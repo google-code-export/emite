@@ -1,5 +1,7 @@
 package com.calclab.emite.client.packet;
 
+import java.util.List;
+
 public class DelegatedPacket implements Packet {
 	private final Packet delegate;
 
@@ -19,8 +21,12 @@ public class DelegatedPacket implements Packet {
 		return delegate.getAttribute(name);
 	}
 
-	public final Packet getFirst(final String childName) {
-		return delegate.getFirst(childName);
+	public List<Packet> getChildren(final String name) {
+		return delegate.getChildren(name);
+	}
+
+	public final Packet getFirstChildren(final String childName) {
+		return delegate.getFirstChildren(childName);
 	}
 
 	public final String getName() {

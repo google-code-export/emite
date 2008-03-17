@@ -83,7 +83,7 @@ public class Engine {
 	}
 
 	public void stop() {
-
+		bosh.stop();
 	}
 
 }

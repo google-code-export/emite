@@ -1,5 +1,7 @@
 package com.calclab.emite.client.packet;
 
+import java.util.List;
+
 /**
  * TODO: no está nada claro lo del setText, getText, addText...
  * 
@@ -13,7 +15,14 @@ public interface Packet {
 
 	String getAttribute(String name);
 
-	Packet getFirst(String childName);
+	/**
+	 * Return all the descendant childs with node name
+	 * 
+	 * @param name
+	 */
+	List<Packet> getChildren(String name);
+
+	Packet getFirstChildren(String childName);
 
 	String getName();
 

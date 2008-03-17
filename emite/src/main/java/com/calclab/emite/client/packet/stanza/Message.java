@@ -18,7 +18,7 @@ public class Message extends BasicStanza {
 	}
 
 	public String getBody() {
-		return getFirst("body").getText();
+		return getFirstChildren("body").getText();
 	}
 
 	private void setMessage(final String msg) {

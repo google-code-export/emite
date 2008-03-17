@@ -21,6 +21,7 @@ public class Xmpp {
 		final Engine engine = new Engine(options, output);
 		final PluginManager pluginManager = new PluginManager(engine);
 		pluginManager.install(new MessagePlugin(), new RosterPlugin(), new PresencePlugin());
+		pluginManager.install(new ConnectionPlugin());
 		pluginManager.install(new SASLModule(), new ResourceModule(), new SessionPlugin());
 		return new Xmpp(engine, pluginManager);
 	}

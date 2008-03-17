@@ -4,7 +4,6 @@ import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.bosh.Bosh;
 import com.calclab.emite.client.bosh.BoshOptions;
 import com.calclab.emite.client.im.MessageListener;
-import com.calclab.emite.client.im.roster.RosterListener;
 import com.calclab.emite.client.log.LoggerOutput;
 import com.calclab.emite.client.packet.stanza.Message;
 import com.calclab.xmpptest.bosh.client.script.Interpreter;
@@ -46,10 +45,6 @@ public class TestBoshEntryPoint implements EntryPoint, Output {
 			public void log(final int level, final String message) {
 				print("[LOGGER - " + level + " ]\n" + message);
 			}
-		});
-
-		xmpp.getRoster().addListener(new RosterListener() {
-
 		});
 
 		xmpp.addMessageListener(new MessageListener() {

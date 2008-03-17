@@ -2,9 +2,11 @@ package com.calclab.emite.client.im.roster;
 
 import com.calclab.emite.client.Engine;
 import com.calclab.emite.client.packet.Event;
+import com.calclab.emite.client.packet.stanza.IQ;
 import com.calclab.emite.client.packet.stanza.Presence;
 import com.calclab.emite.client.plugin.Plugin;
 import com.calclab.emite.client.subscriber.EventSubscriber;
+import com.calclab.emite.client.subscriber.IQSubscriber;
 import com.calclab.emite.client.subscriber.PresenceSubscriber;
 
 public class RosterPlugin implements Plugin {
@@ -23,6 +25,13 @@ public class RosterPlugin implements Plugin {
 			@Override
 			protected void handleEvent(final Event event) {
 				roster.onSessionStarted();
+			}
+		});
+
+		engine.addListener(new IQSubscriber("roster") {
+			@Override
+			protected void handleIQ(final IQ iq) {
+				roster.onRosterReceived(iq);
 			}
 		});
 

@@ -2,6 +2,7 @@ package com.calclab.emite.client.packet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class BasicPacket implements Packet {
 	private final HashMap<String, String> attributes;
@@ -32,7 +33,17 @@ public class BasicPacket implements Packet {
 		return attributes.get(name);
 	}
 
-	public Packet getFirst(final String childName) {
+	public List<Packet> getChildren(final String name) {
+		final List<Packet> selected = new ArrayList<Packet>();
+		for (final Packet child : children) {
+			if (name.equals(child.getName())) {
+				selected.add(child);
+			}
+		}
+		return selected;
+	}
+
+	public Packet getFirstChildren(final String childName) {
 		for (final Packet child : children) {
 			if (childName.equals(child.getName())) {
 				return child;

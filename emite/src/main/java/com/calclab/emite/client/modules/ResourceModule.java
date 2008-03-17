@@ -25,7 +25,7 @@ public class ResourceModule implements Plugin {
 		xmpp.addListener(new IQSubscriber("bind_1") {
 			@Override
 			protected void handleIQ(final IQ iq) {
-				final String jid = iq.getFirst("bind").getFirst("jid").getText();
+				final String jid = iq.getFirstChildren("bind").getFirstChildren("jid").getText();
 				xmpp.setGlobal(Engine.JID, jid);
 				xmpp.publish(new Event(SUCCESS));
 			}
