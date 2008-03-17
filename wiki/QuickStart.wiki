@@ -1,0 +1,23 @@
+#summary How to get the example running
+
+
+
+= Introduction =
+
+There's a gwt example of use. You need a running xmpp server with bosh connection linked to localhost:8181/http-bind (i will change this in the near future)
+
+get the source code.
+
+inside the project folder type:
+{{{
+mvn gwt:compile
+}}}
+to compile the sources
+and
+{{{
+mvn jetty:run
+}}}
+to run the proxy servlet
+
+Point the browser to:
+http://localhost:8080/gwt/com.calclab.examplechat.Example/ChatExample.html
