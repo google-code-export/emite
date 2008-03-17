@@ -1,5 +1,8 @@
 #!/bin/bash
 
-rm src/main/webapp/gwt/com.calclab.examplechat.Example/ -R
-cp target/emite-0.0.1/gwt/com.calclab.examplechat.Example/ src/main/webapp/gwt/ -R
-mvn jetty:run -o
+if [ -d src/main/webapp/gwt/com.calclab.examplechat.Example ]
+then
+  rm -rf src/main/webapp/gwt/com.calclab.examplechat.Example/
+fi
+cp -a target/emite-0.0.1/gwt/com.calclab.examplechat.Example src/main/webapp/gwt/
+mvn jetty:run
