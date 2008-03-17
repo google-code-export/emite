@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.calclab.emite.client.bosh.Bosh;
 import com.calclab.emite.client.bosh.BoshListener;
 import com.calclab.emite.client.bosh.BoshOptions;
+import com.calclab.emite.client.log.NullLogger;
 
 public class Interpreter {
 	private final Bosh bosh;
@@ -74,7 +75,7 @@ public class Interpreter {
 				resume();
 			}
 
-		});
+		}, new NullLogger());
 	}
 
 	private ScriptComponent getCommand(final Instruction step) {

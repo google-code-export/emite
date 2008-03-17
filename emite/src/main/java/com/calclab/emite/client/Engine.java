@@ -8,7 +8,6 @@ import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.log.LoggerAdapter;
 import com.calclab.emite.client.log.LoggerOutput;
 import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.plugin.PluginManager;
 import com.calclab.emite.client.subscriber.PacketSubscriber;
 
 /**
@@ -29,17 +28,15 @@ public class Engine {
 	private final Dispatcher dispatcher;
 	private final HashMap<String, Object> globals;
 	private final Logger logger;
-	final PluginManager pluginManager;
 
 	public Engine(final BoshOptions options, final Logger logger) {
 		this.logger = logger;
-		this.pluginManager = new PluginManager(this);
 		this.dispatcher = new Dispatcher(logger);
 		this.globals = new HashMap<String, Object>();
 
 		globals.put(DOMAIN, options.getDomain());
 
-		this.bosh = new Bosh(options, dispatcher);
+		this.bosh = new Bosh(options, dispatcher, logger);
 	}
 
 	public Engine(final BoshOptions options, final LoggerOutput output) {

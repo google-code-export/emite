@@ -14,7 +14,7 @@ public class LoggerAdapter implements Logger {
 	}
 
 	public void log(final int level, final String pattern, final Object... params) {
-		final String applied = TextHelper.temple(pattern, params);
+		final String applied = TextHelper.template(pattern, params);
 		output.log(level, applied);
 	}
 

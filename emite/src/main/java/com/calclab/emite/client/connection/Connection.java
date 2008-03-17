@@ -14,12 +14,18 @@ public class Connection {
 		this.listeners = new ArrayList<ConnectionListener>();
 	}
 
-	public void start() {
+	public void addListener(final ConnectionListener listener) {
+		listeners.add(listener);
+	}
+
+	public void login(final String userName, final String userPassword) {
+		engine.setGlobal(Engine.USER, userName);
+		engine.setGlobal(Engine.PASSWORD, userPassword);
 		engine.publish(new Event("connection:connecting"));
 		engine.start();
 	}
 
-	public void stop() {
+	public void logout() {
 		engine.stop();
 		engine.publish(new Event("connection:disconnected"));
 	}

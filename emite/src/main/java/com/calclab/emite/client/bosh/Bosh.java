@@ -1,5 +1,6 @@
 package com.calclab.emite.client.bosh;
 
+import com.calclab.emite.client.log.Logger;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -13,23 +14,25 @@ public class Bosh {
 	private final RequestCallback defaultCallback;
 	private boolean isRunning;
 	private final BoshListener listener;
+	private final Logger logger;
 	private final BoshOptions options;
 	// TODO: problemas con long y GWT
 	private long rid;
 	private String sid;
 
-	public Bosh(final BoshOptions options, final BoshListener listener) {
+	public Bosh(final BoshOptions options, final BoshListener listener, final Logger logger) {
 		this.options = options;
 		this.listener = listener;
+		this.logger = logger;
 		// TODO: mejorar
 		this.rid = (long) (Math.random() * 1573741820);
 		this.sid = null;
 		this.concurrent = 0;
-		this.isRunning = false;
+		this.setRunning(false);
 
 		this.defaultCallback = new RequestCallback() {
 			public void onError(final Request req, final Throwable error) {
-				isRunning = false;
+				setRunning(false);
 				concurrent--;
 				listener.onError(error);
 			}
@@ -40,7 +43,8 @@ public class Bosh {
 				new Timer() {
 					@Override
 					public void run() {
-						if (isRunning && concurrent == 0) {
+						logger.debug("HOT! running {0} - concurrent  {1}", isRunning, concurrent);
+						if (isRunning() && concurrent == 0) {
 							sendEmpty();
 						}
 					}
@@ -78,7 +82,7 @@ public class Bosh {
 			}
 
 			public void onResponseReceived(final Request req, final Response res) {
-				isRunning = true;
+				setRunning(true);
 				final String responseText = res.getText();
 				sid = XMLHelper.extractAttribute("sid", responseText);
 				inactivity = XMLHelper.extractIntegerAttribute("inactivity", responseText);
@@ -88,8 +92,13 @@ public class Bosh {
 	}
 
 	public void stop() {
-		// TODO: send gracefully logout
-		isRunning = false;
+		final String terminate = XMLHelper.terminate(rid, sid);
+		sendRequest(terminate, defaultCallback);
+		setRunning(false);
+	}
+
+	private boolean isRunning() {
+		return isRunning;
 	}
 
 	private void sendEmpty() {
@@ -107,6 +116,11 @@ public class Bosh {
 			listener.onError(e);
 		}
 		listener.onRequest(request);
+	}
+
+	private void setRunning(final boolean isRunning) {
+		this.isRunning = isRunning;
+		logger.debug("BOSH RUNNING {0}", isRunning);
 	}
 
 }
