@@ -1,12 +1,19 @@
-#architecture description
+# architecture description
 
-= Introduction =
+= General overview =
+
+We tried to make a modularized system (each module is called -surprise- plugin, and can be hot deployed and hot removed) driven by a event system. Each time a module wants to comunicate with others, it does thought an event.
+
+The core of the system is the Engine and the PluginManager.
+The engine handles all the subscription and dispachtes all the events (including the xmpp stanzas).
+The pluginManager is the one who performs the plugin deploy and removal.
+
+All this complexity is hidden by a facade class call XMPP. *Normally yo dont have to access other parts of the system but XMPP facade*
 
 
+= The XMPP Facade =
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Its intened to access quickly the most used opeartions
+  * With this object, you can login and logout
+  * Control the roster
+  * Get information about the connection state
