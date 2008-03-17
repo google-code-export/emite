@@ -2,5 +2,5 @@
 	<!-- other inherited modules, such as com.google.gwt.user.User -->
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.calclab.emite.Emite" />
-	<entry-point class="com.calclab.emite.example.client.ChatExampleEntryPoint" />
+	<entry-point class="com.calclab.examplechat.client.ChatExampleEntryPoint" />
 </module>

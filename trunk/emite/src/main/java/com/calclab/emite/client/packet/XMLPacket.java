@@ -1,5 +1,8 @@
 package com.calclab.emite.client.packet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
@@ -25,7 +28,16 @@ public class XMLPacket implements Packet {
 		return element.getAttribute(name);
 	}
 
-	public Packet getFirst(final String childName) {
+	public List<Packet> getChildren(final String name) {
+		final ArrayList<Packet> selected = new ArrayList<Packet>();
+		final NodeList nodes = element.getElementsByTagName(name);
+		for (int index = 0; index < nodes.getLength(); index++) {
+			selected.add(new XMLPacket((Element) nodes.item(index)));
+		}
+		return selected;
+	}
+
+	public Packet getFirstChildren(final String childName) {
 		final NodeList nodes = element.getElementsByTagName(childName);
 		return nodes.getLength() > 0 ? new XMLPacket((Element) nodes.item(0)) : null;
 	}

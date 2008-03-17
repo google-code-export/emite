@@ -39,16 +39,9 @@ public class Bosh {
 
 			public void onResponseReceived(final Request req, final Response res) {
 				concurrent--;
+				// TODO: check if its a valid response
 				listener.onResponse(res.getText());
-				new Timer() {
-					@Override
-					public void run() {
-						logger.debug("HOT! running {0} - concurrent  {1}", isRunning, concurrent);
-						if (isRunning() && concurrent == 0) {
-							sendEmpty();
-						}
-					}
-				}.schedule(1000);
+				keepItBusy();
 			}
 		};
 	}
@@ -99,6 +92,18 @@ public class Bosh {
 
 	private boolean isRunning() {
 		return isRunning;
+	}
+
+	private void keepItBusy() {
+		new Timer() {
+			@Override
+			public void run() {
+				logger.debug("HOT! running {0} - concurrent  {1}", isRunning, concurrent);
+				if (isRunning() && concurrent == 0) {
+					sendEmpty();
+				}
+			}
+		}.schedule(1000);
 	}
 
 	private void sendEmpty() {

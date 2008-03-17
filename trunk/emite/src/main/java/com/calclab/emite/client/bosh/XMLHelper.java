@@ -8,7 +8,7 @@ class XMLHelper {
 			+ " to=\"{1}\" " + "secure=\"true\" " + "ver=\"1.6\" " + "wait=\"60\" " + "ack=\"1\" " + "hold=\"1\" "
 			+ "xml:lang=\"en\" " + "xmlns=\"http://jabber.org/protocol/httpbind\" />";
 
-	private static final String EMPTY = "<body rid=\"{0}\" sid=\"{1}\" pause=\"{2}\" xmlns=\"http://jabber.org/protocol/httpbind\" />";
+	private static final String EMPTY = "<body rid=\"{0}\" sid=\"{1}\" xmlns=\"http://jabber.org/protocol/httpbind\" />";
 
 	private static final String END = "</body>";
 
