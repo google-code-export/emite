@@ -1,0 +1,63 @@
+package com.calclab.emite.client.packet;
+
+import com.google.gwt.xml.client.Element;
+import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
+
+public class XMLPacket implements Packet {
+	private final Element element;
+
+	public XMLPacket(final Element element) {
+		this.element = element;
+	}
+
+	public Packet add(final String nodeName, final String xmlns) {
+		final Element child = element.getOwnerDocument().createElement(nodeName);
+		element.appendChild(child);
+		return new XMLPacket(child);
+	}
+
+	public void addText(final String text) {
+		element.appendChild(element.getOwnerDocument().createTextNode(text));
+	}
+
+	public String getAttribute(final String name) {
+		return element.getAttribute(name);
+	}
+
+	public Packet getFirst(final String childName) {
+		final NodeList nodes = element.getElementsByTagName(childName);
+		return nodes.getLength() > 0 ? new XMLPacket((Element) nodes.item(0)) : null;
+	}
+
+	public String getName() {
+		return element.getNodeName();
+	}
+
+	public String getText() {
+		Node item;
+		final NodeList childs = element.getChildNodes();
+		for (int index = 0; index < childs.getLength(); index++) {
+			item = childs.item(index);
+			if (item.getNodeType() == Node.TEXT_NODE) {
+				return item.getNodeValue();
+			}
+		}
+		return null;
+	}
+
+	public void setAttribute(final String name, final String value) {
+		element.setAttribute(name, value);
+	}
+
+	// FIXME
+	public void setText(final String text) {
+		addText(text);
+	}
+
+	public Packet with(final String name, final String value) {
+		setAttribute(name, value);
+		return this;
+	}
+
+}

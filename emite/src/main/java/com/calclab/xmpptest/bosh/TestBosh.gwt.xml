@@ -1,0 +1,6 @@
+<module>
+	<!-- other inherited modules, such as com.google.gwt.user.User -->
+	<inherits name="com.google.gwt.user.User" />
+	<inherits name="com.calclab.transa.xmpp.Xmpp" />
+	<entry-point class="com.calclab.xmpptest.bosh.client.TestBoshEntryPoint" />
+</module>
