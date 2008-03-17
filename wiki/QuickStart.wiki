@@ -16,11 +16,19 @@ inside the project folder type:
 mvn gwt:compile
 }}}
 to compile the sources
-and
+and, if you use a linux envirorment, write:
+{{{
+./script/server
+}}}
+to copy the compiled js to the destination folder and run the proxy servlet
+
+
+if you are not unix', take a look to the script to know which are
+the folders you have to copy and then 
 {{{
 mvn jetty:run
 }}}
-to run the proxy servlet
+to run the proxy
 
 Point the browser to:
 http://localhost:8080/gwt/com.calclab.examplechat.Example/ChatExample.html
