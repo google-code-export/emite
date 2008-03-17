@@ -6,7 +6,7 @@ public class Event extends DelegatedPacket {
 	}
 
 	public Event(final String name) {
-		this(new BasicPacket("event", "transa:event"));
+		this(new BasicPacket("event", "emite:event"));
 		setAttribute("name", name);
 	}
 }

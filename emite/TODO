@@ -6,19 +6,40 @@ TODO-list for kune
 SHORT-TERM (URGENT):
 --------------------------------------------------------------------------------
 
-<vjrj> Integrate with gwt-log
+<vjrj> Integrate with gwt-log (infraestructure)
 -->vjrj
-<vjrj> Integrate gwt-ext chat sample interface
+<vjrj> Integrate gwt-ext chat sample interface (ui)
 -->vjrj
-<vjrj> Study license issues
+<vjrj> Study license issues (doc)
 --> vjrj
-<vjrj> Scroll y chat text area
+<vjrj> Scroll y chat text area (ui)
 --> vjrj
 
+<dani> Remove Bosh connection bugs (bosh)
+--> dani
+<dani> Add support to MUC (xmpp)
+--> dani
+<dani> Better presence support (xmpp)
+--> dani
+
+
 MIND-TERM:
+
+<dani> Better plugin system 
+	* more declarative interface (exported events, subscriptions, etc...)
+
+<dani> Better matching system (infraestructure)
+--> dani
+	
+<dani> Remove Bosh connection bugs
+<dani> Add suport to RosterManagment
+<dani> Add MD5 SASL mechanism
+
 --------------------------------------------------------------------------------
 
 LONG-TERM:
+<dani> Remove Bosh connection bugs
+<dani> Hot remove of plugins
 --------------------------------------------------------------------------------
 
 IDEAS:
