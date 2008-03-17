@@ -1,5 +1,5 @@
 <module>
 	<inherits name="com.google.gwt.xml.XML" />
 	<inherits name="com.google.gwt.http.HTTP" />
-	<entry-point class="com.calclab.transa.xmpp.client.XmppEntryPoint" />
+	<entry-point class="com.calclab.emite.client.EmiteEntryPoint" />
 </module>

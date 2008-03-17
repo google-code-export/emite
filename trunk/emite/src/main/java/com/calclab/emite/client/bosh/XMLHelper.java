@@ -15,12 +15,15 @@ class XMLHelper {
 	private static final String RESTART = "<body rid=\"{0}\" sid=\"{1}\" to=\"{2}\" "
 			+ "xml:lang=\"en\" xmpp:restart=\"true\" xmlns=\"http://jabber.org/protocol/httpbind\" xmlns:xmpp=\"urn:xmpp:xbosh\" />";
 
+	private static final String TERMINATE = "<body rid=\"{0}\" sid=\"{1}\" type=\"terminate\" "
+			+ "xmlns=\"http://jabber.org/protocol/httpbind\"><presence type=\"unavailable\" xmlns=\"jabber:client\"/></body>";
+
 	public static String buildSessionCreationRequest(final BoshOptions options, final long rid) {
-		return TextHelper.temple(CREATION, rid, options.getDomain());
+		return TextHelper.template(CREATION, rid, options.getDomain());
 	}
 
 	public static String empty(final long rid, final String sid, final int inactivity) {
-		return TextHelper.temple(EMPTY, rid, sid, inactivity);
+		return TextHelper.template(EMPTY, rid, sid, inactivity);
 	}
 
 	public static String extractAttribute(final String attName, final String responseText) {
@@ -40,11 +43,15 @@ class XMLHelper {
 	}
 
 	public static String restart(final long rid, final String sid, final String domain) {
-		return TextHelper.temple(RESTART, rid, sid, domain);
+		return TextHelper.template(RESTART, rid, sid, domain);
+	}
+
+	public static String terminate(final long rid, final String sid) {
+		return TextHelper.template(TERMINATE, rid, sid);
 	}
 
 	public static String wrap(final String stanza, final long rid, final String sid) {
-		String request = TextHelper.temple(BODY, rid, sid);
+		String request = TextHelper.template(BODY, rid, sid);
 		// if (stanza != null) {
 		request += stanza;
 		// }
