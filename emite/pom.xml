@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.calclab</groupId>
+	<artifactId>emite</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1</version>
+	<description>emite: a pure gwt xmpp (jabber) library</description>
+	<name>emite xmpp</name>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>gwtforge</id>
+			<url>http://gwtforge.com/maven-repository/trunk/</url>
+		</pluginRepository>
+	</pluginRepositories>
+	<repositories>
+		<repository>
+			<id>gwtforge</id>
+			<url>http://gwtforge.com/maven-repository/trunk/</url>
+		</repository>
+	</repositories>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>gwtforge.gwtplugin</groupId>
+				<artifactId>gwtforge.gwtplugin</artifactId>
+				<version>1.5-dev-27-01-2008</version>
+				<configuration>
+					<out>gwt</out>
+					<loglevel>INFO</loglevel>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.5</version>
+				<configuration>
+					<contextPath>/</contextPath>
+					<scanIntervalSeconds>0</scanIntervalSeconds>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<version>1.5-dev-27-01-2008</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+
+
+
+		<!-- Include your gwt libraries here -->
+
+	</dependencies>
+</project>
