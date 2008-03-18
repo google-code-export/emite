@@ -18,7 +18,7 @@ public class TestHelper {
 			}
 		});
 
-		c.createComponents(new SimpleParser(), new SimpleConnector(), options);
+		c.createComponents(new SimpleParser(), new SimpleConnector(c.getComponents().getLogger()), options);
 		c.installDefaultPlugins();
 
 		return new Xmpp(c.getComponents());
