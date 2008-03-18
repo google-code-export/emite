@@ -24,11 +24,9 @@ ChatPlugin.getChat(container); // <- this is the nice way
 *Easy*
   * The creation of new plugins is straightforward: there is a mini DSL to publish and receive Events
 {{{
-		when.Event(SASLPlugin.Events.authorized).Do(setAuthorizedState);
-
-		when.Event(ResourcePlugin.Events.binded).send(requestSession);
-
-		when.IQ("requestSession").publish(setStartedState);
+  when.Event(SASLPlugin.Events.authorized).Do(setAuthorizedState);
+  when.Event(ResourcePlugin.Events.binded).send(requestSession);
+  when.IQ("requestSession").publish(setStartedState);
 }}}
 
 *Testing*
