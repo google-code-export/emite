@@ -21,6 +21,10 @@ public class DelegatedPacket implements Packet {
 		return delegate.getAttribute(name);
 	}
 
+	public List<? extends Packet> getChildren() {
+		return delegate.getChildren();
+	}
+
 	public List<Packet> getChildren(final String name) {
 		return delegate.getChildren(name);
 	}
@@ -31,6 +35,10 @@ public class DelegatedPacket implements Packet {
 
 	public final String getName() {
 		return delegate.getName();
+	}
+
+	public Packet getParent() {
+		return delegate.getParent();
 	}
 
 	public final String getText() {

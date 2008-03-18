@@ -1,6 +1,7 @@
 package com.calclab.emite.client.dispatcher;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.calclab.emite.client.action.Action;
 import com.calclab.emite.client.bosh.BoshListener;
@@ -31,7 +32,7 @@ public class ActionDispatcher implements Dispatcher, BoshListener {
 
 	public void onResponse(final String response) {
 		logger.debug("RESPONSE: \n {0}", response);
-		final ArrayList<Packet> stanzas = parser.extractStanzas(response);
+		final List<? extends Packet> stanzas = parser.extractStanzas(response);
 		for (final Packet stanza : stanzas) {
 			fireStanza(stanza, commands);
 		}
