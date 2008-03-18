@@ -23,6 +23,13 @@ ChatPlugin.getChat(container); // <- this is the nice way
 
 *Easy*
   * The creation of new plugins is straightforward: there is a mini DSL to publish and receive Events
+{{{
+		when.Event(SASLPlugin.Events.authorized).Do(setAuthorizedState);
+
+		when.Event(ResourcePlugin.Events.binded).send(requestSession);
+
+		when.IQ("requestSession").publish(setStartedState);
+}}}
 
 *Testing*
   * The javascript and GWT internals are isolated behind a couple of interfaces (Parser, Connector). There's a j2se version of this clases to test real thing outside the browser.
