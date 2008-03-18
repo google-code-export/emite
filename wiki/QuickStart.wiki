@@ -18,7 +18,7 @@ mvn gwt:compile
 to compile the sources
 and, if you use a linux envirorment, write:
 {{{
-./script/server
+./script/server.sh
 }}}
 to copy the compiled js to the destination folder and run the proxy servlet
 
