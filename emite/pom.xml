@@ -7,20 +7,28 @@
 	<version>0.0.1</version>
 	<description>emite: a pure gwt xmpp (jabber) library</description>
 	<name>emite xmpp</name>
+  <url>http://emite.googlecode.com</url>
 
 	<pluginRepositories>
-		<pluginRepository>
-			<id>gwtforge</id>
-			<url>http://gwtforge.com/maven-repository/trunk/</url>
-		</pluginRepository>
+    <pluginRepository>
+      <id>kune-maven</id>
+      <url>http://kune.ourproject.org/mavenrepo/</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>gwt-maven</id>
+      <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+    </pluginRepository>
 	</pluginRepositories>
 	<repositories>
-		<repository>
-			<id>gwtforge</id>
-			<url>http://gwtforge.com/maven-repository/trunk/</url>
-		</repository>
+    <repository>
+      <id>gwt-maven</id>
+      <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+    </repository>
+    <repository>
+      <id>kune-maven</id>
+      <url>http://kune.ourproject.org/mavenrepo/</url>
+    </repository>
 	</repositories>
-
 
 	<build>
 		<plugins>
@@ -31,15 +39,46 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>gwtforge.gwtplugin</groupId>
-				<artifactId>gwtforge.gwtplugin</artifactId>
-				<version>1.5-dev-27-01-2008</version>
-				<configuration>
-					<out>gwt</out>
-					<loglevel>INFO</loglevel>
-				</configuration>
-			</plugin>
+      <plugin>
+        <groupId>com.totsp.gwt</groupId>
+        <artifactId>maven-googlewebtoolkit2-plugin</artifactId>
+        <version>2.0-beta7</version>
+        <configuration>
+          <logLevel>INFO</logLevel>
+          <runTarget>com.calclab.examplechat.Example/ChatExample.html</runTarget>
+          <compileTarget>
+            <param></param>
+          </compileTarget>
+          <compileTargets>
+            <compileTarget>com.calclab.emite.Emite</compileTarget>
+            <compileTarget>com.calclab.examplechat.Example</compileTarget>
+          </compileTargets> 
+					<!--
+          <compileTarget>
+            <param>com.calclab.examplechat.Example</param>
+          </compileTarget>
+          -->
+          <generatorRootClasses>
+            <value>com.calclab.emite.MyBean</value>
+            <value>foo.pkg.MyBean2</value>
+          </generatorRootClasses>
+          <generatorDestinationPackage>
+            com.calclab.examplechat.Example
+          </generatorDestinationPackage>
+          <generateGettersAndSetters>true</generateGettersAndSetters>
+          <generatePropertyChangeSupport>
+            true
+          </generatePropertyChangeSupport>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <!-- <goal>mergewebxml</goal> -->
+              <!-- <goal>compile</goal> -->
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
@@ -49,10 +88,15 @@
 					<scanIntervalSeconds>0</scanIntervalSeconds>
 				</configuration>
 			</plugin>
-
 		</plugins>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <testSourceDirectory>src/test/java</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+      </resource>
+    </resources>
 	</build>
-
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -61,12 +105,20 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-servlet</artifactId>
-			<version>1.5-dev-27-01-2008</version>
-		</dependency>
+    <!--  gwt -->
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>0.0.2030</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-servlet</artifactId>
+      <version>0.0.2030</version>
+    </dependency>
 
+		<!-- other -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -80,17 +132,14 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>tigase-xmltools</groupId>
-			<artifactId>tigase-xmltools</artifactId>
-			<version>2.3.0-SNAPSHOT</version>
-			<scope>test</scope>
+      <groupId>com.allen_sauer.gwt.log.gwt-log</groupId>
+      <artifactId>gwt-log</artifactId>
+      <version>1.5.5</version>
 		</dependency>
-
-
-
-
-
-		<!-- Include your gwt libraries here -->
-
+    <dependency>
+      <groupId>com.gwtext</groupId>
+      <artifactId>gwt-ext</artifactId>
+      <version>2.0.2</version>
+    </dependency>
 	</dependencies>
 </project>
