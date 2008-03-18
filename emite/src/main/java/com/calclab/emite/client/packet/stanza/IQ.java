@@ -17,6 +17,11 @@ public class IQ extends BasicStanza {
 		setType(type.toString());
 	}
 
+	public IQ From(final String from) {
+		setFrom(from);
+		return this;
+	}
+
 	public Packet Include(final String name, final String xmlns) {
 		add(name, xmlns);
 		return this;
@@ -31,12 +36,6 @@ public class IQ extends BasicStanza {
 		return this;
 	}
 
-	/**
-	 * BUILDER METHOD
-	 * 
-	 * @param string
-	 * @return
-	 */
 	public IQ WithQuery(final String queryNamespace) {
 		add("query", queryNamespace);
 		return this;
