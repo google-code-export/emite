@@ -1,68 +1,85 @@
 package com.calclab.emite.client;
 
+import com.calclab.emite.client.bosh.Bosh;
 import com.calclab.emite.client.bosh.BoshOptions;
-import com.calclab.emite.client.connection.Connection;
-import com.calclab.emite.client.connection.ConnectionListener;
-import com.calclab.emite.client.connection.ConnectionPlugin;
-import com.calclab.emite.client.im.MessageListener;
-import com.calclab.emite.client.im.MessagePlugin;
-import com.calclab.emite.client.im.PresencePlugin;
-import com.calclab.emite.client.im.roster.Roster;
-import com.calclab.emite.client.im.roster.RosterPlugin;
-import com.calclab.emite.client.im.session.SessionPlugin;
+import com.calclab.emite.client.bosh.IConnection;
+import com.calclab.emite.client.log.Logger;
+import com.calclab.emite.client.log.LoggerAdapter;
 import com.calclab.emite.client.log.LoggerOutput;
-import com.calclab.emite.client.modules.ResourceModule;
-import com.calclab.emite.client.modules.SASLModule;
+import com.calclab.emite.client.plugin.IPluginManager;
 import com.calclab.emite.client.plugin.PluginManager;
+import com.calclab.emite.client.x.core.SASLModule;
+import com.calclab.emite.client.x.im.ChatPlugin;
+import com.calclab.emite.client.x.im.MessageListener;
+import com.calclab.emite.client.x.im.roster.Roster;
+import com.calclab.emite.client.x.im.roster.RosterPlugin;
+import com.calclab.emite.client.x.im.session.Session;
+import com.calclab.emite.client.x.im.session.SessionListener;
+import com.calclab.emite.client.x.im.session.SessionOptions;
+import com.calclab.emite.client.x.im.session.SessionPlugin;
 
 public class Xmpp {
 
 	public static Xmpp create(final BoshOptions options, final LoggerOutput output) {
-		final Engine engine = new Engine(options, output);
-		final PluginManager pluginManager = new PluginManager(engine);
-		pluginManager.install(new MessagePlugin(), new RosterPlugin(), new PresencePlugin());
-		pluginManager.install(new ConnectionPlugin());
-		pluginManager.install(new SASLModule(), new ResourceModule(), new SessionPlugin());
-		return new Xmpp(engine, pluginManager);
+		final Logger logger = new LoggerAdapter(output);
+		final IContainer components = new Container();
+		final IConnection bosh = new Bosh(options, logger);
+		final IPluginManager pluginManager = new PluginManager(components);
+		final IDispatcher dispatcher = new ActionDispatcher(logger);
+
+		components.setLogger(logger);
+		components.setGlobals(new Globals());
+		components.setConnection(bosh);
+		components.setDispatcher(dispatcher);
+
+		installPlugins(pluginManager, components);
+		return new Xmpp(components);
 	}
 
-	private final Connection connection;
-	private final Engine engine;
+	private static void installPlugins(final IPluginManager manager, final IContainer c) {
+		manager.install("sasl", new SASLModule(c.getGlobals()));
+		manager.install("chat", new ChatPlugin(c.getConnection(), c.getDispatcher()));
+		manager.install("session", new SessionPlugin(c.getGlobals(), c.getDispatcher()));
+		manager.install("roster", new RosterPlugin());
+	}
+
+	private final IContainer components;
+	private final Session session;
 
 	/**
 	 * TODO: pluginManager se usará para desintalar los plugins (si se
 	 * necesitase)
 	 * 
-	 * @param engine
+	 * @param queue
 	 * @param pluginManager
 	 */
-	private Xmpp(final Engine engine, final PluginManager pluginManager) {
-		this.engine = engine;
-		this.connection = ConnectionPlugin.getConnection(engine);
-	}
-
-	public void addConnectionListener(final ConnectionListener listener) {
-		connection.addListener(listener);
+	private Xmpp(final IContainer components) {
+		this.components = components;
+		this.session = SessionPlugin.getSession(components);
 	}
 
 	public void addMessageListener(final MessageListener listener) {
-		MessagePlugin.getMessager(engine).addListener(listener);
+		ChatPlugin.getChat(components).addListener(listener);
+	}
+
+	public void addSessionListener(final SessionListener listener) {
+		session.addListener(listener);
 	}
 
 	public Roster getRoster() {
-		return RosterPlugin.getRoster(engine);
+		return RosterPlugin.getRoster(components);
 	}
 
 	public void login(final String userName, final String userPassword) {
-		connection.login(userName, userPassword);
+		session.login(new SessionOptions(userName, userPassword));
 	}
 
 	public void logout() {
-		connection.logout();
+		session.logout();
 	}
 
 	public void send(final String to, final String msg) {
-		MessagePlugin.getMessager(engine).send(to, msg);
+		ChatPlugin.getChat(components).send(to, msg);
 	}
 
 }
