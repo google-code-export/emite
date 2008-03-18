@@ -2,12 +2,12 @@ package com.calclab.emite.client;
 
 import java.util.HashMap;
 
+@SuppressWarnings("serial")
 public class HashGlobals extends HashMap<String, String> implements Globals {
 	private static final String DOMAIN = "domain";
 	private static final String JID = "jid";
 	private static final String PASSWORD = "password";
 	private static final String USER_NAME = "userName";
-	private static final long serialVersionUID = 1L;
 
 	public String getDomain() {
 		return get(DOMAIN);
@@ -23,6 +23,10 @@ public class HashGlobals extends HashMap<String, String> implements Globals {
 
 	public String getUserName() {
 		return get(USER_NAME);
+	}
+
+	public void setDomain(final String domain) {
+		put(DOMAIN, domain);
 	}
 
 	public void setJID(final String jid) {

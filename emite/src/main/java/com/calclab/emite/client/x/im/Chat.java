@@ -2,14 +2,14 @@ package com.calclab.emite.client.x.im;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.bosh.IConnection;
+import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.packet.stanza.Message;
 
 public class Chat {
-	private final IConnection connection;
+	private final Connection connection;
 	private final ArrayList<MessageListener> listeners;
 
-	public Chat(final IConnection connection) {
+	public Chat(final Connection connection) {
 		this.connection = connection;
 		this.listeners = new ArrayList<MessageListener>();
 	}

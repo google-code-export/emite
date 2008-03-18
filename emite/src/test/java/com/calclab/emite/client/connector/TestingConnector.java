@@ -43,7 +43,7 @@ public class TestingConnector implements Connector {
 
 				try {
 					post.setRequestEntity(new StringRequestEntity(xml, "text/xml", "utf-8"));
-					logger.debug("HttpClientConnector {0} SEND", this.hashCode());
+					logger.debug("HttpClientConnector {0} SEND\n{1}", this.hashCode(), xml);
 					int status = client.executeMethod(post);
 					if (status == HttpStatus.SC_OK) {
 						String response = post.getResponseBodyAsString();
@@ -58,7 +58,7 @@ public class TestingConnector implements Connector {
 					callback.onError(e);
 				} finally {
 					post.releaseConnection();
-					logger.debug("HttpClientConnector:End of request");
+					logger.debug("HttpClientConnector {0} FINISH", this.hashCode());
 				}
 			}
 		};

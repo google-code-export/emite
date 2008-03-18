@@ -13,7 +13,7 @@ public class ActionDispatcher implements Dispatcher, BoshListener {
 	private final Logger logger;
 	private final Parser parser;
 
-	public ActionDispatcher(final Parser parser, final Logger logger) {
+	ActionDispatcher(final Parser parser, final Logger logger) {
 		this.parser = parser;
 		this.logger = logger;
 		this.commands = new ArrayList<Action>();
@@ -31,7 +31,7 @@ public class ActionDispatcher implements Dispatcher, BoshListener {
 	}
 
 	public void onResponse(final String response) {
-		logger.debug("RESPONSE: \n {0}", response);
+		logger.info("RESPONSE: \n {0}", response);
 		logger.debug("DISPATCHER LOOP BEGINS");
 		final List<? extends Packet> stanzas = parser.extractStanzas(response);
 		for (final Packet stanza : stanzas) {
@@ -41,7 +41,7 @@ public class ActionDispatcher implements Dispatcher, BoshListener {
 	}
 
 	public void publish(final Packet stanza) {
-		logger.debug("PUBLISHED: \n {0}", stanza);
+		logger.info("PUBLISHED: \n {0}", stanza);
 		fireStanza(stanza, commands);
 	}
 

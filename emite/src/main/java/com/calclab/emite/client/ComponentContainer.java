@@ -2,7 +2,7 @@ package com.calclab.emite.client;
 
 import java.util.HashMap;
 
-import com.calclab.emite.client.bosh.IConnection;
+import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.plugin.PluginManager;
@@ -23,8 +23,8 @@ public class ComponentContainer extends HashMap<String, Object> implements Compo
 		return super.get(componentName);
 	}
 
-	public IConnection getConnection() {
-		return (IConnection) get(CONNECTION);
+	public Connection getConnection() {
+		return (Connection) get(CONNECTION);
 	}
 
 	public Dispatcher getDispatcher() {
@@ -48,7 +48,7 @@ public class ComponentContainer extends HashMap<String, Object> implements Compo
 		super.put(name, component);
 	}
 
-	public void setConnection(final IConnection bosh) {
+	public void setConnection(final Connection bosh) {
 		register(CONNECTION, bosh);
 	}
 

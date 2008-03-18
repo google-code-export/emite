@@ -3,7 +3,7 @@ package com.calclab.emite.client.x.im.session;
 import com.calclab.emite.client.Components;
 import com.calclab.emite.client.Globals;
 import com.calclab.emite.client.action.BussinessLogic;
-import com.calclab.emite.client.bosh.IConnection;
+import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
@@ -35,12 +35,12 @@ public class SessionPlugin implements Plugin {
 	final BussinessLogic setStartedState;
 	final BussinessLogic startConnection;
 
-	public SessionPlugin(final Globals globals, final Dispatcher dispatcher, final IConnection connection) {
+	public SessionPlugin(final Globals globals, final Dispatcher dispatcher, final Connection connection) {
 		session = new Session(globals, dispatcher);
 
 		requestSession = new BussinessLogic() {
 			public Packet logic(final Packet received) {
-				return new IQ("requestSession", IQ.Type.set).To(globals.getDomain()).Include("session", "");
+				return new IQ("requestSession", IQ.Type.set).To(globals.getDomain()).Include("session", null);
 			}
 		};
 
@@ -66,8 +66,12 @@ public class SessionPlugin implements Plugin {
 		};
 	}
 
-	public void start(final FilterBuilder when, final Components components) {
+	public void install(final Components components) {
 		components.register("session", session);
+
+	}
+
+	public void start(final FilterBuilder when) {
 
 		when.Event(Session.Events.login).Do(startConnection);
 

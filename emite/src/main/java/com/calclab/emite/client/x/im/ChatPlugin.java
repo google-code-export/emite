@@ -2,7 +2,7 @@ package com.calclab.emite.client.x.im;
 
 import com.calclab.emite.client.Components;
 import com.calclab.emite.client.action.BussinessLogic;
-import com.calclab.emite.client.bosh.IConnection;
+import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.Message;
@@ -20,7 +20,7 @@ public class ChatPlugin implements Plugin {
 	final BussinessLogic installListener;
 	final BussinessLogic listenToIncomingMessages;
 
-	public ChatPlugin(final IConnection connection, final Dispatcher dispatcher) {
+	public ChatPlugin(final Connection connection, final Dispatcher dispatcher) {
 		chat = new Chat(connection);
 
 		listenToIncomingMessages = new BussinessLogic() {
@@ -41,12 +41,12 @@ public class ChatPlugin implements Plugin {
 		};
 	}
 
-	public void start(final FilterBuilder when, final Components components) {
+	public void install(final Components components) {
 		components.register("chat", chat);
-
-		when.Event(SessionPlugin.Events.started).Do(installListener);
-
-		when.Event(SessionPlugin.Events.ended).Do(listenToIncomingMessages);
 	}
 
+	public void start(final FilterBuilder when) {
+		when.Event(SessionPlugin.Events.started).Do(installListener);
+		when.Event(SessionPlugin.Events.ended).Do(listenToIncomingMessages);
+	}
 }

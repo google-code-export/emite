@@ -15,7 +15,7 @@ public class FilterBuilderTest {
 
 	@Test
 	public void testCreateMatchers() {
-		final FilterBuilder when = new FilterBuilder(null, null);
+		final FilterBuilder when = new FilterBuilder(null);
 
 		final Event event = new Event("simple");
 		assertWhen(when.Event(event), event);

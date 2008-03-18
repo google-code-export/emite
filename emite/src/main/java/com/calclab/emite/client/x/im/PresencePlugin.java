@@ -1,5 +1,6 @@
 package com.calclab.emite.client.x.im;
 
+import com.calclab.emite.client.Components;
 import com.calclab.emite.client.Globals;
 import com.calclab.emite.client.packet.stanza.Presence;
 import com.calclab.emite.client.plugin.FilterBuilder;
@@ -28,8 +29,11 @@ public class PresencePlugin implements Plugin {
 		this.initialPresence = new Presence(globals.getJID()).With(Presence.Show.chat);
 	}
 
-	public void start(final FilterBuilder when, final com.calclab.emite.client.Components components) {
+	public void install(final Components components) {
+	}
+
+	public void start(final FilterBuilder when) {
 		when.Event(SessionPlugin.Events.started).send(initialPresence);
-	};
+	}
 
 }

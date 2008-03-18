@@ -2,7 +2,7 @@ package com.calclab.emite.client.bosh;
 
 import com.calclab.emite.client.packet.Packet;
 
-public interface IConnection {
+public interface Connection {
 
 	public void addListener(BoshListener listener);
 
