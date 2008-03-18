@@ -1,21 +1,31 @@
-
 = General overview =
 
 We tried to make a modularized system (each module is called -surprise- plugin, and can be hot deployed and hot removed) driven by a event system. Each time a module wants to comunicate with others, it does thought an event.
 
-The core of the system is the Engine and the PluginManager.
-The engine handles all the subscription and dispachtes all the events (including the xmpp stanzas).
-The pluginManager is the one who performs the plugin deploy and removal.
-
-All this complexity is hidden by a facade class call XMPP. *Normally yo dont have to access other parts of the system but XMPP facade*
-
+All the complexity is hidden by a facade class call XMPP. *Normally yo dont have to access other parts of the system but XMPP facade*
 
 This architecture is heavily inspired by jaxxmp-tigase xmpp library
 
+= Details =
 
-= The XMPP Facade =
+*Modular*
+  * The core of the system is a Component registry (Container class) and a event propagation (Dispatcher)
+  * Components are object registred by the Plugins in the container
+  * *Example*: The BoshPlugin register the Bosh object. The output of the bosh object (the incomming xmpp messages) are published into the dispatcher.
+  * *Example*: ChatPlugin register a Chat object that acts as interface for sending and receiving xmpp messages. This is an example of how i can access this object:
+{{{
+Container  container = ... ; // create a container and install the plugins
+container.get("chat"); // <- this returns the chat
+ChatPlugin.getChat(container); // <- this is the nice way
+}}}
+  * Session component (by the SessionPlugin) is used to know the session state
+  * All this complexity is hidden behind the Xmpp facade (XMPP class, for normal use)
 
-Its intened to access quickly the most used opeartions
-  * With this object, you can login and logout
-  * Control the roster
-  * Get information about the connection state
+*Easy*
+  * The creation of new plugins is straightforward: there is a mini DSL to publish and receive Events
+
+*Testing*
+  * The javascript and GWT internals are isolated behind a couple of interfaces (Parser, Connector). There's a j2se version of this clases to test real thing outside the browser.
+  * Most of the classes can be tested without any support of gwt library.
+
+... more to come ....
