@@ -2,8 +2,8 @@ package com.calclab.emite.client.x.im.session;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.IDispatcher;
-import com.calclab.emite.client.IGlobals;
+import com.calclab.emite.client.Globals;
+import com.calclab.emite.client.action.Dispatcher;
 import com.calclab.emite.client.packet.Event;
 
 public class Session {
@@ -16,12 +16,12 @@ public class Session {
 		connected, connecting, disconnected
 	}
 
-	private final IDispatcher dispatcher;
-	private final IGlobals globals;
+	private final Dispatcher dispatcher;
+	private final Globals globals;
 	private final ArrayList<SessionListener> listeners;
 	private State state;
 
-	public Session(final IGlobals globals, final IDispatcher dispatcher) {
+	public Session(final Globals globals, final Dispatcher dispatcher) {
 		this.globals = globals;
 		this.dispatcher = dispatcher;
 		state = State.disconnected;
@@ -42,11 +42,11 @@ public class Session {
 
 	}
 
-	public void setState(final State state) {
-		final State oldState = state;
-		this.state = state;
+	public void setState(final State newState) {
+		final State oldState = this.state;
+		this.state = newState;
 		for (final SessionListener listener : listeners) {
-			listener.onStateChanged(oldState, state);
+			listener.onStateChanged(oldState, newState);
 		}
 	}
 }

@@ -1,18 +1,18 @@
 package com.calclab.emite.client.x.im;
 
-import com.calclab.emite.client.IContainer;
-import com.calclab.emite.client.IDispatcher;
+import com.calclab.emite.client.Components;
 import com.calclab.emite.client.action.BussinessLogic;
+import com.calclab.emite.client.action.Dispatcher;
 import com.calclab.emite.client.bosh.IConnection;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.Message;
 import com.calclab.emite.client.plugin.FilterBuilder;
-import com.calclab.emite.client.plugin.Plugin2;
+import com.calclab.emite.client.plugin.Plugin;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
 
-public class ChatPlugin implements Plugin2 {
+public class ChatPlugin implements Plugin {
 
-	public static Chat getChat(final IContainer container) {
+	public static Chat getChat(final Components container) {
 		return (Chat) container.get("chat");
 	}
 
@@ -20,7 +20,7 @@ public class ChatPlugin implements Plugin2 {
 	final BussinessLogic installListener;
 	final BussinessLogic listenToIncomingMessages;
 
-	public ChatPlugin(final IConnection connection, final IDispatcher dispatcher) {
+	public ChatPlugin(final IConnection connection, final Dispatcher dispatcher) {
 		chat = new Chat(connection);
 
 		listenToIncomingMessages = new BussinessLogic() {
@@ -41,7 +41,7 @@ public class ChatPlugin implements Plugin2 {
 		};
 	}
 
-	public void start(final FilterBuilder when, final IContainer components) {
+	public void start(final FilterBuilder when, final Components components) {
 		components.register("chat", chat);
 
 		when.Event(SessionPlugin.Events.started).Do(installListener);

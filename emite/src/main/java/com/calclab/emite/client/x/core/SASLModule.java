@@ -1,16 +1,16 @@
 package com.calclab.emite.client.x.core;
 
-import com.calclab.emite.client.IContainer;
-import com.calclab.emite.client.IGlobals;
+import com.calclab.emite.client.Components;
+import com.calclab.emite.client.Globals;
 import com.calclab.emite.client.action.BussinessLogic;
 import com.calclab.emite.client.packet.BasicPacket;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.plugin.FilterBuilder;
-import com.calclab.emite.client.plugin.Plugin2;
+import com.calclab.emite.client.plugin.Plugin;
 import com.calclab.emite.client.utils.Base64Coder;
 
-public class SASLModule implements Plugin2 {
+public class SASLModule implements Plugin {
 	public static class Events {
 		public static final Event authorized = new Event("sasl:authorized");
 	}
@@ -19,7 +19,7 @@ public class SASLModule implements Plugin2 {
 
 	private final BussinessLogic authorization;
 
-	public SASLModule(final IGlobals globals) {
+	public SASLModule(final Globals globals) {
 		authorization = new BussinessLogic() {
 			public Packet logic(final Packet cathced) {
 				final Packet auth = createPlainAuthorization(globals);
@@ -31,7 +31,7 @@ public class SASLModule implements Plugin2 {
 				return Base64Coder.encodeString(auth);
 			}
 
-			private Packet createPlainAuthorization(final IGlobals globals) {
+			private Packet createPlainAuthorization(final Globals globals) {
 				final Packet auth = new BasicPacket("auth", "urn:ietf:params:xml:ns:xmpp-sasl").with("mechanism",
 						"PLAIN");
 				final String encoded = encode(globals.getDomain(), globals.getUserName(), globals.getPassword());
@@ -41,7 +41,7 @@ public class SASLModule implements Plugin2 {
 		};
 	}
 
-	public void start(final FilterBuilder when, final IContainer components) {
+	public void start(final FilterBuilder when, final Components components) {
 		when.Packet("stream:features").send(authorization);
 		when.Packet("success", "xmlns", "urn:ietf:params:xml:ns:xmpp-sasl").publish(Events.authorized);
 	}

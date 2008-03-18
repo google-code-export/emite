@@ -1,6 +1,6 @@
 package com.calclab.emite.client.plugin;
 
-import com.calclab.emite.client.IDispatcher;
+import com.calclab.emite.client.action.Dispatcher;
 import com.calclab.emite.client.bosh.IConnection;
 import com.calclab.emite.client.matcher.BasicMatcher;
 import com.calclab.emite.client.packet.Event;
@@ -8,9 +8,9 @@ import com.calclab.emite.client.packet.Event;
 public class FilterBuilder {
 
 	private final IConnection connection;
-	private final IDispatcher dispatcher;
+	private final Dispatcher dispatcher;
 
-	public FilterBuilder(final IDispatcher dispatcher, final IConnection connection) {
+	public FilterBuilder(final Dispatcher dispatcher, final IConnection connection) {
 		this.dispatcher = dispatcher;
 		this.connection = connection;
 	}

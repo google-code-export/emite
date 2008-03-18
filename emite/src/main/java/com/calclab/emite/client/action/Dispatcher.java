@@ -1,9 +1,8 @@
-package com.calclab.emite.client;
+package com.calclab.emite.client.action;
 
-import com.calclab.emite.client.action.Action;
 import com.calclab.emite.client.packet.Packet;
 
-public interface IDispatcher {
+public interface Dispatcher {
 
 	public void addListener(Action action);
 
