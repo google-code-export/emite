@@ -1,6 +1,7 @@
 package com.calclab.emite.client.bosh;
 
 import com.calclab.emite.client.log.Logger;
+import com.calclab.emite.client.packet.Packet;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -8,21 +9,21 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 
-public class Bosh {
+public class Bosh implements IConnection {
 	protected int inactivity;
 	private int concurrent;
 	private final RequestCallback defaultCallback;
 	private boolean isRunning;
-	private final BoshListener listener;
+	private final BoshListenerCollection listeners;
 	private final Logger logger;
 	private final BoshOptions options;
 	// TODO: problemas con long y GWT
 	private long rid;
 	private String sid;
 
-	public Bosh(final BoshOptions options, final BoshListener listener, final Logger logger) {
+	public Bosh(final BoshOptions options, final Logger logger) {
 		this.options = options;
-		this.listener = listener;
+		this.listeners = new BoshListenerCollection();
 		this.logger = logger;
 		// TODO: mejorar
 		this.rid = (long) (Math.random() * 1573741820);
@@ -34,20 +35,28 @@ public class Bosh {
 			public void onError(final Request req, final Throwable error) {
 				setRunning(false);
 				concurrent--;
-				listener.onError(error);
+				listeners.onError(error);
 			}
 
 			public void onResponseReceived(final Request req, final Response res) {
 				concurrent--;
 				// TODO: check if its a valid response
-				listener.onResponse(res.getText());
+				listeners.onResponse(res.getText());
 				keepItBusy();
 			}
 		};
 	}
 
+	public void addListener(final BoshListener listener) {
+		listeners.add(listener);
+	}
+
 	public void pause() {
 
+	}
+
+	public void removeListener(final BoshListener listener) {
+		listeners.remove(listener);
 	}
 
 	public void restart() {
@@ -60,10 +69,8 @@ public class Bosh {
 
 	}
 
-	public void send(final String stanza) {
-		rid++;
-		final String request = XMLHelper.wrap(stanza, rid, sid);
-		sendRequest(request, defaultCallback);
+	public void send(final Packet packet) {
+		send(packet.toString());
 	}
 
 	public void start() {
@@ -106,6 +113,12 @@ public class Bosh {
 		}.schedule(1000);
 	}
 
+	private void send(final String stanza) {
+		rid++;
+		final String request = XMLHelper.wrap(stanza, rid, sid);
+		sendRequest(request, defaultCallback);
+	}
+
 	private void sendEmpty() {
 		rid++;
 		final String request = XMLHelper.empty(rid, sid, inactivity);
@@ -118,9 +131,9 @@ public class Bosh {
 			concurrent++;
 			builder.sendRequest(request, callback);
 		} catch (final RequestException e) {
-			listener.onError(e);
+			listeners.onError(e);
 		}
-		listener.onRequest(request);
+		listeners.onRequest(request);
 	}
 
 	private void setRunning(final boolean isRunning) {

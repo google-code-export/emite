@@ -4,10 +4,9 @@ import com.calclab.emite.client.packet.Packet;
 
 public class Presence extends BasicStanza {
 
-	public static final String SHOW_AWAY = "away";
-	public static final String SHOW_BUSY = "dnd";
-	public static final String SHOW_CHAT = "chat";
-	public static final String SHOW_XA = "xa";
+	public static enum Show {
+		away, chat, dnd, xa
+	}
 
 	public Presence(final Packet stanza) {
 		super(stanza);
@@ -18,12 +17,17 @@ public class Presence extends BasicStanza {
 		setFrom(from);
 	}
 
-	public void setShow(final String showValue) {
+	public void setShow(final Show value) {
 		Packet show = getFirstChildren("show");
 		if (show == null) {
 			show = add("show", null);
 		}
-		show.setText(showValue);
+		show.setText(value.toString());
+	}
+
+	public Presence With(final Show value) {
+		setShow(value);
+		return this;
 	}
 
 }

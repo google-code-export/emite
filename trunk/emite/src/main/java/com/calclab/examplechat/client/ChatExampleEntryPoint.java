@@ -4,12 +4,13 @@ import java.util.List;
 
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.bosh.BoshOptions;
-import com.calclab.emite.client.connection.ConnectionListener;
-import com.calclab.emite.client.im.MessageListener;
-import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emite.client.im.roster.RosterListener;
 import com.calclab.emite.client.log.LoggerOutput;
 import com.calclab.emite.client.packet.stanza.Message;
+import com.calclab.emite.client.x.im.MessageListener;
+import com.calclab.emite.client.x.im.roster.RosterItem;
+import com.calclab.emite.client.x.im.roster.RosterListener;
+import com.calclab.emite.client.x.im.session.SessionListener;
+import com.calclab.emite.client.x.im.session.Session.State;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -46,21 +47,19 @@ public class ChatExampleEntryPoint implements EntryPoint {
 			}
 		});
 
-		xmpp.addConnectionListener(new ConnectionListener() {
-			public void onConnected() {
-				print("CONNECTION - connected");
-				btnLogin.setEnabled(false);
-				btnLogout.setEnabled(true);
-			}
-
-			public void onConnecting() {
-				print("CONNECTION - connecting");
-			}
-
-			public void onDisconnected() {
-				print("CONNECTION - disconnected");
-				btnLogin.setEnabled(false);
-				btnLogout.setEnabled(true);
+		xmpp.addSessionListener(new SessionListener() {
+			public void onStateChanged(final State old, final State current) {
+				print("STATE CHANGED: " + current + " - old: " + old);
+				switch (current) {
+				case connected:
+					btnLogin.setEnabled(false);
+					btnLogout.setEnabled(true);
+				case connecting:
+					btnLogin.setEnabled(false);
+				case disconnected:
+					btnLogin.setEnabled(true);
+					btnLogout.setEnabled(false);
+				}
 			}
 		});
 

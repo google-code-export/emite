@@ -1,18 +1,24 @@
 package com.calclab.emite.client.plugin;
 
-import com.calclab.emite.client.Engine;
+import com.calclab.emite.client.IContainer;
 
-public class PluginManager {
-	private final Engine engine;
+/**
+ * @author dani
+ */
+public class PluginManager implements IPluginManager {
 
-	public PluginManager(final Engine engine) {
-		this.engine = engine;
+	private final IContainer container;
+
+	public PluginManager(final IContainer container) {
+		this.container = container;
 	}
 
-	public void install(final Plugin... modules) {
-		for (final Plugin m : modules) {
-			m.start(engine);
-		}
+	public void install(final String name, final Plugin2 plugin) {
+		final FilterBuilder when = null;
+		plugin.start(when, container);
 	}
 
+	public void uninstall(final String name) {
+		throw new RuntimeException("not implemented");
+	}
 }
