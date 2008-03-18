@@ -8,12 +8,12 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 
 import com.calclab.emite.client.log.Logger;
 
-public class SimpleConnector implements Connector {
+public class TestingConnector implements Connector {
 
 	private final HttpClient client;
 	private final Logger logger;
 
-	public SimpleConnector(final Logger logger) {
+	public TestingConnector(final Logger logger) {
 		this.logger = logger;
 		final HttpClientParams params = new HttpClientParams();
 		params.setConnectionManagerTimeout(2000);
@@ -22,10 +22,20 @@ public class SimpleConnector implements Connector {
 	}
 
 	public void schedule(final Delayed delayed, final int msecs) {
-
+		final Runnable r = new Runnable() {
+			public synchronized void run() {
+				try {
+					wait(msecs);
+					delayed.run();
+				} catch (InterruptedException e) {
+					logger.debug("Schedule exception {0}", e);
+				}
+			}
+		};
+		new Thread(r).start();
 	}
 
-	public void send(final String httpBase, final String xml, final ConnectorCallback callback)
+	public synchronized void send(final String httpBase, final String xml, final ConnectorCallback callback)
 			throws ConnectorException {
 		final Runnable process = new Runnable() {
 			public void run() {
@@ -33,11 +43,11 @@ public class SimpleConnector implements Connector {
 
 				try {
 					post.setRequestEntity(new StringRequestEntity(xml, "text/xml", "utf-8"));
-					logger.debug("HttpClientConnector:send {0} - {1}", post.toString(), xml);
+					logger.debug("HttpClientConnector:sending");
 					int status = client.executeMethod(post);
 					if (status == HttpStatus.SC_OK) {
 						String response = post.getResponseBodyAsString();
-						logger.debug("HttpClientConnector:response {0}", response);
+						logger.debug("HttpClientConnector:RESPONSE!");
 						callback.onResponseReceived(post.getStatusCode(), response);
 					} else {
 						logger.debug("Bad HttpStatus: {0}", status);
@@ -48,12 +58,11 @@ public class SimpleConnector implements Connector {
 					callback.onError(e);
 				} finally {
 					post.releaseConnection();
-					logger.debug("End of request");
+					logger.debug("HttpClientConnector:End of request");
 				}
 			}
 		};
 		new Thread(process).start();
 
 	}
-
 }

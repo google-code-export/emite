@@ -28,13 +28,13 @@ public class XMLPacket implements Packet {
 		return element.getAttribute(name);
 	}
 
+	public List<? extends Packet> getChildren() {
+		return wrap(element.getChildNodes());
+	}
+
 	public List<Packet> getChildren(final String name) {
-		final ArrayList<Packet> selected = new ArrayList<Packet>();
 		final NodeList nodes = element.getElementsByTagName(name);
-		for (int index = 0; index < nodes.getLength(); index++) {
-			selected.add(new XMLPacket((Element) nodes.item(index)));
-		}
-		return selected;
+		return wrap(nodes);
 	}
 
 	public Packet getFirstChildren(final String childName) {
@@ -44,6 +44,10 @@ public class XMLPacket implements Packet {
 
 	public String getName() {
 		return element.getNodeName();
+	}
+
+	public Packet getParent() {
+		return new XMLPacket((Element) element.getParentNode());
 	}
 
 	public String getText() {
@@ -70,6 +74,14 @@ public class XMLPacket implements Packet {
 	public Packet with(final String name, final String value) {
 		setAttribute(name, value);
 		return this;
+	}
+
+	private List<Packet> wrap(final NodeList nodes) {
+		final ArrayList<Packet> selected = new ArrayList<Packet>();
+		for (int index = 0; index < nodes.getLength(); index++) {
+			selected.add(new XMLPacket((Element) nodes.item(index)));
+		}
+		return selected;
 	}
 
 }

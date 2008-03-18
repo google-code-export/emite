@@ -38,6 +38,7 @@ public class Bosh implements IConnection {
 			}
 
 			public void onResponseReceived(final int statusCode, final String content) {
+				logger.debug("BOSH we have response: {0}", content);
 				concurrent--;
 				// TODO: check if its a valid response
 				listeners.onResponse(content);

@@ -15,6 +15,8 @@ public interface Packet {
 
 	String getAttribute(String name);
 
+	List<? extends Packet> getChildren();
+
 	/**
 	 * Return all the descendant childs with node name
 	 * 
@@ -25,6 +27,8 @@ public interface Packet {
 	Packet getFirstChildren(String childName);
 
 	String getName();
+
+	Packet getParent();
 
 	String getText();
 

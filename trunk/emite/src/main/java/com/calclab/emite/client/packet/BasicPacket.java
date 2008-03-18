@@ -8,6 +8,7 @@ public class BasicPacket implements Packet {
 	private final HashMap<String, String> attributes;
 	private final ArrayList<BasicPacket> children;
 	private final String name;
+	private BasicPacket parent;
 
 	public BasicPacket(final String name, final String xmlns) {
 		this.name = name;
@@ -16,10 +17,12 @@ public class BasicPacket implements Packet {
 		if (xmlns != null) {
 			setAttribute("xmlns", xmlns);
 		}
+		parent = null;
 	}
 
 	public Packet add(final String name, final String xmlns) {
 		final BasicPacket child = new BasicPacket(name, xmlns);
+		child.parent = this;
 		add(child);
 		return child;
 	}
@@ -31,6 +34,10 @@ public class BasicPacket implements Packet {
 
 	public String getAttribute(final String name) {
 		return attributes.get(name);
+	}
+
+	public List<? extends Packet> getChildren() {
+		return children;
 	}
 
 	public List<Packet> getChildren(final String name) {
@@ -54,6 +61,10 @@ public class BasicPacket implements Packet {
 
 	public String getName() {
 		return name;
+	}
+
+	public Packet getParent() {
+		return parent;
 	}
 
 	/**
