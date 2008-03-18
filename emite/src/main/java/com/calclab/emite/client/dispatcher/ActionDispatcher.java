@@ -32,10 +32,12 @@ public class ActionDispatcher implements Dispatcher, BoshListener {
 
 	public void onResponse(final String response) {
 		logger.debug("RESPONSE: \n {0}", response);
+		logger.debug("DISPATCHER LOOP BEGINS");
 		final List<? extends Packet> stanzas = parser.extractStanzas(response);
 		for (final Packet stanza : stanzas) {
 			fireStanza(stanza, commands);
 		}
+		logger.debug("DISPATCHER LOOP ENDS");
 	}
 
 	public void publish(final Packet stanza) {

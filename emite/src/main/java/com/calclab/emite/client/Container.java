@@ -4,7 +4,6 @@ import com.calclab.emite.client.bosh.Bosh;
 import com.calclab.emite.client.bosh.BoshOptions;
 import com.calclab.emite.client.connector.Connector;
 import com.calclab.emite.client.dispatcher.ActionDispatcher;
-import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.dispatcher.Parser;
 import com.calclab.emite.client.log.LoggerAdapter;
 import com.calclab.emite.client.log.LoggerOutput;
@@ -24,8 +23,10 @@ public class Container {
 	}
 
 	public Components createComponents(final Parser parser, final Connector connector, final BoshOptions options) {
-		final Dispatcher dispatcher = new ActionDispatcher(parser, c.getLogger());
-		c.setConnection(new Bosh(connector, options, c.getLogger()));
+		final ActionDispatcher dispatcher = new ActionDispatcher(parser, c.getLogger());
+		final Bosh bosh = new Bosh(connector, options, c.getLogger());
+		bosh.addListener(dispatcher);
+		c.setConnection(bosh);
 
 		c.setGlobals(new HashGlobals());
 		c.setDispatcher(dispatcher);

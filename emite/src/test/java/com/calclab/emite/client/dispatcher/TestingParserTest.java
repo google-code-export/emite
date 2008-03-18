@@ -24,6 +24,12 @@ public class TestingParserTest {
 		final TestingParser parser = new TestingParser(TestHelper.createLogger());
 		final List<? extends Packet> stanzas = parser.extractStanzas(response);
 		assertEquals(1, stanzas.size());
-
+		final Packet features = stanzas.get(0);
+		assertEquals("stream:features", features.getName());
+		final Packet mechanisms = features.getChildren().get(0);
+		assertEquals("mechanisms", mechanisms.getName());
+		final Packet mec1 = mechanisms.getChildren().get(0);
+		assertEquals("mechanism", mec1.getName());
+		assertEquals("DIGEST-MD5", mec1.getText());
 	}
 }
