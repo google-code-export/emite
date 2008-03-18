@@ -43,14 +43,14 @@ public class TestingConnector implements Connector {
 
 				try {
 					post.setRequestEntity(new StringRequestEntity(xml, "text/xml", "utf-8"));
-					logger.debug("HttpClientConnector:sending");
+					logger.debug("HttpClientConnector {0} SEND", this.hashCode());
 					int status = client.executeMethod(post);
 					if (status == HttpStatus.SC_OK) {
 						String response = post.getResponseBodyAsString();
-						logger.debug("HttpClientConnector:RESPONSE!");
+						logger.debug("HttpClientConnector {0} RESPONSE!", this.hashCode());
 						callback.onResponseReceived(post.getStatusCode(), response);
 					} else {
-						logger.debug("Bad HttpStatus: {0}", status);
+						logger.debug("HttpClientConnector {0} Bad HttpStatus: {1}", this.hashCode(), status);
 						callback.onError(new Exception("bad http status " + status));
 					}
 				} catch (Exception e) {

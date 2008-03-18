@@ -27,10 +27,6 @@ public class TestHelper {
 		return new Xmpp(c.getComponents());
 	}
 
-	public static TestingConn getConnection(final Xmpp xmpp) {
-		return (TestingConn) xmpp.getComponents().getConnection();
-	}
-
 	private static LoggerOutput createLoggerOutput() {
 		return new LoggerOutput() {
 			public void log(final int level, final String message) {

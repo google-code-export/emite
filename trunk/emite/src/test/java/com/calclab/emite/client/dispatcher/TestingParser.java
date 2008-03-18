@@ -1,10 +1,13 @@
 package com.calclab.emite.client.dispatcher;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
-import com.calclab.emite.client.dispatcher.parser.ParserException;
-import com.calclab.emite.client.dispatcher.parser.SimpleBuilder;
-import com.calclab.emite.client.dispatcher.parser.SimpleParser;
+import tigase.xml.DomBuilderHandler;
+import tigase.xml.Element;
+import tigase.xml.SimpleParser;
+
 import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.packet.Packet;
 
@@ -12,33 +15,24 @@ public class TestingParser implements Parser {
 	private final SimpleParser parser;
 
 	public TestingParser(final Logger logger) {
-		final SimpleBuilder builder = new SimpleBuilder();
-		parser = new SimpleParser(builder, logger);
+		parser = new SimpleParser();
 	}
 
 	public List<? extends Packet> extractStanzas(final String xml) {
 
-		Packet parsed;
-		try {
-			parsed = parser.parse(xml);
-			return parsed.getChildren();
-		} catch (final ParserException e) {
-			e.printStackTrace();
-			return null;
+		final DomBuilderHandler handler = new DomBuilderHandler();
+		parser.parse(handler, xml.toCharArray(), 0, xml.length());
+		final Queue<Element> parsedElements = handler.getParsedElements();
+
+		final Element root = parsedElements.poll();
+		// skip body node
+		final List<Element> elements = root.getChildren(); // root.getChildren().get(0).getChildren();
+		final ArrayList<Packet> stanzas = new ArrayList<Packet>();
+		for (int index = 0; index < elements.size(); index++) {
+			stanzas.add(new TigasePacket(elements.get(0)));
 		}
 
-		// skip body node
-
-		// final NodeList childNodes =
-		// parsed.getChildNodes().item(0).getChildNodes();
-		// final ArrayList<Packet> stanzas = new ArrayList<Packet>();
-		// for (int index = 0; index < childNodes.getLength(); index++) {
-		// child = childNodes.item(index);
-		// if (child.getNodeType() == Node.ELEMENT_NODE) {
-		// stanzas.add(new XMLPacket((Element) child));
-		// }
-		// }
-		// return stanzas;
+		return stanzas;
 
 	}
 }
