@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.calclab.emite.client.action.Dispatcher;
+import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.BasicPacket;
 import com.calclab.emite.client.packet.stanza.IQ;
 import com.calclab.emite.client.x.im.session.Session;

@@ -1,5 +1,6 @@
 package com.calclab.emite.client.action;
 
+import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.Packet;
 
 public class PublishAction implements Action {

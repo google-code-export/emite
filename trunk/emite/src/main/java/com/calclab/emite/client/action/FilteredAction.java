@@ -13,9 +13,7 @@ public class FilteredAction implements Action {
 	}
 
 	public void handle(final Packet stanza) {
-		// System.out.println("filter: " + matcher.toString() + " : " + stanza);
 		if (matcher.matches(stanza)) {
-			// System.out.println("!!!");
 			command.handle(stanza);
 		}
 	}
