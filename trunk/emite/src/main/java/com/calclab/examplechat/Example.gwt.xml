@@ -1,6 +1,32 @@
 <module>
-	<!-- other inherited modules, such as com.google.gwt.user.User -->
-	<inherits name="com.google.gwt.user.User" />
-	<inherits name="com.calclab.emite.Emite" />
-	<entry-point class="com.calclab.examplechat.client.ChatExampleEntryPoint" />
+        <!-- other inherited modules, such as com.google.gwt.user.User -->
+        <inherits name="com.google.gwt.user.User" />
+        <inherits name="com.calclab.emite.Emite" />
+        <inherits name="com.allen_sauer.gwt.log.gwt-log" />
+
+        <entry-point class="com.calclab.examplechat.client.ChatExampleEntryPoint" />
+
+
+    <!--
+      The default log level is `OFF`. In development you'll usually want
+      to switch to `DEBUG` level logging.
+    -->
+    <extend-property name="log_level" values="DEBUG" />
+    <set-property name="log_level" value="DEBUG" />
+
+    <set-property name="log_DivLogger" value="ENABLED" />
+    <set-property name="log_FirebugLogger" value="DISABLED" />
+
+    <!--
+      Alternatively, you may want to generate two or more combinations,
+      at the cost of increased compile time.
+
+      However, please note that the runtime default will still be `OFF`.
+
+      To compile both an `OFF` (production) and a `DEBUG` (development)
+      version of your application:
+
+      <extend-property name="log_level" values="DEBUG,OFF" />
+    -->
+
 </module>
