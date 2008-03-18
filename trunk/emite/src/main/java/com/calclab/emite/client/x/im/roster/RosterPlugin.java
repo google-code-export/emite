@@ -2,17 +2,17 @@ package com.calclab.emite.client.x.im.roster;
 
 import java.util.List;
 
-import com.calclab.emite.client.IContainer;
+import com.calclab.emite.client.Components;
 import com.calclab.emite.client.action.BussinessLogic;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
 import com.calclab.emite.client.plugin.FilterBuilder;
-import com.calclab.emite.client.plugin.Plugin2;
+import com.calclab.emite.client.plugin.Plugin;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
 
-public class RosterPlugin implements Plugin2 {
+public class RosterPlugin implements Plugin {
 
-	public static Roster getRoster(final IContainer components) {
+	public static Roster getRoster(final Components components) {
 		return (Roster) components.get("roster");
 	}
 
@@ -47,7 +47,7 @@ public class RosterPlugin implements Plugin2 {
 		};
 	}
 
-	public void start(final FilterBuilder when, final IContainer components) {
+	public void start(final FilterBuilder when, final Components components) {
 		components.register("roster", roster);
 
 		when.Event(SessionPlugin.Events.started).send(requestRoster);

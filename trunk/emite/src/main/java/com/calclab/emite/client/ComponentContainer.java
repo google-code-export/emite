@@ -2,14 +2,17 @@ package com.calclab.emite.client;
 
 import java.util.HashMap;
 
+import com.calclab.emite.client.action.Dispatcher;
 import com.calclab.emite.client.bosh.IConnection;
 import com.calclab.emite.client.log.Logger;
+import com.calclab.emite.client.plugin.PluginManager;
 
-public class Container extends HashMap<String, Object> implements IContainer {
+public class ComponentContainer extends HashMap<String, Object> implements Components {
 	private static final String CONNECTION = "connection";
 	private static final String DISPATCHER = "dispatcher";
 	private static final String GLOBALS = "globals";
 	private static final String LOGGER = "logger";
+	private static final String PLUGIN_MANAGER = "pluginManager";
 	private static final long serialVersionUID = 1L;
 
 	public Object get(final String componentName) {
@@ -20,12 +23,20 @@ public class Container extends HashMap<String, Object> implements IContainer {
 		return (IConnection) get(CONNECTION);
 	}
 
-	public IDispatcher getDispatcher() {
-		return (IDispatcher) get(DISPATCHER);
+	public Dispatcher getDispatcher() {
+		return (Dispatcher) get(DISPATCHER);
 	}
 
-	public IGlobals getGlobals() {
-		return (IGlobals) get(GLOBALS);
+	public Globals getGlobals() {
+		return (Globals) get(GLOBALS);
+	}
+
+	public Logger getLogger() {
+		return (Logger) get(LOGGER);
+	}
+
+	public PluginManager getPluginManager() {
+		return (PluginManager) get(PLUGIN_MANAGER);
 	}
 
 	public void register(final String name, final Object component) {
@@ -36,15 +47,20 @@ public class Container extends HashMap<String, Object> implements IContainer {
 		register(CONNECTION, bosh);
 	}
 
-	public void setDispatcher(final IDispatcher dispatcher) {
+	public void setDispatcher(final Dispatcher dispatcher) {
 		register(DISPATCHER, dispatcher);
 	}
 
-	public void setGlobals(final IGlobals globals) {
+	public void setGlobals(final Globals globals) {
 		register(GLOBALS, globals);
 	}
 
 	public void setLogger(final Logger logger) {
 		register(LOGGER, logger);
+	}
+
+	public void setPluginManager(final PluginManager pluginManager) {
+		register(PLUGIN_MANAGER, pluginManager);
+
 	}
 }

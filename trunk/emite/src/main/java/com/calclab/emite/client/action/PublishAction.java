@@ -1,22 +1,21 @@
 package com.calclab.emite.client.action;
 
-import com.calclab.emite.client.IDispatcher;
 import com.calclab.emite.client.packet.Packet;
 
 public class PublishAction implements Action {
-	private final IDispatcher dispatcher;
+	private final Dispatcher dispatcher;
 	private final BussinessLogic logic;
 	private final Packet packet;
 
-	public PublishAction(final IDispatcher dispatcher, final BussinessLogic logic) {
+	public PublishAction(final Dispatcher dispatcher, final BussinessLogic logic) {
 		this(dispatcher, logic, null);
 	}
 
-	public PublishAction(final IDispatcher dispatcher, final Packet packet) {
+	public PublishAction(final Dispatcher dispatcher, final Packet packet) {
 		this(dispatcher, null, packet);
 	}
 
-	PublishAction(final IDispatcher dispatcher, final BussinessLogic logic, final Packet packet) {
+	PublishAction(final Dispatcher dispatcher, final BussinessLogic logic, final Packet packet) {
 		this.dispatcher = dispatcher;
 		this.logic = logic;
 		this.packet = packet;

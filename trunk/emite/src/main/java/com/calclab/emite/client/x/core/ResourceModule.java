@@ -1,15 +1,15 @@
 package com.calclab.emite.client.x.core;
 
-import com.calclab.emite.client.Globals;
-import com.calclab.emite.client.IContainer;
+import com.calclab.emite.client.HashGlobals;
+import com.calclab.emite.client.Components;
 import com.calclab.emite.client.action.BussinessLogic;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
 import com.calclab.emite.client.plugin.FilterBuilder;
-import com.calclab.emite.client.plugin.Plugin2;
+import com.calclab.emite.client.plugin.Plugin;
 
-public class ResourceModule implements Plugin2 {
+public class ResourceModule implements Plugin {
 
 	public static class Events {
 		public static final Event binded = new Event("resource:binded");
@@ -18,7 +18,7 @@ public class ResourceModule implements Plugin2 {
 	final BussinessLogic requestResourceBinding;
 	final BussinessLogic resourceBinded;
 
-	public ResourceModule(final Globals globals) {
+	public ResourceModule(final HashGlobals hashGlobals) {
 		requestResourceBinding = new BussinessLogic() {
 			public Packet logic(final Packet cathced) {
 				final IQ iq = new IQ("bindRequest", IQ.Type.set);
@@ -30,13 +30,13 @@ public class ResourceModule implements Plugin2 {
 		resourceBinded = new BussinessLogic() {
 			public Packet logic(final Packet iq) {
 				final String jid = iq.getFirstChildren("bind").getFirstChildren("jid").getText();
-				globals.setJID(jid);
+				hashGlobals.setJID(jid);
 				return Events.binded;
 			}
 		};
 	}
 
-	public void start(final FilterBuilder when, final IContainer components) {
+	public void start(final FilterBuilder when, final Components components) {
 		when.Event(SASLModule.Events.authorized).send(requestResourceBinding);
 
 		when.IQ("bindRequest").publish(resourceBinded);

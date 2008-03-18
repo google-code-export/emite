@@ -1,41 +1,15 @@
 package com.calclab.emite.client;
 
-import java.util.HashMap;
+public interface Globals {
+	String getDomain();
 
-public class Globals extends HashMap<String, String> implements IGlobals {
-	private static final String DOMAIN = "domain";
-	private static final String JID = "jid";
-	private static final String PASSWORD = "password";
-	private static final String USER_NAME = "userName";
-	private static final long serialVersionUID = 1L;
+	String getJID();
 
-	public String getDomain() {
-		return get(DOMAIN);
-	}
+	String getPassword();
 
-	public String getJID() {
-		return get(JID);
-	}
+	String getUserName();
 
-	public String getPassword() {
-		return get(PASSWORD);
-	}
+	void setPassword(String password);
 
-	public String getUserName() {
-		return get(USER_NAME);
-	}
-
-	public void setJID(final String jid) {
-		put(JID, jid);
-	}
-
-	public void setPassword(final String password) {
-		put(PASSWORD, password);
-	}
-
-	public void setUserName(final String userName) {
-		put(USER_NAME, userName);
-
-	}
-
+	void setUserName(String userName);
 }

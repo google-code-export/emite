@@ -1,8 +1,8 @@
 package com.calclab.emite.client.plugin;
 
-import com.calclab.emite.client.IDispatcher;
 import com.calclab.emite.client.action.BussinessLogic;
 import com.calclab.emite.client.action.FilteredCommand;
+import com.calclab.emite.client.action.Dispatcher;
 import com.calclab.emite.client.action.LogicAction;
 import com.calclab.emite.client.action.PublishAction;
 import com.calclab.emite.client.action.SendAction;
@@ -12,10 +12,10 @@ import com.calclab.emite.client.packet.Packet;
 
 public class ActionBuilder {
 	private final IConnection connection;
-	private final IDispatcher dispatcher;
+	private final Dispatcher dispatcher;
 	private final Matcher matcher;
 
-	ActionBuilder(final Matcher matcher, final IDispatcher dispatcher, final IConnection connection) {
+	ActionBuilder(final Matcher matcher, final Dispatcher dispatcher, final IConnection connection) {
 		this.matcher = matcher;
 		this.dispatcher = dispatcher;
 		this.connection = connection;

@@ -1,8 +1,7 @@
-package com.calclab.emite.client;
+package com.calclab.emite.client.action;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.action.Action;
 import com.calclab.emite.client.bosh.BoshListener;
 import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.packet.Packet;
@@ -13,7 +12,7 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
-public class ActionDispatcher implements IDispatcher, BoshListener {
+public class ActionDispatcher implements Dispatcher, BoshListener {
 	private final ArrayList<Action> commands;
 	private final Logger logger;
 
