@@ -41,7 +41,7 @@ public class ActionDispatcher implements Dispatcher, BoshListener {
 	}
 
 	public void publish(final Packet stanza) {
-		logger.debug("EVENT: \n {0}", stanza);
+		logger.debug("PUBLISHED: \n {0}", stanza);
 		fireStanza(stanza, commands);
 	}
 

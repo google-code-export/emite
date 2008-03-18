@@ -28,4 +28,11 @@ public class BasicMatcher implements Matcher {
 		}
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		final String name = attName == null ? "null" : attName;
+		final String value = attValue == null ? "null" : attValue;
+		return "[Matcher: " + regex + " (" + name + "," + value + ")]";
+	}
 }

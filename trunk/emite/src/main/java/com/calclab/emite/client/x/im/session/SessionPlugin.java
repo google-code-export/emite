@@ -56,7 +56,7 @@ public class SessionPlugin implements Plugin {
 
 		when.Event(ResourceModule.Events.binded).send(requestSession);
 
-		when.IQ("sess_1").publish(SessionPlugin.Events.started);
+		when.IQ("requestSession").publish(SessionPlugin.Events.started);
 
 	}
 }
