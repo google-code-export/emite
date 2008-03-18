@@ -15,7 +15,7 @@ import com.calclab.emite.client.x.im.session.SessionPlugin;
 public class Xmpp {
 
 	public static Xmpp create(final BoshOptions options, final LoggerOutput output) {
-		final Components components = XMPPPlugin.createContainer(output);
+		final Components components = XMPPPlugin.createComponents(output);
 		components.setConnection(new Bosh(options, components.getLogger()));
 		XMPPPlugin.installPlugins(components);
 		return new Xmpp(components);
@@ -24,14 +24,7 @@ public class Xmpp {
 	private final Components components;
 	private final Session session;
 
-	/**
-	 * TODO: pluginManager se usará para desintalar los plugins (si se
-	 * necesitase)
-	 * 
-	 * @param queue
-	 * @param pluginManager
-	 */
-	private Xmpp(final Components components) {
+	public Xmpp(final Components components) {
 		this.components = components;
 		this.session = SessionPlugin.getSession(components);
 	}

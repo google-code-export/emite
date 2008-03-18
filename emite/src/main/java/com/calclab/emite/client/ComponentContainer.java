@@ -11,9 +11,13 @@ public class ComponentContainer extends HashMap<String, Object> implements Compo
 	private static final String CONNECTION = "connection";
 	private static final String DISPATCHER = "dispatcher";
 	private static final String GLOBALS = "globals";
-	private static final String LOGGER = "logger";
 	private static final String PLUGIN_MANAGER = "pluginManager";
 	private static final long serialVersionUID = 1L;
+	private final Logger logger;
+
+	public ComponentContainer(final Logger logger) {
+		this.logger = logger;
+	}
 
 	public Object get(final String componentName) {
 		return super.get(componentName);
@@ -32,7 +36,7 @@ public class ComponentContainer extends HashMap<String, Object> implements Compo
 	}
 
 	public Logger getLogger() {
-		return (Logger) get(LOGGER);
+		return logger;
 	}
 
 	public PluginManager getPluginManager() {
@@ -40,6 +44,7 @@ public class ComponentContainer extends HashMap<String, Object> implements Compo
 	}
 
 	public void register(final String name, final Object component) {
+		logger.log(Logger.DEBUG, "Registering component '{0}'", name);
 		super.put(name, component);
 	}
 
@@ -53,10 +58,6 @@ public class ComponentContainer extends HashMap<String, Object> implements Compo
 
 	public void setGlobals(final Globals globals) {
 		register(GLOBALS, globals);
-	}
-
-	public void setLogger(final Logger logger) {
-		register(LOGGER, logger);
 	}
 
 	public void setPluginManager(final PluginManager pluginManager) {
