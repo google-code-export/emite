@@ -8,10 +8,10 @@ import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
-import com.calclab.emite.client.plugin.FilterBuilder;
 import com.calclab.emite.client.plugin.Plugin;
-import com.calclab.emite.client.x.core.ResourceModule;
-import com.calclab.emite.client.x.core.SASLModule;
+import com.calclab.emite.client.plugin.dsl.FilterBuilder;
+import com.calclab.emite.client.x.core.ResourcePlugin;
+import com.calclab.emite.client.x.core.SASLPlugin;
 
 /**
  * TODO: better plugin system!!!
@@ -77,9 +77,9 @@ public class SessionPlugin implements Plugin {
 
 		when.Event(Session.Events.login).Do(startConnection);
 
-		when.Event(SASLModule.Events.authorized).Do(setAuthorizedState);
+		when.Event(SASLPlugin.Events.authorized).Do(setAuthorizedState);
 
-		when.Event(ResourceModule.Events.binded).send(requestSession);
+		when.Event(ResourcePlugin.Events.binded).send(requestSession);
 
 		when.IQ("requestSession").publish(setStartedState);
 

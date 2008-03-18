@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.calclab.emite.client.Components;
 import com.calclab.emite.client.log.Logger;
+import com.calclab.emite.client.plugin.dsl.FilterBuilder;
 
 /**
  * @author dani

@@ -30,6 +30,8 @@ public class ActionDispatcher implements Dispatcher, BoshListener {
 	public void onRequest(final String request) {
 	}
 
+	// FIXME: this should be responsability of the BoshPlugin
+	// dispacher should not know anything from XML!!!
 	public void onResponse(final String response) {
 		logger.info("RESPONSE: \n {0}", response);
 		logger.debug("DISPATCHER LOOP BEGINS");

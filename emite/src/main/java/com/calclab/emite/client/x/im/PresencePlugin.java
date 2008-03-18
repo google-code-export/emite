@@ -3,8 +3,8 @@ package com.calclab.emite.client.x.im;
 import com.calclab.emite.client.Components;
 import com.calclab.emite.client.Globals;
 import com.calclab.emite.client.packet.stanza.Presence;
-import com.calclab.emite.client.plugin.FilterBuilder;
 import com.calclab.emite.client.plugin.Plugin;
+import com.calclab.emite.client.plugin.dsl.FilterBuilder;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
 
 public class PresencePlugin implements Plugin {

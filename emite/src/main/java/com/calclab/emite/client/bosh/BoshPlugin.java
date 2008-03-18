@@ -6,9 +6,9 @@ import com.calclab.emite.client.action.BussinessLogic;
 import com.calclab.emite.client.connector.Connector;
 import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.plugin.FilterBuilder;
 import com.calclab.emite.client.plugin.Plugin;
-import com.calclab.emite.client.x.core.SASLModule;
+import com.calclab.emite.client.plugin.dsl.FilterBuilder;
+import com.calclab.emite.client.x.core.SASLPlugin;
 
 public class BoshPlugin implements Plugin {
 	private final Bosh bosh;
@@ -32,7 +32,7 @@ public class BoshPlugin implements Plugin {
 	}
 
 	public void start(final FilterBuilder when) {
-		when.Event(SASLModule.Events.authorized).Do(restartStream);
+		when.Event(SASLPlugin.Events.authorized).Do(restartStream);
 	}
 
 }

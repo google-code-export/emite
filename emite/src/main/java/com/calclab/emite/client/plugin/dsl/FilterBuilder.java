@@ -1,4 +1,4 @@
-package com.calclab.emite.client.plugin;
+package com.calclab.emite.client.plugin.dsl;
 
 import com.calclab.emite.client.Components;
 import com.calclab.emite.client.action.BussinessLogic;
