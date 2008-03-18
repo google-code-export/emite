@@ -6,8 +6,8 @@ import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.Message;
-import com.calclab.emite.client.plugin.FilterBuilder;
 import com.calclab.emite.client.plugin.Plugin;
+import com.calclab.emite.client.plugin.dsl.FilterBuilder;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
 
 public class ChatPlugin implements Plugin {

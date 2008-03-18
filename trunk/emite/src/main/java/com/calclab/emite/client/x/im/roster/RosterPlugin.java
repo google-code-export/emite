@@ -6,8 +6,8 @@ import com.calclab.emite.client.Components;
 import com.calclab.emite.client.action.BussinessLogic;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
-import com.calclab.emite.client.plugin.FilterBuilder;
 import com.calclab.emite.client.plugin.Plugin;
+import com.calclab.emite.client.plugin.dsl.FilterBuilder;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
 
 public class RosterPlugin implements Plugin {

@@ -8,8 +8,8 @@ import com.calclab.emite.client.dispatcher.Parser;
 import com.calclab.emite.client.log.LoggerAdapter;
 import com.calclab.emite.client.log.LoggerOutput;
 import com.calclab.emite.client.plugin.DefaultPluginManager;
-import com.calclab.emite.client.x.core.ResourceModule;
-import com.calclab.emite.client.x.core.SASLModule;
+import com.calclab.emite.client.x.core.ResourcePlugin;
+import com.calclab.emite.client.x.core.SASLPlugin;
 import com.calclab.emite.client.x.im.ChatPlugin;
 import com.calclab.emite.client.x.im.roster.RosterPlugin;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
@@ -36,8 +36,8 @@ public class Container {
 		manager.install("chat", new ChatPlugin(c.getConnection(), c.getDispatcher()));
 		manager.install("session", new SessionPlugin(c.getGlobals(), c.getDispatcher(), c.getConnection()));
 		manager.install("roster", new RosterPlugin());
-		manager.install("sasl", new SASLModule(c.getGlobals()));
-		manager.install("resource", new ResourceModule(c.getGlobals()));
+		manager.install("sasl", new SASLPlugin(c.getGlobals()));
+		manager.install("resource", new ResourcePlugin(c.getGlobals()));
 
 		manager.start();
 	}

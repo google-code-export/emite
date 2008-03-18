@@ -6,10 +6,10 @@ import com.calclab.emite.client.action.BussinessLogic;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
-import com.calclab.emite.client.plugin.FilterBuilder;
 import com.calclab.emite.client.plugin.Plugin;
+import com.calclab.emite.client.plugin.dsl.FilterBuilder;
 
-public class ResourceModule implements Plugin {
+public class ResourcePlugin implements Plugin {
 
 	public static class Events {
 		public static final Event binded = new Event("resource:binded");
@@ -18,7 +18,7 @@ public class ResourceModule implements Plugin {
 	final BussinessLogic requestResourceBinding;
 	final BussinessLogic resourceBinded;
 
-	public ResourceModule(final Globals globals) {
+	public ResourcePlugin(final Globals globals) {
 		requestResourceBinding = new BussinessLogic() {
 			public Packet logic(final Packet cathced) {
 				final IQ iq = new IQ("bindRequest", IQ.Type.set);
@@ -40,7 +40,7 @@ public class ResourceModule implements Plugin {
 	}
 
 	public void start(final FilterBuilder when) {
-		when.Event(SASLModule.Events.authorized).send(requestResourceBinding);
+		when.Event(SASLPlugin.Events.authorized).send(requestResourceBinding);
 
 		when.IQ("bindRequest").publish(resourceBinded);
 

@@ -6,11 +6,11 @@ import com.calclab.emite.client.action.BussinessLogic;
 import com.calclab.emite.client.packet.BasicPacket;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.plugin.FilterBuilder;
 import com.calclab.emite.client.plugin.Plugin;
+import com.calclab.emite.client.plugin.dsl.FilterBuilder;
 import com.calclab.emite.client.utils.Base64Coder;
 
-public class SASLModule implements Plugin {
+public class SASLPlugin implements Plugin {
 	public static class Events {
 		public static final Event authorized = new Event("sasl:authorized");
 	}
@@ -21,7 +21,7 @@ public class SASLModule implements Plugin {
 
 	final BussinessLogic restartAndAuthorize;
 
-	public SASLModule(final Globals globals) {
+	public SASLPlugin(final Globals globals) {
 		authorization = new BussinessLogic() {
 			public Packet logic(final Packet cathced) {
 				final Packet auth = createPlainAuthorization(globals);

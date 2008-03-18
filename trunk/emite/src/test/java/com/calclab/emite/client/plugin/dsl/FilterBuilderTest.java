@@ -1,4 +1,4 @@
-package com.calclab.emite.client.plugin;
+package com.calclab.emite.client.plugin.dsl;
 
 import static org.junit.Assert.assertTrue;
 
@@ -9,7 +9,8 @@ import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
 import com.calclab.emite.client.packet.stanza.Message;
-import com.calclab.emite.client.plugin.FilterBuilder.ActionBuilder;
+import com.calclab.emite.client.plugin.dsl.FilterBuilder;
+import com.calclab.emite.client.plugin.dsl.FilterBuilder.ActionBuilder;
 
 public class FilterBuilderTest {
 
