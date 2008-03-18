@@ -39,6 +39,10 @@ public class FilterBuilder {
 			dispatcher.addListener(new FilteredAction(filter, action));
 		}
 
+		BasicMatcher getCurrentFilter() {
+			return filter;
+		}
+
 	}
 
 	private final ActionBuilder actionBuilder;
