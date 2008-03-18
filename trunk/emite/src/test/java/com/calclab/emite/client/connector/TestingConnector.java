@@ -1,5 +1,7 @@
 package com.calclab.emite.client.connector;
 
+import java.io.IOException;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -53,9 +55,10 @@ public class TestingConnector implements Connector {
 						logger.debug("HttpClientConnector {0} Bad HttpStatus: {1}", this.hashCode(), status);
 						callback.onError(new Exception("bad http status " + status));
 					}
-				} catch (Exception e) {
+				} catch (IOException e) {
 					logger.debug("Exception! {0}", e);
 					callback.onError(e);
+					e.printStackTrace();
 				} finally {
 					post.releaseConnection();
 					logger.debug("HttpClientConnector {0} FINISH", this.hashCode());

@@ -40,7 +40,9 @@ public class SessionPlugin implements Plugin {
 
 		requestSession = new BussinessLogic() {
 			public Packet logic(final Packet received) {
-				return new IQ("requestSession", IQ.Type.set).To(globals.getDomain()).Include("session", null);
+				final IQ iq = new IQ("requestSession", IQ.Type.set).From(globals.getJID()).To(globals.getDomain());
+				iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
+				return iq;
 			}
 		};
 

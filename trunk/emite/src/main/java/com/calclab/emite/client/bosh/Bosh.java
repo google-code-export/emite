@@ -130,6 +130,7 @@ public class Bosh implements Connection {
 		final String request;
 
 		if (shouldRestart) {
+			logger.debug("Sending RESTART");
 			shouldRestart = false;
 			request = XMLHelper.restart(stanza, rid, sid);
 		} else {
