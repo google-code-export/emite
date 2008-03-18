@@ -6,6 +6,7 @@ import com.calclab.emite.client.log.LoggerAdapter;
 import com.calclab.emite.client.log.LoggerOutput;
 import com.calclab.emite.client.plugin.DefaultPluginManager;
 import com.calclab.emite.client.plugin.PluginManager;
+import com.calclab.emite.client.x.core.ResourceModule;
 import com.calclab.emite.client.x.core.SASLModule;
 import com.calclab.emite.client.x.im.ChatPlugin;
 import com.calclab.emite.client.x.im.roster.RosterPlugin;
@@ -23,9 +24,10 @@ public class XMPPPlugin {
 
 	public static void installPlugins(final Components c) {
 		final PluginManager manager = new DefaultPluginManager(c);
-		manager.install("sasl", new SASLModule(c.getGlobals()));
 		manager.install("chat", new ChatPlugin(c.getConnection(), c.getDispatcher()));
 		manager.install("session", new SessionPlugin(c.getGlobals(), c.getDispatcher(), c.getConnection()));
 		manager.install("roster", new RosterPlugin());
+		manager.install("sasl", new SASLModule(c.getGlobals()));
+		manager.install("resource", new ResourceModule(c.getGlobals()));
 	}
 }

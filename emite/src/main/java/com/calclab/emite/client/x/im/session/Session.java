@@ -13,7 +13,7 @@ public class Session {
 	}
 
 	public static enum State {
-		connected, connecting, disconnected
+		authorized, connected, connecting, disconnected
 	}
 
 	private final Dispatcher dispatcher;
@@ -32,9 +32,14 @@ public class Session {
 		listeners.add(listener);
 	}
 
+	public State getState() {
+		return state;
+	}
+
 	public void login(final SessionOptions sessionOptions) {
 		globals.setUserName(sessionOptions.getUserName());
 		globals.setPassword(sessionOptions.getPassword());
+		setState(State.connecting);
 		dispatcher.publish(Events.login);
 	}
 

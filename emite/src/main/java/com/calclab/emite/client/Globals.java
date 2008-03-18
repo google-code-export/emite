@@ -9,6 +9,8 @@ public interface Globals {
 
 	String getUserName();
 
+	void setJID(String jid);
+
 	void setPassword(String password);
 
 	void setUserName(String userName);

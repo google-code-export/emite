@@ -1,7 +1,7 @@
 package com.calclab.emite.client.x.core;
 
-import com.calclab.emite.client.HashGlobals;
 import com.calclab.emite.client.Components;
+import com.calclab.emite.client.Globals;
 import com.calclab.emite.client.action.BussinessLogic;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
@@ -18,7 +18,7 @@ public class ResourceModule implements Plugin {
 	final BussinessLogic requestResourceBinding;
 	final BussinessLogic resourceBinded;
 
-	public ResourceModule(final HashGlobals hashGlobals) {
+	public ResourceModule(final Globals globals) {
 		requestResourceBinding = new BussinessLogic() {
 			public Packet logic(final Packet cathced) {
 				final IQ iq = new IQ("bindRequest", IQ.Type.set);
@@ -30,7 +30,7 @@ public class ResourceModule implements Plugin {
 		resourceBinded = new BussinessLogic() {
 			public Packet logic(final Packet iq) {
 				final String jid = iq.getFirstChildren("bind").getFirstChildren("jid").getText();
-				hashGlobals.setJID(jid);
+				globals.setJID(jid);
 				return Events.binded;
 			}
 		};

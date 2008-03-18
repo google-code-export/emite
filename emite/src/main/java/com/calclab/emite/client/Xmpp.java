@@ -37,8 +37,16 @@ public class Xmpp {
 		session.addListener(listener);
 	}
 
+	public Components getComponents() {
+		return components;
+	}
+
 	public Roster getRoster() {
 		return RosterPlugin.getRoster(components);
+	}
+
+	public Session getSession() {
+		return session;
 	}
 
 	public void login(final String userName, final String userPassword) {

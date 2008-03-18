@@ -4,24 +4,28 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.calclab.emite.client.packet.BasicPacket;
 import com.calclab.emite.client.packet.Event;
+import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
 import com.calclab.emite.client.packet.stanza.Message;
+import com.calclab.emite.client.plugin.FilterBuilder.ActionBuilder;
 
 public class FilterBuilderTest {
 
 	@Test
 	public void testCreateMatchers() {
-		final FilterBuilder builder = new FilterBuilder(null, null);
+		final FilterBuilder when = new FilterBuilder(null, null);
 
 		final Event event = new Event("simple");
-		builder.Event(event);
-		assertTrue(builder.filter.matches(event));
+		assertWhen(when.Event(event), event);
+		assertWhen(when.IQ("theID"), new IQ("theID", IQ.Type.set));
+		assertWhen(when.MessageTo("recipient"), new Message("recipient", "theMessage"));
 
-		builder.IQ("theID");
-		assertTrue(builder.filter.matches(new IQ("theID", IQ.Type.set)));
+		assertWhen(when.Packet("stream:features"), new BasicPacket("stream:features", null));
+	}
 
-		builder.MessageTo("recipient");
-		assertTrue(builder.filter.matches(new Message("recipient", "theMessage")));
+	private void assertWhen(final ActionBuilder actionBuilder, final Packet packet) {
+		assertTrue(actionBuilder.getCurrentFilter().matches(packet));
 	}
 }

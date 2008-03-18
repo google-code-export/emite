@@ -11,6 +11,7 @@ import com.calclab.emite.client.packet.stanza.IQ;
 import com.calclab.emite.client.plugin.FilterBuilder;
 import com.calclab.emite.client.plugin.Plugin;
 import com.calclab.emite.client.x.core.ResourceModule;
+import com.calclab.emite.client.x.core.SASLModule;
 
 /**
  * TODO: better plugin system!!!
@@ -21,7 +22,7 @@ import com.calclab.emite.client.x.core.ResourceModule;
 public class SessionPlugin implements Plugin {
 	public static class Events {
 		public static final Event ended = new Event("session:ended");
-		public static final Event started = new Event("session:success");
+		public static final Event started = new Event("session:started");
 	}
 
 	public static Session getSession(final Components components) {
@@ -30,6 +31,8 @@ public class SessionPlugin implements Plugin {
 
 	private final Session session;
 	final BussinessLogic requestSession;
+	final BussinessLogic setAuthorizedState;
+	final BussinessLogic setStartedState;
 	final BussinessLogic startConnection;
 
 	public SessionPlugin(final Globals globals, final Dispatcher dispatcher, final IConnection connection) {
@@ -47,6 +50,20 @@ public class SessionPlugin implements Plugin {
 				return null;
 			}
 		};
+
+		setAuthorizedState = new BussinessLogic() {
+			public Packet logic(final Packet received) {
+				session.setState(Session.State.authorized);
+				return null;
+			}
+		};
+
+		setStartedState = new BussinessLogic() {
+			public Packet logic(final Packet received) {
+				session.setState(Session.State.connected);
+				return Events.started;
+			}
+		};
 	}
 
 	public void start(final FilterBuilder when, final Components components) {
@@ -54,9 +71,11 @@ public class SessionPlugin implements Plugin {
 
 		when.Event(Session.Events.login).Do(startConnection);
 
+		when.Event(SASLModule.Events.authorized).Do(setAuthorizedState);
+
 		when.Event(ResourceModule.Events.binded).send(requestSession);
 
-		when.IQ("requestSession").publish(SessionPlugin.Events.started);
+		when.IQ("requestSession").publish(setStartedState);
 
 	}
 }
