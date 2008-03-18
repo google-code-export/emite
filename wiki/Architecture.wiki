@@ -22,11 +22,15 @@ ChatPlugin.getChat(container); // <- this is the nice way
   * All this complexity is hidden behind the Xmpp facade (XMPP class, for normal use)
 
 *Easy*
-  * The creation of new plugins is straightforward: there is a mini DSL to publish and receive Events
+  * The creation of new plugins is straightforward: there is a mini DSL to publish and receive Events:
 {{{
   when.Event(SASLPlugin.Events.authorized).Do(setAuthorizedState);
   when.Event(ResourcePlugin.Events.binded).send(requestSession);
   when.IQ("requestSession").publish(setStartedState);
+}}}
+  * All the api is full of syntax sugar methods to make the life happier to the developer (me ;) ). All this methods starts with uppercase to recognise them:
+{{{
+  chat.send(new Message("hola amigo!").To("vicent@localhost").From("dani@localhost"));
 }}}
 
 *Testing*
