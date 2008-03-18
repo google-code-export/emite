@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.calclab.emite.client.TestHelper;
+import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.packet.Packet;
 
 public class TestingParserTest {
@@ -21,7 +22,7 @@ public class TestingParserTest {
 
 	@Test
 	public void testReal() {
-		final TestingParser parser = new TestingParser(TestHelper.createLogger());
+		final TestingParser parser = new TestingParser(TestHelper.createLogger(Logger.DEBUG));
 		final List<? extends Packet> stanzas = parser.extractStanzas(response);
 		assertEquals(1, stanzas.size());
 		final Packet features = stanzas.get(0);

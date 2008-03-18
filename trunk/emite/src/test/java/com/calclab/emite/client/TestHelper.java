@@ -9,28 +9,29 @@ import com.calclab.emite.client.log.LoggerOutput;
 
 public class TestHelper {
 
-	public static Logger createLogger() {
-		return new LoggerAdapter(createLoggerOutput());
+	public static Logger createLogger(final int level) {
+		return new LoggerAdapter(createLoggerOutput(level));
 	}
 
-	public static Xmpp createXMPP() {
-		return createXMPP(new BoshOptions("http://localhost:8181/http-bind/", "localhost"));
-	}
-
-	public static Xmpp createXMPP(final BoshOptions options) {
-		final Container c = new Container(createLoggerOutput());
+	public static Xmpp createXMPP(final BoshOptions options, final int level) {
+		final Container c = new Container(createLoggerOutput(level));
 
 		final Logger logger = c.getComponents().getLogger();
-		c.createComponents(new TestingParser(logger), new TestingConnector(logger), options);
-		c.installDefaultPlugins();
+		c.installDefaultPlugins(new TestingParser(logger), new TestingConnector(logger), options);
 
 		return new Xmpp(c.getComponents());
 	}
 
-	private static LoggerOutput createLoggerOutput() {
+	public static Xmpp createXMPP(final int level) {
+		return createXMPP(new BoshOptions("http://localhost:8181/http-bind/", "localhost"), level);
+	}
+
+	private static LoggerOutput createLoggerOutput(final int globalLevel) {
 		return new LoggerOutput() {
 			public void log(final int level, final String message) {
-				System.out.println("[" + level + "]: " + message);
+				if (level <= globalLevel) {
+					System.out.println("[" + level + "]: " + message);
+				}
 			}
 		};
 	}

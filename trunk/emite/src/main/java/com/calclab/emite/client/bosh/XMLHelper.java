@@ -12,8 +12,8 @@ class XMLHelper {
 
 	private static final String END = "</body>";
 
-	private static final String RESTART = "<body rid=\"{0}\" sid=\"{1}\" to=\"{2}\" "
-			+ "xml:lang=\"en\" xmpp:restart=\"true\" xmlns=\"http://jabber.org/protocol/httpbind\" xmlns:xmpp=\"urn:xmpp:xbosh\" />";
+	private static final String RESTART = "<body rid=\"{0}\" sid=\"{1}\" xml:lang=\"en\" xmpp:restart=\"true\" "
+			+ "xmlns=\"http://jabber.org/protocol/httpbind\" xmlns:xmpp=\"urn:xmpp:xbosh\" >";
 
 	private static final String TERMINATE = "<body rid=\"{0}\" sid=\"{1}\" type=\"terminate\" "
 			+ "xmlns=\"http://jabber.org/protocol/httpbind\"><presence type=\"unavailable\" xmlns=\"jabber:client\"/></body>";
@@ -42,8 +42,8 @@ class XMLHelper {
 		}
 	}
 
-	public static String restart(final long rid, final String sid, final String domain) {
-		return TextHelper.template(RESTART, rid, sid, domain);
+	public static String restart(final String stanza, final long rid, final String sid) {
+		return TextHelper.template(RESTART, rid, sid) + stanza + END;
 	}
 
 	public static String terminate(final long rid, final String sid) {

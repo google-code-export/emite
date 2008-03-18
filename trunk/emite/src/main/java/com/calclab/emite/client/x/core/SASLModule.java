@@ -17,7 +17,9 @@ public class SASLModule implements Plugin {
 
 	private static final String SEP = new String(new char[] { 0 });
 
-	private final BussinessLogic authorization;
+	final BussinessLogic authorization;
+
+	final BussinessLogic restartAndAuthorize;
 
 	public SASLModule(final Globals globals) {
 		authorization = new BussinessLogic() {
@@ -39,10 +41,20 @@ public class SASLModule implements Plugin {
 				return auth;
 			}
 		};
+
+		restartAndAuthorize = new BussinessLogic() {
+			public Packet logic(final Packet received) {
+				return Events.authorized;
+			}
+
+		};
 	}
 
-	public void start(final FilterBuilder when, final Components components) {
+	public void install(final Components components) {
+	}
+
+	public void start(final FilterBuilder when) {
 		when.Packet("stream:features").send(authorization);
-		when.Packet("success", "xmlns", "urn:ietf:params:xml:ns:xmpp-sasl").publish(Events.authorized);
+		when.Packet("success", "xmlns", "urn:ietf:params:xml:ns:xmpp-sasl").publish(restartAndAuthorize);
 	}
 }

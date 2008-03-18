@@ -1,6 +1,6 @@
 package com.calclab.emite.client;
 
-import com.calclab.emite.client.bosh.IConnection;
+import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.log.Logger;
 
@@ -8,7 +8,7 @@ public interface Components {
 
 	Object get(String componentName);
 
-	IConnection getConnection();
+	Connection getConnection();
 
 	Dispatcher getDispatcher();
 
@@ -18,7 +18,7 @@ public interface Components {
 
 	void register(String name, Object component);
 
-	void setConnection(IConnection bosh);
+	void setConnection(Connection bosh);
 
 	void setDispatcher(Dispatcher dispatcher);
 

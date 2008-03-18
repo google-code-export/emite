@@ -1,5 +1,7 @@
 package com.calclab.emite.client.plugin;
 
+import java.util.ArrayList;
+
 import com.calclab.emite.client.Components;
 import com.calclab.emite.client.log.Logger;
 
@@ -9,18 +11,26 @@ import com.calclab.emite.client.log.Logger;
 public class DefaultPluginManager implements PluginManager {
 
 	private final Components container;
+	private final ArrayList<Plugin> installed;
 	private final Logger logger;
-	private final FilterBuilder when;
 
 	public DefaultPluginManager(final Logger logger, final Components container) {
 		this.logger = logger;
 		this.container = container;
-		when = new FilterBuilder(container.getDispatcher(), container.getConnection());
+		installed = new ArrayList<Plugin>();
 	}
 
 	public void install(final String name, final Plugin plugin) {
 		logger.debug("Installing plugin {0}", name);
-		plugin.start(when, container);
+		plugin.install(container);
+		installed.add(plugin);
+	}
+
+	public void start() {
+		final FilterBuilder when = new FilterBuilder(container);
+		for (final Plugin p : installed) {
+			p.start(when);
+		}
 	}
 
 	public void uninstall(final String name) {

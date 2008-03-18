@@ -17,8 +17,7 @@ public class Xmpp {
 
 	public static Xmpp create(final BoshOptions options, final LoggerOutput output) {
 		final Container container = new Container(output);
-		container.createComponents(new GWTParser(), new GWTConnector(), options);
-		container.installDefaultPlugins();
+		container.installDefaultPlugins(new GWTParser(), new GWTConnector(), options);
 		return new Xmpp(container.getComponents());
 	}
 

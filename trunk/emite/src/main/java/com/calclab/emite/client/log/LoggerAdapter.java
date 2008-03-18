@@ -13,6 +13,10 @@ public class LoggerAdapter implements Logger {
 		log(Logger.DEBUG, pattern, params);
 	}
 
+	public void info(final String pattern, final Object... params) {
+		log(Logger.INFO, pattern, params);
+	}
+
 	public void log(final int level, final String pattern, final Object... params) {
 		final String applied = TextHelper.template(pattern, params);
 		output.log(level, applied);

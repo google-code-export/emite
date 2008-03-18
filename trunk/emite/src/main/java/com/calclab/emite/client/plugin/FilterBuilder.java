@@ -1,11 +1,12 @@
 package com.calclab.emite.client.plugin;
 
+import com.calclab.emite.client.Components;
 import com.calclab.emite.client.action.BussinessLogic;
 import com.calclab.emite.client.action.FilteredAction;
 import com.calclab.emite.client.action.LogicAction;
 import com.calclab.emite.client.action.PublishAction;
 import com.calclab.emite.client.action.SendAction;
-import com.calclab.emite.client.bosh.IConnection;
+import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.matcher.BasicMatcher;
 import com.calclab.emite.client.packet.Event;
@@ -16,27 +17,27 @@ public class FilterBuilder {
 	public class ActionBuilder {
 		public void Do(final BussinessLogic logic) {
 			final LogicAction action = new LogicAction(logic);
-			dispatcher.addListener(new FilteredAction(filter, action));
+			getDispatcher().addListener(new FilteredAction(filter, action));
 		}
 
 		public void publish(final BussinessLogic bussinessLogic) {
-			final PublishAction action = new PublishAction(dispatcher, bussinessLogic);
-			dispatcher.addListener(new FilteredAction(filter, action));
+			final PublishAction action = new PublishAction(getDispatcher(), bussinessLogic);
+			getDispatcher().addListener(new FilteredAction(filter, action));
 		}
 
 		public void publish(final Packet packet) {
-			final PublishAction action = new PublishAction(dispatcher, packet);
-			dispatcher.addListener(new FilteredAction(filter, action));
+			final PublishAction action = new PublishAction(getDispatcher(), packet);
+			getDispatcher().addListener(new FilteredAction(filter, action));
 		}
 
 		public void send(final BussinessLogic logic) {
-			final SendAction action = new SendAction(connection, logic);
-			dispatcher.addListener(new FilteredAction(filter, action));
+			final SendAction action = new SendAction(getConnection(), logic);
+			getDispatcher().addListener(new FilteredAction(filter, action));
 		}
 
 		public void send(final Packet packet) {
-			final SendAction action = new SendAction(connection, packet);
-			dispatcher.addListener(new FilteredAction(filter, action));
+			final SendAction action = new SendAction(getConnection(), packet);
+			getDispatcher().addListener(new FilteredAction(filter, action));
 		}
 
 		BasicMatcher getCurrentFilter() {
@@ -46,14 +47,12 @@ public class FilterBuilder {
 	}
 
 	private final ActionBuilder actionBuilder;
-	final IConnection connection;
+	private final Components container;
 
-	final Dispatcher dispatcher;
 	BasicMatcher filter;
 
-	public FilterBuilder(final Dispatcher dispatcher, final IConnection connection) {
-		this.dispatcher = dispatcher;
-		this.connection = connection;
+	public FilterBuilder(final Components container) {
+		this.container = container;
 		this.actionBuilder = new ActionBuilder();
 	}
 
@@ -84,5 +83,13 @@ public class FilterBuilder {
 	private ActionBuilder createBuilder(final BasicMatcher matcher) {
 		this.filter = matcher;
 		return actionBuilder;
+	}
+
+	Connection getConnection() {
+		return container.getConnection();
+	}
+
+	Dispatcher getDispatcher() {
+		return container.getDispatcher();
 	}
 }

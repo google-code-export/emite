@@ -47,11 +47,12 @@ public class RosterPlugin implements Plugin {
 		};
 	}
 
-	public void start(final FilterBuilder when, final Components components) {
+	public void install(final Components components) {
 		components.register("roster", roster);
+	}
 
+	public void start(final FilterBuilder when) {
 		when.Event(SessionPlugin.Events.started).send(requestRoster);
-
 		when.IQ("roster").Do(setRosterItems);
 	}
 

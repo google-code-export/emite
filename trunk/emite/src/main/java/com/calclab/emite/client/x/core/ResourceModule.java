@@ -36,10 +36,14 @@ public class ResourceModule implements Plugin {
 		};
 	}
 
-	public void start(final FilterBuilder when, final Components components) {
+	public void install(final Components components) {
+	}
+
+	public void start(final FilterBuilder when) {
 		when.Event(SASLModule.Events.authorized).send(requestResourceBinding);
 
 		when.IQ("bindRequest").publish(resourceBinded);
+
 	}
 
 }

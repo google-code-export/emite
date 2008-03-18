@@ -6,7 +6,7 @@ import com.calclab.emite.client.connector.Delayed;
 import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.packet.Packet;
 
-public class Bosh implements IConnection {
+public class Bosh implements Connection {
 	protected int inactivity;
 	private int concurrent;
 	private final Connector connector;
@@ -17,9 +17,10 @@ public class Bosh implements IConnection {
 	private final BoshOptions options;
 	// TODO: problemas con long y GWT
 	private long rid;
+	private boolean shouldRestart;
 	private String sid;
 
-	public Bosh(final Connector connector, final BoshOptions options, final Logger logger) {
+	Bosh(final Connector connector, final BoshOptions options, final Logger logger) {
 		this.connector = connector;
 		this.options = options;
 		this.listeners = new BoshListenerCollection();
@@ -28,6 +29,8 @@ public class Bosh implements IConnection {
 		this.rid = (long) (Math.random() * 1573741820);
 		this.sid = null;
 		this.concurrent = 0;
+		shouldRestart = false;
+
 		this.setRunning(false);
 
 		this.defaultCallback = new ConnectorCallback() {
@@ -58,18 +61,14 @@ public class Bosh implements IConnection {
 		listeners.remove(listener);
 	}
 
-	public void restart() {
-		rid++;
-		final String request = XMLHelper.restart(rid, sid, options.getDomain());
-		sendRequest(request, defaultCallback);
-	}
-
 	public void resume() {
 
 	}
 
 	public void send(final Packet packet) {
-		send(packet.toString());
+		final String content = packet.toString();
+		logger.info("SEND: \n{0}", content);
+		send(content);
 	}
 
 	public void sendRequest(final String request, final ConnectorCallback callback) {
@@ -81,6 +80,10 @@ public class Bosh implements IConnection {
 			listeners.onError(e);
 		}
 		listeners.onRequest(request);
+	}
+
+	public void setRestart(final boolean shouldRestart) {
+		this.shouldRestart = shouldRestart;
 	}
 
 	public void start() {
@@ -124,7 +127,14 @@ public class Bosh implements IConnection {
 
 	private void send(final String stanza) {
 		rid++;
-		final String request = XMLHelper.wrap(stanza, rid, sid);
+		final String request;
+
+		if (shouldRestart) {
+			shouldRestart = false;
+			request = XMLHelper.restart(stanza, rid, sid);
+		} else {
+			request = XMLHelper.wrap(stanza, rid, sid);
+		}
 		sendRequest(request, defaultCallback);
 	}
 
