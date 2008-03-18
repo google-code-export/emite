@@ -1,7 +1,8 @@
 package com.calclab.emite.client;
 
-import com.calclab.emite.client.bosh.Bosh;
 import com.calclab.emite.client.bosh.BoshOptions;
+import com.calclab.emite.client.connector.GWTConnector;
+import com.calclab.emite.client.dispatcher.GWTParser;
 import com.calclab.emite.client.log.LoggerOutput;
 import com.calclab.emite.client.x.im.ChatPlugin;
 import com.calclab.emite.client.x.im.MessageListener;
@@ -15,10 +16,10 @@ import com.calclab.emite.client.x.im.session.SessionPlugin;
 public class Xmpp {
 
 	public static Xmpp create(final BoshOptions options, final LoggerOutput output) {
-		final Components components = XMPPPlugin.createComponents(output);
-		components.setConnection(new Bosh(options, components.getLogger()));
-		XMPPPlugin.installPlugins(components);
-		return new Xmpp(components);
+		final Container container = new Container(output);
+		container.createComponents(new GWTParser(), new GWTConnector(), options);
+		container.installDefaultPlugins();
+		return new Xmpp(container.getComponents());
 	}
 
 	private final Components components;

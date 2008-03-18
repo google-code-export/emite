@@ -3,7 +3,7 @@ package com.calclab.emite.client.x.im.session;
 import java.util.ArrayList;
 
 import com.calclab.emite.client.Globals;
-import com.calclab.emite.client.action.Dispatcher;
+import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.Event;
 
 public class Session {

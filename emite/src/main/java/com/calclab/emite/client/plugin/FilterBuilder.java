@@ -1,12 +1,12 @@
 package com.calclab.emite.client.plugin;
 
 import com.calclab.emite.client.action.BussinessLogic;
-import com.calclab.emite.client.action.Dispatcher;
 import com.calclab.emite.client.action.FilteredAction;
 import com.calclab.emite.client.action.LogicAction;
 import com.calclab.emite.client.action.PublishAction;
 import com.calclab.emite.client.action.SendAction;
 import com.calclab.emite.client.bosh.IConnection;
+import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.matcher.BasicMatcher;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;

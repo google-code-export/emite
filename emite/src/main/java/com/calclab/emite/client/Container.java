@@ -1,7 +1,11 @@
 package com.calclab.emite.client;
 
-import com.calclab.emite.client.action.ActionDispatcher;
-import com.calclab.emite.client.action.Dispatcher;
+import com.calclab.emite.client.bosh.Bosh;
+import com.calclab.emite.client.bosh.BoshOptions;
+import com.calclab.emite.client.connector.Connector;
+import com.calclab.emite.client.dispatcher.ActionDispatcher;
+import com.calclab.emite.client.dispatcher.Dispatcher;
+import com.calclab.emite.client.dispatcher.Parser;
 import com.calclab.emite.client.log.LoggerAdapter;
 import com.calclab.emite.client.log.LoggerOutput;
 import com.calclab.emite.client.plugin.DefaultPluginManager;
@@ -12,18 +16,28 @@ import com.calclab.emite.client.x.im.ChatPlugin;
 import com.calclab.emite.client.x.im.roster.RosterPlugin;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
 
-public class XMPPPlugin {
-	public static Components createComponents(final LoggerOutput output) {
-		final Components c = new ComponentContainer(new LoggerAdapter(output));
-		final Dispatcher dispatcher = new ActionDispatcher(c.getLogger());
+public class Container {
+	private final Components c;
+
+	public Container(final LoggerOutput output) {
+		c = new ComponentContainer(new LoggerAdapter(output));
+	}
+
+	public Components createComponents(final Parser parser, final Connector connector, final BoshOptions options) {
+		final Dispatcher dispatcher = new ActionDispatcher(parser, c.getLogger());
+		c.setConnection(new Bosh(connector, options, c.getLogger()));
 
 		c.setGlobals(new HashGlobals());
 		c.setDispatcher(dispatcher);
 		return c;
 	}
 
-	public static void installPlugins(final Components c) {
-		final PluginManager manager = new DefaultPluginManager(c);
+	public Components getComponents() {
+		return c;
+	}
+
+	public void installDefaultPlugins() {
+		final PluginManager manager = new DefaultPluginManager(c.getLogger(), c);
 		manager.install("chat", new ChatPlugin(c.getConnection(), c.getDispatcher()));
 		manager.install("session", new SessionPlugin(c.getGlobals(), c.getDispatcher(), c.getConnection()));
 		manager.install("roster", new RosterPlugin());

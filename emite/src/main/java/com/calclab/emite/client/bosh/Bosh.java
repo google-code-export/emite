@@ -1,18 +1,16 @@
 package com.calclab.emite.client.bosh;
 
+import com.calclab.emite.client.connector.Connector;
+import com.calclab.emite.client.connector.ConnectorCallback;
+import com.calclab.emite.client.connector.Delayed;
 import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.packet.Packet;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Timer;
 
 public class Bosh implements IConnection {
 	protected int inactivity;
 	private int concurrent;
-	private final RequestCallback defaultCallback;
+	private final Connector connector;
+	private final ConnectorCallback defaultCallback;
 	private boolean isRunning;
 	private final BoshListenerCollection listeners;
 	private final Logger logger;
@@ -21,7 +19,8 @@ public class Bosh implements IConnection {
 	private long rid;
 	private String sid;
 
-	public Bosh(final BoshOptions options, final Logger logger) {
+	public Bosh(final Connector connector, final BoshOptions options, final Logger logger) {
+		this.connector = connector;
 		this.options = options;
 		this.listeners = new BoshListenerCollection();
 		this.logger = logger;
@@ -31,17 +30,17 @@ public class Bosh implements IConnection {
 		this.concurrent = 0;
 		this.setRunning(false);
 
-		this.defaultCallback = new RequestCallback() {
-			public void onError(final Request req, final Throwable error) {
+		this.defaultCallback = new ConnectorCallback() {
+			public void onError(final Throwable error) {
 				setRunning(false);
 				concurrent--;
 				listeners.onError(error);
 			}
 
-			public void onResponseReceived(final Request req, final Response res) {
+			public void onResponseReceived(final int statusCode, final String content) {
 				concurrent--;
 				// TODO: check if its a valid response
-				listeners.onResponse(res.getText());
+				listeners.onResponse(content);
 				keepItBusy();
 			}
 		};
@@ -73,20 +72,30 @@ public class Bosh implements IConnection {
 		send(packet.toString());
 	}
 
+	public void sendRequest(final String request, final ConnectorCallback callback) {
+		try {
+			concurrent++;
+			final String httpBase = options.getHttpBase();
+			connector.send(httpBase, request, callback);
+		} catch (final Exception e) {
+			listeners.onError(e);
+		}
+		listeners.onRequest(request);
+	}
+
 	public void start() {
 		final String sessionRequest = XMLHelper.buildSessionCreationRequest(options, rid);
-		sendRequest(sessionRequest, new RequestCallback() {
+		sendRequest(sessionRequest, new ConnectorCallback() {
 
-			public void onError(final Request req, final Throwable error) {
-				defaultCallback.onError(req, error);
+			public void onError(final Throwable error) {
+				defaultCallback.onError(error);
 			}
 
-			public void onResponseReceived(final Request req, final Response res) {
+			public void onResponseReceived(final int statusCode, final String responseText) {
 				setRunning(true);
-				final String responseText = res.getText();
 				sid = XMLHelper.extractAttribute("sid", responseText);
 				inactivity = XMLHelper.extractIntegerAttribute("inactivity", responseText);
-				defaultCallback.onResponseReceived(req, res);
+				defaultCallback.onResponseReceived(statusCode, responseText);
 			}
 		});
 	}
@@ -102,15 +111,15 @@ public class Bosh implements IConnection {
 	}
 
 	private void keepItBusy() {
-		new Timer() {
-			@Override
+		final Delayed delayed = new Delayed() {
 			public void run() {
 				logger.debug("HOT! running {0} - concurrent  {1}", isRunning, concurrent);
 				if (isRunning() && concurrent == 0) {
 					sendEmpty();
 				}
 			}
-		}.schedule(1000);
+		};
+		connector.schedule(delayed, 1000);
 	}
 
 	private void send(final String stanza) {
@@ -123,17 +132,6 @@ public class Bosh implements IConnection {
 		rid++;
 		final String request = XMLHelper.empty(rid, sid, inactivity);
 		sendRequest(request, defaultCallback);
-	}
-
-	private void sendRequest(final String request, final RequestCallback callback) {
-		final RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, options.getHttpBase());
-		try {
-			concurrent++;
-			builder.sendRequest(request, callback);
-		} catch (final RequestException e) {
-			listeners.onError(e);
-		}
-		listeners.onRequest(request);
 	}
 
 	private void setRunning(final boolean isRunning) {
