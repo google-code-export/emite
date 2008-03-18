@@ -22,8 +22,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,13 +32,14 @@ public class ChatExampleEntryPoint implements EntryPoint {
     private Button btnLogin;
     private Button btnLogout;
     private TextBox messageIn;
-    private TextArea messageOutput;
+    private VerticalPanel messageOutput;
     // private TextArea out;
     private PasswordTextBox passwordInput;
     private TextBox toIn;
     private TextBox userNameInput;
     private ListBox userSelector;
     private Xmpp xmpp;
+    private ScrollPanel messageOutputWrapper;
 
     public void onModuleLoad() {
         /*
@@ -191,8 +192,10 @@ public class ChatExampleEntryPoint implements EntryPoint {
         split.add(userSelector);
         final TabPanel chatTabs = new TabPanel();
         split.add(chatTabs);
-        messageOutput = new TextArea();
-        split.add(messageOutput);
+        messageOutputWrapper = new ScrollPanel();
+        messageOutput = new VerticalPanel();
+        messageOutputWrapper.add(messageOutput);
+        split.add(messageOutputWrapper);
 
         pane.add(split);
 
