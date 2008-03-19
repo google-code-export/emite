@@ -18,12 +18,13 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,13 +33,13 @@ public class ChatExampleEntryPoint implements EntryPoint {
     private Button btnLogin;
     private Button btnLogout;
     private TextBox messageIn;
-    private TextArea messageOutput;
-    // private TextArea out;
+    private VerticalPanel messageOutput;
     private PasswordTextBox passwordInput;
     private TextBox toIn;
     private TextBox userNameInput;
     private ListBox userSelector;
     private Xmpp xmpp;
+    private ScrollPanel messageOutputWrapper;
 
     public void onModuleLoad() {
         /*
@@ -49,6 +50,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
         // At the moment, in runtime:
         Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
+
+        Log.getDivLogger().moveTo(10, 290);
 
         /*
          * Use a deferred command so that the UncaughtExceptionHandler catches
@@ -62,7 +65,6 @@ public class ChatExampleEntryPoint implements EntryPoint {
     }
 
     public void onModuleLoadCont() {
-        // this.out = new TextArea();
         createInterface();
 
         this.xmpp = Xmpp.create(new BoshOptions("http-bind", "localhost"), new LoggerOutput() {
@@ -97,10 +99,9 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
         xmpp.addMessageListener(new MessageListener() {
             public void onReceived(final Message message) {
-                String text = messageOutput.getText();
-                text += "\nIN [" + message.getFrom() + "]\n";
+                String text = "\nIN [" + message.getFrom() + "]\n";
                 text += message.getBody();
-                messageOutput.setText(text);
+                addMessageToOutput(text);
             }
         });
 
@@ -108,7 +109,6 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
     public void print(final String text) {
         Log.debug(text);
-        // out.setText(out.getText() + text + "\n");
     }
 
     private HorizontalPanel createButtonsPane() {
@@ -129,13 +129,6 @@ public class ChatExampleEntryPoint implements EntryPoint {
             }
         });
         buttons.add(btnLogout);
-
-        buttons.add(new Button("Clear", new ClickListener() {
-            public void onClick(final Widget source) {
-                Log.clear();
-                // out.setText("");
-            }
-        }));
         return buttons;
     }
 
@@ -169,13 +162,23 @@ public class ChatExampleEntryPoint implements EntryPoint {
         toIn = new TextBox();
         controls.add(toIn);
         messageIn = new TextBox();
+        messageIn.addKeyboardListener(new KeyboardListener() {
+            public void onKeyDown(final Widget sender, final char keyCode, final int modifiers) {
+            }
+
+            public void onKeyPress(final Widget sender, final char keyCode, final int modifiers) {
+                if (keyCode == KeyboardListener.KEY_ENTER) {
+                    sendMessageIn();
+                }
+            }
+
+            public void onKeyUp(final Widget sender, final char keyCode, final int modifiers) {
+            }
+        });
         controls.add(messageIn);
         final Button btnSend = new Button("send", new ClickListener() {
             public void onClick(Widget arg0) {
-                String msg = messageIn.getText();
-                messageIn.setText("");
-                messageOutput.setText(messageOutput.getText() + "\n" + "sending: " + msg);
-                xmpp.send(toIn.getText(), msg);
+                sendMessageIn();
             }
         });
         controls.add(btnSend);
@@ -191,18 +194,41 @@ public class ChatExampleEntryPoint implements EntryPoint {
         split.add(userSelector);
         final TabPanel chatTabs = new TabPanel();
         split.add(chatTabs);
-        messageOutput = new TextArea();
-        split.add(messageOutput);
+        messageOutputWrapper = new ScrollPanel();
+        messageOutput = new VerticalPanel();
+        messageOutputWrapper.add(messageOutput);
+        messageOutputWrapper.setWidth("400");
+        messageOutputWrapper.setHeight("200");
+        HorizontalPanel messageOutputWrapper2 = new HorizontalPanel();
+        messageOutputWrapper2.add(messageOutputWrapper);
+        messageOutputWrapper2.setBorderWidth(1);
+        split.add(messageOutputWrapper2);
 
         pane.add(split);
+        split.setHeight("100%");
 
         return pane;
     }
 
     private HorizontalPanel createOutputPane() {
         final HorizontalPanel split = new HorizontalPanel();
-        // split.add(out);
         return split;
+    }
+
+    private void addMessageToOutput(final String text) {
+        messageOutput.add(new Label(text));
+        messageOutputWrapper.setScrollPosition(messageOutput.getOffsetHeight());
+        // another way (if we are not using ScrollPanels)
+        // DOM.setElementPropertyInt(messageOutputWrapper.getElement(),
+        // "scrollTop", messageOutput.getOffsetHeight());
+    }
+
+    private void sendMessageIn() {
+        String msg = messageIn.getText();
+        messageIn.setText("");
+        addMessageToOutput("sending: " + msg);
+        xmpp.send(toIn.getText(), msg);
+        messageIn.setFocus(true);
     }
 
 }
