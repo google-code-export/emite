@@ -5,4 +5,5 @@ For reports please use:
   http://code.google.com/p/emite/issues/list
 
 - Bosh is buggy
+- take into account resource in users (user/resource + password)
 
