@@ -1,0 +1,61 @@
+G.emite-RoomPanel-HorizDelimiter {
+  white-space: nowrap;
+  color: #B3B3B3;
+}
+
+.emite-MultiRoomPanel-Subject {
+  font-size: 108%;
+  color: #2E5492;
+}
+
+.emite-MultiRoomPanel-User {
+
+}
+
+.emite-MultiRoomPanel-User .emite-IconLabel {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.emite-RoomPanel-Conversation {
+
+}
+
+.emite-RoomPanel-Message {
+  margin: 0 7px;
+}
+
+.emite-RoomPanel-EventMessage {
+  font-style: italic;
+  color: rgb(102, 153, 204);
+  margin: 0 5px;
+}
+
+.emite-MultiRoomPanel-EmoticonPalette {
+  background-color: #FFF;
+  border: 1px solid #AAA;
+  margin: 1px solid red;
+  z-index:10000;
+  position:absolute;
+}
+
+.emite-MultiRoomPanel-EmoticonPalette td {
+  width: 30px;
+  height: 30px;
+}
+
+.chat-icon {
+  background-image: url(img/chat.gif) !important;
+}
+
+.group-icon {
+  background-image: url(img/group.gif) !important;
+}
+
+.user-icon {
+  background-image: url(img/user.gif) !important;
+}
+
+.userf-icon {
+  background-image: url(img/userf.gif) !important;
+}

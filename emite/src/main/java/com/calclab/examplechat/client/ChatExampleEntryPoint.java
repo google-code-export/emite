@@ -2,6 +2,8 @@ package com.calclab.examplechat.client;
 
 import java.util.List;
 
+import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
+
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.bosh.BoshOptions;
@@ -12,6 +14,11 @@ import com.calclab.emite.client.x.im.roster.RosterItem;
 import com.calclab.emite.client.x.im.roster.RosterListener;
 import com.calclab.emite.client.x.im.session.SessionListener;
 import com.calclab.emite.client.x.im.session.Session.State;
+import com.calclab.examplechat.client.chatuiplugin.MultiRoomListener;
+import com.calclab.examplechat.client.chatuiplugin.MultiRoomPresenter;
+import com.calclab.examplechat.client.chatuiplugin.MultiRoomView;
+import com.calclab.examplechat.client.chatuiplugin.Room;
+import com.calclab.examplechat.client.chatuiplugin.ui.MultiRoomPanel;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -40,6 +47,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
     private ListBox userSelector;
     private Xmpp xmpp;
     private ScrollPanel messageOutputWrapper;
+    private Button btnExperimentalUI;
+    private MultiRoomPresenter extChatDialog;
 
     public void onModuleLoad() {
         /*
@@ -69,22 +78,24 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
         this.xmpp = Xmpp.create(new BoshOptions("http-bind", "localhost"), new LoggerOutput() {
             public void log(final int level, final String message) {
-                print(message);
+                Log.debug(message);
             }
         });
 
         xmpp.addSessionListener(new SessionListener() {
             public void onStateChanged(final State old, final State current) {
-                print("STATE CHANGED: " + current + " - old: " + old);
+                Log.info("STATE CHANGED: " + current + " - old: " + old);
                 switch (current) {
                 case connected:
                     btnLogin.setEnabled(false);
                     btnLogout.setEnabled(true);
+                    extChatDialog.setStatus(MultiRoomView.STATUS_ONLINE);
                 case connecting:
                     btnLogin.setEnabled(false);
                 case disconnected:
                     btnLogin.setEnabled(true);
                     btnLogout.setEnabled(false);
+                    extChatDialog.setStatus(MultiRoomView.STATUS_OFFLINE);
                 }
             }
         });
@@ -92,6 +103,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
         xmpp.getRoster().addListener(new RosterListener() {
             public void onRosterChanged(final List<RosterItem> roster) {
                 for (final RosterItem item : roster) {
+                    Log.info("Rooster, adding: " + item.getName());
                     userSelector.addItem(item.getName(), item.getJid());
                 }
             }
@@ -107,28 +119,27 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
     }
 
-    public void print(final String text) {
-        Log.debug(text);
-    }
-
     private HorizontalPanel createButtonsPane() {
         final HorizontalPanel buttons = new HorizontalPanel();
         btnLogin = new Button("Login", new ClickListener() {
             public void onClick(final Widget source) {
-                xmpp.login(userNameInput.getText(), passwordInput.getText());
-                btnLogin.setEnabled(false);
-                btnLogout.setEnabled(true);
+                login();
             }
         });
         buttons.add(btnLogin);
         btnLogout = new Button("Logout", new ClickListener() {
             public void onClick(final Widget arg0) {
-                xmpp.logout();
-                btnLogout.setEnabled(true);
-                btnLogin.setEnabled(true);
+                logout();
             }
         });
         buttons.add(btnLogout);
+        btnExperimentalUI = new Button("Ext UI", new ClickListener() {
+            public void onClick(final Widget sender) {
+                createExperimentalUI();
+            }
+        });
+        btnExperimentalUI.setTitle("gwt-ext UI (experimental)");
+        buttons.add(btnExperimentalUI);
         return buttons;
     }
 
@@ -229,6 +240,58 @@ public class ChatExampleEntryPoint implements EntryPoint {
         addMessageToOutput("sending: " + msg);
         xmpp.send(toIn.getText(), msg);
         messageIn.setFocus(true);
+    }
+
+    private void createExperimentalUI() {
+        // PluginManager kunePluginManager = new PluginManager(new
+        // UIExtensionPointManager(), new I18nTranslationServiceMocked());
+        // kunePluginManager.install(new ChatDialogPlugin());
+
+        extChatDialog = new MultiRoomPresenter(new MultiRoomListener() {
+            public void onCloseRoom(final Room room) {
+            }
+
+            public void onSendMessage(final Room room, final String message) {
+            }
+
+            public void onStatusSelected(final int status) {
+                switch (status) {
+                case MultiRoomView.STATUS_ONLINE:
+                    login();
+                    break;
+                case MultiRoomView.STATUS_OFFLINE:
+                    logout();
+                    break;
+                case MultiRoomView.STATUS_BUSY:
+                    break;
+                case MultiRoomView.STATUS_INVISIBLE:
+                    break;
+                case MultiRoomView.STATUS_XA:
+                    break;
+                case MultiRoomView.STATUS_AWAY:
+                    break;
+                default:
+                    throw new IndexOutOfBoundsException("Xmpp status unknown");
+                }
+            }
+        });
+        MultiRoomPanel multiRoomPanel = new MultiRoomPanel(new I18nTranslationServiceMocked(), extChatDialog);
+        extChatDialog.init(multiRoomPanel);
+        extChatDialog.show();
+    }
+
+    private void login() {
+        xmpp.login(userNameInput.getText(), passwordInput.getText());
+        btnLogin.setEnabled(false);
+        btnLogout.setEnabled(true);
+        extChatDialog.setStatus(MultiRoomView.STATUS_ONLINE);
+    }
+
+    private void logout() {
+        xmpp.logout();
+        btnLogout.setEnabled(true);
+        btnLogin.setEnabled(true);
+        extChatDialog.setStatus(MultiRoomView.STATUS_OFFLINE);
     }
 
 }
