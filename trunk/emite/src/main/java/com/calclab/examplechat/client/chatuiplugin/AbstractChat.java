@@ -19,10 +19,22 @@
 
 package com.calclab.examplechat.client.chatuiplugin;
 
-public interface RoomListener {
+import org.ourproject.kune.platf.client.View;
 
-    void onRoomReady(Room room);
+public interface AbstractChat {
 
-    void onMessageReceived(Room room);
+    void activate();
+
+    void addDelimiter(String date);
+
+    void addInfoMessage(String message);
+
+    void clearSavedInput();
+
+    String getSavedInput();
+
+    View getView();
+
+    void saveInput(String inputText);
 
 }

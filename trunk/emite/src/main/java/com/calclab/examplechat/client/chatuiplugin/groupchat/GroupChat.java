@@ -17,13 +17,14 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
 import org.ourproject.kune.platf.client.View;
 
-import com.calclab.examplechat.client.chatuiplugin.RoomUser.UserType;
+import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.UserType;
 
-public interface Room {
+public interface GroupChat extends AbstractChat {
 
     String getName();
 
@@ -52,7 +53,7 @@ public interface Room {
 
     String getSubject();
 
-    RoomUserListView getUsersListView();
+    GroupChatUserListView getUsersListView();
 
     View getView();
 

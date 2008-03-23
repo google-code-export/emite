@@ -17,7 +17,7 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,33 +25,33 @@ import java.util.Map;
 import org.ourproject.kune.platf.client.View;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.examplechat.client.chatuiplugin.RoomUser.UserType;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.UserType;
 
-public class RoomPresenter implements Room {
+public class GroupChatPresenter implements GroupChat {
 
     private final static String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
             "purple", "fuchsia", "maroon", "red" };
 
     private int currentColor;
-    private RoomView view;
+    private GroupChatView view;
     private String input;
     private String subject;
     private String userAlias;
     // FIXME: this in RoomUserList?
-    private final Map<String, RoomUser> users;
+    private final Map<String, GroupChatUser> users;
     private String roomName;
-    private RoomUserList userList;
+    private GroupChatUserList userList;
     // private XmppRoom handler;
-    private final RoomListener listener;
+    private final GroupChatListener listener;
     private boolean closeConfirmed;
     private UserType userType;
 
-    public RoomPresenter(final RoomListener listener) {
+    public GroupChatPresenter(final GroupChatListener listener) {
         this.listener = listener;
         this.input = "";
         this.currentColor = 0;
         this.subject = "Subject: " + roomName;
-        users = new HashMap<String, RoomUser>();
+        users = new HashMap<String, GroupChatUser>();
     }
 
     public void setRoomName(final String roomName) {
@@ -67,11 +67,11 @@ public class RoomPresenter implements Room {
         this.userType = userType;
     }
 
-    public void setUserList(final RoomUserList userList) {
+    public void setUserList(final GroupChatUserList userList) {
         this.userList = userList;
     }
 
-    public void init(final RoomView view) {
+    public void init(final GroupChatView view) {
         this.view = view;
         closeConfirmed = false;
     }
@@ -83,7 +83,7 @@ public class RoomPresenter implements Room {
     public void addMessage(final String userAlias, final String message) {
         String userColor;
 
-        RoomUser user = users.get(userAlias);
+        GroupChatUser user = users.get(userAlias);
         if (user != null) {
             userColor = user.getColor();
         } else {
@@ -99,7 +99,7 @@ public class RoomPresenter implements Room {
     }
 
     public void addUser(final String alias, final UserType type) {
-        RoomUser user = new RoomUser(alias, getNextColor(), type);
+        GroupChatUser user = new GroupChatUser(alias, getNextColor(), type);
         getUsersList().add(user);
         users.put(alias, user);
     }
@@ -128,7 +128,7 @@ public class RoomPresenter implements Room {
         return input;
     }
 
-    protected void doClose() {
+    public void doClose() {
         // handler.logout();
     }
 
@@ -152,11 +152,11 @@ public class RoomPresenter implements Room {
         return color;
     }
 
-    public RoomUserList getUsersList() {
+    public GroupChatUserList getUsersList() {
         return userList;
     }
 
-    public RoomUserListView getUsersListView() {
+    public GroupChatUserListView getUsersListView() {
         return userList.getView();
     }
 

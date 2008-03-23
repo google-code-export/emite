@@ -17,9 +17,8 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin.ui;
+package com.calclab.examplechat.client.chatuiplugin.utils;
 
-import com.calclab.examplechat.client.chatuiplugin.EmoticonPaletteListener;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
@@ -42,7 +41,7 @@ public class EmoticonPalettePanel extends Composite {
         initWidget(sp);
         grid.setCellSpacing(1);
         grid.addStyleName("emite-MultiRoomPanel-EmoticonPalette");
-        RoomImages img = RoomImages.App.getInstance();
+        Emoticons img = Emoticons.App.getInstance();
         addNextIcon(createEmoticon(img.smile(), ":-)", listener));
         addNextIcon(createEmoticon(img.crying(), ":'(", listener));
         addNextIcon(createEmoticon(img.surprised(), ":-O", listener));

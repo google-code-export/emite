@@ -18,7 +18,7 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin.ui;
+package com.calclab.examplechat.client.chatuiplugin;
 
 import java.util.HashMap;
 
@@ -26,12 +26,12 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.examplechat.client.chatuiplugin.EmoticonPaletteListener;
-import com.calclab.examplechat.client.chatuiplugin.MultiRoomPresenter;
-import com.calclab.examplechat.client.chatuiplugin.MultiRoomView;
-import com.calclab.examplechat.client.chatuiplugin.Room;
-import com.calclab.examplechat.client.chatuiplugin.RoomPresenter;
-import com.calclab.examplechat.client.chatuiplugin.RoomUserListView;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListView;
+import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
+import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPaletteListener;
+import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPalettePanel;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -66,18 +66,18 @@ import com.gwtext.client.widgets.menu.Menu;
 import com.gwtext.client.widgets.menu.TextItem;
 import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 
-public class MultiRoomPanel implements MultiRoomView {
-    private static final XmppIcons icons = XmppIcons.App.getInstance();
+public class MultiChatPanel implements MultiChatView {
+    private static final ChatIcons icons = ChatIcons.App.getInstance();
 
     protected static final String INPUT_FIELD = "input-area";
     private Window dialog;
     private Button sendBtn;
-    private final MultiRoomPresenter presenter;
+    private final MultiChatPresenter presenter;
     private TextArea subject;
-    private DeckPanel roomUsersDeckPanel;
+    private DeckPanel groupChatUsersDeckPanel;
     private TextArea input;
-    private final HashMap<RoomUserListView, Integer> userListToIndex;
-    private final HashMap<String, Room> panelIdToRoom;
+    private final HashMap<GroupChatUserListView, Integer> userListToIndex;
+    private final HashMap<String, GroupChat> panelIdToGroupChat;
     // private final HashMap panelIdToTabId;
     private EmoticonPalettePanel emoticonPalettePanel;
     private PopupPanel emoticonPopup;
@@ -89,34 +89,34 @@ public class MultiRoomPanel implements MultiRoomView {
     private CheckItem awayMenuItem;
     private ToolbarMenuButton statusButton;
     // private IndexedStackPanelWithSubItems usersStack;
-    private ToolbarButton inviteUserToRoom;
+    private ToolbarButton inviteUserToGroupChat;
     private TabPanel centerPanel;
     private Panel usersPanel;
 
     private final I18nTranslationServiceMocked i18n;;
 
-    public MultiRoomPanel(final I18nTranslationServiceMocked i18n, final MultiRoomPresenter presenter) {
+    public MultiChatPanel(final I18nTranslationServiceMocked i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
         this.presenter = presenter;
-        this.userListToIndex = new HashMap<RoomUserListView, Integer>();
-        panelIdToRoom = new HashMap<String, Room>();
+        this.userListToIndex = new HashMap<GroupChatUserListView, Integer>();
+        panelIdToGroupChat = new HashMap<String, GroupChat>();
         // panelIdToTabId = new HashMap();
         createLayout();
         setStatus(STATUS_OFFLINE);
     }
 
-    public void addRoom(final Room room) {
-        Panel roomPanel = (Panel) room.getView();
-        centerPanel.add(roomPanel);
-        String panelId = roomPanel.getId();
+    public void addGroupChat(final GroupChat groupChat) {
+        Panel groupChatPanel = (Panel) groupChat.getView();
+        centerPanel.add(groupChatPanel);
+        String panelId = groupChatPanel.getId();
         Log.debug("Panel id added: " + panelId);
-        panelIdToRoom.put(panelId, room);
-        roomPanel.show();
+        panelIdToGroupChat.put(panelId, groupChat);
+        groupChatPanel.show();
         // centerPanel.setActiveItemID(panelId);
         // panelIdToTabId.put(panelId, centerPanel.getActiveTab().getId());
     }
 
-    public void highlightRoom(final Room room) {
+    public void highlightGroupChat(final GroupChat groupChat) {
         // Panel roomPanel = (Panel) room.getView();
         // String panelId = roomPanel.getId();
         // String tabId = (String) panelIdToTabId.get(panelId);
@@ -163,20 +163,20 @@ public class MultiRoomPanel implements MultiRoomView {
         subject.setDisabled(editable);
     }
 
-    public void showUserList(final RoomUserListView view) {
+    public void showUserList(final GroupChatUserListView view) {
         Integer index = userListToIndex.get(view);
-        roomUsersDeckPanel.showWidget(index.intValue());
+        groupChatUsersDeckPanel.showWidget(index.intValue());
         usersPanel.setActiveItem(1);
     }
 
-    public void addRoomUsersPanel(final RoomUserListView view) {
-        roomUsersDeckPanel.add((Widget) view);
-        userListToIndex.put(view, new Integer(roomUsersDeckPanel.getWidgetIndex((Widget) view)));
+    public void addRoomUsersPanel(final GroupChatUserListView view) {
+        groupChatUsersDeckPanel.add((Widget) view);
+        userListToIndex.put(view, new Integer(groupChatUsersDeckPanel.getWidgetIndex((Widget) view)));
     }
 
-    public void removeRoomUsersPanel(final RoomUserListView view) {
+    public void removeRoomUsersPanel(final GroupChatUserListView view) {
         Integer index = userListToIndex.get(view);
-        roomUsersDeckPanel.remove(index.intValue());
+        groupChatUsersDeckPanel.remove(index.intValue());
         userListToIndex.remove(view);
     }
 
@@ -301,23 +301,24 @@ public class MultiRoomPanel implements MultiRoomView {
         centerPanel.addListener(new PanelListenerAdapter() {
             public boolean doBeforeRemove(final Container self, final Component component) {
                 final String panelId = component.getId();
-                final RoomPresenter roomPresenter = (RoomPresenter) panelIdToRoom.get(panelId);
-                if (presenter.isCloseAllConfirmed() || roomPresenter.isCloseConfirmed()) {
-                    panelIdToRoom.remove(panelId);
+                final GroupChatPresenter groupChatPresenter = (GroupChatPresenter) panelIdToGroupChat.get(panelId);
+                if (presenter.isCloseAllConfirmed() || groupChatPresenter.isCloseConfirmed()) {
+                    panelIdToGroupChat.remove(panelId);
                     // panelIdToTabId.remove(panelId);
-                    removeRoomUsersPanel(roomPresenter.getUsersListView());
-                    presenter.closeRoom(roomPresenter);
+                    removeRoomUsersPanel(groupChatPresenter.getUsersListView());
+                    presenter.closeRoom(groupChatPresenter);
                     return true;
                 } else {
                     MessageBox.confirm(i18n.t("Confirm"), i18n.t("Are you sure you want to exit from this room?"),
                             new MessageBox.ConfirmCallback() {
                                 public void execute(final String btnID) {
-                                    RoomPresenter roomPresenter = (RoomPresenter) panelIdToRoom.get(panelId);
+                                    GroupChatPresenter groupChatPresenter = (GroupChatPresenter) panelIdToGroupChat
+                                            .get(panelId);
                                     if (btnID.equals("yes")) {
-                                        roomPresenter.onCloseConfirmed();
+                                        groupChatPresenter.onCloseConfirmed();
                                         self.remove(panelId);
                                     } else {
-                                        roomPresenter.onCloseNotConfirmed();
+                                        groupChatPresenter.onCloseNotConfirmed();
                                     }
                                 }
                             });
@@ -327,8 +328,8 @@ public class MultiRoomPanel implements MultiRoomView {
 
             public void onActivate(final Panel panel) {
                 Log.debug("Panel activated: " + panel.getId());
-                RoomPresenter roomPresenter = (RoomPresenter) panelIdToRoom.get(panel.getId());
-                presenter.activateRoom(roomPresenter);
+                GroupChatPresenter groupChatPresenter = (GroupChatPresenter) panelIdToGroupChat.get(panel.getId());
+                presenter.activateGroupChat(groupChatPresenter);
             }
 
             public void onRemove(final Container self, final Component component) {
@@ -344,13 +345,13 @@ public class MultiRoomPanel implements MultiRoomView {
         usersPanel.setBorder(false);
         // usersStack = new IndexedStackPanelWithSubItems();
         // usersStack.setStyleName("kune-StackedDropDownPanel");
-        roomUsersDeckPanel = new DeckPanel();
-        roomUsersDeckPanel.addStyleName("emite-MultiRoomPanel-User");
+        groupChatUsersDeckPanel = new DeckPanel();
+        groupChatUsersDeckPanel.addStyleName("emite-MultiRoomPanel-User");
         Panel buddiesPanel = new Panel(i18n.t("My buddies"));
         buddiesPanel.setIconCls("userf-icon");
         Panel roomUsersPanel = new Panel(i18n.t("Now in this room"));
         roomUsersPanel.setIconCls("group-icon");
-        roomUsersPanel.add(roomUsersDeckPanel);
+        roomUsersPanel.add(groupChatUsersDeckPanel);
         // usersStack.addStackItem(MYBUDDIES, i18n.t("Presence of my
         // buddies"), true);
         // usersStack.add(roomUsersDeckPanel, i18n.t("Now in this room"));
@@ -392,10 +393,10 @@ public class MultiRoomPanel implements MultiRoomView {
 
         topToolbar.addSeparator();
 
-        inviteUserToRoom = new ToolbarButton();
-        inviteUserToRoom.setIcon("images/group_add.png");
-        inviteUserToRoom.setCls("x-btn-icon");
-        inviteUserToRoom.setTooltip(i18n.t("Invite another user to this chat room"));
+        inviteUserToGroupChat = new ToolbarButton();
+        inviteUserToGroupChat.setIcon("images/group_add.png");
+        inviteUserToGroupChat.setCls("x-btn-icon");
+        inviteUserToGroupChat.setTooltip(i18n.t("Invite another user to this chat room"));
 
         ToolbarButton buddyAdd = new ToolbarButton();
         buddyAdd.setIcon("images/user_add.png");
@@ -423,7 +424,7 @@ public class MultiRoomPanel implements MultiRoomView {
             }
         });
 
-        inviteUserToRoom.addListener(new ButtonListenerAdapter() {
+        inviteUserToGroupChat.addListener(new ButtonListenerAdapter() {
             public void onClick(final Button button, final EventObject e) {
                 // DefaultDispatcher.getInstance().fire(PlatformEvents.ADD_USERLIVESEARCH,
                 // inviteUserToRoomListener, null);
@@ -432,7 +433,7 @@ public class MultiRoomPanel implements MultiRoomView {
 
         topToolbar.addButton(buddyAdd);
 
-        topToolbar.addButton(inviteUserToRoom);
+        topToolbar.addButton(inviteUserToGroupChat);
 
         return topToolbar;
     }

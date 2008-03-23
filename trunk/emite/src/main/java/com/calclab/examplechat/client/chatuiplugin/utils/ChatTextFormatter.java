@@ -17,7 +17,7 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin.ui;
+package com.calclab.examplechat.client.chatuiplugin.utils;
 
 import org.ourproject.kune.platf.client.ui.KuneStringUtils;
 
@@ -73,7 +73,7 @@ public class ChatTextFormatter {
     }
 
     private static String formatEmoticons(String message) {
-        RoomImages img = RoomImages.App.getInstance();
+        Emoticons img = Emoticons.App.getInstance();
 
         message = replace(message, new String[] { "&gt;:\\)" }, DEVIL);
         message = replace(message, new String[] { "O:\\)", "o:\\)", "o:-\\)", "O:-\\)", "0:\\)", "0:-\\)" }, ANGEL);

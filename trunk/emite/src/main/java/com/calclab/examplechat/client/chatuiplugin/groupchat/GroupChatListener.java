@@ -17,14 +17,12 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-public interface MultiRoomListener {
+public interface GroupChatListener {
 
-    void onSendMessage(Room room, String message);
+    void onGroupChatReady(GroupChat groupChat);
 
-    void onCloseRoom(Room room);
-
-    void onStatusSelected(final int status);
+    void onMessageReceived(GroupChat groupChat);
 
 }
