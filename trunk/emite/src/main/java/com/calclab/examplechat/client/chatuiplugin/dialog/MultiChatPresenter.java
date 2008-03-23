@@ -23,6 +23,8 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 import org.ourproject.kune.platf.client.View;
 
 import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
+import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
+import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
@@ -31,14 +33,17 @@ import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.Group
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 
 public class MultiChatPresenter implements MultiChat, GroupChatListener, PairChatListener {
     private MultiChatView view;
     private AbstractChat currentChat;
     private final MultiChatListener listener;
     private boolean closeAllConfirmed;
+    private final AbstractChatUser currentSessionUser;
 
-    public MultiChatPresenter(final MultiChatListener listener) {
+    public MultiChatPresenter(final AbstractChatUser currentSessionUser, final MultiChatListener listener) {
+        this.currentSessionUser = currentSessionUser;
         this.listener = listener;
         currentChat = null;
         // view.setSendEnabled(false);
@@ -55,17 +60,25 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.addPresenceBuddy("mengano", "Working", MultiChatView.STATUS_BUSY);
     }
 
-    public GroupChat createGroupChat(final String roomName, final String userAlias,
+    public GroupChat createGroupChat(final String groupChatName, final String userAlias,
             final GroupChatUserType groupChatUserType) {
-        // Room room = ChatFactory.createRoom(this);
-        // room.setRoomName(roomName);
-        // room.setUserAlias(userAlias);
-        // room.setUserType(userType);
-        // currentRoom = room;
-        // view.addRoomUsersPanel(room.getUsersListView());
-        // view.addRoom(room);
-        // return currentRoom;
-        return null;
+        GroupChatUser groupChatUser = new GroupChatUser(currentSessionUser.getJid(), userAlias, "black",
+                groupChatUserType);
+        GroupChat groupChat = ChatDialogFactory.createGroupChat(this, groupChatUser);
+        groupChat.setChatTitle(groupChatName);
+        currentChat = groupChat;
+        view.addGroupChatUsersPanel(groupChat.getUsersListView());
+        view.addChat(groupChat);
+        return groupChat;
+    }
+
+    public PairChat createPairChat(final PairChatUser otherUser) {
+        PairChatUser currentePairChatUser = new PairChatUser(currentSessionUser.getJid(), currentSessionUser.getAlias());
+        PairChat pairChat = ChatDialogFactory.createPairChat(this, currentePairChatUser, otherUser);
+        pairChat.setChatTitle(otherUser.getAlias());
+        currentChat = pairChat;
+        view.addChat(pairChat);
+        return pairChat;
     }
 
     public void show() {

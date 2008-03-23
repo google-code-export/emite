@@ -38,7 +38,7 @@ public interface MultiChatView {
 
     void addPresenceBuddy(String buddyName, String title, int status);
 
-    void addRoomUsersPanel(GroupChatUserListView view);
+    void addGroupChatUsersPanel(GroupChatUserListView view);
 
     void clearInputText();
 
