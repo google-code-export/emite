@@ -18,24 +18,31 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import org.ourproject.kune.platf.client.View;
 
+import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.UserType;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
 
-public class MultiChatPresenter implements MultiChat, GroupChatListener {
+public class MultiChatPresenter implements MultiChat, GroupChatListener, PairChatListener {
     private MultiChatView view;
-    private GroupChat currentRoom;
+    private AbstractChat currentChat;
     private final MultiChatListener listener;
     private boolean closeAllConfirmed;
 
     public MultiChatPresenter(final MultiChatListener listener) {
         this.listener = listener;
+        currentChat = null;
+        // view.setSendEnabled(false);
+        // view.setInputEditable(false);
+        // view.setSubjectEditable(false);
     }
 
     public void init(final MultiChatView view) {
@@ -47,7 +54,8 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener {
         view.addPresenceBuddy("mengano", "Working", MultiChatView.STATUS_BUSY);
     }
 
-    public GroupChat createGroupChat(final String roomName, final String userAlias, final UserType userType) {
+    public GroupChat createGroupChat(final String roomName, final String userAlias,
+            final GroupChatUserType groupChatUserType) {
         // Room room = ChatFactory.createRoom(this);
         // room.setRoomName(roomName);
         // room.setUserAlias(userAlias);
@@ -65,7 +73,11 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener {
     }
 
     public void onSend() {
-        listener.onSendMessage(currentRoom, view.getInputText());
+        if (currentChat.getType() == AbstractChat.TYPE_PAIR_CHAT) {
+            listener.onSendMessage(((PairChat) currentChat).getOtherUser(), view.getInputText());
+        } else {
+            listener.onSendMessage(((GroupChat) currentChat), view.getInputText());
+        }
         // view.setSendEnabled(false);
         view.clearInputText();
     }
@@ -76,26 +88,20 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener {
     }
 
     public void activateGroupChat(final GroupChat nextRoom) {
-        if (currentRoom != null) {
-            currentRoom.saveInput(view.getInputText());
+        if (currentChat != null) {
+            currentChat.saveInput(view.getInputText());
         }
-        view.setSendEnabled(nextRoom.isReady());
+        // view.setSendEnabled(nextRoom.isReady());
         view.setInputText(nextRoom.getSavedInput());
         view.setSubject(nextRoom.getSubject());
-        view.setSubjectEditable(nextRoom.getUserType().equals(GroupChatUser.MODERADOR));
+        view.setSubjectEditable(nextRoom.getSessionUserType().equals(GroupChatUser.MODERADOR));
         view.showUserList(nextRoom.getUsersListView());
         nextRoom.activate();
-        currentRoom = nextRoom;
+        currentChat = nextRoom;
     }
 
-    public void onGroupChatReady(final GroupChat groupChat) {
-        if (currentRoom == groupChat) {
-            view.setSendEnabled(true);
-        }
-    }
-
-    public void onMessageReceived(final GroupChat groupChat) {
-        view.highlightGroupChat(groupChat);
+    public void onMessageReceived(final AbstractChat chat) {
+        view.highlightChat(chat);
     }
 
     public void onCloseAllNotConfirmed() {
@@ -114,8 +120,8 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener {
 
     public void changeRoomSubject(final String text) {
         // FIXME Do the real subject rename
+        ((GroupChat) currentChat).setSubject(text);
         view.setSubject(text);
-        currentRoom.setSubject(text);
     }
 
     public void onStatusSelected(final int status) {
@@ -124,11 +130,9 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener {
     }
 
     public void addBuddy(final String shortName, final String longName) {
-        // TODO Auto-generated method stub
     }
 
     public void inviteUserToRoom(final String shortName, final String longName) {
-        // TODO Auto-generated method stub
     }
 
     public void setStatus(final int status) {

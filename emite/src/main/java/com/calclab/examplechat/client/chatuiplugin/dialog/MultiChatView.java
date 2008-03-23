@@ -18,8 +18,9 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.dialog;
 
+import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListView;
 
@@ -52,8 +53,6 @@ public interface MultiChatView {
 
     void clearInputText();
 
-    void highlightGroupChat(GroupChat groupChat);
-
     void setSubjectEditable(boolean editable);
 
     void setStatus(int statusOnline);
@@ -63,5 +62,9 @@ public interface MultiChatView {
     void removePresenceBuddy(String buddyName);
 
     void destroy();
+
+    void highlightChat(AbstractChat chat);
+
+    void setInputEditable(boolean editable);
 
 }

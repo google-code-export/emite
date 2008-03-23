@@ -17,29 +17,10 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin.groupchat;
+package com.calclab.examplechat.client.chatuiplugin;
 
-import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
+public interface AbstractChatListener {
 
-public interface GroupChat extends AbstractChat {
-
-    void addMessage(String userAlias, String body);
-
-    void addUser(GroupChatUser user);
-
-    String getSessionAlias();
-
-    String getSubject();
-
-    GroupChatUserListView getUsersListView();
-
-    GroupChatUserType getSessionUserType();
-
-    void removeUser(String alias);
-
-    void setSessionUserType(GroupChatUserType groupChatUserType);
-
-    void setSubject(String subject);
+    void onMessageReceived(AbstractChat chat);
 
 }

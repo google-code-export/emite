@@ -19,15 +19,40 @@
 
 package com.calclab.examplechat.client.chatuiplugin;
 
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.UserType;
+public class AbstractChatUser {
 
-public interface MultiChat {
+    private final String jid;
+    private String alias;
+    private String color;
 
-    public void show();
+    public AbstractChatUser(final String jid, final String alias) {
+        this.jid = jid;
+        this.alias = alias;
+    }
 
-    GroupChat createGroupChat(String roomName, String userAlias, UserType userType);
+    public AbstractChatUser(final String jid, final String alias, final String color) {
+        this(jid, alias);
+        this.color = color;
+    }
 
-    public void activateGroupChat(GroupChat groupChat);
+    public String getJid() {
+        return jid;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setColor(final String color) {
+        this.color = color;
+    }
+
+    public void setAlias(final String alias) {
+        this.alias = alias;
+    }
 
 }

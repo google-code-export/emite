@@ -18,7 +18,7 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import java.util.HashMap;
 
@@ -26,6 +26,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListView;
@@ -116,7 +117,11 @@ public class MultiChatPanel implements MultiChatView {
         // panelIdToTabId.put(panelId, centerPanel.getActiveTab().getId());
     }
 
-    public void highlightGroupChat(final GroupChat groupChat) {
+    public void highlightChat(final AbstractChat chat) {
+        chat.getView();
+        // TODO: something like change icon
+
+        // Old:
         // Panel roomPanel = (Panel) room.getView();
         // String panelId = roomPanel.getId();
         // String tabId = (String) panelIdToTabId.get(panelId);
@@ -161,6 +166,10 @@ public class MultiChatPanel implements MultiChatView {
 
     public void setSubjectEditable(final boolean editable) {
         subject.setDisabled(editable);
+    }
+
+    public void setInputEditable(final boolean editable) {
+        input.setDisabled(editable);
     }
 
     public void showUserList(final GroupChatUserListView view) {

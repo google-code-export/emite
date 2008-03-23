@@ -4,4 +4,6 @@ import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
 
 public interface PairChat extends AbstractChat {
 
+    PairChatUser getOtherUser();
+
 }

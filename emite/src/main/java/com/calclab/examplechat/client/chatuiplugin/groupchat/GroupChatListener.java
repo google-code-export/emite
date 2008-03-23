@@ -19,10 +19,8 @@
 
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-public interface GroupChatListener {
+import com.calclab.examplechat.client.chatuiplugin.AbstractChatListener;
 
-    void onGroupChatReady(GroupChat groupChat);
-
-    void onMessageReceived(GroupChat groupChat);
+public interface GroupChatListener extends AbstractChatListener {
 
 }

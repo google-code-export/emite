@@ -19,48 +19,32 @@
 
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-public class GroupChatUser {
-    public static final UserType MODERADOR = new UserType();
-    public static final UserType PARTICIPANT = new UserType();
-    public static final UserType VISITOR = new UserType();
-    public static final UserType NONE = new UserType();
+import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
 
-    public static class UserType {
-        private UserType() {
+public class GroupChatUser extends AbstractChatUser {
+    public static final GroupChatUserType MODERADOR = new GroupChatUserType();
+    public static final GroupChatUserType PARTICIPANT = new GroupChatUserType();
+    public static final GroupChatUserType VISITOR = new GroupChatUserType();
+    public static final GroupChatUserType NONE = new GroupChatUserType();
+
+    public static class GroupChatUserType {
+        private GroupChatUserType() {
         }
     }
 
-    private String color;
-    private String alias;
-    private UserType type;
+    private GroupChatUserType type;
 
-    public GroupChatUser(final String alias, final String color, final UserType userType) {
-        this.alias = alias;
-        this.color = color;
-        this.type = userType;
+    public GroupChatUser(final String jid, final String alias, final String color,
+            final GroupChatUserType groupChatUserType) {
+        super(jid, alias, color);
+        this.type = groupChatUserType;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public UserType getUserType() {
+    public GroupChatUserType getUserType() {
         return type;
     }
 
-    public void setColor(final String color) {
-        this.color = color;
-    }
-
-    public void setAlias(final String alias) {
-        this.alias = alias;
-    }
-
-    public void setUserType(final UserType userType) {
-        this.type = userType;
+    public void setUserType(final GroupChatUserType groupChatUserType) {
+        this.type = groupChatUserType;
     }
 }

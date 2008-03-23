@@ -14,11 +14,12 @@ import com.calclab.emite.client.x.im.roster.RosterItem;
 import com.calclab.emite.client.x.im.roster.RosterListener;
 import com.calclab.emite.client.x.im.session.SessionListener;
 import com.calclab.emite.client.x.im.session.Session.State;
-import com.calclab.examplechat.client.chatuiplugin.MultiChatListener;
-import com.calclab.examplechat.client.chatuiplugin.MultiChatPanel;
-import com.calclab.examplechat.client.chatuiplugin.MultiChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.MultiChatView;
+import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
+import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;
+import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -264,9 +265,6 @@ public class ChatExampleEntryPoint implements EntryPoint {
             public void onCloseGroupChat(final GroupChat groupChat) {
             }
 
-            public void onSendMessage(final GroupChat groupChat, final String message) {
-            }
-
             public void onStatusSelected(final int status) {
                 switch (status) {
                 case MultiChatView.STATUS_ONLINE:
@@ -286,6 +284,13 @@ public class ChatExampleEntryPoint implements EntryPoint {
                 default:
                     throw new IndexOutOfBoundsException("Xmpp status unknown");
                 }
+            }
+
+            public void onSendMessage(final GroupChat groupChat, final String message) {
+            }
+
+            public void onSendMessage(final PairChatUser toUserChat, final String message) {
+                xmpp.send(toUserChat.getJid(), message);
             }
         });
         MultiChatPanel multiChatPanel = new MultiChatPanel(new I18nTranslationServiceMocked(), extChatDialog);
