@@ -19,6 +19,7 @@ import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
@@ -291,6 +292,12 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
             public void onSendMessage(final PairChatUser toUserChat, final String message) {
                 xmpp.send(toUserChat.getJid(), message);
+            }
+
+            public void onClosePairChat(final PairChatPresenter pairChat) {
+            }
+
+            public void setGroupChatSubject(final GroupChat groupChat, final String subject) {
             }
         });
         MultiChatPanel multiChatPanel = new MultiChatPanel(new I18nTranslationServiceMocked(), extChatDialog);

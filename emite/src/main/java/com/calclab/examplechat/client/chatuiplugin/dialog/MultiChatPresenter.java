@@ -30,6 +30,7 @@ import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 
 public class MultiChatPresenter implements MultiChat, GroupChatListener, PairChatListener {
     private MultiChatView view;
@@ -82,22 +83,33 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.clearInputText();
     }
 
-    public void closeRoom(final GroupChatPresenter groupChat) {
+    public void closeGroupChat(final GroupChatPresenter groupChat) {
         groupChat.doClose();
         listener.onCloseGroupChat(groupChat);
     }
 
-    public void activateGroupChat(final GroupChat nextRoom) {
+    public void closePairChat(final PairChatPresenter pairChat) {
+        pairChat.doClose();
+        listener.onClosePairChat(pairChat);
+    }
+
+    public void activateChat(final AbstractChat nextChat) {
         if (currentChat != null) {
             currentChat.saveInput(view.getInputText());
         }
         // view.setSendEnabled(nextRoom.isReady());
-        view.setInputText(nextRoom.getSavedInput());
-        view.setSubject(nextRoom.getSubject());
-        view.setSubjectEditable(nextRoom.getSessionUserType().equals(GroupChatUser.MODERADOR));
-        view.showUserList(nextRoom.getUsersListView());
-        nextRoom.activate();
-        currentChat = nextRoom;
+        view.setInputText(nextChat.getSavedInput());
+        if (nextChat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
+            GroupChatPresenter groupChat = (GroupChatPresenter) nextChat;
+            view.setSubject(groupChat.getSubject());
+            view.setSubjectEditable(groupChat.getSessionUserType().equals(GroupChatUser.MODERADOR));
+            view.showUserList(groupChat.getUsersListView());
+        } else {
+            view.clearSubject();
+        }
+        view.setInputText(nextChat.getSavedInput());
+        nextChat.activate();
+        currentChat = nextChat;
     }
 
     public void onMessageReceived(final AbstractChat chat) {
@@ -118,10 +130,13 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         // UIExtensionPoint.CONTENT_BOTTOM_ICONBAR, view);
     }
 
-    public void changeRoomSubject(final String text) {
-        // FIXME Do the real subject rename
-        ((GroupChat) currentChat).setSubject(text);
+    public void changeGroupChatSubject(final String text) {
+        GroupChat groupChat = (GroupChat) currentChat;
+        groupChat.setSubject(text);
+        listener.setGroupChatSubject(groupChat, text);
+        // FIXME callback?
         view.setSubject(text);
+
     }
 
     public void onStatusSelected(final int status) {

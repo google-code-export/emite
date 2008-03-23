@@ -21,7 +21,6 @@
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListView;
 
 public interface MultiChatView {
@@ -35,36 +34,38 @@ public interface MultiChatView {
     public static final int STATUS_AWAY = 5;
     public static final int STATUS_MESSAGE = 6;
 
-    void addRoomUsersPanel(GroupChatUserListView view);
-
-    void show();
-
-    String getInputText();
-
-    void addGroupChat(GroupChat groupChat);
-
-    void setInputText(String savedInput);
-
-    void setSubject(String subject);
-
-    void showUserList(GroupChatUserListView usersListView);
-
-    void setSendEnabled(boolean enabled);
-
-    void clearInputText();
-
-    void setSubjectEditable(boolean editable);
-
-    void setStatus(int statusOnline);
+    void addChat(AbstractChat chat);
 
     void addPresenceBuddy(String buddyName, String title, int status);
 
-    void removePresenceBuddy(String buddyName);
+    void addRoomUsersPanel(GroupChatUserListView view);
+
+    void clearInputText();
 
     void destroy();
 
+    String getInputText();
+
     void highlightChat(AbstractChat chat);
 
+    void removePresenceBuddy(String buddyName);
+
     void setInputEditable(boolean editable);
+
+    void setInputText(String savedInput);
+
+    void setSendEnabled(boolean enabled);
+
+    void setStatus(int statusOnline);
+
+    void setSubject(String subject);
+
+    void setSubjectEditable(boolean editable);
+
+    void show();
+
+    void showUserList(GroupChatUserListView usersListView);
+
+    void clearSubject();
 
 }

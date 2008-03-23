@@ -24,6 +24,7 @@ import org.ourproject.kune.platf.client.View;
 public interface AbstractChat {
 
     final int TYPE_PAIR_CHAT = 1;
+
     final int TYPE_GROUP_CHAT = 2;
 
     void activate();
@@ -45,5 +46,7 @@ public interface AbstractChat {
     String getChatTitle();
 
     int getType();
+
+    String getSessionAlias();
 
 }
