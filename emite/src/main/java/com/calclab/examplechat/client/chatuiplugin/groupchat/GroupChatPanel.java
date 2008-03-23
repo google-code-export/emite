@@ -22,7 +22,7 @@ package com.calclab.examplechat.client.chatuiplugin.groupchat;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChatPresenter;
 
-public class GroupChatPanel extends AbstractChatPanel {
+public class GroupChatPanel extends AbstractChatPanel implements GroupChatView {
 
     public GroupChatPanel(final AbstractChatPresenter presenter) {
         super(presenter);

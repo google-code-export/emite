@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
 
 public class GroupChatPresenter extends AbstractChatPresenter implements GroupChat {
@@ -36,7 +37,7 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
     private GroupChatUserList userList;
     final GroupChatListener listener;
 
-    public GroupChatPresenter(final GroupChatListener listener, final GroupChatUser currentSessionUser) {
+    public GroupChatPresenter(final GroupChatListener listener, final AbstractChatUser currentSessionUser) {
         super(currentSessionUser, TYPE_GROUP_CHAT);
         this.subject = "Subject: " + getChatTitle();
         this.oldColor = 0;

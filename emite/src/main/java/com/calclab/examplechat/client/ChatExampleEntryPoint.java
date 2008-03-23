@@ -14,13 +14,15 @@ import com.calclab.emite.client.x.im.roster.RosterItem;
 import com.calclab.emite.client.x.im.roster.RosterListener;
 import com.calclab.emite.client.x.im.session.SessionListener;
 import com.calclab.emite.client.x.im.session.Session.State;
+import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
+import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
+import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
-import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;
-import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.utils.MultiChatSamples;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -50,8 +52,9 @@ public class ChatExampleEntryPoint implements EntryPoint {
     private Xmpp xmpp;
     private ScrollPanel messageOutputWrapper;
     private Button btnExtUI;
-    private MultiChatPresenter extChatDialog;
+    private MultiChat extChatDialog;
     private TextBox resourceInput;
+    private Button btnSamplesExtUI;
 
     public void onModuleLoad() {
         /*
@@ -143,7 +146,11 @@ public class ChatExampleEntryPoint implements EntryPoint {
         btnExtUI = new Button("Ext UI", new ClickListener() {
             public void onClick(final Widget sender) {
                 if (extChatDialog == null) {
-                    createExtUI();
+                    if (userNameInput.getText().length() == 0 || passwordInput.getText().length() == 0) {
+                        Log.warn("Fill user/passwd before");
+                    } else {
+                        createExtUI();
+                    }
                 } else {
                     extChatDialog.show();
                 }
@@ -151,6 +158,17 @@ public class ChatExampleEntryPoint implements EntryPoint {
         });
         btnExtUI.setTitle("gwt-ext UI (experimental)");
         buttons.add(btnExtUI);
+        btnSamplesExtUI = new Button("Chat Samples", new ClickListener() {
+            public void onClick(final Widget sender) {
+                if (extChatDialog != null) {
+                    chatSamples();
+                } else {
+                    Log.warn("Please, login and open the ext chat window before");
+                }
+            }
+        });
+        btnSamplesExtUI.setTitle("Samples in gwt-ext UI (experimental)");
+        buttons.add(btnSamplesExtUI);
         return buttons;
     }
 
@@ -262,46 +280,46 @@ public class ChatExampleEntryPoint implements EntryPoint {
         // UIExtensionPointManager(), new I18nTranslationServiceMocked());
         // kunePluginManager.install(new ChatDialogPlugin());
 
-        extChatDialog = new MultiChatPresenter(new MultiChatListener() {
-            public void onCloseGroupChat(final GroupChat groupChat) {
-            }
+        AbstractChatUser currentSessionUser = new AbstractChatUser(userNameInput.getText(), userNameInput.getText());
+        extChatDialog = ChatDialogFactory.createMultiChat(currentSessionUser, new I18nTranslationServiceMocked(),
+                new MultiChatListener() {
+                    public void onCloseGroupChat(final GroupChat groupChat) {
+                    }
 
-            public void onStatusSelected(final int status) {
-                switch (status) {
-                case MultiChatView.STATUS_ONLINE:
-                    login();
-                    break;
-                case MultiChatView.STATUS_OFFLINE:
-                    logout();
-                    break;
-                case MultiChatView.STATUS_BUSY:
-                    break;
-                case MultiChatView.STATUS_INVISIBLE:
-                    break;
-                case MultiChatView.STATUS_XA:
-                    break;
-                case MultiChatView.STATUS_AWAY:
-                    break;
-                default:
-                    throw new IndexOutOfBoundsException("Xmpp status unknown");
-                }
-            }
+                    public void onStatusSelected(final int status) {
+                        switch (status) {
+                        case MultiChatView.STATUS_ONLINE:
+                            login();
+                            break;
+                        case MultiChatView.STATUS_OFFLINE:
+                            logout();
+                            break;
+                        case MultiChatView.STATUS_BUSY:
+                            break;
+                        case MultiChatView.STATUS_INVISIBLE:
+                            break;
+                        case MultiChatView.STATUS_XA:
+                            break;
+                        case MultiChatView.STATUS_AWAY:
+                            break;
+                        default:
+                            throw new IndexOutOfBoundsException("Xmpp status unknown");
+                        }
+                    }
 
-            public void onSendMessage(final GroupChat groupChat, final String message) {
-            }
+                    public void onSendMessage(final GroupChat groupChat, final String message) {
+                    }
 
-            public void onSendMessage(final PairChatUser toUserChat, final String message) {
-                xmpp.send(toUserChat.getJid(), message);
-            }
+                    public void onSendMessage(final PairChatUser toUserChat, final String message) {
+                        xmpp.send(toUserChat.getJid(), message);
+                    }
 
-            public void onClosePairChat(final PairChatPresenter pairChat) {
-            }
+                    public void onClosePairChat(final PairChatPresenter pairChat) {
+                    }
 
-            public void setGroupChatSubject(final GroupChat groupChat, final String subject) {
-            }
-        });
-        MultiChatPanel multiChatPanel = new MultiChatPanel(new I18nTranslationServiceMocked(), extChatDialog);
-        extChatDialog.init(multiChatPanel);
+                    public void setGroupChatSubject(final GroupChat groupChat, final String subject) {
+                    }
+                });
         extChatDialog.show();
     }
 
@@ -323,4 +341,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
         }
     }
 
+    private void chatSamples() {
+        MultiChatSamples.show(extChatDialog);
+    }
 }

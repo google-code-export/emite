@@ -20,7 +20,7 @@ public class ChatDialogPlugin extends Plugin {
 
     @Override
     protected void start() {
-        extChatDialog = new MultiChatPresenter(new MultiChatListener() {
+        extChatDialog = new MultiChatPresenter(new AbstractChatUser("FIXME", "FIXME"), new MultiChatListener() {
             public void onCloseGroupChat(final GroupChat groupChat) {
             }
 

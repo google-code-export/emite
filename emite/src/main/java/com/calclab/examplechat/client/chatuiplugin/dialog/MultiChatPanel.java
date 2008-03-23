@@ -22,7 +22,7 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import java.util.HashMap;
 
-import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
+import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -94,9 +94,9 @@ public class MultiChatPanel implements MultiChatView {
     private TabPanel centerPanel;
     private Panel usersPanel;
 
-    private final I18nTranslationServiceMocked i18n;;
+    private final I18nTranslationService i18n;;
 
-    public MultiChatPanel(final I18nTranslationServiceMocked i18n, final MultiChatPresenter presenter) {
+    public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
         this.presenter = presenter;
         this.userListToIndex = new HashMap<GroupChatUserListView, Integer>();
@@ -171,7 +171,7 @@ public class MultiChatPanel implements MultiChatView {
         usersPanel.setActiveItem(1);
     }
 
-    public void addRoomUsersPanel(final GroupChatUserListView view) {
+    public void addGroupChatUsersPanel(final GroupChatUserListView view) {
         groupChatUsersDeckPanel.add((Widget) view);
         userListToIndex.put(view, new Integer(groupChatUsersDeckPanel.getWidgetIndex((Widget) view)));
     }
