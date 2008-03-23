@@ -17,13 +17,16 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 
 public interface MultiChatListener {
 
     void onSendMessage(GroupChat groupChat, String message);
+
+    void onSendMessage(PairChatUser toUserChat, String message);
 
     void onCloseGroupChat(GroupChat groupChat);
 

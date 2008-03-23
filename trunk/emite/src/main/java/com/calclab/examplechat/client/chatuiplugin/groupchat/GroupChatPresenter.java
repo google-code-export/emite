@@ -22,53 +22,27 @@ package com.calclab.examplechat.client.chatuiplugin.groupchat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ourproject.kune.platf.client.View;
-
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.UserType;
+import com.calclab.examplechat.client.chatuiplugin.AbstractChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
 
-public class GroupChatPresenter implements GroupChat {
+public class GroupChatPresenter extends AbstractChatPresenter implements GroupChat {
 
-    private final static String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
-            "purple", "fuchsia", "maroon", "red" };
-
-    private int currentColor;
-    private GroupChatView view;
-    private String input;
+    private int oldColor;
     private String subject;
-    private String userAlias;
-    // FIXME: this in RoomUserList?
-    private final Map<String, GroupChatUser> users;
-    private String roomName;
+    private GroupChatUserType sessionUserType;
+    // FIXME: this in GroupChatUserList?
+    final Map<String, GroupChatUser> users;
     private GroupChatUserList userList;
-    // private XmppRoom handler;
-    private final GroupChatListener listener;
-    private boolean closeConfirmed;
-    private UserType userType;
+    final GroupChatListener listener;
 
-    public GroupChatPresenter(final GroupChatListener listener) {
-        this.listener = listener;
+    public GroupChatPresenter(final GroupChatListener listener, final GroupChatUser currentSessionUser) {
+        super(currentSessionUser, TYPE_GROUP_CHAT);
+        this.subject = "Subject: " + getChatTitle();
+        this.oldColor = 0;
         this.input = "";
-        this.currentColor = 0;
-        this.subject = "Subject: " + roomName;
         users = new HashMap<String, GroupChatUser>();
-    }
-
-    public void setRoomName(final String roomName) {
-        this.roomName = roomName;
-        view.showRoomName(roomName);
-    }
-
-    public void setUserAlias(final String userAlias) {
-        this.userAlias = userAlias;
-    }
-
-    public void setUserType(final UserType userType) {
-        this.userType = userType;
-    }
-
-    public void setUserList(final GroupChatUserList userList) {
-        this.userList = userList;
+        this.listener = listener;
     }
 
     public void init(final GroupChatView view) {
@@ -76,8 +50,12 @@ public class GroupChatPresenter implements GroupChat {
         closeConfirmed = false;
     }
 
-    public View getView() {
-        return view;
+    public void setSessionUserType(final GroupChatUserType groupChatUserType) {
+        this.sessionUserType = groupChatUserType;
+    }
+
+    public void setUserList(final GroupChatUserList userList) {
+        this.userList = userList;
     }
 
     public void addMessage(final String userAlias, final String message) {
@@ -87,49 +65,21 @@ public class GroupChatPresenter implements GroupChat {
         if (user != null) {
             userColor = user.getColor();
         } else {
-            Log.debug("User " + userAlias + " not in our users list");
+            Log.error("User " + userAlias + " not in our users list");
             userColor = "black";
         }
         view.showMessage(userAlias, userColor, message);
         listener.onMessageReceived(this);
     }
 
-    public void addInfoMessage(final String message) {
-        view.showInfoMessage(message);
-    }
-
-    public void addUser(final String alias, final UserType type) {
-        GroupChatUser user = new GroupChatUser(alias, getNextColor(), type);
+    public void addUser(final GroupChatUser user) {
+        user.setColor(getNextColor());
         getUsersList().add(user);
-        users.put(alias, user);
+        users.put(user.getAlias(), user);
     }
 
     public void removeUser(final String alias) {
         getUsersList().remove(users.get(alias));
-    }
-
-    public void addDelimiter(final String datetime) {
-        view.showDelimiter(datetime);
-    }
-
-    public void clearSavedInput() {
-        saveInput(null);
-    }
-
-    public String getSessionAlias() {
-        return userAlias;
-    }
-
-    public void saveInput(final String inputText) {
-        input = inputText;
-    }
-
-    public String getSavedInput() {
-        return input;
-    }
-
-    public void doClose() {
-        // handler.logout();
     }
 
     public String getSubject() {
@@ -140,14 +90,10 @@ public class GroupChatPresenter implements GroupChat {
         this.subject = subject;
     }
 
-    public String getName() {
-        return roomName;
-    }
-
     private String getNextColor() {
-        String color = USERCOLORS[currentColor++];
-        if (currentColor >= USERCOLORS.length) {
-            currentColor = 0;
+        String color = USERCOLORS[oldColor++];
+        if (oldColor >= USERCOLORS.length) {
+            oldColor = 0;
         }
         return color;
     }
@@ -160,38 +106,8 @@ public class GroupChatPresenter implements GroupChat {
         return userList.getView();
     }
 
-    // public void setHandler(final XmppRoom handler) {
-    // this.handler = handler;
-    // listener.onRoomReady(this);
-    // }
-
-    public boolean isReady() {
-        return true;
-        // return handler != null;
-    }
-
-    // public XmppRoom getHandler() {
-    // // return handler;
-    // }
-
-    public void onCloseConfirmed() {
-        closeConfirmed = true;
-    }
-
-    public void onCloseNotConfirmed() {
-        closeConfirmed = false;
-    }
-
-    public boolean isCloseConfirmed() {
-        return closeConfirmed;
-    }
-
-    public void activate() {
-        view.scrollDown();
-    }
-
-    public UserType getUserType() {
-        return userType;
+    public GroupChatUserType getSessionUserType() {
+        return sessionUserType;
     }
 
 }

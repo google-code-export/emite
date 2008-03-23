@@ -23,6 +23,9 @@ import org.ourproject.kune.platf.client.View;
 
 public interface AbstractChat {
 
+    final int TYPE_PAIR_CHAT = 1;
+    final int TYPE_GROUP_CHAT = 2;
+
     void activate();
 
     void addDelimiter(String date);
@@ -36,5 +39,11 @@ public interface AbstractChat {
     View getView();
 
     void saveInput(String inputText);
+
+    void setChatTitle(String chatTitle);
+
+    String getChatTitle();
+
+    int getType();
 
 }
