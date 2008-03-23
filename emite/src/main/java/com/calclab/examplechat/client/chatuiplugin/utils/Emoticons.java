@@ -17,23 +17,23 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin.ui;
+package com.calclab.examplechat.client.chatuiplugin.utils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ImageBundle;
 
-public interface RoomImages extends ImageBundle {
+public interface Emoticons extends ImageBundle {
 
     public static class App {
-	private static RoomImages ourInstance = null;
+        private static Emoticons ourInstance = null;
 
-	public static synchronized RoomImages getInstance() {
-	    if (ourInstance == null) {
-		ourInstance = (RoomImages) GWT.create(RoomImages.class);
-	    }
-	    return ourInstance;
-	}
+        public static synchronized Emoticons getInstance() {
+            if (ourInstance == null) {
+                ourInstance = (Emoticons) GWT.create(Emoticons.class);
+            }
+            return ourInstance;
+        }
     }
 
     /**

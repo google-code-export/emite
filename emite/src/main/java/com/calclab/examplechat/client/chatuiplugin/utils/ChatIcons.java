@@ -17,20 +17,20 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin.ui;
+package com.calclab.examplechat.client.chatuiplugin.utils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ImageBundle;
 
-public interface XmppIcons extends ImageBundle {
+public interface ChatIcons extends ImageBundle {
 
     public static class App {
-        private static XmppIcons ourInstance = null;
+        private static ChatIcons ourInstance = null;
 
-        public static synchronized XmppIcons getInstance() {
+        public static synchronized ChatIcons getInstance() {
             if (ourInstance == null) {
-                ourInstance = (XmppIcons) GWT.create(XmppIcons.class);
+                ourInstance = (ChatIcons) GWT.create(ChatIcons.class);
             }
             return ourInstance;
         }

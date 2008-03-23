@@ -20,7 +20,10 @@
 
 package com.calclab.examplechat.client.chatuiplugin;
 
-public interface MultiRoomView {
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListView;
+
+public interface MultiChatView {
 
     // FIXME: emite constants?
     public static final int STATUS_ONLINE = 0;
@@ -31,25 +34,25 @@ public interface MultiRoomView {
     public static final int STATUS_AWAY = 5;
     public static final int STATUS_MESSAGE = 6;
 
-    void addRoomUsersPanel(RoomUserListView view);
+    void addRoomUsersPanel(GroupChatUserListView view);
 
     void show();
 
     String getInputText();
 
-    void addRoom(Room room);
+    void addGroupChat(GroupChat groupChat);
 
     void setInputText(String savedInput);
 
     void setSubject(String subject);
 
-    void showUserList(RoomUserListView usersListView);
+    void showUserList(GroupChatUserListView usersListView);
 
     void setSendEnabled(boolean enabled);
 
     void clearInputText();
 
-    void highlightRoom(Room room);
+    void highlightGroupChat(GroupChat groupChat);
 
     void setSubjectEditable(boolean editable);
 

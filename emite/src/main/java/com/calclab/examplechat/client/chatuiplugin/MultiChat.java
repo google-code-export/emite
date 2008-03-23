@@ -19,12 +19,15 @@
 
 package com.calclab.examplechat.client.chatuiplugin;
 
-public interface RoomUserList {
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.UserType;
 
-    public RoomUserListView getView();
+public interface MultiChat {
 
-    void add(RoomUser user);
+    public void show();
 
-    void remove(RoomUser user);
+    GroupChat createGroupChat(String roomName, String userAlias, UserType userType);
+
+    public void activateGroupChat(GroupChat groupChat);
 
 }

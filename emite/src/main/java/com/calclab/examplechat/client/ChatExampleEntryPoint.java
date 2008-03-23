@@ -14,11 +14,11 @@ import com.calclab.emite.client.x.im.roster.RosterItem;
 import com.calclab.emite.client.x.im.roster.RosterListener;
 import com.calclab.emite.client.x.im.session.SessionListener;
 import com.calclab.emite.client.x.im.session.Session.State;
-import com.calclab.examplechat.client.chatuiplugin.MultiRoomListener;
-import com.calclab.examplechat.client.chatuiplugin.MultiRoomPresenter;
-import com.calclab.examplechat.client.chatuiplugin.MultiRoomView;
-import com.calclab.examplechat.client.chatuiplugin.Room;
-import com.calclab.examplechat.client.chatuiplugin.ui.MultiRoomPanel;
+import com.calclab.examplechat.client.chatuiplugin.MultiChatListener;
+import com.calclab.examplechat.client.chatuiplugin.MultiChatPanel;
+import com.calclab.examplechat.client.chatuiplugin.MultiChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.MultiChatView;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -47,8 +47,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
     private ListBox userSelector;
     private Xmpp xmpp;
     private ScrollPanel messageOutputWrapper;
-    private Button btnExperimentalUI;
-    private MultiRoomPresenter extChatDialog;
+    private Button btnExtUI;
+    private MultiChatPresenter extChatDialog;
 
     public void onModuleLoad() {
         /*
@@ -89,13 +89,17 @@ public class ChatExampleEntryPoint implements EntryPoint {
                 case connected:
                     btnLogin.setEnabled(false);
                     btnLogout.setEnabled(true);
-                    extChatDialog.setStatus(MultiRoomView.STATUS_ONLINE);
+                    if (extChatDialog != null) {
+                        extChatDialog.setStatus(MultiChatView.STATUS_ONLINE);
+                    }
                 case connecting:
                     btnLogin.setEnabled(false);
                 case disconnected:
                     btnLogin.setEnabled(true);
                     btnLogout.setEnabled(false);
-                    extChatDialog.setStatus(MultiRoomView.STATUS_OFFLINE);
+                    if (extChatDialog != null) {
+                        extChatDialog.setStatus(MultiChatView.STATUS_OFFLINE);
+                    }
                 }
             }
         });
@@ -133,13 +137,15 @@ public class ChatExampleEntryPoint implements EntryPoint {
             }
         });
         buttons.add(btnLogout);
-        btnExperimentalUI = new Button("Ext UI", new ClickListener() {
+        btnExtUI = new Button("Ext UI", new ClickListener() {
             public void onClick(final Widget sender) {
-                createExperimentalUI();
+                if (extChatDialog == null) {
+                    createExtUI();
+                }
             }
         });
-        btnExperimentalUI.setTitle("gwt-ext UI (experimental)");
-        buttons.add(btnExperimentalUI);
+        btnExtUI.setTitle("gwt-ext UI (experimental)");
+        buttons.add(btnExtUI);
         return buttons;
     }
 
@@ -242,41 +248,41 @@ public class ChatExampleEntryPoint implements EntryPoint {
         messageIn.setFocus(true);
     }
 
-    private void createExperimentalUI() {
+    private void createExtUI() {
         // PluginManager kunePluginManager = new PluginManager(new
         // UIExtensionPointManager(), new I18nTranslationServiceMocked());
         // kunePluginManager.install(new ChatDialogPlugin());
 
-        extChatDialog = new MultiRoomPresenter(new MultiRoomListener() {
-            public void onCloseRoom(final Room room) {
+        extChatDialog = new MultiChatPresenter(new MultiChatListener() {
+            public void onCloseGroupChat(final GroupChat groupChat) {
             }
 
-            public void onSendMessage(final Room room, final String message) {
+            public void onSendMessage(final GroupChat groupChat, final String message) {
             }
 
             public void onStatusSelected(final int status) {
                 switch (status) {
-                case MultiRoomView.STATUS_ONLINE:
+                case MultiChatView.STATUS_ONLINE:
                     login();
                     break;
-                case MultiRoomView.STATUS_OFFLINE:
+                case MultiChatView.STATUS_OFFLINE:
                     logout();
                     break;
-                case MultiRoomView.STATUS_BUSY:
+                case MultiChatView.STATUS_BUSY:
                     break;
-                case MultiRoomView.STATUS_INVISIBLE:
+                case MultiChatView.STATUS_INVISIBLE:
                     break;
-                case MultiRoomView.STATUS_XA:
+                case MultiChatView.STATUS_XA:
                     break;
-                case MultiRoomView.STATUS_AWAY:
+                case MultiChatView.STATUS_AWAY:
                     break;
                 default:
                     throw new IndexOutOfBoundsException("Xmpp status unknown");
                 }
             }
         });
-        MultiRoomPanel multiRoomPanel = new MultiRoomPanel(new I18nTranslationServiceMocked(), extChatDialog);
-        extChatDialog.init(multiRoomPanel);
+        MultiChatPanel multiChatPanel = new MultiChatPanel(new I18nTranslationServiceMocked(), extChatDialog);
+        extChatDialog.init(multiChatPanel);
         extChatDialog.show();
     }
 
@@ -284,14 +290,18 @@ public class ChatExampleEntryPoint implements EntryPoint {
         xmpp.login(userNameInput.getText(), passwordInput.getText());
         btnLogin.setEnabled(false);
         btnLogout.setEnabled(true);
-        extChatDialog.setStatus(MultiRoomView.STATUS_ONLINE);
+        if (extChatDialog != null) {
+            extChatDialog.setStatus(MultiChatView.STATUS_ONLINE);
+        }
     }
 
     private void logout() {
         xmpp.logout();
         btnLogout.setEnabled(true);
         btnLogin.setEnabled(true);
-        extChatDialog.setStatus(MultiRoomView.STATUS_OFFLINE);
+        if (extChatDialog != null) {
+            extChatDialog.setStatus(MultiChatView.STATUS_OFFLINE);
+        }
     }
 
 }

@@ -17,10 +17,15 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-public interface EmoticonPaletteListener {
+import com.calclab.examplechat.client.chatuiplugin.AbstractChatPanel;
+import com.calclab.examplechat.client.chatuiplugin.AbstractChatPresenter;
 
-    void onEmoticonSelected(String emoticonText);
+public class GroupChatPanel extends AbstractChatPanel {
+
+    public GroupChatPanel(final AbstractChatPresenter presenter) {
+        super(presenter);
+    }
 
 }

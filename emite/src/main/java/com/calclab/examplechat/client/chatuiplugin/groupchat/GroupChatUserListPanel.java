@@ -17,27 +17,26 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin.ui;
+package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
 import org.ourproject.kune.platf.client.ui.IconLabel;
 
-import com.calclab.examplechat.client.chatuiplugin.RoomUser;
-import com.calclab.examplechat.client.chatuiplugin.RoomUserListView;
+import com.calclab.examplechat.client.chatuiplugin.utils.Emoticons;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class RoomUserListPanel extends VerticalPanel implements RoomUserListView {
-    public RoomUserListPanel() {
+public class GroupChatUserListPanel extends VerticalPanel implements GroupChatUserListView {
+    public GroupChatUserListPanel() {
     }
 
-    public int addUser(final RoomUser user) {
+    public int addUser(final GroupChatUser user) {
         HorizontalPanel userPanel = new HorizontalPanel();
         AbstractImagePrototype icon;
-        if (user.getUserType() == RoomUser.MODERADOR) {
-            icon = RoomImages.App.getInstance().bulletStar();
+        if (user.getUserType() == GroupChatUser.MODERADOR) {
+            icon = Emoticons.App.getInstance().bulletStar();
         } else {
-            icon = RoomImages.App.getInstance().bulletBlack();
+            icon = Emoticons.App.getInstance().bulletBlack();
         }
         IconLabel userLabel = new IconLabel(icon, user.getAlias());
         userLabel.setColor(user.getColor());

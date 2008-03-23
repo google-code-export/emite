@@ -21,16 +21,16 @@ package com.calclab.examplechat.client.chatuiplugin;
 
 import org.ourproject.kune.platf.client.View;
 
-public interface RoomView extends View {
+public interface AbstractChatView extends View {
 
-    void showRoomName(String roomName);
-
-    void showMessage(String alias, String color, String message);
+    void showMessage(String userAlias, String color, String message);
 
     void showInfoMessage(String message);
 
     void showDelimiter(String datetime);
 
     void scrollDown();
+
+    void setChatTitle(String name);
 
 }

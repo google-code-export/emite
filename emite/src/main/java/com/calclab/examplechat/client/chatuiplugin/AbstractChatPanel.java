@@ -17,12 +17,11 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin.ui;
+package com.calclab.examplechat.client.chatuiplugin;
 
 import org.ourproject.kune.platf.client.ui.HorizontalLine;
 
-import com.calclab.examplechat.client.chatuiplugin.RoomPresenter;
-import com.calclab.examplechat.client.chatuiplugin.RoomView;
+import com.calclab.examplechat.client.chatuiplugin.utils.ChatTextFormatter;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -31,10 +30,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Panel;
 
-public class RoomPanel extends Panel implements RoomView {
+public abstract class AbstractChatPanel extends Panel implements AbstractChatView {
     private final VerticalPanel vp;
 
-    public RoomPanel(final RoomPresenter presenter) {
+    public AbstractChatPanel(final AbstractChatPresenter presenter) {
         setClosable(true);
         // Test to remove AuthoHeight and see if scroll works using this panel
         // in scrollDown
@@ -46,7 +45,7 @@ public class RoomPanel extends Panel implements RoomView {
         addStyleName("emite-RoomPanel-Conversation");
     }
 
-    public void showRoomName(final String name) {
+    public void setChatTitle(final String name) {
         setTitle(name);
     }
 

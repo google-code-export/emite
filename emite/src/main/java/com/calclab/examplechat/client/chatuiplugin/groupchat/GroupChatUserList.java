@@ -17,22 +17,14 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-import com.calclab.examplechat.client.chatuiplugin.RoomUser.UserType;
+public interface GroupChatUserList {
 
-public interface MultiRoom {
-    public void show();
+    public GroupChatUserListView getView();
 
-    /**
-     * @param roomName
-     * @param userAlias
-     * @param userType
-     * @return
-     */
+    void add(GroupChatUser user);
 
-    Room createRoom(String roomName, String userAlias, UserType userType);
-
-    public void activateRoom(Room room);
+    void remove(GroupChatUser user);
 
 }
