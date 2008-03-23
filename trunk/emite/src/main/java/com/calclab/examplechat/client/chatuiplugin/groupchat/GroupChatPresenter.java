@@ -90,14 +90,6 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
         this.subject = subject;
     }
 
-    private String getNextColor() {
-        String color = USERCOLORS[oldColor++];
-        if (oldColor >= USERCOLORS.length) {
-            oldColor = 0;
-        }
-        return color;
-    }
-
     public GroupChatUserList getUsersList() {
         return userList;
     }
@@ -108,6 +100,14 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
 
     public GroupChatUserType getSessionUserType() {
         return sessionUserType;
+    }
+
+    private String getNextColor() {
+        String color = USERCOLORS[oldColor++];
+        if (oldColor >= USERCOLORS.length) {
+            oldColor = 0;
+        }
+        return color;
     }
 
 }

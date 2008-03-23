@@ -22,6 +22,7 @@ package com.calclab.examplechat.client.chatuiplugin.groupchat;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
 
 public class GroupChatUser extends AbstractChatUser {
+
     public static final GroupChatUserType MODERADOR = new GroupChatUserType();
     public static final GroupChatUserType PARTICIPANT = new GroupChatUserType();
     public static final GroupChatUserType VISITOR = new GroupChatUserType();

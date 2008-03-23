@@ -28,8 +28,6 @@ public interface GroupChat extends AbstractChat {
 
     void addUser(GroupChatUser user);
 
-    String getSessionAlias();
-
     String getSubject();
 
     GroupChatUserListView getUsersListView();

@@ -20,6 +20,7 @@
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 
 public interface MultiChatListener {
@@ -31,5 +32,9 @@ public interface MultiChatListener {
     void onCloseGroupChat(GroupChat groupChat);
 
     void onStatusSelected(final int status);
+
+    void onClosePairChat(PairChatPresenter pairChat);
+
+    void setGroupChatSubject(GroupChat groupChat, String subject);
 
 }

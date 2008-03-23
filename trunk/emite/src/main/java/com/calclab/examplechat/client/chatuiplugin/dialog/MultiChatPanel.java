@@ -27,9 +27,10 @@ import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
+import com.calclab.examplechat.client.chatuiplugin.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListView;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
 import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPaletteListener;
 import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPalettePanel;
@@ -78,8 +79,7 @@ public class MultiChatPanel implements MultiChatView {
     private DeckPanel groupChatUsersDeckPanel;
     private TextArea input;
     private final HashMap<GroupChatUserListView, Integer> userListToIndex;
-    private final HashMap<String, GroupChat> panelIdToGroupChat;
-    // private final HashMap panelIdToTabId;
+    private final HashMap<String, AbstractChat> panelIdToChat;
     private EmoticonPalettePanel emoticonPalettePanel;
     private PopupPanel emoticonPopup;
     // private BottomTrayIcon bottomIcon;
@@ -100,32 +100,25 @@ public class MultiChatPanel implements MultiChatView {
         this.i18n = i18n;
         this.presenter = presenter;
         this.userListToIndex = new HashMap<GroupChatUserListView, Integer>();
-        panelIdToGroupChat = new HashMap<String, GroupChat>();
-        // panelIdToTabId = new HashMap();
+        panelIdToChat = new HashMap<String, AbstractChat>();
         createLayout();
         setStatus(STATUS_OFFLINE);
     }
 
-    public void addGroupChat(final GroupChat groupChat) {
-        Panel groupChatPanel = (Panel) groupChat.getView();
-        centerPanel.add(groupChatPanel);
-        String panelId = groupChatPanel.getId();
-        Log.debug("Panel id added: " + panelId);
-        panelIdToGroupChat.put(panelId, groupChat);
-        groupChatPanel.show();
-        // centerPanel.setActiveItemID(panelId);
-        // panelIdToTabId.put(panelId, centerPanel.getActiveTab().getId());
+    public void addChat(final AbstractChat chat) {
+        Panel chatPanel = (Panel) chat.getView();
+        centerPanel.add(chatPanel);
+        String panelId = chatPanel.getId();
+        panelIdToChat.put(panelId, chat);
+        chatPanel.show();
     }
 
     public void highlightChat(final AbstractChat chat) {
-        chat.getView();
-        // TODO: something like change icon
+        ((Panel) chat.getView()).setIconCls("chat-icon");
+    }
 
-        // Old:
-        // Panel roomPanel = (Panel) room.getView();
-        // String panelId = roomPanel.getId();
-        // String tabId = (String) panelIdToTabId.get(panelId);
-        // centerPanel.get(tabId).getTextEl().highlight();
+    public void unHighlightChat(final AbstractChat chat) {
+        ((Panel) chat.getView()).setIconCls("");
     }
 
     public void show() {
@@ -191,6 +184,10 @@ public class MultiChatPanel implements MultiChatView {
 
     public void clearInputText() {
         input.reset();
+    }
+
+    public void clearSubject() {
+        subject.reset();
     }
 
     public void setInputText(final String text) {
@@ -310,24 +307,25 @@ public class MultiChatPanel implements MultiChatView {
         centerPanel.addListener(new PanelListenerAdapter() {
             public boolean doBeforeRemove(final Container self, final Component component) {
                 final String panelId = component.getId();
-                final GroupChatPresenter groupChatPresenter = (GroupChatPresenter) panelIdToGroupChat.get(panelId);
-                if (presenter.isCloseAllConfirmed() || groupChatPresenter.isCloseConfirmed()) {
-                    panelIdToGroupChat.remove(panelId);
-                    // panelIdToTabId.remove(panelId);
-                    removeRoomUsersPanel(groupChatPresenter.getUsersListView());
-                    presenter.closeRoom(groupChatPresenter);
+                final AbstractChatPresenter chatPresenter = (AbstractChatPresenter) panelIdToChat.get(panelId);
+                if (presenter.isCloseAllConfirmed() || chatPresenter.isCloseConfirmed()) {
+                    panelIdToChat.remove(panelId);
+                    if (chatPresenter.getType() == AbstractChat.TYPE_PAIR_CHAT) {
+                        presenter.closePairChat((PairChatPresenter) chatPresenter);
+                    } else {
+                        removeRoomUsersPanel(((GroupChatPresenter) chatPresenter).getUsersListView());
+                        presenter.closeGroupChat((GroupChatPresenter) chatPresenter);
+                    }
                     return true;
                 } else {
                     MessageBox.confirm(i18n.t("Confirm"), i18n.t("Are you sure you want to exit from this room?"),
                             new MessageBox.ConfirmCallback() {
                                 public void execute(final String btnID) {
-                                    GroupChatPresenter groupChatPresenter = (GroupChatPresenter) panelIdToGroupChat
-                                            .get(panelId);
                                     if (btnID.equals("yes")) {
-                                        groupChatPresenter.onCloseConfirmed();
+                                        chatPresenter.onCloseConfirmed();
                                         self.remove(panelId);
                                     } else {
-                                        groupChatPresenter.onCloseNotConfirmed();
+                                        chatPresenter.onCloseNotConfirmed();
                                     }
                                 }
                             });
@@ -337,8 +335,8 @@ public class MultiChatPanel implements MultiChatView {
 
             public void onActivate(final Panel panel) {
                 Log.debug("Panel activated: " + panel.getId());
-                GroupChatPresenter groupChatPresenter = (GroupChatPresenter) panelIdToGroupChat.get(panel.getId());
-                presenter.activateGroupChat(groupChatPresenter);
+                AbstractChatPresenter chatPresenter = (AbstractChatPresenter) panelIdToChat.get(panel.getId());
+                presenter.activateChat(chatPresenter);
             }
 
             public void onRemove(final Container self, final Component component) {
@@ -469,7 +467,7 @@ public class MultiChatPanel implements MultiChatView {
             public void onSpecialKey(final Field field, final EventObject e) {
                 Log.debug("Special key: " + e.getKey());
                 if (e.getKey() == 13) {
-                    presenter.changeRoomSubject(field.getValueAsString());
+                    presenter.changeGroupChatSubject(field.getValueAsString());
                     e.stopEvent();
                 }
             }
@@ -478,7 +476,7 @@ public class MultiChatPanel implements MultiChatView {
             public void onSpecialKey(final Field field, final EventObject e) {
                 Log.debug("Special key: " + e.getKey());
                 if (e.getKey() == 13) {
-                    presenter.changeRoomSubject(field.getValueAsString());
+                    presenter.changeGroupChatSubject(field.getValueAsString());
                     e.stopEvent();
                 }
             }
