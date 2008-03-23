@@ -49,6 +49,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
     private ScrollPanel messageOutputWrapper;
     private Button btnExtUI;
     private MultiChatPresenter extChatDialog;
+    private TextBox resourceInput;
 
     public void onModuleLoad() {
         /*
@@ -141,6 +142,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
             public void onClick(final Widget sender) {
                 if (extChatDialog == null) {
                     createExtUI();
+                } else {
+                    extChatDialog.show();
                 }
             }
         });
@@ -162,9 +165,13 @@ public class ChatExampleEntryPoint implements EntryPoint {
     private HorizontalPanel createLoginPane() {
         final HorizontalPanel login = new HorizontalPanel();
         userNameInput = new TextBox();
+        resourceInput = new TextBox();
+        resourceInput.setText("emite");
         passwordInput = new PasswordTextBox();
         login.add(new Label("user name:"));
         login.add(userNameInput);
+        login.add(new Label("Resource:"));
+        login.add(resourceInput);
         login.add(new Label("password"));
         login.add(passwordInput);
         return login;

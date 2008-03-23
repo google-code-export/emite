@@ -9,48 +9,48 @@ import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.packet.Packet;
 
 public class ActionDispatcher implements Dispatcher, BoshListener {
-	private final ArrayList<Action> commands;
-	private final Logger logger;
-	private final Parser parser;
+    private final ArrayList<Action> commands;
+    private final Logger logger;
+    private final Parser parser;
 
-	ActionDispatcher(final Parser parser, final Logger logger) {
-		this.parser = parser;
-		this.logger = logger;
-		this.commands = new ArrayList<Action>();
-	}
+    ActionDispatcher(final Parser parser, final Logger logger) {
+        this.parser = parser;
+        this.logger = logger;
+        this.commands = new ArrayList<Action>();
+    }
 
-	public void addListener(final Action listener) {
-		commands.add(listener);
-	}
+    public void addListener(final Action listener) {
+        commands.add(listener);
+    }
 
-	public void onError(final Throwable error) {
-		logger.debug("Xmpp::onError {0}", error);
-	}
+    public void onError(final Throwable error) {
+        logger.error("Xmpp::onError {0}", error);
+    }
 
-	public void onRequest(final String request) {
-	}
+    public void onRequest(final String request) {
+    }
 
-	// FIXME: this should be responsability of the BoshPlugin
-	// dispacher should not know anything from XML!!!
-	public void onResponse(final String response) {
-		logger.info("RESPONSE: \n {0}", response);
-		logger.debug("DISPATCHER LOOP BEGINS");
-		final List<? extends Packet> stanzas = parser.extractStanzas(response);
-		for (final Packet stanza : stanzas) {
-			fireStanza(stanza, commands);
-		}
-		logger.debug("DISPATCHER LOOP ENDS");
-	}
+    // FIXME: this should be responsability of the BoshPlugin
+    // dispacher should not know anything from XML!!!
+    public void onResponse(final String response) {
+        logger.info("RESPONSE: \n {0}", response);
+        logger.debug("DISPATCHER LOOP BEGINS");
+        final List<? extends Packet> stanzas = parser.extractStanzas(response);
+        for (final Packet stanza : stanzas) {
+            fireStanza(stanza, commands);
+        }
+        logger.debug("DISPATCHER LOOP ENDS");
+    }
 
-	public void publish(final Packet stanza) {
-		logger.info("PUBLISHED: \n {0}", stanza);
-		fireStanza(stanza, commands);
-	}
+    public void publish(final Packet stanza) {
+        logger.info("PUBLISHED: \n {0}", stanza);
+        fireStanza(stanza, commands);
+    }
 
-	private void fireStanza(final Packet stanza, final ArrayList<Action> listeners) {
-		for (final Action listener : listeners) {
-			listener.handle(stanza);
-		}
-	}
+    private void fireStanza(final Packet stanza, final ArrayList<Action> listeners) {
+        for (final Action listener : listeners) {
+            listener.handle(stanza);
+        }
+    }
 
 }
