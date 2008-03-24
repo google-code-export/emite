@@ -8,8 +8,8 @@ import com.calclab.emite.client.connector.ConnectorException;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.BasicPacket;
 import com.calclab.emite.client.packet.Packet;
+import com.calclab.emite.client.packet.XMLService;
 import com.calclab.emite.client.plugin.dsl.BussinessLogic;
-import com.calclab.emite.client.xml.XMLService;
 
 public class Bosh implements Connection {
 

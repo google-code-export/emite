@@ -4,9 +4,9 @@ import com.calclab.emite.client.Components;
 import com.calclab.emite.client.connector.Connector;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.dispatcher.DispatcherStateListener;
+import com.calclab.emite.client.packet.XMLService;
 import com.calclab.emite.client.plugin.PublisherPlugin;
 import com.calclab.emite.client.x.core.SASLPlugin;
-import com.calclab.emite.client.xml.XMLService;
 
 public class BoshPlugin extends PublisherPlugin {
     private final Connector connector;
