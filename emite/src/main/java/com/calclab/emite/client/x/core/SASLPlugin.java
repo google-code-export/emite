@@ -2,15 +2,15 @@ package com.calclab.emite.client.x.core;
 
 import com.calclab.emite.client.Components;
 import com.calclab.emite.client.Globals;
-import com.calclab.emite.client.action.BussinessLogic;
+import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.packet.BasicPacket;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.plugin.Plugin;
-import com.calclab.emite.client.plugin.dsl.FilterBuilder;
+import com.calclab.emite.client.plugin.SenderPlugin;
+import com.calclab.emite.client.plugin.dsl.BussinessLogic;
 import com.calclab.emite.client.utils.Base64Coder;
 
-public class SASLPlugin implements Plugin {
+public class SASLPlugin extends SenderPlugin {
 	public static class Events {
 		public static final Event authorized = new Event("sasl:authorized");
 	}
@@ -21,23 +21,28 @@ public class SASLPlugin implements Plugin {
 
 	final BussinessLogic restartAndAuthorize;
 
-	public SASLPlugin(final Globals globals) {
+	public SASLPlugin(final Connection connection, final Globals globals) {
+		super(connection);
 		authorization = new BussinessLogic() {
-			public Packet logic(final Packet cathced) {
-				final Packet auth = createPlainAuthorization(globals);
+			private Packet createPlainAuthorization(final Globals globals) {
+				final Packet auth = new BasicPacket("auth",
+						"urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism",
+						"PLAIN");
+				final String encoded = encode(globals.getDomain(), globals
+						.getUserName(), globals.getPassword());
+				auth.addText(encoded);
 				return auth;
 			}
 
-			protected String encode(final String domain, final String userName, final String password) {
-				final String auth = userName + "@" + domain + SEP + userName + SEP + password;
+			protected String encode(final String domain, final String userName,
+					final String password) {
+				final String auth = userName + "@" + domain + SEP + userName
+						+ SEP + password;
 				return Base64Coder.encodeString(auth);
 			}
 
-			private Packet createPlainAuthorization(final Globals globals) {
-				final Packet auth = new BasicPacket("auth", "urn:ietf:params:xml:ns:xmpp-sasl").with("mechanism",
-						"PLAIN");
-				final String encoded = encode(globals.getDomain(), globals.getUserName(), globals.getPassword());
-				auth.addText(encoded);
+			public Packet logic(final Packet cathced) {
+				final Packet auth = createPlainAuthorization(globals);
 				return auth;
 			}
 		};
@@ -50,11 +55,13 @@ public class SASLPlugin implements Plugin {
 		};
 	}
 
-	public void install(final Components components) {
+	@Override
+	public void attach() {
+		when.Packet("stream:features").send(authorization);
+		when.Packet("success", "xmlns", "urn:ietf:params:xml:ns:xmpp-sasl")
+				.publish(restartAndAuthorize);
 	}
 
-	public void start(final FilterBuilder when) {
-		when.Packet("stream:features").send(authorization);
-		when.Packet("success", "xmlns", "urn:ietf:params:xml:ns:xmpp-sasl").publish(restartAndAuthorize);
+	public void install(final Components components) {
 	}
 }

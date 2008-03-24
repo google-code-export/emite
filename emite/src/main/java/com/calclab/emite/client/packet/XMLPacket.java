@@ -7,7 +7,7 @@ import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 
-public class XMLPacket implements Packet {
+public class XMLPacket extends AbstractPacket {
 	private final Element element;
 
 	public XMLPacket(final Element element) {
@@ -71,10 +71,6 @@ public class XMLPacket implements Packet {
 		addText(text);
 	}
 
-	public Packet with(final String name, final String value) {
-		setAttribute(name, value);
-		return this;
-	}
 
 	private List<Packet> wrap(final NodeList nodes) {
 		final ArrayList<Packet> selected = new ArrayList<Packet>();

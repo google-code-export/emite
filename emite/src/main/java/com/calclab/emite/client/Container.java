@@ -2,7 +2,9 @@ package com.calclab.emite.client;
 
 import com.calclab.emite.client.bosh.BoshOptions;
 import com.calclab.emite.client.bosh.BoshPlugin;
+import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.connector.Connector;
+import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.dispatcher.DispatcherPlugin;
 import com.calclab.emite.client.dispatcher.Parser;
 import com.calclab.emite.client.log.LoggerAdapter;
@@ -30,14 +32,22 @@ public class Container {
 		return c;
 	}
 
-	public void installDefaultPlugins(final Parser parser, final Connector connector, final BoshOptions options) {
-		manager.install("bosh", new BoshPlugin(connector, options, logger, c.getGlobals()));
+	public void installDefaultPlugins(final Parser parser,
+			final Connector connector, final BoshOptions options) {
 		manager.install("dispatcher", new DispatcherPlugin(parser, logger));
-		manager.install("chat", new ChatPlugin(c.getConnection(), c.getDispatcher()));
-		manager.install("session", new SessionPlugin(c.getGlobals(), c.getDispatcher(), c.getConnection()));
-		manager.install("roster", new RosterPlugin());
-		manager.install("sasl", new SASLPlugin(c.getGlobals()));
-		manager.install("resource", new ResourcePlugin(c.getGlobals()));
+		manager.install("bosh", new BoshPlugin(connector, options, logger, c
+				.getGlobals()));
+
+		final Globals globals = c.getGlobals();
+		final Connection connection = c.getConnection();
+		final Dispatcher dispatcher = c.getDispatcher();
+
+		manager.install("chat", new ChatPlugin(connection, dispatcher));
+		manager.install("session", new SessionPlugin(dispatcher, connection,
+				globals));
+		manager.install("roster", new RosterPlugin(connection));
+		manager.install("sasl", new SASLPlugin(connection, globals));
+		manager.install("resource", new ResourcePlugin(globals));
 
 		manager.start();
 	}

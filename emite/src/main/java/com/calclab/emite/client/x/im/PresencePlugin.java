@@ -2,12 +2,12 @@ package com.calclab.emite.client.x.im;
 
 import com.calclab.emite.client.Components;
 import com.calclab.emite.client.Globals;
+import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.packet.stanza.Presence;
-import com.calclab.emite.client.plugin.Plugin;
-import com.calclab.emite.client.plugin.dsl.FilterBuilder;
+import com.calclab.emite.client.plugin.SenderPlugin;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
 
-public class PresencePlugin implements Plugin {
+public class PresencePlugin extends SenderPlugin {
 	final Presence initialPresence;
 
 	/**
@@ -25,15 +25,18 @@ public class PresencePlugin implements Plugin {
 	 * 
 	 */
 
-	public PresencePlugin(final Globals globals) {
-		this.initialPresence = new Presence(globals.getJID()).With(Presence.Show.chat);
+	public PresencePlugin(final Connection connection, final Globals globals) {
+		super(connection);
+		this.initialPresence = new Presence(globals.getJID())
+				.With(Presence.Show.chat);
+	}
+
+	@Override
+	public void attach() {
+		when.Event(SessionPlugin.Events.started).send(initialPresence);
 	}
 
 	public void install(final Components components) {
-	}
-
-	public void start(final FilterBuilder when) {
-		when.Event(SessionPlugin.Events.started).send(initialPresence);
 	}
 
 }

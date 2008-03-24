@@ -5,20 +5,25 @@ import com.calclab.emite.client.packet.Packet;
 public class BasicMatcher implements Matcher {
 	private final String attName;
 	private final String attValue;
-	private final String regex;
+	private final String name;
 
-	public BasicMatcher(final String regex) {
-		this(regex, null, null);
+	public BasicMatcher(final String name) {
+		this(name, null, null);
 	}
 
-	public BasicMatcher(final String regex, final String attName, final String attValue) {
-		this.regex = regex;
+	public BasicMatcher(final String name, final String attName,
+			final String attValue) {
+		this.name = name;
 		this.attName = attName;
 		this.attValue = attValue;
 	}
 
+	public String getElementName() {
+		return name;
+	}
+
 	public boolean matches(final Packet stanza) {
-		final boolean isCorrectName = stanza.getName().matches(regex);
+		final boolean isCorrectName = stanza.getName().equals(name);
 		if (isCorrectName) {
 			if (attName != null) {
 				return attValue.equals(stanza.getAttribute(attName));
@@ -33,6 +38,6 @@ public class BasicMatcher implements Matcher {
 	public String toString() {
 		final String name = attName == null ? "null" : attName;
 		final String value = attValue == null ? "null" : attValue;
-		return "[Matcher: " + regex + " (" + name + "," + value + ")]";
+		return "[Matcher: " + name + " (" + name + "," + value + ")]";
 	}
 }

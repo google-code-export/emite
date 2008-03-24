@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class BasicPacket implements Packet {
+public class BasicPacket extends AbstractPacket {
 	private final HashMap<String, String> attributes;
 	private final ArrayList<BasicPacket> children;
 	private final String name;
@@ -95,10 +95,7 @@ public class BasicPacket implements Packet {
 		return buffer.toString();
 	}
 
-	public Packet with(final String name, final String value) {
-		setAttribute(name, value);
-		return this;
-	}
+
 
 	protected void add(final BasicPacket node) {
 		children.add(node);
