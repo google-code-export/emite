@@ -44,6 +44,10 @@ G.emite-RoomPanel-HorizDelimiter {
   height: 30px;
 }
 
+.emite-icon {
+  background-image: url(img/icon.gif) !important;
+}
+
 .chat-icon {
   background-image: url(img/chat.gif) !important;
 }
