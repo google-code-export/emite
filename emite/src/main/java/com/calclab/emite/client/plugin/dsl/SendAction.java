@@ -6,10 +6,10 @@ import com.calclab.emite.client.packet.Packet;
 
 public class SendAction implements Action {
 	private final Connection connection;
-	private final BussinessLogic logic;
+	private final PacketProducer logic;
 	private final Packet packet;
 
-	public SendAction(final Connection connection, final BussinessLogic logic) {
+	public SendAction(final Connection connection, final PacketProducer logic) {
 		this(connection, logic, null);
 	}
 
@@ -17,7 +17,7 @@ public class SendAction implements Action {
 		this(connection, null, packet);
 	}
 
-	SendAction(final Connection connection, final BussinessLogic logic, final Packet packet) {
+	SendAction(final Connection connection, final PacketProducer logic, final Packet packet) {
 		this.connection = connection;
 		this.logic = logic;
 		this.packet = packet;
