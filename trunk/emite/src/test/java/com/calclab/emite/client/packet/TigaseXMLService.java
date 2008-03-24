@@ -8,7 +8,6 @@ import tigase.xml.SimpleParser;
 
 import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.xml.XMLService;
 
 public class TigaseXMLService implements XMLService {
     private final SimpleParser parser;

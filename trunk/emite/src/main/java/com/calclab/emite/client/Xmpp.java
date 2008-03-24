@@ -3,6 +3,7 @@ package com.calclab.emite.client;
 import com.calclab.emite.client.bosh.BoshOptions;
 import com.calclab.emite.client.connector.GWTConnector;
 import com.calclab.emite.client.log.LoggerOutput;
+import com.calclab.emite.client.packet.GWTXMLService;
 import com.calclab.emite.client.x.im.ChatPlugin;
 import com.calclab.emite.client.x.im.MessageListener;
 import com.calclab.emite.client.x.im.roster.Roster;
@@ -11,7 +12,6 @@ import com.calclab.emite.client.x.im.session.Session;
 import com.calclab.emite.client.x.im.session.SessionListener;
 import com.calclab.emite.client.x.im.session.SessionOptions;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
-import com.calclab.emite.client.xml.GWTXMLService;
 
 public class Xmpp {
 

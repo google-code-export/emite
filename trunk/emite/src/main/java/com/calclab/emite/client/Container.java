@@ -8,13 +8,13 @@ import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.dispatcher.DispatcherPlugin;
 import com.calclab.emite.client.log.LoggerAdapter;
 import com.calclab.emite.client.log.LoggerOutput;
+import com.calclab.emite.client.packet.XMLService;
 import com.calclab.emite.client.plugin.DefaultPluginManager;
 import com.calclab.emite.client.x.core.ResourcePlugin;
 import com.calclab.emite.client.x.core.SASLPlugin;
 import com.calclab.emite.client.x.im.ChatPlugin;
 import com.calclab.emite.client.x.im.roster.RosterPlugin;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
-import com.calclab.emite.client.xml.XMLService;
 
 public class Container {
     private final Components c;
