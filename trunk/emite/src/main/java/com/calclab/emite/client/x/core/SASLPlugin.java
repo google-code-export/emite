@@ -6,7 +6,7 @@ import com.calclab.emite.client.packet.BasicPacket;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.plugin.SenderPlugin;
-import com.calclab.emite.client.plugin.dsl.BussinessLogic;
+import com.calclab.emite.client.plugin.dsl.PacketProducer;
 import com.calclab.emite.client.utils.Base64Coder;
 
 public class SASLPlugin extends SenderPlugin {
@@ -16,13 +16,13 @@ public class SASLPlugin extends SenderPlugin {
 
     private static final String SEP = new String(new char[] { 0 });
 
-    final BussinessLogic authorization;
+    final PacketProducer authorization;
 
-    final BussinessLogic restartAndAuthorize;
+    final PacketProducer restartAndAuthorize;
 
     public SASLPlugin(final Connection connection, final Globals globals) {
         super(connection);
-        authorization = new BussinessLogic() {
+        authorization = new PacketProducer() {
             public Packet logic(final Packet cathced) {
                 final Packet auth = createPlainAuthorization(globals);
                 return auth;
@@ -42,7 +42,7 @@ public class SASLPlugin extends SenderPlugin {
             }
         };
 
-        restartAndAuthorize = new BussinessLogic() {
+        restartAndAuthorize = new PacketProducer() {
             public Packet logic(final Packet received) {
                 return Events.authorized;
             }

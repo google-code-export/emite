@@ -5,17 +5,17 @@ import com.calclab.emite.client.Globals;
 import com.calclab.emite.client.connector.Connector;
 import com.calclab.emite.client.connector.ConnectorCallback;
 import com.calclab.emite.client.connector.ConnectorException;
+import com.calclab.emite.client.dispatcher.Action;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.BasicPacket;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.XMLService;
-import com.calclab.emite.client.plugin.dsl.BussinessLogic;
 
 public class Bosh implements Connection {
 
-    public final BussinessLogic stop;
-    final BussinessLogic restartStream;
-    final BussinessLogic sendCreation;
+    final Action stop;
+    final Action restartStream;
+    final Action sendCreation;
     private Packet body;
     private final XMLService xmler;
     private final Connector connector;
@@ -37,28 +37,25 @@ public class Bosh implements Connection {
 
         globals.setDomain(options.getDomain());
 
-        restartStream = new BussinessLogic() {
-            public Packet logic(final Packet received) {
+        restartStream = new Action() {
+            public void handle(final Packet received) {
                 setRestart();
-                return null;
             }
         };
 
-        sendCreation = new BussinessLogic() {
-            public Packet logic(final Packet received) {
+        sendCreation = new Action() {
+            public void handle(final Packet received) {
                 isRunning = true;
                 rid = generateRID();
                 body.With("content", "text/xml; charset=utf-8").With("rid", rid).With("to", options.getDomain()).With(
                         "secure", "true").With("ver", "1.6").With("wait", "60").With("ack", "1").With("hold", "1")
                         .With("xml:lang", "en");
-                return null;
             }
         };
 
-        stop = new BussinessLogic() {
-            public Packet logic(final Packet received) {
+        stop = new Action() {
+            public void handle(final Packet stanza) {
                 stop();
-                return null;
             }
         };
 

@@ -2,28 +2,27 @@ package com.calclab.emite.client.bosh;
 
 import java.util.List;
 
+import com.calclab.emite.client.dispatcher.Action;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.plugin.dsl.BussinessLogic;
 
 public class StreamManager {
 
-    public final BussinessLogic clear;
-    public final BussinessLogic publishStanzas;
+    public final Action clear;
+    public final Action publishStanzas;
     private String sid;
 
     public StreamManager(final Bosh bosh, final Dispatcher dispatcher) {
         this.sid = null;
 
-        clear = new BussinessLogic() {
-            public Packet logic(final Packet received) {
+        clear = new Action() {
+            public void handle(final Packet stanza) {
                 sid = null;
-                return null;
             }
         };
 
-        publishStanzas = new BussinessLogic() {
-            public Packet logic(final Packet received) {
+        publishStanzas = new Action() {
+            public void handle(final Packet received) {
                 if (sid == null) {
                     sid = received.getAttribute("sid");
                 }
@@ -32,7 +31,6 @@ public class StreamManager {
                 for (final Packet stanza : children) {
                     dispatcher.publish(stanza);
                 }
-                return null;
             }
         };
 
