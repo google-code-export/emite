@@ -1,20 +1,20 @@
 package com.calclab.emite.client.packet;
 
 class TextPacket extends BasicPacket {
-	private final String value;
+    private final String value;
 
-	public TextPacket(final String value) {
-		super(null, null);
-		this.value = value;
-	}
+    public TextPacket(final String value) {
+        super(null, null);
+        this.value = value;
+    }
 
-	@Override
-	public String toString() {
-		return value;
-	}
+    @Override
+    public void render(final StringBuffer buffer) {
+        buffer.append(value);
+    }
 
-	@Override
-	protected void render(final StringBuffer buffer) {
-		buffer.append(value);
-	}
+    @Override
+    public String toString() {
+        return value;
+    }
 }

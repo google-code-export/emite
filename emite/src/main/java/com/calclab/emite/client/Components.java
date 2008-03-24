@@ -6,6 +6,11 @@ import com.calclab.emite.client.log.Logger;
 
 public interface Components {
 
+	static final String CONNECTION = "connection";
+	static final String DISPATCHER = "dispatcher";
+	static final String GLOBALS = "globals";
+	static final String PLUGIN_MANAGER = "pluginManager";
+
 	Object get(String componentName);
 
 	Connection getConnection();

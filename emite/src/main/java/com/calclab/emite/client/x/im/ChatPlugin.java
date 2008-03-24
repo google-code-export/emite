@@ -15,9 +15,9 @@ public class ChatPlugin extends SenderPlugin {
 		return (Chat) container.get("chat");
 	}
 
-	private final Chat chat;
 	final BussinessLogic installListener;
 	final BussinessLogic listenToIncomingMessages;
+	private final Chat chat;
 
 	public ChatPlugin(final Connection connection, final Dispatcher dispatcher) {
 		super(connection);
@@ -47,7 +47,9 @@ public class ChatPlugin extends SenderPlugin {
 		when.Event(SessionPlugin.Events.ended).Do(listenToIncomingMessages);
 	}
 
-	public void install(final Components components) {
-		components.register("chat", chat);
+	@Override
+	public void install() {
+		register("chat", chat);
 	}
+
 }

@@ -28,7 +28,7 @@ public class ActionBuilder {
 		return actionBuilder.filter;
 	}
 
-	public void publish(final BussinessLogic bussinessLogic) {
+	public void Publish(final BussinessLogic bussinessLogic) {
 		final PublishAction action = new PublishAction(actionBuilder
 				.getDispatcher(), bussinessLogic);
 		actionBuilder.getDispatcher().subscribe(actionBuilder.filter, action);
@@ -40,13 +40,13 @@ public class ActionBuilder {
 		actionBuilder.getDispatcher().subscribe(actionBuilder.filter, action);
 	}
 
-	public void send(final BussinessLogic logic) {
+	public void Send(final BussinessLogic logic) {
 		final SendAction action = new SendAction(actionBuilder.getConnection(),
 				logic);
 		actionBuilder.getDispatcher().subscribe(actionBuilder.filter, action);
 	}
 
-	public void send(final Packet packet) {
+	public void Send(final Packet packet) {
 		final SendAction action = new SendAction(actionBuilder.getConnection(),
 				packet);
 		actionBuilder.getDispatcher().subscribe(actionBuilder.filter, action);

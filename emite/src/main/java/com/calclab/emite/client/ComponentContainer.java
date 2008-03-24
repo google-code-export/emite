@@ -8,10 +8,6 @@ import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.plugin.PluginManager;
 
 public class ComponentContainer extends HashMap<String, Object> implements Components {
-	private static final String CONNECTION = "connection";
-	private static final String DISPATCHER = "dispatcher";
-	private static final String GLOBALS = "globals";
-	private static final String PLUGIN_MANAGER = "pluginManager";
 	private static final long serialVersionUID = 1L;
 	private final Logger logger;
 
@@ -24,15 +20,15 @@ public class ComponentContainer extends HashMap<String, Object> implements Compo
 	}
 
 	public Connection getConnection() {
-		return (Connection) get(CONNECTION);
+		return (Connection) get(Components.CONNECTION);
 	}
 
 	public Dispatcher getDispatcher() {
-		return (Dispatcher) get(DISPATCHER);
+		return (Dispatcher) get(Components.DISPATCHER);
 	}
 
 	public Globals getGlobals() {
-		return (Globals) get(GLOBALS);
+		return (Globals) get(Components.GLOBALS);
 	}
 
 	public Logger getLogger() {
@@ -40,7 +36,7 @@ public class ComponentContainer extends HashMap<String, Object> implements Compo
 	}
 
 	public PluginManager getPluginManager() {
-		return (PluginManager) get(PLUGIN_MANAGER);
+		return (PluginManager) get(Components.PLUGIN_MANAGER);
 	}
 
 	public void register(final String name, final Object component) {
@@ -49,19 +45,19 @@ public class ComponentContainer extends HashMap<String, Object> implements Compo
 	}
 
 	public void setConnection(final Connection bosh) {
-		register(CONNECTION, bosh);
+		register(Components.CONNECTION, bosh);
 	}
 
 	public void setDispatcher(final Dispatcher dispatcher) {
-		register(DISPATCHER, dispatcher);
+		register(Components.DISPATCHER, dispatcher);
 	}
 
 	public void setGlobals(final Globals globals) {
-		register(GLOBALS, globals);
+		register(Components.GLOBALS, globals);
 	}
 
 	public void setPluginManager(final PluginManager pluginManager) {
-		register(PLUGIN_MANAGER, pluginManager);
+		register(Components.PLUGIN_MANAGER, pluginManager);
 
 	}
 }
