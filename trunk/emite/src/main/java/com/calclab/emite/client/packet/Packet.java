@@ -36,12 +36,11 @@ public interface Packet {
 
 	void setText(String text);
 
-	/**
-	 * helper method
-	 * 
+	/** 
+	 * Chain-able method to add a attribute
 	 * @param name
 	 * @param value
 	 * @return
 	 */
-	Packet with(String name, String value);
+	Packet With(String name, String value);
 }

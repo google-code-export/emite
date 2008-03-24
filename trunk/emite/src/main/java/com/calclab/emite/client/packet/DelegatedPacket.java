@@ -2,7 +2,7 @@ package com.calclab.emite.client.packet;
 
 import java.util.List;
 
-public class DelegatedPacket implements Packet {
+public class DelegatedPacket extends AbstractPacket {
 	private final Packet delegate;
 
 	public DelegatedPacket(final Packet delegate) {
@@ -56,10 +56,6 @@ public class DelegatedPacket implements Packet {
 	@Override
 	public String toString() {
 		return delegate.toString();
-	}
-
-	public final Packet with(final String name, final String value) {
-		return delegate.with(name, value);
 	}
 
 }

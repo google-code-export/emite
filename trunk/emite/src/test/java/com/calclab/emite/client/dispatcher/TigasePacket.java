@@ -64,7 +64,7 @@ public class TigasePacket implements Packet {
 		return delegate.toString();
 	}
 
-	public Packet with(final String name, final String value) {
+	public Packet With(final String name, final String value) {
 		throw new RuntimeException("not implemented");
 	}
 

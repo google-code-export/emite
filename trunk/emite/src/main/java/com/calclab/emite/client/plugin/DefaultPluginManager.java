@@ -3,8 +3,8 @@ package com.calclab.emite.client.plugin;
 import java.util.ArrayList;
 
 import com.calclab.emite.client.Components;
+import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.log.Logger;
-import com.calclab.emite.client.plugin.dsl.FilterBuilder;
 
 /**
  * @author dani
@@ -28,9 +28,9 @@ public class DefaultPluginManager implements PluginManager {
 	}
 
 	public void start() {
-		final FilterBuilder when = new FilterBuilder(container);
+		final Dispatcher dis = container.getDispatcher();
 		for (final Plugin p : installed) {
-			p.start(when);
+			p.attach(dis);
 		}
 	}
 
