@@ -13,10 +13,7 @@ import com.calclab.emite.client.x.core.ResourcePlugin;
 import com.calclab.emite.client.x.core.SASLPlugin;
 
 /**
- * TODO: better plugin system!!!
- * 
  * @author dani
- * 
  */
 public class SessionPlugin extends SenderPlugin {
 	public static class Events {
@@ -28,14 +25,13 @@ public class SessionPlugin extends SenderPlugin {
 		return (Session) components.get("session");
 	}
 
-	private final Session session;
 	final BussinessLogic requestSession;
 	final BussinessLogic setAuthorizedState;
 	final BussinessLogic setStartedState;
-	final BussinessLogic startConnection;
+	private final Session session;
 
-	public SessionPlugin(final Dispatcher dispatcher, final Connection connection,
-			final Globals globals) {
+	public SessionPlugin(final Dispatcher dispatcher,
+			final Connection connection, final Globals globals) {
 		super(connection);
 		session = new Session(globals, dispatcher);
 
@@ -45,13 +41,6 @@ public class SessionPlugin extends SenderPlugin {
 						globals.getJID()).To(globals.getDomain());
 				iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
 				return iq;
-			}
-		};
-
-		startConnection = new BussinessLogic() {
-			public Packet logic(final Packet received) {
-				connection.start();
-				return null;
 			}
 		};
 
@@ -73,18 +62,18 @@ public class SessionPlugin extends SenderPlugin {
 	@Override
 	public void attach() {
 
-		when.Event(Session.Events.login).Do(startConnection);
+		when.Event(Session.Events.login).Send(Connection.Events.start);
 
 		when.Event(SASLPlugin.Events.authorized).Do(setAuthorizedState);
 
-		when.Event(ResourcePlugin.Events.binded).send(requestSession);
+		when.Event(ResourcePlugin.Events.binded).Send(requestSession);
 
-		when.IQ("requestSession").publish(setStartedState);
+		when.IQ("requestSession").Publish(setStartedState);
 
 	}
 
-	public void install(final Components components) {
-		components.register("session", session);
-
+	@Override
+	public void install() {
+		register("session", session);
 	}
 }

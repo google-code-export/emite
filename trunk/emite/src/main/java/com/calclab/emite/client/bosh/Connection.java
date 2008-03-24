@@ -1,20 +1,14 @@
 package com.calclab.emite.client.bosh;
 
+import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
 
 public interface Connection {
 
-	public void addListener(BoshListener listener);
+    public static class Events {
+        public static Event start = new Event("connection:start");
+        public static Event error = new Event("connection:error");
+    }
 
-	public void pause();
-
-	public void removeListener(BoshListener listener);
-
-	public void resume();
-
-	public void send(Packet toBeSend);
-
-	public void start();
-
-	public void stop();
+    public void send(Packet toBeSend);
 }

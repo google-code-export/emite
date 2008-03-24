@@ -29,6 +29,14 @@ public class RosterPlugin extends SenderPlugin {
 				.WithQuery("jabber:iq:roster");
 
 		setRosterItems = new BussinessLogic() {
+			public Packet logic(final Packet packet) {
+				roster.clear();
+				for (final Packet item : getItems(packet)) {
+					roster.add(convert(item));
+				}
+				return null;
+			}
+
 			private RosterItem convert(final Packet item) {
 				return new RosterItem(item.getAttribute("jid"), item
 						.getAttribute("subscription"), item
@@ -40,25 +48,18 @@ public class RosterPlugin extends SenderPlugin {
 						.getChildren("item");
 				return items;
 			}
-
-			public Packet logic(final Packet packet) {
-				roster.clear();
-				for (final Packet item : getItems(packet)) {
-					roster.add(convert(item));
-				}
-				return null;
-			}
 		};
 	}
 
 	@Override
 	public void attach() {
-		when.Event(SessionPlugin.Events.started).send(requestRoster);
+		when.Event(SessionPlugin.Events.started).Send(requestRoster);
 		when.IQ("roster").Do(setRosterItems);
 	}
 
-	public void install(final Components components) {
-		components.register("roster", roster);
+	@Override
+	public void install() {
+		register("roster", roster);
 	}
 
 }

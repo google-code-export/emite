@@ -1,6 +1,5 @@
 package com.calclab.emite.client.x.im;
 
-import com.calclab.emite.client.Components;
 import com.calclab.emite.client.Globals;
 import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.packet.stanza.Presence;
@@ -33,10 +32,11 @@ public class PresencePlugin extends SenderPlugin {
 
 	@Override
 	public void attach() {
-		when.Event(SessionPlugin.Events.started).send(initialPresence);
+		when.Event(SessionPlugin.Events.started).Send(initialPresence);
 	}
 
-	public void install(final Components components) {
+	@Override
+	public void install() {
 	}
 
 }

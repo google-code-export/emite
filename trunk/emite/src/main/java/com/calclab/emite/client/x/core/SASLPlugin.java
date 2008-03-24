@@ -1,6 +1,5 @@
 package com.calclab.emite.client.x.core;
 
-import com.calclab.emite.client.Components;
 import com.calclab.emite.client.Globals;
 import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.packet.BasicPacket;
@@ -11,57 +10,54 @@ import com.calclab.emite.client.plugin.dsl.BussinessLogic;
 import com.calclab.emite.client.utils.Base64Coder;
 
 public class SASLPlugin extends SenderPlugin {
-	public static class Events {
-		public static final Event authorized = new Event("sasl:authorized");
-	}
+    public static class Events {
+        public static final Event authorized = new Event("sasl:authorized");
+    }
 
-	private static final String SEP = new String(new char[] { 0 });
+    private static final String SEP = new String(new char[] { 0 });
 
-	final BussinessLogic authorization;
+    final BussinessLogic authorization;
 
-	final BussinessLogic restartAndAuthorize;
+    final BussinessLogic restartAndAuthorize;
 
-	public SASLPlugin(final Connection connection, final Globals globals) {
-		super(connection);
-		authorization = new BussinessLogic() {
-			private Packet createPlainAuthorization(final Globals globals) {
-				final Packet auth = new BasicPacket("auth",
-						"urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism",
-						"PLAIN");
-				final String encoded = encode(globals.getDomain(), globals
-						.getUserName(), globals.getPassword());
-				auth.addText(encoded);
-				return auth;
-			}
+    public SASLPlugin(final Connection connection, final Globals globals) {
+        super(connection);
+        authorization = new BussinessLogic() {
+            public Packet logic(final Packet cathced) {
+                final Packet auth = createPlainAuthorization(globals);
+                return auth;
+            }
 
-			protected String encode(final String domain, final String userName,
-					final String password) {
-				final String auth = userName + "@" + domain + SEP + userName
-						+ SEP + password;
-				return Base64Coder.encodeString(auth);
-			}
+            protected String encode(final String domain, final String userName, final String password) {
+                final String auth = userName + "@" + domain + SEP + userName + SEP + password;
+                return Base64Coder.encodeString(auth);
+            }
 
-			public Packet logic(final Packet cathced) {
-				final Packet auth = createPlainAuthorization(globals);
-				return auth;
-			}
-		};
+            private Packet createPlainAuthorization(final Globals globals) {
+                final Packet auth = new BasicPacket("auth", "urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism",
+                        "PLAIN");
+                final String encoded = encode(globals.getDomain(), globals.getUserName(), globals.getPassword());
+                auth.addText(encoded);
+                return auth;
+            }
+        };
 
-		restartAndAuthorize = new BussinessLogic() {
-			public Packet logic(final Packet received) {
-				return Events.authorized;
-			}
+        restartAndAuthorize = new BussinessLogic() {
+            public Packet logic(final Packet received) {
+                return Events.authorized;
+            }
 
-		};
-	}
+        };
+    }
 
-	@Override
-	public void attach() {
-		when.Packet("stream:features").send(authorization);
-		when.Packet("success", "xmlns", "urn:ietf:params:xml:ns:xmpp-sasl")
-				.publish(restartAndAuthorize);
-	}
+    @Override
+    public void attach() {
+        when.Packet("stream:features").Send(authorization);
 
-	public void install(final Components components) {
-	}
+        when.Packet("success", "xmlns", "urn:ietf:params:xml:ns:xmpp-sasl").Publish(restartAndAuthorize);
+    }
+
+    @Override
+    public void install() {
+    }
 }

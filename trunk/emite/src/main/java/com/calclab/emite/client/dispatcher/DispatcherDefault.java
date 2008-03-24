@@ -9,66 +9,83 @@ import com.calclab.emite.client.matcher.Matcher;
 import com.calclab.emite.client.packet.Packet;
 
 public class DispatcherDefault implements Dispatcher {
-	private final Logger logger;
-	private final Parser parser;
-	private final HashMap<String, List<Action>> subscriptors;
-	private final ArrayList<Packet> queue;
-	private boolean isRunning;
-	private final DispatcherStateListenerCollection listeners;
+    private static class Subscriptor {
+        private final Matcher matcher;
+        private final Action action;
 
-	DispatcherDefault(final Parser parser, final Logger logger) {
-		this.parser = parser;
-		this.logger = logger;
-		this.subscriptors = new HashMap<String, List<Action>>();
-		this.listeners = new DispatcherStateListenerCollection();
-		this.queue = new ArrayList<Packet>();
-		this.isRunning = false;
-	}
+        public Subscriptor(final Matcher matcher, final Action action) {
+            this.matcher = matcher;
+            this.action = action;
+        }
 
-	public void addListener(final DispatcherStateListener listener) {
-		listeners.add(listener);
-	}
+    }
 
-	public void publish(final Packet packet) {
-		queue.add(packet);
-		if (!isRunning)
-			start();
-	}
+    private final Logger logger;
+    private final HashMap<String, List<Subscriptor>> subscriptors;
+    private final ArrayList<Packet> queue;
+    private boolean isCurrentlyDispatching;
 
-	public void subscribe(final Matcher matcher, final Action action) {
-		final List<Action> list = getSubscriptorList(matcher.getElementName());
-		list.add(new FilteredAction(matcher, action));
-	}
+    private final DispatcherStateListenerCollection listeners;
 
-	private void fireActions(final Packet packet,
-			final List<Action> subscriptors) {
+    DispatcherDefault(final Logger logger) {
+        this.logger = logger;
+        this.subscriptors = new HashMap<String, List<Subscriptor>>();
+        this.listeners = new DispatcherStateListenerCollection();
+        this.queue = new ArrayList<Packet>();
+        this.isCurrentlyDispatching = false;
+    }
 
-		for (final Action action : subscriptors) {
-			action.handle(packet);
-		}
-	}
+    public void addListener(final DispatcherStateListener listener) {
+        listeners.add(listener);
+    }
 
-	private List<Action> getSubscriptorList(final String name) {
-		List<Action> list = subscriptors.get(name);
-		if (list == null) {
-			list = new ArrayList<Action>();
-			subscriptors.put(name, list);
-		}
-		return list;
-	}
+    public void publish(final Packet packet) {
+        logger.debug("published {0}", packet);
+        queue.add(packet);
+        if (!isCurrentlyDispatching)
+            start();
+    }
 
-	/**
-	 * TODO: possible race condition
-	 */
-	private void start() {
-		listeners.fireBeforeDispatch();
-		isRunning = true;
-		while (queue.size() > 0) {
-			final Packet next = queue.remove(0);
-			fireActions(next, getSubscriptorList(next.getName()));
-		}
-		isRunning = false;
-		listeners.fireAfterDispatch();
-	}
+    public void subscribe(final Matcher matcher, final Action action) {
+        logger.debug("Subscribing to {0}", matcher.getElementName());
+        final List<Subscriptor> list = getSubscriptorList(matcher.getElementName());
+        list.add(new Subscriptor(matcher, action));
+    }
+
+    private void fireActions(final Packet packet, final List<Subscriptor> subscriptors) {
+        logger.debug("Found {0} subscriptors to {1}", subscriptors.size(), packet.getName());
+        for (final Subscriptor subscriptor : subscriptors) {
+            if (subscriptor.matcher.matches(packet)) {
+                logger.debug("Subscriptor found!");
+                subscriptor.action.handle(packet);
+            }
+        }
+    }
+
+    private List<Subscriptor> getSubscriptorList(final String name) {
+        List<Subscriptor> list = subscriptors.get(name);
+        if (list == null) {
+            list = new ArrayList<Subscriptor>();
+            subscriptors.put(name, list);
+        }
+        return list;
+    }
+
+    /**
+     * TODO: possible race condition under J2SE
+     */
+    private void start() {
+        listeners.fireBeforeDispatch();
+        isCurrentlyDispatching = true;
+        logger.debug("begin dispatch loop");
+        while (queue.size() > 0) {
+            final Packet next = queue.remove(0);
+            logger.debug("dispatching: {0}", next);
+            fireActions(next, getSubscriptorList(next.getName()));
+        }
+        isCurrentlyDispatching = false;
+        logger.debug("end dispatch loop");
+        listeners.fireAfterDispatch();
+    }
 
 }

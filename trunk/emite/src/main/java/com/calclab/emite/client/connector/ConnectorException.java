@@ -1,10 +1,9 @@
 package com.calclab.emite.client.connector;
 
+@SuppressWarnings("serial")
 public class ConnectorException extends Exception {
-	private static final long serialVersionUID = 1L;
-
-	public ConnectorException(final String message) {
-		super(message);
-	}
+    public ConnectorException(final String message) {
+        super(message);
+    }
 
 }
