@@ -41,8 +41,8 @@ public class GroupChatUserListPanel extends VerticalPanel implements GroupChatUs
         IconLabel userLabel = new IconLabel(icon, user.getAlias());
         userLabel.setColor(user.getColor());
         userPanel.add(userLabel);
-        this.insert(userPanel, this.getWidgetCount() - 1);
-        return this.getWidgetIndex(userPanel);
+        super.add(userPanel);
+        return this.getWidgetCount();
     }
 
     public void delUser(final int index) {

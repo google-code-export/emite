@@ -53,7 +53,7 @@ public class MultiChatSamples {
                 GroupChatUser.PARTICIPANT);
 
         Log.debug("Adding group users");
-        GroupChatUser otherUser = new GroupChatUser("other user", "otheruser", "red", GroupChatUser.MODERADOR);
+        GroupChatUser otherUser = new GroupChatUser("otheruser", "ouser", "red", GroupChatUser.MODERADOR);
         GroupChatUser otherUser2 = new GroupChatUser("luther", "luther", "green", GroupChatUser.MODERADOR);
         groupChat1.addUser(otherUser);
         groupChat2.addUser(otherUser2);

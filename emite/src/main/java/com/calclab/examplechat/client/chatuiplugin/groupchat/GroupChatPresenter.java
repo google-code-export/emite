@@ -75,12 +75,12 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
 
     public void addUser(final GroupChatUser user) {
         user.setColor(getNextColor());
-        getUsersList().add(user);
+        userList.add(user);
         users.put(user.getAlias(), user);
     }
 
     public void removeUser(final String alias) {
-        getUsersList().remove(users.get(alias));
+        userList.remove(users.get(alias));
     }
 
     public String getSubject() {
@@ -89,10 +89,6 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
 
     public void setSubject(final String subject) {
         this.subject = subject;
-    }
-
-    public GroupChatUserList getUsersList() {
-        return userList;
     }
 
     public GroupChatUserListView getUsersListView() {
