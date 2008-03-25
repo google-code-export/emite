@@ -32,6 +32,9 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
         this.otherUser = otherUser;
         this.input = "";
         this.listener = listener;
+        // Currently simple colors:
+        currentSessionUser.setColor("blue");
+        otherUser.setColor("green");
     }
 
     public void init(final PairChatView view) {
@@ -54,4 +57,9 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
     public PairChatUser getOtherUser() {
         return otherUser;
     }
+
+    public void onActivated() {
+        listener.onActivate(this);
+    }
+
 }

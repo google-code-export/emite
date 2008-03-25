@@ -23,4 +23,6 @@ public interface AbstractChatListener {
 
     void onMessageReceived(AbstractChat chat);
 
+    void onActivate(AbstractChat chat);
+
 }

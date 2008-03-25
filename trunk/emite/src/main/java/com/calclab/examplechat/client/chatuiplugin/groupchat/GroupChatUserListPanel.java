@@ -19,6 +19,8 @@
 
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
+import java.util.ArrayList;
+
 import org.ourproject.kune.platf.client.ui.IconLabel;
 
 import com.calclab.examplechat.client.chatuiplugin.utils.Emoticons;
@@ -27,7 +29,10 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class GroupChatUserListPanel extends VerticalPanel implements GroupChatUserListView {
+    private final ArrayList<String> users;
+
     public GroupChatUserListPanel() {
+        users = new ArrayList<String>();
     }
 
     public int addUser(final GroupChatUser user) {
@@ -38,14 +43,18 @@ public class GroupChatUserListPanel extends VerticalPanel implements GroupChatUs
         } else {
             icon = Emoticons.App.getInstance().bulletBlack();
         }
-        IconLabel userLabel = new IconLabel(icon, user.getAlias());
+        String userAlias = user.getAlias();
+        IconLabel userLabel = new IconLabel(icon, userAlias);
         userLabel.setColor(user.getColor());
         userPanel.add(userLabel);
         super.add(userPanel);
+        users.add(userAlias);
         return this.getWidgetCount();
     }
 
-    public void delUser(final int index) {
-        this.remove(index);
+    public void remove(final GroupChatUser user) {
+        String userAlias = user.getAlias();
+        this.remove(users.indexOf(userAlias));
+        users.remove(userAlias);
     }
 }

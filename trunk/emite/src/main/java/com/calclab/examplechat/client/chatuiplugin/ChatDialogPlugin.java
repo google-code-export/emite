@@ -38,6 +38,9 @@ public class ChatDialogPlugin extends Plugin {
 
             public void setGroupChatSubject(final GroupChat groupChat, final String subject) {
             }
+
+            public void onUserColorChanged(final String color) {
+            }
         });
         MultiChatPanel multiChatPanel = new MultiChatPanel(new I18nTranslationServiceMocked(), extChatDialog);
         extChatDialog.init(multiChatPanel);

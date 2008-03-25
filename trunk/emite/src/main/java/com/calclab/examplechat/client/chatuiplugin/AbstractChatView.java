@@ -33,4 +33,8 @@ public interface AbstractChatView extends View {
 
     void setChatTitle(String name);
 
+    int getScrollPos();
+
+    void restoreScrollPos(int position);
+
 }

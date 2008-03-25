@@ -19,15 +19,15 @@
 
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Map;
 
 public class GroupChatUserListPresenter implements GroupChatUserList {
     private GroupChatUserListPanel view;
-    private final ArrayList<GroupChatUser> users;
+    private final Map<String, GroupChatUser> users;
 
     public GroupChatUserListPresenter() {
-        users = new ArrayList<GroupChatUser>();
+        users = new HashMap<String, GroupChatUser>();
     }
 
     public void init(final GroupChatUserListPanel view) {
@@ -35,12 +35,16 @@ public class GroupChatUserListPresenter implements GroupChatUserList {
     }
 
     public void add(final GroupChatUser user) {
-        users.add(user);
+        users.put(user.getAlias(), user);
         view.addUser(user);
     }
 
+    public GroupChatUser get(final String userAlias) {
+        return users.get(userAlias);
+    }
+
     public void remove(final GroupChatUser user) {
-        view.delUser(users.indexOf(user));
+        view.remove(user);
     }
 
     public GroupChatUserListView getView() {
