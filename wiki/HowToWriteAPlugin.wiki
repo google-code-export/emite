@@ -1,0 +1,32 @@
+#labels Featured,Phase-Implementation
+A plugin (in emite) its a collection of objects (called components) registered into a container, usually subscribed to a message in the dispatcher *and* a object (that implements the Plugin interface) who has the responsability of create the components and subscribe them  into the dispatcher.
+
+So we will write a a simple plugin that, when a xmpp message arrives it answer the same. First we have the Echo object
+
+{{{
+class Echo {
+ public Message answerTo(Message incoming) {
+  Message answer = new Message(incoming.getBody());
+  answer.setTo(incoming.getFrom());
+  answer.setFrom(incoming.getTo());
+  return answer;
+ }
+}
+}}}
+
+Some objects can have some methods always starting with uppercase (to recognise them) that acts as syntatic sugar and can make the coding more descriptive:
+
+{{{
+class Echo {
+ public Message answerTo(Message incoming) {
+  return new Message(incoming.getBody().To(incoming.getFrom()).From(incoming.getTo());
+ }
+}
+}}}
+
+
+
+
+
+{{{
+}}}
