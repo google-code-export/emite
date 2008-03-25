@@ -24,9 +24,40 @@ class Echo {
 }
 }}}
 
-
-
-
+Then we need the EchoPlugin that installs the components and subscribe it into the dispatcher. We will subclass the SenderPlugin that provides also some sugar to the process:
 
 {{{
+class EchoPlugin extends SenderPlugin {
+ private final Echo echo;
+
+ public EchoPlugin(Bosh bosh) {
+  super(bosh);
+  this.echo = new Echo();
+ }
+
+ public void install() {
+  register("echo", this.echo);
+ }
+
+ public void attach() {
+  when.Message().Send(new DefferredResponse() {
+    public Packet handle(Packet packet) {
+      return echo.answerTo(new Message(packet));
+    }
+  }
+ }
+}
 }}}
+
+a couple of tricks:
+  * the SenderPlugin depends on the bosh component (because is capable to send!)
+  * we use the inherit where object (a kind of dsl object) to subscribe the dispatcher in a declarative way 
+  * we create a anonymous object implementing the DeferredResponse interface as a subscriptor
+  * the wrap the incomming packet with a Message class. Any packet can be wrapped to a Message, a IQ or Presence stanza types (but you have to be sure of what you're doing!)
+
+(i normally use a more concise way where the Echo class have the DeferredResponse as the attribute so i can write:
+{{{
+when.Message().Send(echo.answerToMessage);
+}}}
+in the attach method)
+
