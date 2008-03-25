@@ -102,6 +102,7 @@ public class MultiChatPanel implements MultiChatView {
     private Panel infoPanel;
     private Panel groupChatUsersPanel;
     private String infoPanelId;
+    private Panel buddiesPanel;
 
     public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
@@ -257,6 +258,8 @@ public class MultiChatPanel implements MultiChatView {
         groupChatUsersPanel.setVisible(visible);
         if (visible == true) {
             usersPanel.setActiveItemID(groupChatUsersPanel.getId());
+            buddiesPanel.collapse();
+            groupChatUsersPanel.expand();
         }
 
     }
@@ -393,8 +396,7 @@ public class MultiChatPanel implements MultiChatView {
                                 }
                             });
                     DOM.setStyleAttribute(dialog.getElement(), "zIndex", "9000");
-                    // DOM.setStyleAttribute(MessageBox.getDialog().getElement(),
-                    // "zIndex", "10000");
+                    DOM.setStyleAttribute(MessageBox.getDialog().getElement(), "zIndex", "10000");
                 }
                 return false;
             }
@@ -405,13 +407,15 @@ public class MultiChatPanel implements MultiChatView {
     private Panel createUsersPanel() {
         usersPanel = new Panel();
         usersPanel.setLayout(new AccordionLayout(true));
-        usersPanel.setAutoScroll(true);
+        usersPanel.setAutoScroll(false);
         usersPanel.setBorder(false);
         groupChatUsersDeckPanel = new DeckPanel();
         groupChatUsersDeckPanel.addStyleName("emite-MultiChatPanel-User");
-        Panel buddiesPanel = new Panel(i18n.t("My buddies"));
+        buddiesPanel = new Panel(i18n.t("My buddies"));
+        buddiesPanel.setAutoScroll(true);
         buddiesPanel.setIconCls("userf-icon");
         groupChatUsersPanel = new Panel(i18n.t("Now in this room"));
+        groupChatUsersPanel.setAutoScroll(true);
         groupChatUsersPanel.setIconCls("group-icon");
         groupChatUsersPanel.add(groupChatUsersDeckPanel);
         usersPanel.add(buddiesPanel);
