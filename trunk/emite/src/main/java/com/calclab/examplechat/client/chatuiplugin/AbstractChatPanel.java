@@ -21,7 +21,6 @@ package com.calclab.examplechat.client.chatuiplugin;
 
 import org.ourproject.kune.platf.client.ui.HorizontalLine;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatTextFormatter;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -87,12 +86,7 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
     }
 
     private Element getScrollableElement() {
-        // Element parent = DOM.getParent(this.getElement());
-        // return parent;
-        // return this.getElement();
-        Log.debug("panel id:" + getId());
         return DOM.getParent(childPanel.getElement());
-        // return childPanel.getParent().getElement();
     }
 
     private void addWidget(final Widget widget) {
