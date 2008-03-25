@@ -96,6 +96,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         pairChat.setChatTitle(otherUserAlias);
         currentChat = pairChat;
         view.addChat(pairChat);
+        chats.put(otherUserAlias, pairChat);
         return pairChat;
     }
 
@@ -160,7 +161,11 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void onCloseAllNotConfirmed() {
         closeAllConfirmed = false;
-        view.setSubject("");
+    }
+
+    public void onCloseAllConfirmed() {
+        closeAllConfirmed = true;
+        view.closeAllChats();
     }
 
     public boolean isCloseAllConfirmed() {
@@ -208,17 +213,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
             chat.setSessionUserColor(color);
         }
         listener.onUserColorChanged(color);
-    }
-
-    public void onCloseAllConfirmed() {
-        closeAllConfirmed = true;
-        view.closeAllChats();
-        // for (Iterator<AbstractChat> iterator = chats.values().iterator();
-        // iterator.hasNext();) {
-        // AbstractChat chat = iterator.next();
-        // chat.doClose();
-        // // TODO
-        // }
     }
 
 }

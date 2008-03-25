@@ -27,21 +27,20 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Panel;
 
 public abstract class AbstractChatPanel extends Panel implements AbstractChatView {
 
-    private final VerticalPanel childPanel;
+    private final Panel childPanel;
 
     public AbstractChatPanel(final AbstractChatPresenter presenter) {
         setClosable(true);
         setAutoScroll(true);
         setBorder(false);
-        setAutoHeight(true);
-        // FIXME: remove VerticalPanel
-        childPanel = new VerticalPanel();
+        childPanel = new Panel();
+        childPanel.setAutoScroll(false);
+        childPanel.setBorder(false);
         add(childPanel);
         addStyleName("emite-ChatPanel-Conversation");
     }
@@ -87,8 +86,9 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
     }
 
     private Element getScrollableElement() {
-        Element parent = DOM.getParent(this.getElement());
-        return parent;
+        // Element parent = DOM.getParent(this.getElement());
+        // return parent;
+        return this.getElement();
     }
 
     private void addWidget(final Widget widget) {
