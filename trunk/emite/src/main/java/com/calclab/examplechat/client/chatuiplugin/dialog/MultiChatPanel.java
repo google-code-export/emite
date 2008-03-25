@@ -34,7 +34,9 @@ import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
 import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPaletteListener;
 import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPalettePanel;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -199,8 +201,10 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void removeGroupChatUsersPanel(final GroupChatUserListView view) {
-        Integer index = userListToIndex.get(view);
-        groupChatUsersDeckPanel.remove(index.intValue());
+        // Integer index = userListToIndex.get(view);
+        // Bug in gwt 1.5?:
+        groupChatUsersDeckPanel.remove((Widget) view);
+        // groupChatUsersDeckPanel.remove(index.intValue());
         userListToIndex.remove(view);
     }
 
@@ -395,8 +399,12 @@ public class MultiChatPanel implements MultiChatView {
                                     }
                                 }
                             });
-                    DOM.setStyleAttribute(dialog.getElement(), "zIndex", "9000");
-                    DOM.setStyleAttribute(MessageBox.getDialog().getElement(), "zIndex", "10000");
+                    DeferredCommand.addCommand(new Command() {
+                        public void execute() {
+                            DOM.setStyleAttribute(dialog.getElement(), "zIndex", "9000");
+                            DOM.setStyleAttribute(MessageBox.getDialog().getElement(), "zIndex", "10000");
+                        }
+                    });
                 }
                 return false;
             }
@@ -677,7 +685,6 @@ public class MultiChatPanel implements MultiChatView {
             return icons.message();
         default:
             throw new IndexOutOfBoundsException("Xmpp status unknown");
-
         }
     }
 
