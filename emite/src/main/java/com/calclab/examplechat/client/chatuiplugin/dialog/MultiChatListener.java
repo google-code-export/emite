@@ -37,4 +37,6 @@ public interface MultiChatListener {
 
     void setGroupChatSubject(GroupChat groupChat, String subject);
 
+    void onUserColorChanged(String color);
+
 }

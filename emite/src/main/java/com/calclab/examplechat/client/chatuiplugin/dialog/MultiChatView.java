@@ -68,4 +68,10 @@ public interface MultiChatView {
 
     void clearSubject();
 
+    void setGroupChatUsersPanelVisible(boolean visible);
+
+    void setInviteToGroupChatButtonEnabled(boolean enable);
+
+    void closeAllChats();
+
 }

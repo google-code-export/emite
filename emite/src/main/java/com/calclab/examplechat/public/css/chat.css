@@ -1,37 +1,34 @@
-G.emite-RoomPanel-HorizDelimiter {
-  white-space: nowrap;
-  color: #B3B3B3;
-}
-
-.emite-MultiRoomPanel-Subject {
-  font-size: 108%;
+.emite-MultiChatPanel-Subject {
   color: #2E5492;
 }
 
-.emite-MultiRoomPanel-User {
-
+.emite-MultiChatPanel-User {
 }
 
-.emite-MultiRoomPanel-User .emite-IconLabel {
+.emite-MultiChatPanel-User .emite-IconLabel {
   overflow: hidden;
   white-space: nowrap;
 }
 
-.emite-RoomPanel-Conversation {
-
+.emite-ChatPanel-Conversation {
 }
 
-.emite-RoomPanel-Message {
+.emite-ChatPanel-Message {
   margin: 0 7px;
 }
 
-.emite-RoomPanel-EventMessage {
+.emite-ChatPanel-EventMessage {
   font-style: italic;
   color: rgb(102, 153, 204);
   margin: 0 5px;
 }
 
-.emite-MultiRoomPanel-EmoticonPalette {
+.emite-ChatPanel-HorizDelimiter {
+  white-space: nowrap;
+  color: #B3B3B3;
+}
+
+.emite-MultiChatPanel-EmoticonPalette {
   background-color: #FFF;
   border: 1px solid #AAA;
   margin: 1px solid red;
@@ -39,7 +36,7 @@ G.emite-RoomPanel-HorizDelimiter {
   position:absolute;
 }
 
-.emite-MultiRoomPanel-EmoticonPalette td {
+.emite-MultiChatPanel-EmoticonPalette td {
   width: 30px;
   height: 30px;
 }

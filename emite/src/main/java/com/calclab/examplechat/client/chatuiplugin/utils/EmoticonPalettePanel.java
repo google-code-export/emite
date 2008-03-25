@@ -40,7 +40,7 @@ public class EmoticonPalettePanel extends Composite {
         currentWidget = 0;
         initWidget(sp);
         grid.setCellSpacing(1);
-        grid.addStyleName("emite-MultiRoomPanel-EmoticonPalette");
+        grid.addStyleName("emite-MultiChatPanel-EmoticonPalette");
         Emoticons img = Emoticons.App.getInstance();
         addNextIcon(createEmoticon(img.smile(), ":-)", listener));
         addNextIcon(createEmoticon(img.crying(), ":'(", listener));

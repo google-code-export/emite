@@ -27,4 +27,6 @@ public interface GroupChatUserList {
 
     void remove(GroupChatUser user);
 
+    public GroupChatUser get(String userAlias);
+
 }

@@ -61,7 +61,11 @@ public class ChatExampleEntryPoint implements EntryPoint {
          * Install an UncaughtExceptionHandler which will produce <code>FATAL</code>
          * log messages
          */
-        Log.setUncaughtExceptionHandler();
+
+        /*
+         * Currently we let firebug to catch the error:
+         * Log.setUncaughtExceptionHandler();
+         */
 
         // At the moment, in runtime:
         Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
@@ -158,7 +162,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
         });
         btnExtUI.setTitle("gwt-ext UI (experimental)");
         buttons.add(btnExtUI);
-        btnSamplesExtUI = new Button("Chat Samples", new ClickListener() {
+        btnSamplesExtUI = new Button("Ext UI Tests", new ClickListener() {
             public void onClick(final Widget sender) {
                 if (extChatDialog != null) {
                     chatSamples();
@@ -185,9 +189,11 @@ public class ChatExampleEntryPoint implements EntryPoint {
     private HorizontalPanel createLoginPane() {
         final HorizontalPanel login = new HorizontalPanel();
         userNameInput = new TextBox();
+        userNameInput.setText("admin@localhost");
         resourceInput = new TextBox();
         resourceInput.setText("emite");
         passwordInput = new PasswordTextBox();
+        passwordInput.setText("easyeasy");
         login.add(new Label("user name:"));
         login.add(userNameInput);
         login.add(new Label("Resource:"));
@@ -318,6 +324,9 @@ public class ChatExampleEntryPoint implements EntryPoint {
                     }
 
                     public void setGroupChatSubject(final GroupChat groupChat, final String subject) {
+                    }
+
+                    public void onUserColorChanged(final String color) {
                     }
                 });
         extChatDialog.show();

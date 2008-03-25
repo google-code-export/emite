@@ -10,6 +10,7 @@ import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserList;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListPanel;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListPresenter;
@@ -36,7 +37,7 @@ public class ChatDialogFactory {
         return userListPresenter;
     }
 
-    public static GroupChat createGroupChat(final GroupChatListener listener, final AbstractChatUser currentSessionUser) {
+    public static GroupChat createGroupChat(final GroupChatListener listener, final GroupChatUser currentSessionUser) {
         GroupChatUserList userList = createGroupChatUserList();
         GroupChatPresenter presenter = new GroupChatPresenter(listener, currentSessionUser);
         presenter.setUserList(userList);

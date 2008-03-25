@@ -53,9 +53,14 @@ public class MultiChatSamples {
                 GroupChatUser.PARTICIPANT);
 
         Log.debug("Adding group users");
+        GroupChatUser lutherb = new GroupChatUser("groucho@localhost", "luther.b", "blue", GroupChatUser.MODERADOR);
+        GroupChatUser luther = new GroupChatUser("luther@localhost", "luther", "blue", GroupChatUser.MODERADOR);
         GroupChatUser otherUser = new GroupChatUser("otheruser", "ouser", "red", GroupChatUser.MODERADOR);
         GroupChatUser otherUser2 = new GroupChatUser("luther", "luther", "green", GroupChatUser.MODERADOR);
+
+        groupChat1.addUser(lutherb);
         groupChat1.addUser(otherUser);
+        groupChat2.addUser(luther);
         groupChat2.addUser(otherUser2);
 
         Log.debug("Adding subjects");
@@ -69,6 +74,17 @@ public class MultiChatSamples {
         Log.debug("Adding other messages");
         groupChat2.addInfoMessage("Mensaje de evento en group chat 2");
         groupChat2.addDelimiter("17:35");
+
+        pairChat.addMessage("ma", "testing");
+        pairChat.addMessage("ma", "testing");
+        pairChat.addMessage("ma", "testing");
+        pairChat.addMessage("ma", "testing");
+        pairChat.addMessage("ma", "testing");
+        pairChat.addMessage("ma", "testing");
+        pairChat.addMessage("ma", "testing");
+        pairChat.addMessage("ma", "testing");
+        pairChat.addMessage("ma", "testing");
+        pairChat.addMessage("ma", "testing");
 
     }
 }

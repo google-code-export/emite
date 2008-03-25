@@ -19,12 +19,8 @@
 
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
 
 public class GroupChatPresenter extends AbstractChatPresenter implements GroupChat {
@@ -33,17 +29,17 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
     private String subject;
     private GroupChatUserType sessionUserType;
     // FIXME: this in GroupChatUserList?
-    final Map<String, GroupChatUser> users;
+
     private GroupChatUserList userList;
     final GroupChatListener listener;
 
-    public GroupChatPresenter(final GroupChatListener listener, final AbstractChatUser currentSessionUser) {
+    public GroupChatPresenter(final GroupChatListener listener, final GroupChatUser currentSessionUser) {
         super(currentSessionUser, TYPE_GROUP_CHAT);
         this.subject = "Subject: " + getChatTitle();
         this.oldColor = 0;
         this.input = "";
-        users = new HashMap<String, GroupChatUser>();
         this.listener = listener;
+        this.sessionUserType = currentSessionUser.getUserType();
     }
 
     public void init(final GroupChatView view) {
@@ -62,7 +58,7 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
     public void addMessage(final String userAlias, final String message) {
         String userColor;
 
-        GroupChatUser user = users.get(userAlias);
+        GroupChatUser user = userList.get(userAlias);
         if (user != null) {
             userColor = user.getColor();
         } else {
@@ -76,11 +72,11 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
     public void addUser(final GroupChatUser user) {
         user.setColor(getNextColor());
         userList.add(user);
-        users.put(user.getAlias(), user);
     }
 
-    public void removeUser(final String alias) {
-        userList.remove(users.get(alias));
+    public void removeUser(final String userAlias) {
+        GroupChatUser user = userList.get(userAlias);
+        userList.remove(user);
     }
 
     public String getSubject() {
@@ -105,6 +101,10 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
             oldColor = 0;
         }
         return color;
+    }
+
+    public void onActivated() {
+        listener.onActivate(this);
     }
 
 }

@@ -47,6 +47,12 @@ public interface AbstractChat {
 
     int getType();
 
-    String getSessionAlias();
+    String getSessionUserAlias();
+
+    void saveOtherProperties();
+
+    void setSessionUserColor(String color);
+
+    void doClose();
 
 }

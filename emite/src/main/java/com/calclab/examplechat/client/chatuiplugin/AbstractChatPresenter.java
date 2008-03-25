@@ -44,12 +44,21 @@ public class AbstractChatPresenter implements AbstractChat {
         saveInput(null);
     }
 
-    public String getSessionAlias() {
+    public String getSessionUserAlias() {
         return sessionUser.getAlias();
+    }
+
+    public void setSessionUserColor(final String color) {
+        sessionUser.setColor(color);
     }
 
     public void saveInput(final String inputText) {
         input = inputText;
+    }
+
+    public void saveOtherProperties() {
+        // Bug: this fails after tab close !?
+        // scrollPos = view.getScrollPos();
     }
 
     public String getSavedInput() {
@@ -73,10 +82,12 @@ public class AbstractChatPresenter implements AbstractChat {
     }
 
     public void activate() {
+        // view.restoreScrollPos(scrollPos);
         view.scrollDown();
     }
 
     public int getType() {
         return chatType;
     }
+
 }
