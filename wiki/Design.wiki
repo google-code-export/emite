@@ -22,3 +22,11 @@ You can publish any event freely into the dispatcher when you want, but you only
 So, when the user want to send a message to the server, it uses the Chat object that sends an event (with the user message) into the dispatcher and then a subscriptor catches this event and uses the Bosh object to send the message.
 If you try to use the Bosh object outside a subscriptor, you will have an exception.
 
+===the container and the plugin manager===
+
+the container ({{{Container}}}) its a place to register components, managed by a plugin manager and where all begins: you create a container, and use its plugin manager to install and remove the plugins.
+All the objects registered by a plugin into the container are called components. Some plugin can access some components of another plugin using the container (but its more polite to use the event system ;)
+
+===the xmpp facade===
+
+the xmpp facade creates a container, register all core and im plugins and provie some nice methods to interact with the components and perform the most common operations
