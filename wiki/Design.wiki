@@ -1,18 +1,24 @@
 #labels Featured,Phase-Design
-
 _work in progress_
 
 ==how it works==
 
 This is a document to describe the internals of emite and to get used quickier with the source code. It's not about how to use the library. All this complexity is hidden under the Xmpp facade class.
 
-===1. the dispatcher===
+===the dispatcher===
 
-The dispatcher is the central part of the system.
+The dispatcher is the central part of the system. Its a publisher/subscribe system where the messages are always valid xml. Some of this messages comes from the server (because the Bosh object publish any incoming xmpp message into the dispatcher) and some other with the <event> element as root (events) come from the internal components.
 
-The bosh component publish any incoming xmpp message into the dispatcher. Some other components can subscribe to those events and react.
+When a component subscribes to some message, it can react in three different ways:
 
-There are three kind of reactions: perform some action (*do*), usually to change the state of the system, *send* a xmpp back to the server  or *publish* other xmpp message (any kind, but moslty <event> ones) into the dispatcher.
+
+  * (*do*) perform some action, usually to change the state of the system
+  * *send* a xmpp back to the server  or 
+  * *publish* other xmpp message (any kind, but moslty <event> ones) into the dispatcher.
+
 For example, when a incoming xmmp message informing that the authentication was succesful, the ResourcePlugin (subscribed to that message) send back to the server the xmpp resource binding request, and the SessionPlugin (also subscribed to that message) change its state to authorized and publish the <event type="session:authorized">. If you (as user) want to know if the athentication was succesfully you could subscribe to that event in the dispatcher (but there  is a nicer way to do it)
 
-You can publish any event freely into the dispatcher when you want, but you only can send a message to the server as a response to a dispachtcher message (this is a little constriction to keep the design simple).  
+You can publish any event freely into the dispatcher when you want, but you only can send a message to the server as a response to a dispachtcher message (this is a little constriction to keep the design simple and to give the oportunity to any plugin to interact with the outcoming messagess). 
+So, when the user want to send a message to the server, it uses the Chat object that sends an event (with the user message) into the dispatcher and then a subscriptor catches this event and uses the Bosh object to send the message.
+If you try to use the Bosh object outside a subscriptor, you will have an exception.
+
