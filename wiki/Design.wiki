@@ -1,0 +1,18 @@
+#labels Featured,Phase-Design
+
+_work in progress_
+
+==how it works==
+
+This is a document to describe the internals of emite and to get used quickier with the source code. It's not about how to use the library. All this complexity is hidden under the Xmpp facade class.
+
+===1. the dispatcher===
+
+The dispatcher is the central part of the system.
+
+The bosh component publish any incoming xmpp message into the dispatcher. Some other components can subscribe to those events and react.
+
+There are three kind of reactions: perform some action (*do*), usually to change the state of the system, *send* a xmpp back to the server  or *publish* other xmpp message (any kind, but moslty <event> ones) into the dispatcher.
+For example, when a incoming xmmp message informing that the authentication was succesful, the ResourcePlugin (subscribed to that message) send back to the server the xmpp resource binding request, and the SessionPlugin (also subscribed to that message) change its state to authorized and publish the <event type="session:authorized">. If you (as user) want to know if the athentication was succesfully you could subscribe to that event in the dispatcher (but there  is a nicer way to do it)
+
+You can publish any event freely into the dispatcher when you want, but you only can send a message to the server as a response to a dispachtcher message (this is a little constriction to keep the design simple).  
