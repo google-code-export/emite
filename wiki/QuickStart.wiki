@@ -31,4 +31,4 @@ mvn jetty:run
 to run the proxy
 
 Point the browser to:
-http://localhost:8080/gwt/com.calclab.examplechat.Example/ChatExample.html
+http://localhost:8888/gwt/com.calclab.examplechat.Example/ChatExample.html
