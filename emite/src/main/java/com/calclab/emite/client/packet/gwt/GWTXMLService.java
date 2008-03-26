@@ -1,5 +1,7 @@
-package com.calclab.emite.client.packet;
+package com.calclab.emite.client.packet.gwt;
 
+import com.calclab.emite.client.packet.Packet;
+import com.calclab.emite.client.packet.XMLService;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
@@ -15,7 +17,7 @@ public class GWTXMLService implements XMLService {
     public Packet toXML(final String xml) {
         final Document parsed = XMLParser.parse(xml);
         final Node body = parsed.getChildNodes().item(0);
-        return new XMLPacket((Element) body);
+        return new GWTPacket((Element) body);
     }
 
 }

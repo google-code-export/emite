@@ -9,6 +9,12 @@ import java.util.List;
  * 
  */
 public interface Packet {
+	public int getChildrenCount();
+
+	public boolean hasAttribute(String name);
+
+	public boolean hasAttribute(String name, String value);
+
 	public Packet With(final Packet child);
 
 	Packet add(String nodeName, String xmlns);

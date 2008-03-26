@@ -1,9 +1,10 @@
 package com.calclab.emite.client;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.bosh.BoshOptions;
 import com.calclab.emite.client.connector.GWTConnector;
 import com.calclab.emite.client.dispatcher.Dispatcher;
-import com.calclab.emite.client.packet.GWTXMLService;
+import com.calclab.emite.client.packet.gwt.GWTXMLService;
 import com.calclab.emite.client.x.im.ChatPlugin;
 import com.calclab.emite.client.x.im.MessageListener;
 import com.calclab.emite.client.x.im.roster.Roster;
@@ -55,6 +56,7 @@ public class Xmpp {
 	}
 
 	public void login(final String userName, final String userPassword) {
+		Log.debug("XMPP Login " + userName + " : " + userPassword);
 		session.login(new SessionOptions(userName, userPassword));
 	}
 
