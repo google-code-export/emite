@@ -54,7 +54,7 @@ public class BasicPacket extends AbstractPacket {
         return selected;
     }
 
-    public Packet getFirstChildren(final String childName) {
+    public Packet getFirstChild(final String childName) {
         for (final Packet child : children) {
             if (childName.equals(child.getName())) {
                 return child;

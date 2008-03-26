@@ -55,7 +55,7 @@ public class XMLPacket extends AbstractPacket {
         return wrap(nodes);
     }
 
-    public Packet getFirstChildren(final String childName) {
+    public Packet getFirstChild(final String childName) {
         final NodeList nodes = element.getElementsByTagName(childName);
         return nodes.getLength() > 0 ? new XMLPacket((Element) nodes.item(0)) : null;
     }

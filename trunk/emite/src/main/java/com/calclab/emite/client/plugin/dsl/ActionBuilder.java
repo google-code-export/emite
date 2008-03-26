@@ -29,7 +29,7 @@ public class ActionBuilder {
         actionBuilder.getDispatcher().subscribe(actionBuilder.filter, action);
     }
 
-    public void Publish(final PacketProducer bussinessLogic) {
+    public void Publish(final Answer bussinessLogic) {
         final PublishAction action = new PublishAction(actionBuilder.getDispatcher(), bussinessLogic);
         actionBuilder.getDispatcher().subscribe(actionBuilder.filter, action);
     }
@@ -39,7 +39,7 @@ public class ActionBuilder {
         actionBuilder.getDispatcher().subscribe(actionBuilder.filter, action);
     }
 
-    public void Send(final PacketProducer logic) {
+    public void Send(final Answer logic) {
         final SendAction action = new SendAction(actionBuilder.getConnection(), logic);
         actionBuilder.getDispatcher().subscribe(actionBuilder.filter, action);
     }

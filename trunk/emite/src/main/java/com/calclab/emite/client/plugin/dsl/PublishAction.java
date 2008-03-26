@@ -6,10 +6,10 @@ import com.calclab.emite.client.packet.Packet;
 
 public class PublishAction implements Action {
 	private final Dispatcher dispatcher;
-	private final PacketProducer logic;
+	private final Answer logic;
 	private final Packet packet;
 
-	public PublishAction(final Dispatcher dispatcher, final PacketProducer logic) {
+	public PublishAction(final Dispatcher dispatcher, final Answer logic) {
 		this(dispatcher, logic, null);
 	}
 
@@ -17,7 +17,7 @@ public class PublishAction implements Action {
 		this(dispatcher, null, packet);
 	}
 
-	PublishAction(final Dispatcher dispatcher, final PacketProducer logic, final Packet packet) {
+	PublishAction(final Dispatcher dispatcher, final Answer logic, final Packet packet) {
 		this.dispatcher = dispatcher;
 		this.logic = logic;
 		this.packet = packet;

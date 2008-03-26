@@ -18,7 +18,7 @@ public class Presence extends BasicStanza {
 	}
 
 	public void setShow(final Show value) {
-		Packet show = getFirstChildren("show");
+		Packet show = getFirstChild("show");
 		if (show == null) {
 			show = add("show", null);
 		}

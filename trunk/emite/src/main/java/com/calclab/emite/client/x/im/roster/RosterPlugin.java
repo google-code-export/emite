@@ -41,7 +41,7 @@ public class RosterPlugin extends SenderPlugin {
             }
 
             private List<Packet> getItems(final Packet packet) {
-                final List<Packet> items = packet.getFirstChildren("query").getChildren("item");
+                final List<Packet> items = packet.getFirstChild("query").getChildren("item");
                 return items;
             }
         };

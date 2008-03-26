@@ -6,7 +6,7 @@ import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
 import com.calclab.emite.client.plugin.SenderPlugin;
-import com.calclab.emite.client.plugin.dsl.PacketProducer;
+import com.calclab.emite.client.plugin.dsl.Answer;
 
 public class ResourcePlugin extends SenderPlugin {
 
@@ -14,12 +14,12 @@ public class ResourcePlugin extends SenderPlugin {
         public static final Event binded = new Event("resource:binded");
     }
 
-    final PacketProducer requestResourceBinding;
-    final PacketProducer resourceBinded;
+    final Answer requestResourceBinding;
+    final Answer resourceBinded;
 
     public ResourcePlugin(final Connection connection, final Globals globals) {
         super(connection);
-        requestResourceBinding = new PacketProducer() {
+        requestResourceBinding = new Answer() {
             public Packet respondTo(final Packet cathced) {
                 final IQ iq = new IQ("bindRequest", IQ.Type.set);
                 iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).addText("mensa");
@@ -27,9 +27,9 @@ public class ResourcePlugin extends SenderPlugin {
             }
         };
 
-        resourceBinded = new PacketProducer() {
+        resourceBinded = new Answer() {
             public Packet respondTo(final Packet iq) {
-                final String jid = iq.getFirstChildren("bind").getFirstChildren("jid").getText();
+                final String jid = iq.getFirstChild("bind").getFirstChild("jid").getText();
                 globals.setJID(jid);
                 return Events.binded;
             }
