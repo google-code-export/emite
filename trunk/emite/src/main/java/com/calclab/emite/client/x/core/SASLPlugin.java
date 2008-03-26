@@ -23,7 +23,7 @@ public class SASLPlugin extends SenderPlugin {
     public SASLPlugin(final Connection connection, final Globals globals) {
         super(connection);
         authorization = new PacketProducer() {
-            public Packet logic(final Packet cathced) {
+            public Packet respondTo(final Packet cathced) {
                 final Packet auth = createPlainAuthorization(globals);
                 return auth;
             }
@@ -43,7 +43,7 @@ public class SASLPlugin extends SenderPlugin {
         };
 
         restartAndAuthorize = new PacketProducer() {
-            public Packet logic(final Packet received) {
+            public Packet respondTo(final Packet received) {
                 return Events.authorized;
             }
 

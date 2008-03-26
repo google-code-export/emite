@@ -20,7 +20,7 @@ public class ResourcePlugin extends SenderPlugin {
     public ResourcePlugin(final Connection connection, final Globals globals) {
         super(connection);
         requestResourceBinding = new PacketProducer() {
-            public Packet logic(final Packet cathced) {
+            public Packet respondTo(final Packet cathced) {
                 final IQ iq = new IQ("bindRequest", IQ.Type.set);
                 iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).addText("mensa");
                 return iq;
@@ -28,7 +28,7 @@ public class ResourcePlugin extends SenderPlugin {
         };
 
         resourceBinded = new PacketProducer() {
-            public Packet logic(final Packet iq) {
+            public Packet respondTo(final Packet iq) {
                 final String jid = iq.getFirstChildren("bind").getFirstChildren("jid").getText();
                 globals.setJID(jid);
                 return Events.binded;

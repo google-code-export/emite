@@ -1,12 +1,17 @@
 package com.calclab.emite.client.packet;
 
 public class Event extends DelegatedPacket {
-	public Event(final Packet packet) {
-		super(packet);
+
+	private static Packet cloneEvent(final Event event) {
+		return new BasicPacket("event", "emite:event").With("name", event.getName());
+	}
+
+	public Event(final Event event) {
+		super(cloneEvent(event));
 	}
 
 	public Event(final String name) {
-		this(new BasicPacket("event", "emite:event"));
+		super(new BasicPacket("event", "emite:event"));
 		setAttribute("name", name);
 	}
 }

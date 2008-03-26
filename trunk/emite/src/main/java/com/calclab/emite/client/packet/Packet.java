@@ -9,45 +9,47 @@ import java.util.List;
  * 
  */
 public interface Packet {
-    Packet add(String nodeName, String xmlns);
+	public Packet With(final Packet child);
 
-    void addChild(Packet child);
+	Packet add(String nodeName, String xmlns);
 
-    void addText(String text);
+	void addChild(Packet child);
 
-    String getAttribute(String name);
+	void addText(String text);
 
-    List<? extends Packet> getChildren();
+	String getAttribute(String name);
 
-    /**
-     * Return all the descendant childs with node name
-     * 
-     * @param name
-     */
-    List<Packet> getChildren(String name);
+	List<? extends Packet> getChildren();
 
-    Packet getFirstChildren(String childName);
+	/**
+	 * Return all the descendant childs with node name
+	 * 
+	 * @param name
+	 */
+	List<Packet> getChildren(String name);
 
-    String getName();
+	Packet getFirstChildren(String childName);
 
-    Packet getParent();
+	String getName();
 
-    String getText();
+	Packet getParent();
 
-    void render(StringBuffer buffer);
+	String getText();
 
-    void setAttribute(String name, String value);
+	void render(StringBuffer buffer);
 
-    void setText(String text);
+	void setAttribute(String name, String value);
 
-    Packet With(String name, long value);
+	void setText(String text);
 
-    /**
-     * Chain-able method to add a attribute
-     * 
-     * @param name
-     * @param value
-     * @return
-     */
-    Packet With(String name, String value);
+	Packet With(String name, long value);
+
+	/**
+	 * Chain-able method to add a attribute
+	 * 
+	 * @param name
+	 * @param value
+	 * @return
+	 */
+	Packet With(String name, String value);
 }
