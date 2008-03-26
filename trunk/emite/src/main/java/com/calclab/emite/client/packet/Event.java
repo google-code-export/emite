@@ -18,6 +18,11 @@ public class Event extends DelegatedPacket {
 		setAttribute(TYPE, type);
 	}
 
+	public Event Because(final String cause) {
+		setAttribute("cause", cause);
+		return this;
+	}
+
 	public String getType() {
 		return getAttribute(TYPE);
 	}

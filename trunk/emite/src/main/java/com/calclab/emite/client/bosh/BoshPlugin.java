@@ -13,7 +13,6 @@ public class BoshPlugin extends PublisherPlugin {
 	private final XMLService xmler;
 	private final BoshOptions options;
 	private Bosh bosh;
-	private StreamManager stream;
 
 	public BoshPlugin(final Connector connector, final XMLService xmler,
 			final BoshOptions options) {
@@ -28,16 +27,13 @@ public class BoshPlugin extends PublisherPlugin {
 		when.Event(Connection.Events.start).Do(bosh.sendCreation);
 		when.Event(Connection.Events.error).Do(bosh.stop);
 		when.Event(Connection.Events.send).Do(bosh.send);
-
-		when.Packet("body").Do(stream.publishStanzas);
-		when.Event(Connection.Events.error).Do(stream.clear);
+		when.Packet("body").Do(bosh.publishStanzas);
 	}
 
 	@Override
 	public void install() {
 		final Dispatcher dispatcher = getDispatcher();
 		bosh = new Bosh(dispatcher, getGlobals(), connector, xmler, options);
-		stream = new StreamManager(bosh, dispatcher);
 
 		register(Components.CONNECTION, bosh);
 		dispatcher.addListener(new DispatcherStateListener() {

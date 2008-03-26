@@ -284,8 +284,10 @@ public class ChatExampleEntryPoint implements EntryPoint {
 		pane.add(controls);
 
 		toIn = new TextBox();
+		toIn.setText("testuser1@localhost");
 		controls.add(toIn);
 		messageIn = new TextBox();
+		messageIn.setText("hola!");
 		messageIn.addKeyboardListener(new KeyboardListener() {
 			public void onKeyDown(final Widget sender, final char keyCode,
 					final int modifiers) {

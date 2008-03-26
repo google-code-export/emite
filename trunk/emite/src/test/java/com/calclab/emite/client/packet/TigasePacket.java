@@ -6,77 +6,81 @@ import java.util.List;
 import tigase.xml.Element;
 
 public class TigasePacket extends AbstractPacket {
-    private final Element delegate;
+	private final Element delegate;
 
-    public TigasePacket(final Element element) {
-        this.delegate = element;
-    }
+	public TigasePacket(final Element element) {
+		this.delegate = element;
+	}
 
-    public Packet add(final String nodeName, final String xmlns) {
-        throw new RuntimeException("not implemented");
-    }
+	public Packet add(final String nodeName, final String xmlns) {
+		throw new RuntimeException("not implemented");
+	}
 
-    public void addChild(final Packet toBeSend) {
-        throw new RuntimeException("not implemented");
-    }
+	public void addChild(final Packet toBeSend) {
+		throw new RuntimeException("not implemented");
+	}
 
-    public void addText(final String text) {
-        throw new RuntimeException("not implemented");
-    }
+	public void addText(final String text) {
+		throw new RuntimeException("not implemented");
+	}
 
-    public String getAttribute(final String name) {
-        return delegate.getAttribute(name);
-    }
+	public String getAttribute(final String name) {
+		return delegate.getAttribute(name);
+	}
 
-    public List<? extends Packet> getChildren() {
-        final List<Element> children = delegate.getChildren();
-        return wrap(children);
-    }
+	public List<? extends Packet> getChildren() {
+		final List<Element> children = delegate.getChildren();
+		return wrap(children);
+	}
 
-    public List<Packet> getChildren(final String name) {
-        return wrap(delegate.getChildren(name));
-    }
+	public List<Packet> getChildren(final String name) {
+		return wrap(delegate.getChildren(name));
+	}
 
-    public Packet getFirstChild(final String childName) {
-        return new TigasePacket(delegate.getChild(childName));
-    }
+	public int getChildrenCount() {
+		return delegate.getChildren().size();
+	}
 
-    public String getName() {
-        return delegate.getName();
-    }
+	public Packet getFirstChild(final String childName) {
+		return new TigasePacket(delegate.getChild(childName));
+	}
 
-    public Packet getParent() {
-        throw new RuntimeException("not implemented");
-    }
+	public String getName() {
+		return delegate.getName();
+	}
 
-    public String getText() {
-        return delegate.getCData();
-    }
+	public Packet getParent() {
+		throw new RuntimeException("not implemented");
+	}
 
-    public void render(final StringBuffer buffer) {
-        buffer.append(delegate.toString());
-    }
+	public String getText() {
+		return delegate.getCData();
+	}
 
-    public void setAttribute(final String name, final String value) {
-        throw new RuntimeException("not implemented");
-    }
+	public void render(final StringBuffer buffer) {
+		buffer.append(delegate.toString());
+	}
 
-    public void setText(final String text) {
-        throw new RuntimeException("not implemented");
-    }
+	public void setAttribute(final String name, final String value) {
+		throw new RuntimeException("not implemented");
+	}
 
-    @Override
-    public String toString() {
-        return delegate.toString();
-    }
+	public void setText(final String text) {
+		throw new RuntimeException("not implemented");
+	}
 
-    private List<Packet> wrap(final List<Element> children) {
-        final ArrayList<Packet> result = new ArrayList<Packet>();
-        if (children != null) {
-            for (final Element e : children) {
-                result.add(new TigasePacket(e));
-            }
-        }
-        return result;
-    }
+	@Override
+	public String toString() {
+		return delegate.toString();
+	}
+
+	private List<Packet> wrap(final List<Element> children) {
+		final ArrayList<Packet> result = new ArrayList<Packet>();
+		if (children != null) {
+			for (final Element e : children) {
+				result.add(new TigasePacket(e));
+			}
+		}
+		return result;
+	}
 }

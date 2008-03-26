@@ -46,7 +46,7 @@ public class DispatcherDefault implements Dispatcher {
 	}
 
 	public void subscribe(final Matcher matcher, final Action action) {
-		Log.debug("Subscribing to {0}" + matcher.getElementName());
+		Log.debug("Subscribing to: " + matcher.getElementName());
 		final List<Subscriptor> list = getSubscriptorList(matcher
 				.getElementName());
 		list.add(new Subscriptor(matcher, action));
