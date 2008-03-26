@@ -38,7 +38,6 @@ http://localhost:8888/gwt/com.calclab.examplechat.Example/ChatExample.html
  <settings>
    <profiles>
      <profile>
-     <profile>
        <id>gwt-1.4.61</id>
        <properties>
          <google.webtoolkit.home>/usr/local/lib/gwt/gwt-linux-1.4.61</google.webtoolkit.home>
