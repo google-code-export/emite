@@ -2,17 +2,16 @@ package com.calclab.emite.client;
 
 import java.util.HashMap;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.dispatcher.Dispatcher;
-import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.plugin.PluginManager;
 
-public class ComponentContainer extends HashMap<String, Object> implements Components {
+public class ComponentContainer extends HashMap<String, Object> implements
+		Components {
 	private static final long serialVersionUID = 1L;
-	private final Logger logger;
 
-	public ComponentContainer(final Logger logger) {
-		this.logger = logger;
+	public ComponentContainer() {
 	}
 
 	public Object get(final String componentName) {
@@ -31,16 +30,12 @@ public class ComponentContainer extends HashMap<String, Object> implements Compo
 		return (Globals) get(Components.GLOBALS);
 	}
 
-	public Logger getLogger() {
-		return logger;
-	}
-
 	public PluginManager getPluginManager() {
 		return (PluginManager) get(Components.PLUGIN_MANAGER);
 	}
 
 	public void register(final String name, final Object component) {
-		logger.log(Logger.DEBUG, "Registering component '{0}'", name);
+		Log.debug("Registering component " + name);
 		super.put(name, component);
 	}
 

@@ -2,7 +2,7 @@ package com.calclab.emite.client;
 
 import com.calclab.emite.client.bosh.BoshOptions;
 import com.calclab.emite.client.connector.GWTConnector;
-import com.calclab.emite.client.log.LoggerOutput;
+import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.GWTXMLService;
 import com.calclab.emite.client.x.im.ChatPlugin;
 import com.calclab.emite.client.x.im.MessageListener;
@@ -15,9 +15,10 @@ import com.calclab.emite.client.x.im.session.SessionPlugin;
 
 public class Xmpp {
 
-	public static Xmpp create(final BoshOptions options, final LoggerOutput output) {
-		final Container container = new Container(output);
-		container.installDefaultPlugins(new GWTXMLService(), new GWTConnector(), options);
+	public static Xmpp create(final BoshOptions options) {
+		final Container container = new Container();
+		container.installDefaultPlugins(new GWTXMLService(),
+				new GWTConnector(), options);
 		return new Xmpp(container.getComponents());
 	}
 
@@ -39,6 +40,10 @@ public class Xmpp {
 
 	public Components getComponents() {
 		return components;
+	}
+
+	public Dispatcher getDispatcher() {
+		return components.getDispatcher();
 	}
 
 	public Roster getRoster() {

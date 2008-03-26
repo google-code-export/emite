@@ -11,6 +11,7 @@
      <servlet>
         <servlet-name>Proxy</servlet-name>
         <servlet-class>de.spieleck.servlets.ProxyServlet</servlet-class>
+        
     </servlet>
     <servlet-mapping>
         <servlet-name>Proxy</servlet-name>

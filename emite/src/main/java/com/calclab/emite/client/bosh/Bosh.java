@@ -87,11 +87,20 @@ public class Bosh implements Connection {
 
 						public void onResponseReceived(final int statusCode,
 								final String content) {
-							final Packet response = xmler.toXML(content);
-							dispatcher.publish(response);
+							if (statusCode >= 400) {
+								dispatcher.publish(Connection.Events.error);
+							} else {
+								final Packet response = xmler.toXML(content);
+								if ("body".equals(response.getName())) {
+									dispatcher.publish(response);
+								} else {
+									dispatcher.publish(Connection.Events.error);
+								}
+							}
 						}
 
 					});
+			body = null;
 		} catch (final ConnectorException e) {
 			dispatcher.publish(Connection.Events.error);
 		}

@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.allen_sauer.gwt.log.client.Log;
+
 /**
  * Serves pages which are fetched from another HTTP-Server useful for going thru
  * firewalls and other trickery...
@@ -93,7 +95,8 @@ public class ProxyServlet extends HttpServlet {
 	 * Copy a file from in to out. Sub-classes can override this in order to do
 	 * filtering of some sort.
 	 */
-	public void copyStream(final InputStream in, final OutputStream out) throws IOException {
+	public void copyStream(final InputStream in, final OutputStream out)
+			throws IOException {
 		final BufferedInputStream bin = new BufferedInputStream(in);
 		int b;
 		while ((b = bin.read()) != -1) {
@@ -155,14 +158,15 @@ public class ProxyServlet extends HttpServlet {
 	@Override
 	public void log(final String msg) {
 		if (debugFlag) {
-			System.out.println("PROXY SERVLET - ## " + msg);
+			Log.debug("PROXY SERVLET - ## " + msg);
 		}
 	}
 
 	/**
 	 * Read a RFC2616 line from an InputStream:
 	 */
-	public int readLine(final InputStream in, final byte[] b) throws IOException {
+	public int readLine(final InputStream in, final byte[] b)
+			throws IOException {
 		int off2 = 0;
 		while (off2 < b.length) {
 			final int r = in.read();
@@ -188,9 +192,10 @@ public class ProxyServlet extends HttpServlet {
 	// @param req the servlet request
 	// @param req the servlet response
 	// @exception ServletException when an exception has occurred
+	@SuppressWarnings("unchecked")
 	@Override
-	public void service(final HttpServletRequest req, final HttpServletResponse res) throws ServletException,
-			IOException {
+	public void service(final HttpServletRequest req,
+			final HttpServletResponse res) throws ServletException, IOException {
 		//
 		// Connect to "remote" server:
 		Socket sock;
@@ -202,8 +207,9 @@ public class ProxyServlet extends HttpServlet {
 			out = new BufferedOutputStream(sock.getOutputStream());
 			in = new BufferedInputStream(sock.getInputStream());
 		} catch (final IOException e) {
-			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Socket opening: " + remoteServer + ":"
-					+ remotePort + " >> " + e.toString());
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+					"Socket opening: " + remoteServer + ":" + remotePort
+							+ " >> " + e.toString());
 			return;
 		}
 		try {
@@ -246,7 +252,8 @@ public class ProxyServlet extends HttpServlet {
 				//
 				// Throw away persistant connections between servers
 				// Throw away request potentially causing a 304 response.
-				else if (!"Connection".equalsIgnoreCase(k) && !"If-Modified-Since".equalsIgnoreCase(k)
+				else if (!"Connection".equalsIgnoreCase(k)
+						&& !"If-Modified-Since".equalsIgnoreCase(k)
 						&& !"If-None-Match".equalsIgnoreCase(k)) {
 					sb.setLength(0);
 					sb.append(k);
@@ -318,7 +325,8 @@ public class ProxyServlet extends HttpServlet {
 	/**
 	 * Forward and filter header from backend Request.
 	 */
-	private boolean treatHeader(final InputStream in, final HttpServletRequest req, final HttpServletResponse res)
+	private boolean treatHeader(final InputStream in,
+			final HttpServletRequest req, final HttpServletResponse res)
 			throws ServletException {
 		boolean retval = true;
 		final byte[] lineBytes = new byte[4096];

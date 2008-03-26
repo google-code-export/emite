@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.x.im.session.Session;
 import com.calclab.emite.client.x.im.session.SessionListener;
 import com.calclab.emite.client.x.im.session.Session.State;
@@ -14,7 +13,7 @@ public class RealServerTest {
 
 	@Test
 	public synchronized void testSimple() throws InterruptedException {
-		final Xmpp xmpp = TestHelper.createXMPP(Logger.DEBUG);
+		final Xmpp xmpp = TestHelper.createXMPP();
 		final Session session = xmpp.getSession();
 
 		assertEquals(Session.State.disconnected, session.getState());

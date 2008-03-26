@@ -2,7 +2,6 @@ package com.calclab.emite.client;
 
 import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.dispatcher.Dispatcher;
-import com.calclab.emite.client.log.Logger;
 
 public interface Components {
 
@@ -18,8 +17,6 @@ public interface Components {
 	Dispatcher getDispatcher();
 
 	Globals getGlobals();
-
-	Logger getLogger();
 
 	void register(String name, Object component);
 
