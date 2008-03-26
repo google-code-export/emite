@@ -1,5 +1,69 @@
 INSTALL
 --------------------------------------------------------------------------------
 
-jar generation:
+Bundled with the library there is a gwt ui example.
+
+You need a running xmpp server with bosh connection linked to localhost:8181/http-bind (i will change this in the near future) as pre-requisites (openfire is the easyiest way to obtain that).
+
+
+Install gwt (0.0.2030) and maven2. Get the source code.
+
+Inside the project folder type:
+
+  mvn gwt:compile
+
+to compile the sources and, if you use a linux envirorment, write:
+
+  ./script/server.sh
+
+to copy the compiled js to the destination folder and run the proxy servlet
+
+if you are not unix', take a look to the script to know which are
+the folders you have to copy and then 
+
+  mvn jetty:run
+
+to run the proxy
+
+Point the browser to:
+
+  http://localhost:8888/gwt/com.calclab.examplechat.Example/ChatExample.html
+
+Appendix A: Configuration of maven
+--------------------------------------------------------------------------------
+Example of .m2/settings.xml:
+
+<?xml version="1.0" encoding="UTF-8"?>
+ <settings>
+   <profiles>
+     <profile>
+     <profile>
+       <id>gwt-1.4.61</id>
+       <properties>
+         <google.webtoolkit.home>/usr/local/lib/gwt/gwt-linux-1.4.61</google.webtoolkit.home>
+         <!-- <google.webtoolkit.devjar>gwt-dev-linux</google.webtoolkit.devjar> -->
+         <!-- you only need this is you are on a mac -->
+        <google.webtoolkit.extrajvmargs>-Xmx256M</google.webtoolkit.extrajvmargs>
+      </properties>
+     </profile>
+     <profile>
+       <id>gwt-0.0.2030</id>
+       <properties>
+         <google.webtoolkit.home>/usr/local/lib/gwt/gwt-linux-0.0.2030</google.webtoolkit.home>
+         <!-- <google.webtoolkit.devjar>gwt-dev-linux</google.webtoolkit.devjar> -->
+         <!-- you only need this is you are on a mac -->
+        <google.webtoolkit.extrajvmargs>-Xmx256M</google.webtoolkit.extrajvmargs>
+      </properties>
+     </profile>
+   </profiles>
+   <activeProfiles>
+     <activeProfile>gwt-0.0.2030</activeProfile>
+   </activeProfiles>
+</settings>
+
+Appendix B: jar generation
+--------------------------------------------------------------------------------
+
   mvn package
+
+
