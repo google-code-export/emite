@@ -36,7 +36,7 @@ public class SessionPlugin extends SenderPlugin {
         session = new Session(globals, dispatcher);
 
         requestSession = new PacketProducer() {
-            public Packet logic(final Packet received) {
+            public Packet respondTo(final Packet received) {
                 final IQ iq = new IQ("requestSession", IQ.Type.set).From(globals.getJID()).To(globals.getDomain());
                 iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
                 return iq;
@@ -50,7 +50,7 @@ public class SessionPlugin extends SenderPlugin {
         };
 
         setStartedState = new PacketProducer() {
-            public Packet logic(final Packet received) {
+            public Packet respondTo(final Packet received) {
                 session.setState(Session.State.connected);
                 return Events.started;
             }

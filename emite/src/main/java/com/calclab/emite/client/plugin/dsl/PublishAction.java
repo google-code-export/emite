@@ -24,7 +24,7 @@ public class PublishAction implements Action {
 	}
 
 	public void handle(final Packet stanza) {
-		final Packet toBePublished = packet != null ? packet : logic.logic(stanza);
+		final Packet toBePublished = packet != null ? packet : logic.respondTo(stanza);
 		dispatcher.publish(toBePublished);
 	}
 }

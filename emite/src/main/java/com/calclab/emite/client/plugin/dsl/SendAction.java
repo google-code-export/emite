@@ -24,7 +24,7 @@ public class SendAction implements Action {
 	}
 
 	public void handle(final Packet stanza) {
-		final Packet toBeSend = packet != null ? packet : logic.logic(stanza);
+		final Packet toBeSend = packet != null ? packet : logic.respondTo(stanza);
 		connection.send(toBeSend);
 	}
 

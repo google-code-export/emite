@@ -17,35 +17,35 @@ import com.calclab.emite.client.x.im.roster.RosterPlugin;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
 
 public class Container {
-    private final Components c;
-    private final LoggerAdapter logger;
-    private final DefaultPluginManager manager;
+	private final Components c;
+	private final LoggerAdapter logger;
+	private final DefaultPluginManager manager;
 
-    public Container(final LoggerOutput output) {
-        logger = new LoggerAdapter(output);
-        c = new ComponentContainer(logger);
-        c.setGlobals(new HashGlobals());
-        manager = new DefaultPluginManager(c.getLogger(), c);
-    }
+	public Container(final LoggerOutput output) {
+		logger = new LoggerAdapter(output);
+		c = new ComponentContainer(logger);
+		c.setGlobals(new HashGlobals());
+		manager = new DefaultPluginManager(c.getLogger(), c);
+	}
 
-    public Components getComponents() {
-        return c;
-    }
+	public Components getComponents() {
+		return c;
+	}
 
-    public void installDefaultPlugins(final XMLService xmler, final Connector connector, final BoshOptions options) {
-        manager.install("dispatcher", new DispatcherPlugin());
-        manager.install("bosh", new BoshPlugin(connector, xmler, options));
+	public void installDefaultPlugins(final XMLService xmler, final Connector connector, final BoshOptions options) {
+		manager.install("dispatcher", new DispatcherPlugin());
+		manager.install("bosh", new BoshPlugin(connector, xmler, options));
 
-        final Globals globals = c.getGlobals();
-        final Connection connection = c.getConnection();
-        final Dispatcher dispatcher = c.getDispatcher();
+		final Globals globals = c.getGlobals();
+		final Connection connection = c.getConnection();
+		final Dispatcher dispatcher = c.getDispatcher();
 
-        manager.install("chat", new ChatPlugin(connection, dispatcher));
-        manager.install("session", new SessionPlugin(dispatcher, connection, globals));
-        manager.install("roster", new RosterPlugin(connection));
-        manager.install("sasl", new SASLPlugin(connection, globals));
-        manager.install("resource", new ResourcePlugin(connection, globals));
+		manager.install("chat", new ChatPlugin(dispatcher, connection));
+		manager.install("session", new SessionPlugin(dispatcher, connection, globals));
+		manager.install("roster", new RosterPlugin(connection));
+		manager.install("sasl", new SASLPlugin(connection, globals));
+		manager.install("resource", new ResourcePlugin(connection, globals));
 
-        manager.start();
-    }
+		manager.start();
+	}
 }

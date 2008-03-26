@@ -12,7 +12,7 @@ public class LogicAction implements Action {
 	}
 
 	public void handle(final Packet stanza) {
-		logic.logic(stanza);
+		logic.respondTo(stanza);
 	}
 
 }
