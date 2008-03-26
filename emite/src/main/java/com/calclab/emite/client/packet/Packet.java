@@ -28,7 +28,7 @@ public interface Packet {
 	 */
 	List<Packet> getChildren(String name);
 
-	Packet getFirstChildren(String childName);
+	Packet getFirstChild(String childName);
 
 	String getName();
 

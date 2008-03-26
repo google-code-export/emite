@@ -5,9 +5,9 @@ import com.calclab.emite.client.packet.Packet;
 
 public class LogicAction implements Action {
 
-	private final PacketProducer logic;
+	private final Answer logic;
 
-	public LogicAction(final PacketProducer logic) {
+	public LogicAction(final Answer logic) {
 		this.logic = logic;
 	}
 

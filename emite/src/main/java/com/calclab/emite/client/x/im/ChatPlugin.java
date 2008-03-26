@@ -20,7 +20,6 @@ public class ChatPlugin extends SenderPlugin {
 
 	@Override
 	public void attach() {
-		when.Event(Chat.Events.send).Send(chat.send);
 	}
 
 	@Override

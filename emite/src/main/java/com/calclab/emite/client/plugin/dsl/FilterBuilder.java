@@ -7,9 +7,9 @@ import com.calclab.emite.client.packet.Event;
 
 public class FilterBuilder {
 
-	private final ActionBuilder actionBuilder;
-
 	BasicMatcher filter;
+
+	private final ActionBuilder actionBuilder;
 
 	private final Dispatcher dispatcher;
 
@@ -22,26 +22,10 @@ public class FilterBuilder {
 		this.actionBuilder = new ActionBuilder(this);
 	}
 
-	private ActionBuilder createBuilder(final BasicMatcher matcher) {
-		this.filter = matcher;
-		return actionBuilder;
-	}
-
 	public ActionBuilder Event(final Event event) {
-		final BasicMatcher matcher = new BasicMatcher("event", "name", event
-				.getAttribute("name"));
+		final BasicMatcher matcher = new BasicMatcher("event", "type", event
+				.getType());
 		return createBuilder(matcher);
-	}
-
-	Connection getConnection() {
-		if (connection == null) {
-			throw new RuntimeException("you should use a SenderPlugin instead");
-		}
-		return connection;
-	}
-
-	Dispatcher getDispatcher() {
-		return dispatcher;
 	}
 
 	public ActionBuilder IQ(final String id) {
@@ -62,5 +46,21 @@ public class FilterBuilder {
 			final String attValue) {
 		final BasicMatcher matcher = new BasicMatcher(name, attName, attValue);
 		return createBuilder(matcher);
+	}
+
+	Connection getConnection() {
+		if (connection == null) {
+			throw new RuntimeException("you should use a SenderPlugin instead");
+		}
+		return connection;
+	}
+
+	Dispatcher getDispatcher() {
+		return dispatcher;
+	}
+
+	private ActionBuilder createBuilder(final BasicMatcher matcher) {
+		this.filter = matcher;
+		return actionBuilder;
 	}
 }

@@ -9,7 +9,7 @@ import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
 import com.calclab.emite.client.plugin.SenderPlugin;
-import com.calclab.emite.client.plugin.dsl.PacketProducer;
+import com.calclab.emite.client.plugin.dsl.Answer;
 import com.calclab.emite.client.x.core.ResourcePlugin;
 import com.calclab.emite.client.x.core.SASLPlugin;
 
@@ -26,16 +26,16 @@ public class SessionPlugin extends SenderPlugin {
         return (Session) components.get("session");
     }
 
-    final PacketProducer requestSession;
+    final Answer requestSession;
     final Action setAuthorizedState;
-    final PacketProducer setStartedState;
+    final Answer setStartedState;
     private final Session session;
 
     public SessionPlugin(final Dispatcher dispatcher, final Connection connection, final Globals globals) {
         super(connection);
         session = new Session(globals, dispatcher);
 
-        requestSession = new PacketProducer() {
+        requestSession = new Answer() {
             public Packet respondTo(final Packet received) {
                 final IQ iq = new IQ("requestSession", IQ.Type.set).From(globals.getJID()).To(globals.getDomain());
                 iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
@@ -49,7 +49,7 @@ public class SessionPlugin extends SenderPlugin {
             }
         };
 
-        setStartedState = new PacketProducer() {
+        setStartedState = new Answer() {
             public Packet respondTo(final Packet received) {
                 session.setState(Session.State.connected);
                 return Events.started;

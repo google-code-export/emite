@@ -13,101 +13,114 @@ import com.calclab.emite.client.packet.XMLService;
 
 public class Bosh implements Connection {
 
-    final Action stop;
-    final Action restartStream;
-    final Action sendCreation;
-    private Packet body;
-    private final XMLService xmler;
-    private final Connector connector;
-    private final String httpBase;
-    private final Dispatcher dispatcher;
-    private boolean isRunning;
-    // FIXME: gwt and long problems
-    private long rid;
+	final Action stop;
+	final Action restartStream;
+	final Action sendCreation;
+	final Action send;
+	private Packet body;
+	private final XMLService xmler;
+	private final Connector connector;
+	private final String httpBase;
+	private final Dispatcher dispatcher;
+	private boolean isRunning;
+	// FIXME: gwt and long problems
+	private long rid;
 
-    public Bosh(final Dispatcher dispatcher, final Globals globals, final Connector connector, final XMLService xmler,
-            final BoshOptions options) {
-        this.dispatcher = dispatcher;
-        this.connector = connector;
-        this.xmler = xmler;
-        this.httpBase = options.getHttpBase();
-        this.body = null;
-        this.isRunning = false;
-        this.rid = 0;
+	public Bosh(final Dispatcher dispatcher, final Globals globals,
+			final Connector connector, final XMLService xmler,
+			final BoshOptions options) {
+		this.dispatcher = dispatcher;
+		this.connector = connector;
+		this.xmler = xmler;
+		this.httpBase = options.getHttpBase();
+		this.body = null;
+		this.isRunning = false;
+		this.rid = 0;
 
-        globals.setDomain(options.getDomain());
+		globals.setDomain(options.getDomain());
 
-        restartStream = new Action() {
-            public void handle(final Packet received) {
-                setRestart();
-            }
-        };
+		restartStream = new Action() {
+			public void handle(final Packet received) {
+				setRestart();
+			}
+		};
 
-        sendCreation = new Action() {
-            public void handle(final Packet received) {
-                isRunning = true;
-                rid = generateRID();
-                body.With("content", "text/xml; charset=utf-8").With("rid", rid).With("to", options.getDomain()).With(
-                        "secure", "true").With("ver", "1.6").With("wait", "60").With("ack", "1").With("hold", "1")
-                        .With("xml:lang", "en");
-            }
-        };
+		sendCreation = new Action() {
+			public void handle(final Packet received) {
+				isRunning = true;
+				rid = generateRID();
+				body.With("content", "text/xml; charset=utf-8")
+						.With("rid", rid).With("to", options.getDomain()).With(
+								"secure", "true").With("ver", "1.6").With(
+								"wait", "60").With("ack", "1")
+						.With("hold", "1").With("xml:lang", "en");
+			}
+		};
 
-        stop = new Action() {
-            public void handle(final Packet stanza) {
-                stop();
-            }
-        };
+		stop = new Action() {
+			public void handle(final Packet stanza) {
+				stop();
+			}
+		};
 
-    }
+		send = new Action() {
+			public void handle(final Packet received) {
+				send(received.getFirstChild("message"));
+			}
+		};
 
-    public void catchPackets() {
-        rid++;
-        this.body = new BasicPacket("body", "http://jabber.org/protocol/httpbind").With("rid", rid);
-    }
+	}
 
-    public void firePackets() {
-        try {
-            connector.send(httpBase, xmler.toString(body), new ConnectorCallback() {
-                public void onError(final Throwable throwable) {
-                    dispatcher.publish(Connection.Events.error);
-                }
+	public void catchPackets() {
+		rid++;
+		this.body = new BasicPacket("body",
+				"http://jabber.org/protocol/httpbind").With("rid", rid);
+	}
 
-                public void onResponseReceived(final int statusCode, final String content) {
-                    final Packet response = xmler.toXML(content);
-                    dispatcher.publish(response);
-                }
+	public void firePackets() {
+		try {
+			connector.send(httpBase, xmler.toString(body),
+					new ConnectorCallback() {
+						public void onError(final Throwable throwable) {
+							dispatcher.publish(Connection.Events.error);
+						}
 
-            });
-        } catch (final ConnectorException e) {
-            dispatcher.publish(Connection.Events.error);
-        }
-    }
+						public void onResponseReceived(final int statusCode,
+								final String content) {
+							final Packet response = xmler.toXML(content);
+							dispatcher.publish(response);
+						}
 
-    public boolean isRunning() {
-        return isRunning;
-    }
+					});
+		} catch (final ConnectorException e) {
+			dispatcher.publish(Connection.Events.error);
+		}
+	}
 
-    public void send(final Packet toBeSend) {
-        Log.debug("BOSH::Send: " + toBeSend);
-        body.addChild(toBeSend);
-    }
+	public boolean isRunning() {
+		return isRunning;
+	}
 
-    public void setRestart() {
-        body.setAttribute("restart", "true");
-    }
+	public void send(final Packet toBeSend) {
+		Log.debug("BOSH::Queueing: " + toBeSend);
+		body.addChild(toBeSend);
+	}
 
-    public void setSID(final String sid) {
-        body.setAttribute("sid", sid);
-    }
+	public void setRestart() {
+		body.setAttribute("restart", "true");
+	}
 
-    public void stop() {
-        isRunning = false;
-    }
+	public void setSID(final String sid) {
+		body.setAttribute("sid", sid);
+	}
 
-    private long generateRID() {
-        final long rid = (long) (Math.random() * 1245234);
-        return rid;
-    }
+	public void stop() {
+		isRunning = false;
+	}
+
+	private long generateRID() {
+		final long rid = (long) (Math.random() * 1245234);
+		return rid;
+	}
 
 }

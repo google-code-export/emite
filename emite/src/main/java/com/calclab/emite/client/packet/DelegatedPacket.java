@@ -33,8 +33,8 @@ public class DelegatedPacket extends AbstractPacket {
         return delegate.getChildren(name);
     }
 
-    public final Packet getFirstChildren(final String childName) {
-        return delegate.getFirstChildren(childName);
+    public final Packet getFirstChild(final String childName) {
+        return delegate.getFirstChild(childName);
     }
 
     public final String getName() {

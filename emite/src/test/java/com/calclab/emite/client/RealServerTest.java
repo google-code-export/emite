@@ -4,8 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.log.Logger;
 import com.calclab.emite.client.x.im.session.Session;
+import com.calclab.emite.client.x.im.session.SessionListener;
+import com.calclab.emite.client.x.im.session.Session.State;
 
 public class RealServerTest {
 
@@ -15,8 +18,16 @@ public class RealServerTest {
 		final Session session = xmpp.getSession();
 
 		assertEquals(Session.State.disconnected, session.getState());
+		xmpp.addSessionListener(new SessionListener() {
+			public void onStateChanged(final State old, final State current) {
+				Log.debug("Session state: " + current);
+				switch (current) {
+				case connected:
+					xmpp.send("testuser1@localhost", "hola!");
+				}
+			}
+		});
 		xmpp.login("admin", "easyeasy");
-		xmpp.send("testuser1", "hola!");
 		wait(6000);
 		assertEquals(Session.State.connected, session.getState());
 	}

@@ -37,7 +37,7 @@ public class TigasePacket extends AbstractPacket {
         return wrap(delegate.getChildren(name));
     }
 
-    public Packet getFirstChildren(final String childName) {
+    public Packet getFirstChild(final String childName) {
         return new TigasePacket(delegate.getChild(childName));
     }
 
