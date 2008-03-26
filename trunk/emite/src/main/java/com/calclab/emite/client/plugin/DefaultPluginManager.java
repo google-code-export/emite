@@ -2,9 +2,9 @@ package com.calclab.emite.client.plugin;
 
 import java.util.ArrayList;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Components;
 import com.calclab.emite.client.dispatcher.Dispatcher;
-import com.calclab.emite.client.log.Logger;
 
 /**
  * @author dani
@@ -13,16 +13,14 @@ public class DefaultPluginManager implements PluginManager {
 
 	private final Components container;
 	private final ArrayList<Plugin> installed;
-	private final Logger logger;
 
-	public DefaultPluginManager(final Logger logger, final Components container) {
-		this.logger = logger;
+	public DefaultPluginManager(final Components container) {
 		this.container = container;
 		installed = new ArrayList<Plugin>();
 	}
 
 	public void install(final String name, final Plugin plugin) {
-		logger.debug("Installing plugin {0}", name);
+		Log.debug("Installing plugin " + name);
 		plugin.install(container);
 		installed.add(plugin);
 	}
