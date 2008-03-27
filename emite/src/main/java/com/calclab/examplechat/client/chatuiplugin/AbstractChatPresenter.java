@@ -14,6 +14,8 @@ public class AbstractChatPresenter implements AbstractChat {
     protected int chatType;
     private String chatTitle;
 
+    private int scrollPos;
+
     public AbstractChatPresenter(final AbstractChatUser sessionUser, final int chatType) {
         this.sessionUser = sessionUser;
         this.chatType = chatType;
@@ -57,8 +59,11 @@ public class AbstractChatPresenter implements AbstractChat {
     }
 
     public void saveOtherProperties() {
-        // Bug: this fails after tab close !?
-        // scrollPos = view.getScrollPos();
+        saveScrollPos();
+    }
+
+    protected void saveScrollPos() {
+        scrollPos = view.getScrollPos();
     }
 
     public String getSavedInput() {
@@ -82,8 +87,8 @@ public class AbstractChatPresenter implements AbstractChat {
     }
 
     public void activate() {
-        // view.restoreScrollPos(scrollPos);
-        view.scrollDown();
+        view.restoreScrollPos(scrollPos);
+        // view.scrollDown();
     }
 
     public int getType() {

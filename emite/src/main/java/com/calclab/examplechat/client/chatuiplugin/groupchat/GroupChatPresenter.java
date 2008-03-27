@@ -28,8 +28,6 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
     private int oldColor;
     private String subject;
     private GroupChatUserType sessionUserType;
-    // FIXME: this in GroupChatUserList?
-
     private GroupChatUserList userList;
     final GroupChatListener listener;
 
@@ -67,6 +65,7 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
         }
         view.showMessage(userAlias, userColor, message);
         listener.onMessageReceived(this);
+        super.saveScrollPos();
     }
 
     public void addUser(final GroupChatUser user) {
@@ -103,8 +102,12 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
         return color;
     }
 
-    public void onActivated() {
+    public void onActivate() {
         listener.onActivate(this);
+    }
+
+    public void onDeactivate() {
+        listener.onDeactivate(this);
     }
 
 }

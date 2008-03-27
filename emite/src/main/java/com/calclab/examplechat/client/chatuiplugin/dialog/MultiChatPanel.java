@@ -58,7 +58,6 @@ import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.KeyListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
-import com.gwtext.client.widgets.event.WindowListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
@@ -105,6 +104,7 @@ public class MultiChatPanel implements MultiChatView {
     private Panel groupChatUsersPanel;
     private String infoPanelId;
     private Panel buddiesPanel;
+    private Item closeAllOption;
 
     public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
@@ -112,7 +112,11 @@ public class MultiChatPanel implements MultiChatView {
         this.userListToIndex = new HashMap<GroupChatUserListView, Integer>();
         panelIdToChat = new HashMap<String, AbstractChat>();
         createLayout();
-        setStatus(STATUS_OFFLINE);
+        reset();
+    }
+
+    private void reset() {
+        subject.reset();
         setGroupChatUsersPanelVisible(false);
         setInviteToGroupChatButtonEnabled(false);
     }
@@ -122,8 +126,9 @@ public class MultiChatPanel implements MultiChatView {
         centerPanel.add(chatPanel);
         String panelId = chatPanel.getId();
         panelIdToChat.put(panelId, chat);
-        centerPanel.activate(panelId);
         chatPanel.show();
+        setSubject(chat.getChatTitle());
+        centerPanel.activate(panelId);
         if (centerPanel.hasItem(infoPanelId)) {
             centerPanel.remove(infoPanelId);
         }
@@ -175,6 +180,10 @@ public class MultiChatPanel implements MultiChatView {
         } else {
             sendBtn.disable();
         }
+    }
+
+    public void setCloseAllOptionEnabled(boolean enabled) {
+        closeAllOption.setDisabled(!enabled);
     }
 
     public void setSubject(final String text) {
@@ -272,6 +281,19 @@ public class MultiChatPanel implements MultiChatView {
         inviteUserToGroupChat.setVisible(enable);
     }
 
+    public void confirmCloseAll() {
+        MessageBox.confirm(i18n.t("Confirm"), i18n.t("Are you sure you want to exit all the chats?"),
+                new MessageBox.ConfirmCallback() {
+                    public void execute(final String btnID) {
+                        if (btnID.equals("yes")) {
+                            presenter.onCloseAllConfirmed();
+                        } else {
+                            presenter.onCloseAllNotConfirmed();
+                        }
+                    }
+                });
+    }
+
     private void createLayout() {
         dialog = new BasicDialog(i18n.t("Chats"), false, false, 600, 415, 300, 300);
         dialog.setBorder(false);
@@ -332,39 +354,6 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private void createListeners() {
-        dialog.addListener(new WindowListenerAdapter() {
-
-            // public boolean doBeforeHide(final Component component) {
-            // if (centralLayout.getNumPanels() > 0) {
-            // if (presenter.isCloseAllConfirmed()) {
-            // return true;
-            // } else {
-            // MessageBox.confirm(i18n.t("Confirm"), i18n
-            // .t("Are you sure you want to exit all the rooms?"), new
-            // MessageBox.ConfirmCallback() {
-            // public void execute(final String btnID) {
-            // if (btnID.equals("yes")) {
-            // presenter.closeAllRooms();
-            // } else {
-            // presenter.onCloseAllNotConfirmed();
-            // }
-            // }
-            // });
-            // return false;
-            // }
-            // }
-            // return true;
-            // }
-
-            public void onCollapse(final Panel panel) {
-                // dialog.hide();
-            }
-
-            public void onClose(final Panel panel) {
-                Log.debug("Close chat dialog");
-            }
-
-        });
 
         centerPanel.addListener(new PanelListenerAdapter() {
 
@@ -438,7 +427,7 @@ public class MultiChatPanel implements MultiChatView {
         optionsMenu.setShadow(true);
         Item joinOption = new Item();
         joinOption.setText(i18n.t("Join a chat room"));
-        Item closeAllOption = new Item();
+        closeAllOption = new Item();
         closeAllOption.setText(i18n.t("Close all chats"));
         ColorMenu colorMenu = new ColorMenu();
         colorMenu.addListener(new ColorMenuListener() {
@@ -456,16 +445,7 @@ public class MultiChatPanel implements MultiChatView {
         topToolbar.addSeparator();
         closeAllOption.addListener(new BaseItemListenerAdapter() {
             public void onClick(final BaseItem item, final EventObject e) {
-                MessageBox.confirm(i18n.t("Confirm"), i18n.t("Are you sure you want to exit all the chats?"),
-                        new MessageBox.ConfirmCallback() {
-                            public void execute(final String btnID) {
-                                if (btnID.equals("yes")) {
-                                    presenter.onCloseAllConfirmed();
-                                } else {
-                                    presenter.onCloseAllNotConfirmed();
-                                }
-                            }
-                        });
+                confirmCloseAll();
             }
         });
 
@@ -727,6 +707,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private void addInfoPanel() {
+        reset();
         centerPanel.add(infoPanel);
         infoPanel.show();
         centerPanel.activate(infoPanelId);

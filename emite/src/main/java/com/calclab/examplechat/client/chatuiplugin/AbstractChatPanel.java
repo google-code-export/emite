@@ -41,6 +41,7 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
         childPanel = new Panel();
         childPanel.setAutoScroll(false);
         childPanel.setBorder(false);
+        childPanel.setMargins(5);
         add(childPanel);
         addStyleName("emite-ChatPanel-Conversation");
     }
@@ -57,6 +58,9 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
 
     public void showMessage(final String userAlias, final String color, final String message) {
         // FIXME: Use gwt DOM.create... for this:
+        // Element userAliasSpan = DOM.createSpan();
+        // DOM.setInnerText(userAliasSpan, userAlias);
+        // DOM.setStyleAttribute(userAliasSpan, "color", color);
         String userHtml = "<span style=\"color: " + color + ";\">" + userAlias + "</span>:&nbsp;";
         HTML messageHtml = new HTML(userHtml + ChatTextFormatter.format(message).getHTML());
         addWidget(messageHtml);

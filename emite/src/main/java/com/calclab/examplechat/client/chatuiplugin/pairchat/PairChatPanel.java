@@ -12,6 +12,10 @@ public class PairChatPanel extends AbstractChatPanel implements PairChatView {
             public void onActivate(final Panel panel) {
                 presenter.onActivated();
             }
+
+            public void onDeactivate(final Panel panel) {
+                presenter.onDeactivate();
+            }
         });
     }
 

@@ -52,6 +52,7 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
         }
         view.showMessage(userAlias, userColor, message);
         listener.onMessageReceived(this);
+        super.saveScrollPos();
     }
 
     public PairChatUser getOtherUser() {
@@ -60,6 +61,10 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
 
     public void onActivated() {
         listener.onActivate(this);
+    }
+
+    public void onDeactivate() {
+        listener.onDeactivate(this);
     }
 
 }
