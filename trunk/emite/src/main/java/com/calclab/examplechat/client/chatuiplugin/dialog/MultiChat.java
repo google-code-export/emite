@@ -37,4 +37,6 @@ public interface MultiChat {
 
     public void setStatus(int status);
 
+    public void closeAllChats(final boolean withConfirmation);
+
 }

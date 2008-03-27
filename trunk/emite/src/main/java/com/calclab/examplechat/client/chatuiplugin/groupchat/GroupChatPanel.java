@@ -29,7 +29,11 @@ public class GroupChatPanel extends AbstractChatPanel implements GroupChatView {
         super(presenter);
         this.addListener(new PanelListenerAdapter() {
             public void onActivate(final Panel panel) {
-                presenter.onActivated();
+                presenter.onActivate();
+            }
+
+            public void onDeactivate(final Panel panel) {
+                presenter.onDeactivate();
             }
         });
     }

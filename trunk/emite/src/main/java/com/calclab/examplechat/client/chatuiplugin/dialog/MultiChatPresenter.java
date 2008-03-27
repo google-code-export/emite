@@ -49,7 +49,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     public MultiChatPresenter(final AbstractChatUser currentSessionUser, final MultiChatListener listener) {
         this.currentSessionUser = currentSessionUser;
         this.listener = listener;
-        currentChat = null;
         chats = new HashMap<String, AbstractChat>();
         // view.setSendEnabled(false);
         // view.setInputEditable(false);
@@ -58,11 +57,18 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void init(final MultiChatView view) {
         this.view = view;
-        closeAllConfirmed = false;
+        reset();
+        view.setStatus(MultiChatView.STATUS_OFFLINE);
 
         // only for tests
         view.addPresenceBuddy("fulano", "I'm out for dinner", MultiChatView.STATUS_AWAY);
         view.addPresenceBuddy("mengano", "Working", MultiChatView.STATUS_BUSY);
+    }
+
+    private void reset() {
+        currentChat = null;
+        closeAllConfirmed = false;
+        view.setCloseAllOptionEnabled(false);
     }
 
     public GroupChat createGroupChat(final String groupChatName, final String userAlias,
@@ -81,6 +87,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.addGroupChatUsersPanel(groupChat.getUsersListView());
         view.addChat(groupChat);
         chats.put(groupChatName, groupChat);
+        checkCloseAllEnabling();
         return groupChat;
     }
 
@@ -97,6 +104,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         currentChat = pairChat;
         view.addChat(pairChat);
         chats.put(otherUserAlias, pairChat);
+        checkCloseAllEnabling();
         return pairChat;
     }
 
@@ -119,12 +127,36 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         groupChat.doClose();
         chats.remove(groupChat.getChatTitle());
         listener.onCloseGroupChat(groupChat);
+        checkCloseAllDisabling();
     }
 
     public void closePairChat(final PairChatPresenter pairChat) {
         pairChat.doClose();
         chats.remove(pairChat.getChatTitle());
         listener.onClosePairChat(pairChat);
+        checkCloseAllDisabling();
+    }
+
+    public void closeAllChats(final boolean withConfirmation) {
+        if (withConfirmation) {
+            view.confirmCloseAll();
+        } else {
+            onCloseAllConfirmed();
+        }
+    }
+
+    public void onCloseAllNotConfirmed() {
+        closeAllConfirmed = false;
+    }
+
+    public void onCloseAllConfirmed() {
+        closeAllConfirmed = true;
+        view.closeAllChats();
+        reset();
+    }
+
+    public boolean isCloseAllConfirmed() {
+        return closeAllConfirmed;
     }
 
     public void activateChat(final AbstractChat chat) {
@@ -132,10 +164,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     }
 
     public void onActivate(final AbstractChat nextChat) {
-        if (currentChat != null) {
-            currentChat.saveInput(view.getInputText());
-            currentChat.saveOtherProperties();
-        }
         // view.setSendEnabled(nextRoom.isReady());
         view.setInputText(nextChat.getSavedInput());
         if (nextChat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
@@ -155,21 +183,13 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         currentChat = nextChat;
     }
 
+    public void onDeactivate(final AbstractChat chat) {
+        chat.saveInput(view.getInputText());
+        chat.saveOtherProperties();
+    }
+
     public void onMessageReceived(final AbstractChat chat) {
         view.highlightChat(chat);
-    }
-
-    public void onCloseAllNotConfirmed() {
-        closeAllConfirmed = false;
-    }
-
-    public void onCloseAllConfirmed() {
-        closeAllConfirmed = true;
-        view.closeAllChats();
-    }
-
-    public boolean isCloseAllConfirmed() {
-        return closeAllConfirmed;
     }
 
     public void attachIconToBottomBar(final View view) {
@@ -215,4 +235,15 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         listener.onUserColorChanged(color);
     }
 
+    private void checkCloseAllDisabling() {
+        if (chats.size() == 0) {
+            view.setCloseAllOptionEnabled(false);
+        }
+    }
+
+    private void checkCloseAllEnabling() {
+        if (chats.size() == 1) {
+            view.setCloseAllOptionEnabled(true);
+        }
+    }
 }

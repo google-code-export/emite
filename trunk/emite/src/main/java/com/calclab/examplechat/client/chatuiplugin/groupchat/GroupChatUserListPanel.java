@@ -19,24 +19,24 @@
 
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.ourproject.kune.platf.client.ui.IconLabel;
 
 import com.calclab.examplechat.client.chatuiplugin.utils.Emoticons;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.layout.VerticalLayout;
 
-public class GroupChatUserListPanel extends VerticalPanel implements GroupChatUserListView {
-    private final ArrayList<String> users;
+public class GroupChatUserListPanel extends Panel implements GroupChatUserListView {
+    private final HashMap<String, IconLabel> users;
 
     public GroupChatUserListPanel() {
-        users = new ArrayList<String>();
+        users = new HashMap<String, IconLabel>();
+        setLayout(new VerticalLayout(2));
     }
 
-    public int addUser(final GroupChatUser user) {
-        HorizontalPanel userPanel = new HorizontalPanel();
+    public void addUser(final GroupChatUser user) {
         AbstractImagePrototype icon;
         if (user.getUserType() == GroupChatUser.MODERADOR) {
             icon = Emoticons.App.getInstance().bulletStar();
@@ -46,15 +46,14 @@ public class GroupChatUserListPanel extends VerticalPanel implements GroupChatUs
         String userAlias = user.getAlias();
         IconLabel userLabel = new IconLabel(icon, userAlias);
         userLabel.setColor(user.getColor());
-        userPanel.add(userLabel);
-        super.add(userPanel);
-        users.add(userAlias);
-        return this.getWidgetCount();
+        super.add(userLabel);
+        super.render(userLabel.getElement());
+        users.put(userAlias, userLabel);
     }
 
     public void remove(final GroupChatUser user) {
         String userAlias = user.getAlias();
-        this.remove(users.indexOf(userAlias));
+        this.remove(users.get(userAlias));
         users.remove(userAlias);
     }
 }
