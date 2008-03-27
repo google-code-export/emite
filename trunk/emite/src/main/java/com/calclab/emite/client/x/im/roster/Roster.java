@@ -2,7 +2,13 @@ package com.calclab.emite.client.x.im.roster;
 
 import java.util.ArrayList;
 
+import com.calclab.emite.client.packet.Event;
+
 public class Roster {
+	public static class Events {
+		public static final Event received = new Event("roster:received");
+	}
+
 	private final ArrayList<RosterItem> items;
 	private final ArrayList<RosterListener> listeners;
 

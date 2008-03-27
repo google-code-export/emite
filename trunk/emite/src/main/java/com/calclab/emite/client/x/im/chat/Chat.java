@@ -1,4 +1,4 @@
-package com.calclab.emite.client.x.im;
+package com.calclab.emite.client.x.im.chat;
 
 import java.util.ArrayList;
 

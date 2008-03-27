@@ -17,61 +17,61 @@ import com.calclab.emite.client.x.core.SASLPlugin;
  * @author dani
  */
 public class SessionPlugin extends SenderPlugin {
-    public static class Events {
-        public static final Event ended = new Event("session:ended");
-        public static final Event started = new Event("session:started");
-    }
+	public static class Events {
+		public static final Event ended = new Event("session:ended");
+		public static final Event started = new Event("session:started");
+	}
 
-    public static Session getSession(final Components components) {
-        return (Session) components.get("session");
-    }
+	public static Session getSession(final Components components) {
+		return (Session) components.get("session");
+	}
 
-    final Answer requestSession;
-    final Action setAuthorizedState;
-    final Answer setStartedState;
-    private final Session session;
+	private final Session session;
+	final Answer requestSession;
+	final Action setAuthorizedState;
+	final Answer setSessionStarted;
 
-    public SessionPlugin(final Dispatcher dispatcher, final Connection connection, final Globals globals) {
-        super(connection);
-        session = new Session(globals, dispatcher);
+	public SessionPlugin(final Dispatcher dispatcher, final Connection connection, final Globals globals) {
+		super(connection);
+		session = new Session(globals, dispatcher);
 
-        requestSession = new Answer() {
-            public Packet respondTo(final Packet received) {
-                final IQ iq = new IQ("requestSession", IQ.Type.set).From(globals.getJID()).To(globals.getDomain());
-                iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
-                return iq;
-            }
-        };
+		requestSession = new Answer() {
+			public Packet respondTo(final Packet received) {
+				final IQ iq = new IQ("requestSession", IQ.Type.set).From(globals.getJID()).To(globals.getDomain());
+				iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
+				return iq;
+			}
+		};
 
-        setAuthorizedState = new Action() {
-            public void handle(final Packet received) {
-                session.setState(Session.State.authorized);
-            }
-        };
+		setAuthorizedState = new Action() {
+			public void handle(final Packet received) {
+				session.setState(Session.State.authorized);
+			}
+		};
 
-        setStartedState = new Answer() {
-            public Packet respondTo(final Packet received) {
-                session.setState(Session.State.connected);
-                return Events.started;
-            }
-        };
-    }
+		setSessionStarted = new Answer() {
+			public Packet respondTo(final Packet received) {
+				session.setState(Session.State.connected);
+				return Events.started;
+			}
+		};
+	}
 
-    @Override
-    public void attach() {
+	@Override
+	public void attach() {
 
-        when.Event(Session.Events.login).Send(Connection.Events.start);
+		when.Event(Session.Events.login).Send(Connection.Events.start);
 
-        when.Event(SASLPlugin.Events.authorized).Do(setAuthorizedState);
+		when.Event(SASLPlugin.Events.authorized).Do(setAuthorizedState);
 
-        when.Event(ResourcePlugin.Events.binded).Send(requestSession);
+		when.Event(ResourcePlugin.Events.binded).Send(requestSession);
 
-        when.IQ("requestSession").Publish(setStartedState);
+		when.IQ("requestSession").Publish(setSessionStarted);
 
-    }
+	}
 
-    @Override
-    public void install() {
-        register("session", session);
-    }
+	@Override
+	public void install() {
+		register("session", session);
+	}
 }

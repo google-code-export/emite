@@ -9,13 +9,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.connector.HttpConnectorListener;
 import com.calclab.emite.client.packet.stanza.Message;
-import com.calclab.emite.client.x.im.MessageListener;
+import com.calclab.emite.client.x.im.chat.MessageListener;
 import com.calclab.emite.client.x.im.session.SessionListener;
 import com.calclab.emite.client.x.im.session.Session.State;
 
@@ -25,25 +26,26 @@ public class SwingClient {
 		new SwingClient().start();
 	}
 
-	private Xmpp xmpp;
-	private JTextField fieldJID;
-	private JButton btnSend;
-	private JTextField fieldMessage;
-	private JButton btnLogout;
-	private JButton btnPanic;
 	private final JTextArea area;
 	private JButton btnLogin;
+	private JButton btnLogout;
+	private JButton btnPanic;
+	private JButton btnSend;
+	private JTextField fieldJID;
+	private JTextField fieldMessage;
 	private JTextField fieldName;
 	private JPasswordField fieldPassword;
 	private final JPanel messager;
 	private final JPanel root;
+	private Xmpp xmpp;
 
 	public SwingClient() {
 		root = new JPanel(new BorderLayout());
 
 		root.add(createLoginPanel(), BorderLayout.NORTH);
 		area = new JTextArea();
-		root.add(area, BorderLayout.CENTER);
+		area.setWrapStyleWord(true);
+		root.add(new JScrollPane(area), BorderLayout.CENTER);
 		messager = createMessager();
 		root.add(messager, BorderLayout.SOUTH);
 

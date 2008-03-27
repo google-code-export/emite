@@ -9,13 +9,12 @@ import com.calclab.emite.client.plugin.PublisherPlugin;
 import com.calclab.emite.client.x.core.SASLPlugin;
 
 public class BoshPlugin extends PublisherPlugin {
-	private final Connector connector;
-	private final XMLService xmler;
-	private final BoshOptions options;
 	private Bosh bosh;
+	private final Connector connector;
+	private final BoshOptions options;
+	private final XMLService xmler;
 
-	public BoshPlugin(final Connector connector, final XMLService xmler,
-			final BoshOptions options) {
+	public BoshPlugin(final Connector connector, final XMLService xmler, final BoshOptions options) {
 		this.connector = connector;
 		this.xmler = xmler;
 		this.options = options;
@@ -38,9 +37,7 @@ public class BoshPlugin extends PublisherPlugin {
 		register(Components.CONNECTION, bosh);
 		dispatcher.addListener(new DispatcherStateListener() {
 			public void afterDispatching() {
-				if (bosh.isRunning()) {
-					bosh.firePackets();
-				}
+				bosh.firePackets();
 			}
 
 			public void beforeDispatching() {

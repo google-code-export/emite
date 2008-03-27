@@ -16,29 +16,29 @@ import com.calclab.emite.client.packet.XMLService;
 
 public class Bosh implements Connection {
 
-	final Action stop;
-	final Action restartStream;
-	final Action sendCreation;
-	final Action send;
-	final Action publishStanzas;
 	private Packet body;
-	private final XMLService xmler;
 	private final Connector connector;
-	private final String httpBase;
+	private int currentConnections;
 	private final Dispatcher dispatcher;
 	private boolean isRunning;
+	private final BoshOptions options;
 	// FIXME: gwt and long problems
 	private long rid;
 	private String sid;
-	private int currentConnections;
+	private final XMLService xmler;
+	final Action publishStanzas;
+	final Action restartStream;
+	final Action send;
+	final Action sendCreation;
+	final Action stop;
 
-	public Bosh(final Dispatcher dispatcher, final Globals globals,
-			final Connector connector, final XMLService xmler,
+	public Bosh(final Dispatcher dispatcher, final Globals globals, final Connector connector, final XMLService xmler,
 			final BoshOptions options) {
 		this.dispatcher = dispatcher;
 		this.connector = connector;
 		this.xmler = xmler;
-		this.httpBase = options.getHttpBase();
+		this.options = options;
+
 		this.body = null;
 		this.isRunning = false;
 		this.rid = 0;
@@ -46,6 +46,7 @@ public class Bosh implements Connection {
 		this.currentConnections = 0;
 
 		globals.setDomain(options.getDomain());
+		globals.setResourceName(options.getResource());
 
 		restartStream = new Action() {
 			public void handle(final Packet received) {
@@ -57,11 +58,9 @@ public class Bosh implements Connection {
 			public void handle(final Packet received) {
 				isRunning = true;
 				rid = generateRID();
-				body.With("content", "text/xml; charset=utf-8")
-						.With("rid", rid).With("to", options.getDomain()).With(
-								"secure", "true").With("ver", "1.6").With(
-								"wait", "60").With("ack", "1")
-						.With("hold", "1").With("xml:lang", "en");
+				body.With("content", "text/xml; charset=utf-8").With("rid", rid).With("to", options.getDomain()).With(
+						"secure", "true").With("ver", "1.6").With("wait", "60").With("ack", "1").With("hold", "1")
+						.With("xml:lang", "en");
 			}
 		};
 
@@ -82,12 +81,11 @@ public class Bosh implements Connection {
 				if (sid == null) {
 					setSID(received.getAttribute("sid"));
 				}
-				if (received.hasAttribute("type", "terminate")) {
-					dispatcher.publish(new Event(Connection.Events.error)
-							.Because(received.getAttribute("condition")));
+				// TODO: OpenFire devuelve esto (terminal) no sé si es un bug...
+				if (received.hasAttribute("type", "terminate") || received.hasAttribute("type", "terminal")) {
+					dispatcher.publish(new Event(Connection.Events.error).Because(received.getAttribute("condition")));
 				} else {
-					final List<? extends Packet> children = received
-							.getChildren();
+					final List<? extends Packet> children = received.getChildren();
 					for (final Packet stanza : children) {
 						dispatcher.publish(stanza);
 					}
@@ -99,19 +97,22 @@ public class Bosh implements Connection {
 
 	public void catchPackets() {
 		rid++;
-		this.body = new BasicPacket("body",
-				"http://jabber.org/protocol/httpbind").With("rid", rid);
+		this.body = new BasicPacket("body", "http://jabber.org/protocol/httpbind").With("rid", rid);
 		if (sid != null) {
 			body.setAttribute("sid", sid);
 		}
 	}
 
 	public void firePackets() {
-		if (body.getChildrenCount() == 0 && currentConnections > 0) {
-			// its an empty answer from the server
-			rid--;
+		if (isRunning()) {
+			if (body.getChildrenCount() == 0 && currentConnections > 0) {
+				// its an empty answer from the server
+				discardBody();
+			} else {
+				send();
+			}
 		} else {
-			send();
+			Log.debug("BODY DONT SENDED. stopped");
 		}
 	}
 
@@ -125,7 +126,8 @@ public class Bosh implements Connection {
 	}
 
 	public void setRestart() {
-		body.setAttribute("restart", "true");
+		body.With("xmpp:restart", "true").With("xmlns:xmpp", "urn:xmpp:xbosh").With("xml:lang", "en").With("to",
+				options.getDomain());
 	}
 
 	public void setSID(final String sid) {
@@ -139,6 +141,11 @@ public class Bosh implements Connection {
 		sid = null;
 	}
 
+	private void discardBody() {
+		this.body = null;
+		rid--;
+	}
+
 	private long generateRID() {
 		final long rid = (long) (Math.random() * 1245234);
 		return rid;
@@ -146,29 +153,27 @@ public class Bosh implements Connection {
 
 	private void send() {
 		try {
-			connector.send(httpBase, xmler.toString(body),
-					new ConnectorCallback() {
-						public void onError(final Throwable throwable) {
-							currentConnections--;
+			connector.send(options.getHttpBase(), xmler.toString(body), new ConnectorCallback() {
+				public void onError(final Throwable throwable) {
+					currentConnections--;
+					dispatcher.publish(Connection.Events.error);
+				}
+
+				public void onResponseReceived(final int statusCode, final String content) {
+					currentConnections--;
+					if (statusCode >= 400) {
+						dispatcher.publish(Connection.Events.error);
+					} else {
+						final Packet response = xmler.toXML(content);
+						if ("body".equals(response.getName())) {
+							dispatcher.publish(response);
+						} else {
 							dispatcher.publish(Connection.Events.error);
 						}
+					}
+				}
 
-						public void onResponseReceived(final int statusCode,
-								final String content) {
-							currentConnections--;
-							if (statusCode >= 400) {
-								dispatcher.publish(Connection.Events.error);
-							} else {
-								final Packet response = xmler.toXML(content);
-								if ("body".equals(response.getName())) {
-									dispatcher.publish(response);
-								} else {
-									dispatcher.publish(Connection.Events.error);
-								}
-							}
-						}
-
-					});
+			});
 			currentConnections++;
 			body = null;
 		} catch (final ConnectorException e) {

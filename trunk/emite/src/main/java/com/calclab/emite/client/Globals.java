@@ -7,6 +7,8 @@ public interface Globals {
 
 	String getPassword();
 
+	String getResourceName();
+
 	String getUserName();
 
 	void setDomain(String domain);
@@ -14,6 +16,8 @@ public interface Globals {
 	void setJID(String jid);
 
 	void setPassword(String password);
+
+	void setResourceName(String resource);
 
 	void setUserName(String userName);
 }

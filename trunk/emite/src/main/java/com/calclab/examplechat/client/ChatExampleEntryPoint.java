@@ -9,7 +9,7 @@ import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.bosh.BoshOptions;
 import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.packet.stanza.Message;
-import com.calclab.emite.client.x.im.MessageListener;
+import com.calclab.emite.client.x.im.chat.MessageListener;
 import com.calclab.emite.client.x.im.roster.RosterItem;
 import com.calclab.emite.client.x.im.roster.RosterListener;
 import com.calclab.emite.client.x.im.session.SessionListener;
