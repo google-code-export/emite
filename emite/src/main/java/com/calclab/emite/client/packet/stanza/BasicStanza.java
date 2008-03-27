@@ -51,4 +51,8 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
 		setAttribute(TYPE, type);
 	}
 
+	public Stanza To(final String to) {
+		setTo(to);
+		return this;
+	}
 }

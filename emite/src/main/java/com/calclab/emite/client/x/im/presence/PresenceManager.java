@@ -1,13 +1,21 @@
-package com.calclab.emite.client.x.im;
+package com.calclab.emite.client.x.im.presence;
 
 import com.calclab.emite.client.Globals;
-import com.calclab.emite.client.bosh.Connection;
+import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.Presence;
-import com.calclab.emite.client.plugin.SenderPlugin;
-import com.calclab.emite.client.x.im.session.SessionPlugin;
+import com.calclab.emite.client.plugin.dsl.Answer;
 
-public class PresencePlugin extends SenderPlugin {
-	final Presence initialPresence;
+public class PresenceManager {
+
+	private final Globals globals;
+
+	public PresenceManager(final Globals globals) {
+		this.globals = globals;
+	}
+
+	public Packet answerTo(final Presence presence) {
+		return new Presence(globals.getJID()).To(presence.getFrom());
+	}
 
 	/**
 	 * 5.1.1. Initial Presence
@@ -23,20 +31,11 @@ public class PresencePlugin extends SenderPlugin {
 	 * @link http://www.xmpp.org/rfcs/rfc3921.html#presence
 	 * 
 	 */
-
-	public PresencePlugin(final Connection connection, final Globals globals) {
-		super(connection);
-		this.initialPresence = new Presence(globals.getJID())
-				.With(Presence.Show.chat);
+	public Answer getInitialPresence() {
+		return new Answer() {
+			public Packet respondTo(final Packet received) {
+				return new Presence(globals.getJID()).With(Presence.Show.chat);
+			}
+		};
 	}
-
-	@Override
-	public void attach() {
-		when.Event(SessionPlugin.Events.started).Send(initialPresence);
-	}
-
-	@Override
-	public void install() {
-	}
-
 }

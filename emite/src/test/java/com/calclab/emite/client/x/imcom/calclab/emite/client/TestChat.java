@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.mock.MockDispatcher;
 import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.x.im.Chat;
+import com.calclab.emite.client.x.im.chat.Chat;
 
 public class TestChat {
 
