@@ -19,15 +19,11 @@
 
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
+import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 
 public interface MultiChatListener {
-
-    void onSendMessage(GroupChat groupChat, String message);
-
-    void onSendMessage(PairChatUser toUserChat, String message);
 
     void onCloseGroupChat(GroupChat groupChat);
 
@@ -38,5 +34,7 @@ public interface MultiChatListener {
     void setGroupChatSubject(GroupChat groupChat, String subject);
 
     void onUserColorChanged(String color);
+
+    void onSendMessage(AbstractChat currentChat, String message);
 
 }

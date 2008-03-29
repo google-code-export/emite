@@ -114,11 +114,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     }
 
     public void onSend() {
-        if (currentChat.getType() == AbstractChat.TYPE_PAIR_CHAT) {
-            listener.onSendMessage(((PairChat) currentChat).getOtherUser(), view.getInputText());
-        } else {
-            listener.onSendMessage(((GroupChat) currentChat), view.getInputText());
-        }
+        listener.onSendMessage(currentChat, view.getInputText());
         // view.setSendEnabled(false);
         view.clearInputText();
     }
