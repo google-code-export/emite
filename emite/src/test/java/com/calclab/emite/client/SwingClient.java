@@ -61,7 +61,8 @@ public class SwingClient {
 		btnLogin = new JButton("login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				xmpp.login(fieldName.getText(), fieldPassword.getText());
+				xmpp.login(fieldName.getText(), new String(fieldPassword
+						.getPassword()));
 			}
 		});
 		btnLogout = new JButton("logout");

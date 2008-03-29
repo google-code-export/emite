@@ -5,6 +5,7 @@ import com.calclab.emite.client.bosh.BoshOptions;
 import com.calclab.emite.client.connector.GWTConnector;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.packet.gwt.GWTXMLService;
+import com.calclab.emite.client.scheduler.gwt.GWTScheduler;
 import com.calclab.emite.client.x.im.chat.ChatPlugin;
 import com.calclab.emite.client.x.im.chat.MessageListener;
 import com.calclab.emite.client.x.im.roster.Roster;
@@ -19,7 +20,7 @@ public class Xmpp {
 	public static Xmpp create(final BoshOptions options) {
 		final Container container = new Container();
 		container.installDefaultPlugins(new GWTXMLService(),
-				new GWTConnector(), options);
+				new GWTConnector(), new GWTScheduler(), options);
 		return new Xmpp(container.getComponents());
 	}
 

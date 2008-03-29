@@ -6,6 +6,7 @@ import com.calclab.emite.client.connector.HttpConnectorListener;
 import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.dispatcher.DispatcherPlugin;
 import com.calclab.emite.client.packet.TigaseXMLService;
+import com.calclab.emite.client.scheduler.ThreadScheduler;
 
 public class TestHelper {
 
@@ -29,20 +30,26 @@ public class TestHelper {
 		});
 	}
 
-	public static Xmpp createXMPP(final BoshOptions options, final HttpConnectorListener listener) {
+	public static Xmpp createXMPP(final BoshOptions options,
+			final HttpConnectorListener listener) {
 		final Container c = new Container();
 
-		c.installDefaultPlugins(new TigaseXMLService(), new HttpConnector(listener), options);
+		c.installDefaultPlugins(new TigaseXMLService(), new HttpConnector(
+				listener), new ThreadScheduler(), options);
 
 		return new Xmpp(c.getComponents());
 	}
 
-	public static Xmpp createXMPP(final HttpConnectorListener httpConnectorListener) {
-		final Xmpp xmpp = createXMPP(new BoshOptions("http://localhost:8181/http-bind/", "localhost"),
+	public static Xmpp createXMPP(
+			final HttpConnectorListener httpConnectorListener) {
+		final Xmpp xmpp = createXMPP(new BoshOptions(
+				"http://localhost:8181/http-bind/", "localhost"),
 				httpConnectorListener);
 		final Components components = xmpp.getComponents();
-		final Dispatcher dispatcher = DispatcherPlugin.getDispatcher(components);
-		DispatcherPlugin.setDispatcher(components, new LoggerDispatcher(dispatcher));
+		final Dispatcher dispatcher = DispatcherPlugin
+				.getDispatcher(components);
+		DispatcherPlugin.setDispatcher(components, new LoggerDispatcher(
+				dispatcher));
 		return xmpp;
 	}
 
