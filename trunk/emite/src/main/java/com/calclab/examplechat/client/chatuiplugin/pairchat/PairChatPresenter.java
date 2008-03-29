@@ -19,6 +19,7 @@
 
 package com.calclab.examplechat.client.chatuiplugin.pairchat;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChatPresenter;
 
 public class PairChatPresenter extends AbstractChatPresenter implements PairChat {
@@ -42,15 +43,19 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
         closeConfirmed = false;
     }
 
-    public void addMessage(final String userAlias, final String message) {
+    public void addMessage(final String userJid, final String message) {
         String userColor;
 
-        if (sessionUser.equals(userAlias)) {
+        if (sessionUser.getJid().equals(userJid)) {
             userColor = sessionUser.getColor();
-        } else {
+        } else if (otherUser.getJid().equals(userJid)) {
             userColor = otherUser.getColor();
+        } else {
+            String error = "Unexpected message from user '" + userJid + "' in " + "chat '" + otherUser.getJid();
+            Log.error(error);
+            throw new RuntimeException(error);
         }
-        view.showMessage(userAlias, userColor, message);
+        view.showMessage(userJid, userColor, message);
         listener.onMessageReceived(this);
         super.saveScrollPos();
     }

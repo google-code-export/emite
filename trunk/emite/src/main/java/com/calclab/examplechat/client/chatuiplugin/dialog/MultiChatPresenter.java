@@ -25,6 +25,7 @@ import java.util.Iterator;
 
 import org.ourproject.kune.platf.client.View;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
@@ -93,7 +94,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public PairChat createPairChat(final PairChatUser otherUser) {
         String otherUserAlias = otherUser.getAlias();
-        AbstractChat abstractChat = chats.get(otherUserAlias);
+        AbstractChat abstractChat = chats.get(otherUser.getJid());
         if (abstractChat != null) {
             activateChat(abstractChat);
             return (PairChat) abstractChat;
@@ -103,7 +104,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         pairChat.setChatTitle(otherUserAlias);
         currentChat = pairChat;
         view.addChat(pairChat);
-        chats.put(otherUserAlias, pairChat);
+        chats.put(otherUser.getJid(), pairChat);
         checkCloseAllEnabling();
         return pairChat;
     }
@@ -111,12 +112,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     public void show() {
         view.show();
         closeAllConfirmed = false;
-    }
-
-    public void onSend() {
-        listener.onSendMessage(currentChat, view.getInputText());
-        // view.setSendEnabled(false);
-        view.clearInputText();
     }
 
     public void closeGroupChat(final GroupChatPresenter groupChat) {
@@ -184,6 +179,36 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         chat.saveOtherProperties();
     }
 
+    public void onCurrentUserSend() {
+        listener.onSendMessage(currentChat, view.getInputText());
+        // view.setSendEnabled(false);
+        view.clearInputText();
+    }
+
+    /**
+     * 
+     * Currently we use jid in pair chats and alias in group chat :-/
+     * 
+     */
+    public void messageReceived(final String chatId, final String fromUser, final String message) {
+        AbstractChat chat = getChat(chatId);
+        if (chat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
+            ((GroupChat) chat).addMessage(fromUser, message);
+        } else {
+            ((PairChat) chat).addMessage(fromUser, message);
+        }
+    }
+
+    private AbstractChat getChat(final String chatId) {
+        AbstractChat chat = chats.get(chatId);
+        if (chat == null) {
+            String error = "Unexpected chatId '" + chatId + "'";
+            Log.error(error);
+            throw new RuntimeException(error);
+        }
+        return chat;
+    }
+
     public void onMessageReceived(final AbstractChat chat) {
         view.highlightChat(chat);
     }
@@ -193,13 +218,22 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         // UIExtensionPoint.CONTENT_BOTTOM_ICONBAR, view);
     }
 
-    public void changeGroupChatSubject(final String text) {
+    public void groupChatSubjectChanged(final String groupChatName, final String newSubject) {
+        AbstractChat groupChat = getChat(groupChatName);
+        if (groupChat.getType() != AbstractChat.TYPE_GROUP_CHAT) {
+            new RuntimeException("You cannot change the subject in a pair chat");
+        }
+        ((GroupChat) groupChat).setSubject(newSubject);
+        view.setSubject(newSubject);
+
+    }
+
+    public void onSubjectChangedByCurrentUser(final String text) {
         GroupChat groupChat = (GroupChat) currentChat;
         groupChat.setSubject(text);
         listener.setGroupChatSubject(groupChat, text);
-        // FIXME callback?
+        // FIXME callback? erase this:
         view.setSubject(text);
-
     }
 
     public void onStatusSelected(final int status) {

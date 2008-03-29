@@ -39,4 +39,8 @@ public interface MultiChat {
 
     public void closeAllChats(final boolean withConfirmation);
 
+    void messageReceived(String chatId, String fromUser, String message);
+
+    void groupChatSubjectChanged(String groupChatName, String newSubject);
+
 }

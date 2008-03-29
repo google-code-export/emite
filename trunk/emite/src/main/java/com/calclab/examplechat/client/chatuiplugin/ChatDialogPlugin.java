@@ -20,14 +20,16 @@ public class ChatDialogPlugin extends Plugin {
     public static final String CREATE_GROUP_CHAT = "chatplugin.creategroupchat";
     public static final String CREATE_PAIR_CHAT = "chatplugin.createpairchat";
     public static final String ACTIVATE_CHAT = "chatplugin.activatechat";
+    public static final String MESSAGE_RECEIVED = "chatplugin.messagereceived";
+    public static final String SET_GROUPCHAT_SUBJECT = "chatplugin.groupchatsubjectchanged";
 
     // Output events
-    public static final String STATUS_SELECTED = "chatplugin.statusselected";
-    public static final String MESSAGE_SENDED = "chatplugin.messagesended";
-    public static final String PAIR_CHAT_CLOSED = "chatplugin.pairchatclosed";
-    public static final String GROUP_CHAT_CLOSED = "chatplugin.groupchatclosed";
-    public static final String GROUP_CHAT_SUBJECT_CHANGED = "chatplugin.groupchatsubjectchanged";
-    public static final String USER_COLOR_SELECTED = "chatplugin.usercolorselected";
+    public static final String ON_STATUS_SELECTED = "chatplugin.onstatusselected";
+    public static final String ON_MESSAGE_SENDED = "chatplugin.onmessagesended";
+    public static final String ON_PAIR_CHAT_CLOSED = "chatplugin.onpairchatclosed";
+    public static final String ON_GROUP_CHAT_CLOSED = "chatplugin.ongroupchatclosed";
+    public static final String ON_GROUP_CHAT_SUBJECT_CHANGED = "chatplugin.ongroupchatsubjectchanged";
+    public static final String ON_USER_COLOR_SELECTED = "chatplugin.onusercolorselected";
 
     private MultiChatPresenter extChatDialog;
 
@@ -49,28 +51,29 @@ public class ChatDialogPlugin extends Plugin {
                 extChatDialog = new MultiChatPresenter(user, new MultiChatListener() {
 
                     public void onStatusSelected(final int status) {
-                        getDispatcher().fire(ChatDialogPlugin.STATUS_SELECTED, new Integer(status));
+                        getDispatcher().fire(ChatDialogPlugin.ON_STATUS_SELECTED, new Integer(status));
                     }
 
                     public void onSendMessage(final AbstractChat chat, final String message) {
-                        getDispatcher().fire(ChatDialogPlugin.MESSAGE_SENDED, new AbstractChatMessage(chat, message));
+                        getDispatcher().fire(ChatDialogPlugin.ON_MESSAGE_SENDED,
+                                new AbstractChatOutputMessage(chat, message));
                     }
 
                     public void onClosePairChat(final PairChatPresenter pairChat) {
-                        getDispatcher().fire(ChatDialogPlugin.PAIR_CHAT_CLOSED, pairChat);
+                        getDispatcher().fire(ChatDialogPlugin.ON_PAIR_CHAT_CLOSED, pairChat);
                     }
 
                     public void onCloseGroupChat(final GroupChat groupChat) {
-                        getDispatcher().fire(ChatDialogPlugin.GROUP_CHAT_CLOSED, groupChat);
+                        getDispatcher().fire(ChatDialogPlugin.ON_GROUP_CHAT_CLOSED, groupChat);
                     }
 
                     public void setGroupChatSubject(final GroupChat groupChat, final String subject) {
-                        getDispatcher().fire(ChatDialogPlugin.GROUP_CHAT_SUBJECT_CHANGED,
-                                new GroupChatSubject(groupChat, subject));
+                        getDispatcher().fire(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED,
+                                new GroupChatSubject(groupChat.getChatTitle(), subject));
                     }
 
                     public void onUserColorChanged(final String color) {
-                        getDispatcher().fire(ChatDialogPlugin.USER_COLOR_SELECTED, color);
+                        getDispatcher().fire(ChatDialogPlugin.ON_USER_COLOR_SELECTED, color);
                     }
                 });
                 MultiChatPanel multiChatPanel = new MultiChatPanel(new I18nTranslationServiceMocked(), extChatDialog);
@@ -108,6 +111,18 @@ public class ChatDialogPlugin extends Plugin {
         getDispatcher().subscribe(ACTIVATE_CHAT, new Action<AbstractChat>() {
             public void execute(final AbstractChat chat) {
                 extChatDialog.activateChat(chat);
+            }
+        });
+
+        getDispatcher().subscribe(MESSAGE_RECEIVED, new Action<AbstractChatInputMessage>() {
+            public void execute(final AbstractChatInputMessage param) {
+                extChatDialog.messageReceived(param.getChatId(), param.getFromUser(), param.getMessage());
+            }
+        });
+
+        getDispatcher().subscribe(SET_GROUPCHAT_SUBJECT, new Action<GroupChatSubject>() {
+            public void execute(final GroupChatSubject param) {
+                extChatDialog.groupChatSubjectChanged(param.getChatId(), param.getSubject());
             }
         });
 

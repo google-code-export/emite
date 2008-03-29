@@ -25,7 +25,6 @@ import java.util.HashMap;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
@@ -61,7 +60,6 @@ import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
-import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
 import com.gwtext.client.widgets.layout.AccordionLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
@@ -127,7 +125,6 @@ public class MultiChatPanel implements MultiChatView {
         String panelId = chatPanel.getId();
         panelIdToChat.put(panelId, chat);
         chatPanel.show();
-        setSubject(chat.getChatTitle());
         centerPanel.activate(panelId);
         if (centerPanel.hasItem(infoPanelId)) {
             centerPanel.remove(infoPanelId);
@@ -539,32 +536,21 @@ public class MultiChatPanel implements MultiChatView {
         FormPanel subjectForm = createGenericInputForm();
 
         subject = new TextArea();
+        subject.setTitle(i18n.t("Subject of the room"));
         // As height 100% doesn't works
         subject.setHeight(27);
         // TODO: Fixed in gwt-ext 2.0.3 TextArea.setEnterIsSpecial
         subject.addListener(new TextFieldListenerAdapter() {
             public void onSpecialKey(final Field field, final EventObject e) {
-                Log.debug("Special key: " + e.getKey());
                 if (e.getKey() == 13) {
-                    presenter.changeGroupChatSubject(field.getValueAsString());
+                    presenter.onSubjectChangedByCurrentUser(field.getValueAsString());
                     e.stopEvent();
                 }
             }
         });
-        subject.addListener(new FieldListenerAdapter() {
-            public void onSpecialKey(final Field field, final EventObject e) {
-                Log.debug("Special key: " + e.getKey());
-                if (e.getKey() == 13) {
-                    presenter.changeGroupChatSubject(field.getValueAsString());
-                    e.stopEvent();
-                }
-            }
-        });
-
         subject.addKeyListener(13, new KeyListener() {
-
             public void onKey(final int key, final EventObject e) {
-                presenter.changeGroupChatSubject(subject.getValueAsString());
+                presenter.onSubjectChangedByCurrentUser(subject.getText());
                 e.stopEvent();
             }
         });
@@ -587,6 +573,7 @@ public class MultiChatPanel implements MultiChatView {
         input.addKeyListener(13, new KeyListener() {
             public void onKey(final int key, final EventObject e) {
                 doSend(e);
+                e.stopEvent();
             }
         });
 
@@ -714,7 +701,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private void doSend(final EventObject e) {
-        presenter.onSend();
+        presenter.onCurrentUserSend();
         e.stopEvent();
         input.focus();
     }

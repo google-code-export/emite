@@ -1,23 +1,22 @@
 package com.calclab.examplechat.client.chatuiplugin;
 
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 
 public class GroupChatSubject {
 
-    public final GroupChat groupChat;
     public final String subject;
+    private final String chatId;
 
-    public GroupChatSubject(final GroupChat groupChat, final String subject) {
-        this.groupChat = groupChat;
+    public GroupChatSubject(final String chatId, final String subject) {
+        this.chatId = chatId;
         this.subject = subject;
-    }
-
-    public GroupChat getGroupChat() {
-        return groupChat;
     }
 
     public String getSubject() {
         return subject;
+    }
+
+    public String getChatId() {
+        return chatId;
     }
 
 }

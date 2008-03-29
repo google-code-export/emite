@@ -4,7 +4,7 @@ import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
 
 public interface PairChat extends AbstractChat {
 
-    void addMessage(String userAlias, String body);
+    void addMessage(String userJid, String message);
 
     PairChatUser getOtherUser();
 
