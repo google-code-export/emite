@@ -37,6 +37,11 @@ public interface ChatIcons extends ImageBundle {
     }
 
     /**
+     * @gwt.resource chat.png
+     */
+    AbstractImagePrototype chat();
+
+    /**
      * @gwt.resource away.png
      */
     AbstractImagePrototype away();
