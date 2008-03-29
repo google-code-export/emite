@@ -18,7 +18,7 @@ import com.calclab.emite.client.x.im.roster.RosterItem;
 import com.calclab.emite.client.x.im.roster.RosterListener;
 import com.calclab.emite.client.x.im.session.SessionListener;
 import com.calclab.emite.client.x.im.session.Session.State;
-import com.calclab.examplechat.client.chatuiplugin.AbstractChatMessage;
+import com.calclab.examplechat.client.chatuiplugin.AbstractChatOutputMessage;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogPlugin;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
@@ -135,7 +135,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
     }
 
     private void chatSamples() {
-        MultiChatSamples.show(dispatcher);
+        MultiChatSamples.show(dispatcher, userNameInput.getText());
     }
 
     private HorizontalPanel createButtonsPane() {
@@ -185,7 +185,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
                 new I18nTranslationServiceMocked());
         kunePluginManager.install(new ChatDialogPlugin());
 
-        dispatcher.subscribe(ChatDialogPlugin.STATUS_SELECTED, new Action<Integer>() {
+        dispatcher.subscribe(ChatDialogPlugin.ON_STATUS_SELECTED, new Action<Integer>() {
             public void execute(final Integer status) {
                 switch (status) {
                 case MultiChatView.STATUS_ONLINE:
@@ -208,8 +208,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
             }
         });
 
-        dispatcher.subscribe(ChatDialogPlugin.MESSAGE_SENDED, new Action<AbstractChatMessage>() {
-            public void execute(final AbstractChatMessage param) {
+        dispatcher.subscribe(ChatDialogPlugin.ON_MESSAGE_SENDED, new Action<AbstractChatOutputMessage>() {
+            public void execute(final AbstractChatOutputMessage param) {
                 xmpp.send(toIn.getText(), param.getMessage());
             }
         });

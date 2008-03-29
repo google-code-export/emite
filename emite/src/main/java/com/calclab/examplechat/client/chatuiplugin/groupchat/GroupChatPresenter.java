@@ -33,7 +33,11 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
 
     public GroupChatPresenter(final GroupChatListener listener, final GroupChatUser currentSessionUser) {
         super(currentSessionUser, TYPE_GROUP_CHAT);
-        this.subject = "Subject: " + getChatTitle();
+        if (subject != null) {
+            this.subject = getChatTitle();
+        } else {
+            this.subject = "";
+        }
         this.oldColor = 0;
         this.input = "";
         this.listener = listener;
@@ -53,17 +57,17 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
         this.userList = userList;
     }
 
-    public void addMessage(final String userAlias, final String message) {
+    public void addMessage(final String userId, final String message) {
         String userColor;
 
-        GroupChatUser user = userList.get(userAlias);
+        GroupChatUser user = userList.get(userId);
         if (user != null) {
             userColor = user.getColor();
         } else {
-            Log.error("User " + userAlias + " not in our users list");
+            Log.error("User " + userId + " not in our users list");
             userColor = "black";
         }
-        view.showMessage(userAlias, userColor, message);
+        view.showMessage(userId, userColor, message);
         listener.onMessageReceived(this);
         super.saveScrollPos();
     }
