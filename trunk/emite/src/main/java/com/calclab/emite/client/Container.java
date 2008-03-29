@@ -8,6 +8,7 @@ import com.calclab.emite.client.dispatcher.Dispatcher;
 import com.calclab.emite.client.dispatcher.DispatcherPlugin;
 import com.calclab.emite.client.packet.XMLService;
 import com.calclab.emite.client.plugin.DefaultPluginManager;
+import com.calclab.emite.client.scheduler.Scheduler;
 import com.calclab.emite.client.x.core.ResourcePlugin;
 import com.calclab.emite.client.x.core.SASLPlugin;
 import com.calclab.emite.client.x.im.chat.ChatPlugin;
@@ -29,16 +30,20 @@ public class Container {
 		return c;
 	}
 
-	public void installDefaultPlugins(final XMLService xmler, final Connector connector, final BoshOptions options) {
+	public void installDefaultPlugins(final XMLService xmler,
+			final Connector connector, final Scheduler scheduler,
+			final BoshOptions options) {
 		manager.install("dispatcher", new DispatcherPlugin());
-		manager.install("bosh", new BoshPlugin(connector, xmler, options));
+		manager.install("bosh", new BoshPlugin(connector, xmler, scheduler,
+				options));
 
 		final Globals globals = c.getGlobals();
 		final Connection connection = c.getConnection();
 		final Dispatcher dispatcher = c.getDispatcher();
 
 		manager.install("chat", new ChatPlugin(dispatcher, connection));
-		manager.install("session", new SessionPlugin(dispatcher, connection, globals));
+		manager.install("session", new SessionPlugin(dispatcher, connection,
+				globals));
 		manager.install("presence", new PresencePlugin(connection, globals));
 		manager.install("roster", new RosterPlugin(connection));
 		manager.install("sasl", new SASLPlugin(connection, globals));

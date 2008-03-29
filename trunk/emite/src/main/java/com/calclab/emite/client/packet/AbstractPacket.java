@@ -2,6 +2,11 @@ package com.calclab.emite.client.packet;
 
 public abstract class AbstractPacket implements Packet {
 
+	public int getAttributeAsInt(final String name) {
+		final String value = getAttribute(name);
+		return Integer.parseInt(value);
+	}
+
 	public boolean hasAttribute(final String name) {
 		return getAttribute(name) != null;
 	}

@@ -9,6 +9,17 @@ import java.util.List;
  * 
  */
 public interface Packet {
+	/**
+	 * 
+	 * 
+	 * @param the
+	 *            attribute name
+	 * @return the integer value
+	 * @throws an
+	 *             exception
+	 */
+	public int getAttributeAsInt(String name);
+
 	public int getChildrenCount();
 
 	public boolean hasAttribute(String name);
