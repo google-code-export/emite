@@ -21,6 +21,7 @@ import com.calclab.emite.client.x.im.session.Session.State;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChatOutputMessage;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogPlugin;
+import com.calclab.examplechat.client.chatuiplugin.GroupChatSubject;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.utils.MultiChatSamples;
 import com.google.gwt.core.client.EntryPoint;
@@ -211,6 +212,13 @@ public class ChatExampleEntryPoint implements EntryPoint {
         dispatcher.subscribe(ChatDialogPlugin.ON_MESSAGE_SENDED, new Action<AbstractChatOutputMessage>() {
             public void execute(final AbstractChatOutputMessage param) {
                 xmpp.send(toIn.getText(), param.getMessage());
+            }
+        });
+
+        dispatcher.subscribe(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED, new Action<GroupChatSubject>() {
+            public void execute(final GroupChatSubject param) {
+                Log.info("Group '" + param.getChatId() + "' changed subject to '" + param.getSubject()
+                        + "' (not implemented yet emite connection");
             }
         });
 

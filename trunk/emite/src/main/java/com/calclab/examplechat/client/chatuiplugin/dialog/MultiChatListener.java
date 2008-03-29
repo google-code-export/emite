@@ -19,6 +19,8 @@
 
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
+import org.ourproject.kune.platf.client.extend.UIExtensionElement;
+
 import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
@@ -36,5 +38,7 @@ public interface MultiChatListener {
     void onUserColorChanged(String color);
 
     void onSendMessage(AbstractChat currentChat, String message);
+
+    void attachToExtPoint(UIExtensionElement extensionElement);
 
 }

@@ -23,6 +23,7 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 import java.util.HashMap;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
+import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
@@ -103,6 +104,7 @@ public class MultiChatPanel implements MultiChatView {
     private String infoPanelId;
     private Panel buddiesPanel;
     private Item closeAllOption;
+    private BottomTrayIcon bottomIcon;
 
     public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
@@ -150,21 +152,19 @@ public class MultiChatPanel implements MultiChatView {
     public void show() {
         dialog.show();
         dialog.expand();
-        // if (bottomIcon == null) {
-        // bottomIcon = new BottomTrayIcon(i18n.t("Show/hide chat
-        // dialog"));
-        // bottomIcon.addMainButton(Images.App.getInstance().chat(), new
-        // Command() {
-        // public void execute() {
-        // if (dialog.isVisible()) {
-        // dialog.hide();
-        // } else {
-        // dialog.show();
-        // }
-        // }
-        // });
-        // presenter.attachIconToBottomBar(bottomIcon);
-        // }
+        if (bottomIcon == null) {
+            bottomIcon = new BottomTrayIcon(i18n.t("Show/hide chat dialog"));
+            bottomIcon.addMainButton(icons.chat(), new Command() {
+                public void execute() {
+                    if (dialog.isVisible()) {
+                        dialog.hide();
+                    } else {
+                        dialog.show();
+                    }
+                }
+            });
+            presenter.attachIconToBottomBar(bottomIcon);
+        }
     }
 
     public void destroy() {

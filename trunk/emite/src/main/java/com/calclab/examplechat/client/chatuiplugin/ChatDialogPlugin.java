@@ -1,7 +1,9 @@
 package com.calclab.examplechat.client.chatuiplugin;
 
+import org.ourproject.kune.platf.client.PlatformEvents;
 import org.ourproject.kune.platf.client.dispatch.Action;
 import org.ourproject.kune.platf.client.extend.Plugin;
+import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
@@ -22,6 +24,7 @@ public class ChatDialogPlugin extends Plugin {
     public static final String ACTIVATE_CHAT = "chatplugin.activatechat";
     public static final String MESSAGE_RECEIVED = "chatplugin.messagereceived";
     public static final String SET_GROUPCHAT_SUBJECT = "chatplugin.groupchatsubjectchanged";
+    public static final String ADD_USER_TO_GROUP_CHAT = "chatplugin.addusertogroupchat";
 
     // Output events
     public static final String ON_STATUS_SELECTED = "chatplugin.onstatusselected";
@@ -75,6 +78,10 @@ public class ChatDialogPlugin extends Plugin {
                     public void onUserColorChanged(final String color) {
                         getDispatcher().fire(ChatDialogPlugin.ON_USER_COLOR_SELECTED, color);
                     }
+
+                    public void attachToExtPoint(final UIExtensionElement extensionElement) {
+                        getDispatcher().fire(PlatformEvents.ATTACH_TO_EXT_POINT, extensionElement);
+                    }
                 });
                 MultiChatPanel multiChatPanel = new MultiChatPanel(new I18nTranslationServiceMocked(), extChatDialog);
                 extChatDialog.init(multiChatPanel);
@@ -126,6 +133,11 @@ public class ChatDialogPlugin extends Plugin {
             }
         });
 
+        getDispatcher().subscribe(ADD_USER_TO_GROUP_CHAT, new Action<GroupChatUserAddActionParam>() {
+            public void execute(final GroupChatUserAddActionParam param) {
+                extChatDialog.addUsetToGroupChat(param.getGroupChatId(), param.getGroupChatUser());
+            }
+        });
     }
 
     @Override

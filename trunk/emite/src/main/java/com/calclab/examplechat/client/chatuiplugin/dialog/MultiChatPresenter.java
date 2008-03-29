@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.ourproject.kune.platf.client.View;
+import org.ourproject.kune.platf.client.extend.UIExtensionElement;
+import org.ourproject.kune.platf.client.extend.UIExtensionPoint;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
@@ -213,19 +215,28 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.highlightChat(chat);
     }
 
+    public void addUsetToGroupChat(final String chatId, final GroupChatUser groupChatUser) {
+        GroupChat chat = (GroupChat) chats.get(chatId);
+        checkIsGroupChat(chat);
+        chat.addUser(groupChatUser);
+    }
+
     public void attachIconToBottomBar(final View view) {
-        // DefaultDispatcher.getInstance().fire(PlatformEvents.ATTACH_TO_EXT_POINT,
-        // UIExtensionPoint.CONTENT_BOTTOM_ICONBAR, view);
+        listener.attachToExtPoint(new UIExtensionElement(UIExtensionPoint.CONTENT_BOTTOM_ICONBAR, view));
     }
 
     public void groupChatSubjectChanged(final String groupChatName, final String newSubject) {
         AbstractChat groupChat = getChat(groupChatName);
-        if (groupChat.getType() != AbstractChat.TYPE_GROUP_CHAT) {
-            new RuntimeException("You cannot change the subject in a pair chat");
-        }
+        checkIsGroupChat(groupChat);
         ((GroupChat) groupChat).setSubject(newSubject);
         view.setSubject(newSubject);
 
+    }
+
+    private void checkIsGroupChat(final AbstractChat chat) {
+        if (chat.getType() != AbstractChat.TYPE_GROUP_CHAT) {
+            new RuntimeException("You cannot do this operation in a this kind of chat");
+        }
     }
 
     public void onSubjectChangedByCurrentUser(final String text) {
@@ -276,4 +287,5 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
             view.setCloseAllOptionEnabled(true);
         }
     }
+
 }
