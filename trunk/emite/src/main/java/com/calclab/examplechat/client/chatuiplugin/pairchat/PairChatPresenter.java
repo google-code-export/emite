@@ -27,9 +27,9 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
     final PairChatListener listener;
     private final PairChatUser otherUser;
 
-    public PairChatPresenter(final PairChatListener listener, final PairChatUser currentSessionUser,
-            final PairChatUser otherUser) {
-        super(currentSessionUser, TYPE_PAIR_CHAT);
+    public PairChatPresenter(final String chatId, final PairChatListener listener,
+            final PairChatUser currentSessionUser, final PairChatUser otherUser) {
+        super(chatId, currentSessionUser, TYPE_PAIR_CHAT);
         this.otherUser = otherUser;
         this.input = "";
         this.listener = listener;

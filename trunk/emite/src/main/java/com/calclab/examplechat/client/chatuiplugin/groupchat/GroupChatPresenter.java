@@ -31,8 +31,9 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
     private GroupChatUserList userList;
     final GroupChatListener listener;
 
-    public GroupChatPresenter(final GroupChatListener listener, final GroupChatUser currentSessionUser) {
-        super(currentSessionUser, TYPE_GROUP_CHAT);
+    public GroupChatPresenter(final String chatId, final GroupChatListener listener,
+            final GroupChatUser currentSessionUser) {
+        super(chatId, currentSessionUser, TYPE_GROUP_CHAT);
         if (subject != null) {
             this.subject = getChatTitle();
         } else {

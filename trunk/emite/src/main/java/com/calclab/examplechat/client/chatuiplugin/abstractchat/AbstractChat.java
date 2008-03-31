@@ -55,4 +55,6 @@ public interface AbstractChat {
 
     void doClose();
 
+    String getId();
+
 }

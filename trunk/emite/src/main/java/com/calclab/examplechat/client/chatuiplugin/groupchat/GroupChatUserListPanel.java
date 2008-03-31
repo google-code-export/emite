@@ -21,6 +21,7 @@ package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
 import com.calclab.examplechat.client.chatuiplugin.users.UserGrid;
 import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.layout.FitLayout;
 
 public class GroupChatUserListPanel extends Panel implements GroupChatUserListView {
     private final UserGrid userGrid;
@@ -28,6 +29,7 @@ public class GroupChatUserListPanel extends Panel implements GroupChatUserListVi
     public GroupChatUserListPanel() {
         userGrid = new UserGrid();
         super.add(userGrid);
+        super.setLayout(new FitLayout());
     }
 
     public void addUser(final GroupChatUser user) {

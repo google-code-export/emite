@@ -41,7 +41,8 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
         childPanel = new Panel();
         childPanel.setAutoScroll(false);
         childPanel.setBorder(false);
-        childPanel.setMargins(5);
+        // ScrollProblems?
+        // childPanel.setMargins(5);
         add(childPanel);
         addStyleName("emite-ChatPanel-Conversation");
     }
@@ -95,7 +96,8 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
 
     private void addWidget(final Widget widget) {
         childPanel.add(widget);
-        childPanel.render(widget.getElement());
+        // childPanel.render(widget.getElement());
+        childPanel.doLayout();
         widget.addStyleName("emite-ChatPanel-Message");
         scrollDown();
     }
