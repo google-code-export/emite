@@ -1,12 +1,13 @@
 package com.calclab.emite.client.x.core;
 
+import com.calclab.emite.client.components.Answer;
 import com.calclab.emite.client.components.SenderComponent;
 import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
-import com.calclab.emite.client.plugin.dsl.Answer;
 
 public class ResourceManager extends SenderComponent {
 	public static class Events {
@@ -16,8 +17,8 @@ public class ResourceManager extends SenderComponent {
 	final Answer requestResourceBinding;
 	final Answer resourceBinded;
 
-	public ResourceManager(final Connection connection, final Globals globals) {
-		super(connection);
+	public ResourceManager(final Dispatcher dispatcher, final Connection connection, final Globals globals) {
+		super(dispatcher, connection);
 		requestResourceBinding = new Answer() {
 			public Packet respondTo(final Packet cathced) {
 				final IQ iq = new IQ("bindRequest", IQ.Type.set);

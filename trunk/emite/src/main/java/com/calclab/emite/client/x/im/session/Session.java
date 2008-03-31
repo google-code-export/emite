@@ -23,7 +23,7 @@ public class Session {
 	private final ArrayList<SessionListener> listeners;
 	private State state;
 
-	public Session(final Globals globals, final Dispatcher dispatcher) {
+	public Session(final Dispatcher dispatcher, final Globals globals) {
 		this.globals = globals;
 		this.dispatcher = dispatcher;
 		state = State.disconnected;
