@@ -14,7 +14,7 @@ import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.core.services.Scheduler;
 import com.calclab.emite.client.core.services.XMLService;
-import com.calclab.emite.client.x.im.session.Session;
+import com.calclab.emite.client.im.session.Session;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 
 public class BoshManager extends PublisherComponent implements Connection, ConnectorCallback {

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<cache-entry>
-	<rebind-decision in="com.calclab.hablar.client.HablarEntryPoint" out="com.calclab.hablar.client.HablarEntryPoint"/>
-</cache-entry>

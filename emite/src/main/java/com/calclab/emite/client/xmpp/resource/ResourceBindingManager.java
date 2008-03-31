@@ -6,9 +6,9 @@ import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.core.packet.stanza.IQ;
 import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
+import com.calclab.emite.client.xmpp.stanzas.IQ;
 
 public class ResourceBindingManager extends SenderComponent {
 	public static class Events {

@@ -12,14 +12,14 @@ import com.calclab.emite.client.core.services.XMLService;
 import com.calclab.emite.client.core.services.gwt.GWTConnector;
 import com.calclab.emite.client.core.services.gwt.GWTScheduler;
 import com.calclab.emite.client.core.services.gwt.GWTXMLService;
-import com.calclab.emite.client.x.im.chat.ChatPlugin;
-import com.calclab.emite.client.x.im.chat.MessageListener;
-import com.calclab.emite.client.x.im.roster.Roster;
-import com.calclab.emite.client.x.im.roster.RosterPlugin;
-import com.calclab.emite.client.x.im.session.Session;
-import com.calclab.emite.client.x.im.session.SessionListener;
-import com.calclab.emite.client.x.im.session.SessionOptions;
-import com.calclab.emite.client.x.im.session.SessionPlugin;
+import com.calclab.emite.client.im.chat.ChatPlugin;
+import com.calclab.emite.client.im.chat.MessageListener;
+import com.calclab.emite.client.im.roster.Roster;
+import com.calclab.emite.client.im.roster.RosterPlugin;
+import com.calclab.emite.client.im.session.Session;
+import com.calclab.emite.client.im.session.SessionListener;
+import com.calclab.emite.client.im.session.SessionOptions;
+import com.calclab.emite.client.im.session.SessionPlugin;
 
 public class Xmpp {
 
