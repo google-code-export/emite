@@ -17,7 +17,7 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin.groupchat;
+package com.calclab.examplechat.client.chatuiplugin.users;
 
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 

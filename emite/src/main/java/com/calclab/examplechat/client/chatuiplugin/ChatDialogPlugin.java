@@ -91,6 +91,10 @@ public class ChatDialogPlugin extends Plugin {
                     public void attachToExtPoint(final UIExtensionElement extensionElement) {
                         dispatcher.fire(PlatformEvents.ATTACH_TO_EXT_POINT, extensionElement);
                     }
+
+                    public void doAction(final String eventId, final Object param) {
+                        dispatcher.fire(eventId, param);
+                    }
                 });
                 MultiChatPanel multiChatPanel = new MultiChatPanel(new I18nTranslationServiceMocked(), extChatDialog);
                 extChatDialog.init(multiChatPanel);

@@ -34,12 +34,12 @@ import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 
 public class MultiChatPresenter implements MultiChat, GroupChatListener, PairChatListener {
     private MultiChatView view;
@@ -64,16 +64,10 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.setStatus(MultiChatView.STATUS_OFFLINE);
 
         // only for tests
-        view.addPresenceBuddy(new PairChatUser("images/person-def.gif", "fulano@example.com", "fulano", "red"),
-                "I'm out for dinner"); // , MultiChatView.STATUS_AWAY);
-        // view.addPresenceBuddy("mengano", "Working",
-        // MultiChatView.STATUS_BUSY);
-    }
-
-    private void reset() {
-        currentChat = null;
-        closeAllConfirmed = false;
-        view.setCloseAllOptionEnabled(false);
+        view.addPresenceBuddy(new PairChatUser("images/person-def.gif", "testuser1@localhost", "testuser1", "maroon",
+                MultiChatView.STATUS_AWAY, "I'm out for dinner"));
+        view.addPresenceBuddy(new PairChatUser("images/person-def.gif", "vjrj@localhost", "testuser2", "navy",
+                MultiChatView.STATUS_ONLINE, "I'm out for dinner"));
     }
 
     public GroupChat createGroupChat(final String groupChatName, final String userAlias,
@@ -103,15 +97,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
                 currentSessionUser.getAlias(), currentSessionUser.getColor());
         PairChat pairChat = ChatDialogFactory.createPairChat(chatId, this, currentPairChatUser, otherUser);
         return (PairChat) finishChatCreation(pairChat, otherUser.getAlias());
-    }
-
-    private AbstractChat finishChatCreation(final AbstractChat chat, final String chatTitle) {
-        chat.setChatTitle(chatTitle);
-        currentChat = chat;
-        view.addChat(chat);
-        chats.put(chat.getId(), chat);
-        checkCloseAllEnabling();
-        return chat;
     }
 
     public void show() {
@@ -210,16 +195,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         }
     }
 
-    private AbstractChat getChat(final String chatId) {
-        AbstractChat chat = chats.get(chatId);
-        if (chat == null) {
-            String error = "Unexpected chatId '" + chatId + "'";
-            Log.error(error);
-            throw new RuntimeException(error);
-        }
-        return chat;
-    }
-
     public void onMessageReceived(final AbstractChat chat) {
         view.highlightChat(chat);
     }
@@ -240,12 +215,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         ((GroupChat) groupChat).setSubject(newSubject);
         view.setSubject(newSubject);
 
-    }
-
-    private void checkIsGroupChat(final AbstractChat chat) {
-        if (chat.getType() != AbstractChat.TYPE_GROUP_CHAT) {
-            new RuntimeException("You cannot do this operation in a this kind of chat");
-        }
     }
 
     public void onSubjectChangedByCurrentUser(final String text) {
@@ -285,6 +254,35 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         listener.onUserColorChanged(color);
     }
 
+    public void doAction(final String eventId, final Object param) {
+        listener.doAction(eventId, param);
+    }
+
+    private AbstractChat getChat(final String chatId) {
+        AbstractChat chat = chats.get(chatId);
+        if (chat == null) {
+            String error = "Unexpected chatId '" + chatId + "'";
+            Log.error(error);
+            throw new RuntimeException(error);
+        }
+        return chat;
+    }
+
+    private AbstractChat finishChatCreation(final AbstractChat chat, final String chatTitle) {
+        chat.setChatTitle(chatTitle);
+        currentChat = chat;
+        view.addChat(chat);
+        chats.put(chat.getId(), chat);
+        checkCloseAllEnabling();
+        return chat;
+    }
+
+    private void checkIsGroupChat(final AbstractChat chat) {
+        if (chat.getType() != AbstractChat.TYPE_GROUP_CHAT) {
+            new RuntimeException("You cannot do this operation in a this kind of chat");
+        }
+    }
+
     private void checkCloseAllDisabling() {
         if (chats.size() == 0) {
             view.setCloseAllOptionEnabled(false);
@@ -295,6 +293,12 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         if (chats.size() == 1) {
             view.setCloseAllOptionEnabled(true);
         }
+    }
+
+    private void reset() {
+        currentChat = null;
+        closeAllConfirmed = false;
+        view.setCloseAllOptionEnabled(false);
     }
 
 }

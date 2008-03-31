@@ -21,7 +21,10 @@ package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListView;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 
 public class GroupChatPresenter extends AbstractChatPresenter implements GroupChat {
 

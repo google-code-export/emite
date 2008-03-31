@@ -21,8 +21,8 @@
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListView;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListView;
 
 public interface MultiChatView {
 
@@ -81,6 +81,6 @@ public interface MultiChatView {
 
     void activateChat(AbstractChat chat);
 
-    void addPresenceBuddy(PairChatUser user, String statusMessage);
+    void addPresenceBuddy(PairChatUser user);
 
 }

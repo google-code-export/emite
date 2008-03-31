@@ -1,6 +1,6 @@
 package com.calclab.examplechat.client.chatuiplugin.params;
 
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 
 public class GroupChatUserAddActionParam {
 

@@ -26,14 +26,16 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
+import com.calclab.examplechat.client.chatuiplugin.ChatDialogPlugin;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListPanel;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListView;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPanel;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListView;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGrid;
+import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenu;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
 import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPaletteListener;
 import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPalettePanel;
@@ -239,14 +241,11 @@ public class MultiChatPanel implements MultiChatView {
         return input.getValueAsString();
     }
 
-    public void addPresenceBuddy(final PairChatUser user, final String statusMessage) {
-        buddiesGrid.addUser(user);
-        // StackSubItemAction[] actions = {
-        // new StackSubItemAction(Images.App.getInstance().chat(),
-        // i18n.t("Start a chat with this person"),
-        // WorkspaceEvents.GOTO), StackSubItemAction.DEFAULT_VISIT_GROUP };
-        // usersStack.addStackSubItem(MYBUDDIES, getStatusIcon(status), name,
-        // title, actions, presenter);
+    public void addPresenceBuddy(final PairChatUser user) {
+        UserGridMenu menu = new UserGridMenu(presenter);
+        menu.addMenuOption(i18n.t("Start a chat with this person"), "chat-icon", ChatDialogPlugin.CREATE_PAIR_CHAT,
+                user);
+        buddiesGrid.addUser(user, menu);
     }
 
     public void removePresenceBuddy(final String name) {

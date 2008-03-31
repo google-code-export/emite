@@ -3,12 +3,12 @@ package com.calclab.examplechat.client.chatuiplugin.utils;
 import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogPlugin;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.ChatInputMessageParam;
 import com.calclab.examplechat.client.chatuiplugin.params.CreateGroupChatActionParam;
 import com.calclab.examplechat.client.chatuiplugin.params.GroupChatSubjectParam;
 import com.calclab.examplechat.client.chatuiplugin.params.GroupChatUserAddActionParam;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 
 public class MultiChatSamples {
     public static void show(final DefaultDispatcher dispatcher, final String currentUserJid) {
