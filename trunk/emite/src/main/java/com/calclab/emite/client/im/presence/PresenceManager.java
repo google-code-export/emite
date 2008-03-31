@@ -1,8 +1,8 @@
 package com.calclab.emite.client.im.presence;
 
 import com.calclab.emite.client.components.Answer;
-import com.calclab.emite.client.components.SenderComponent;
 import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.bosh.SenderComponent;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Globals;

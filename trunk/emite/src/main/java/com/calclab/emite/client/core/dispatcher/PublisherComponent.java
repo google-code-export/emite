@@ -1,6 +1,6 @@
-package com.calclab.emite.client.components;
+package com.calclab.emite.client.core.dispatcher;
 
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.components.Startable;
 import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
 import com.calclab.emite.client.core.packet.Packet;
 
@@ -21,11 +21,11 @@ public abstract class PublisherComponent implements Startable {
 	public void stop() {
 	}
 
-	public BasicActionsBuilder when(final Packet packet) {
-		return new BasicActionsBuilder(new PacketMatcher(packet), dispatcher);
+	public PublisherActionsBuilder when(final Packet packet) {
+		return new PublisherActionsBuilder(new PacketMatcher(packet), dispatcher);
 	}
 
-	public BasicActionsBuilder when(final String packetName) {
-		return new BasicActionsBuilder(new PacketMatcher(packetName), dispatcher);
+	public PublisherActionsBuilder when(final String packetName) {
+		return new PublisherActionsBuilder(new PacketMatcher(packetName), dispatcher);
 	}
 }

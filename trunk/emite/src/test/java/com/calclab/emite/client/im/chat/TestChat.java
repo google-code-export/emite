@@ -1,4 +1,4 @@
-package com.calclab.emite.client.x.imcom.calclab.emite.client;
+package com.calclab.emite.client.im.chat;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

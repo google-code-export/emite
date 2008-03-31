@@ -24,6 +24,10 @@ public class BoshState {
 		return currentConnections;
 	}
 
+	public long getLastSendTime() {
+		return lastSendTime;
+	}
+
 	public int getPoll() {
 		return poll;
 	}
