@@ -11,7 +11,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.im.chat.MessageListener;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterListener;
@@ -330,7 +330,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
     }
 
     private void panic() {
-        xmpp.getDispatcher().publish(Connection.Events.error);
+        xmpp.getDispatcher().publish(Bosh.Events.error);
     }
 
     private void sendMessageIn() {

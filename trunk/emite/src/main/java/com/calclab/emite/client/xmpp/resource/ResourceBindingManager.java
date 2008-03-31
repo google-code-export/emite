@@ -1,8 +1,8 @@
 package com.calclab.emite.client.xmpp.resource;
 
-import com.calclab.emite.client.components.Answer;
-import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.bosh.SenderComponent;
+import com.calclab.emite.client.core.dispatcher.Answer;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
@@ -18,8 +18,8 @@ public class ResourceBindingManager extends SenderComponent {
 	final Answer requestResourceBinding;
 	final Answer resourceBinded;
 
-	public ResourceBindingManager(final Dispatcher dispatcher, final Connection connection, final Globals globals) {
-		super(dispatcher, connection);
+	public ResourceBindingManager(final Dispatcher dispatcher, final Bosh bosh, final Globals globals) {
+		super(dispatcher, bosh);
 		requestResourceBinding = new Answer() {
 			public Packet respondTo(final Packet cathced) {
 				final IQ iq = new IQ("bindRequest", IQ.Type.set);

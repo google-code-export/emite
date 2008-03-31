@@ -1,8 +1,8 @@
 package com.calclab.emite.client.xmpp.sasl;
 
-import com.calclab.emite.client.components.Answer;
-import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.bosh.SenderComponent;
+import com.calclab.emite.client.core.dispatcher.Answer;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.packet.BasicPacket;
 import com.calclab.emite.client.core.packet.Event;
@@ -19,8 +19,8 @@ public class SASLManager extends SenderComponent {
 
 	final Answer restartAndAuthorize;
 
-	public SASLManager(final Dispatcher dispatcher, final Connection connection, final Globals globals) {
-		super(dispatcher, connection);
+	public SASLManager(final Dispatcher dispatcher, final Bosh bosh, final Globals globals) {
+		super(dispatcher, bosh);
 		this.globals = globals;
 
 		restartAndAuthorize = new Answer() {

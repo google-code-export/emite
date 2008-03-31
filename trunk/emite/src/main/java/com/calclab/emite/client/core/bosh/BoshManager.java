@@ -14,10 +14,8 @@ import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.core.services.Scheduler;
 import com.calclab.emite.client.core.services.XMLService;
-import com.calclab.emite.client.im.session.Session;
-import com.calclab.emite.client.xmpp.sasl.SASLManager;
 
-public class BoshManager extends PublisherComponent implements Connection, ConnectorCallback {
+public class BoshManager extends PublisherComponent implements Bosh, ConnectorCallback {
 
 	private Activator activator;
 	private final Connector connector;
@@ -89,12 +87,12 @@ public class BoshManager extends PublisherComponent implements Connection, Conne
 
 	@Override
 	public void attach() {
-		when(SASLManager.Events.authorized).Do(restartStream);
-		when(Connection.Events.start).Do(sendCreation);
-		when(Connection.Events.error).Do(stop);
-		when(Connection.Events.send).Do(send);
+		when(Bosh.Events.restart).Do(restartStream);
+		when(Bosh.Events.start).Do(sendCreation);
+		when(Bosh.Events.error).Do(stop);
+		when(Bosh.Events.send).Do(send);
 		when("body").Do(publishStanzas);
-		when(Session.Events.logout).Do(new Action() {
+		when(Bosh.Events.stop).Do(new Action() {
 			public void handle(final Packet received) {
 				setTerminate();
 			}
@@ -124,7 +122,7 @@ public class BoshManager extends PublisherComponent implements Connection, Conne
 
 	public void onError(final Throwable throwable) {
 		state.decreaseRequests();
-		dispatcher.publish(Connection.Events.error);
+		dispatcher.publish(Bosh.Events.error);
 	}
 
 	/**
@@ -135,13 +133,13 @@ public class BoshManager extends PublisherComponent implements Connection, Conne
 	public void onResponseReceived(final int statusCode, final String content) {
 		state.decreaseRequests();
 		if (statusCode >= 400) {
-			dispatcher.publish(Connection.Events.error);
+			dispatcher.publish(Bosh.Events.error);
 		} else {
 			final Packet response = xmler.toXML(content);
 			if ("body".equals(response.getName())) {
 				dispatcher.publish(response);
 			} else {
-				dispatcher.publish(Connection.Events.error);
+				dispatcher.publish(Bosh.Events.error);
 			}
 		}
 	}
@@ -179,7 +177,7 @@ public class BoshManager extends PublisherComponent implements Connection, Conne
 		}
 		state.setLastResponseEmpty(response.isEmpty());
 		if (response.isTerminal()) {
-			dispatcher.publish(new Event(Connection.Events.error).Because(response.getCondition()));
+			dispatcher.publish(new Event(Bosh.Events.error).Because(response.getCondition()));
 		} else {
 			final List<? extends Packet> children = response.getChildren();
 			for (final Packet stanza : children) {
@@ -198,7 +196,7 @@ public class BoshManager extends PublisherComponent implements Connection, Conne
 			state.setLastSend(now);
 			state.increaseRequests();
 		} catch (final ConnectorException e) {
-			dispatcher.publish(Connection.Events.error);
+			dispatcher.publish(Bosh.Events.error);
 		}
 	}
 

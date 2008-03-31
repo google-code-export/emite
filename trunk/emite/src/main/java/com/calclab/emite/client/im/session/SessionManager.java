@@ -1,10 +1,10 @@
 package com.calclab.emite.client.im.session;
 
-import com.calclab.emite.client.components.Answer;
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.bosh.SenderComponent;
 import com.calclab.emite.client.core.dispatcher.Action;
+import com.calclab.emite.client.core.dispatcher.Answer;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Globals;
@@ -21,9 +21,8 @@ public class SessionManager extends SenderComponent {
 	final Action setAuthorizedState;
 	final Answer setSessionStarted;
 
-	public SessionManager(final Dispatcher dispatcher, final Connection connection, final Globals globals,
-			final Session session) {
-		super(dispatcher, connection);
+	public SessionManager(final Dispatcher dispatcher, final Bosh bosh, final Globals globals, final Session session) {
+		super(dispatcher, bosh);
 
 		requestSession = new Answer() {
 			public Packet respondTo(final Packet received) {
@@ -50,10 +49,12 @@ public class SessionManager extends SenderComponent {
 	@Override
 	public void attach() {
 
+		when(SASLManager.Events.authorized).Publish(Bosh.Events.restart);
 		when(SASLManager.Events.authorized).Do(setAuthorizedState);
 
-		when(ResourceBindingManager.Events.binded).Send(requestSession);
+		when(Session.Events.logout).Publish(Bosh.Events.stop);
 
+		when(ResourceBindingManager.Events.binded).Send(requestSession);
 		when(new IQ("requestSession", IQ.Type.result, null)).Publish(setSessionStarted);
 
 	}
