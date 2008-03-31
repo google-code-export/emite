@@ -5,9 +5,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.x.im.session.Session;
-import com.calclab.emite.client.x.im.session.SessionListener;
-import com.calclab.emite.client.x.im.session.Session.State;
+import com.calclab.emite.client.im.session.Session;
+import com.calclab.emite.client.im.session.SessionListener;
+import com.calclab.emite.client.im.session.Session.State;
 
 public class RealServerTest {
 
