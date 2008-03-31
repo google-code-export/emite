@@ -24,8 +24,8 @@ public class SessionPlugin {
 		final Connection connection = BoshPlugin.getConnection(container);
 		final Dispatcher dispatcher = DispatcherPlugin.getDispatcher(container);
 		final Session session = new Session(dispatcher, globals);
-		container.reg(COMPONENT_SESSION, session);
+		container.register(COMPONENT_SESSION, session);
 		final SessionManager manager = new SessionManager(dispatcher, connection, globals, session);
-		container.register(COMPONENT_SESSION_MANAGER, manager);
+		container.install(COMPONENT_SESSION_MANAGER, manager);
 	}
 }

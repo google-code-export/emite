@@ -6,6 +6,9 @@ import java.util.List;
 
 import tigase.xml.Element;
 
+import com.calclab.emite.client.core.packet.AbstractPacket;
+import com.calclab.emite.client.core.packet.Packet;
+
 public class TigasePacket extends AbstractPacket {
 	private final Element delegate;
 
@@ -46,7 +49,8 @@ public class TigasePacket extends AbstractPacket {
 	}
 
 	public int getChildrenCount() {
-		return delegate.getChildren().size();
+		final List<Element> children = delegate.getChildren();
+		return children != null ? children.size() : 0;
 	}
 
 	public Packet getFirstChild(final String childName) {

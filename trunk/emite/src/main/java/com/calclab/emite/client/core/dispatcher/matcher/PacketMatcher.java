@@ -2,7 +2,8 @@ package com.calclab.emite.client.core.dispatcher.matcher;
 
 import java.util.HashMap;
 
-import com.calclab.emite.client.packet.Packet;
+import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.core.packet.Packet;
 
 public class PacketMatcher implements Matcher {
 	private final HashMap<String, String> attributes;
@@ -31,7 +32,9 @@ public class PacketMatcher implements Matcher {
 		}
 		for (final String name : attributes.keySet()) {
 			final String value = stanza.getAttribute(name);
-			if (!attributes.get(name).equals(value)) {
+			final String expected = attributes.get(name);
+			Log.debug("MATCHER " + name + " - expecting: " + expected + " | value: " + value);
+			if (!expected.equals(value)) {
 				return false;
 			}
 		}

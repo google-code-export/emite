@@ -1,9 +1,6 @@
 package com.calclab.emite.client.core.services;
 
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.connector.Connector;
-import com.calclab.emite.client.packet.XMLService;
-import com.calclab.emite.client.scheduler.Scheduler;
 
 public class ServicesPlugin {
 
@@ -30,10 +27,10 @@ public class ServicesPlugin {
 
 	public static void install(final Container container, final Connector connector, final XMLService xmler,
 			final Scheduler scheduler) {
-		container.reg(COMPONENT_GLOBALS, new HashGlobals());
-		container.reg(COMPONENT_CONNECTOR, connector);
-		container.reg(COMPONENT_XML, xmler);
-		container.reg(COMPONENT_SCHEDULER, scheduler);
+		container.register(COMPONENT_GLOBALS, new HashGlobals());
+		container.register(COMPONENT_CONNECTOR, connector);
+		container.register(COMPONENT_XML, xmler);
+		container.register(COMPONENT_SCHEDULER, scheduler);
 	}
 
 }

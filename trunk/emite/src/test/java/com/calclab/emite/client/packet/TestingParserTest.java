@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.calclab.emite.client.core.packet.Packet;
+
 public class TestingParserTest {
 
 	final String response = "<body xmlns=\"http://jabber.org/protocol/httpbind\" xmlns:stream=\"http://etherx.jabber.org/streams\" "

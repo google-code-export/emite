@@ -1,7 +1,7 @@
 package com.calclab.emite.client.core.bosh;
 
-import com.calclab.emite.client.packet.Event;
-import com.calclab.emite.client.packet.Packet;
+import com.calclab.emite.client.core.packet.Event;
+import com.calclab.emite.client.core.packet.Packet;
 
 public interface Connection {
 

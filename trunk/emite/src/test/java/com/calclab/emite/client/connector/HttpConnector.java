@@ -10,6 +10,9 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpClientParams;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.core.services.Connector;
+import com.calclab.emite.client.core.services.ConnectorCallback;
+import com.calclab.emite.client.core.services.ConnectorException;
 
 public class HttpConnector implements Connector {
 
@@ -47,6 +50,7 @@ public class HttpConnector implements Connector {
 					post.setRequestEntity(new StringRequestEntity(xml, "text/xml", "utf-8"));
 					listener.onSend(id, xml);
 					final int status = client.executeMethod(post);
+					listener.onFinish(id, System.currentTimeMillis() - timeBegin);
 					if (status == HttpStatus.SC_OK) {
 						final String response = post.getResponseBodyAsString();
 						listener.onResponse(id, response);
@@ -61,7 +65,6 @@ public class HttpConnector implements Connector {
 					e.printStackTrace();
 				} finally {
 					post.releaseConnection();
-					listener.onFinish(id, System.currentTimeMillis() - timeBegin);
 				}
 			}
 		};

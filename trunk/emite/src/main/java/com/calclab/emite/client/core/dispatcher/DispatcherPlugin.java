@@ -16,7 +16,7 @@ public class DispatcherPlugin {
 	}
 
 	public static void setDispatcher(final Container container, final Dispatcher dispatcher) {
-		container.reg(COMPONENT_DISPATCHER, dispatcher);
+		container.register(COMPONENT_DISPATCHER, dispatcher);
 	}
 
 }

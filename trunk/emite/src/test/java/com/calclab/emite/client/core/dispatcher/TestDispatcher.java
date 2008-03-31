@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.calclab.emite.client.core.dispatcher.matcher.BasicMatcher;
-import com.calclab.emite.client.packet.Event;
-import com.calclab.emite.client.packet.Packet;
+import com.calclab.emite.client.core.packet.Event;
+import com.calclab.emite.client.core.packet.Packet;
 
 public class TestDispatcher {
 

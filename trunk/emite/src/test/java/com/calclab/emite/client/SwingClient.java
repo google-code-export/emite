@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 
 import com.calclab.emite.client.connector.HttpConnectorListener;
 import com.calclab.emite.client.core.bosh.Connection;
-import com.calclab.emite.client.packet.stanza.Message;
+import com.calclab.emite.client.core.packet.stanza.Message;
 import com.calclab.emite.client.x.im.chat.MessageListener;
 import com.calclab.emite.client.x.im.session.SessionListener;
 import com.calclab.emite.client.x.im.session.Session.State;

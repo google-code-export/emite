@@ -1,6 +1,6 @@
 package com.calclab.emite.client.core.dispatcher.matcher;
 
-import com.calclab.emite.client.packet.Packet;
+import com.calclab.emite.client.core.packet.Packet;
 
 public class BasicMatcher implements Matcher {
 	private final String attName;

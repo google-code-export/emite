@@ -6,11 +6,11 @@ import com.calclab.emite.client.components.SenderComponent;
 import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.core.dispatcher.Action;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.stanza.IQ;
 import com.calclab.emite.client.core.services.Globals;
-import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.packet.stanza.IQ;
-import com.calclab.emite.client.x.core.ResourceManager;
-import com.calclab.emite.client.x.core.SASLManager;
+import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
+import com.calclab.emite.client.xmpp.sasl.SASLManager;
 
 public class SessionManager extends SenderComponent {
 	public static Session getSession(final Container container) {
@@ -50,13 +50,11 @@ public class SessionManager extends SenderComponent {
 	@Override
 	public void attach() {
 
-		when(Session.Events.login).Send(Connection.Events.start);
-
 		when(SASLManager.Events.authorized).Do(setAuthorizedState);
 
-		when(ResourceManager.Events.binded).Send(requestSession);
+		when(ResourceBindingManager.Events.binded).Send(requestSession);
 
-		when(new IQ("requestSession", IQ.Type.result)).Publish(setSessionStarted);
+		when(new IQ("requestSession", IQ.Type.result, null)).Publish(setSessionStarted);
 
 	}
 }

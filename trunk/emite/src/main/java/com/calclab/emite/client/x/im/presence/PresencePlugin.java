@@ -15,7 +15,7 @@ public class PresencePlugin {
 		final Connection connection = BoshPlugin.getConnection(container);
 		final Globals globals = ServicesPlugin.getGlobals(container);
 		final PresenceManager manager = new PresenceManager(dispatcher, connection, globals);
-		container.register("presenceManager", manager);
+		container.install("presenceManager", manager);
 	}
 
 }

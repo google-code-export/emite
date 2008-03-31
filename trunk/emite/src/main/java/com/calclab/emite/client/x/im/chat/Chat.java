@@ -2,16 +2,16 @@ package com.calclab.emite.client.x.im.chat;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.components.AbstractComponent;
+import com.calclab.emite.client.components.PublisherComponent;
 import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.core.dispatcher.Action;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.packet.BasicPacket;
-import com.calclab.emite.client.packet.Event;
-import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.packet.stanza.Message;
+import com.calclab.emite.client.core.packet.BasicPacket;
+import com.calclab.emite.client.core.packet.Event;
+import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.stanza.Message;
 
-public class Chat extends AbstractComponent {
+public class Chat extends PublisherComponent {
 
 	private final Dispatcher dispatcher;
 	private final ArrayList<MessageListener> listeners;

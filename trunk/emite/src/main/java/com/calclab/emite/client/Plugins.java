@@ -1,18 +1,19 @@
 package com.calclab.emite.client;
 
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.connector.Connector;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.bosh.BoshPlugin;
 import com.calclab.emite.client.core.dispatcher.DispatcherPlugin;
+import com.calclab.emite.client.core.services.Connector;
+import com.calclab.emite.client.core.services.Scheduler;
 import com.calclab.emite.client.core.services.ServicesPlugin;
-import com.calclab.emite.client.packet.XMLService;
-import com.calclab.emite.client.scheduler.Scheduler;
-import com.calclab.emite.client.x.core.ResourcePlugin;
-import com.calclab.emite.client.x.core.SASLPlugin;
+import com.calclab.emite.client.core.services.XMLService;
 import com.calclab.emite.client.x.im.chat.ChatPlugin;
 import com.calclab.emite.client.x.im.presence.PresencePlugin;
+import com.calclab.emite.client.x.im.roster.RosterPlugin;
 import com.calclab.emite.client.x.im.session.SessionPlugin;
+import com.calclab.emite.client.xmpp.resource.ResourceBindingPlugin;
+import com.calclab.emite.client.xmpp.sasl.SASLPlugin;
 
 public class Plugins {
 
@@ -35,12 +36,13 @@ public class Plugins {
 		// Instant Messaging
 		ChatPlugin.install(container);
 		SessionPlugin.install(container);
+		RosterPlugin.install(container);
 		PresencePlugin.install(container);
 	}
 
 	private static void installXMPPPlugins(final Container container) {
 		SASLPlugin.install(container);
-		ResourcePlugin.install(container);
+		ResourceBindingPlugin.install(container);
 	}
 
 }
