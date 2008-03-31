@@ -1,14 +1,13 @@
 package com.calclab.emite.client.x.im.roster;
 
-import com.calclab.emite.client.Components;
-import com.calclab.emite.client.bosh.Connection;
+import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.plugin.SenderPlugin;
-import com.calclab.emite.client.x.core.ResourcePlugin;
 
 public class RosterPlugin extends SenderPlugin {
 
-	public static Roster getRoster(final Components components) {
-		return (Roster) components.get("roster");
+	public static Roster getRoster(final Container container) {
+		return (Roster) container.get("roster");
 	}
 
 	private RosterManager rosterManager;
@@ -23,7 +22,7 @@ public class RosterPlugin extends SenderPlugin {
 	 */
 	@Override
 	public void attach() {
-		when.Event(ResourcePlugin.Events.binded).Send(rosterManager.requestRoster);
+		// when.Event(Session).Send(rosterManager.requestRoster);
 		when.IQ("roster").Publish(rosterManager.setRosterItems);
 	}
 

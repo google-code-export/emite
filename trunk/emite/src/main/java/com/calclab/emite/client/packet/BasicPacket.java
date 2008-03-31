@@ -10,6 +10,10 @@ public class BasicPacket extends AbstractPacket {
 	private final String name;
 	private BasicPacket parent;
 
+	public BasicPacket(final String name) {
+		this(name, null);
+	}
+
 	public BasicPacket(final String name, final String xmlns) {
 		this.name = name;
 		this.attributes = new HashMap<String, String>();
@@ -38,6 +42,13 @@ public class BasicPacket extends AbstractPacket {
 
 	public String getAttribute(final String name) {
 		return attributes.get(name);
+	}
+
+	/**
+	 * WARNING: broken encapsulation
+	 */
+	public HashMap<String, String> getAttributes() {
+		return attributes;
 	}
 
 	public List<? extends Packet> getChildren() {

@@ -1,10 +1,10 @@
 package com.calclab.emite.client;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.dispatcher.Action;
-import com.calclab.emite.client.dispatcher.Dispatcher;
-import com.calclab.emite.client.dispatcher.DispatcherStateListener;
-import com.calclab.emite.client.matcher.Matcher;
+import com.calclab.emite.client.core.dispatcher.Action;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
+import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.packet.Packet;
 
 public class LoggerDispatcher implements Dispatcher {

@@ -1,6 +1,7 @@
 package com.calclab.emite.client.packet;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import tigase.xml.Element;
@@ -16,16 +17,23 @@ public class TigasePacket extends AbstractPacket {
 		throw new RuntimeException("not implemented");
 	}
 
+	// TODO
 	public void addChild(final Packet toBeSend) {
 		throw new RuntimeException("not implemented");
 	}
 
+	// TODO
 	public void addText(final String text) {
 		throw new RuntimeException("not implemented");
 	}
 
 	public String getAttribute(final String name) {
 		return delegate.getAttribute(name);
+	}
+
+	// TODO
+	public HashMap<String, String> getAttributes() {
+		throw new RuntimeException("not implemented");
 	}
 
 	public List<? extends Packet> getChildren() {
@@ -49,6 +57,7 @@ public class TigasePacket extends AbstractPacket {
 		return delegate.getName();
 	}
 
+	// TODO
 	public Packet getParent() {
 		throw new RuntimeException("not implemented");
 	}
@@ -61,6 +70,7 @@ public class TigasePacket extends AbstractPacket {
 		buffer.append(delegate.toString());
 	}
 
+	// TODO
 	public void setAttribute(final String name, final String value) {
 		throw new RuntimeException("not implemented");
 	}

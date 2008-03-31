@@ -2,15 +2,16 @@ package com.calclab.emite.client.x.im.session;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.Globals;
-import com.calclab.emite.client.bosh.Connection;
-import com.calclab.emite.client.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.packet.Event;
 
 public class Session {
 
 	public static class Events {
 		public static final Event login = new Event("session:login");
+		public static final Event logout = new Event("session:logout");
 	}
 
 	public static enum State {
@@ -51,7 +52,7 @@ public class Session {
 	}
 
 	public void logout() {
-
+		dispatcher.publish(Events.logout);
 	}
 
 	public void setState(final State newState) {

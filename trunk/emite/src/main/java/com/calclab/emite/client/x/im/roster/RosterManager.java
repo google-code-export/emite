@@ -7,13 +7,10 @@ import com.calclab.emite.client.packet.stanza.IQ;
 import com.calclab.emite.client.plugin.dsl.Answer;
 
 public class RosterManager {
-
-	private final Roster roster;
 	final Packet requestRoster;
 	final Answer setRosterItems;
 
 	public RosterManager(final Roster roster) {
-		this.roster = roster;
 
 		requestRoster = new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster");
 

@@ -8,12 +8,16 @@ public class Presence extends BasicStanza {
 		away, chat, dnd, xa
 	}
 
+	public Presence() {
+		super("presence", "jabber:client");
+	}
+
 	public Presence(final Packet stanza) {
 		super(stanza);
 	}
 
 	public Presence(final String from) {
-		super("presence", "jabber:client");
+		this();
 		setFrom(from);
 	}
 
