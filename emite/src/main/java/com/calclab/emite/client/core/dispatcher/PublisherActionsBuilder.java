@@ -1,16 +1,15 @@
-package com.calclab.emite.client.components;
+package com.calclab.emite.client.core.dispatcher;
 
-import com.calclab.emite.client.core.dispatcher.Action;
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.components.Answer;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
 
-public class BasicActionsBuilder {
+public class PublisherActionsBuilder {
 	protected final Dispatcher dispatcher;
 	protected final Matcher matcher;
 
-	BasicActionsBuilder(final Matcher matcher, final Dispatcher dispatcher) {
+	protected PublisherActionsBuilder(final Matcher matcher, final Dispatcher dispatcher) {
 		this.matcher = matcher;
 		this.dispatcher = dispatcher;
 	}

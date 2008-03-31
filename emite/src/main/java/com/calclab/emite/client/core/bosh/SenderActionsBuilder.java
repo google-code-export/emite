@@ -1,16 +1,17 @@
-package com.calclab.emite.client.components;
+package com.calclab.emite.client.core.bosh;
 
-import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.components.Answer;
 import com.calclab.emite.client.core.dispatcher.Action;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.PublisherActionsBuilder;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
 
-public class SenderActionsBuilder extends BasicActionsBuilder {
+public class SenderActionsBuilder extends PublisherActionsBuilder {
 	private final Connection connection;
 
-	SenderActionsBuilder(final Matcher matcher, final Dispatcher dispatcher, final Connection connection) {
+	protected SenderActionsBuilder(final Matcher matcher, final Dispatcher dispatcher, final Connection connection) {
 		super(matcher, dispatcher);
 		this.connection = connection;
 	}

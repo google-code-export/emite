@@ -1,7 +1,7 @@
-package com.calclab.emite.client.components;
+package com.calclab.emite.client.core.bosh;
 
-import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.PublisherComponent;
 import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
 import com.calclab.emite.client.core.packet.Packet;
 

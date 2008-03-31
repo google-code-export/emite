@@ -3,9 +3,9 @@ package com.calclab.emite.client.core.bosh;
 import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.components.PublisherComponent;
 import com.calclab.emite.client.core.dispatcher.Action;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.PublisherComponent;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Connector;
@@ -192,7 +192,10 @@ public class BoshManager extends PublisherComponent implements Connection, Conne
 		try {
 			connector.send(options.getHttpBase(), xmler.toString(request), this);
 			request = null;
-			state.setLastSend(scheduler.getCurrentTime());
+			final long now = scheduler.getCurrentTime();
+			final long last = state.getLastSendTime();
+			Log.debug("BOSH SEND: " + last + " -> " + now + "(" + (now - last) + ")");
+			state.setLastSend(now);
 			state.increaseRequests();
 		} catch (final ConnectorException e) {
 			dispatcher.publish(Connection.Events.error);
