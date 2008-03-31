@@ -13,8 +13,8 @@ import com.calclab.emite.client.core.services.XMLService;
 public class BoshPlugin {
 	private static final String COMPONENT_BOSH = "bosh";
 
-	public static Connection getConnection(final Container container) {
-		return (Connection) container.get(COMPONENT_BOSH);
+	public static Bosh getConnection(final Container container) {
+		return (Bosh) container.get(COMPONENT_BOSH);
 	}
 
 	public static void install(final Container container, final BoshOptions options) {

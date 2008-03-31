@@ -6,15 +6,15 @@ import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
 import com.calclab.emite.client.core.packet.Packet;
 
 public abstract class SenderComponent extends PublisherComponent {
-	private final Connection connection;
+	private final Bosh bosh;
 
-	public SenderComponent(final Dispatcher dispatcher, final Connection connection) {
+	public SenderComponent(final Dispatcher dispatcher, final Bosh bosh) {
 		super(dispatcher);
-		this.connection = connection;
+		this.bosh = bosh;
 	}
 
 	@Override
 	public SenderActionsBuilder when(final Packet packet) {
-		return new SenderActionsBuilder(new PacketMatcher(packet), dispatcher, connection);
+		return new SenderActionsBuilder(new PacketMatcher(packet), dispatcher, bosh);
 	}
 }

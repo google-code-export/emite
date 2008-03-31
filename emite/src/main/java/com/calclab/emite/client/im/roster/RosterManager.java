@@ -2,9 +2,9 @@ package com.calclab.emite.client.im.roster;
 
 import java.util.List;
 
-import com.calclab.emite.client.components.Answer;
-import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.bosh.SenderComponent;
+import com.calclab.emite.client.core.dispatcher.Answer;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.im.session.Session;
@@ -14,8 +14,8 @@ public class RosterManager extends SenderComponent {
 
 	private final Roster roster;
 
-	public RosterManager(final Dispatcher dispatcher, final Connection connection, final Roster roster) {
-		super(dispatcher, connection);
+	public RosterManager(final Dispatcher dispatcher, final Bosh bosh, final Roster roster) {
+		super(dispatcher, bosh);
 		this.roster = roster;
 	}
 

@@ -1,8 +1,8 @@
 package com.calclab.emite.client.im.presence;
 
-import com.calclab.emite.client.components.Answer;
-import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.bosh.SenderComponent;
+import com.calclab.emite.client.core.dispatcher.Answer;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Globals;
@@ -13,8 +13,8 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 public class PresenceManager extends SenderComponent {
 	private final Globals globals;
 
-	public PresenceManager(final Dispatcher dispatcher, final Connection connection, final Globals globals) {
-		super(dispatcher, connection);
+	public PresenceManager(final Dispatcher dispatcher, final Bosh bosh, final Globals globals) {
+		super(dispatcher, bosh);
 		this.globals = globals;
 	}
 

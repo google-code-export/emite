@@ -2,7 +2,7 @@ package com.calclab.emite.client.im.session;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.services.Globals;
@@ -48,7 +48,7 @@ public class Session {
 		globals.setUserName(sessionOptions.getUserName());
 		globals.setPassword(sessionOptions.getPassword());
 		setState(State.connecting);
-		dispatcher.publish(Connection.Events.start);
+		dispatcher.publish(Bosh.Events.start);
 	}
 
 	public void logout() {

@@ -1,4 +1,4 @@
-package com.calclab.emite.client.components;
+package com.calclab.emite.client.core.dispatcher;
 
 import com.calclab.emite.client.core.packet.Packet;
 

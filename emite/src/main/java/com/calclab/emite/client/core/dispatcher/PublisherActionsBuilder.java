@@ -1,6 +1,5 @@
 package com.calclab.emite.client.core.dispatcher;
 
-import com.calclab.emite.client.components.Answer;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;

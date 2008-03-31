@@ -14,7 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.calclab.emite.client.connector.HttpConnectorListener;
-import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.im.chat.MessageListener;
 import com.calclab.emite.client.im.session.SessionListener;
 import com.calclab.emite.client.im.session.Session.State;
@@ -75,7 +75,7 @@ public class SwingClient {
 		btnPanic = new JButton("panic");
 		btnPanic.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				xmpp.getDispatcher().publish(Connection.Events.error);
+				xmpp.getDispatcher().publish(Bosh.Events.error);
 			}
 		});
 		final JButton btnClear = new JButton("clear");

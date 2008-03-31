@@ -10,8 +10,8 @@ import com.calclab.emite.client.core.packet.Packet;
 
 public class DispatcherDefault implements Dispatcher {
 	private static class Subscriptor {
-		private final Action action;
-		private final Matcher matcher;
+		final Action action;
+		final Matcher matcher;
 
 		public Subscriptor(final Matcher matcher, final Action action) {
 			this.matcher = matcher;

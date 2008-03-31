@@ -2,7 +2,7 @@ package com.calclab.emite.client.im.chat;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.dispatcher.Action;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.PublisherComponent;
@@ -44,7 +44,7 @@ public class Chat extends PublisherComponent {
 
 	public void send(final String to, final String msg) {
 		final Message message = new Message(to, msg);
-		dispatcher.publish(new Event(Connection.Events.send).With(message));
+		dispatcher.publish(new Event(Bosh.Events.send).With(message));
 	}
 
 }
