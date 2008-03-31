@@ -1,5 +1,6 @@
 package com.calclab.emite.client.packet;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,6 +20,8 @@ public interface Packet {
 	 *             exception
 	 */
 	public int getAttributeAsInt(String name);
+
+	public HashMap<String, String> getAttributes();
 
 	public int getChildrenCount();
 

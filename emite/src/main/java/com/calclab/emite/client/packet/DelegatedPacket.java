@@ -1,5 +1,6 @@
 package com.calclab.emite.client.packet;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class DelegatedPacket extends AbstractPacket {
@@ -23,6 +24,10 @@ public class DelegatedPacket extends AbstractPacket {
 
 	public final String getAttribute(final String name) {
 		return delegate.getAttribute(name);
+	}
+
+	public HashMap<String, String> getAttributes() {
+		return delegate.getAttributes();
 	}
 
 	public List<? extends Packet> getChildren() {

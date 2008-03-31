@@ -3,18 +3,17 @@ package com.calclab.emite.client.plugin;
 import java.util.ArrayList;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.Components;
-import com.calclab.emite.client.dispatcher.Dispatcher;
+import com.calclab.emite.client.components.Container;
 
 /**
  * @author dani
  */
 public class DefaultPluginManager implements PluginManager {
 
-	private final Components container;
+	private final Container container;
 	private final ArrayList<Plugin> installed;
 
-	public DefaultPluginManager(final Components container) {
+	public DefaultPluginManager(final Container container) {
 		this.container = container;
 		installed = new ArrayList<Plugin>();
 	}
@@ -26,10 +25,6 @@ public class DefaultPluginManager implements PluginManager {
 	}
 
 	public void start() {
-		final Dispatcher dis = container.getDispatcher();
-		for (final Plugin p : installed) {
-			p.attach(dis);
-		}
 	}
 
 	public void uninstall(final String name) {

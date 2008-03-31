@@ -29,34 +29,31 @@ public class HttpConnector implements Connector {
 		this.listener = listener;
 	}
 
-	public synchronized void send(final String httpBase, final String xml,
-			final ConnectorCallback callback) throws ConnectorException {
+	public synchronized void send(final String httpBase, final String xml, final ConnectorCallback callback)
+			throws ConnectorException {
 		final long timeBegin = System.currentTimeMillis();
 		final String id = HttpConnectorID.getNext();
 		listener.onStart(id);
 		final HttpClientParams params = new HttpClientParams();
 		params.setConnectionManagerTimeout(10000);
 		final HttpClient client = new HttpClient(params);
-		debug("HttpClientConnector created!");
+		debug("HttpClientConnector created!: " + xml);
 
 		final Runnable process = new Runnable() {
 			public void run() {
 				final PostMethod post = new PostMethod(httpBase);
 
 				try {
-					post.setRequestEntity(new StringRequestEntity(xml,
-							"text/xml", "utf-8"));
+					post.setRequestEntity(new StringRequestEntity(xml, "text/xml", "utf-8"));
 					listener.onSend(id, xml);
 					final int status = client.executeMethod(post);
 					if (status == HttpStatus.SC_OK) {
 						final String response = post.getResponseBodyAsString();
 						listener.onResponse(id, response);
-						callback.onResponseReceived(post.getStatusCode(),
-								response);
+						callback.onResponseReceived(post.getStatusCode(), response);
 					} else {
 						listener.onError(id, "bad status");
-						callback.onError(new Exception("bad http status "
-								+ status));
+						callback.onError(new Exception("bad http status " + status));
 					}
 				} catch (final IOException e) {
 					listener.onError(id, "exception " + e);
@@ -64,8 +61,7 @@ public class HttpConnector implements Connector {
 					e.printStackTrace();
 				} finally {
 					post.releaseConnection();
-					listener.onFinish(id, System.currentTimeMillis()
-							- timeBegin);
+					listener.onFinish(id, System.currentTimeMillis() - timeBegin);
 				}
 			}
 		};

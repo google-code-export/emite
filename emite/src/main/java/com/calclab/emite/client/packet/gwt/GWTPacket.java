@@ -20,8 +20,7 @@ public class GWTPacket extends AbstractPacket {
 	}
 
 	public Packet add(final String nodeName, final String xmlns) {
-		final Element child = element.getOwnerDocument()
-				.createElement(nodeName);
+		final Element child = element.getOwnerDocument().createElement(nodeName);
 		element.appendChild(child);
 		return new GWTPacket(child);
 	}
@@ -37,6 +36,10 @@ public class GWTPacket extends AbstractPacket {
 
 	public String getAttribute(final String name) {
 		return element.getAttribute(name);
+	}
+
+	public HashMap<String, String> getAttributes() {
+		throw new RuntimeException("GWTPacket.getAttributes: not implemented!");
 	}
 
 	public Map<String, String> getAttributtes() {
@@ -64,8 +67,7 @@ public class GWTPacket extends AbstractPacket {
 
 	public Packet getFirstChild(final String childName) {
 		final NodeList nodes = element.getElementsByTagName(childName);
-		return nodes.getLength() > 0 ? new GWTPacket((Element) nodes.item(0))
-				: null;
+		return nodes.getLength() > 0 ? new GWTPacket((Element) nodes.item(0)) : null;
 	}
 
 	public String getName() {

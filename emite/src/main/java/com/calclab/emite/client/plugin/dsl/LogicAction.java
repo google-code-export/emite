@@ -1,6 +1,6 @@
 package com.calclab.emite.client.plugin.dsl;
 
-import com.calclab.emite.client.dispatcher.Action;
+import com.calclab.emite.client.core.dispatcher.Action;
 import com.calclab.emite.client.packet.Packet;
 
 public class LogicAction implements Action {

@@ -13,8 +13,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.calclab.emite.client.bosh.Connection;
 import com.calclab.emite.client.connector.HttpConnectorListener;
+import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.packet.stanza.Message;
 import com.calclab.emite.client.x.im.chat.MessageListener;
 import com.calclab.emite.client.x.im.session.SessionListener;
@@ -31,6 +31,8 @@ public class SwingClient {
 	private JButton btnLogout;
 	private JButton btnPanic;
 	private JButton btnSend;
+	private JTextField fieldDomain;
+	private JTextField fieldHttpBase;
 	private JTextField fieldJID;
 	private JTextField fieldMessage;
 	private JTextField fieldName;
@@ -61,8 +63,7 @@ public class SwingClient {
 		btnLogin = new JButton("login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				xmpp.login(fieldName.getText(), new String(fieldPassword
-						.getPassword()));
+				xmpp.login(fieldName.getText(), new String(fieldPassword.getPassword()));
 			}
 		});
 		btnLogout = new JButton("logout");
@@ -84,9 +85,13 @@ public class SwingClient {
 			}
 		});
 
+		fieldHttpBase = new JTextField("http://localhost:8181/http-bind/");
+		fieldDomain = new JTextField("localhost");
 		fieldName = new JTextField("admin");
 		fieldPassword = new JPasswordField("easyeasy");
 
+		panel.add(fieldHttpBase);
+		panel.add(fieldDomain);
 		panel.add(fieldName);
 		panel.add(fieldPassword);
 		panel.add(btnLogin);
@@ -152,7 +157,7 @@ public class SwingClient {
 		});
 		xmpp.addMessageListener(new MessageListener() {
 			public void onReceived(final Message message) {
-				print(message.getFrom() + ": " + message.getTo());
+				print(message.getFrom() + ": " + message.getBody());
 			}
 		});
 	}

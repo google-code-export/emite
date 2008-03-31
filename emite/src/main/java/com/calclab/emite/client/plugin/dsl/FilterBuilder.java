@@ -1,8 +1,8 @@
 package com.calclab.emite.client.plugin.dsl;
 
-import com.calclab.emite.client.bosh.Connection;
-import com.calclab.emite.client.dispatcher.Dispatcher;
-import com.calclab.emite.client.matcher.BasicMatcher;
+import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.matcher.BasicMatcher;
 import com.calclab.emite.client.packet.Event;
 
 public class FilterBuilder {

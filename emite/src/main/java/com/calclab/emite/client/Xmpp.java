@@ -1,10 +1,16 @@
 package com.calclab.emite.client;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.bosh.BoshOptions;
+import com.calclab.emite.client.components.DefaultContainer;
+import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.connector.Connector;
 import com.calclab.emite.client.connector.GWTConnector;
-import com.calclab.emite.client.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.bosh.BoshOptions;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.DispatcherPlugin;
+import com.calclab.emite.client.packet.XMLService;
 import com.calclab.emite.client.packet.gwt.GWTXMLService;
+import com.calclab.emite.client.scheduler.Scheduler;
 import com.calclab.emite.client.scheduler.gwt.GWTScheduler;
 import com.calclab.emite.client.x.im.chat.ChatPlugin;
 import com.calclab.emite.client.x.im.chat.MessageListener;
@@ -18,38 +24,46 @@ import com.calclab.emite.client.x.im.session.SessionPlugin;
 public class Xmpp {
 
 	public static Xmpp create(final BoshOptions options) {
-		final Container container = new Container();
-		container.installDefaultPlugins(new GWTXMLService(),
-				new GWTConnector(), new GWTScheduler(), options);
-		return new Xmpp(container.getComponents());
+		final GWTXMLService xmlService = new GWTXMLService();
+		final GWTConnector connector = new GWTConnector();
+		final GWTScheduler scheduler = new GWTScheduler();
+		return create(connector, xmlService, scheduler, options);
 	}
 
-	private final Components components;
+	public static Xmpp create(final Connector connector, final XMLService xmlService, final Scheduler scheduler,
+			final BoshOptions options) {
+
+		final Container container = new DefaultContainer();
+		Plugins.installDefaultPlugins(container, xmlService, connector, scheduler, options);
+		return new Xmpp(container);
+	}
+
+	private final Container container;
 	private final Session session;
 
-	public Xmpp(final Components components) {
-		this.components = components;
-		this.session = SessionPlugin.getSession(components);
+	public Xmpp(final Container container) {
+		this.container = container;
+		this.session = SessionPlugin.getSession(container);
 	}
 
 	public void addMessageListener(final MessageListener listener) {
-		ChatPlugin.getChat(components).addListener(listener);
+		ChatPlugin.getChat(container).addListener(listener);
 	}
 
 	public void addSessionListener(final SessionListener listener) {
 		session.addListener(listener);
 	}
 
-	public Components getComponents() {
-		return components;
+	public Container getComponents() {
+		return container;
 	}
 
 	public Dispatcher getDispatcher() {
-		return components.getDispatcher();
+		return DispatcherPlugin.getDispatcher(container);
 	}
 
 	public Roster getRoster() {
-		return RosterPlugin.getRoster(components);
+		return RosterPlugin.getRoster(container);
 	}
 
 	public Session getSession() {
@@ -66,7 +80,7 @@ public class Xmpp {
 	}
 
 	public void send(final String to, final String msg) {
-		ChatPlugin.getChat(components).send(to, msg);
+		ChatPlugin.getChat(container).send(to, msg);
 	}
 
 }

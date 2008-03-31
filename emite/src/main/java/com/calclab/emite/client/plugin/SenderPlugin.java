@@ -1,7 +1,7 @@
 package com.calclab.emite.client.plugin;
 
-import com.calclab.emite.client.bosh.Connection;
-import com.calclab.emite.client.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.plugin.dsl.FilterBuilder;
 
 public abstract class SenderPlugin extends PublisherPlugin {

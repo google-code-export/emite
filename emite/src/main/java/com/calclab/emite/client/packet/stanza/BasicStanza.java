@@ -11,11 +11,11 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
 	private static final String TO = "to";
 	private static final String TYPE = "type";
 
-	BasicStanza(final Packet stanza) {
+	protected BasicStanza(final Packet stanza) {
 		super(stanza);
 	}
 
-	BasicStanza(final String name, final String xmlns) {
+	protected BasicStanza(final String name, final String xmlns) {
 		super(new BasicPacket(name, xmlns));
 	}
 
