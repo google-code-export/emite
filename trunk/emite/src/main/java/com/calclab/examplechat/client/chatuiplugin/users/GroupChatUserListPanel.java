@@ -17,38 +17,25 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin.groupchat;
+package com.calclab.examplechat.client.chatuiplugin.users;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.layout.FitLayout;
 
-public class GroupChatUserListPresenter implements GroupChatUserList {
-    private GroupChatUserListPanel view;
-    private final Map<String, GroupChatUser> users;
+public class GroupChatUserListPanel extends Panel implements GroupChatUserListView {
+    private final UserGrid userGrid;
 
-    public GroupChatUserListPresenter() {
-        users = new HashMap<String, GroupChatUser>();
+    public GroupChatUserListPanel() {
+        userGrid = new UserGrid();
+        super.add(userGrid);
+        super.setLayout(new FitLayout());
     }
 
-    public void init(final GroupChatUserListPanel view) {
-        this.view = view;
-    }
-
-    public void add(final GroupChatUser user) {
-        users.put(user.getAlias(), user);
-        view.addUser(user);
-    }
-
-    public GroupChatUser get(final String userAlias) {
-        return users.get(userAlias);
+    public void addUser(final GroupChatUser user) {
+        userGrid.addUser(user);
     }
 
     public void remove(final GroupChatUser user) {
-        view.remove(user);
+        userGrid.addUser(user);
     }
-
-    public GroupChatUserListView getView() {
-        return view;
-    }
-
 }

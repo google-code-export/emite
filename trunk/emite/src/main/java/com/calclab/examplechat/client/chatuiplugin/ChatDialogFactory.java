@@ -11,15 +11,15 @@ import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserList;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListPanel;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPanel;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPresenter;
 
 public class ChatDialogFactory {
 

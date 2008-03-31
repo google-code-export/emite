@@ -21,7 +21,10 @@ package com.calclab.examplechat.client.chatuiplugin.utils;
 
 import org.ourproject.kune.platf.client.ui.KuneStringUtils;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 
 public class ChatTextFormatter {
 
@@ -114,42 +117,50 @@ public class ChatTextFormatter {
         message = replace(message, new String[] { ":\\?" }, WONDERING);
         message = replace(message, new String[] { ":-\\)", ":\\)" }, SMILE);
 
-        message = message.replaceAll(SMILE, img.smile().getHTML());
-        message = message.replaceAll(CRYING, img.crying().getHTML());
-        message = message.replaceAll(SURPRISED, img.surprised().getHTML());
-        message = message.replaceAll(ANGEL, img.angel().getHTML());
-        message = message.replaceAll(HAPPY, img.happy().getHTML());
-        message = message.replaceAll(GRIN, img.grin().getHTML());
-        message = message.replaceAll(JOYFUL, img.joyful().getHTML());
-        message = message.replaceAll(UNCERTAIN, img.uncertain().getHTML());
-        message = message.replaceAll(ANGRY, img.angry().getHTML());
-        message = message.replaceAll(TONGUE, img.tongue().getHTML());
-        message = message.replaceAll(LOVE, img.love().getHTML());
-        message = message.replaceAll(SLEEPING, img.sleeping().getHTML());
-        message = message.replaceAll(COOL, img.cool().getHTML());
-        message = message.replaceAll(KISSING, img.kissing().getHTML());
-        message = message.replaceAll(SAD, img.sad().getHTML());
-        message = message.replaceAll(ALIEN, img.alien().getHTML());
-        message = message.replaceAll(ANDY, img.andy().getHTML());
-        message = message.replaceAll(BANDIT, img.bandit().getHTML());
-        message = message.replaceAll(BLUSHING, img.blushing().getHTML());
-        message = message.replaceAll(DEVIL, img.devil().getHTML());
-        message = message.replaceAll(HEART, img.heart().getHTML());
-        message = message.replaceAll(LOL, img.lol().getHTML());
-        message = message.replaceAll(NINJA, img.ninja().getHTML());
-        message = message.replaceAll(PINCHED, img.pinched().getHTML());
-        message = message.replaceAll(POLICEMAN, img.policeman().getHTML());
-        message = message.replaceAll(POUTY, img.pouty().getHTML());
-        message = message.replaceAll(SICK, img.sick().getHTML());
-        message = message.replaceAll(SIDEWAYS, img.sideways().getHTML());
-        message = message.replaceAll(UNSURE, img.unsure().getHTML());
-        message = message.replaceAll(W00T, img.w00t().getHTML());
-        message = message.replaceAll(WINK, img.wink().getHTML());
-        message = message.replaceAll(WONDERING, img.wondering().getHTML());
-        message = message.replaceAll(WHISTLING, img.whistling().getHTML());
-        message = message.replaceAll(WIZARD, img.wizard().getHTML());
+        message = message.replaceAll(SMILE, getImgHtml(img.smile()));
+        message = message.replaceAll(CRYING, getImgHtml(img.crying()));
+        message = message.replaceAll(SURPRISED, getImgHtml(img.surprised()));
+        message = message.replaceAll(ANGEL, getImgHtml(img.angel()));
+        message = message.replaceAll(HAPPY, getImgHtml(img.happy()));
+        message = message.replaceAll(GRIN, getImgHtml(img.grin()));
+        message = message.replaceAll(JOYFUL, getImgHtml(img.joyful()));
+        message = message.replaceAll(UNCERTAIN, getImgHtml(img.uncertain()));
+        message = message.replaceAll(ANGRY, getImgHtml(img.angry()));
+        message = message.replaceAll(TONGUE, getImgHtml(img.tongue()));
+        message = message.replaceAll(LOVE, getImgHtml(img.love()));
+        message = message.replaceAll(SLEEPING, getImgHtml(img.sleeping()));
+        message = message.replaceAll(COOL, getImgHtml(img.cool()));
+        message = message.replaceAll(KISSING, getImgHtml(img.kissing()));
+        message = message.replaceAll(SAD, getImgHtml(img.sad()));
+        message = message.replaceAll(ALIEN, getImgHtml(img.alien()));
+        message = message.replaceAll(ANDY, getImgHtml(img.andy()));
+        message = message.replaceAll(BANDIT, getImgHtml(img.bandit()));
+        message = message.replaceAll(BLUSHING, getImgHtml(img.blushing()));
+        message = message.replaceAll(DEVIL, getImgHtml(img.devil()));
+        message = message.replaceAll(HEART, getImgHtml(img.heart()));
+        message = message.replaceAll(LOL, getImgHtml(img.lol()));
+        message = message.replaceAll(NINJA, getImgHtml(img.ninja()));
+        message = message.replaceAll(PINCHED, getImgHtml(img.pinched()));
+        message = message.replaceAll(POLICEMAN, getImgHtml(img.policeman()));
+        message = message.replaceAll(POUTY, getImgHtml(img.pouty()));
+        message = message.replaceAll(SICK, getImgHtml(img.sick()));
+        message = message.replaceAll(SIDEWAYS, getImgHtml(img.sideways()));
+        message = message.replaceAll(UNSURE, getImgHtml(img.unsure()));
+        message = message.replaceAll(W00T, getImgHtml(img.w00t()));
+        message = message.replaceAll(WINK, getImgHtml(img.wink()));
+        message = message.replaceAll(WONDERING, getImgHtml(img.wondering()));
+        message = message.replaceAll(WHISTLING, getImgHtml(img.whistling()));
+        message = message.replaceAll(WIZARD, getImgHtml(img.wizard()));
 
         return message;
+    }
+
+    private static String getImgHtml(final AbstractImagePrototype img) {
+        Image image = new Image();
+        // FIXME: this doesn't works :-/
+        DOM.setStyleAttribute(image.getElement(), "vertical-align", "bottom");
+        img.applyTo(image);
+        return img.getHTML();
     }
 
     private static String replace(String message, final String[] from, final String to) {

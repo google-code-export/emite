@@ -1,6 +1,6 @@
 package com.calclab.examplechat.client.chatuiplugin.params;
 
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 
 public class CreateGroupChatActionParam {
     public final String groupChatName;

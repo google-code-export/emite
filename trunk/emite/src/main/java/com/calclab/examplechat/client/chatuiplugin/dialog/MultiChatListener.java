@@ -41,4 +41,6 @@ public interface MultiChatListener {
 
     void attachToExtPoint(UIExtensionElement extensionElement);
 
+    void doAction(String eventId, Object param);
+
 }
