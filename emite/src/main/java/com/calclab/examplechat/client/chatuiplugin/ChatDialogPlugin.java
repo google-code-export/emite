@@ -68,6 +68,7 @@ public class ChatDialogPlugin extends Plugin {
 
                     public void onSendMessage(final AbstractChat chat, final String message) {
                         dispatcher.fire(ChatDialogPlugin.ON_MESSAGE_SENDED, new ChatOutputMessageParam(chat, message));
+                        extChatDialog.messageReceived(chat.getId(), chat.getSessionUserAlias(), message);
                     }
 
                     public void onClosePairChat(final PairChatPresenter pairChat) {

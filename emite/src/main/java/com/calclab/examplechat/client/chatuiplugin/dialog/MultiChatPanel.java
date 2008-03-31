@@ -40,7 +40,6 @@ import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPalettePanel;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -136,19 +135,17 @@ public class MultiChatPanel implements MultiChatView {
         }
     }
 
+    public void activateChat(final AbstractChat chat) {
+        Panel chatPanel = (Panel) chat.getView();
+        centerPanel.activate(chatPanel.getId());
+        centerPanel.scrollToTab(chatPanel, true);
+    }
+
     public void closeAllChats() {
         Component[] items = centerPanel.getItems();
         for (int i = 0; i < items.length; i++) {
             centerPanel.remove(items[i]);
         }
-    }
-
-    public void activateChat(final AbstractChat chat) {
-        Panel chatPanel = (Panel) chat.getView();
-        centerPanel.activate(chatPanel.getId());
-        chatPanel.expand();
-        chatPanel.show();
-        chatPanel.doLayout();
     }
 
     public void highlightChat(final AbstractChat chat) {
@@ -273,7 +270,7 @@ public class MultiChatPanel implements MultiChatView {
         default:
             break;
         }
-        String icon = getStatusIcon(status).getHTML();
+        String icon = StatusUtil.getStatusIcon(status).getHTML();
         statusButton.setText(icon);
     }
 
@@ -416,14 +413,18 @@ public class MultiChatPanel implements MultiChatView {
         usersPanel.setLayout(new AccordionLayout(true));
         usersPanel.setAutoScroll(false);
         usersPanel.setBorder(false);
+        // Maybe use Accordion playing with visibility instead of gwt's
+        // deckpanel
         groupChatUsersDeckPanel = new DeckPanel();
         groupChatUsersDeckPanel.addStyleName("emite-MultiChatPanel-User");
         buddiesPanel = new Panel(i18n.t("My buddies"));
+        buddiesPanel.setLayout(new FitLayout());
         buddiesPanel.setAutoScroll(true);
         buddiesPanel.setIconCls("userf-icon");
         buddiesGrid = new UserGrid();
         buddiesPanel.add(buddiesGrid);
         groupChatUsersPanel = new Panel(i18n.t("Now in this room"));
+        groupChatUsersPanel.setLayout(new FitLayout());
         groupChatUsersPanel.setAutoScroll(true);
         groupChatUsersPanel.setIconCls("group-icon");
         groupChatUsersPanel.add(groupChatUsersDeckPanel);
@@ -539,7 +540,7 @@ public class MultiChatPanel implements MultiChatView {
 
     private CheckItem createStatusCheckItem(final int status) {
         CheckItem checkItem = new CheckItem();
-        checkItem.setText(getStatusText(status));
+        checkItem.setText(StatusUtil.getStatusIconAndText(i18n, status));
         checkItem.setGroup("chatstatus");
 
         checkItem.addListener(new BaseItemListenerAdapter() {
@@ -650,55 +651,6 @@ public class MultiChatPanel implements MultiChatView {
         emoticonPopup.setPopupPosition(x + 2, y - 160);
         emoticonPopup.setWidget(emoticonPalettePanel);
         emoticonPopup.setVisible(true);
-    }
-
-    private AbstractImagePrototype getStatusIcon(final int status) {
-        switch (status) {
-        case STATUS_ONLINE:
-            return icons.online();
-        case STATUS_OFFLINE:
-            return icons.offline();
-        case STATUS_BUSY:
-            return icons.busy();
-        case STATUS_INVISIBLE:
-            return icons.invisible();
-        case STATUS_XA:
-            return icons.extendedAway();
-        case STATUS_AWAY:
-            return icons.away();
-        case STATUS_MESSAGE:
-            return icons.message();
-        default:
-            throw new IndexOutOfBoundsException("Xmpp status unknown");
-        }
-    }
-
-    private String getStatusText(final int status) {
-        String textLabel;
-
-        switch (status) {
-        case STATUS_ONLINE:
-            textLabel = i18n.t("online");
-            break;
-        case STATUS_OFFLINE:
-            textLabel = i18n.t("offline");
-            break;
-        case STATUS_BUSY:
-            textLabel = i18n.t("busy");
-            break;
-        case STATUS_INVISIBLE:
-            textLabel = i18n.t("invisible");
-            break;
-        case STATUS_XA:
-            textLabel = i18n.t("extended away");
-            break;
-        case STATUS_AWAY:
-            textLabel = i18n.t("away");
-            break;
-        default:
-            throw new IndexOutOfBoundsException("Xmpp status unknown");
-        }
-        return getStatusIcon(status).getHTML() + "&nbsp;" + textLabel;
     }
 
     private void createInfoPanel() {

@@ -37,8 +37,7 @@ public class GroupChatUser extends AbstractChatUser {
 
     public GroupChatUser(final String jid, final String alias, final String color,
             final GroupChatUserType groupChatUserType) {
-        super(groupChatUserType.equals(MODERADOR) ? "images/moderatoruser.gif" : "images/normaluser.gif", jid, alias,
-                color);
+        super("images/person-def.gif", jid, alias, color);
         this.type = groupChatUserType;
     }
 

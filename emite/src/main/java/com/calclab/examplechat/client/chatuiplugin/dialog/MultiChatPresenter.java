@@ -78,40 +78,40 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public GroupChat createGroupChat(final String groupChatName, final String userAlias,
             final GroupChatUserType groupChatUserType) {
-
-        AbstractChat abstractChat = chats.get(groupChatName);
+        String chatId = groupChatName;
+        AbstractChat abstractChat = chats.get(chatId);
         if (abstractChat != null) {
             activateChat(abstractChat);
             return (GroupChat) abstractChat;
         }
         GroupChatUser groupChatUser = new GroupChatUser(currentSessionUser.getJid(), userAlias,
                 MultiChatView.DEF_USER_COLOR, groupChatUserType);
-        GroupChat groupChat = ChatDialogFactory.createGroupChat(this, groupChatUser);
-        groupChat.setChatTitle(groupChatName);
-        currentChat = groupChat;
+        GroupChat groupChat = ChatDialogFactory.createGroupChat(chatId, this, groupChatUser);
         view.addGroupChatUsersPanel(groupChat.getUsersListView());
-        view.addChat(groupChat);
-        chats.put(groupChatName, groupChat);
-        checkCloseAllEnabling();
-        return groupChat;
+        view.setSubject("");
+        return (GroupChat) finishChatCreation(groupChat, groupChatName);
     }
 
     public PairChat createPairChat(final PairChatUser otherUser) {
-        String otherUserAlias = otherUser.getAlias();
-        AbstractChat abstractChat = chats.get(otherUser.getJid());
+        String chatId = otherUser.getJid();
+        AbstractChat abstractChat = chats.get(chatId);
         if (abstractChat != null) {
             activateChat(abstractChat);
             return (PairChat) abstractChat;
         }
         PairChatUser currentPairChatUser = new PairChatUser("images/person-def.gif", currentSessionUser.getJid(),
                 currentSessionUser.getAlias(), currentSessionUser.getColor());
-        PairChat pairChat = ChatDialogFactory.createPairChat(this, currentPairChatUser, otherUser);
-        pairChat.setChatTitle(otherUserAlias);
-        currentChat = pairChat;
-        view.addChat(pairChat);
-        chats.put(otherUser.getJid(), pairChat);
+        PairChat pairChat = ChatDialogFactory.createPairChat(chatId, this, currentPairChatUser, otherUser);
+        return (PairChat) finishChatCreation(pairChat, otherUser.getAlias());
+    }
+
+    private AbstractChat finishChatCreation(final AbstractChat chat, final String chatTitle) {
+        chat.setChatTitle(chatTitle);
+        currentChat = chat;
+        view.addChat(chat);
+        chats.put(chat.getId(), chat);
         checkCloseAllEnabling();
-        return pairChat;
+        return chat;
     }
 
     public void show() {

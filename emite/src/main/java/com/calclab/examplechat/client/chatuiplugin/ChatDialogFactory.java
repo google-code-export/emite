@@ -38,18 +38,19 @@ public class ChatDialogFactory {
         return userListPresenter;
     }
 
-    public static GroupChat createGroupChat(final GroupChatListener listener, final GroupChatUser currentSessionUser) {
+    public static GroupChat createGroupChat(final String chatId, final GroupChatListener listener,
+            final GroupChatUser currentSessionUser) {
         GroupChatUserList userList = createGroupChatUserList();
-        GroupChatPresenter presenter = new GroupChatPresenter(listener, currentSessionUser);
+        GroupChatPresenter presenter = new GroupChatPresenter(chatId, listener, currentSessionUser);
         presenter.setUserList(userList);
         GroupChatPanel panel = new GroupChatPanel(presenter);
         presenter.init(panel);
         return presenter;
     }
 
-    public static PairChat createPairChat(final PairChatListener listener, final PairChatUser currentSessionUser,
-            final PairChatUser otherUser) {
-        PairChatPresenter presenter = new PairChatPresenter(listener, currentSessionUser, otherUser);
+    public static PairChat createPairChat(final String chatId, final PairChatListener listener,
+            final PairChatUser currentSessionUser, final PairChatUser otherUser) {
+        PairChatPresenter presenter = new PairChatPresenter(chatId, listener, currentSessionUser, otherUser);
         PairChatPanel panel = new PairChatPanel(presenter);
         presenter.init(panel);
         return presenter;

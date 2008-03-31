@@ -1,6 +1,9 @@
 package com.calclab.examplechat.client.chatuiplugin.users;
 
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
+import com.calclab.examplechat.client.chatuiplugin.dialog.StatusUtil;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.gwtext.client.data.ArrayReader;
 import com.gwtext.client.data.FieldDef;
 import com.gwtext.client.data.MemoryProxy;
@@ -22,6 +25,7 @@ public class UserGrid extends GridPanel {
     private static final String ALIAS = "alias";
     private static final String IMG = "img";
     private static final String COLOR = "color";
+    private static final String STATUSIMG = "status";
     private Store store;
     private FieldDef[] fieldDefs;
     private RecordDef recordDef;
@@ -32,7 +36,7 @@ public class UserGrid extends GridPanel {
 
     private void createGrid() {
         fieldDefs = new FieldDef[] { new StringFieldDef(IMG), new StringFieldDef(JID), new StringFieldDef(ALIAS),
-                new StringFieldDef(COLOR) };
+                new StringFieldDef(COLOR), new StringFieldDef(STATUSIMG) };
         recordDef = new RecordDef(fieldDefs);
 
         MemoryProxy proxy = new MemoryProxy(new Object[][] {});
@@ -51,23 +55,23 @@ public class UserGrid extends GridPanel {
         Renderer userAliasRender = new Renderer() {
             public String render(Object value, CellMetadata cellMetadata, Record record, int rowIndex, int colNum,
                     Store store) {
-                return Format.format("<span style=\"color: {0} ;\">{1}</span>", new String[] {
-                        record.getAsString(COLOR), record.getAsString(ALIAS) });
+                return Format.format("<span style=\"vertical-align: middle; color: {0} ;\">{1}&nbsp;</span>{2}",
+                        new String[] { record.getAsString(COLOR), record.getAsString(ALIAS),
+                                record.getAsString(STATUSIMG) });
             }
         };
         ColumnConfig[] columnsConfigs = new ColumnConfig[] {
                 new ColumnConfig("Image", IMG, 24, false, iconRender, IMG),
-                new ColumnConfig("Alias", ALIAS, 120, true, userAliasRender, ALIAS) };
+                new ColumnConfig("Alias", ALIAS, 115, true, userAliasRender, ALIAS) };
         ColumnModel columnModel = new ColumnModel(columnsConfigs);
         this.setColumnModel(columnModel);
 
-        // this.setWidth(148);
         // this.setAutoExpandColumn(ALIAS);
         this.stripeRows(true);
         GridView view = new GridView();
         // i18n
         view.setEmptyText("Nobody");
-        // / view.setAutoFill(true);
+        // view.setAutoFill(true);
         this.setView(view);
         this.setHideColumnHeader(true);
         this.setBorder(false);
@@ -75,7 +79,24 @@ public class UserGrid extends GridPanel {
         // countriesGrid.setDdGroup("myDDGroup");
     }
 
-    public void addUser(final AbstractChatUser user) {
+    public void addUser(final PairChatUser user) {
+        String statusIcon = StatusUtil.getStatusIcon(user.getStatus()).getHTML();
+        addUser(user, statusIcon);
+    }
+
+    public void addUser(final GroupChatUser user) {
+        String img = user.getUserType().equals(GroupChatUser.MODERADOR) ? "images/moderatoruser.gif"
+                : "images/normaluser.gif";
+        addUser(user, "<img src=\"" + img + "\">");
+    }
+
+    private void addUser(final AbstractChatUser user, final String statusIcon) {
+        Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getJid(), user.getAlias(),
+                user.getColor(), statusIcon });
+        store.add(newUserRecord);
+    }
+
+    public void addList() {
 
         // Use this to set a list of Users
 
@@ -94,19 +115,11 @@ public class UserGrid extends GridPanel {
         // this.reconfigure(store, columnModel);
         // }
         //
-
-        Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getJid(), user.getAlias(),
-                user.getColor() });
-
-        // Log.info("Trying to add: " + newUserRecord.toString());
-        // Log.info("user count before: " + store.getTotalCount());
-        store.add(newUserRecord);
-        // Log.info("user count after: " + store.getTotalCount());
     }
 
     public void removeUser(final AbstractChatUser user) {
         Record newUserRecord = recordDef.createRecord(new Object[] { "", user.getJid(), user.getAlias(),
-                user.getColor() });
+                user.getColor(), "" });
         store.remove(newUserRecord);
         store.load();
     }
