@@ -1,6 +1,6 @@
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.params;
 
-public class AbstractChatInputMessage {
+public class ChatInputMessageParam {
 
     final private String chatId;
     final private String fromUser;
@@ -14,7 +14,7 @@ public class AbstractChatInputMessage {
      *                Currently we use jid in pair chats and alias in group chat
      *                :-/
      */
-    public AbstractChatInputMessage(final String chatId, final String fromUser, final String message) {
+    public ChatInputMessageParam(final String chatId, final String fromUser, final String message) {
         this.chatId = chatId;
         this.fromUser = fromUser;
         this.message = message;

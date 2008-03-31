@@ -19,7 +19,7 @@
 
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
 
 public interface GroupChat extends AbstractChat {

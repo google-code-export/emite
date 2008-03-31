@@ -20,7 +20,7 @@
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.examplechat.client.chatuiplugin.AbstractChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
 
 public class GroupChatPresenter extends AbstractChatPresenter implements GroupChat {
@@ -69,7 +69,6 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
         }
         view.showMessage(userId, userColor, message);
         listener.onMessageReceived(this);
-        super.saveScrollPos();
     }
 
     public void addUser(final GroupChatUser user) {

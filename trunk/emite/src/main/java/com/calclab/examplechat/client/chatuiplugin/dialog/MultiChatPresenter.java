@@ -28,9 +28,9 @@ import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.extend.UIExtensionPoint;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
-import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
@@ -64,8 +64,10 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.setStatus(MultiChatView.STATUS_OFFLINE);
 
         // only for tests
-        view.addPresenceBuddy("fulano", "I'm out for dinner", MultiChatView.STATUS_AWAY);
-        view.addPresenceBuddy("mengano", "Working", MultiChatView.STATUS_BUSY);
+        view.addPresenceBuddy(new PairChatUser("images/person-def.gif", "fulano@example.com", "fulano", "red"),
+                "I'm out for dinner"); // , MultiChatView.STATUS_AWAY);
+        // view.addPresenceBuddy("mengano", "Working",
+        // MultiChatView.STATUS_BUSY);
     }
 
     private void reset() {
@@ -82,8 +84,8 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
             activateChat(abstractChat);
             return (GroupChat) abstractChat;
         }
-        GroupChatUser groupChatUser = new GroupChatUser(currentSessionUser.getJid(), userAlias, "blue",
-                groupChatUserType);
+        GroupChatUser groupChatUser = new GroupChatUser(currentSessionUser.getJid(), userAlias,
+                MultiChatView.DEF_USER_COLOR, groupChatUserType);
         GroupChat groupChat = ChatDialogFactory.createGroupChat(this, groupChatUser);
         groupChat.setChatTitle(groupChatName);
         currentChat = groupChat;
@@ -101,8 +103,9 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
             activateChat(abstractChat);
             return (PairChat) abstractChat;
         }
-        PairChatUser currentePairChatUser = new PairChatUser(currentSessionUser.getJid(), currentSessionUser.getAlias());
-        PairChat pairChat = ChatDialogFactory.createPairChat(this, currentePairChatUser, otherUser);
+        PairChatUser currentPairChatUser = new PairChatUser("images/person-def.gif", currentSessionUser.getJid(),
+                currentSessionUser.getAlias(), currentSessionUser.getColor());
+        PairChat pairChat = ChatDialogFactory.createPairChat(this, currentPairChatUser, otherUser);
         pairChat.setChatTitle(otherUserAlias);
         currentChat = pairChat;
         view.addChat(pairChat);
@@ -125,7 +128,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void closePairChat(final PairChatPresenter pairChat) {
         pairChat.doClose();
-        chats.remove(pairChat.getChatTitle());
+        chats.remove(pairChat.getOtherUser().getJid());
         listener.onClosePairChat(pairChat);
         checkCloseAllDisabling();
     }
@@ -152,7 +155,13 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         return closeAllConfirmed;
     }
 
+    public void activateChat(final String chatId) {
+        AbstractChat chat = getChat(chatId);
+        activateChat(chat);
+    }
+
     public void activateChat(final AbstractChat chat) {
+        view.activateChat(chat);
         onActivate(chat);
     }
 

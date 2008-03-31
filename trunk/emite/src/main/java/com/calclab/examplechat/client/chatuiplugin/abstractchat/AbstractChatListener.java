@@ -17,42 +17,14 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.abstractchat;
 
-import org.ourproject.kune.platf.client.View;
+public interface AbstractChatListener {
 
-public interface AbstractChat {
+    void onMessageReceived(AbstractChat chat);
 
-    final int TYPE_PAIR_CHAT = 1;
+    void onActivate(AbstractChat chat);
 
-    final int TYPE_GROUP_CHAT = 2;
-
-    void activate();
-
-    void addDelimiter(String date);
-
-    void addInfoMessage(String message);
-
-    void clearSavedInput();
-
-    String getSavedInput();
-
-    View getView();
-
-    void saveInput(String inputText);
-
-    void setChatTitle(String chatTitle);
-
-    String getChatTitle();
-
-    int getType();
-
-    String getSessionUserAlias();
-
-    void saveOtherProperties();
-
-    void setSessionUserColor(String color);
-
-    void doClose();
+    void onDeactivate(AbstractChat chat);
 
 }

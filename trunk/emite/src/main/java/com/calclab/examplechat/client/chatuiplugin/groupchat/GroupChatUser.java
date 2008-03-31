@@ -19,7 +19,7 @@
 
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 
 public class GroupChatUser extends AbstractChatUser {
 
@@ -37,7 +37,8 @@ public class GroupChatUser extends AbstractChatUser {
 
     public GroupChatUser(final String jid, final String alias, final String color,
             final GroupChatUserType groupChatUserType) {
-        super(jid, alias, color);
+        super(groupChatUserType.equals(MODERADOR) ? "images/moderatoruser.gif" : "images/normaluser.gif", jid, alias,
+                color);
         this.type = groupChatUserType;
     }
 

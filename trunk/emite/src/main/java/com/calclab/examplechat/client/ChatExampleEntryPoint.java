@@ -18,11 +18,11 @@ import com.calclab.emite.client.x.im.roster.RosterItem;
 import com.calclab.emite.client.x.im.roster.RosterListener;
 import com.calclab.emite.client.x.im.session.SessionListener;
 import com.calclab.emite.client.x.im.session.Session.State;
-import com.calclab.examplechat.client.chatuiplugin.AbstractChatOutputMessage;
-import com.calclab.examplechat.client.chatuiplugin.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogPlugin;
-import com.calclab.examplechat.client.chatuiplugin.GroupChatSubject;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
+import com.calclab.examplechat.client.chatuiplugin.params.ChatOutputMessageParam;
+import com.calclab.examplechat.client.chatuiplugin.params.GroupChatSubjectParam;
 import com.calclab.examplechat.client.chatuiplugin.utils.MultiChatSamples;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
@@ -163,8 +163,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
         btnExtUI = new Button("Ext UI", new ClickListener() {
             public void onClick(final Widget sender) {
-                dispatcher.fire(ChatDialogPlugin.OPEN_CHAT_DIALOG, new AbstractChatUser(userNameInput.getText(),
-                        userNameInput.getText()));
+                dispatcher.fire(ChatDialogPlugin.OPEN_CHAT_DIALOG, new AbstractChatUser("images/person-def.gif",
+                        userNameInput.getText(), userNameInput.getText(), MultiChatView.DEF_USER_COLOR));
             }
         });
         btnExtUI.setTitle("gwt-ext UI (experimental)");
@@ -209,14 +209,14 @@ public class ChatExampleEntryPoint implements EntryPoint {
             }
         });
 
-        dispatcher.subscribe(ChatDialogPlugin.ON_MESSAGE_SENDED, new Action<AbstractChatOutputMessage>() {
-            public void execute(final AbstractChatOutputMessage param) {
+        dispatcher.subscribe(ChatDialogPlugin.ON_MESSAGE_SENDED, new Action<ChatOutputMessageParam>() {
+            public void execute(final ChatOutputMessageParam param) {
                 xmpp.send(toIn.getText(), param.getMessage());
             }
         });
 
-        dispatcher.subscribe(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED, new Action<GroupChatSubject>() {
-            public void execute(final GroupChatSubject param) {
+        dispatcher.subscribe(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED, new Action<GroupChatSubjectParam>() {
+            public void execute(final GroupChatSubjectParam param) {
                 Log.info("Group '" + param.getChatId() + "' changed subject to '" + param.getSubject()
                         + "' (not implemented yet emite connection");
             }

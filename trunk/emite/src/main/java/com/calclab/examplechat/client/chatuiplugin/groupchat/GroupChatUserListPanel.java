@@ -19,41 +19,22 @@
 
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-import java.util.HashMap;
-
-import org.ourproject.kune.platf.client.ui.IconLabel;
-
-import com.calclab.examplechat.client.chatuiplugin.utils.Emoticons;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.calclab.examplechat.client.chatuiplugin.users.UserGrid;
 import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.layout.VerticalLayout;
 
 public class GroupChatUserListPanel extends Panel implements GroupChatUserListView {
-    private final HashMap<String, IconLabel> users;
+    private final UserGrid userGrid;
 
     public GroupChatUserListPanel() {
-        users = new HashMap<String, IconLabel>();
-        setLayout(new VerticalLayout(2));
+        userGrid = new UserGrid();
+        super.add(userGrid);
     }
 
     public void addUser(final GroupChatUser user) {
-        AbstractImagePrototype icon;
-        if (user.getUserType() == GroupChatUser.MODERADOR) {
-            icon = Emoticons.App.getInstance().bulletStar();
-        } else {
-            icon = Emoticons.App.getInstance().bulletBlack();
-        }
-        String userAlias = user.getAlias();
-        IconLabel userLabel = new IconLabel(icon, userAlias);
-        userLabel.setColor(user.getColor());
-        super.add(userLabel);
-        super.render(userLabel.getElement());
-        users.put(userAlias, userLabel);
+        userGrid.addUser(user);
     }
 
     public void remove(final GroupChatUser user) {
-        String userAlias = user.getAlias();
-        this.remove(users.get(userAlias));
-        users.remove(userAlias);
+        userGrid.addUser(user);
     }
 }

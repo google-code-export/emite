@@ -1,4 +1,4 @@
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.params;
 
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser;
 

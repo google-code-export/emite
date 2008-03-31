@@ -20,8 +20,9 @@
 
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
-import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListView;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 
 public interface MultiChatView {
 
@@ -34,9 +35,9 @@ public interface MultiChatView {
     public static final int STATUS_AWAY = 5;
     public static final int STATUS_MESSAGE = 6;
 
-    void addChat(AbstractChat chat);
+    public static final String DEF_USER_COLOR = "blue";
 
-    void addPresenceBuddy(String buddyName, String title, int status);
+    void addChat(AbstractChat chat);
 
     void addGroupChatUsersPanel(GroupChatUserListView view);
 
@@ -77,5 +78,9 @@ public interface MultiChatView {
     void setCloseAllOptionEnabled(boolean enabled);
 
     void confirmCloseAll();
+
+    void activateChat(AbstractChat chat);
+
+    void addPresenceBuddy(PairChatUser user, String statusMessage);
 
 }
