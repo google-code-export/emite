@@ -5,7 +5,7 @@ import com.calclab.emite.client.core.dispatcher.Action;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
-import com.calclab.emite.client.packet.Packet;
+import com.calclab.emite.client.core.packet.Packet;
 
 public class LoggerDispatcher implements Dispatcher {
 

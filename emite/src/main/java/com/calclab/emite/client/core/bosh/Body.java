@@ -1,7 +1,7 @@
 package com.calclab.emite.client.core.bosh;
 
-import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.packet.stanza.BasicStanza;
+import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.stanza.BasicStanza;
 
 public class Body extends BasicStanza {
 

@@ -2,6 +2,9 @@ package com.calclab.emite.client.packet;
 
 import java.util.Queue;
 
+import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.services.XMLService;
+
 import tigase.xml.DomBuilderHandler;
 import tigase.xml.Element;
 import tigase.xml.SimpleParser;

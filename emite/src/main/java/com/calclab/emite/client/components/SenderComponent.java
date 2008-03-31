@@ -3,9 +3,9 @@ package com.calclab.emite.client.components;
 import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
-import com.calclab.emite.client.packet.Packet;
+import com.calclab.emite.client.core.packet.Packet;
 
-public abstract class SenderComponent extends AbstractComponent {
+public abstract class SenderComponent extends PublisherComponent {
 	private final Connection connection;
 
 	public SenderComponent(final Dispatcher dispatcher, final Connection connection) {

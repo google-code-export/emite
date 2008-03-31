@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.services.Globals;
-import com.calclab.emite.client.packet.Event;
 
 public class Session {
 

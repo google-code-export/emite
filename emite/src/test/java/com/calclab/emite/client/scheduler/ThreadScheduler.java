@@ -1,6 +1,8 @@
 package com.calclab.emite.client.scheduler;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.core.services.ScheduledAction;
+import com.calclab.emite.client.core.services.Scheduler;
 
 public class ThreadScheduler implements Scheduler {
 

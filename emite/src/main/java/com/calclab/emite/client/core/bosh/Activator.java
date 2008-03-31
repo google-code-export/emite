@@ -1,13 +1,13 @@
 package com.calclab.emite.client.core.bosh;
 
-import com.calclab.emite.client.scheduler.ScheduledAction;
+import com.calclab.emite.client.core.services.ScheduledAction;
 
 public class Activator implements ScheduledAction {
-	private final Bosh bosh;
+	private final BoshManager boshManager;
 	private boolean isCancelled;
 
-	Activator(final Bosh bosh) {
-		this.bosh = bosh;
+	Activator(final BoshManager boshManager) {
+		this.boshManager = boshManager;
 		this.isCancelled = false;
 	}
 
@@ -17,7 +17,7 @@ public class Activator implements ScheduledAction {
 
 	public void run() {
 		if (!isCancelled) {
-			bosh.sendResponse();
+			boshManager.sendResponse();
 		}
 	}
 }

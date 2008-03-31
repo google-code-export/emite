@@ -4,8 +4,8 @@ import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.core.dispatcher.Action;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
-import com.calclab.emite.client.packet.Event;
-import com.calclab.emite.client.packet.Packet;
+import com.calclab.emite.client.core.packet.Event;
+import com.calclab.emite.client.core.packet.Packet;
 
 public class SenderActionsBuilder extends BasicActionsBuilder {
 	private final Connection connection;

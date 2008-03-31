@@ -1,14 +1,14 @@
 package com.calclab.emite.client.core.bosh;
 
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.connector.Connector;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherPlugin;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
+import com.calclab.emite.client.core.services.Connector;
 import com.calclab.emite.client.core.services.Globals;
+import com.calclab.emite.client.core.services.Scheduler;
 import com.calclab.emite.client.core.services.ServicesPlugin;
-import com.calclab.emite.client.packet.XMLService;
-import com.calclab.emite.client.scheduler.Scheduler;
+import com.calclab.emite.client.core.services.XMLService;
 
 public class BoshPlugin {
 	private static final String COMPONENT_BOSH = "bosh";
@@ -24,16 +24,16 @@ public class BoshPlugin {
 		final XMLService xmler = ServicesPlugin.getXMLService(container);
 		final Scheduler scheduler = ServicesPlugin.getScheduler(container);
 
-		final Bosh bosh = new Bosh(dispatcher, globals, connector, xmler, scheduler, options);
+		final BoshManager boshManager = new BoshManager(dispatcher, globals, connector, xmler, scheduler, options);
 
-		container.register(COMPONENT_BOSH, bosh);
+		container.install(COMPONENT_BOSH, boshManager);
 		dispatcher.addListener(new DispatcherStateListener() {
 			public void afterDispatching() {
-				bosh.firePackets();
+				boshManager.firePackets();
 			}
 
 			public void beforeDispatching() {
-				bosh.catchPackets();
+				boshManager.catchPackets();
 			}
 		});
 	}

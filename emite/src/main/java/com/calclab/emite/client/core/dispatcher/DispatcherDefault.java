@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
-import com.calclab.emite.client.packet.Packet;
+import com.calclab.emite.client.core.packet.Packet;
 
 public class DispatcherDefault implements Dispatcher {
 	private static class Subscriptor {

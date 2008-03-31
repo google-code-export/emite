@@ -17,13 +17,13 @@ public class DefaultContainer extends HashMap<String, Object> implements Contain
 		return super.get(componentName);
 	}
 
-	public void reg(final String name, final Object component) {
+	public void register(final String name, final Object component) {
 		Log.debug("Registering component " + name);
 		super.put(name, component);
 	}
 
-	public void register(final String name, final Startable startable) {
-		reg(name, startable);
+	public void install(final String name, final Startable startable) {
+		register(name, startable);
 		startables.add(startable);
 	}
 

@@ -2,38 +2,41 @@ package com.calclab.emite.client.x.im.roster;
 
 import java.util.List;
 
-import com.calclab.emite.client.components.AbstractComponent;
 import com.calclab.emite.client.components.Answer;
-import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.packet.stanza.IQ;
+import com.calclab.emite.client.components.SenderComponent;
+import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.stanza.IQ;
+import com.calclab.emite.client.x.im.session.Session;
 
-public class RosterManager extends AbstractComponent {
-	final Packet requestRoster;
-	final Answer setRosterItems;
+public class RosterManager extends SenderComponent {
 
-	// FIXME!!
-	public RosterManager(final Roster roster) {
-		super(null);
+	private final Roster roster;
 
-		requestRoster = new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster");
-
-		setRosterItems = new Answer() {
-			public Packet respondTo(final Packet received) {
-				setRosterItems(roster, received);
-				return Roster.Events.received;
-			}
-
-		};
+	public RosterManager(final Dispatcher dispatcher, final Connection connection, final Roster roster) {
+		super(dispatcher, connection);
+		this.roster = roster;
 	}
 
 	/**
 	 * Upon connecting to the server and becoming an active resource, a client
-	 * SHOULD request the roster before sending initial presence
+	 * SHOULD request the roster BEFORE! sending initial presence
 	 */
 	@Override
 	public void attach() {
-		// when.Event(Session).Send(rosterManager.requestRoster);
-		// when(new IQ("roster")).Publish(setRosterItems);
+		when(Session.Events.login).Send(new Answer() {
+			public Packet respondTo(final Packet received) {
+				return new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster");
+			}
+		});
+		when(new IQ("roster", IQ.Type.result, null)).Publish(new Answer() {
+			public Packet respondTo(final Packet received) {
+				setRosterItems(roster, received);
+				return Roster.Events.ready;
+			}
+
+		});
 	}
 
 	private RosterItem convert(final Packet item) {

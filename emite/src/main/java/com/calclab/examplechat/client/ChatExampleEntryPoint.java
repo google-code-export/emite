@@ -12,7 +12,7 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.bosh.Connection;
-import com.calclab.emite.client.packet.stanza.Message;
+import com.calclab.emite.client.core.packet.stanza.Message;
 import com.calclab.emite.client.x.im.chat.MessageListener;
 import com.calclab.emite.client.x.im.roster.RosterItem;
 import com.calclab.emite.client.x.im.roster.RosterListener;

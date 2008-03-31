@@ -14,7 +14,7 @@ public class ChatPlugin {
 	public static void install(final Container container) {
 		final Dispatcher dispatcher = DispatcherPlugin.getDispatcher(container);
 		final Chat chat = new Chat(dispatcher);
-		container.register(COMPONENT_CHAT, chat);
+		container.install(COMPONENT_CHAT, chat);
 	}
 
 }
