@@ -10,8 +10,8 @@ import com.calclab.emite.client.packet.Packet;
 
 public class DispatcherDefault implements Dispatcher {
 	private static class Subscriptor {
-		private final Matcher matcher;
 		private final Action action;
+		private final Matcher matcher;
 
 		public Subscriptor(final Matcher matcher, final Action action) {
 			this.matcher = matcher;
@@ -20,11 +20,11 @@ public class DispatcherDefault implements Dispatcher {
 
 	}
 
-	private final HashMap<String, List<Subscriptor>> subscriptors;
-	private final ArrayList<Packet> queue;
 	private boolean isCurrentlyDispatching;
-
 	private final DispatcherStateListenerCollection listeners;
+	private final ArrayList<Packet> queue;
+
+	private final HashMap<String, List<Subscriptor>> subscriptors;
 
 	DispatcherDefault() {
 		this.subscriptors = new HashMap<String, List<Subscriptor>>();
@@ -37,6 +37,10 @@ public class DispatcherDefault implements Dispatcher {
 		listeners.add(listener);
 	}
 
+	public void install(final Dispatcher dispatcher) {
+
+	}
+
 	public void publish(final Packet packet) {
 		Log.debug("published: " + packet);
 		queue.add(packet);
@@ -47,15 +51,12 @@ public class DispatcherDefault implements Dispatcher {
 
 	public void subscribe(final Matcher matcher, final Action action) {
 		Log.debug("Subscribing to: " + matcher.getElementName());
-		final List<Subscriptor> list = getSubscriptorList(matcher
-				.getElementName());
+		final List<Subscriptor> list = getSubscriptorList(matcher.getElementName());
 		list.add(new Subscriptor(matcher, action));
 	}
 
-	private void fireActions(final Packet packet,
-			final List<Subscriptor> subscriptors) {
-		Log.debug("Found " + subscriptors.size() + " subscriptors to "
-				+ packet.getName());
+	private void fireActions(final Packet packet, final List<Subscriptor> subscriptors) {
+		Log.debug("Found " + subscriptors.size() + " subscriptors to " + packet.getName());
 		for (final Subscriptor subscriptor : subscriptors) {
 			if (subscriptor.matcher.matches(packet)) {
 				Log.debug("Subscriptor found!");

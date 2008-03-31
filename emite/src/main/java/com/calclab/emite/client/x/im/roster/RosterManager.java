@@ -2,15 +2,18 @@ package com.calclab.emite.client.x.im.roster;
 
 import java.util.List;
 
+import com.calclab.emite.client.components.AbstractComponent;
+import com.calclab.emite.client.components.Answer;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
-import com.calclab.emite.client.plugin.dsl.Answer;
 
-public class RosterManager {
+public class RosterManager extends AbstractComponent {
 	final Packet requestRoster;
 	final Answer setRosterItems;
 
+	// FIXME!!
 	public RosterManager(final Roster roster) {
+		super(null);
 
 		requestRoster = new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster");
 
@@ -21,6 +24,16 @@ public class RosterManager {
 			}
 
 		};
+	}
+
+	/**
+	 * Upon connecting to the server and becoming an active resource, a client
+	 * SHOULD request the roster before sending initial presence
+	 */
+	@Override
+	public void attach() {
+		// when.Event(Session).Send(rosterManager.requestRoster);
+		// when(new IQ("roster")).Publish(setRosterItems);
 	}
 
 	private RosterItem convert(final Packet item) {

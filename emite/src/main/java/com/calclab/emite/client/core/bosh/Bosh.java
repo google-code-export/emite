@@ -35,6 +35,7 @@ public class Bosh extends AbstractComponent implements Connection, ConnectorCall
 
 	public Bosh(final Dispatcher dispatcher, final Globals globals, final Connector connector, final XMLService xmler,
 			final Scheduler scheduler, final BoshOptions options) {
+		super(dispatcher);
 		this.dispatcher = dispatcher;
 		this.connector = connector;
 		this.xmler = xmler;

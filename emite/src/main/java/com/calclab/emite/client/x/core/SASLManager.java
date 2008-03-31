@@ -1,12 +1,13 @@
 package com.calclab.emite.client.x.core;
 
+import com.calclab.emite.client.components.Answer;
 import com.calclab.emite.client.components.SenderComponent;
 import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.packet.BasicPacket;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;
-import com.calclab.emite.client.plugin.dsl.Answer;
 import com.calclab.emite.client.utils.Base64Coder;
 
 public class SASLManager extends SenderComponent {
@@ -19,8 +20,8 @@ public class SASLManager extends SenderComponent {
 
 	final Answer restartAndAuthorize;
 
-	public SASLManager(final Connection connection, final Globals globals) {
-		super(connection);
+	public SASLManager(final Dispatcher dispatcher, final Connection connection, final Globals globals) {
+		super(dispatcher, connection);
 		this.globals = globals;
 
 		restartAndAuthorize = new Answer() {

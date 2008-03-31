@@ -30,10 +30,10 @@ public class ServicesPlugin {
 
 	public static void install(final Container container, final Connector connector, final XMLService xmler,
 			final Scheduler scheduler) {
-		container.register(COMPONENT_GLOBALS, new HashGlobals());
-		container.register(COMPONENT_CONNECTOR, connector);
-		container.register(COMPONENT_XML, xmler);
-		container.register(COMPONENT_SCHEDULER, scheduler);
+		container.reg(COMPONENT_GLOBALS, new HashGlobals());
+		container.reg(COMPONENT_CONNECTOR, connector);
+		container.reg(COMPONENT_XML, xmler);
+		container.reg(COMPONENT_SCHEDULER, scheduler);
 	}
 
 }

@@ -4,8 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.calclab.emite.client.core.dispatcher.Action;
-import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.core.dispatcher.matcher.BasicMatcher;
 import com.calclab.emite.client.packet.Event;
 import com.calclab.emite.client.packet.Packet;

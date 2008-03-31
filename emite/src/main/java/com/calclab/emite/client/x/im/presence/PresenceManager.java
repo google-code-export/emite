@@ -1,18 +1,19 @@
 package com.calclab.emite.client.x.im.presence;
 
+import com.calclab.emite.client.components.Answer;
 import com.calclab.emite.client.components.SenderComponent;
 import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.Presence;
-import com.calclab.emite.client.plugin.dsl.Answer;
 import com.calclab.emite.client.x.im.session.Session;
 
 public class PresenceManager extends SenderComponent {
 	private final Globals globals;
 
-	public PresenceManager(final Connection connection, final Globals globals) {
-		super(connection);
+	public PresenceManager(final Dispatcher dispatcher, final Connection connection, final Globals globals) {
+		super(dispatcher, connection);
 		this.globals = globals;
 	}
 

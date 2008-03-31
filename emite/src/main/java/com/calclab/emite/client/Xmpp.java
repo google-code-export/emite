@@ -1,8 +1,8 @@
 package com.calclab.emite.client;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.components.DefaultContainer;
 import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.components.DefaultContainer;
 import com.calclab.emite.client.connector.Connector;
 import com.calclab.emite.client.connector.GWTConnector;
 import com.calclab.emite.client.core.bosh.BoshOptions;
@@ -35,6 +35,7 @@ public class Xmpp {
 
 		final Container container = new DefaultContainer();
 		Plugins.installDefaultPlugins(container, xmlService, connector, scheduler, options);
+		container.start();
 		return new Xmpp(container);
 	}
 

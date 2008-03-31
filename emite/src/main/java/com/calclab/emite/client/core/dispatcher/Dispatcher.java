@@ -5,10 +5,10 @@ import com.calclab.emite.client.packet.Packet;
 
 public interface Dispatcher {
 
-	public void subscribe(Matcher matcher, Action action);
+	public void addListener(DispatcherStateListener listener);
 
 	public void publish(Packet packet);
-	
-	public void addListener(DispatcherStateListener listener);
-	
+
+	public void subscribe(Matcher matcher, Action action);
+
 }

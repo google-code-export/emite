@@ -6,8 +6,6 @@ import tigase.xml.DomBuilderHandler;
 import tigase.xml.Element;
 import tigase.xml.SimpleParser;
 
-import com.calclab.emite.client.packet.Packet;
-
 public class TigaseXMLService implements XMLService {
 	private final SimpleParser parser;
 

@@ -1,13 +1,14 @@
 package com.calclab.emite.client.x.im.session;
 
+import com.calclab.emite.client.components.Answer;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.components.SenderComponent;
 import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.core.dispatcher.Action;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.packet.Packet;
 import com.calclab.emite.client.packet.stanza.IQ;
-import com.calclab.emite.client.plugin.dsl.Answer;
 import com.calclab.emite.client.x.core.ResourceManager;
 import com.calclab.emite.client.x.core.SASLManager;
 
@@ -20,8 +21,9 @@ public class SessionManager extends SenderComponent {
 	final Action setAuthorizedState;
 	final Answer setSessionStarted;
 
-	public SessionManager(final Connection connection, final Globals globals, final Session session) {
-		super(connection);
+	public SessionManager(final Dispatcher dispatcher, final Connection connection, final Globals globals,
+			final Session session) {
+		super(dispatcher, connection);
 
 		requestSession = new Answer() {
 			public Packet respondTo(final Packet received) {

@@ -17,6 +17,7 @@ public class Chat extends AbstractComponent {
 	private final ArrayList<MessageListener> listeners;
 
 	public Chat(final Dispatcher dispatcher) {
+		super(dispatcher);
 		this.dispatcher = dispatcher;
 		this.listeners = new ArrayList<MessageListener>();
 	}
