@@ -1,13 +1,13 @@
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.params;
 
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUser.GroupChatUserType;
 
-public class CreateGroupChatActionParams {
+public class CreateGroupChatActionParam {
     public final String groupChatName;
     public final String userAlias;
     public final GroupChatUserType groupChatUserType;
 
-    public CreateGroupChatActionParams(final String groupChatName, final String userAlias,
+    public CreateGroupChatActionParam(final String groupChatName, final String userAlias,
             final GroupChatUserType groupChatUserType) {
         this.groupChatName = groupChatName;
         this.userAlias = userAlias;

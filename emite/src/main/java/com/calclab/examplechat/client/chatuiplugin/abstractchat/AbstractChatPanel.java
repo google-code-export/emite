@@ -17,7 +17,7 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.abstractchat;
 
 import org.ourproject.kune.platf.client.ui.HorizontalLine;
 

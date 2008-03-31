@@ -20,7 +20,7 @@
 package com.calclab.examplechat.client.chatuiplugin.pairchat;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.examplechat.client.chatuiplugin.AbstractChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 
 public class PairChatPresenter extends AbstractChatPresenter implements PairChat {
 
@@ -33,9 +33,6 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
         this.otherUser = otherUser;
         this.input = "";
         this.listener = listener;
-        // Currently simple colors:
-        currentSessionUser.setColor("blue");
-        otherUser.setColor("green");
     }
 
     public void init(final PairChatView view) {
@@ -57,7 +54,6 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
         }
         view.showMessage(userJid, userColor, message);
         listener.onMessageReceived(this);
-        super.saveScrollPos();
     }
 
     public PairChatUser getOtherUser() {

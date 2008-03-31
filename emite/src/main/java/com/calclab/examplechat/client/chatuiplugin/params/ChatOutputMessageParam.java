@@ -1,11 +1,13 @@
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.params;
 
-public class AbstractChatOutputMessage {
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
+
+public class ChatOutputMessageParam {
 
     private final AbstractChat chat;
     private final String message;
 
-    public AbstractChatOutputMessage(final AbstractChat chat, final String message) {
+    public ChatOutputMessageParam(final AbstractChat chat, final String message) {
         this.chat = chat;
         this.message = message;
     }

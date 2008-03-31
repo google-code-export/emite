@@ -1,4 +1,4 @@
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.abstractchat;
 
 import org.ourproject.kune.platf.client.View;
 
@@ -13,8 +13,6 @@ public class AbstractChatPresenter implements AbstractChat {
     protected boolean closeConfirmed;
     protected int chatType;
     private String chatTitle;
-
-    private int scrollPos;
 
     public AbstractChatPresenter(final AbstractChatUser sessionUser, final int chatType) {
         this.sessionUser = sessionUser;
@@ -59,11 +57,7 @@ public class AbstractChatPresenter implements AbstractChat {
     }
 
     public void saveOtherProperties() {
-        saveScrollPos();
-    }
-
-    protected void saveScrollPos() {
-        scrollPos = view.getScrollPos();
+        // Nothing currently
     }
 
     public String getSavedInput() {
@@ -71,7 +65,6 @@ public class AbstractChatPresenter implements AbstractChat {
     }
 
     public void doClose() {
-        // handler.logout();
     }
 
     public void onCloseConfirmed() {
@@ -87,8 +80,7 @@ public class AbstractChatPresenter implements AbstractChat {
     }
 
     public void activate() {
-        view.restoreScrollPos(scrollPos);
-        // view.scrollDown();
+        // Nothing currently
     }
 
     public int getType() {

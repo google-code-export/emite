@@ -1,12 +1,12 @@
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.params;
 
 
-public class GroupChatSubject {
+public class GroupChatSubjectParam {
 
     public final String subject;
     private final String chatId;
 
-    public GroupChatSubject(final String chatId, final String subject) {
+    public GroupChatSubjectParam(final String chatId, final String subject) {
         this.chatId = chatId;
         this.subject = subject;
     }

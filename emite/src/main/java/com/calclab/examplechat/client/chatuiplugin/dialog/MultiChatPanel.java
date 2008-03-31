@@ -26,11 +26,14 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
-import com.calclab.examplechat.client.chatuiplugin.AbstractChat;
-import com.calclab.examplechat.client.chatuiplugin.AbstractChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListPanel;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatUserListView;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.UserGrid;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
 import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPaletteListener;
 import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPalettePanel;
@@ -105,6 +108,7 @@ public class MultiChatPanel implements MultiChatView {
     private Panel buddiesPanel;
     private Item closeAllOption;
     private BottomTrayIcon bottomIcon;
+    private UserGrid buddiesGrid;
 
     public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
@@ -126,12 +130,10 @@ public class MultiChatPanel implements MultiChatView {
         centerPanel.add(chatPanel);
         String panelId = chatPanel.getId();
         panelIdToChat.put(panelId, chat);
-        chatPanel.show();
-        centerPanel.activate(panelId);
+        activateChat(chat);
         if (centerPanel.hasItem(infoPanelId)) {
             centerPanel.remove(infoPanelId);
         }
-
     }
 
     public void closeAllChats() {
@@ -141,8 +143,17 @@ public class MultiChatPanel implements MultiChatView {
         }
     }
 
+    public void activateChat(final AbstractChat chat) {
+        Panel chatPanel = (Panel) chat.getView();
+        centerPanel.activate(chatPanel.getId());
+        chatPanel.expand();
+        chatPanel.show();
+        chatPanel.doLayout();
+    }
+
     public void highlightChat(final AbstractChat chat) {
         // TODO
+        // centerPanel.getActiveTab().setIconCls("emite-icon");
     }
 
     public void unHighlightChat(final AbstractChat chat) {
@@ -198,6 +209,7 @@ public class MultiChatPanel implements MultiChatView {
     public void showUserList(final GroupChatUserListView view) {
         Integer index = userListToIndex.get(view);
         groupChatUsersDeckPanel.showWidget(index.intValue());
+        ((GroupChatUserListPanel) view).doLayout();
         usersPanel.setActiveItem(1);
     }
 
@@ -230,7 +242,8 @@ public class MultiChatPanel implements MultiChatView {
         return input.getValueAsString();
     }
 
-    public void addPresenceBuddy(final String name, final String title, final int status) {
+    public void addPresenceBuddy(final PairChatUser user, final String statusMessage) {
+        buddiesGrid.addUser(user);
         // StackSubItemAction[] actions = {
         // new StackSubItemAction(Images.App.getInstance().chat(),
         // i18n.t("Start a chat with this person"),
@@ -337,7 +350,7 @@ public class MultiChatPanel implements MultiChatView {
         dialog.add(eastPanel, eastData);
 
         centerPanel = new TabPanel();
-        centerPanel.setActiveTab(0);
+        // centerPanel.setActiveTab(0);
         centerPanel.setBorder(true);
         centerPanel.setEnableTabScroll(true);
         centerPanel.setAutoScroll(false);
@@ -369,7 +382,7 @@ public class MultiChatPanel implements MultiChatView {
                         removeGroupChatUsersPanel(((GroupChatPresenter) chatPresenter).getUsersListView());
                         presenter.closeGroupChat((GroupChatPresenter) chatPresenter);
                     }
-                    if (centerPanel.getComponents().length == 1) {
+                    if (centerPanel.getComponents() == null || centerPanel.getComponents().length == 1) {
                         addInfoPanel();
                     }
                     return true;
@@ -408,6 +421,8 @@ public class MultiChatPanel implements MultiChatView {
         buddiesPanel = new Panel(i18n.t("My buddies"));
         buddiesPanel.setAutoScroll(true);
         buddiesPanel.setIconCls("userf-icon");
+        buddiesGrid = new UserGrid();
+        buddiesPanel.add(buddiesGrid);
         groupChatUsersPanel = new Panel(i18n.t("Now in this room"));
         groupChatUsersPanel.setAutoScroll(true);
         groupChatUsersPanel.setIconCls("group-icon");
@@ -433,6 +448,8 @@ public class MultiChatPanel implements MultiChatView {
             }
         });
         MenuItem colorMenuItem = new MenuItem("Choose your color", colorMenu);
+        colorMenuItem.setIconCls("colors-icon");
+        colorMenuItem.setIcon("css/img/colors.gif");
         optionsMenu.addItem(joinOption);
         optionsMenu.addItem(colorMenuItem);
         optionsMenu.addItem(closeAllOption);
@@ -440,6 +457,7 @@ public class MultiChatPanel implements MultiChatView {
         optionsMenuButton.setMenu(optionsMenu);
         topToolbar.addButton(optionsMenuButton);
         topToolbar.addSeparator();
+        closeAllOption.setIconCls("exit-icon");
         closeAllOption.addListener(new BaseItemListenerAdapter() {
             public void onClick(final BaseItem item, final EventObject e) {
                 confirmCloseAll();

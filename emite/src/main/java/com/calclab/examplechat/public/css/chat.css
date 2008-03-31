@@ -45,6 +45,14 @@
   background-image: url(img/icon.gif) !important;
 }
 
+.exit-icon {
+  background-image: url(img/exit.gif) !important;
+}
+
+.colors-icon {
+  background-image: url(img/colors.gif) !important;
+}
+
 .chat-icon {
   background-image: url(img/chat.gif) !important;
 }

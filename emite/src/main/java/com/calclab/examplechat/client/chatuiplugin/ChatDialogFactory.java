@@ -2,6 +2,7 @@ package com.calclab.examplechat.client.chatuiplugin;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;

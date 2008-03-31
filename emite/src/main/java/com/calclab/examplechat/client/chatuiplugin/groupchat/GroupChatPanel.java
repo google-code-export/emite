@@ -19,7 +19,7 @@
 
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
-import com.calclab.examplechat.client.chatuiplugin.AbstractChatPanel;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPanel;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 

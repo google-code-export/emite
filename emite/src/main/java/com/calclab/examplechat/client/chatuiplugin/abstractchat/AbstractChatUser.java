@@ -17,21 +17,18 @@
  *
  */
 
-package com.calclab.examplechat.client.chatuiplugin;
+package com.calclab.examplechat.client.chatuiplugin.abstractchat;
 
 public class AbstractChatUser {
-
+    private final String iconUrl;
     private final String jid;
     private String alias;
     private String color;
 
-    public AbstractChatUser(final String jid, final String alias) {
+    public AbstractChatUser(final String iconUrl, final String jid, final String alias, final String color) {
+        this.iconUrl = iconUrl;
         this.jid = jid;
         this.alias = alias;
-    }
-
-    public AbstractChatUser(final String jid, final String alias, final String color) {
-        this(jid, alias);
         this.color = color;
     }
 
@@ -53,6 +50,10 @@ public class AbstractChatUser {
 
     public void setAlias(final String alias) {
         this.alias = alias;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
     }
 
 }
