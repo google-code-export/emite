@@ -19,8 +19,8 @@ public class Body extends BasicStanza {
 		return getAttribute("condition");
 	}
 
-	public int getPollingMilisecs() {
-		return (getAttributeAsInt("polling") + 1) * 1000;
+	public int getPoll() {
+		return getAttributeAsInt("polling") * 1000;
 	}
 
 	public String getSID() {

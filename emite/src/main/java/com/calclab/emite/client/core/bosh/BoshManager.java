@@ -25,7 +25,7 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 	private final Scheduler scheduler;
 	private final BoshState state;
 	private final XMLService xmler;
-	final Action publishStanzas;
+	final Action onBodyReceived;
 	final Action restartStream;
 	final Action send;
 	final Action sendCreation;
@@ -76,7 +76,7 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 		/**
 		 * a body element was published into the dispatcher
 		 */
-		publishStanzas = new Action() {
+		onBodyReceived = new Action() {
 			public void handle(final Packet packet) {
 				final Body response = new Body(packet);
 				publishBodyChilds(response);
@@ -91,7 +91,7 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 		when(Bosh.Events.start).Do(sendCreation);
 		when(Bosh.Events.error).Do(stop);
 		when(Bosh.Events.send).Do(send);
-		when("body").Do(publishStanzas);
+		when("body").Do(onBodyReceived);
 		when(Bosh.Events.stop).Do(new Action() {
 			public void handle(final Packet received) {
 				setTerminate();
@@ -108,8 +108,10 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 	public void firePackets() {
 		activator.cancel();
 		if (state.isRunning()) {
-			if (request.isEmpty() && state.isLastResponseEmpty()) {
-				if (state.getCurrentRequestsCount() == 0) {
+			if (request.isEmpty()) {
+				if (state.getCurrentRequestsCount() > 0) {
+					// no need
+				} else {
 					delaySend();
 				}
 			} else {
@@ -155,25 +157,34 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 
 	public void setTerminate() {
 		request.setTerminate();
-		state.setTerminate();
+		state.setTerminating();
 	}
 
 	@Override
 	public void stop() {
-		state.init();
+		state.setRunning(false);
 	}
 
 	private void delaySend() {
 		this.activator = new Activator(this);
-		scheduler.schedule(state.getPoll(), activator);
+		final int ms = state.getPoll();
+		final int diference = (int) (scheduler.getCurrentTime() - state.getLastSendTime());
+		int total = ms - diference;
+		Log.debug("DELAYING - poll: " + ms + ", diff: " + diference + ", total: " + total);
+		if (total < 1) {
+			total = 1;
+		}
+		scheduler.schedule(total, activator);
 	}
 
 	private void publishBodyChilds(final Body response) {
-		if (state.isFirstResponse()) {
+		if (state.isTerminating()) {
+			stop();
+		} else if (state.isFirstResponse()) {
 			final String sid = response.getSID();
 			state.setSID(sid);
 			request.setSID(sid);
-			state.setPoll(response.getPollingMilisecs());
+			state.setPoll(response.getPoll() + 500);
 		}
 		state.setLastResponseEmpty(response.isEmpty());
 		if (response.isTerminal()) {
@@ -188,6 +199,8 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 
 	void sendResponse() {
 		try {
+			Log.debug("SENDING. Current: " + state.getCurrentRequestsCount() + ", after: "
+					+ (scheduler.getCurrentTime() - state.getLastSendTime()));
 			connector.send(options.getHttpBase(), xmler.toString(request), this);
 			request = null;
 			final long now = scheduler.getCurrentTime();

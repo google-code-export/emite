@@ -7,7 +7,7 @@ import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.im.roster.Roster;
-import com.calclab.emite.client.im.session.Session;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 
 public class PresenceManager extends SenderComponent {

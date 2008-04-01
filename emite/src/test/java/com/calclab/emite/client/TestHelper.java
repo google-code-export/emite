@@ -41,7 +41,7 @@ public class TestHelper {
 
 	public static Xmpp createXMPP(final HttpConnectorListener httpConnectorListener) {
 
-		final Xmpp xmpp = createXMPP(new BoshOptions("http://localhost:8181/http-bind/", "localhost"),
+		final Xmpp xmpp = createXMPP(new BoshOptions("http://localhost:8383/http-bind/", "localhost"),
 				httpConnectorListener);
 		final Container container = xmpp.getComponents();
 		final Dispatcher dispatcher = DispatcherPlugin.getDispatcher(container);

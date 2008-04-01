@@ -2,8 +2,9 @@
 
 if [ -d src/main/webapp/gwt/com.calclab.examplechat.Example ]
 then
-  rm -rf src/main/webapp/gwt/com.calclab.examplechat.Example/
+  rm -rf src/main/webapp/gwt/com.calclab.examplechat.Example/*
 fi
+
 if [ ! -d src/main/webapp/gwt ]
 then
 	mkdir src/main/webapp/gwt

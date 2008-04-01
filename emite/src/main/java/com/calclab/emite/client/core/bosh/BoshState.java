@@ -6,7 +6,7 @@ public class BoshState {
 	private int currentConnections;
 	private boolean isLastResponseEmpty;
 	private boolean isRunning;
-	private boolean isTerminated;
+	private boolean isTerminating;
 	private long lastSendTime;
 	private int poll;
 	private long rid;
@@ -37,15 +37,7 @@ public class BoshState {
 	}
 
 	public void increaseRequests() {
-		currentConnections--;
-	}
-
-	public void init() {
-		this.isRunning = false;
-		rid = generateRID();
-		this.sid = null;
-		this.currentConnections = 0;
-		this.poll = 1;
+		currentConnections++;
 	}
 
 	public boolean isFirstResponse() {
@@ -58,6 +50,10 @@ public class BoshState {
 
 	public boolean isRunning() {
 		return isRunning;
+	}
+
+	public boolean isTerminating() {
+		return isTerminating;
 	}
 
 	public long nextRid() {
@@ -80,7 +76,11 @@ public class BoshState {
 	}
 
 	public void setRunning(final boolean isRunning) {
-		this.isRunning = isRunning;
+		if (isRunning) {
+			this.isRunning = isRunning;
+		} else {
+			init();
+		}
 	}
 
 	public void setSID(final String sid) {
@@ -88,14 +88,22 @@ public class BoshState {
 		this.sid = sid;
 	}
 
-	public void setTerminate() {
-		this.isTerminated = true;
+	public void setTerminating() {
+		this.isTerminating = true;
 
 	}
 
 	private long generateRID() {
 		final long rid = (long) (Math.random() * 1245234);
 		return rid;
+	}
+
+	private void init() {
+		this.isRunning = false;
+		rid = generateRID();
+		this.sid = null;
+		this.currentConnections = 0;
+		this.poll = 1;
 	}
 
 }
