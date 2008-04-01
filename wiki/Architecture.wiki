@@ -1,3 +1,4 @@
+#labels Featured
 = General overview =
 
 We tried to make a modularized system (each module is called -surprise- plugin, and can be hot deployed and hot removed) driven by a event system. Each time a module wants to comunicate with others, it does thought an event.
