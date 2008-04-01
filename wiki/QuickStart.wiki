@@ -6,7 +6,7 @@
 
 Bundled with the library there is a gwt ui example.
 
-You need a running xmpp server with bosh connection linked to localhost:8181/http-bind (i will change this in the near future) as pre-requisites (openfire is the easyiest way to obtain that).
+You need a running xmpp server with bosh connection linked to localhost:8383/http-bind (i will change this in the near future) as pre-requisites (openfire is the easyiest way to obtain that).
 
 Install gwt and maven2, get the source code.
 
