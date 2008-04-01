@@ -40,31 +40,33 @@ public class HttpConnector implements Connector {
 		final HttpClientParams params = new HttpClientParams();
 		params.setConnectionManagerTimeout(10000);
 		final HttpClient client = new HttpClient(params);
-		debug("HttpClientConnector created!: " + xml);
 
 		final Runnable process = new Runnable() {
 			public void run() {
+				int status = 0;
+				String response = null;
 				final PostMethod post = new PostMethod(httpBase);
 
 				try {
 					post.setRequestEntity(new StringRequestEntity(xml, "text/xml", "utf-8"));
 					listener.onSend(id, xml);
-					final int status = client.executeMethod(post);
-					listener.onFinish(id, System.currentTimeMillis() - timeBegin);
-					if (status == HttpStatus.SC_OK) {
-						final String response = post.getResponseBodyAsString();
-						listener.onResponse(id, response);
-						callback.onResponseReceived(post.getStatusCode(), response);
-					} else {
-						listener.onError(id, "bad status");
-						callback.onError(new Exception("bad http status " + status));
-					}
+					status = client.executeMethod(post);
+					response = post.getResponseBodyAsString();
 				} catch (final IOException e) {
 					listener.onError(id, "exception " + e);
 					callback.onError(e);
 					e.printStackTrace();
 				} finally {
 					post.releaseConnection();
+				}
+
+				if (status == HttpStatus.SC_OK) {
+					listener.onFinish(id, System.currentTimeMillis() - timeBegin);
+					listener.onResponse(id, response);
+					callback.onResponseReceived(post.getStatusCode(), response);
+				} else {
+					listener.onError(id, "bad status");
+					callback.onError(new Exception("bad http status " + status));
 				}
 			}
 		};

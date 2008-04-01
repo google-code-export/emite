@@ -11,9 +11,9 @@ import com.calclab.emite.client.core.services.XMLService;
 import com.calclab.emite.client.im.chat.ChatPlugin;
 import com.calclab.emite.client.im.presence.PresencePlugin;
 import com.calclab.emite.client.im.roster.RosterPlugin;
-import com.calclab.emite.client.im.session.SessionPlugin;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingPlugin;
 import com.calclab.emite.client.xmpp.sasl.SASLPlugin;
+import com.calclab.emite.client.xmpp.session.SessionPlugin;
 
 public class Plugins {
 

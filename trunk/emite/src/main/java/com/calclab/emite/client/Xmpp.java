@@ -16,10 +16,10 @@ import com.calclab.emite.client.im.chat.ChatPlugin;
 import com.calclab.emite.client.im.chat.MessageListener;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterPlugin;
-import com.calclab.emite.client.im.session.Session;
-import com.calclab.emite.client.im.session.SessionListener;
-import com.calclab.emite.client.im.session.SessionOptions;
-import com.calclab.emite.client.im.session.SessionPlugin;
+import com.calclab.emite.client.xmpp.session.Session;
+import com.calclab.emite.client.xmpp.session.SessionListener;
+import com.calclab.emite.client.xmpp.session.SessionOptions;
+import com.calclab.emite.client.xmpp.session.SessionPlugin;
 
 public class Xmpp {
 

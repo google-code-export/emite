@@ -13,11 +13,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.connector.HttpConnectorListener;
 import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.im.chat.MessageListener;
-import com.calclab.emite.client.im.session.SessionListener;
-import com.calclab.emite.client.im.session.Session.State;
+import com.calclab.emite.client.xmpp.session.SessionListener;
+import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 
 public class SwingClient {
@@ -164,6 +165,7 @@ public class SwingClient {
 
 	private void print(final String message, final JTextArea out) {
 		out.setText(out.getText() + "\n" + message);
+		Log.info(message);
 	}
 
 	private void setConnectedState(final boolean isConnected) {
