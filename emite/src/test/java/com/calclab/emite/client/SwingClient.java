@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +18,8 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.connector.HttpConnectorListener;
 import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.im.chat.MessageListener;
+import com.calclab.emite.client.im.roster.RosterItem;
+import com.calclab.emite.client.im.roster.RosterListener;
 import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -125,27 +128,27 @@ public class SwingClient {
 	private void initXMPP() {
 		this.xmpp = TestHelper.createXMPP(new HttpConnectorListener() {
 			public void onError(final String id, final String cause) {
-				print((id + "-ERROR: " + cause));
+				Log.debug((id + "-ERROR: " + cause));
 			}
 
 			public void onFinish(final String id, final long duration) {
-				print((id + "-FINISH " + duration + "ms"));
+				Log.debug((id + "-FINISH " + duration + "ms"));
 			}
 
 			public void onResponse(final String id, final String response) {
-				print((id + "-RESPONSE: " + response));
+				Log.debug((id + "-RESPONSE: " + response));
 			}
 
 			public void onSend(final String id, final String xml) {
-				print((id + "-SENDING: " + xml));
+				Log.debug((id + "-SENDING: " + xml));
 			}
 
 			public void onStart(final String id) {
-				print((id + "-STARTED: " + id));
+				Log.debug((id + "-STARTED: " + id));
 			}
 
 		});
-		xmpp.addSessionListener(new SessionListener() {
+		xmpp.getSession().addListener(new SessionListener() {
 			public void onStateChanged(final State old, final State current) {
 				print("STATE: " + current);
 				switch (current) {
@@ -156,9 +159,17 @@ public class SwingClient {
 				}
 			}
 		});
-		xmpp.addMessageListener(new MessageListener() {
+		xmpp.getChat().addListener(new MessageListener() {
 			public void onReceived(final Message message) {
 				print(message.getFrom() + ": " + message.getBody());
+			}
+		});
+		xmpp.getRoster().addListener(new RosterListener() {
+			public void onRosterInitialized(final List<RosterItem> items) {
+				print("ROSTER INITIALIZED");
+				for (final RosterItem item : items) {
+					print("ITEM: " + item.getJid() + ", " + item.getName());
+				}
 			}
 		});
 	}

@@ -31,7 +31,7 @@ public class Roster {
 
 	void fireRosterChanged() {
 		for (final RosterListener listener : listeners) {
-			listener.onRosterChanged(items);
+			listener.onRosterInitialized(items);
 		}
 	}
 
