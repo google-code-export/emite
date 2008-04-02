@@ -10,12 +10,12 @@ import com.calclab.emite.client.core.packet.Packet;
 
 public class DispatcherDefault implements Dispatcher {
 	private static class Subscriptor {
-		final Action action;
+		final PacketListener packetListener;
 		final Matcher matcher;
 
-		public Subscriptor(final Matcher matcher, final Action action) {
+		public Subscriptor(final Matcher matcher, final PacketListener packetListener) {
 			this.matcher = matcher;
-			this.action = action;
+			this.packetListener = packetListener;
 		}
 
 	}
@@ -49,10 +49,10 @@ public class DispatcherDefault implements Dispatcher {
 		}
 	}
 
-	public void subscribe(final Matcher matcher, final Action action) {
+	public void subscribe(final Matcher matcher, final PacketListener packetListener) {
 		// Log.debug("Subscribing to: " + matcher.getElementName());
 		final List<Subscriptor> list = getSubscriptorList(matcher.getElementName());
-		list.add(new Subscriptor(matcher, action));
+		list.add(new Subscriptor(matcher, packetListener));
 	}
 
 	private void fireActions(final Packet packet, final List<Subscriptor> subscriptors) {
@@ -61,7 +61,7 @@ public class DispatcherDefault implements Dispatcher {
 		for (final Subscriptor subscriptor : subscriptors) {
 			if (subscriptor.matcher.matches(packet)) {
 				Log.debug("Subscriptor found!");
-				subscriptor.action.handle(packet);
+				subscriptor.packetListener.handle(packet);
 			}
 		}
 	}

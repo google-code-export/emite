@@ -9,7 +9,6 @@ public class BoshState {
 	private boolean isTerminating;
 	private long lastSendTime;
 	private int poll;
-	private long rid;
 	private String sid;
 
 	public BoshState() {
@@ -56,11 +55,6 @@ public class BoshState {
 		return isTerminating;
 	}
 
-	public long nextRid() {
-		rid++;
-		return rid;
-	}
-
 	public void setLastResponseEmpty(final boolean isLastResponseEmpty) {
 		this.isLastResponseEmpty = isLastResponseEmpty;
 
@@ -93,14 +87,8 @@ public class BoshState {
 
 	}
 
-	private long generateRID() {
-		final long rid = (long) (Math.random() * 1245234);
-		return rid;
-	}
-
 	private void init() {
 		this.isRunning = false;
-		rid = generateRID();
 		this.sid = null;
 		this.currentConnections = 0;
 		this.poll = 1;

@@ -11,15 +11,11 @@ import com.calclab.emite.client.core.services.ServicesPlugin;
 import com.calclab.emite.client.core.services.XMLService;
 
 public class BoshPlugin {
-	private static final String COMPONENT_BOSH = "bosh";
-	private static final String COMPONENT_RESPONDER = "bosh:responder";
+	private static final String COMPONENT_BOSH = "bosh:manager";
+	private static final String COMPONENT_EMITE = "emite";
 
-	public static Bosh getConnection(final Container container) {
-		return (Bosh) container.get(COMPONENT_BOSH);
-	}
-
-	public static Responder getResponder(final Container container) {
-		return (Responder) container.get(COMPONENT_RESPONDER);
+	public static Emite getEmite(final Container container) {
+		return (Emite) container.get(COMPONENT_EMITE);
 	}
 
 	public static void install(final Container container, final BoshOptions options) {
@@ -29,10 +25,10 @@ public class BoshPlugin {
 		final XMLService xmler = ServicesPlugin.getXMLService(container);
 		final Scheduler scheduler = ServicesPlugin.getScheduler(container);
 
-		final BoshResponder responder = new BoshResponder(dispatcher, xmler);
-		container.register(COMPONENT_RESPONDER, responder);
+		final EmiteBosh emite = new EmiteBosh(dispatcher, xmler);
+		container.install(COMPONENT_EMITE, emite);
 
-		final BoshManager boshManager = new BoshManager(dispatcher, globals, connector, scheduler, responder, options);
+		final BoshManager boshManager = new BoshManager(dispatcher, globals, connector, scheduler, emite, options);
 
 		container.install(COMPONENT_BOSH, boshManager);
 
@@ -46,4 +42,5 @@ public class BoshPlugin {
 			}
 		});
 	}
+
 }

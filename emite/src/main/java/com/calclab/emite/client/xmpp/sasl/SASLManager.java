@@ -1,9 +1,8 @@
 package com.calclab.emite.client.xmpp.sasl;
 
-import com.calclab.emite.client.core.bosh.Bosh;
+import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.SenderComponent;
-import com.calclab.emite.client.core.dispatcher.Answer;
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.BasicPacket;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
@@ -17,28 +16,26 @@ public class SASLManager extends SenderComponent {
 	private static final String SEP = new String(new char[] { 0 });
 	private final Globals globals;
 
-	final Answer restartAndAuthorize;
-
-	public SASLManager(final Dispatcher dispatcher, final Bosh bosh, final Globals globals) {
-		super(dispatcher, bosh);
+	public SASLManager(final Emite emite, final Globals globals) {
+		super(emite);
 		this.globals = globals;
 
-		restartAndAuthorize = new Answer() {
-			public Packet respondTo(final Packet received) {
-				return Events.authorized;
-			}
-
-		};
 	}
 
 	@Override
 	public void attach() {
-		when(new BasicPacket("stream:features")).Send(new Answer() {
-			public Packet respondTo(final Packet cathced) {
-				return createPlainAuthorization(globals);
+		when(new BasicPacket("stream:features"), new PacketListener() {
+			public void handle(final Packet received) {
+				emite.send(createPlainAuthorization());
 			}
 		});
-		when(new BasicPacket("success", "urn:ietf:params:xml:ns:xmpp-sasl")).Publish(Events.authorized);
+
+		when(new BasicPacket("success", "urn:ietf:params:xml:ns:xmpp-sasl"), new PacketListener() {
+			public void handle(final Packet received) {
+				emite.publish(Events.authorized);
+			}
+		});
+
 	}
 
 	protected String encode(final String domain, final String userName, final String password) {
@@ -46,7 +43,7 @@ public class SASLManager extends SenderComponent {
 		return Base64Coder.encodeString(auth);
 	}
 
-	private Packet createPlainAuthorization(final Globals globals) {
+	private Packet createPlainAuthorization() {
 		final Packet auth = new BasicPacket("auth", "urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism", "PLAIN");
 		final String encoded = encode(globals.getDomain(), globals.getUserName(), globals.getPassword());
 		auth.addText(encoded);

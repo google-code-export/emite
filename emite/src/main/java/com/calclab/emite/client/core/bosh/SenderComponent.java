@@ -1,20 +1,13 @@
 package com.calclab.emite.client.core.bosh;
 
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.core.dispatcher.PublisherComponent;
-import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 
-public abstract class SenderComponent extends PublisherComponent {
-	private final Bosh bosh;
+public abstract class SenderComponent extends DispatcherComponent {
+	protected final Emite emite;
 
-	public SenderComponent(final Dispatcher dispatcher, final Bosh bosh) {
-		super(dispatcher);
-		this.bosh = bosh;
+	public SenderComponent(final Emite emite) {
+		super(emite.getDispatcher());
+		this.emite = emite;
 	}
 
-	@Override
-	public SenderActionsBuilder when(final Packet packet) {
-		return new SenderActionsBuilder(new PacketMatcher(packet), dispatcher, bosh);
-	}
 }

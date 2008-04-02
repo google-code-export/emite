@@ -2,7 +2,7 @@ package com.calclab.emite.client.mock;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.core.dispatcher.Action;
+import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
@@ -31,7 +31,7 @@ public class MockDispatcher implements Dispatcher {
 		published.add(packet);
 	}
 
-	public void subscribe(final Matcher matcher, final Action action) {
+	public void subscribe(final Matcher matcher, final PacketListener packetListener) {
 	}
 
 }

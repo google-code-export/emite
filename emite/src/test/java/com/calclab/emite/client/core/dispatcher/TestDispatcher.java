@@ -19,7 +19,7 @@ public class TestDispatcher {
 		final Event event = new Event("simple");
 		final BasicMatcher matcher = new BasicMatcher("event", "name", event
 				.getAttribute("name"));
-		dispatcher.subscribe(matcher, new Action() {
+		dispatcher.subscribe(matcher, new PacketListener() {
 			public void handle(final Packet stanza) {
 				handled = true;
 			}
