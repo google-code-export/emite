@@ -39,6 +39,7 @@ public class PresenceManager extends SenderComponent {
 
 		when("presence", new PacketListener() {
 			public void handle(final Packet received) {
+				onPresenceReceived(new Presence(received));
 			}
 		});
 
@@ -47,6 +48,10 @@ public class PresenceManager extends SenderComponent {
 				emite.send(answerToSessionLogout());
 			}
 		});
+
+	}
+
+	protected void onPresenceReceived(final Presence presence) {
 
 	}
 

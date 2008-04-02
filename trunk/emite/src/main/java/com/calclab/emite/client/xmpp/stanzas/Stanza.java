@@ -7,7 +7,11 @@ public interface Stanza extends Packet {
 
 	String getFrom();
 
+	XmppURI getFromURI();
+
 	String getTo();
+
+	XmppURI getToURI();
 
 	void setFrom(String from);
 

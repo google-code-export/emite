@@ -88,6 +88,7 @@ public class BoshState {
 	}
 
 	private void init() {
+		Log.debug("INIT BOSH STATE");
 		this.isRunning = false;
 		this.sid = null;
 		this.currentConnections = 0;

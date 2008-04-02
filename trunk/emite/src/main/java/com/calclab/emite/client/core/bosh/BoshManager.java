@@ -136,7 +136,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	@Override
 	public void stop() {
 		state.setRunning(false);
-		emite.newRID();
+		emite.clear();
 	}
 
 	private void delaySend() {
