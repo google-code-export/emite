@@ -14,6 +14,8 @@ import com.calclab.emite.client.core.services.gwt.GWTScheduler;
 import com.calclab.emite.client.core.services.gwt.GWTXMLService;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatPlugin;
+import com.calclab.emite.client.im.presence.PresenceManager;
+import com.calclab.emite.client.im.presence.PresencePlugin;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterPlugin;
 import com.calclab.emite.client.xmpp.session.Session;
@@ -56,6 +58,10 @@ public class Xmpp {
 
 	public Dispatcher getDispatcher() {
 		return DispatcherPlugin.getDispatcher(container);
+	}
+
+	public PresenceManager getPresenceManager() {
+		return PresencePlugin.getManager(container);
 	}
 
 	public Roster getRoster() {

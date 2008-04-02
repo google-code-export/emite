@@ -44,7 +44,7 @@ public class SessionManager extends SenderComponent {
 
 		when(ResourceBindingManager.Events.binded, new PacketListener() {
 			public void handle(final Packet received) {
-				final IQ iq = new IQ("requestSession", IQ.Type.set).From(globals.getJID()).To(globals.getDomain());
+				final IQ iq = new IQ("requestSession", IQ.Type.set).From(globals.getXmppURI()).To(globals.getDomain());
 				iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
 				emite.send(iq);
 			}

@@ -21,6 +21,26 @@ public class Presence extends BasicStanza {
 		setFrom(from);
 	}
 
+	public Integer getPriority() {
+		Integer value = null;
+		final Packet priority = getFirstChild("priority");
+		if (priority != null) {
+			try {
+				value = Integer.parseInt(priority.getText());
+			} catch (final NumberFormatException e) {
+				value = null;
+			}
+		}
+		return value;
+	}
+
+	// TODO: revisar esto (type == null -> available)
+	// http://www.xmpp.org/rfcs/rfc3921.html#presence
+	public PresenceType getType() {
+		final String type = getAttribute(BasicStanza.TYPE);
+		return type != null ? PresenceType.valueOf(type) : PresenceType.available;
+	}
+
 	public void setShow(final Show value) {
 		Packet show = getFirstChild("show");
 		if (show == null) {

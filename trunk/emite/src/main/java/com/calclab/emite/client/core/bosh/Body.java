@@ -34,7 +34,7 @@ public class Body extends BasicStanza {
 	// TODO: OpenFire devuelve "terminal" en vez de "terminate"... no sé si es
 	// un bug...
 	public boolean isTerminal() {
-		final String type = getType();
+		final String type = getAttribute(TYPE);
 		return type != null && (type.equals("terminate") || type.equals("terminal"));
 	}
 
