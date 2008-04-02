@@ -23,7 +23,7 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	public EmiteBosh(final Dispatcher dispatcher, final XMLService xmler) {
 		super(dispatcher);
 		this.xmler = xmler;
-		newRID();
+		clear();
 	}
 
 	@Override
@@ -65,8 +65,9 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 		}
 	}
 
-	public void newRID() {
+	public void clear() {
 		rid = (long) (Math.random() * 1245234);
+		this.body = null;
 	}
 
 	public void publish(final Event event) {

@@ -43,8 +43,8 @@ public class RosterManager extends SenderComponent {
 		return new RosterItem(item.getAttribute("jid"), item.getAttribute("subscription"), item.getAttribute("name"));
 	}
 
-	private List<Packet> getItems(final Packet packet) {
-		final List<Packet> items = packet.getFirstChild("query").getChildren("item");
+	private List<? extends Packet> getItems(final Packet packet) {
+		final List<? extends Packet> items = packet.getFirstChild("query").getChildren();
 		return items;
 	}
 
@@ -53,5 +53,6 @@ public class RosterManager extends SenderComponent {
 		for (final Packet item : getItems(received)) {
 			roster.add(convert(item));
 		}
+		roster.fireRosterInitialized();
 	}
 }

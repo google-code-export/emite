@@ -29,7 +29,7 @@ public class Roster {
 		items.clear();
 	}
 
-	void fireRosterChanged() {
+	void fireRosterInitialized() {
 		for (final RosterListener listener : listeners) {
 			listener.onRosterInitialized(items);
 		}
