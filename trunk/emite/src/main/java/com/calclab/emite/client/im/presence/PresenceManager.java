@@ -3,7 +3,7 @@ package com.calclab.emite.client.im.presence;
 import java.util.ArrayList;
 
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.SenderComponent;
+import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Globals;
@@ -12,7 +12,7 @@ import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.PresenceType;
 
-public class PresenceManager extends SenderComponent {
+public class PresenceManager extends EmiteComponent {
 	private Presence currentPresence;
 	private final Globals globals;
 	private final ArrayList<PresenceListener> listeners;

@@ -34,7 +34,8 @@ public class DefaultContainer extends HashMap<String, Object> implements Contain
 	}
 
 	public void stop() {
-		// TODO Auto-generated method stub
-
+		for (final Startable c : startables) {
+			c.stop();
+		}
 	}
 }

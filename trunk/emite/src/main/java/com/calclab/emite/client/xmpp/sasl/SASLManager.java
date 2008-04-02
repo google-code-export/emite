@@ -1,14 +1,14 @@
 package com.calclab.emite.client.xmpp.sasl;
 
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.SenderComponent;
+import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.BasicPacket;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Globals;
 
-public class SASLManager extends SenderComponent {
+public class SASLManager extends EmiteComponent {
 	public static class Events {
 		public static final Event authorized = new Event("sasl:authorized");
 	}

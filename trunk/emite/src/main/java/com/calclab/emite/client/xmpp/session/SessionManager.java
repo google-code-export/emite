@@ -2,7 +2,7 @@ package com.calclab.emite.client.xmpp.session;
 
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.SenderComponent;
+import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Globals;
@@ -10,7 +10,7 @@ import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 
-public class SessionManager extends SenderComponent {
+public class SessionManager extends EmiteComponent {
 	private final Globals globals;
 	private final Session session;
 

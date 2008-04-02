@@ -12,7 +12,7 @@ import com.calclab.emite.client.core.services.XMLService;
 import com.calclab.emite.client.core.services.gwt.GWTConnector;
 import com.calclab.emite.client.core.services.gwt.GWTScheduler;
 import com.calclab.emite.client.core.services.gwt.GWTXMLService;
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.chat.ChatPlugin;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.presence.PresencePlugin;
@@ -48,7 +48,7 @@ public class Xmpp {
 		this.session = SessionPlugin.getSession(container);
 	}
 
-	public Chat getChat() {
+	public ChatManager getChat() {
 		return ChatPlugin.getChat(container);
 	}
 
