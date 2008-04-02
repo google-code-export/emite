@@ -62,10 +62,8 @@ import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.KeyListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
-import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
-import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
 import com.gwtext.client.widgets.layout.AccordionLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.BorderLayout;
@@ -110,6 +108,7 @@ public class MultiChatPanel implements MultiChatView {
     private Item closeAllOption;
     private BottomTrayIcon bottomIcon;
     private UserGrid buddiesGrid;
+    private ToolbarButton emoticonButton;
 
     public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
@@ -118,12 +117,6 @@ public class MultiChatPanel implements MultiChatView {
         panelIdToChat = new HashMap<String, AbstractChat>();
         createLayout();
         reset();
-    }
-
-    private void reset() {
-        subject.reset();
-        setGroupChatUsersPanelVisible(false);
-        setInviteToGroupChatButtonEnabled(false);
     }
 
     public void addChat(final AbstractChat chat) {
@@ -203,6 +196,10 @@ public class MultiChatPanel implements MultiChatView {
 
     public void setInputEditable(final boolean editable) {
         input.setDisabled(!editable);
+    }
+
+    public void setEmoticonButton(final boolean enabled) {
+        emoticonButton.setDisabled(!enabled);
     }
 
     public void showUserList(final GroupChatUserListView view) {
@@ -554,15 +551,6 @@ public class MultiChatPanel implements MultiChatView {
         subject.setTitle(i18n.t("Subject of the room"));
         // As height 100% doesn't works
         subject.setHeight(27);
-        // TODO: Fixed in gwt-ext 2.0.3 TextArea.setEnterIsSpecial
-        subject.addListener(new TextFieldListenerAdapter() {
-            public void onSpecialKey(final Field field, final EventObject e) {
-                if (e.getKey() == 13) {
-                    presenter.onSubjectChangedByCurrentUser(field.getValueAsString());
-                    e.stopEvent();
-                }
-            }
-        });
         subject.addKeyListener(13, new KeyListener() {
             public void onKey(final int key, final EventObject e) {
                 presenter.onSubjectChangedByCurrentUser(subject.getText());
@@ -596,17 +584,17 @@ public class MultiChatPanel implements MultiChatView {
 
         /* Input toolbar */
         final Toolbar inputToolbar = new Toolbar();
-        ToolbarButton emoticonIcon = new ToolbarButton();
-        emoticonIcon.setIcon("images/smile.png");
-        emoticonIcon.setCls("x-btn-icon x-btn-focus");
-        emoticonIcon.setTooltip(i18n.t("Insert a emoticon"));
+        emoticonButton = new ToolbarButton();
+        emoticonButton.setIcon("images/smile.png");
+        emoticonButton.setCls("x-btn-icon x-btn-focus");
+        emoticonButton.setTooltip(i18n.t("Insert a emoticon"));
 
-        emoticonIcon.addListener(new ButtonListenerAdapter() {
+        emoticonButton.addListener(new ButtonListenerAdapter() {
             public void onClick(final Button button, final EventObject e) {
                 showEmoticonPalette(e.getXY()[0], e.getXY()[1]);
             }
         });
-        inputToolbar.addButton(emoticonIcon);
+        inputToolbar.addButton(emoticonButton);
         inputToolbar.addSeparator();
 
         Panel southPanel = createInputFormWithToolBar(inputForm, inputToolbar);
@@ -672,4 +660,9 @@ public class MultiChatPanel implements MultiChatView {
         input.focus();
     }
 
+    private void reset() {
+        subject.reset();
+        setGroupChatUsersPanelVisible(false);
+        setInviteToGroupChatButtonEnabled(false);
+    }
 }

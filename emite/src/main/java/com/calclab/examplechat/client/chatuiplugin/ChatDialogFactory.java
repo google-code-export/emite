@@ -2,7 +2,6 @@ package com.calclab.examplechat.client.chatuiplugin;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;
@@ -23,8 +22,8 @@ import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPresen
 
 public class ChatDialogFactory {
 
-    public static MultiChat createMultiChat(final AbstractChatUser currentSessionUser,
-            final I18nTranslationService i18n, final MultiChatListener listener) {
+    public static MultiChat createMultiChat(final PairChatUser currentSessionUser, final I18nTranslationService i18n,
+            final MultiChatListener listener) {
         MultiChatPresenter presenter = new MultiChatPresenter(currentSessionUser, listener);
         MultiChatPanel panel = new MultiChatPanel(i18n, presenter);
         presenter.init(panel);

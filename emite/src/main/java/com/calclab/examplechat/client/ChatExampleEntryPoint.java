@@ -1,5 +1,6 @@
 package com.calclab.examplechat.client;
 
+import java.util.Date;
 import java.util.List;
 
 import org.ourproject.kune.platf.client.dispatch.Action;
@@ -18,8 +19,9 @@ import com.calclab.emite.client.im.roster.RosterListener;
 import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogPlugin;
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.ChatInputMessageParam;
@@ -44,308 +46,320 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ChatExampleEntryPoint implements EntryPoint {
-	private Button btnLogin;
-	private Button btnLogout;
-	private Button btnSamplesExtUI;
-	private DefaultDispatcher dispatcher;
-	private TextBox messageIn;
-	private VerticalPanel messageOutput;
-	private ScrollPanel messageOutputWrapper;
-	private PasswordTextBox passwordInput;
-	private TextBox resourceInput;
-	private TextBox toIn;
-	private TextBox userNameInput;
-	private ListBox userSelector;
-	private Xmpp xmpp;
+    private Button btnLogin;
+    private Button btnLogout;
+    private Button btnSamplesExtUI;
+    private DefaultDispatcher dispatcher;
+    private TextBox messageIn;
+    private VerticalPanel messageOutput;
+    private ScrollPanel messageOutputWrapper;
+    private PasswordTextBox passwordInput;
+    private TextBox resourceInput;
+    private TextBox toIn;
+    private TextBox userNameInput;
+    private ListBox userSelector;
+    private Xmpp xmpp;
+    private Presence presenceForTest;
 
-	public void onModuleLoad() {
-		/*
-		 * Install an UncaughtExceptionHandler which will produce <code>FATAL</code>
-		 * log messages
-		 */
+    public void onModuleLoad() {
+        /*
+         * Install an UncaughtExceptionHandler which will produce <code>FATAL</code>
+         * log messages
+         */
 
-		/*
-		 * Currently we let firebug to catch the error:
-		 * Log.setUncaughtExceptionHandler();
-		 */
+        /*
+         * Currently we let firebug to catch the error:
+         * Log.setUncaughtExceptionHandler();
+         */
 
-		// At the moment, in runtime:
-		Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
+        // At the moment, in runtime:
+        Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
 
-		Log.getDivLogger().moveTo(10, 290);
+        Log.getDivLogger().moveTo(10, 290);
 
-		/*
-		 * Use a deferred command so that the UncaughtExceptionHandler catches
-		 * any exceptions in onModuleLoadCont()
-		 */
-		DeferredCommand.addCommand(new Command() {
-			public void execute() {
-				onModuleLoadCont();
-			}
-		});
-	}
+        /*
+         * Use a deferred command so that the UncaughtExceptionHandler catches
+         * any exceptions in onModuleLoadCont()
+         */
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                onModuleLoadCont();
+            }
+        });
+    }
 
-	public void onModuleLoadCont() {
-		createInterface();
-		createExtUI();
+    public void onModuleLoadCont() {
 
-		this.xmpp = Xmpp.create(new BoshOptions("http-bind", "localhost"));
+        createPresenceForTest();
 
-		xmpp.getSession().addListener(new SessionListener() {
-			public void onStateChanged(final State old, final State current) {
-				Log.info("STATE CHANGED: " + current + " - old: " + old);
-				switch (current) {
-				case connected:
-					btnLogin.setEnabled(false);
-					btnLogout.setEnabled(true);
-					dispatcher.fire(ChatDialogPlugin.SET_STATUS, MultiChatView.STATUS_ONLINE);
-					break;
-				case connecting:
-					btnLogin.setEnabled(false);
-					break;
-				case disconnected:
-					btnLogin.setEnabled(true);
-					btnLogout.setEnabled(false);
-					dispatcher.fire(ChatDialogPlugin.SET_STATUS, MultiChatView.STATUS_OFFLINE);
-					break;
-				}
-			}
-		});
+        createInterface();
+        createExtUI();
 
-		xmpp.getRoster().addListener(new RosterListener() {
-			public void onRosterInitialized(final List<RosterItem> roster) {
-				for (final RosterItem item : roster) {
-					Log.info("Rooster, adding: " + item.getName());
-					userSelector.addItem(item.getName(), item.getJid());
-				}
-			}
-		});
+        this.xmpp = Xmpp.create(new BoshOptions("http-bind", "localhost"));
 
-		xmpp.getChat().addListener(new MessageListener() {
-			public void onReceived(final Message message) {
-				// FIXME, from/to and chatId ???
-				dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatInputMessageParam(message.getFrom(), message
-						.getTo(), message.getBody()));
-				String text = "\nIN [" + message.getFrom() + "]\n";
-				text += message.getBody();
-				addMessageToOutput(text);
-			}
-		});
+        xmpp.getSession().addListener(new SessionListener() {
+            public void onStateChanged(final State old, final State current) {
+                Log.info("STATE CHANGED: " + current + " - old: " + old);
+                switch (current) {
+                case connected:
+                    btnLogin.setEnabled(false);
+                    btnLogout.setEnabled(true);
+                    dispatcher.fire(ChatDialogPlugin.SET_STATUS, MultiChatView.STATUS_ONLINE);
+                    break;
+                case connecting:
+                    btnLogin.setEnabled(false);
+                    break;
+                case disconnected:
+                    btnLogin.setEnabled(true);
+                    btnLogout.setEnabled(false);
+                    dispatcher.fire(ChatDialogPlugin.SET_STATUS, MultiChatView.STATUS_OFFLINE);
+                    break;
+                }
+            }
+        });
 
-	}
+        xmpp.getRoster().addListener(new RosterListener() {
+            public void onRosterInitialized(final List<RosterItem> roster) {
+                for (final RosterItem item : roster) {
+                    Log.info("Rooster, adding: " + item.getJid() + " name: " + item.getName() + " subsc: "
+                            + item.getSubscription());
+                    userSelector.addItem(item.getJid(), item.getJid());
+                    // FIXME: Dani: Presence?...
+                    // FIXME: Name: null¿?
+                    dispatcher.fire(ChatDialogPlugin.ADD_PRESENCE_BUDDY, new PairChatUser("images/person-def.gif", item
+                            .getJid(), item.getJid(), "maroon", presenceForTest));
+                }
+            }
+        });
 
-	private void addMessageToOutput(final String text) {
-		messageOutput.add(new Label(text));
-		messageOutputWrapper.setScrollPosition(messageOutput.getOffsetHeight());
-		// another way (if we are not using ScrollPanels)
-		// DOM.setElementPropertyInt(messageOutputWrapper.getElement(),
-		// "scrollTop", messageOutput.getOffsetHeight());
-	}
+        xmpp.getChat().addListener(new MessageListener() {
+            public void onReceived(final Message message) {
+                dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatInputMessageParam(XmppURI.parseURI(
+                        message.getFrom()).getJid(), XmppURI.parseURI(message.getTo()).getJid(), message.getBody()));
+                String text = "\nIN [" + message.getFrom() + "]\n";
+                text += message.getBody();
+                addMessageToOutput(text);
+            }
+        });
 
-	private void chatSamples() {
-		MultiChatSamples.show(dispatcher, userNameInput.getText());
-	}
+    }
 
-	private HorizontalPanel createButtonsPane() {
-		final HorizontalPanel buttons = new HorizontalPanel();
-		btnLogin = new Button("Login", new ClickListener() {
-			public void onClick(final Widget source) {
-				login();
-			}
-		});
-		buttons.add(btnLogin);
-		btnLogout = new Button("Logout", new ClickListener() {
-			public void onClick(final Widget arg0) {
-				logout();
-			}
-		});
-		buttons.add(btnLogout);
+    private void createPresenceForTest() {
+        presenceForTest = new Presence();
+        presenceForTest.setShow(Presence.Show.available);
+        presenceForTest.setType(Presence.Type.available.toString());
+        presenceForTest.setStatus("I\'m out for dinner");
+    }
 
-		final Button btnPanic = new Button("Panic!", new ClickListener() {
-			public void onClick(final Widget arg0) {
-				panic();
-			}
-		});
-		buttons.add(btnPanic);
+    private void addMessageToOutput(final String text) {
+        messageOutput.add(new Label(text));
+        messageOutputWrapper.setScrollPosition(messageOutput.getOffsetHeight());
+        // another way (if we are not using ScrollPanels)
+        // DOM.setElementPropertyInt(messageOutputWrapper.getElement(),
+        // "scrollTop", messageOutput.getOffsetHeight());
+    }
 
-		btnSamplesExtUI = new Button("Ext UI Tests", new ClickListener() {
-			public void onClick(final Widget sender) {
-				chatSamples();
-			}
-		});
-		btnSamplesExtUI.setTitle("Samples in gwt-ext UI (experimental)");
-		buttons.add(btnSamplesExtUI);
-		return buttons;
-	}
+    private void chatSamples() {
+        MultiChatSamples.show(dispatcher, userNameInput.getText());
+    }
 
-	private void createExtUI() {
-		dispatcher = DefaultDispatcher.getInstance();
-		final PluginManager kunePluginManager = new PluginManager(dispatcher, new UIExtensionPointManager(),
-				new I18nTranslationServiceMocked());
-		kunePluginManager.install(new ChatDialogPlugin());
+    private HorizontalPanel createButtonsPane() {
+        final HorizontalPanel buttons = new HorizontalPanel();
+        btnLogin = new Button("Login", new ClickListener() {
+            public void onClick(final Widget source) {
+                login();
+            }
+        });
+        buttons.add(btnLogin);
+        btnLogout = new Button("Logout", new ClickListener() {
+            public void onClick(final Widget arg0) {
+                logout();
+            }
+        });
+        buttons.add(btnLogout);
 
-		dispatcher.fire(ChatDialogPlugin.OPEN_CHAT_DIALOG, new AbstractChatUser("images/person-def.gif", userNameInput
-				.getText(), userNameInput.getText(), MultiChatView.DEF_USER_COLOR));
+        final Button btnPanic = new Button("Panic!", new ClickListener() {
+            public void onClick(final Widget arg0) {
+                panic();
+            }
+        });
+        buttons.add(btnPanic);
 
-		dispatcher.fire(ChatDialogPlugin.ADD_PRESENCE_BUDDY, new PairChatUser("images/person-def.gif",
-				"testuser1@localhost", "testuser1", "maroon", MultiChatView.STATUS_AWAY, "I'm out for dinner"));
-		dispatcher.fire(ChatDialogPlugin.ADD_PRESENCE_BUDDY, new PairChatUser("images/person-def.gif",
-				"vjrj@localhost", "testuser2", "navy", MultiChatView.STATUS_ONLINE, "I'm out for dinner"));
+        btnSamplesExtUI = new Button("Ext UI Tests", new ClickListener() {
+            public void onClick(final Widget sender) {
+                chatSamples();
+            }
+        });
+        btnSamplesExtUI.setTitle("Samples in gwt-ext UI (experimental)");
+        buttons.add(btnSamplesExtUI);
+        return buttons;
+    }
 
-		dispatcher.subscribe(ChatDialogPlugin.ON_STATUS_SELECTED, new Action<Integer>() {
-			public void execute(final Integer status) {
-				switch (status) {
-				case MultiChatView.STATUS_ONLINE:
-					login();
-					break;
-				case MultiChatView.STATUS_OFFLINE:
-					logout();
-					break;
-				case MultiChatView.STATUS_BUSY:
-					break;
-				case MultiChatView.STATUS_INVISIBLE:
-					break;
-				case MultiChatView.STATUS_XA:
-					break;
-				case MultiChatView.STATUS_AWAY:
-					break;
-				default:
-					throw new IndexOutOfBoundsException("Xmpp status unknown");
-				}
-			}
-		});
+    private void createExtUI() {
+        dispatcher = DefaultDispatcher.getInstance();
+        final PluginManager kunePluginManager = new PluginManager(dispatcher, new UIExtensionPointManager(),
+                new I18nTranslationServiceMocked());
+        kunePluginManager.install(new ChatDialogPlugin());
 
-		dispatcher.subscribe(ChatDialogPlugin.ON_MESSAGE_SENDED, new Action<ChatOutputMessageParam>() {
-			public void execute(final ChatOutputMessageParam param) {
-				xmpp.send(param.getChat().getId(), param.getMessage());
-			}
-		});
+        dispatcher.fire(ChatDialogPlugin.OPEN_CHAT_DIALOG, new PairChatUser("images/person-def.gif", userNameInput
+                .getText(), userNameInput.getText(), MultiChatView.DEF_USER_COLOR, presenceForTest));
 
-		dispatcher.subscribe(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED, new Action<GroupChatSubjectParam>() {
-			public void execute(final GroupChatSubjectParam param) {
-				Log.info("Group '" + param.getChatId() + "' changed subject to '" + param.getSubject()
-						+ "' (not implemented yet emite connection");
-			}
-		});
+        dispatcher.subscribe(ChatDialogPlugin.ON_STATUS_SELECTED, new Action<Integer>() {
+            public void execute(final Integer status) {
+                switch (status) {
+                case MultiChatView.STATUS_ONLINE:
+                    login();
+                    break;
+                case MultiChatView.STATUS_OFFLINE:
+                    logout();
+                    break;
+                case MultiChatView.STATUS_BUSY:
+                    break;
+                case MultiChatView.STATUS_INVISIBLE:
+                    break;
+                case MultiChatView.STATUS_XA:
+                    break;
+                case MultiChatView.STATUS_AWAY:
+                    break;
+                default:
+                    throw new IndexOutOfBoundsException("Xmpp status unknown");
+                }
+            }
+        });
 
-	}
+        dispatcher.subscribe(ChatDialogPlugin.ON_MESSAGE_SENDED, new Action<ChatOutputMessageParam>() {
+            public void execute(final ChatOutputMessageParam param) {
+                xmpp.send(param.getChat().getId(), param.getMessage());
+            }
+        });
 
-	private void createInterface() {
-		final VerticalPanel vertical = new VerticalPanel();
-		vertical.add(createButtonsPane());
-		vertical.add(createLoginPane());
-		vertical.add(createMessagePane());
-		vertical.add(createOutputPane());
+        dispatcher.subscribe(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED, new Action<GroupChatSubjectParam>() {
+            public void execute(final GroupChatSubjectParam param) {
+                Log.info("Group '" + param.getChatId() + "' changed subject to '" + param.getSubject()
+                        + "' (not implemented yet emite connection");
+            }
+        });
 
-		RootPanel.get().add(vertical);
-	}
+    }
 
-	private HorizontalPanel createLoginPane() {
-		final HorizontalPanel login = new HorizontalPanel();
-		userNameInput = new TextBox();
-		userNameInput.setText("admin@localhost");
-		resourceInput = new TextBox();
-		resourceInput.setText("emite");
-		passwordInput = new PasswordTextBox();
-		passwordInput.setText("easyeasy");
-		login.add(new Label("user name:"));
-		login.add(userNameInput);
-		login.add(new Label("Resource:"));
-		login.add(resourceInput);
-		login.add(new Label("password"));
-		login.add(passwordInput);
-		return login;
-	}
+    private void createInterface() {
+        final VerticalPanel vertical = new VerticalPanel();
+        vertical.add(createButtonsPane());
+        vertical.add(createLoginPane());
+        vertical.add(createMessagePane());
+        vertical.add(createOutputPane());
 
-	private VerticalPanel createMessagePane() {
-		final VerticalPanel pane = new VerticalPanel();
+        RootPanel.get().add(vertical);
+    }
 
-		final HorizontalPanel controls = new HorizontalPanel();
-		pane.add(controls);
+    private HorizontalPanel createLoginPane() {
+        final HorizontalPanel login = new HorizontalPanel();
+        userNameInput = new TextBox();
+        userNameInput.setText("admin@localhost");
+        resourceInput = new TextBox();
+        resourceInput.setText("emite." + (new Date()).getTime());
+        passwordInput = new PasswordTextBox();
+        passwordInput.setText("easyeasy");
+        login.add(new Label("user name:"));
+        login.add(userNameInput);
+        login.add(new Label("Resource:"));
+        login.add(resourceInput);
+        login.add(new Label("password"));
+        login.add(passwordInput);
+        return login;
+    }
 
-		toIn = new TextBox();
-		toIn.setText("testuser1@localhost");
-		controls.add(toIn);
-		messageIn = new TextBox();
-		messageIn.setText("hola!");
-		messageIn.addKeyboardListener(new KeyboardListener() {
-			public void onKeyDown(final Widget sender, final char keyCode, final int modifiers) {
-			}
+    private VerticalPanel createMessagePane() {
+        final VerticalPanel pane = new VerticalPanel();
 
-			public void onKeyPress(final Widget sender, final char keyCode, final int modifiers) {
-				if (keyCode == KeyboardListener.KEY_ENTER) {
-					sendMessageIn();
-				}
-			}
+        final HorizontalPanel controls = new HorizontalPanel();
+        pane.add(controls);
 
-			public void onKeyUp(final Widget sender, final char keyCode, final int modifiers) {
-			}
-		});
-		controls.add(messageIn);
-		final Button btnSend = new Button("send", new ClickListener() {
-			public void onClick(final Widget arg0) {
-				sendMessageIn();
-			}
-		});
-		controls.add(btnSend);
+        toIn = new TextBox();
+        toIn.setText("testuser1@localhost");
+        controls.add(toIn);
+        messageIn = new TextBox();
+        messageIn.setText("hola!");
+        messageIn.addKeyboardListener(new KeyboardListener() {
+            public void onKeyDown(final Widget sender, final char keyCode, final int modifiers) {
+            }
 
-		final HorizontalPanel split = new HorizontalPanel();
-		userSelector = new ListBox(true);
-		userSelector.addClickListener(new ClickListener() {
-			public void onClick(final Widget arg0) {
-				final String jid = userSelector.getValue(userSelector.getSelectedIndex());
-				toIn.setText(jid);
-			}
-		});
-		split.add(userSelector);
-		final TabPanel chatTabs = new TabPanel();
-		split.add(chatTabs);
-		messageOutputWrapper = new ScrollPanel();
-		messageOutput = new VerticalPanel();
-		messageOutputWrapper.add(messageOutput);
-		messageOutputWrapper.setWidth("400");
-		messageOutputWrapper.setHeight("200");
-		final HorizontalPanel messageOutputWrapper2 = new HorizontalPanel();
-		messageOutputWrapper2.add(messageOutputWrapper);
-		messageOutputWrapper2.setBorderWidth(1);
-		split.add(messageOutputWrapper2);
+            public void onKeyPress(final Widget sender, final char keyCode, final int modifiers) {
+                if (keyCode == KeyboardListener.KEY_ENTER) {
+                    sendMessageIn();
+                }
+            }
 
-		pane.add(split);
-		split.setHeight("100%");
+            public void onKeyUp(final Widget sender, final char keyCode, final int modifiers) {
+            }
+        });
+        controls.add(messageIn);
+        final Button btnSend = new Button("send", new ClickListener() {
+            public void onClick(final Widget arg0) {
+                sendMessageIn();
+            }
+        });
+        controls.add(btnSend);
 
-		return pane;
-	}
+        final HorizontalPanel split = new HorizontalPanel();
+        userSelector = new ListBox(true);
+        userSelector.addClickListener(new ClickListener() {
+            public void onClick(final Widget arg0) {
+                final String jid = userSelector.getValue(userSelector.getSelectedIndex());
+                toIn.setText(jid);
+            }
+        });
+        split.add(userSelector);
+        final TabPanel chatTabs = new TabPanel();
+        split.add(chatTabs);
+        messageOutputWrapper = new ScrollPanel();
+        messageOutput = new VerticalPanel();
+        messageOutputWrapper.add(messageOutput);
+        messageOutputWrapper.setWidth("400");
+        messageOutputWrapper.setHeight("200");
+        final HorizontalPanel messageOutputWrapper2 = new HorizontalPanel();
+        messageOutputWrapper2.add(messageOutputWrapper);
+        messageOutputWrapper2.setBorderWidth(1);
+        split.add(messageOutputWrapper2);
 
-	private HorizontalPanel createOutputPane() {
-		final HorizontalPanel split = new HorizontalPanel();
-		return split;
-	}
+        pane.add(split);
+        split.setHeight("100%");
 
-	private void login() {
-		xmpp.login(userNameInput.getText(), passwordInput.getText());
-		// btnLogin.setEnabled(false);
-		// btnLogout.setEnabled(true);
-		// dispatcher.fire(ChatDialogPlugin.SET_STATUS,
-		// MultiChatView.STATUS_ONLINE);
-	}
+        return pane;
+    }
 
-	private void logout() {
-		xmpp.logout();
-		// btnLogout.setEnabled(false);
-		// btnLogin.setEnabled(true);
-		// dispatcher.fire(ChatDialogPlugin.SET_STATUS,
-		// MultiChatView.STATUS_OFFLINE);
-	}
+    private HorizontalPanel createOutputPane() {
+        final HorizontalPanel split = new HorizontalPanel();
+        return split;
+    }
 
-	private void panic() {
-		xmpp.getDispatcher().publish(BoshManager.Events.error);
-	}
+    private void login() {
+        xmpp.login(userNameInput.getText(), passwordInput.getText());
+        // btnLogin.setEnabled(false);
+        // btnLogout.setEnabled(true);
+        // dispatcher.fire(ChatDialogPlugin.SET_STATUS,
+        // MultiChatView.STATUS_ONLINE);
+    }
 
-	private void sendMessageIn() {
-		final String msg = messageIn.getText();
-		messageIn.setText("");
-		addMessageToOutput("sending: " + msg);
-		xmpp.send(toIn.getText(), msg);
-		messageIn.setFocus(true);
-	}
+    private void logout() {
+        xmpp.logout();
+        btnLogout.setEnabled(false);
+        btnLogin.setEnabled(true);
+        dispatcher.fire(ChatDialogPlugin.SET_STATUS, MultiChatView.STATUS_OFFLINE);
+    }
+
+    private void panic() {
+        xmpp.getDispatcher().publish(BoshManager.Events.error);
+        btnLogin.setEnabled(true);
+        btnLogout.setEnabled(true);
+
+    }
+
+    private void sendMessageIn() {
+        final String msg = messageIn.getText();
+        messageIn.setText("");
+        addMessageToOutput("sending: " + msg);
+        xmpp.send(toIn.getText(), msg);
+        messageIn.setFocus(true);
+    }
 }

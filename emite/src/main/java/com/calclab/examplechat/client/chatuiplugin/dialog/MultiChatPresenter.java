@@ -30,7 +30,6 @@ import org.ourproject.kune.platf.client.extend.UIExtensionPoint;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
@@ -38,6 +37,7 @@ import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.params.ChatInputMessageParam;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 
@@ -46,10 +46,10 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     private AbstractChat currentChat;
     private final MultiChatListener listener;
     private boolean closeAllConfirmed;
-    private final AbstractChatUser currentSessionUser;
+    private final PairChatUser currentSessionUser;
     private final HashMap<String, AbstractChat> chats;
 
-    public MultiChatPresenter(final AbstractChatUser currentSessionUser, final MultiChatListener listener) {
+    public MultiChatPresenter(final PairChatUser currentSessionUser, final MultiChatListener listener) {
         this.currentSessionUser = currentSessionUser;
         this.listener = listener;
         chats = new HashMap<String, AbstractChat>();
@@ -83,9 +83,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
             activateChat(abstractChat);
             return (PairChat) abstractChat;
         }
-        PairChatUser currentPairChatUser = new PairChatUser("images/person-def.gif", currentSessionUser.getJid(),
-                currentSessionUser.getAlias(), currentSessionUser.getColor());
-        PairChat pairChat = ChatDialogFactory.createPairChat(chatId, this, currentPairChatUser, otherUser);
+        PairChat pairChat = ChatDialogFactory.createPairChat(chatId, this, currentSessionUser, otherUser);
         return (PairChat) finishChatCreation(pairChat, otherUser.getAlias());
     }
 
@@ -172,17 +170,21 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.clearInputText();
     }
 
-    /**
-     * 
-     * Currently we use jid in pair chats and alias in group chat :-/
-     * 
-     */
-    public void messageReceived(final String chatId, final String fromUser, final String message) {
+    public void messageReceived(final ChatInputMessageParam param) {
+        String chatId;
+        String from = param.getFrom().toString();
+        String to = param.getTo().toString();
+        String message = param.getMessage();
+        if (currentSessionUser.getJid().equals(from)) {
+            chatId = to;
+        } else {
+            chatId = from;
+        }
         AbstractChat chat = getChat(chatId);
         if (chat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
-            ((GroupChat) chat).addMessage(fromUser, message);
+            ((GroupChat) chat).addMessage(to, message);
         } else {
-            ((PairChat) chat).addMessage(fromUser, message);
+            ((PairChat) chat).addMessage(to, message);
         }
     }
 
@@ -300,6 +302,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     private void setInputEnabled(final boolean enabled) {
         view.setSendEnabled(enabled);
         view.setInputEditable(enabled);
+        view.setEmoticonButton(enabled);
     }
 
     public void addPresenceBuddy(final PairChatUser user) {

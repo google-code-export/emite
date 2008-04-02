@@ -113,13 +113,13 @@ public class UserGrid extends GridPanel {
     }
 
     public void addUser(final PairChatUser user, final UserGridMenu menu) {
-        AbstractImagePrototype statusAbsIcon = StatusUtil.getStatusIcon(user.getStatus());
+        AbstractImagePrototype statusAbsIcon = StatusUtil.getStatusIcon(user.getPresence());
         // Image img = new Image();
         // statusAbsIcon.applyTo(img);
         // KuneUiUtils.setQuickTip(img.getElement(), user.getStatusText());
 
         String statusIcon = statusAbsIcon.getHTML();
-        addUser(user, statusIcon, user.getStatusText());
+        addUser(user, statusIcon, user.getPresence().getStatus());
         menuMap.put(user.getJid(), menu);
     }
 
