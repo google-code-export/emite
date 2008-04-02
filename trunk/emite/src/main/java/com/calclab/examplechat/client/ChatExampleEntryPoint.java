@@ -20,12 +20,12 @@ import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.client.xmpp.stanzas.XmppJID;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogPlugin;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
-import com.calclab.examplechat.client.chatuiplugin.params.ChatInputMessageParam;
-import com.calclab.examplechat.client.chatuiplugin.params.ChatOutputMessageParam;
+import com.calclab.examplechat.client.chatuiplugin.params.ChatMessageParam;
 import com.calclab.examplechat.client.chatuiplugin.params.GroupChatSubjectParam;
 import com.calclab.examplechat.client.chatuiplugin.utils.MultiChatSamples;
 import com.google.gwt.core.client.EntryPoint;
@@ -126,15 +126,15 @@ public class ChatExampleEntryPoint implements EntryPoint {
                     userSelector.addItem(item.getJid(), item.getJid());
                     // FIXME: Dani: Presence?...
                     // FIXME: Name: null¿?
-                    dispatcher.fire(ChatDialogPlugin.ADD_PRESENCE_BUDDY, new PairChatUser("images/person-def.gif", item
-                            .getJid(), item.getJid(), "maroon", presenceForTest));
+                    dispatcher.fire(ChatDialogPlugin.ADD_PRESENCE_BUDDY, new PairChatUser("images/person-def.gif",
+                            XmppJID.parseJID(item.getJid()), item.getJid(), "maroon", presenceForTest));
                 }
             }
         });
 
         xmpp.getChat().addListener(new MessageListener() {
             public void onReceived(final Message message) {
-                dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatInputMessageParam(XmppURI.parseURI(
+                dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatMessageParam(XmppURI.parseURI(
                         message.getFrom()).getJid(), XmppURI.parseURI(message.getTo()).getJid(), message.getBody()));
                 String text = "\nIN [" + message.getFrom() + "]\n";
                 text += message.getBody();
@@ -201,8 +201,9 @@ public class ChatExampleEntryPoint implements EntryPoint {
                 new I18nTranslationServiceMocked());
         kunePluginManager.install(new ChatDialogPlugin());
 
-        dispatcher.fire(ChatDialogPlugin.OPEN_CHAT_DIALOG, new PairChatUser("images/person-def.gif", userNameInput
-                .getText(), userNameInput.getText(), MultiChatView.DEF_USER_COLOR, presenceForTest));
+        dispatcher.fire(ChatDialogPlugin.OPEN_CHAT_DIALOG, new PairChatUser("images/person-def.gif", XmppJID
+                .parseJID(userNameInput.getText()), userNameInput.getText(), MultiChatView.DEF_USER_COLOR,
+                presenceForTest));
 
         dispatcher.subscribe(ChatDialogPlugin.ON_STATUS_SELECTED, new Action<Integer>() {
             public void execute(final Integer status) {
@@ -227,9 +228,9 @@ public class ChatExampleEntryPoint implements EntryPoint {
             }
         });
 
-        dispatcher.subscribe(ChatDialogPlugin.ON_MESSAGE_SENDED, new Action<ChatOutputMessageParam>() {
-            public void execute(final ChatOutputMessageParam param) {
-                xmpp.send(param.getChat().getId(), param.getMessage());
+        dispatcher.subscribe(ChatDialogPlugin.ON_MESSAGE_SENDED, new Action<ChatMessageParam>() {
+            public void execute(final ChatMessageParam param) {
+                xmpp.send(param.getTo().toString(), param.getMessage());
             }
         });
 

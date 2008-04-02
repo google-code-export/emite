@@ -2,6 +2,7 @@ package com.calclab.examplechat.client.chatuiplugin;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.ChatId;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;
@@ -37,7 +38,7 @@ public class ChatDialogFactory {
         return userListPresenter;
     }
 
-    public static GroupChat createGroupChat(final String chatId, final GroupChatListener listener,
+    public static GroupChat createGroupChat(final ChatId chatId, final GroupChatListener listener,
             final GroupChatUser currentSessionUser) {
         GroupChatUserList userList = createGroupChatUserList();
         GroupChatPresenter presenter = new GroupChatPresenter(chatId, listener, currentSessionUser);
@@ -47,7 +48,7 @@ public class ChatDialogFactory {
         return presenter;
     }
 
-    public static PairChat createPairChat(final String chatId, final PairChatListener listener,
+    public static PairChat createPairChat(final ChatId chatId, final PairChatListener listener,
             final PairChatUser currentSessionUser, final PairChatUser otherUser) {
         PairChatPresenter presenter = new PairChatPresenter(chatId, listener, currentSessionUser, otherUser);
         PairChatPanel panel = new PairChatPanel(presenter);

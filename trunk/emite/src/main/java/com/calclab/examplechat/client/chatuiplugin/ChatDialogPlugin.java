@@ -7,15 +7,13 @@ import org.ourproject.kune.platf.client.extend.Plugin;
 import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
-import com.calclab.examplechat.client.chatuiplugin.params.ChatInputMessageParam;
-import com.calclab.examplechat.client.chatuiplugin.params.ChatOutputMessageParam;
+import com.calclab.examplechat.client.chatuiplugin.params.ChatMessageParam;
 import com.calclab.examplechat.client.chatuiplugin.params.CreateGroupChatActionParam;
 import com.calclab.examplechat.client.chatuiplugin.params.GroupChatSubjectParam;
 import com.calclab.examplechat.client.chatuiplugin.params.GroupChatUserAddActionParam;
@@ -66,8 +64,8 @@ public class ChatDialogPlugin extends Plugin {
                         dispatcher.fire(ChatDialogPlugin.ON_STATUS_SELECTED, new Integer(status));
                     }
 
-                    public void onSendMessage(final AbstractChat chat, final String message) {
-                        dispatcher.fire(ChatDialogPlugin.ON_MESSAGE_SENDED, new ChatOutputMessageParam(chat, message));
+                    public void onSendMessage(final ChatMessageParam message) {
+                        dispatcher.fire(ChatDialogPlugin.ON_MESSAGE_SENDED, message);
                     }
 
                     public void onClosePairChat(final PairChatPresenter pairChat) {
@@ -133,8 +131,8 @@ public class ChatDialogPlugin extends Plugin {
             }
         });
 
-        dispatcher.subscribe(MESSAGE_RECEIVED, new Action<ChatInputMessageParam>() {
-            public void execute(final ChatInputMessageParam param) {
+        dispatcher.subscribe(MESSAGE_RECEIVED, new Action<ChatMessageParam>() {
+            public void execute(final ChatMessageParam param) {
                 extChatDialog.messageReceived(param);
             }
         });

@@ -19,6 +19,7 @@
 
 package com.calclab.examplechat.client.chatuiplugin.users;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppJID;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 
 public class GroupChatUser extends AbstractChatUser {
@@ -35,7 +36,7 @@ public class GroupChatUser extends AbstractChatUser {
 
     private GroupChatUserType type;
 
-    public GroupChatUser(final String jid, final String alias, final String color,
+    public GroupChatUser(final XmppJID jid, final String alias, final String color,
             final GroupChatUserType groupChatUserType) {
         super("images/person-def.gif", jid, alias, color);
         this.type = groupChatUserType;

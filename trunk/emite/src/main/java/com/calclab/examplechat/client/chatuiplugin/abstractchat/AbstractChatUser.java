@@ -19,20 +19,22 @@
 
 package com.calclab.examplechat.client.chatuiplugin.abstractchat;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppJID;
+
 public class AbstractChatUser {
     private final String iconUrl;
-    private final String jid;
+    private final XmppJID jid;
     private String alias;
     private String color;
 
-    public AbstractChatUser(final String iconUrl, final String jid, final String alias, final String color) {
+    public AbstractChatUser(final String iconUrl, final XmppJID jid, final String alias, final String color) {
         this.iconUrl = iconUrl;
         this.jid = jid;
         this.alias = alias;
         this.color = color;
     }
 
-    public String getJid() {
+    public XmppJID getJid() {
         return jid;
     }
 

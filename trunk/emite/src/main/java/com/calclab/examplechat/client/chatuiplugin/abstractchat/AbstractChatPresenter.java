@@ -13,9 +13,9 @@ public class AbstractChatPresenter implements AbstractChat {
     protected boolean closeConfirmed;
     protected int chatType;
     private String chatTitle;
-    private final String chatId;
+    private final ChatId chatId;
 
-    public AbstractChatPresenter(final String chatId, final AbstractChatUser sessionUser, final int chatType) {
+    public AbstractChatPresenter(final ChatId chatId, final AbstractChatUser sessionUser, final int chatType) {
         this.chatId = chatId;
         this.sessionUser = sessionUser;
         this.chatType = chatType;
@@ -89,7 +89,7 @@ public class AbstractChatPresenter implements AbstractChat {
         return chatType;
     }
 
-    public String getId() {
+    public ChatId getId() {
         return chatId;
     }
 
