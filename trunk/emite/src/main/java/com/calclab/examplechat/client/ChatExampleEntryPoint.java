@@ -99,12 +99,15 @@ public class ChatExampleEntryPoint implements EntryPoint {
 					btnLogin.setEnabled(false);
 					btnLogout.setEnabled(true);
 					dispatcher.fire(ChatDialogPlugin.SET_STATUS, MultiChatView.STATUS_ONLINE);
+					break;
 				case connecting:
-					// btnLogin.setEnabled(false);
+					btnLogin.setEnabled(false);
+					break;
 				case disconnected:
 					btnLogin.setEnabled(true);
 					btnLogout.setEnabled(false);
 					dispatcher.fire(ChatDialogPlugin.SET_STATUS, MultiChatView.STATUS_OFFLINE);
+					break;
 				}
 			}
 		});

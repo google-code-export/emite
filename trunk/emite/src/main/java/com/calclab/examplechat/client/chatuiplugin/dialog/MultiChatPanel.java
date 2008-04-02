@@ -146,7 +146,7 @@ public class MultiChatPanel implements MultiChatView {
     public void closeAllChats() {
         Component[] items = centerPanel.getItems();
         for (int i = 0; i < items.length; i++) {
-            centerPanel.remove(items[i]);
+            centerPanel.remove(items[i].getId());
         }
     }
 

@@ -89,7 +89,7 @@ public class SwingClient {
 			}
 		});
 
-		fieldHttpBase = new JTextField("http://localhost:8181/http-bind/");
+		fieldHttpBase = new JTextField("http://localhost:8383/http-bind/");
 		fieldDomain = new JTextField("localhost");
 		fieldName = new JTextField("admin");
 		fieldPassword = new JPasswordField("easyeasy");
