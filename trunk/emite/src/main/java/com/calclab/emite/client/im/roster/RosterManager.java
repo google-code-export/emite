@@ -2,10 +2,9 @@ package com.calclab.emite.client.im.roster;
 
 import java.util.List;
 
-import com.calclab.emite.client.core.bosh.Bosh;
+import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.SenderComponent;
-import com.calclab.emite.client.core.dispatcher.Answer;
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
@@ -14,8 +13,8 @@ public class RosterManager extends SenderComponent {
 
 	private final Roster roster;
 
-	public RosterManager(final Dispatcher dispatcher, final Bosh bosh, final Roster roster) {
-		super(dispatcher, bosh);
+	public RosterManager(final Emite emite, final Roster roster) {
+		super(emite);
 		this.roster = roster;
 	}
 
@@ -25,18 +24,19 @@ public class RosterManager extends SenderComponent {
 	 */
 	@Override
 	public void attach() {
-		when(Session.Events.login).Send(new Answer() {
-			public Packet respondTo(final Packet received) {
-				return new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster");
+		when(Session.Events.login, new PacketListener() {
+			public void handle(final Packet received) {
+				emite.send(new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster"));
 			}
 		});
-		when(new IQ("roster", IQ.Type.result, null)).Publish(new Answer() {
-			public Packet respondTo(final Packet received) {
-				setRosterItems(roster, received);
-				return Roster.Events.ready;
-			}
 
+		when(new IQ("roster", IQ.Type.result, null), new PacketListener() {
+			public void handle(final Packet received) {
+				setRosterItems(roster, received);
+				emite.publish(Roster.Events.ready);
+			}
 		});
+
 	}
 
 	private RosterItem convert(final Packet item) {

@@ -9,6 +9,6 @@ public interface Dispatcher {
 
 	public void publish(Packet packet);
 
-	public void subscribe(Matcher matcher, Action action);
+	public void subscribe(Matcher matcher, PacketListener packetListener);
 
 }

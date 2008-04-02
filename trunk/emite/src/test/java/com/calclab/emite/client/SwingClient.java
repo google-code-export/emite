@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.connector.HttpConnectorListener;
-import com.calclab.emite.client.core.bosh.Bosh;
+import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.im.chat.MessageListener;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterListener;
@@ -79,7 +79,7 @@ public class SwingClient {
 		btnPanic = new JButton("panic");
 		btnPanic.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				xmpp.getDispatcher().publish(Bosh.Events.error);
+				xmpp.getDispatcher().publish(BoshManager.Events.error);
 			}
 		});
 		final JButton btnClear = new JButton("clear");
@@ -128,23 +128,23 @@ public class SwingClient {
 	private void initXMPP() {
 		this.xmpp = TestHelper.createXMPP(new HttpConnectorListener() {
 			public void onError(final String id, final String cause) {
-				Log.debug((id + "-ERROR: " + cause));
+				print((id + "-ERROR: " + cause));
 			}
 
 			public void onFinish(final String id, final long duration) {
-				Log.debug((id + "-FINISH " + duration + "ms"));
+				print((id + "-FINISH " + duration + "ms"));
 			}
 
 			public void onResponse(final String id, final String response) {
-				Log.debug((id + "-RESPONSE: " + response));
+				print((id + "-RESPONSE: " + response));
 			}
 
 			public void onSend(final String id, final String xml) {
-				Log.debug((id + "-SENDING: " + xml));
+				print((id + "-SENDING: " + xml));
 			}
 
 			public void onStart(final String id) {
-				Log.debug((id + "-STARTED: " + id));
+				print((id + "-STARTED: " + id));
 			}
 
 		});

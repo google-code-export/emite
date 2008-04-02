@@ -2,7 +2,7 @@ package com.calclab.emite.client.xmpp.session;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.core.bosh.Bosh;
+import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.services.Globals;
@@ -48,7 +48,7 @@ public class Session {
 		globals.setUserName(sessionOptions.getUserName());
 		globals.setPassword(sessionOptions.getPassword());
 		setState(State.connecting);
-		dispatcher.publish(Bosh.Events.start);
+		dispatcher.publish(BoshManager.Events.start);
 	}
 
 	public void logout() {

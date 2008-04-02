@@ -5,9 +5,8 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import com.calclab.emite.client.core.bosh.Bosh;
+import com.calclab.emite.client.core.bosh.EmiteBosh;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.mock.MockDispatcher;
 
 public class TestChat {
@@ -19,8 +18,7 @@ public class TestChat {
 		chat.send("jid", "body");
 		assertEquals(1, dispatcher.getLength());
 		final Packet published = dispatcher.getPublished(0);
-		assertEquals(Bosh.Events.send.getType(), published
-				.getAttribute("type"));
+		assertEquals(EmiteBosh.Events.send.getType(), published.getAttribute("type"));
 		final Packet message = published.getFirstChild("message");
 		assertNotNull(message);
 	}

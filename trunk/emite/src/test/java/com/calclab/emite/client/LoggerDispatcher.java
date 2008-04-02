@@ -1,7 +1,7 @@
 package com.calclab.emite.client;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.dispatcher.Action;
+import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
@@ -24,8 +24,8 @@ public class LoggerDispatcher implements Dispatcher {
 		dispatcher.publish(packet);
 	}
 
-	public void subscribe(final Matcher matcher, final Action action) {
-		dispatcher.subscribe(matcher, action);
+	public void subscribe(final Matcher matcher, final PacketListener packetListener) {
+		dispatcher.subscribe(matcher, packetListener);
 	}
 
 }
