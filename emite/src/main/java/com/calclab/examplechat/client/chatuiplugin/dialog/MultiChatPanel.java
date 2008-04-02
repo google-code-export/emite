@@ -198,11 +198,11 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void setSubjectEditable(final boolean editable) {
-        subject.setDisabled(editable);
+        subject.setDisabled(!editable);
     }
 
     public void setInputEditable(final boolean editable) {
-        input.setDisabled(editable);
+        input.setDisabled(!editable);
     }
 
     public void showUserList(final GroupChatUserListView view) {
@@ -218,10 +218,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void removeGroupChatUsersPanel(final GroupChatUserListView view) {
-        // Integer index = userListToIndex.get(view);
-        // Bug in gwt 1.5?:
         groupChatUsersDeckPanel.remove((Widget) view);
-        // groupChatUsersDeckPanel.remove(index.intValue());
         userListToIndex.remove(view);
     }
 
@@ -248,8 +245,8 @@ public class MultiChatPanel implements MultiChatView {
         buddiesGrid.addUser(user, menu);
     }
 
-    public void removePresenceBuddy(final String name) {
-        // usersStack.removeStackSubItem(MYBUDDIES, name);
+    public void removePresenceBuddy(final PairChatUser user) {
+        buddiesGrid.removeUser(user);
     }
 
     public void setStatus(final int status) {
@@ -277,10 +274,9 @@ public class MultiChatPanel implements MultiChatView {
         groupChatUsersPanel.setVisible(visible);
         if (visible == true) {
             usersPanel.setActiveItemID(groupChatUsersPanel.getId());
-            buddiesPanel.collapse();
+            // buddiesPanel.collapse();
             groupChatUsersPanel.expand();
         }
-
     }
 
     public void setInviteToGroupChatButtonEnabled(final boolean enable) {
@@ -420,6 +416,7 @@ public class MultiChatPanel implements MultiChatView {
         buddiesPanel.setLayout(new FitLayout());
         buddiesPanel.setAutoScroll(true);
         buddiesPanel.setIconCls("userf-icon");
+        buddiesPanel.setBorder(false);
         buddiesGrid = new UserGrid();
         buddiesPanel.add(buddiesGrid);
         groupChatUsersPanel = new Panel(i18n.t("Now in this room"));

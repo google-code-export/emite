@@ -29,6 +29,7 @@ public class GroupChatUserListPanel extends Panel implements GroupChatUserListVi
         userGrid = new UserGrid();
         super.add(userGrid);
         super.setLayout(new FitLayout());
+        // super.setBorder(false);
     }
 
     public void addUser(final GroupChatUser user) {

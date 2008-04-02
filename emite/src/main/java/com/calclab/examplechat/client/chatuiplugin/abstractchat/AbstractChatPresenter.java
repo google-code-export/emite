@@ -35,11 +35,11 @@ public class AbstractChatPresenter implements AbstractChat {
     }
 
     public void addInfoMessage(final String message) {
-        view.showInfoMessage(message);
+        view.addInfoMessage(message);
     }
 
     public void addDelimiter(final String datetime) {
-        view.showDelimiter(datetime);
+        view.addDelimiter(datetime);
     }
 
     public void clearSavedInput() {

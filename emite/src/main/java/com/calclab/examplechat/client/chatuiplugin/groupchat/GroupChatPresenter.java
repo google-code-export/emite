@@ -71,7 +71,7 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
             Log.error("User " + userId + " not in our users list");
             userColor = "black";
         }
-        view.showMessage(userId, userColor, message);
+        view.addMessage(userId, userColor, message);
         listener.onMessageReceived(this);
     }
 

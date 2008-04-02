@@ -49,7 +49,7 @@ public interface MultiChatView {
 
     void highlightChat(AbstractChat chat);
 
-    void removePresenceBuddy(String buddyName);
+    void removePresenceBuddy(PairChatUser user);
 
     void setInputEditable(boolean editable);
 
