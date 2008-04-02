@@ -3,6 +3,9 @@ package com.calclab.emite.client.xmpp.stanzas;
 import com.calclab.emite.client.core.packet.Packet;
 
 public class Message extends BasicStanza {
+	public static enum MessageType {
+		chat, error, groupchat, headlines, normal
+	}
 
 	private static final String TYPE_CHAT = "chat";
 

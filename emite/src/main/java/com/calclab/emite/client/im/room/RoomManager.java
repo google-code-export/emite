@@ -5,7 +5,7 @@ import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.MessageType;
+import com.calclab.emite.client.xmpp.stanzas.Message.MessageType;
 
 public class RoomManager extends EmiteComponent {
 
