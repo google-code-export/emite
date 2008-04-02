@@ -14,8 +14,8 @@ public class TestChat {
 	@Test
 	public void testSend() {
 		final MockDispatcher dispatcher = new MockDispatcher();
-		final Chat chat = new Chat(dispatcher);
-		chat.send("jid", "body");
+		final ChatManager chatManager = new ChatManager(dispatcher);
+		chatManager.send("jid", "body");
 		assertEquals(1, dispatcher.getLength());
 		final Packet published = dispatcher.getPublished(0);
 		assertEquals(EmiteBosh.Events.send.getType(), published.getAttribute("type"));

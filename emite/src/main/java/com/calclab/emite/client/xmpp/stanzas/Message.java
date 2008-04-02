@@ -21,6 +21,11 @@ public class Message extends BasicStanza {
 		return getFirstChild("body").getText();
 	}
 
+	public MessageType getType() {
+		final String type = getAttribute(TYPE);
+		return type != null ? MessageType.valueOf(type) : null;
+	}
+
 	private void setMessage(final String msg) {
 		final Packet body = add("body", null);
 		body.addText(msg);

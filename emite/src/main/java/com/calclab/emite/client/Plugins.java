@@ -10,6 +10,7 @@ import com.calclab.emite.client.core.services.ServicesPlugin;
 import com.calclab.emite.client.core.services.XMLService;
 import com.calclab.emite.client.im.chat.ChatPlugin;
 import com.calclab.emite.client.im.presence.PresencePlugin;
+import com.calclab.emite.client.im.room.RoomPlugin;
 import com.calclab.emite.client.im.roster.RosterPlugin;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingPlugin;
 import com.calclab.emite.client.xmpp.sasl.SASLPlugin;
@@ -38,6 +39,7 @@ public class Plugins {
 		SessionPlugin.install(container);
 		RosterPlugin.install(container);
 		PresencePlugin.install(container);
+		RoomPlugin.install(container);
 	}
 
 	private static void installXMPPPlugins(final Container container) {

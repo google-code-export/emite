@@ -10,13 +10,14 @@ import com.calclab.emite.client.core.packet.BasicPacket;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.MessageType;
 
-public class Chat extends DispatcherComponent {
+public class ChatManager extends DispatcherComponent {
 
 	private final Dispatcher dispatcher;
 	private final ArrayList<MessageListener> listeners;
 
-	public Chat(final Dispatcher dispatcher) {
+	public ChatManager(final Dispatcher dispatcher) {
 		super(dispatcher);
 		this.dispatcher = dispatcher;
 		this.listeners = new ArrayList<MessageListener>();
@@ -37,8 +38,13 @@ public class Chat extends DispatcherComponent {
 	}
 
 	public void onReceived(final Message message) {
-		for (final MessageListener listener : listeners) {
-			listener.onReceived(message);
+		final MessageType type = message.getType();
+		switch (type) {
+		case chat:
+		case normal:
+			for (final MessageListener listener : listeners) {
+				listener.onReceived(message);
+			}
 		}
 	}
 
