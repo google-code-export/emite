@@ -10,7 +10,7 @@ import com.calclab.emite.client.core.packet.BasicPacket;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.MessageType;
+import com.calclab.emite.client.xmpp.stanzas.Message.MessageType;
 
 public class ChatManager extends DispatcherComponent {
 

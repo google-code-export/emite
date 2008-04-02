@@ -10,7 +10,7 @@ import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.emite.client.xmpp.stanzas.PresenceType;
+import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class PresenceManager extends EmiteComponent {
 	private Presence currentPresence;
@@ -64,7 +64,7 @@ public class PresenceManager extends EmiteComponent {
 	}
 
 	protected void onPresenceReceived(final Presence presence) {
-		final PresenceType type = presence.getType();
+		final Type type = presence.getType();
 		switch (type) {
 		case subscribe:
 			fireSubscriptionRequest(presence);
