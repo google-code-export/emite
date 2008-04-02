@@ -6,10 +6,10 @@ import com.calclab.emite.client.core.packet.Packet;
 
 public class BasicStanza extends DelegatedPacket implements Stanza {
 	protected static final String NAME = "iq";
+	protected static final String TYPE = "type";
 	private static final String FROM = "from";
 	private static final String ID = "id";
 	private static final String TO = "to";
-	private static final String TYPE = "type";
 
 	protected BasicStanza(final Packet stanza) {
 		super(stanza);
@@ -37,10 +37,6 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
 
 	public XmppURI getToURI() {
 		return XmppURI.parseURI(getTo());
-	}
-
-	public String getType() {
-		return getAttribute(TYPE);
 	}
 
 	public void setFrom(final String from) {

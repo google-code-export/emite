@@ -36,7 +36,7 @@ public class ResourceBindingManager extends SenderComponent {
 		when(new IQ("bindRequest", IQ.Type.result, null), new PacketListener() {
 			public void handle(final Packet iq) {
 				final String jid = iq.getFirstChild("bind").getFirstChild("jid").getText();
-				globals.setJID(jid);
+				globals.setXmppURI(jid);
 				emite.publish(Events.binded);
 			}
 		});

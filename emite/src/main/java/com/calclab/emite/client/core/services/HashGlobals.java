@@ -5,17 +5,13 @@ import java.util.HashMap;
 @SuppressWarnings("serial")
 public class HashGlobals extends HashMap<String, String> implements Globals {
 	private static final String DOMAIN = "domain";
-	private static final String JID = "jid";
 	private static final String PASSWORD = "password";
 	private static final String RESOURCE = "resource";
+	private static final String URI = "xmpp:uri";
 	private static final String USER_NAME = "userName";
 
 	public String getDomain() {
 		return get(DOMAIN);
-	}
-
-	public String getJID() {
-		return get(JID);
 	}
 
 	public String getPassword() {
@@ -30,12 +26,12 @@ public class HashGlobals extends HashMap<String, String> implements Globals {
 		return get(USER_NAME);
 	}
 
-	public void setDomain(final String domain) {
-		put(DOMAIN, domain);
+	public String getXmppURI() {
+		return get(URI);
 	}
 
-	public void setJID(final String jid) {
-		put(JID, jid);
+	public void setDomain(final String domain) {
+		put(DOMAIN, domain);
 	}
 
 	public void setPassword(final String password) {
@@ -50,6 +46,10 @@ public class HashGlobals extends HashMap<String, String> implements Globals {
 	public void setUserName(final String userName) {
 		put(USER_NAME, userName);
 
+	}
+
+	public void setXmppURI(final String jid) {
+		put(URI, jid);
 	}
 
 }

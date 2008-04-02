@@ -18,11 +18,13 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.connector.HttpConnectorListener;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.im.chat.MessageListener;
+import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterListener;
 import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 
 public class SwingClient {
 
@@ -172,6 +174,15 @@ public class SwingClient {
 				}
 			}
 		});
+		xmpp.getPresenceManager().addListener(new PresenceListener() {
+			public void onPresenceReceived(final Presence presence) {
+				print("PRESENCE!!: " + presence);
+			}
+
+			public void onSubscriptionRequest(final Presence presence) {
+				print("SUBSCRIPTION: " + presence);
+			}
+		});
 	}
 
 	private void print(final String message, final JTextArea out) {
@@ -180,8 +191,8 @@ public class SwingClient {
 	}
 
 	private void setConnectedState(final boolean isConnected) {
-		// btnLogin.setEnabled(isConnected);
-		// btnLogout.setEnabled(!isConnected);
+		btnLogin.setEnabled(isConnected);
+		btnLogout.setEnabled(!isConnected);
 	}
 
 	private void start() {
