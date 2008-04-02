@@ -28,8 +28,10 @@ import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.extend.UIExtensionPoint;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.xmpp.stanzas.XmppJID;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.ChatId;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
@@ -37,7 +39,7 @@ import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
-import com.calclab.examplechat.client.chatuiplugin.params.ChatInputMessageParam;
+import com.calclab.examplechat.client.chatuiplugin.params.ChatMessageParam;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 
@@ -47,12 +49,12 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     private final MultiChatListener listener;
     private boolean closeAllConfirmed;
     private final PairChatUser currentSessionUser;
-    private final HashMap<String, AbstractChat> chats;
+    private final HashMap<ChatId, AbstractChat> chats;
 
     public MultiChatPresenter(final PairChatUser currentSessionUser, final MultiChatListener listener) {
         this.currentSessionUser = currentSessionUser;
         this.listener = listener;
-        chats = new HashMap<String, AbstractChat>();
+        chats = new HashMap<ChatId, AbstractChat>();
     }
 
     public void init(final MultiChatView view) {
@@ -60,9 +62,9 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         reset();
     }
 
-    public GroupChat createGroupChat(final String groupChatName, final String userAlias,
+    public GroupChat createGroupChat(final String groupJid, final String userAlias,
             final GroupChatUserType groupChatUserType) {
-        String chatId = groupChatName;
+        ChatId chatId = new ChatId(XmppJID.parseJID(groupJid));
         AbstractChat abstractChat = chats.get(chatId);
         if (abstractChat != null) {
             activateChat(abstractChat);
@@ -73,11 +75,11 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         GroupChat groupChat = ChatDialogFactory.createGroupChat(chatId, this, groupChatUser);
         view.addGroupChatUsersPanel(groupChat.getUsersListView());
         view.setSubject("");
-        return (GroupChat) finishChatCreation(groupChat, groupChatName);
+        return (GroupChat) finishChatCreation(groupChat, groupJid);
     }
 
     public PairChat createPairChat(final PairChatUser otherUser) {
-        String chatId = otherUser.getJid();
+        ChatId chatId = new ChatId(otherUser.getJid());
         AbstractChat abstractChat = chats.get(chatId);
         if (abstractChat != null) {
             activateChat(abstractChat);
@@ -164,13 +166,15 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         chat.saveOtherProperties();
     }
 
-    public void onCurrentUserSend() {
-        listener.onSendMessage(currentChat, view.getInputText());
-        // view.setSendEnabled(false);
+    public void onCurrentUserSend(final String message) {
+        ChatMessageParam outputMessage = new ChatMessageParam(currentSessionUser.getJid(),
+                currentChat.getId().getJid(), message);
+        listener.onSendMessage(outputMessage);
+        messageReceived(outputMessage);
         view.clearInputText();
     }
 
-    public void messageReceived(final ChatInputMessageParam param) {
+    public void messageReceived(final ChatMessageParam param) {
         String chatId;
         String from = param.getFrom().toString();
         String to = param.getTo().toString();
@@ -182,9 +186,9 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         }
         AbstractChat chat = getChat(chatId);
         if (chat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
-            ((GroupChat) chat).addMessage(to, message);
+            ((GroupChat) chat).addMessage(from, message);
         } else {
-            ((PairChat) chat).addMessage(to, message);
+            ((PairChat) chat).addMessage(from, message);
         }
     }
 

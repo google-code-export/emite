@@ -655,7 +655,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private void doSend(final EventObject e) {
-        presenter.onCurrentUserSend();
+        presenter.onCurrentUserSend(getInputText());
         e.stopEvent();
         input.focus();
     }

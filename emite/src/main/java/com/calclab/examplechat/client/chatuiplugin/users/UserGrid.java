@@ -2,6 +2,7 @@ package com.calclab.examplechat.client.chatuiplugin.users;
 
 import java.util.HashMap;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppJID;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.dialog.StatusUtil;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
@@ -34,11 +35,11 @@ public class UserGrid extends GridPanel {
     private Store store;
     private FieldDef[] fieldDefs;
     private RecordDef recordDef;
-    private final HashMap<String, UserGridMenu> menuMap;
+    private final HashMap<XmppJID, UserGridMenu> menuMap;
 
     public UserGrid() {
         createGrid();
-        menuMap = new HashMap<String, UserGridMenu>();
+        menuMap = new HashMap<XmppJID, UserGridMenu>();
     }
 
     private void createGrid() {
@@ -93,7 +94,7 @@ public class UserGrid extends GridPanel {
             private void showMenu(final int rowIndex, final EventObject e) {
                 Record record = store.getRecordAt(rowIndex);
                 String jid = record.getAsString(JID);
-                UserGridMenu menu = menuMap.get(jid);
+                UserGridMenu menu = menuMap.get(XmppJID.parseJID(jid));
                 menu.showMenu(e);
             }
 
@@ -135,10 +136,15 @@ public class UserGrid extends GridPanel {
         store.add(newUserRecord);
     }
 
+    public void removeUser(final AbstractChatUser user) {
+        Record newUserRecord = recordDef.createRecord(new Object[] { "", user.getJid(), user.getAlias(),
+                user.getColor(), "" });
+        store.remove(newUserRecord);
+        menuMap.remove(user.getJid());
+    }
+
     // public void addList() {
-
     // Use this to set a list of Users
-
     // Object[][] data = new Object[rows][cols];
     //
     // RecordDef recordDef = new RecordDef(fields);
@@ -156,10 +162,4 @@ public class UserGrid extends GridPanel {
     //
     // }
 
-    public void removeUser(final AbstractChatUser user) {
-        Record newUserRecord = recordDef.createRecord(new Object[] { "", user.getJid(), user.getAlias(),
-                user.getColor(), "" });
-        store.remove(newUserRecord);
-        store.load();
-    }
 }

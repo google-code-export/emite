@@ -2,12 +2,12 @@ package com.calclab.examplechat.client.chatuiplugin.params;
 
 import com.calclab.emite.client.xmpp.stanzas.XmppJID;
 
-public class ChatInputMessageParam {
+public class ChatMessageParam {
     private final String message;
     private final XmppJID from;
     private final XmppJID to;
 
-    public ChatInputMessageParam(final XmppJID from, final XmppJID to, final String message) {
+    public ChatMessageParam(final XmppJID from, final XmppJID to, final String message) {
         this.from = from;
         this.to = to;
         this.message = message;

@@ -21,13 +21,14 @@ package com.calclab.examplechat.client.chatuiplugin.pairchat;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.ChatId;
 
 public class PairChatPresenter extends AbstractChatPresenter implements PairChat {
 
     final PairChatListener listener;
     private final PairChatUser otherUser;
 
-    public PairChatPresenter(final String chatId, final PairChatListener listener,
+    public PairChatPresenter(final ChatId chatId, final PairChatListener listener,
             final PairChatUser currentSessionUser, final PairChatUser otherUser) {
         super(chatId, currentSessionUser, TYPE_PAIR_CHAT);
         this.otherUser = otherUser;

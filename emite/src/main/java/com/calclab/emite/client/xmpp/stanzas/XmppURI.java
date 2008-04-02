@@ -52,4 +52,31 @@ public class XmppURI {
     public String toString() {
         return "xmpp:" + jid + "/" + resource;
     }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        final XmppURI other = (XmppURI) obj;
+        if (jid == null) {
+            if (other.jid != null) {
+                return false;
+            }
+        } else if (!jid.equals(other.jid)) {
+            return false;
+        }
+        if (resource == null) {
+            if (other.resource != null) {
+                return false;
+            }
+        } else if (!resource.equals(other.resource)) {
+            return false;
+        }
+        return true;
+    }
+
 }
