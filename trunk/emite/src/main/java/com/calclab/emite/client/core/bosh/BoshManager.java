@@ -13,7 +13,6 @@ import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.core.services.Scheduler;
-import com.calclab.emite.client.core.services.XMLService;
 
 public class BoshManager extends PublisherComponent implements Bosh, ConnectorCallback {
 
@@ -21,10 +20,9 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 	private final Connector connector;
 	private final Dispatcher dispatcher;
 	private final BoshOptions options;
-	private Body request;
+	private final BoshResponder responder;
 	private final Scheduler scheduler;
 	private final BoshState state;
-	private final XMLService xmler;
 	final Action onBodyReceived;
 	final Action restartStream;
 	final Action send;
@@ -32,12 +30,12 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 	final Action stop;
 
 	public BoshManager(final Dispatcher dispatcher, final Globals globals, final Connector connector,
-			final XMLService xmler, final Scheduler scheduler, final BoshOptions options) {
+			final Scheduler scheduler, final BoshResponder responder, final BoshOptions options) {
 		super(dispatcher);
 		this.dispatcher = dispatcher;
 		this.connector = connector;
-		this.xmler = xmler;
 		this.scheduler = scheduler;
+		this.responder = responder;
 		this.options = options;
 		this.activator = new Activator(this);
 		this.state = new BoshState();
@@ -54,7 +52,7 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 		sendCreation = new Action() {
 			public void handle(final Packet received) {
 				state.setRunning(true);
-				request.setCreationState(options.getDomain());
+				responder.getBody().setCreationState(options.getDomain());
 			}
 		};
 
@@ -100,15 +98,13 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 	}
 
 	public void catchPackets() {
-		if (this.request == null) {
-			request = new Body(state.nextRid(), state.getSID());
-		}
+		responder.initBody(state.nextRid(), state.getSID());
 	}
 
 	public void firePackets() {
 		activator.cancel();
 		if (state.isRunning()) {
-			if (request.isEmpty()) {
+			if (responder.getBody().isEmpty()) {
 				if (state.getCurrentRequestsCount() > 0) {
 					// no need
 				} else {
@@ -137,7 +133,7 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 		if (statusCode >= 400) {
 			dispatcher.publish(Bosh.Events.error);
 		} else {
-			final Packet response = xmler.toXML(content);
+			final Packet response = responder.bodyFromResponse(content);
 			if ("body".equals(response.getName())) {
 				dispatcher.publish(response);
 			} else {
@@ -148,15 +144,15 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 
 	public void send(final Packet toBeSend) {
 		Log.debug("BOSH::Queueing: " + toBeSend);
-		request.addChild(toBeSend);
+		responder.getBody().addChild(toBeSend);
 	}
 
 	public void setRestart() {
-		request.setRestart(options.getDomain());
+		responder.getBody().setRestart(options.getDomain());
 	}
 
 	public void setTerminate() {
-		request.setTerminate();
+		responder.getBody().setTerminate();
 		state.setTerminating();
 	}
 
@@ -183,7 +179,7 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 		} else if (state.isFirstResponse()) {
 			final String sid = response.getSID();
 			state.setSID(sid);
-			request.setSID(sid);
+			responder.getBody().setSID(sid);
 			state.setPoll(response.getPoll() + 500);
 		}
 		state.setLastResponseEmpty(response.isEmpty());
@@ -201,8 +197,8 @@ public class BoshManager extends PublisherComponent implements Bosh, ConnectorCa
 		try {
 			Log.debug("SENDING. Current: " + state.getCurrentRequestsCount() + ", after: "
 					+ (scheduler.getCurrentTime() - state.getLastSendTime()));
-			connector.send(options.getHttpBase(), xmler.toString(request), this);
-			request = null;
+			connector.send(options.getHttpBase(), responder.getResponse(), this);
+			responder.clearBody();
 			final long now = scheduler.getCurrentTime();
 			final long last = state.getLastSendTime();
 			Log.debug("BOSH SEND: " + last + " -> " + now + "(" + (now - last) + ")");
