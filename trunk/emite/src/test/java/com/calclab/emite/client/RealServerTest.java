@@ -17,7 +17,7 @@ public class RealServerTest {
 		final Session session = xmpp.getSession();
 
 		assertEquals(Session.State.disconnected, session.getState());
-		xmpp.addSessionListener(new SessionListener() {
+		xmpp.getSession().addListener(new SessionListener() {
 			public void onStateChanged(final State old, final State current) {
 				Log.debug("Session state: " + current);
 				switch (current) {
