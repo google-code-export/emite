@@ -53,21 +53,11 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         this.currentSessionUser = currentSessionUser;
         this.listener = listener;
         chats = new HashMap<String, AbstractChat>();
-        // view.setSendEnabled(false);
-        // view.setInputEditable(false);
-        // view.setSubjectEditable(false);
     }
 
     public void init(final MultiChatView view) {
         this.view = view;
         reset();
-        view.setStatus(MultiChatView.STATUS_OFFLINE);
-
-        // only for tests
-        view.addPresenceBuddy(new PairChatUser("images/person-def.gif", "testuser1@localhost", "testuser1", "maroon",
-                MultiChatView.STATUS_AWAY, "I'm out for dinner"));
-        view.addPresenceBuddy(new PairChatUser("images/person-def.gif", "vjrj@localhost", "testuser2", "navy",
-                MultiChatView.STATUS_ONLINE, "I'm out for dinner"));
     }
 
     public GroupChat createGroupChat(final String groupChatName, final String userAlias,
@@ -108,14 +98,14 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         groupChat.doClose();
         chats.remove(groupChat.getChatTitle());
         listener.onCloseGroupChat(groupChat);
-        checkCloseAllDisabling();
+        checkNoChats();
     }
 
     public void closePairChat(final PairChatPresenter pairChat) {
         pairChat.doClose();
         chats.remove(pairChat.getOtherUser().getJid());
         listener.onClosePairChat(pairChat);
-        checkCloseAllDisabling();
+        checkNoChats();
     }
 
     public void closeAllChats(final boolean withConfirmation) {
@@ -164,6 +154,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
             view.setGroupChatUsersPanelVisible(false);
             view.setInviteToGroupChatButtonEnabled(false);
             view.clearSubject();
+            view.setSubjectEditable(false);
         }
         view.setInputText(nextChat.getSavedInput());
         nextChat.activate();
@@ -273,7 +264,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         currentChat = chat;
         view.addChat(chat);
         chats.put(chat.getId(), chat);
-        checkCloseAllEnabling();
+        checkThereAreChats();
         return chat;
     }
 
@@ -283,22 +274,36 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         }
     }
 
-    private void checkCloseAllDisabling() {
+    private void checkNoChats() {
         if (chats.size() == 0) {
             view.setCloseAllOptionEnabled(false);
+            setInputEnabled(false);
         }
     }
 
-    private void checkCloseAllEnabling() {
+    private void checkThereAreChats() {
         if (chats.size() == 1) {
             view.setCloseAllOptionEnabled(true);
+            setInputEnabled(true);
         }
     }
 
     private void reset() {
         currentChat = null;
         closeAllConfirmed = false;
+        view.setStatus(MultiChatView.STATUS_OFFLINE);
         view.setCloseAllOptionEnabled(false);
+        view.setSubjectEditable(false);
+        setInputEnabled(false);
+    }
+
+    private void setInputEnabled(final boolean enabled) {
+        view.setSendEnabled(enabled);
+        view.setInputEditable(enabled);
+    }
+
+    public void addPresenceBuddy(final PairChatUser user) {
+        view.addPresenceBuddy(user);
     }
 
 }

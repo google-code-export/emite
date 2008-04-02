@@ -23,11 +23,11 @@ import org.ourproject.kune.platf.client.View;
 
 public interface AbstractChatView extends View {
 
-    void showMessage(String userAlias, String color, String message);
+    void addMessage(String userAlias, String color, String message);
 
-    void showInfoMessage(String message);
+    void addInfoMessage(String message);
 
-    void showDelimiter(String datetime);
+    void addDelimiter(String datetime);
 
     void scrollDown();
 

@@ -135,26 +135,26 @@ public class UserGrid extends GridPanel {
         store.add(newUserRecord);
     }
 
-    public void addList() {
+    // public void addList() {
 
-        // Use this to set a list of Users
+    // Use this to set a list of Users
 
-        // Object[][] data = new Object[rows][cols];
-        //
-        // RecordDef recordDef = new RecordDef(fields);
-        // ColumnModel columnModel = new ColumnModel(columns);
-        //
-        //
-        //
-        // MemoryProxy proxy = new MemoryProxy(data);
-        // ArrayReader reader = new ArrayReader(recordDef);
-        // store = new Store(proxy, reader);
-        // store.load();
-        //
-        // this.reconfigure(store, columnModel);
-        // }
-        //
-    }
+    // Object[][] data = new Object[rows][cols];
+    //
+    // RecordDef recordDef = new RecordDef(fields);
+    // ColumnModel columnModel = new ColumnModel(columns);
+    //
+    //
+    //
+    // MemoryProxy proxy = new MemoryProxy(data);
+    // ArrayReader reader = new ArrayReader(recordDef);
+    // store = new Store(proxy, reader);
+    // store.load();
+    //
+    // this.reconfigure(store, columnModel);
+    // }
+    //
+    // }
 
     public void removeUser(final AbstractChatUser user) {
         Record newUserRecord = recordDef.createRecord(new Object[] { "", user.getJid(), user.getAlias(),

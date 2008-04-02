@@ -33,6 +33,7 @@ public class ChatDialogPlugin extends Plugin {
     public static final String MESSAGE_RECEIVED = "chatplugin.messagereceived";
     public static final String SET_GROUPCHAT_SUBJECT = "chatplugin.groupchatsubjectchanged";
     public static final String ADD_USER_TO_GROUP_CHAT = "chatplugin.addusertogroupchat";
+    public static final String ADD_PRESENCE_BUDDY = "chatplugin.addpresencebuddy";
 
     // Output events
     public static final String ON_STATUS_SELECTED = "chatplugin.onstatusselected";
@@ -68,7 +69,6 @@ public class ChatDialogPlugin extends Plugin {
 
                     public void onSendMessage(final AbstractChat chat, final String message) {
                         dispatcher.fire(ChatDialogPlugin.ON_MESSAGE_SENDED, new ChatOutputMessageParam(chat, message));
-                        extChatDialog.messageReceived(chat.getId(), chat.getSessionUserAlias(), message);
                     }
 
                     public void onClosePairChat(final PairChatPresenter pairChat) {
@@ -149,6 +149,12 @@ public class ChatDialogPlugin extends Plugin {
         dispatcher.subscribe(ADD_USER_TO_GROUP_CHAT, new Action<GroupChatUserAddActionParam>() {
             public void execute(final GroupChatUserAddActionParam param) {
                 extChatDialog.addUsetToGroupChat(param.getGroupChatId(), param.getGroupChatUser());
+            }
+        });
+
+        dispatcher.subscribe(ADD_PRESENCE_BUDDY, new Action<PairChatUser>() {
+            public void execute(final PairChatUser param) {
+                extChatDialog.addPresenceBuddy(param);
             }
         });
     }

@@ -25,8 +25,8 @@ public class MultiChatSamples {
         dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatInputMessageParam(chatId2, chatId2, "hello"));
         dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatInputMessageParam(chatId2, currentUserJid, "hi"));
 
-        sendTestMessages(dispatcher, chatId1, currentUserJid, chatId1, 10);
-        sendTestMessages(dispatcher, chatId2, chatId2, currentUserJid, 10);
+        sendTestMessages(dispatcher, chatId1, currentUserJid, chatId1, 3);
+        sendTestMessages(dispatcher, chatId2, chatId2, currentUserJid, 3);
 
         String groupChatId1 = "chat1@rooms.localhost";
         String groupChatUserAlias1 = "luther.b";
@@ -66,15 +66,15 @@ public class MultiChatSamples {
         dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatInputMessageParam(groupChatId1, groupChatUserAlias3,
                 "testing"));
 
-        sendTestMessages(dispatcher, groupChatId1, groupChatUserAlias1, groupChatUserAlias3, 15);
-        sendTestMessages(dispatcher, groupChatId2, groupChatUserAlias3, groupChatUserAlias2, 15);
+        sendTestMessages(dispatcher, groupChatId1, groupChatUserAlias1, groupChatUserAlias3, 3);
+        sendTestMessages(dispatcher, groupChatId2, groupChatUserAlias3, groupChatUserAlias2, 3);
 
         // Log.debug("Adding other messages");
         // groupChat2.addInfoMessage("Mensaje de evento en group chat 2");
         // groupChat2.addDelimiter("17:35");
 
-        sendTestMessages(dispatcher, chatId1, currentUserJid, chatId1, 10);
-        sendTestMessages(dispatcher, chatId2, chatId2, currentUserJid, 10);
+        sendTestMessages(dispatcher, chatId1, currentUserJid, chatId1, 3);
+        sendTestMessages(dispatcher, chatId2, chatId2, currentUserJid, 3);
 
     }
 

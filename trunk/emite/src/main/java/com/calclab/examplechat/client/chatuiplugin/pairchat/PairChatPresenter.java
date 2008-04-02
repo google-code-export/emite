@@ -52,7 +52,7 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
             Log.error(error);
             throw new RuntimeException(error);
         }
-        view.showMessage(userJid, userColor, message);
+        view.addMessage(userJid, userColor, message);
         listener.onMessageReceived(this);
     }
 

@@ -51,13 +51,13 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
         setTitle(name);
     }
 
-    public void showInfoMessage(final String message) {
+    public void addInfoMessage(final String message) {
         HTML messageHtml = new HTML(message);
         addWidget(messageHtml);
         messageHtml.addStyleName("emite-ChatPanel-EventMessage");
     }
 
-    public void showMessage(final String userAlias, final String color, final String message) {
+    public void addMessage(final String userAlias, final String color, final String message) {
         // FIXME: Use gwt DOM.create... for this:
         // Element userAliasSpan = DOM.createSpan();
         // DOM.setInnerText(userAliasSpan, userAlias);
@@ -67,7 +67,7 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
         addWidget(messageHtml);
     }
 
-    public void showDelimiter(final String datetime) {
+    public void addDelimiter(final String datetime) {
         HorizontalPanel hp = new HorizontalPanel();
         HorizontalLine hr = new HorizontalLine();
         hp.add(new Label(datetime));
@@ -96,7 +96,6 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
 
     private void addWidget(final Widget widget) {
         childPanel.add(widget);
-        // childPanel.render(widget.getElement());
         childPanel.doLayout();
         widget.addStyleName("emite-ChatPanel-Message");
         scrollDown();
