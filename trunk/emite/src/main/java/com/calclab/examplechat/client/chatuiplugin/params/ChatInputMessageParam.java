@@ -1,35 +1,28 @@
 package com.calclab.examplechat.client.chatuiplugin.params;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppJID;
+
 public class ChatInputMessageParam {
+    private final String message;
+    private final XmppJID from;
+    private final XmppJID to;
 
-    final private String chatId;
-    final private String fromUser;
-    final private String message;
-
-    /**
-     * @param chatId
-     *                we are user the room name in Group chats and the other
-     *                user jid for pairchat
-     * @param fromUser
-     *                Currently we use jid in pair chats and alias in group chat
-     *                :-/
-     */
-    public ChatInputMessageParam(final String chatId, final String fromUser, final String message) {
-        this.chatId = chatId;
-        this.fromUser = fromUser;
+    public ChatInputMessageParam(final XmppJID from, final XmppJID to, final String message) {
+        this.from = from;
+        this.to = to;
         this.message = message;
-    }
-
-    public String getChatId() {
-        return chatId;
-    }
-
-    public String getFromUser() {
-        return fromUser;
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public XmppJID getFrom() {
+        return from;
+    }
+
+    public XmppJID getTo() {
+        return to;
     }
 
 }

@@ -2,6 +2,8 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
+import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
@@ -9,6 +11,7 @@ public class StatusUtil {
 
     private static final ChatIcons icons = ChatIcons.App.getInstance();
 
+    @Deprecated
     public static AbstractImagePrototype getStatusIcon(final int status) {
         switch (status) {
         case MultiChatView.STATUS_ONLINE:
@@ -30,6 +33,34 @@ public class StatusUtil {
         }
     }
 
+    public static AbstractImagePrototype getStatusIcon(final Presence presence) {
+        // Other icons to use
+        // return icons.invisible();
+        // return icons.away();
+        // return icons.message();
+
+        switch (presence.getType()) {
+        case available:
+            switch (presence.getShow()) {
+            case available:
+            case chat:
+                return icons.online();
+            case dnd:
+                return icons.busy();
+            case xa:
+                return icons.extendedAway();
+            default:
+                Log.debug("Status unknown" + presence.getShow());
+                return icons.online();
+            }
+        case unavailable:
+            return icons.offline();
+        default:
+            throw new IndexOutOfBoundsException("Xmpp status unknown");
+        }
+    }
+
+    @Deprecated
     public static String getStatusText(final I18nTranslationService i18n, final int status) {
         String textLabel;
 

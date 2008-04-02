@@ -8,7 +8,6 @@ import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
@@ -52,15 +51,15 @@ public class ChatDialogPlugin extends Plugin {
     @Override
     protected void start() {
         final Dispatcher dispatcher = getDispatcher();
-        dispatcher.subscribe(OPEN_CHAT_DIALOG, new Action<AbstractChatUser>() {
-            public void execute(final AbstractChatUser user) {
+        dispatcher.subscribe(OPEN_CHAT_DIALOG, new Action<PairChatUser>() {
+            public void execute(final PairChatUser user) {
                 if (extChatDialog == null) {
                     createChatDialog(user);
                 }
                 extChatDialog.show();
             }
 
-            private void createChatDialog(final AbstractChatUser user) {
+            private void createChatDialog(final PairChatUser user) {
                 extChatDialog = new MultiChatPresenter(user, new MultiChatListener() {
 
                     public void onStatusSelected(final int status) {
@@ -136,7 +135,7 @@ public class ChatDialogPlugin extends Plugin {
 
         dispatcher.subscribe(MESSAGE_RECEIVED, new Action<ChatInputMessageParam>() {
             public void execute(final ChatInputMessageParam param) {
-                extChatDialog.messageReceived(param.getChatId(), param.getFromUser(), param.getMessage());
+                extChatDialog.messageReceived(param);
             }
         });
 
