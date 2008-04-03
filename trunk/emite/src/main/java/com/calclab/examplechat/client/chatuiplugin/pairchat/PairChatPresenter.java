@@ -20,6 +20,7 @@
 package com.calclab.examplechat.client.chatuiplugin.pairchat;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.xmpp.stanzas.XmppJID;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.ChatId;
 
@@ -41,7 +42,7 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
         closeConfirmed = false;
     }
 
-    public void addMessage(final String userJid, final String message) {
+    public void addMessage(final XmppJID userJid, final String message) {
         String userColor;
 
         if (sessionUser.getJid().equals(userJid)) {
@@ -53,7 +54,7 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
             Log.error(error);
             throw new RuntimeException(error);
         }
-        view.addMessage(userJid, userColor, message);
+        view.addMessage(userJid.toString(), userColor, message);
         listener.onMessageReceived(this);
     }
 

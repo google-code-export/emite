@@ -188,7 +188,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         if (chat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
             ((GroupChat) chat).addMessage(from.toString(), message);
         } else {
-            ((PairChat) chat).addMessage(from.toString(), message);
+            ((PairChat) chat).addMessage(from, message);
         }
     }
 
