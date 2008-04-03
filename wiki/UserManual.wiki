@@ -2,19 +2,21 @@
 
 If you're planning to use emite, this guide is for you.
 
+
+
 == Create the xmpp object ==
 
 All the interaction with emite is done thought the xmpp facade object. 
 This is the way to obtain it:
 
 {{{
-	Xmpp xmpp = Xmpp.create(new BoshOptions("http-bind", "localhost"));
+Xmpp xmpp = Xmpp.create(new BoshOptions("http-bind", "localhost"));
 }}}
 
 We need to give the httpBase (where our server proxy is located) and the server domain name.
 Take a look to the BoshOptions class to know what parameters subsceptible of configuration.
 
-The xmpp object provides references to different "managers" (ie: ChatManager, RosterManager). All the interaction
+The xmpp object provides references to different "managers" (ie: !ChatManager, !RosterManager). All the interaction
 between emite and you is done by adding  listerers to those managers. 
 
 == Login/logout and control the session staste ==
@@ -22,89 +24,93 @@ between emite and you is done by adding  listerers to those managers.
 To login the session we use the login method on xmpp:
 
 {{{
-	xmpp.login("theUserName", "theUserPassword");
+xmpp.login("theUserName", "theUserPassword");
 }}}
 
 When the login method returns the login process *begins*. You could (and probably want) to know about
 the state of the login process. For this purpose we use a session listener:
 {{{
-	xmpp.getSession().addListener(new SessionListener() {
-		public void onStateChanged(final State old, final State current) {
-			switch (current) {
-			case connected:
-				// NOW WE CAN SEND AND RECEIVE XMPP STANZAS!
-				break;
-			case connecting:
-				break;
-			case disconnected:
-				break;
-			}
+xmpp.getSession().addListener(new SessionListener() {
+	public void onStateChanged(final State old, final State current) {
+		switch (current) {
+		case connected:
+			// NOW WE CAN SEND AND RECEIVE XMPP STANZAS!
+			break;
+		case connecting:
+			break;
+		case disconnected:
+			break;
 		}
+	}
 }}}
 
-We shouln't send any message BEFORE the 'connected' state is received. The disconnected state is received when an
+*We shouln't send any message before the 'connected' state is received.* The disconnected state is received when an
 error makes the xmpp stop (connection errors, etc...)
 
 We can logout whenever we want:
 {{{
-	xmpp.logout();
+xmpp.logout();
 }}}
+
+
 
 == Chat: user to user message exchaning ==
 
 *This is a proposal. Please Vicente read it and give me some feedback*
 
-We use the ChatManager to handle all the user to user message exchanging. As always, to obtain the ChatManager:
+We use the !ChatManager to handle all the user to user message exchanging. 
+As always, to obtain the !ChatManager we use the xmpp object:
 {{{
-	ChatManager chatManager = xmpp.getChatManager();
+ChatManager chatManager = xmpp.getChatManager();
 }}}
+
 
 === Create a chat, send and receive messages ===
 
 To start a conversation with someone we shoud create a chat object:
 {{{
-	Chat chat = xmpp.getChatManager().newChat("destinationUserJID");
+Chat chat = xmpp.getChatManager().newChat("destinationUserJID");
 }}}
 We can, now send messages, or change the subject:
 {{{
-	chat.send("hello, friend");
-	chat.setSubject("welcome");
+chat.send("hello, friend");
+chat.setSubject("welcome");
 }}}
 Or we can receive messages:
 {{{
-	chat.addListener(new ChatListener() {
-		public void onMessageReceived(Message receivedMessage) {
-			// here we have the message 
-		}
-	});
+chat.addListener(new ChatListener() {
+	public void onMessageReceived(Message receivedMessage) {
+		// here we have the message 
+	}
+});
 }}}
 
 Every Chat object has a unique id (based on the user JID and thread, but completely meaninless) 
 that allows us to differenciate one chat from another: 
 {{{
-	String uniqueID = chat.getID();
+String uniqueID = chat.getID();
 }}}
 
 
 === Manage created chats ===
 
 Chats can be created by us (as the last example) or by other connected xmpp users. To know when a chat is created 
-(either by us or by other) we can add a listener to the ChatManager object:
+(either by us or by other) we can add a listener to the !ChatManager object:
 {{{
-	xmpp.getChatManager().addListener(new ChatManagerListener() {
-		public void onChatCreated(Chat chat) {
-			// this is only an example... ChatView object doesnt exist within emite
-			final ChatView view = new ChatPanel();
-			chat.addListener(new ChatListener() {
-				public void onMessageReceived(Message message) {
-					view.add(message.getFrom() + ": " + message.getBody());
-				}
-				public void onMessageSent(Message message) {
-					view.add(message.getFrom() + ": " + message.getBody());
-				}
-			});			
-		}
-	});
+xmpp.getChatManager().addListener(new ChatManagerListener() {
+	public void onChatCreated(Chat chat) {
+		// this is only an example... ChatView object doesnt exist within emite
+		final ChatView view = new ChatPanel();
+		chat.addListener(new ChatListener() {
+			public void onMessageReceived(Message message) {
+				view.add(message.getFrom() + ": " + message.getBody());
+			}
+			public void onMessageSent(Message message) {
+				view.add(message.getFrom() + ": " + message.getBody());
+			}
+		});			
+	}
+});
 }}}
 
 
@@ -112,24 +118,26 @@ Chats can be created by us (as the last example) or by other connected xmpp user
 
 == Roster management ==
 
-All the roster management is done using the RosterManager object: {{{ xmpp.getRosterManager(); }}}
+All the roster management is done using the !RosterManager object: 
+{{{ xmpp.getRosterManager(); }}}
+
 
 === Retrieve the initial roster ===
 
 By default, the xmpp object retrieves the roster *after* connected state. We can retrieve the roster by:
 {{{
-	Roster roster = xmpp.getRoster();
-	roster.getSize();
-	RosterItem rosterItem = roster.getItem(0);
+Roster roster = xmpp.getRoster();
+roster.getSize();
+RosterItem rosterItem = roster.getItem(0);
 }}}
 
 To know when the roster is ready we can attach a listener to the roster:
 {{{
-	xmpp.getRoster().addListener(new RosterListener() {
-		public void onRosterInitialized(final List<RosterItem> rosterItems) {
-			// THE ROSTER IS READY AND YOU GET THE ITEMS FOR FREE ;) 
-		}
-	});
+xmpp.getRoster().addListener(new RosterListener() {
+	public void onRosterInitialized(final List<RosterItem> rosterItems) {
+		// THE ROSTER IS READY AND YOU GET THE ITEMS FOR FREE ;) 
+	}
+});
 }}}
 
 
