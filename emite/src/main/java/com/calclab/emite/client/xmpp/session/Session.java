@@ -10,8 +10,8 @@ import com.calclab.emite.client.core.services.Globals;
 public class Session {
 
 	public static class Events {
-		public static final Event login = new Event("session:login");
-		public static final Event logout = new Event("session:logout");
+		public static final Event loggedIn = new Event("session:login");
+		public static final Event loggedOut = new Event("session:logout");
 	}
 
 	public static enum State {
@@ -52,7 +52,7 @@ public class Session {
 	}
 
 	public void logout() {
-		dispatcher.publish(Events.logout);
+		dispatcher.publish(Events.loggedOut);
 	}
 
 	public void setState(final State newState) {

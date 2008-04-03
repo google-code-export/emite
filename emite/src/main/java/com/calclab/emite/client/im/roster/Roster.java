@@ -17,16 +17,24 @@ public class Roster {
 		items = new ArrayList<RosterItem>();
 	}
 
-	public void add(final RosterItem item) {
-		items.add(item);
-	}
-
 	public void addListener(final RosterListener listener) {
 		listeners.add(listener);
 	}
 
 	public void clear() {
 		items.clear();
+	}
+
+	public RosterItem getItem(final int index) {
+		return items.get(index);
+	}
+
+	public int getSize() {
+		return items.size();
+	}
+
+	void add(final RosterItem item) {
+		items.add(item);
 	}
 
 	void fireRosterInitialized() {

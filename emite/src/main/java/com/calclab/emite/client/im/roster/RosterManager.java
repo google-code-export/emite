@@ -24,7 +24,7 @@ public class RosterManager extends EmiteComponent {
 	 */
 	@Override
 	public void attach() {
-		when(Session.Events.login, new PacketListener() {
+		when(Session.Events.loggedIn, new PacketListener() {
 			public void handle(final Packet received) {
 				emite.send(new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster"));
 			}

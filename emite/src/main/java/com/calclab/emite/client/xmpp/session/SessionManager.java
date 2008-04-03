@@ -36,7 +36,7 @@ public class SessionManager extends EmiteComponent {
 			}
 		});
 
-		when(Session.Events.logout, new PacketListener() {
+		when(Session.Events.loggedOut, new PacketListener() {
 			public void handle(final Packet received) {
 				emite.publish(BoshManager.Events.stop);
 			}
@@ -53,7 +53,7 @@ public class SessionManager extends EmiteComponent {
 		when(new IQ("requestSession", IQ.Type.result, null), new PacketListener() {
 			public void handle(final Packet received) {
 				session.setState(Session.State.connected);
-				emite.publish(Session.Events.login);
+				emite.publish(Session.Events.loggedIn);
 			}
 		});
 

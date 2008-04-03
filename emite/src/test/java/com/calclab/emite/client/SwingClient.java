@@ -17,7 +17,9 @@ import javax.swing.JTextField;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.connector.HttpConnectorListener;
 import com.calclab.emite.client.core.bosh.BoshManager;
-import com.calclab.emite.client.im.chat.MessageListener;
+import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatListener;
+import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterListener;
@@ -161,9 +163,17 @@ public class SwingClient {
 				}
 			}
 		});
-		xmpp.getChat().addListener(new MessageListener() {
-			public void onReceived(final Message message) {
-				print(message.getFrom() + ": " + message.getBody());
+		xmpp.getChat().addListener(new ChatManagerListener() {
+			public void onChatCreated(final Chat chat) {
+				chat.addListener(new ChatListener() {
+					public void onMessageReceived(final Chat chat, final Message message) {
+						print("RECEIVED: " + message.toString());
+					}
+
+					public void onMessageSent(final Chat chat, final Message message) {
+						print("SENT: " + message.toString());
+					}
+				});
 			}
 		});
 		xmpp.getRoster().addListener(new RosterListener() {
