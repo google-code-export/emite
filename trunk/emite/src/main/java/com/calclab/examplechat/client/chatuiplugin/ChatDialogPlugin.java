@@ -7,7 +7,7 @@ import org.ourproject.kune.platf.client.extend.Plugin;
 import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.ChatId;
+import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
@@ -77,9 +77,9 @@ public class ChatDialogPlugin extends Plugin {
                                 dispatcher.fire(ChatDialogPlugin.ON_GROUP_CHAT_CLOSED, groupChat);
                             }
 
-                            public void setGroupChatSubject(final ChatId groupChatId, final String subject) {
+                            public void setGroupChatSubject(final Chat groupChat, final String subject) {
                                 dispatcher.fire(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED,
-                                        new GroupChatSubjectParam(groupChatId, subject));
+                                        new GroupChatSubjectParam(groupChat, subject));
                             }
 
                             public void onUserColorChanged(final String color) {
@@ -113,20 +113,20 @@ public class ChatDialogPlugin extends Plugin {
 
         dispatcher.subscribe(CREATE_GROUP_CHAT, new Action<CreateGroupChatActionParam>() {
             public void execute(final CreateGroupChatActionParam params) {
-                extChatDialog.createGroupChat(params.getGroupChatName(), params.getUserAlias(), params
+                extChatDialog.createGroupChat(params.getGroupChat(), params.getUserAlias(), params
                         .getGroupChatUserType());
             }
         });
 
-        dispatcher.subscribe(CREATE_PAIR_CHAT, new Action<PairChatUser>() {
-            public void execute(final PairChatUser pairChat) {
+        dispatcher.subscribe(CREATE_PAIR_CHAT, new Action<Chat>() {
+            public void execute(final Chat pairChat) {
                 extChatDialog.createPairChat(pairChat);
             }
         });
 
-        dispatcher.subscribe(ACTIVATE_CHAT, new Action<ChatId>() {
-            public void execute(final ChatId chatId) {
-                extChatDialog.activateChat(chatId);
+        dispatcher.subscribe(ACTIVATE_CHAT, new Action<Chat>() {
+            public void execute(final Chat chat) {
+                extChatDialog.activateChat(chat);
             }
         });
 
@@ -138,7 +138,7 @@ public class ChatDialogPlugin extends Plugin {
 
         dispatcher.subscribe(SET_GROUPCHAT_SUBJECT, new Action<GroupChatSubjectParam>() {
             public void execute(final GroupChatSubjectParam param) {
-                extChatDialog.groupChatSubjectChanged(param.getChatId(), param.getSubject());
+                extChatDialog.groupChatSubjectChanged(param.getChat(), param.getSubject());
             }
         });
 
