@@ -170,7 +170,7 @@ public class SwingClient {
 			public void onRosterInitialized(final List<RosterItem> items) {
 				print("ROSTER INITIALIZED");
 				for (final RosterItem item : items) {
-					print("ITEM: " + item.getJid() + ", " + item.getName());
+					print("ITEM: " + item.getXmppURI() + ", " + item.getName());
 				}
 			}
 		});
