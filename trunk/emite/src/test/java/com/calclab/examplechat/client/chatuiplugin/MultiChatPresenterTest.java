@@ -76,4 +76,7 @@ public class MultiChatPresenterTest {
         multiChat.addPresenceBuddy(otherUser);
         sendMessageFromOther();
     }
+
+    // Probar a cerrar room y volver a escribir...
+
 }
