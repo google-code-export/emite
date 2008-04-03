@@ -18,7 +18,7 @@ public class TestChatManager {
 
     private Dispatcher dispatcher;
     private Globals globals;
-    private ChatManager manager;
+    private ChatManagerDefault manager;
 
     @Before
     public void createManager() {
@@ -41,7 +41,7 @@ public class TestChatManager {
 	dispatcher.publish(new Message("from@localhost", "to@localhost", "hola!"));
 	assertEquals(1, manager.getChats().size());
 
-	final Chat theOnlyChat = manager.getChats().toArray(new Chat[1])[0];
+	final ChatDefault theOnlyChat = manager.getChats().toArray(new ChatDefault[1])[0];
 	Mockito.verify(listener).onChatCreated(theOnlyChat);
 
 	final ChatListener chatListener = Mockito.mock(ChatListener.class);

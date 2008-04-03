@@ -7,7 +7,7 @@ import org.ourproject.kune.platf.client.extend.Plugin;
 import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatDefault;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
@@ -77,7 +77,7 @@ public class ChatDialogPlugin extends Plugin {
                                 dispatcher.fire(ChatDialogPlugin.ON_GROUP_CHAT_CLOSED, groupChat);
                             }
 
-                            public void setGroupChatSubject(final Chat groupChat, final String subject) {
+                            public void setGroupChatSubject(final ChatDefault groupChat, final String subject) {
                                 dispatcher.fire(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED,
                                         new GroupChatSubjectParam(groupChat, subject));
                             }
@@ -118,15 +118,15 @@ public class ChatDialogPlugin extends Plugin {
             }
         });
 
-        dispatcher.subscribe(CREATE_PAIR_CHAT, new Action<Chat>() {
-            public void execute(final Chat pairChat) {
+        dispatcher.subscribe(CREATE_PAIR_CHAT, new Action<ChatDefault>() {
+            public void execute(final ChatDefault pairChat) {
                 extChatDialog.createPairChat(pairChat);
             }
         });
 
-        dispatcher.subscribe(ACTIVATE_CHAT, new Action<Chat>() {
-            public void execute(final Chat chat) {
-                extChatDialog.activateChat(chat);
+        dispatcher.subscribe(ACTIVATE_CHAT, new Action<ChatDefault>() {
+            public void execute(final ChatDefault chatDefault) {
+                extChatDialog.activateChat(chatDefault);
             }
         });
 

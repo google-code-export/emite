@@ -13,7 +13,7 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatDefault;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.im.presence.PresenceListener;
@@ -123,8 +123,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
         });
 
         xmpp.getChat().addListener(new ChatManagerListener() {
-            public void onChatCreated(final Chat chat) {
-                dispatcher.fire(ChatDialogPlugin.CREATE_PAIR_CHAT, chat);
+            public void onChatCreated(final ChatDefault chatDefault) {
+                dispatcher.fire(ChatDialogPlugin.CREATE_PAIR_CHAT, chatDefault);
 
                 dispatcher.subscribe(ChatDialogPlugin.ON_MESSAGE_SENDED, new Action<ChatMessageParam>() {
                     public void execute(final ChatMessageParam param) {
@@ -160,16 +160,16 @@ public class ChatExampleEntryPoint implements EntryPoint {
         });
 
         xmpp.getChat().addListener(new ChatManagerListener() {
-            public void onChatCreated(final Chat chat) {
-                chat.addListener(new ChatListener() {
-                    public void onMessageReceived(final Chat chat, final Message message) {
+            public void onChatCreated(final ChatDefault chatDefault) {
+                chatDefault.addListener(new ChatListener() {
+                    public void onMessageReceived(final ChatDefault chatDefault, final Message message) {
                         // dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED,
                         // new ChatMessageParam(XmppURI.parse(message
                         // .getFrom()), XmppURI.parse(message.getTo()),
                         // message.getBody()));
                     }
 
-                    public void onMessageSent(final Chat chat, final Message message) {
+                    public void onMessageSent(final ChatDefault chatDefault, final Message message) {
                     }
 
                 });

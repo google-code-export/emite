@@ -1,14 +1,14 @@
 package com.calclab.examplechat.client.chatuiplugin.params;
 
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatDefault;
 
 public class GroupChatSubjectParam {
 
     public final String subject;
-    private final Chat chat;
+    private final ChatDefault chatDefault;
 
-    public GroupChatSubjectParam(final Chat chat, final String subject) {
-        this.chat = chat;
+    public GroupChatSubjectParam(final ChatDefault chatDefault, final String subject) {
+        this.chatDefault = chatDefault;
         this.subject = subject;
     }
 
@@ -16,8 +16,8 @@ public class GroupChatSubjectParam {
         return subject;
     }
 
-    public Chat getChat() {
-        return chat;
+    public ChatDefault getChat() {
+        return chatDefault;
     }
 
 }

@@ -1,5 +1,5 @@
 package com.calclab.emite.client.im.chat;
 
 public interface ChatManagerListener {
-	void onChatCreated(Chat chat);
+	void onChatCreated(ChatDefault chatDefault);
 }

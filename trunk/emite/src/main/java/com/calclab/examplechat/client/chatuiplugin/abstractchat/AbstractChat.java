@@ -21,7 +21,7 @@ package com.calclab.examplechat.client.chatuiplugin.abstractchat;
 
 import org.ourproject.kune.platf.client.View;
 
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatDefault;
 
 public interface AbstractChat {
 
@@ -57,6 +57,6 @@ public interface AbstractChat {
 
     void doClose();
 
-    Chat getChat();
+    ChatDefault getChat();
 
 }

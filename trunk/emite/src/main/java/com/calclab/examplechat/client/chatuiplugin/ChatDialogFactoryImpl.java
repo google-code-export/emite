@@ -2,7 +2,7 @@ package com.calclab.examplechat.client.chatuiplugin;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatDefault;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;
@@ -48,19 +48,19 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         return userListPresenter;
     }
 
-    public GroupChat createGroupChat(final Chat chat, final GroupChatListener listener,
+    public GroupChat createGroupChat(final ChatDefault chatDefault, final GroupChatListener listener,
             final GroupChatUser currentSessionUser) {
         GroupChatUserList userList = createGroupChatUserList();
-        GroupChatPresenter presenter = new GroupChatPresenter(chat, listener, currentSessionUser);
+        GroupChatPresenter presenter = new GroupChatPresenter(chatDefault, listener, currentSessionUser);
         presenter.setUserList(userList);
         GroupChatPanel panel = new GroupChatPanel(presenter);
         presenter.init(panel);
         return presenter;
     }
 
-    public PairChat createPairChat(final Chat chat, final PairChatListener listener,
+    public PairChat createPairChat(final ChatDefault chatDefault, final PairChatListener listener,
             final PairChatUser currentSessionUser, final PairChatUser otherUser) {
-        PairChatPresenter presenter = new PairChatPresenter(chat, listener, currentSessionUser, otherUser);
+        PairChatPresenter presenter = new PairChatPresenter(chatDefault, listener, currentSessionUser, otherUser);
         PairChatPanel panel = new PairChatPanel(presenter);
         presenter.init(panel);
         return presenter;

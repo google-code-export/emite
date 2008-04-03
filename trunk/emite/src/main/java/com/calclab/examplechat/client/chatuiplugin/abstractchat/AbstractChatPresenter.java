@@ -2,7 +2,7 @@ package com.calclab.examplechat.client.chatuiplugin.abstractchat;
 
 import org.ourproject.kune.platf.client.View;
 
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatDefault;
 
 public class AbstractChatPresenter implements AbstractChat {
 
@@ -15,10 +15,10 @@ public class AbstractChatPresenter implements AbstractChat {
     protected boolean closeConfirmed;
     protected int chatType;
     private String chatTitle;
-    private final Chat chat;
+    private final ChatDefault chatDefault;
 
-    public AbstractChatPresenter(final Chat chat, final AbstractChatUser sessionUser, final int chatType) {
-        this.chat = chat;
+    public AbstractChatPresenter(final ChatDefault chatDefault, final AbstractChatUser sessionUser, final int chatType) {
+        this.chatDefault = chatDefault;
         this.sessionUser = sessionUser;
         this.chatType = chatType;
     }
@@ -91,8 +91,8 @@ public class AbstractChatPresenter implements AbstractChat {
         return chatType;
     }
 
-    public Chat getChat() {
-        return chat;
+    public ChatDefault getChat() {
+        return chatDefault;
     }
 
 }

@@ -20,7 +20,7 @@
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatDefault;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
@@ -35,8 +35,8 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
     private GroupChatUserList userList;
     final GroupChatListener listener;
 
-    public GroupChatPresenter(final Chat chat, final GroupChatListener listener, final GroupChatUser currentSessionUser) {
-        super(chat, currentSessionUser, TYPE_GROUP_CHAT);
+    public GroupChatPresenter(final ChatDefault chatDefault, final GroupChatListener listener, final GroupChatUser currentSessionUser) {
+        super(chatDefault, currentSessionUser, TYPE_GROUP_CHAT);
         if (subject != null) {
             this.subject = getChatTitle();
         } else {
