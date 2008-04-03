@@ -55,13 +55,14 @@ public class MultiChatPresenterTest {
         final Message message = new Message(sessionUser.getUri(), otherUser.getUri(), messageBody);
         multiChat.onCurrentUserSend(messageBody);
         Mockito.verify(chat).send(messageBody);
-        Mockito.verify(chatListener).onMessageSent(chat, message);
-        // Mockito.verify(pairChat).addMessage(sessionUser.getUri(),
-        // messageBody);
     }
 
     @Test
     public void testReceiveMessage() {
+        sendMessageFromOther();
+    }
+
+    private void sendMessageFromOther() {
         String messageBody = "hello world :)";
         final Message message = new Message(otherUser.getUri(), sessionUser.getUri(), messageBody);
         ChatMessageParam param = new ChatMessageParam(chat, message);
@@ -69,4 +70,10 @@ public class MultiChatPresenterTest {
         Mockito.verify(pairChat).addMessage(otherUser.getUri(), messageBody);
     }
 
+    @Test
+    public void removeAndAddPresenceAndSend() {
+        multiChat.removePresenceBuddy(otherUser);
+        multiChat.addPresenceBuddy(otherUser);
+        sendMessageFromOther();
+    }
 }

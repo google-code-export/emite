@@ -1,6 +1,5 @@
 package com.calclab.examplechat.client;
 
-import java.util.Date;
 import java.util.List;
 
 import org.ourproject.kune.platf.client.dispatch.Action;
@@ -48,7 +47,6 @@ public class ChatExampleEntryPoint implements EntryPoint {
     private DefaultDispatcher dispatcher;
     private PasswordTextBox passwordInput;
     private Presence presenceForTest;
-    private TextBox resourceInput;
     private TextBox userNameInput;
     private Xmpp xmpp;
 
@@ -131,7 +129,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
                     }
 
                     public void onMessageSent(final Chat chat, final Message message) {
-                        new ChatMessageParam(chat, message);
+                        dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatMessageParam(chat, message));
                     }
                 });
             }
@@ -234,14 +232,11 @@ public class ChatExampleEntryPoint implements EntryPoint {
         final HorizontalPanel login = new HorizontalPanel();
         userNameInput = new TextBox();
         userNameInput.setText("admin@localhost");
-        resourceInput = new TextBox();
-        resourceInput.setText("emite." + (new Date()).getTime());
         passwordInput = new PasswordTextBox();
         passwordInput.setText("easyeasy");
         login.add(new Label("user name:"));
         login.add(userNameInput);
         login.add(new Label("Resource:"));
-        login.add(resourceInput);
         login.add(new Label("password"));
         login.add(passwordInput);
         return login;

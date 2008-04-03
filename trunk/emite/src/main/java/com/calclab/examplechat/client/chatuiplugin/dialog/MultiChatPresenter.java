@@ -228,7 +228,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         chat.saveOtherProperties();
     }
 
-    public void onMessageReceived(final AbstractChat chat) {
+    public void onMessageAdded(final AbstractChat chat) {
         view.highlightChat(chat);
     }
 
