@@ -90,6 +90,7 @@ that allows us to differenciate one chat from another:
 {{{
 String uniqueID = chat.getID();
 }}}
+If we start a new chat, the !ChatManager always assigns a thead property to that chat. 
 
 
 === Manage created chats ===
@@ -115,11 +116,12 @@ xmpp.getChatManager().addListener(new ChatManagerListener() {
 
 
 
+== Roster  ==
 
-== Roster management ==
-
-All the roster management is done using the !RosterManager object: 
-{{{ xmpp.getRosterManager(); }}}
+You can retrieve the roster directly using xmpp: 
+{{{ 
+xmpp.getRoster(); 
+}}}
 
 
 === Retrieve the initial roster ===
@@ -139,6 +141,30 @@ xmpp.getRoster().addListener(new RosterListener() {
 	}
 });
 }}}
+
+
+
+== Presence ==
+
+*This is a proposal. Please Vicente read it and give me some feedback*
+
+We use the !PresenceManager to receive and send presence information.
+The roster *don't* handle automatically the presence of its items, but
+it has a method that make it trivally:
+
+{{{
+xmpp.getPresenceManager().addListener(new PresenceListener() {
+	public void onPresenceReceived(final Presence presence) {
+		xmpp.getRoster().handle(presence);
+	}
+	
+	public void onSubscriptionRequest(final Presence presence) {
+	}
+});
+xmpp.getPresenceManager().setMyOwnPresence(Presence.Show.away, "i'm out!");
+}}}
+
+
 
 
 
