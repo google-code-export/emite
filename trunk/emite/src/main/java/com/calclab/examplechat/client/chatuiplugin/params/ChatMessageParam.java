@@ -1,17 +1,18 @@
 package com.calclab.examplechat.client.chatuiplugin.params;
 
 import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.xmpp.stanzas.Message;
 
 public class ChatMessageParam {
     private final Chat chat;
-    private final String message;
+    private final Message message;
 
-    public ChatMessageParam(final Chat chat, final String message) {
+    public ChatMessageParam(final Chat chat, final Message message) {
         this.chat = chat;
         this.message = message;
     }
 
-    public String getMessage() {
+    public Message getMessage() {
         return message;
     }
 

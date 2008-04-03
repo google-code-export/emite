@@ -56,18 +56,18 @@ public class UserGrid extends GridPanel {
 
 		final String statusIcon = statusAbsIcon.getHTML();
 		addUser(user, statusIcon, user.getPresence().getStatus());
-		menuMap.put(user.getJid(), menu);
+		menuMap.put(user.getUri(), menu);
 	}
 
 	public void removeUser(final AbstractChatUser user) {
-		final Record newUserRecord = recordDef.createRecord(new Object[] { "", user.getJid(), user.getAlias(),
+		final Record newUserRecord = recordDef.createRecord(new Object[] { "", user.getUri(), user.getAlias(),
 				user.getColor(), "" });
 		store.remove(newUserRecord);
-		menuMap.remove(user.getJid());
+		menuMap.remove(user.getUri());
 	}
 
 	private void addUser(final AbstractChatUser user, final String statusIcon, final String statusText) {
-		final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getJid(),
+		final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getUri(),
 				user.getAlias(), user.getColor(), statusIcon, statusText });
 		store.add(newUserRecord);
 	}

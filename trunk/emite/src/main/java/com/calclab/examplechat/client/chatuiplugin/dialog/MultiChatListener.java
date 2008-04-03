@@ -24,7 +24,6 @@ import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.params.ChatMessageParam;
 
 public interface MultiChatListener {
 
@@ -41,7 +40,5 @@ public interface MultiChatListener {
     void attachToExtPoint(UIExtensionElement extensionElement);
 
     void doAction(String eventId, Object param);
-
-    void onSendMessage(ChatMessageParam outputMessage);
 
 }
