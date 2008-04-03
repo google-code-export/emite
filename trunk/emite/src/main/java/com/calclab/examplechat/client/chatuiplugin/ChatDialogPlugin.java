@@ -9,7 +9,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.ChatId;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
-import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
@@ -59,43 +58,42 @@ public class ChatDialogPlugin extends Plugin {
             }
 
             private void createChatDialog(final PairChatUser user) {
-                extChatDialog = new MultiChatPresenter(user, new MultiChatListener() {
+                ChatDialogFactoryImpl.App.getInstance().createMultiChat(user, new I18nTranslationServiceMocked(),
+                        new MultiChatListener() {
 
-                    public void onStatusSelected(final int status) {
-                        dispatcher.fire(ChatDialogPlugin.ON_STATUS_SELECTED, new Integer(status));
-                    }
+                            public void onStatusSelected(final int status) {
+                                dispatcher.fire(ChatDialogPlugin.ON_STATUS_SELECTED, new Integer(status));
+                            }
 
-                    public void onSendMessage(final ChatMessageParam message) {
-                        dispatcher.fire(ChatDialogPlugin.ON_MESSAGE_SENDED, message);
-                    }
+                            public void onSendMessage(final ChatMessageParam message) {
+                                dispatcher.fire(ChatDialogPlugin.ON_MESSAGE_SENDED, message);
+                            }
 
-                    public void onClosePairChat(final PairChatPresenter pairChat) {
-                        dispatcher.fire(ChatDialogPlugin.ON_PAIR_CHAT_CLOSED, pairChat);
-                    }
+                            public void onClosePairChat(final PairChatPresenter pairChat) {
+                                dispatcher.fire(ChatDialogPlugin.ON_PAIR_CHAT_CLOSED, pairChat);
+                            }
 
-                    public void onCloseGroupChat(final GroupChat groupChat) {
-                        dispatcher.fire(ChatDialogPlugin.ON_GROUP_CHAT_CLOSED, groupChat);
-                    }
+                            public void onCloseGroupChat(final GroupChat groupChat) {
+                                dispatcher.fire(ChatDialogPlugin.ON_GROUP_CHAT_CLOSED, groupChat);
+                            }
 
-                    public void setGroupChatSubject(final ChatId groupChatId, final String subject) {
-                        dispatcher.fire(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED, new GroupChatSubjectParam(
-                                groupChatId, subject));
-                    }
+                            public void setGroupChatSubject(final ChatId groupChatId, final String subject) {
+                                dispatcher.fire(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED,
+                                        new GroupChatSubjectParam(groupChatId, subject));
+                            }
 
-                    public void onUserColorChanged(final String color) {
-                        dispatcher.fire(ChatDialogPlugin.ON_USER_COLOR_SELECTED, color);
-                    }
+                            public void onUserColorChanged(final String color) {
+                                dispatcher.fire(ChatDialogPlugin.ON_USER_COLOR_SELECTED, color);
+                            }
 
-                    public void attachToExtPoint(final UIExtensionElement extensionElement) {
-                        dispatcher.fire(PlatformEvents.ATTACH_TO_EXT_POINT, extensionElement);
-                    }
+                            public void attachToExtPoint(final UIExtensionElement extensionElement) {
+                                dispatcher.fire(PlatformEvents.ATTACH_TO_EXT_POINT, extensionElement);
+                            }
 
-                    public void doAction(final String eventId, final Object param) {
-                        dispatcher.fire(eventId, param);
-                    }
-                });
-                MultiChatPanel multiChatPanel = new MultiChatPanel(new I18nTranslationServiceMocked(), extChatDialog);
-                extChatDialog.init(multiChatPanel);
+                            public void doAction(final String eventId, final Object param) {
+                                dispatcher.fire(eventId, param);
+                            }
+                        });
             }
         });
 
