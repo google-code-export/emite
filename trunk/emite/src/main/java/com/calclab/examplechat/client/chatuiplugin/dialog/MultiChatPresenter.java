@@ -96,14 +96,14 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void closeGroupChat(final GroupChatPresenter groupChat) {
         groupChat.doClose();
-        chats.remove(groupChat.getChatTitle());
+        chats.remove(groupChat.getChatId());
         listener.onCloseGroupChat(groupChat);
         checkNoChats();
     }
 
     public void closePairChat(final PairChatPresenter pairChat) {
         pairChat.doClose();
-        chats.remove(pairChat.getOtherUser().getJid());
+        chats.remove(pairChat.getChatId());
         listener.onClosePairChat(pairChat);
         checkNoChats();
     }
