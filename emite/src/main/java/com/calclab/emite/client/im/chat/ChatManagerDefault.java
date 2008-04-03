@@ -2,7 +2,7 @@ package com.calclab.emite.client.im.chat;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.HashSet;
 
 import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.EmiteBosh;
@@ -16,19 +16,19 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.MessageType;
 
-public class ChatManager extends DispatcherComponent {
+public class ChatManagerDefault extends DispatcherComponent {
 
-    private final HashMap<String, Chat> chats;
+    private final HashSet<ChatDefault> chatDefaults;
     private final Dispatcher dispatcher;
     private final Globals globals;
     private final ArrayList<ChatManagerListener> listeners;
 
-    public ChatManager(final Dispatcher dispatcher, final Globals globals) {
+    public ChatManagerDefault(final Dispatcher dispatcher, final Globals globals) {
 	super(dispatcher);
 	this.dispatcher = dispatcher;
 	this.globals = globals;
 	this.listeners = new ArrayList<ChatManagerListener>();
-	this.chats = new HashMap<String, Chat>();
+	this.chatDefaults = new HashSet<ChatDefault>();
     }
 
     public void addListener(final ChatManagerListener listener) {
@@ -45,11 +45,11 @@ public class ChatManager extends DispatcherComponent {
 	});
     }
 
-    public Collection<Chat> getChats() {
-	return chats.values();
+    public Collection<ChatDefault> getChats() {
+	return chatDefaults;
     }
 
-    public Chat newChat(final XmppURI xmppURI) {
+    public ChatDefault newChat(final XmppURI xmppURI) {
 	final String thread = String.valueOf(Math.random() * 1000000);
 	return createChat(xmppURI, thread);
     }
@@ -69,17 +69,28 @@ public class ChatManager extends DispatcherComponent {
 	dispatcher.publish(new Event(EmiteBosh.Events.send).With(message));
     }
 
-    private Chat createChat(final XmppURI from, final String thread) {
-	final Chat chat = new Chat(from, globals.getOwnURI(), thread, this);
-	chats.put(from.toString() + thread, chat);
+    private ChatDefault createChat(final XmppURI from, final String thread) {
+	final ChatDefault chatDefault = new ChatDefault(from, globals.getOwnURI(), thread, this);
+	chatDefaults.add(chatDefault);
 	for (final ChatManagerListener listener : listeners) {
-	    listener.onChatCreated(chat);
+	    listener.onChatCreated(chatDefault);
 	}
-	return chat;
+	return chatDefault;
     }
 
-    private Chat findChat(final XmppURI from, final String thread) {
-	return chats.get(from.toString() + thread);
+    private ChatDefault findChat(final XmppURI from, final String thread) {
+	ChatDefault selected = null;
+
+	for (final ChatDefault c : chatDefaults) {
+	    if (c.getFromURI().equals(from)) {
+		selected = c;
+		if (c.getThread().equals(thread)) {
+		    return c;
+		}
+	    }
+	}
+
+	return selected;
     }
 
     private void onChatMessageReceived(final Message message) {
@@ -88,11 +99,11 @@ public class ChatManager extends DispatcherComponent {
 	String thread = message.getThread();
 	thread = thread != null ? thread : "";
 
-	Chat chat = findChat(from, thread);
-	if (chat == null) {
-	    chat = createChat(from, thread);
+	ChatDefault chatDefault = findChat(from, thread);
+	if (chatDefault == null) {
+	    chatDefault = createChat(from, thread);
 	}
-	chat.process(message);
+	chatDefault.process(message);
     }
 
     void sendMessage(final Message message) {

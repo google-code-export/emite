@@ -5,15 +5,19 @@ import java.util.ArrayList;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class Chat {
+public class ChatDefault {
     private final String from;
     private final boolean hasThread;
     private final String id;
     private final ArrayList<ChatListener> listeners;
-    private final ChatManager manager;
+    private final ChatManagerDefault manager;
+    private final XmppURI other;
+    private final String thread;
     private final String to;
 
-    public Chat(final XmppURI other, final XmppURI myself, final String thread, final ChatManager manager) {
+    public ChatDefault(final XmppURI other, final XmppURI myself, final String thread, final ChatManagerDefault manager) {
+	this.other = other;
+	this.thread = thread;
 	this.from = myself.toString();
 	this.to = other.toString();
 	this.manager = manager;
@@ -41,6 +45,14 @@ public class Chat {
     @Override
     public String toString() {
 	return id;
+    }
+
+    XmppURI getFromURI() {
+	return other;
+    }
+
+    String getThread() {
+	return thread;
     }
 
     void process(final Message message) {

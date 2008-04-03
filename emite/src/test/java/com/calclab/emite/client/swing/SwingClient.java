@@ -10,7 +10,7 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.TestHelper;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.connector.HttpConnectorListener;
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatDefault;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.im.presence.PresenceListener;
@@ -94,20 +94,20 @@ public class SwingClient {
 	    }
 	});
 	xmpp.getChat().addListener(new ChatManagerListener() {
-	    public void onChatCreated(final Chat chat) {
-		final ChatPanel chatPanel = conversationsPanel.createChat(chat.getID(), new ChatPanelListener() {
+	    public void onChatCreated(final ChatDefault chatDefault) {
+		final ChatPanel chatPanel = conversationsPanel.createChat(chatDefault.getID(), new ChatPanelListener() {
 		    public void onSend(ChatPanel source, String text) {
-			chat.send(text);
+			chatDefault.send(text);
 			source.clearMessage();
 		    }
 
 		});
-		chat.addListener(new ChatListener() {
-		    public void onMessageReceived(final Chat chat, final Message message) {
+		chatDefault.addListener(new ChatListener() {
+		    public void onMessageReceived(final ChatDefault chatDefault, final Message message) {
 			chatPanel.showIcomingMessage(message.getFrom(), message.getBody());
 		    }
 
-		    public void onMessageSent(final Chat chat, final Message message) {
+		    public void onMessageSent(final ChatDefault chatDefault, final Message message) {
 			chatPanel.showOutMessage(message.getBody());
 		    }
 		});
