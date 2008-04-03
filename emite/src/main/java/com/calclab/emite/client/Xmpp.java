@@ -81,6 +81,13 @@ public class Xmpp {
 		session.logout();
 	}
 
+	/**
+	 * DEPRECATED: use Chat.send instead
+	 * 
+	 * @param to
+	 * @param msg
+	 */
+	@Deprecated
 	public void send(final String to, final String msg) {
 		getChat().send(to, msg);
 	}
