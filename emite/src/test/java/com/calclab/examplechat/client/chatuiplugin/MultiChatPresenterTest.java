@@ -15,33 +15,33 @@ import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 
 public class MultiChatPresenterTest {
 
-    private PairChatUser sessionUser;
+    private ChatDialogFactory factory;
     private MultiChatPresenter multiChat;
     private PairChatUser otherUser;
-    private ChatDialogFactory factory;
     private PairChat pairChat;
+    private PairChatUser sessionUser;
 
     @Before
     public void begin() {
-        factory = Mockito.mock(ChatDialogFactory.class);
-        MultiChatListener multiChatlistener = Mockito.mock(MultiChatListener.class);
-        sessionUser = new PairChatUser("", XmppURI.parseURI("lutherb@example.com"), "lutherb", "red", new Presence());
-        otherUser = new PairChatUser("", XmppURI.parseURI("matt@example.com"), "matt", "blue", new Presence());
-        multiChat = new MultiChatPresenter(factory, sessionUser, multiChatlistener);
-        MultiChatView panel = Mockito.mock(MultiChatView.class);
-        multiChat.init(panel);
-        ChatId chatId = new ChatId(otherUser.getJid());
-        pairChat = Mockito.mock(PairChat.class);
-        Mockito.stub(factory.createPairChat(chatId, multiChat, sessionUser, otherUser)).toReturn(pairChat);
-        multiChat.createPairChat(otherUser);
+	factory = Mockito.mock(ChatDialogFactory.class);
+	final MultiChatListener multiChatlistener = Mockito.mock(MultiChatListener.class);
+	sessionUser = new PairChatUser("", XmppURI.parse("lutherb@example.com"), "lutherb", "red", new Presence());
+	otherUser = new PairChatUser("", XmppURI.parse("matt@example.com"), "matt", "blue", new Presence());
+	multiChat = new MultiChatPresenter(factory, sessionUser, multiChatlistener);
+	final MultiChatView panel = Mockito.mock(MultiChatView.class);
+	multiChat.init(panel);
+	final ChatId chatId = new ChatId(otherUser.getJid());
+	pairChat = Mockito.mock(PairChat.class);
+	Mockito.stub(factory.createPairChat(chatId, multiChat, sessionUser, otherUser)).toReturn(pairChat);
+	multiChat.createPairChat(otherUser);
     }
 
     @Test
     public void testOnSendMessage() {
-        String message = "hello world";
-        Mockito.stub(pairChat.getChatId()).toReturn(new ChatId(otherUser.getJid()));
-        multiChat.onCurrentUserSend(message);
-        Mockito.verify(pairChat).addMessage(sessionUser.getJid(), message);
+	final String message = "hello world";
+	Mockito.stub(pairChat.getChatId()).toReturn(new ChatId(otherUser.getJid()));
+	multiChat.onCurrentUserSend(message);
+	Mockito.verify(pairChat).addMessage(sessionUser.getJid(), message);
     }
 
 }

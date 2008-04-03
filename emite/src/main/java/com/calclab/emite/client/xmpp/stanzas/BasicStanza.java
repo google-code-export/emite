@@ -24,7 +24,7 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
 	}
 
 	public XmppURI getFromURI() {
-		return XmppURI.parseURI(getFrom());
+		return XmppURI.parse(getFrom());
 	}
 
 	public String getId() {
@@ -36,7 +36,7 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
 	}
 
 	public XmppURI getToURI() {
-		return XmppURI.parseURI(getTo());
+		return XmppURI.parse(getTo());
 	}
 
 	public void setFrom(final String from) {

@@ -2,11 +2,11 @@ package com.calclab.emite.client.im.presence;
 
 import java.util.ArrayList;
 
+import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -29,11 +29,11 @@ public class PresenceManager extends EmiteComponent {
 	}
 
 	public Packet answerTo(final Presence presence) {
-		return new Presence(globals.getXmppURI()).To(presence.getFrom());
+		return new Presence(globals.getOwnURI()).To(presence.getFrom());
 	}
 
 	public Packet answerToSessionLogout() {
-		return new Presence(globals.getXmppURI()).With("type", "unavailable");
+		return new Presence(globals.getOwnURI()).With("type", "unavailable");
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class PresenceManager extends EmiteComponent {
 	}
 
 	private Presence createInitialPresence() {
-		return new Presence(globals.getXmppURI()).With(Presence.Show.chat);
+		return new Presence(globals.getOwnURI()).With(Presence.Show.chat);
 	}
 
 	private void firePresenceReceived(final Presence presence) {

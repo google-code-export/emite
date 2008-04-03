@@ -1,7 +1,11 @@
-package com.calclab.emite.client.core.services;
+package com.calclab.emite.client.components;
+
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public interface Globals {
 	String getDomain();
+
+	XmppURI getOwnURI();
 
 	String getPassword();
 
@@ -9,15 +13,13 @@ public interface Globals {
 
 	String getUserName();
 
-	String getXmppURI();
-
 	void setDomain(String domain);
+
+	void setOwnURI(XmppURI uri);
 
 	void setPassword(String password);
 
 	void setResourceName(String resource);
 
 	void setUserName(String userName);
-
-	void setXmppURI(String uri);
 }

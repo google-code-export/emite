@@ -2,10 +2,10 @@ package com.calclab.emite.client.xmpp.session;
 
 import java.util.ArrayList;
 
+import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.services.Globals;
 
 public class Session {
 

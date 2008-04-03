@@ -47,271 +47,271 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     private boolean closeAllConfirmed;
     private AbstractChat currentChat;
     private final PairChatUser currentSessionUser;
+    private final ChatDialogFactory factory;
     private final MultiChatListener listener;
     private MultiChatView view;
-    private final ChatDialogFactory factory;
 
     public MultiChatPresenter(final ChatDialogFactory factory, final PairChatUser currentSessionUser,
-            final MultiChatListener listener) {
-        this.factory = factory;
-        this.currentSessionUser = currentSessionUser;
-        this.listener = listener;
-        chats = new HashMap<ChatId, AbstractChat>();
+	    final MultiChatListener listener) {
+	this.factory = factory;
+	this.currentSessionUser = currentSessionUser;
+	this.listener = listener;
+	chats = new HashMap<ChatId, AbstractChat>();
     }
 
     public void activateChat(final AbstractChat chat) {
-        view.activateChat(chat);
-        onActivate(chat);
+	view.activateChat(chat);
+	onActivate(chat);
     }
 
     public void activateChat(final ChatId chatId) {
-        final AbstractChat chat = getChat(chatId);
-        activateChat(chat);
+	final AbstractChat chat = getChat(chatId);
+	activateChat(chat);
     }
 
     public void addBuddy(final String shortName, final String longName) {
     }
 
     public void addPresenceBuddy(final PairChatUser user) {
-        view.addPresenceBuddy(user);
+	view.addPresenceBuddy(user);
     }
 
     public void addUsetToGroupChat(final String chatId, final GroupChatUser groupChatUser) {
-        final GroupChat chat = (GroupChat) chats.get(chatId);
-        checkIsGroupChat(chat);
-        chat.addUser(groupChatUser);
+	final GroupChat chat = (GroupChat) chats.get(chatId);
+	checkIsGroupChat(chat);
+	chat.addUser(groupChatUser);
     }
 
     public void attachIconToBottomBar(final View view) {
-        listener.attachToExtPoint(new UIExtensionElement(UIExtensionPoint.CONTENT_BOTTOM_ICONBAR, view));
+	listener.attachToExtPoint(new UIExtensionElement(UIExtensionPoint.CONTENT_BOTTOM_ICONBAR, view));
     }
 
     public void closeAllChats(final boolean withConfirmation) {
-        if (withConfirmation) {
-            view.confirmCloseAll();
-        } else {
-            onCloseAllConfirmed();
-        }
+	if (withConfirmation) {
+	    view.confirmCloseAll();
+	} else {
+	    onCloseAllConfirmed();
+	}
     }
 
     public void closeGroupChat(final GroupChatPresenter groupChat) {
-        groupChat.doClose();
-        chats.remove(groupChat.getChatId());
-        listener.onCloseGroupChat(groupChat);
-        checkNoChats();
+	groupChat.doClose();
+	chats.remove(groupChat.getChatId());
+	listener.onCloseGroupChat(groupChat);
+	checkNoChats();
     }
 
     public void closePairChat(final PairChatPresenter pairChat) {
-        pairChat.doClose();
-        chats.remove(pairChat.getChatId());
-        listener.onClosePairChat(pairChat);
-        checkNoChats();
+	pairChat.doClose();
+	chats.remove(pairChat.getChatId());
+	listener.onClosePairChat(pairChat);
+	checkNoChats();
     }
 
     public GroupChat createGroupChat(final String groupJid, final String userAlias,
-            final GroupChatUserType groupChatUserType) {
-        final ChatId chatId = new ChatId(XmppURI.parseURI(groupJid));
-        final AbstractChat abstractChat = chats.get(chatId);
-        if (abstractChat != null) {
-            activateChat(abstractChat);
-            return (GroupChat) abstractChat;
-        }
-        final GroupChatUser groupChatUser = new GroupChatUser(currentSessionUser.getJid(), userAlias,
-                MultiChatView.DEF_USER_COLOR, groupChatUserType);
-        final GroupChat groupChat = factory.createGroupChat(chatId, this, groupChatUser);
-        view.addGroupChatUsersPanel(groupChat.getUsersListView());
-        view.setSubject("");
-        return (GroupChat) finishChatCreation(groupChat, groupJid);
+	    final GroupChatUserType groupChatUserType) {
+	final ChatId chatId = new ChatId(XmppURI.parse(groupJid));
+	final AbstractChat abstractChat = chats.get(chatId);
+	if (abstractChat != null) {
+	    activateChat(abstractChat);
+	    return (GroupChat) abstractChat;
+	}
+	final GroupChatUser groupChatUser = new GroupChatUser(currentSessionUser.getJid(), userAlias,
+		MultiChatView.DEF_USER_COLOR, groupChatUserType);
+	final GroupChat groupChat = factory.createGroupChat(chatId, this, groupChatUser);
+	view.addGroupChatUsersPanel(groupChat.getUsersListView());
+	view.setSubject("");
+	return (GroupChat) finishChatCreation(groupChat, groupJid);
     }
 
     public PairChat createPairChat(final PairChatUser otherUser) {
-        final ChatId chatId = new ChatId(otherUser.getJid());
-        final AbstractChat abstractChat = chats.get(chatId);
-        if (abstractChat != null) {
-            activateChat(abstractChat);
-            return (PairChat) abstractChat;
-        }
-        final PairChat pairChat = factory.createPairChat(chatId, this, currentSessionUser, otherUser);
-        return (PairChat) finishChatCreation(pairChat, otherUser.getAlias());
+	final ChatId chatId = new ChatId(otherUser.getJid());
+	final AbstractChat abstractChat = chats.get(chatId);
+	if (abstractChat != null) {
+	    activateChat(abstractChat);
+	    return (PairChat) abstractChat;
+	}
+	final PairChat pairChat = factory.createPairChat(chatId, this, currentSessionUser, otherUser);
+	return (PairChat) finishChatCreation(pairChat, otherUser.getAlias());
     }
 
     public void destroy() {
-        view.destroy();
+	view.destroy();
 
     }
 
     public void doAction(final String eventId, final Object param) {
-        listener.doAction(eventId, param);
+	listener.doAction(eventId, param);
     }
 
     public void groupChatSubjectChanged(final ChatId groupChatId, final String newSubject) {
-        final AbstractChat groupChat = getChat(groupChatId);
-        checkIsGroupChat(groupChat);
-        ((GroupChat) groupChat).setSubject(newSubject);
-        view.setSubject(newSubject);
+	final AbstractChat groupChat = getChat(groupChatId);
+	checkIsGroupChat(groupChat);
+	((GroupChat) groupChat).setSubject(newSubject);
+	view.setSubject(newSubject);
 
     }
 
     public void init(final MultiChatView view) {
-        this.view = view;
-        reset();
+	this.view = view;
+	reset();
     }
 
     public void inviteUserToRoom(final String shortName, final String longName) {
     }
 
     public boolean isCloseAllConfirmed() {
-        return closeAllConfirmed;
+	return closeAllConfirmed;
     }
 
     public void messageReceived(final ChatMessageParam param) {
-        ChatId chatId;
-        final String message = param.getMessage();
-        final XmppURI from = param.getFrom();
-        final XmppURI to = param.getTo();
-        if (currentSessionUser.getJid().equals(from)) {
-            chatId = new ChatId(to);
-        } else {
-            chatId = new ChatId(from);
-        }
-        final AbstractChat chat = getChat(chatId);
-        if (chat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
-            ((GroupChat) chat).addMessage(from.toString(), message);
-        } else {
-            ((PairChat) chat).addMessage(from, message);
-        }
+	ChatId chatId;
+	final String message = param.getMessage();
+	final XmppURI from = param.getFrom();
+	final XmppURI to = param.getTo();
+	if (currentSessionUser.getJid().equals(from)) {
+	    chatId = new ChatId(to);
+	} else {
+	    chatId = new ChatId(from);
+	}
+	final AbstractChat chat = getChat(chatId);
+	if (chat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
+	    ((GroupChat) chat).addMessage(from.toString(), message);
+	} else {
+	    ((PairChat) chat).addMessage(from, message);
+	}
     }
 
     public void onActivate(final AbstractChat nextChat) {
-        // view.setSendEnabled(nextRoom.isReady());
-        view.setInputText(nextChat.getSavedInput());
-        if (nextChat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
-            view.setGroupChatUsersPanelVisible(true);
-            view.setInviteToGroupChatButtonEnabled(true);
-            final GroupChatPresenter groupChat = (GroupChatPresenter) nextChat;
-            view.setSubject(groupChat.getSubject());
-            view.setSubjectEditable(groupChat.getSessionUserType().equals(GroupChatUser.MODERADOR));
-            view.showUserList(groupChat.getUsersListView());
-        } else {
-            view.setGroupChatUsersPanelVisible(false);
-            view.setInviteToGroupChatButtonEnabled(false);
-            view.clearSubject();
-            view.setSubjectEditable(false);
-        }
-        view.setInputText(nextChat.getSavedInput());
-        nextChat.activate();
-        currentChat = nextChat;
+	// view.setSendEnabled(nextRoom.isReady());
+	view.setInputText(nextChat.getSavedInput());
+	if (nextChat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
+	    view.setGroupChatUsersPanelVisible(true);
+	    view.setInviteToGroupChatButtonEnabled(true);
+	    final GroupChatPresenter groupChat = (GroupChatPresenter) nextChat;
+	    view.setSubject(groupChat.getSubject());
+	    view.setSubjectEditable(groupChat.getSessionUserType().equals(GroupChatUser.MODERADOR));
+	    view.showUserList(groupChat.getUsersListView());
+	} else {
+	    view.setGroupChatUsersPanelVisible(false);
+	    view.setInviteToGroupChatButtonEnabled(false);
+	    view.clearSubject();
+	    view.setSubjectEditable(false);
+	}
+	view.setInputText(nextChat.getSavedInput());
+	nextChat.activate();
+	currentChat = nextChat;
     }
 
     public void onCloseAllConfirmed() {
-        closeAllConfirmed = true;
-        view.closeAllChats();
-        reset();
+	closeAllConfirmed = true;
+	view.closeAllChats();
+	reset();
     }
 
     public void onCloseAllNotConfirmed() {
-        closeAllConfirmed = false;
+	closeAllConfirmed = false;
     }
 
     public void onCurrentUserSend(final String message) {
-        final ChatMessageParam outputMessage = new ChatMessageParam(currentSessionUser.getJid(), currentChat
-                .getChatId().getJid(), message);
-        listener.onSendMessage(outputMessage);
-        messageReceived(outputMessage);
-        view.clearInputText();
+	final ChatMessageParam outputMessage = new ChatMessageParam(currentSessionUser.getJid(), currentChat
+		.getChatId().getJid(), message);
+	listener.onSendMessage(outputMessage);
+	messageReceived(outputMessage);
+	view.clearInputText();
     }
 
     public void onDeactivate(final AbstractChat chat) {
-        chat.saveInput(view.getInputText());
-        chat.saveOtherProperties();
+	chat.saveInput(view.getInputText());
+	chat.saveOtherProperties();
     }
 
     public void onMessageReceived(final AbstractChat chat) {
-        view.highlightChat(chat);
+	view.highlightChat(chat);
     }
 
     public void onStatusSelected(final int status) {
-        view.setStatus(status);
-        listener.onStatusSelected(status);
+	view.setStatus(status);
+	listener.onStatusSelected(status);
     }
 
     public void onSubjectChangedByCurrentUser(final String text) {
-        final GroupChat groupChat = (GroupChat) currentChat;
-        groupChat.setSubject(text);
-        listener.setGroupChatSubject(groupChat.getChatId(), text);
-        // FIXME callback? erase this:
-        view.setSubject(text);
+	final GroupChat groupChat = (GroupChat) currentChat;
+	groupChat.setSubject(text);
+	listener.setGroupChatSubject(groupChat.getChatId(), text);
+	// FIXME callback? erase this:
+	view.setSubject(text);
     }
 
     public void onUserColorChanged(final String color) {
-        currentSessionUser.setColor(color);
-        for (final AbstractChat chat : chats.values()) {
-            chat.setSessionUserColor(color);
-        }
-        listener.onUserColorChanged(color);
+	currentSessionUser.setColor(color);
+	for (final AbstractChat chat : chats.values()) {
+	    chat.setSessionUserColor(color);
+	}
+	listener.onUserColorChanged(color);
     }
 
     public void setStatus(final int status) {
-        view.setStatus(status);
+	view.setStatus(status);
     }
 
     public void show() {
-        view.show();
-        closeAllConfirmed = false;
+	view.show();
+	closeAllConfirmed = false;
     }
 
     private void checkIsGroupChat(final AbstractChat chat) {
-        if (chat.getType() != AbstractChat.TYPE_GROUP_CHAT) {
-            new RuntimeException("You cannot do this operation in a this kind of chat");
-        }
+	if (chat.getType() != AbstractChat.TYPE_GROUP_CHAT) {
+	    new RuntimeException("You cannot do this operation in a this kind of chat");
+	}
     }
 
     private void checkNoChats() {
-        if (chats.size() == 0) {
-            view.setCloseAllOptionEnabled(false);
-            setInputEnabled(false);
-        }
+	if (chats.size() == 0) {
+	    view.setCloseAllOptionEnabled(false);
+	    setInputEnabled(false);
+	}
     }
 
     private void checkThereAreChats() {
-        if (chats.size() == 1) {
-            view.setCloseAllOptionEnabled(true);
-            setInputEnabled(true);
-        }
+	if (chats.size() == 1) {
+	    view.setCloseAllOptionEnabled(true);
+	    setInputEnabled(true);
+	}
     }
 
     private AbstractChat finishChatCreation(final AbstractChat chat, final String chatTitle) {
-        chat.setChatTitle(chatTitle);
-        currentChat = chat;
-        view.addChat(chat);
-        chats.put(chat.getChatId(), chat);
-        checkThereAreChats();
-        return chat;
+	chat.setChatTitle(chatTitle);
+	currentChat = chat;
+	view.addChat(chat);
+	chats.put(chat.getChatId(), chat);
+	checkThereAreChats();
+	return chat;
     }
 
     private AbstractChat getChat(final ChatId chatId) {
-        final AbstractChat chat = chats.get(chatId);
-        if (chat == null) {
-            final String error = "Unexpected chatId '" + chatId.getJid().toString() + "'";
-            Log.error(error);
-            throw new RuntimeException(error);
-        }
-        return chat;
+	final AbstractChat chat = chats.get(chatId);
+	if (chat == null) {
+	    final String error = "Unexpected chatId '" + chatId.getJid().toString() + "'";
+	    Log.error(error);
+	    throw new RuntimeException(error);
+	}
+	return chat;
     }
 
     private void reset() {
-        currentChat = null;
-        closeAllConfirmed = false;
-        view.setStatus(MultiChatView.STATUS_OFFLINE);
-        view.setCloseAllOptionEnabled(false);
-        view.setSubjectEditable(false);
-        setInputEnabled(false);
+	currentChat = null;
+	closeAllConfirmed = false;
+	view.setStatus(MultiChatView.STATUS_OFFLINE);
+	view.setCloseAllOptionEnabled(false);
+	view.setSubjectEditable(false);
+	setInputEnabled(false);
     }
 
     private void setInputEnabled(final boolean enabled) {
-        view.setSendEnabled(enabled);
-        view.setInputEditable(enabled);
-        view.setEmoticonButton(enabled);
+	view.setSendEnabled(enabled);
+	view.setInputEditable(enabled);
+	view.setEmoticonButton(enabled);
     }
 
 }

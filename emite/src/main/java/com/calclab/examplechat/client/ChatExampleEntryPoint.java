@@ -129,7 +129,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
 							+ item.getSubscription());
 					userSelector.addItem(item.getXmppURI(), item.getXmppURI());
 					dispatcher.fire(ChatDialogPlugin.ADD_PRESENCE_BUDDY, new PairChatUser("images/person-def.gif",
-							XmppURI.parseURI(item.getXmppURI()), item.getXmppURI(), "maroon", presenceForTest));
+							XmppURI.parse(item.getXmppURI()), item.getXmppURI(), "maroon", presenceForTest));
 				}
 			}
 		});
@@ -139,7 +139,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
 				chat.addListener(new ChatListener() {
 					public void onMessageReceived(final Chat chat, final Message message) {
 						dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatMessageParam(XmppURI
-								.parseURI(message.getFrom()), XmppURI.parseURI(message.getTo()), message.getBody()));
+								.parse(message.getFrom()), XmppURI.parse(message.getTo()), message.getBody()));
 						String text = "\nIN [" + message.getFrom() + "]\n";
 						text += message.getBody();
 						addMessageToOutput(text);
@@ -216,7 +216,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
 		kunePluginManager.install(new ChatDialogPlugin());
 
 		dispatcher.fire(ChatDialogPlugin.OPEN_CHAT_DIALOG, new PairChatUser("images/person-def.gif", XmppURI
-				.parseURI(userNameInput.getText()), userNameInput.getText(), MultiChatView.DEF_USER_COLOR,
+				.parse(userNameInput.getText()), userNameInput.getText(), MultiChatView.DEF_USER_COLOR,
 				presenceForTest));
 
 		dispatcher.subscribe(ChatDialogPlugin.ON_STATUS_SELECTED, new Action<Integer>() {
