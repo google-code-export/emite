@@ -130,7 +130,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         return closeAllConfirmed;
     }
 
-    public void activateChat(final String chatId) {
+    public void activateChat(final ChatId chatId) {
         AbstractChat chat = getChat(chatId);
         activateChat(chat);
     }
@@ -167,28 +167,28 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     }
 
     public void onCurrentUserSend(final String message) {
-        ChatMessageParam outputMessage = new ChatMessageParam(currentSessionUser.getJid(),
-                currentChat.getId().getJid(), message);
+        ChatMessageParam outputMessage = new ChatMessageParam(currentSessionUser.getJid(), currentChat.getChatId()
+                .getJid(), message);
         listener.onSendMessage(outputMessage);
         messageReceived(outputMessage);
         view.clearInputText();
     }
 
     public void messageReceived(final ChatMessageParam param) {
-        String chatId;
-        String from = param.getFrom().toString();
-        String to = param.getTo().toString();
+        ChatId chatId;
         String message = param.getMessage();
+        XmppJID from = param.getFrom();
+        XmppJID to = param.getTo();
         if (currentSessionUser.getJid().equals(from)) {
-            chatId = to;
+            chatId = new ChatId(to);
         } else {
-            chatId = from;
+            chatId = new ChatId(from);
         }
         AbstractChat chat = getChat(chatId);
         if (chat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
-            ((GroupChat) chat).addMessage(from, message);
+            ((GroupChat) chat).addMessage(from.toString(), message);
         } else {
-            ((PairChat) chat).addMessage(from, message);
+            ((PairChat) chat).addMessage(from.toString(), message);
         }
     }
 
@@ -206,8 +206,8 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         listener.attachToExtPoint(new UIExtensionElement(UIExtensionPoint.CONTENT_BOTTOM_ICONBAR, view));
     }
 
-    public void groupChatSubjectChanged(final String groupChatName, final String newSubject) {
-        AbstractChat groupChat = getChat(groupChatName);
+    public void groupChatSubjectChanged(final ChatId groupChatId, final String newSubject) {
+        AbstractChat groupChat = getChat(groupChatId);
         checkIsGroupChat(groupChat);
         ((GroupChat) groupChat).setSubject(newSubject);
         view.setSubject(newSubject);
@@ -217,7 +217,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     public void onSubjectChangedByCurrentUser(final String text) {
         GroupChat groupChat = (GroupChat) currentChat;
         groupChat.setSubject(text);
-        listener.setGroupChatSubject(groupChat, text);
+        listener.setGroupChatSubject(groupChat.getChatId(), text);
         // FIXME callback? erase this:
         view.setSubject(text);
     }
@@ -255,10 +255,10 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         listener.doAction(eventId, param);
     }
 
-    private AbstractChat getChat(final String chatId) {
+    private AbstractChat getChat(final ChatId chatId) {
         AbstractChat chat = chats.get(chatId);
         if (chat == null) {
-            String error = "Unexpected chatId '" + chatId + "'";
+            String error = "Unexpected chatId '" + chatId.getJid().toString() + "'";
             Log.error(error);
             throw new RuntimeException(error);
         }
@@ -269,7 +269,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         chat.setChatTitle(chatTitle);
         currentChat = chat;
         view.addChat(chat);
-        chats.put(chat.getId(), chat);
+        chats.put(chat.getChatId(), chat);
         checkThereAreChats();
         return chat;
     }
