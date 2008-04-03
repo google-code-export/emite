@@ -24,6 +24,11 @@ public class Message extends BasicStanza {
 		return getFirstChild("body").getText();
 	}
 
+	public String getThread() {
+		final Packet thread = getFirstChild("thread");
+		return thread != null ? thread.getText() : null;
+	}
+
 	public MessageType getType() {
 		final String type = getAttribute(TYPE);
 		return type != null ? MessageType.valueOf(type) : null;

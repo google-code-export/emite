@@ -10,20 +10,21 @@ import com.calclab.emite.client.core.packet.BasicPacket;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.MessageType;
 
 public class ChatManager extends DispatcherComponent {
 
 	private final Dispatcher dispatcher;
-	private final ArrayList<MessageListener> listeners;
+	private final ArrayList<ChatManagerListener> listeners;
 
 	public ChatManager(final Dispatcher dispatcher) {
 		super(dispatcher);
 		this.dispatcher = dispatcher;
-		this.listeners = new ArrayList<MessageListener>();
+		this.listeners = new ArrayList<ChatManagerListener>();
 	}
 
-	public void addListener(final MessageListener listener) {
+	public void addListener(final ChatManagerListener listener) {
 		listeners.add(listener);
 
 	}
@@ -42,15 +43,35 @@ public class ChatManager extends DispatcherComponent {
 		switch (type) {
 		case chat:
 		case normal:
-			for (final MessageListener listener : listeners) {
-				listener.onReceived(message);
-			}
+			onChatMessageReceived(message);
 		}
 	}
 
 	public void send(final String to, final String msg) {
 		final Message message = new Message(to, msg);
 		dispatcher.publish(new Event(EmiteBosh.Events.send).With(message));
+	}
+
+	private Chat createChat(final XmppURI from, final String thread) {
+		final Chat chat = new Chat();
+		for (final ChatManagerListener listener : listeners) {
+			listener.onChatCreated(chat);
+		}
+		return chat;
+	}
+
+	private Chat findChat(final XmppURI from, final String thread) {
+		return null;
+	}
+
+	private void onChatMessageReceived(final Message message) {
+		final XmppURI from = message.getFromURI();
+		final String thread = message.getThread();
+		Chat chat = findChat(from, thread);
+		if (chat == null) {
+			chat = createChat(from, thread);
+		}
+		chat.process(message);
 	}
 
 }

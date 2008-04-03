@@ -13,7 +13,9 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.im.chat.MessageListener;
+import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatListener;
+import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterListener;
@@ -135,14 +137,24 @@ public class ChatExampleEntryPoint implements EntryPoint {
 			}
 		});
 
-		xmpp.getChat().addListener(new MessageListener() {
-			public void onReceived(final Message message) {
-				dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatMessageParam(XmppURI.parseURI(
-						message.getFrom()).getJid(), XmppURI.parseURI(message.getTo()).getJid(), message.getBody()));
-				String text = "\nIN [" + message.getFrom() + "]\n";
-				text += message.getBody();
-				addMessageToOutput(text);
+		xmpp.getChat().addListener(new ChatManagerListener() {
+			public void onChatCreated(final Chat chat) {
+				chat.addListener(new ChatListener() {
+					public void onMessageReceived(final Chat chat, final Message message) {
+						dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatMessageParam(XmppURI.parseURI(
+								message.getFrom()).getJid(), XmppURI.parseURI(message.getTo()).getJid(), message
+								.getBody()));
+						String text = "\nIN [" + message.getFrom() + "]\n";
+						text += message.getBody();
+						addMessageToOutput(text);
+					}
+
+					public void onMessageSent(final Chat chat, final Message message) {
+					}
+
+				});
 			}
+
 		});
 
 		xmpp.getPresenceManager().addListener(new PresenceListener() {

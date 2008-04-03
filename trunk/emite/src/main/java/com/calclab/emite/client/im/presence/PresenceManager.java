@@ -55,7 +55,7 @@ public class PresenceManager extends EmiteComponent {
 			}
 		});
 
-		when(Session.Events.logout, new PacketListener() {
+		when(Session.Events.loggedOut, new PacketListener() {
 			public void handle(final Packet received) {
 				emite.send(answerToSessionLogout());
 			}
