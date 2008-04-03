@@ -49,6 +49,10 @@ public class ChatManager extends DispatcherComponent {
 	return chats.values();
     }
 
+    public void newChat(final XmppURI xmppURI) {
+
+    }
+
     public void onReceived(final Message message) {
 	final MessageType type = message.getType();
 	switch (type) {

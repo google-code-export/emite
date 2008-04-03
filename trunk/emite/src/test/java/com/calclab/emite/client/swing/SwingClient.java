@@ -18,6 +18,7 @@ import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterListener;
 import com.calclab.emite.client.swing.ChatPanel.ChatPanelListener;
 import com.calclab.emite.client.swing.LoginPanel.LoginPanelListener;
+import com.calclab.emite.client.swing.RosterPanel.RosterPanelListener;
 import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -40,18 +41,7 @@ public class SwingClient {
     public SwingClient() {
 	root = new JPanel(new BorderLayout());
 
-	loginPanel = createLoginPanel();
-	rosterPanel = new RosterPanel();
-	conversationsPanel = new ConversationsPanel();
-	root.add(loginPanel, BorderLayout.NORTH);
-	root.add(rosterPanel, BorderLayout.EAST);
-	root.add(conversationsPanel, BorderLayout.CENTER);
-
-	initXMPP();
-    }
-
-    private LoginPanel createLoginPanel() {
-	return new LoginPanel(new LoginPanelListener() {
+	loginPanel = new LoginPanel(new LoginPanelListener() {
 	    public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
 		xmpp.login(userName, password);
 	    }
@@ -61,6 +51,17 @@ public class SwingClient {
 	    }
 
 	});
+	rosterPanel = new RosterPanel(new RosterPanelListener() {
+	    public void onStartChat(final RosterItem item) {
+		xmpp.getChat().newChat(item.getXmppURI());
+	    }
+	});
+	conversationsPanel = new ConversationsPanel();
+	root.add(loginPanel, BorderLayout.NORTH);
+	root.add(rosterPanel, BorderLayout.EAST);
+	root.add(conversationsPanel, BorderLayout.CENTER);
+
+	initXMPP();
     }
 
     private void initXMPP() {
