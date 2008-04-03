@@ -7,6 +7,7 @@ import org.ourproject.kune.platf.client.extend.Plugin;
 import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.ChatId;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
@@ -76,9 +77,9 @@ public class ChatDialogPlugin extends Plugin {
                         dispatcher.fire(ChatDialogPlugin.ON_GROUP_CHAT_CLOSED, groupChat);
                     }
 
-                    public void setGroupChatSubject(final GroupChat groupChat, final String subject) {
+                    public void setGroupChatSubject(final ChatId groupChatId, final String subject) {
                         dispatcher.fire(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED, new GroupChatSubjectParam(
-                                groupChat.getChatTitle(), subject));
+                                groupChatId, subject));
                     }
 
                     public void onUserColorChanged(final String color) {
@@ -125,8 +126,8 @@ public class ChatDialogPlugin extends Plugin {
             }
         });
 
-        dispatcher.subscribe(ACTIVATE_CHAT, new Action<String>() {
-            public void execute(final String chatId) {
+        dispatcher.subscribe(ACTIVATE_CHAT, new Action<ChatId>() {
+            public void execute(final ChatId chatId) {
                 extChatDialog.activateChat(chatId);
             }
         });

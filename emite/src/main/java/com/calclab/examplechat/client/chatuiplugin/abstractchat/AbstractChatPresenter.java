@@ -89,7 +89,7 @@ public class AbstractChatPresenter implements AbstractChat {
         return chatType;
     }
 
-    public ChatId getId() {
+    public ChatId getChatId() {
         return chatId;
     }
 

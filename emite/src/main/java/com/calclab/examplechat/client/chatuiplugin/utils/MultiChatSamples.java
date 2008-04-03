@@ -5,6 +5,7 @@ import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppJID;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogPlugin;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.ChatId;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.ChatMessageParam;
 import com.calclab.examplechat.client.chatuiplugin.params.CreateGroupChatActionParam;
@@ -50,8 +51,8 @@ public class MultiChatSamples {
         dispatcher.fire(ChatDialogPlugin.CREATE_GROUP_CHAT, new CreateGroupChatActionParam(groupChatId2,
                 groupChatUserAlias2, GroupChatUser.PARTICIPANT));
 
-        dispatcher.fire(ChatDialogPlugin.SET_GROUPCHAT_SUBJECT, new GroupChatSubjectParam(groupChatId1,
-                "Welcome to chat1, today topic: Cultural issues in Brazil"));
+        dispatcher.fire(ChatDialogPlugin.SET_GROUPCHAT_SUBJECT, new GroupChatSubjectParam(new ChatId(XmppJID
+                .parseJID(groupChatId1)), "Welcome to chat1, today topic: Cultural issues in Brazil"));
 
         // groupChat2.setSubject("Welcome to this room: we are talking today
         // about

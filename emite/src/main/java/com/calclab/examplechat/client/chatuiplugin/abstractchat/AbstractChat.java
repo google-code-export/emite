@@ -55,6 +55,6 @@ public interface AbstractChat {
 
     void doClose();
 
-    ChatId getId();
+    ChatId getChatId();
 
 }

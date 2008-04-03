@@ -19,6 +19,7 @@
 
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.ChatId;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
@@ -39,6 +40,6 @@ public interface MultiChat {
 
     void messageReceived(final ChatMessageParam param);
 
-    void groupChatSubjectChanged(String groupChatName, String newSubject);
+    void groupChatSubjectChanged(final ChatId groupChatId, String newSubject);
 
 }
