@@ -49,8 +49,9 @@ public class ChatManager extends DispatcherComponent {
 	return chats.values();
     }
 
-    public void newChat(final XmppURI xmppURI) {
-
+    public Chat newChat(final XmppURI xmppURI) {
+	final String thread = String.valueOf(Math.random() * 1000000);
+	return createChat(xmppURI, thread);
     }
 
     public void onReceived(final Message message) {
