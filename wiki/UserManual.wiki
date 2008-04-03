@@ -14,12 +14,12 @@ Xmpp xmpp = Xmpp.create(new BoshOptions("http-bind", "localhost"));
 }}}
 
 We need to give the httpBase (where our server proxy is located) and the server domain name.
-Take a look to the BoshOptions class to know what parameters subsceptible of configuration.
+Take a look to the BoshOptions class to know what parameters are susceptible of configuration.
 
 The xmpp object provides references to different "managers" (ie: !ChatManager, !RosterManager). All the interaction
 between emite and you is done by adding  listerers to those managers. 
 
-== Login/logout and control the session staste ==
+== Login/logout and control the session state ==
 
 To login the session we use the login method on xmpp:
 
@@ -54,7 +54,7 @@ xmpp.logout();
 
 
 
-== Chat: user to user message exchaning ==
+== Chat: user to user message exchanging ==
 
 *This is a proposal. Please Vicente read it and give me some feedback*
 
@@ -67,7 +67,7 @@ ChatManager chatManager = xmpp.getChatManager();
 
 === Create a chat, send and receive messages ===
 
-To start a conversation with someone we shoud create a chat object:
+To start a conversation with someone we should create a chat object:
 {{{
 Chat chat = xmpp.getChatManager().newChat("destinationUserJID");
 }}}
@@ -85,12 +85,12 @@ chat.addListener(new ChatListener() {
 });
 }}}
 
-Every Chat object has a unique id (based on the user JID and thread, but completely meaninless) 
-that allows us to differenciate one chat from another: 
+Every Chat object has a unique id (based on the user JID and thread, but completely meaningless) 
+that allows us to difference one chat from other: 
 {{{
 String uniqueID = chat.getID();
 }}}
-If we start a new chat, the !ChatManager always assigns a thead property to that chat. 
+If we start a new chat, the !ChatManager always assigns a thread property to that chat. 
 
 
 === Manage created chats ===
