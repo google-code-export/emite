@@ -46,7 +46,7 @@ public class AbstractChatUser {
 		return iconUrl;
 	}
 
-	public XmppURI getJid() {
+	public XmppURI getUri() {
 		return jid;
 	}
 

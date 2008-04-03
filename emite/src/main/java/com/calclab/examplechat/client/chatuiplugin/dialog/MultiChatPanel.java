@@ -237,8 +237,8 @@ public class MultiChatPanel implements MultiChatView {
 
     public void addPresenceBuddy(final PairChatUser user) {
         UserGridMenu menu = new UserGridMenu(presenter);
-        menu.addMenuOption(i18n.t("Start a chat with this person"), "chat-icon", ChatDialogPlugin.CREATE_PAIR_CHAT,
-                user);
+        menu.addMenuOption(i18n.t("Start a chat with this person"), "chat-icon", ChatDialogPlugin.ON_PAIR_CHAT_START,
+                user.getUri());
         buddiesGrid.addUser(user, menu);
     }
 
