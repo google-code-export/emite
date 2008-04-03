@@ -21,24 +21,34 @@ import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPanel;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPresenter;
 
-public class ChatDialogFactory {
+public class ChatDialogFactoryImpl implements ChatDialogFactory {
+    public static class App {
+        private static ChatDialogFactoryImpl ourInstance = null;
 
-    public static MultiChat createMultiChat(final PairChatUser currentSessionUser, final I18nTranslationService i18n,
+        public static synchronized ChatDialogFactoryImpl getInstance() {
+            if (ourInstance == null) {
+                ourInstance = new ChatDialogFactoryImpl();
+            }
+            return ourInstance;
+        }
+    }
+
+    public MultiChat createMultiChat(final PairChatUser currentSessionUser, final I18nTranslationService i18n,
             final MultiChatListener listener) {
-        MultiChatPresenter presenter = new MultiChatPresenter(currentSessionUser, listener);
+        MultiChatPresenter presenter = new MultiChatPresenter(App.getInstance(), currentSessionUser, listener);
         MultiChatPanel panel = new MultiChatPanel(i18n, presenter);
         presenter.init(panel);
         return presenter;
     }
 
-    public static GroupChatUserList createGroupChatUserList() {
+    public GroupChatUserList createGroupChatUserList() {
         GroupChatUserListPresenter userListPresenter = new GroupChatUserListPresenter();
         GroupChatUserListPanel panel = new GroupChatUserListPanel();
         userListPresenter.init(panel);
         return userListPresenter;
     }
 
-    public static GroupChat createGroupChat(final ChatId chatId, final GroupChatListener listener,
+    public GroupChat createGroupChat(final ChatId chatId, final GroupChatListener listener,
             final GroupChatUser currentSessionUser) {
         GroupChatUserList userList = createGroupChatUserList();
         GroupChatPresenter presenter = new GroupChatPresenter(chatId, listener, currentSessionUser);
@@ -48,7 +58,7 @@ public class ChatDialogFactory {
         return presenter;
     }
 
-    public static PairChat createPairChat(final ChatId chatId, final PairChatListener listener,
+    public PairChat createPairChat(final ChatId chatId, final PairChatListener listener,
             final PairChatUser currentSessionUser, final PairChatUser otherUser) {
         PairChatPresenter presenter = new PairChatPresenter(chatId, listener, currentSessionUser, otherUser);
         PairChatPanel panel = new PairChatPanel(presenter);
