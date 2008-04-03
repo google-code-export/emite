@@ -4,26 +4,39 @@ package com.calclab.emite.client.xmpp.stanzas;
  * 
  * http://www.xmpp.org/drafts/attic/draft-saintandre-xmpp-uri-00.html
  * 
- * <code>XMPP-URI      = "xmpp:" jid [ "/" resource]</code>
+ * <code>XMPP-URI      = ["xmpp:"] node "@" host[ "/" resource]</code>
  * 
  */
 public class XmppURI {
-	// TODO: no estoy seguro de las excepciones... mejor devolver null?
+	private static final String PREFIX = "xmpp:";
+	private static final int PREFIX_LENGTH = PREFIX.length();
+
 	public static XmppURI parseURI(final String xmppUri) {
-		final String[] splitted1 = xmppUri.split("\\:");
-		if (splitted1.length > 2 || splitted1.length == 2 && !splitted1[0].equals("xmpp")) {
-			throw new RuntimeException("Wrong XmppUri format" + xmppUri);
+		final String xmppNoPrefix = xmppUri.startsWith(PREFIX) ? xmppUri.substring(PREFIX_LENGTH) : xmppUri;
+
+		final int atIndex = xmppNoPrefix.indexOf('@') + 1;
+		if (atIndex <= 0) {
+			throw new RuntimeException("The @ is mandatory");
 		}
-		final String uriWithoutXmpp = splitted1.length == 1 ? splitted1[0] : splitted1[1];
-		final String[] splitted2 = uriWithoutXmpp.split("/");
-		if (splitted2.length != 2 || !(splitted2[1].length() > 0)) {
-			throw new RuntimeException("Wrong XmppUri format" + xmppUri);
+		final String node = xmppNoPrefix.substring(0, atIndex - 1);
+		if (node.length() == 0) {
+			throw new RuntimeException("The node is mandatory");
 		}
-		return new XmppURI(XmppJID.parseJID(splitted2[0]), splitted2[1]);
+
+		final int barIndex = xmppNoPrefix.indexOf('/', atIndex);
+		final String host = barIndex > 0 ? xmppNoPrefix.substring(atIndex, barIndex) : xmppNoPrefix.substring(atIndex);
+		if (host.length() == 0) {
+			throw new RuntimeException("The domain is required");
+		}
+
+		final String resource = barIndex > 0 ? xmppNoPrefix.substring(barIndex + 1) : null;
+
+		return new XmppURI(node, host, resource);
 	}
 
-	private final XmppJID jid;
-	private final String repr;
+	private final String host;
+	private final String node;
+	private final String representation;
 	private final String resource;
 
 	/**
@@ -35,22 +48,30 @@ public class XmppURI {
 	            "$" / "," / "[" / "]" </code>
 	 * 
 	 */
-	public XmppURI(final XmppJID jid, final String resource) {
-		this.jid = jid;
+	public XmppURI(final String node, final String host, final String resource) {
+		this.node = node;
+		this.host = host;
 		this.resource = resource;
-		this.repr = "xmpp:" + jid.toString() + "/" + resource;
+		this.representation = PREFIX + node + "@" + host + (resource != null ? "/" + resource : "");
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
 			return true;
 		}
-		return obj == null ? false : repr.equals(((XmppURI) obj).repr);
+		return representation.equals(((XmppURI) obj).representation);
 	}
 
-	public XmppJID getJid() {
-		return jid;
+	public String getHost() {
+		return host;
+	}
+
+	public String getNode() {
+		return node;
 	}
 
 	public String getResource() {
@@ -59,12 +80,15 @@ public class XmppURI {
 
 	@Override
 	public int hashCode() {
-		return repr.hashCode();
+		return representation.hashCode();
+	}
+
+	public boolean hasResource() {
+		return resource != null;
 	}
 
 	@Override
 	public String toString() {
-		return repr;
+		return representation;
 	}
-
 }

@@ -20,54 +20,54 @@
 package com.calclab.examplechat.client.chatuiplugin.pairchat;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.xmpp.stanzas.XmppJID;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.ChatId;
 
 public class PairChatPresenter extends AbstractChatPresenter implements PairChat {
 
-    final PairChatListener listener;
-    private final PairChatUser otherUser;
+	private final PairChatUser otherUser;
+	final PairChatListener listener;
 
-    public PairChatPresenter(final ChatId chatId, final PairChatListener listener,
-            final PairChatUser currentSessionUser, final PairChatUser otherUser) {
-        super(chatId, currentSessionUser, TYPE_PAIR_CHAT);
-        this.otherUser = otherUser;
-        this.input = "";
-        this.listener = listener;
-    }
+	public PairChatPresenter(final ChatId chatId, final PairChatListener listener,
+			final PairChatUser currentSessionUser, final PairChatUser otherUser) {
+		super(chatId, currentSessionUser, TYPE_PAIR_CHAT);
+		this.otherUser = otherUser;
+		this.input = "";
+		this.listener = listener;
+	}
 
-    public void init(final PairChatView view) {
-        this.view = view;
-        closeConfirmed = false;
-    }
+	public void addMessage(final XmppURI userJid, final String message) {
+		String userColor;
 
-    public void addMessage(final XmppJID userJid, final String message) {
-        String userColor;
+		if (sessionUser.getJid().equals(userJid)) {
+			userColor = sessionUser.getColor();
+		} else if (otherUser.getJid().equals(userJid)) {
+			userColor = otherUser.getColor();
+		} else {
+			final String error = "Unexpected message from user '" + userJid + "' in " + "chat '" + otherUser.getJid();
+			Log.error(error);
+			throw new RuntimeException(error);
+		}
+		view.addMessage(userJid.toString(), userColor, message);
+		listener.onMessageReceived(this);
+	}
 
-        if (sessionUser.getJid().equals(userJid)) {
-            userColor = sessionUser.getColor();
-        } else if (otherUser.getJid().equals(userJid)) {
-            userColor = otherUser.getColor();
-        } else {
-            String error = "Unexpected message from user '" + userJid + "' in " + "chat '" + otherUser.getJid();
-            Log.error(error);
-            throw new RuntimeException(error);
-        }
-        view.addMessage(userJid.toString(), userColor, message);
-        listener.onMessageReceived(this);
-    }
+	public PairChatUser getOtherUser() {
+		return otherUser;
+	}
 
-    public PairChatUser getOtherUser() {
-        return otherUser;
-    }
+	public void init(final PairChatView view) {
+		this.view = view;
+		closeConfirmed = false;
+	}
 
-    public void onActivated() {
-        listener.onActivate(this);
-    }
+	public void onActivated() {
+		listener.onActivate(this);
+	}
 
-    public void onDeactivate() {
-        listener.onDeactivate(this);
-    }
+	public void onDeactivate() {
+		listener.onDeactivate(this);
+	}
 
 }
