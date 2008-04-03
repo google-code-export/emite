@@ -66,6 +66,10 @@ public class XmppURI {
 	return representation.equals(((XmppURI) obj).representation);
     }
 
+    public boolean equalsNoResource(final XmppURI other) {
+	return host.equals(other.host) && node.equals(other.node);
+    }
+
     public String getHost() {
 	return host;
     }

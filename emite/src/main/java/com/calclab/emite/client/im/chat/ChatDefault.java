@@ -8,12 +8,12 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 class ChatDefault implements Chat {
     private final String from;
     private final boolean hasThread;
-    private final String id;
+    private String id;
     private final ArrayList<ChatListener> listeners;
     private final ChatManagerDefault manager;
-    private final XmppURI other;
+    private XmppURI other;
     private final String thread;
-    private final String to;
+    private String to;
 
     public ChatDefault(final XmppURI other, final XmppURI myself, final String thread, final ChatManagerDefault manager) {
 	this.other = other;
@@ -23,19 +23,19 @@ class ChatDefault implements Chat {
 	this.manager = manager;
 	this.listeners = new ArrayList<ChatListener>();
 	this.hasThread = !(thread == null || thread.length() == 0);
-	this.id = "chat: " + other.toString() + (hasThread ? "-" + thread : "");
+	this.id = createID(other, thread);
     }
 
     public void addListener(final ChatListener listener) {
 	listeners.add(listener);
     }
 
-    public XmppURI getOtherURI() {
-	return other;
-    }
-
     public String getID() {
 	return id;
+    }
+
+    public XmppURI getOtherURI() {
+	return other;
     }
 
     public void send(final String body) {
@@ -46,9 +46,19 @@ class ChatDefault implements Chat {
 	}
     }
 
+    public void setOtherURI(final XmppURI otherURI) {
+	other = otherURI;
+	to = other.toString();
+	id = createID(other, thread);
+    }
+
     @Override
     public String toString() {
 	return id;
+    }
+
+    private String createID(final XmppURI other, final String thread) {
+	return "chat: " + other.toString() + (hasThread ? "-" + thread : "");
     }
 
     String getThread() {
