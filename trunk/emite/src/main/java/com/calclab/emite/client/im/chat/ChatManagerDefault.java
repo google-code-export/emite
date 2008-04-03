@@ -82,12 +82,28 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
 	ChatDefault selected = null;
 
 	for (final ChatDefault c : chats) {
-	    if (c.getOtherURI().equals(from)) {
-		selected = c;
-		if (c.getThread().equals(thread)) {
-		    return c;
+	    if (from.equalsNoResource(c.getOtherURI())) {
+
+		if (thread == null) {
+		    if (!c.getOtherURI().hasResource()) {
+			selected = c;
+		    } else if (c.getOtherURI().equals(from)) {
+			return selected;
+		    }
+		} else {
+		    if (!c.getOtherURI().hasResource() && thread.equals(c.getThread())) {
+			selected = c;
+		    } else if (c.getOtherURI().equals(from) && thread.equals(c.getThread())) {
+			return selected;
+		    }
 		}
 	    }
+	}
+
+	if (selected != null && !selected.getOtherURI().hasResource()) {
+	    final XmppURI old = selected.getOtherURI();
+	    new XmppURI(old.getNode(), old.getHost(), from.getResource());
+	    selected.setOtherURI(selected.getOtherURI());
 	}
 
 	return selected;
@@ -96,8 +112,7 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
     private void onChatMessageReceived(final Message message) {
 	final XmppURI from = message.getFromURI();
 
-	String thread = message.getThread();
-	thread = thread != null ? thread : "";
+	final String thread = message.getThread();
 
 	ChatDefault chat = findChat(from, thread);
 	if (chat == null) {
