@@ -19,7 +19,7 @@ public class Chat {
 	this.manager = manager;
 	this.listeners = new ArrayList<ChatListener>();
 	this.hasThread = !(thread == null || thread.length() == 0);
-	this.id = other.toString() + (hasThread ? thread : "");
+	this.id = "chat: " + other.toString() + (hasThread ? "-" + thread : "");
     }
 
     public void addListener(final ChatListener listener) {
@@ -36,6 +36,11 @@ public class Chat {
 	for (final ChatListener listener : listeners) {
 	    listener.onMessageSent(this, message);
 	}
+    }
+
+    @Override
+    public String toString() {
+	return id;
     }
 
     void process(final Message message) {
