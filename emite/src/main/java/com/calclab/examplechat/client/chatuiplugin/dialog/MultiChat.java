@@ -19,10 +19,9 @@
 
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.ChatId;
+import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.ChatMessageParam;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 
@@ -30,9 +29,9 @@ public interface MultiChat {
 
     public void show();
 
-    GroupChat createGroupChat(String groupChatName, String userAlias, GroupChatUserType groupChatUserType);
+    GroupChat createGroupChat(Chat chat, String userAlias, GroupChatUserType groupChatUserType);
 
-    PairChat createPairChat(PairChatUser otherUser);
+    PairChat createPairChat(Chat chat);
 
     public void setStatus(int status);
 
@@ -40,6 +39,6 @@ public interface MultiChat {
 
     void messageReceived(final ChatMessageParam param);
 
-    void groupChatSubjectChanged(final ChatId groupChatId, String newSubject);
+    void groupChatSubjectChanged(final Chat groupChat, String newSubject);
 
 }

@@ -2,6 +2,8 @@ package com.calclab.examplechat.client.chatuiplugin.abstractchat;
 
 import org.ourproject.kune.platf.client.View;
 
+import com.calclab.emite.client.im.chat.Chat;
+
 public class AbstractChatPresenter implements AbstractChat {
 
     protected static final String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
@@ -13,10 +15,10 @@ public class AbstractChatPresenter implements AbstractChat {
     protected boolean closeConfirmed;
     protected int chatType;
     private String chatTitle;
-    private final ChatId chatId;
+    private final Chat chat;
 
-    public AbstractChatPresenter(final ChatId chatId, final AbstractChatUser sessionUser, final int chatType) {
-        this.chatId = chatId;
+    public AbstractChatPresenter(final Chat chat, final AbstractChatUser sessionUser, final int chatType) {
+        this.chat = chat;
         this.sessionUser = sessionUser;
         this.chatType = chatType;
     }
@@ -89,8 +91,8 @@ public class AbstractChatPresenter implements AbstractChat {
         return chatType;
     }
 
-    public ChatId getChatId() {
-        return chatId;
+    public Chat getChat() {
+        return chat;
     }
 
 }
