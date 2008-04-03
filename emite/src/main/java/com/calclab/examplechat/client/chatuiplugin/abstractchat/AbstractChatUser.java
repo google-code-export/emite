@@ -19,43 +19,43 @@
 
 package com.calclab.examplechat.client.chatuiplugin.abstractchat;
 
-import com.calclab.emite.client.xmpp.stanzas.XmppJID;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class AbstractChatUser {
-    private final String iconUrl;
-    private final XmppJID jid;
-    private String alias;
-    private String color;
+	private String alias;
+	private String color;
+	private final String iconUrl;
+	private final XmppURI jid;
 
-    public AbstractChatUser(final String iconUrl, final XmppJID jid, final String alias, final String color) {
-        this.iconUrl = iconUrl;
-        this.jid = jid;
-        this.alias = alias;
-        this.color = color;
-    }
+	public AbstractChatUser(final String iconUrl, final XmppURI jid, final String alias, final String color) {
+		this.iconUrl = iconUrl;
+		this.jid = jid;
+		this.alias = alias;
+		this.color = color;
+	}
 
-    public XmppJID getJid() {
-        return jid;
-    }
+	public String getAlias() {
+		return alias;
+	}
 
-    public String getColor() {
-        return color;
-    }
+	public String getColor() {
+		return color;
+	}
 
-    public String getAlias() {
-        return alias;
-    }
+	public String getIconUrl() {
+		return iconUrl;
+	}
 
-    public void setColor(final String color) {
-        this.color = color;
-    }
+	public XmppURI getJid() {
+		return jid;
+	}
 
-    public void setAlias(final String alias) {
-        this.alias = alias;
-    }
+	public void setAlias(final String alias) {
+		this.alias = alias;
+	}
 
-    public String getIconUrl() {
-        return iconUrl;
-    }
+	public void setColor(final String color) {
+		this.color = color;
+	}
 
 }
