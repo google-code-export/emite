@@ -37,21 +37,21 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
         this.listener = listener;
     }
 
-    public void addMessage(final XmppURI userJid, final String message) {
+    public void addMessage(final XmppURI userUri, final String message) {
         String userColor;
 
-        if (sessionUser.getUri().equals(userJid)) {
+        if (sessionUser.getUri().equals(userUri) || sessionUser.getUri().getJid().equals(userUri.getJid())) {
             userColor = sessionUser.getColor();
-        } else if (otherUser.getUri().equals(userJid) || otherUser.getUri().getJid().equals(userJid.getJid())) {
+        } else if (otherUser.getUri().equals(userUri) || otherUser.getUri().getJid().equals(userUri.getJid())) {
             // FIXME Roster / Jids Problems...
             userColor = otherUser.getColor();
         } else {
-            final String error = "Unexpected message from user '" + userJid + "' in " + "chat '" + otherUser.getUri();
+            final String error = "Unexpected message from user '" + userUri + "' in " + "chat '" + otherUser.getUri();
             Log.error(error);
             throw new RuntimeException(error);
         }
-        view.addMessage(userJid.toString(), userColor, message);
-        listener.onMessageReceived(this);
+        view.addMessage(userUri.getNode(), userColor, message);
+        listener.onMessageAdded(this);
     }
 
     public PairChatUser getOtherUser() {
