@@ -10,8 +10,8 @@ import com.calclab.emite.client.core.packet.Packet;
 
 public class DispatcherDefault implements Dispatcher {
 	private static class Subscriptor {
-		final PacketListener packetListener;
 		final Matcher matcher;
+		final PacketListener packetListener;
 
 		public Subscriptor(final Matcher matcher, final PacketListener packetListener) {
 			this.matcher = matcher;
@@ -26,7 +26,7 @@ public class DispatcherDefault implements Dispatcher {
 
 	private final HashMap<String, List<Subscriptor>> subscriptors;
 
-	DispatcherDefault() {
+	public DispatcherDefault() {
 		this.subscriptors = new HashMap<String, List<Subscriptor>>();
 		this.listeners = new DispatcherStateListenerCollection();
 		this.queue = new ArrayList<Packet>();

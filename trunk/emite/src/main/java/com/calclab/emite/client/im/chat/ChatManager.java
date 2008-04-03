@@ -1,6 +1,8 @@
 package com.calclab.emite.client.im.chat;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 import com.calclab.emite.client.core.bosh.EmiteBosh;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
@@ -15,6 +17,7 @@ import com.calclab.emite.client.xmpp.stanzas.Message.MessageType;
 
 public class ChatManager extends DispatcherComponent {
 
+	private final HashMap<String, Chat> chats;
 	private final Dispatcher dispatcher;
 	private final ArrayList<ChatManagerListener> listeners;
 
@@ -22,6 +25,7 @@ public class ChatManager extends DispatcherComponent {
 		super(dispatcher);
 		this.dispatcher = dispatcher;
 		this.listeners = new ArrayList<ChatManagerListener>();
+		this.chats = new HashMap<String, Chat>();
 	}
 
 	public void addListener(final ChatManagerListener listener) {
@@ -36,6 +40,10 @@ public class ChatManager extends DispatcherComponent {
 				onReceived(new Message(received));
 			}
 		});
+	}
+
+	public Collection<Chat> getChats() {
+		return chats.values();
 	}
 
 	public void onReceived(final Message message) {
