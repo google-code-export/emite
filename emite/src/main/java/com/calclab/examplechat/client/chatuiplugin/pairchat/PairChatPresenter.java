@@ -20,7 +20,7 @@
 package com.calclab.examplechat.client.chatuiplugin.pairchat;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.im.chat.ChatDefault;
+import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 
@@ -29,45 +29,45 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
     private final PairChatUser otherUser;
     final PairChatListener listener;
 
-    public PairChatPresenter(final ChatDefault chatDefault, final PairChatListener listener, final PairChatUser currentSessionUser,
-            final PairChatUser otherUser) {
-        super(chatDefault, currentSessionUser, TYPE_PAIR_CHAT);
-        this.otherUser = otherUser;
-        this.input = "";
-        this.listener = listener;
+    public PairChatPresenter(final Chat chat, final PairChatListener listener, final PairChatUser currentSessionUser,
+	    final PairChatUser otherUser) {
+	super(chat, currentSessionUser, TYPE_PAIR_CHAT);
+	this.otherUser = otherUser;
+	this.input = "";
+	this.listener = listener;
     }
 
     public void addMessage(final XmppURI userJid, final String message) {
-        String userColor;
+	String userColor;
 
-        if (sessionUser.getJid().equals(userJid)) {
-            userColor = sessionUser.getColor();
-        } else if (otherUser.getJid().equals(userJid)) {
-            userColor = otherUser.getColor();
-        } else {
-            final String error = "Unexpected message from user '" + userJid + "' in " + "chat '" + otherUser.getJid();
-            Log.error(error);
-            throw new RuntimeException(error);
-        }
-        view.addMessage(userJid.toString(), userColor, message);
-        listener.onMessageReceived(this);
+	if (sessionUser.getJid().equals(userJid)) {
+	    userColor = sessionUser.getColor();
+	} else if (otherUser.getJid().equals(userJid)) {
+	    userColor = otherUser.getColor();
+	} else {
+	    final String error = "Unexpected message from user '" + userJid + "' in " + "chat '" + otherUser.getJid();
+	    Log.error(error);
+	    throw new RuntimeException(error);
+	}
+	view.addMessage(userJid.toString(), userColor, message);
+	listener.onMessageReceived(this);
     }
 
     public PairChatUser getOtherUser() {
-        return otherUser;
+	return otherUser;
     }
 
     public void init(final PairChatView view) {
-        this.view = view;
-        closeConfirmed = false;
+	this.view = view;
+	closeConfirmed = false;
     }
 
     public void onActivated() {
-        listener.onActivate(this);
+	listener.onActivate(this);
     }
 
     public void onDeactivate() {
-        listener.onDeactivate(this);
+	listener.onDeactivate(this);
     }
 
 }

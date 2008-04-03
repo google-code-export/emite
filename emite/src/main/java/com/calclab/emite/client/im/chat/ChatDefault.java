@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class ChatDefault {
+class ChatDefault implements Chat {
     private final String from;
     private final boolean hasThread;
     private final String id;
@@ -30,6 +30,10 @@ public class ChatDefault {
 	listeners.add(listener);
     }
 
+    public XmppURI getOtherURI() {
+	return other;
+    }
+
     public String getID() {
 	return id;
     }
@@ -45,10 +49,6 @@ public class ChatDefault {
     @Override
     public String toString() {
 	return id;
-    }
-
-    XmppURI getFromURI() {
-	return other;
     }
 
     String getThread() {

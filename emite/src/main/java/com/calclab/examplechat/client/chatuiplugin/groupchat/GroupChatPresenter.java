@@ -20,7 +20,7 @@
 package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.im.chat.ChatDefault;
+import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
@@ -30,91 +30,92 @@ import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChat
 public class GroupChatPresenter extends AbstractChatPresenter implements GroupChat {
 
     private int oldColor;
-    private String subject;
     private GroupChatUserType sessionUserType;
+    private String subject;
     private GroupChatUserList userList;
     final GroupChatListener listener;
 
-    public GroupChatPresenter(final ChatDefault chatDefault, final GroupChatListener listener, final GroupChatUser currentSessionUser) {
-        super(chatDefault, currentSessionUser, TYPE_GROUP_CHAT);
-        if (subject != null) {
-            this.subject = getChatTitle();
-        } else {
-            this.subject = "";
-        }
-        this.oldColor = 0;
-        this.input = "";
-        this.listener = listener;
-        this.sessionUserType = currentSessionUser.getUserType();
-    }
-
-    public void init(final GroupChatView view) {
-        this.view = view;
-        closeConfirmed = false;
-    }
-
-    public void setSessionUserType(final GroupChatUserType groupChatUserType) {
-        this.sessionUserType = groupChatUserType;
-    }
-
-    public void setUserList(final GroupChatUserList userList) {
-        this.userList = userList;
+    public GroupChatPresenter(final Chat chat, final GroupChatListener listener,
+	    final GroupChatUser currentSessionUser) {
+	super(chat, currentSessionUser, TYPE_GROUP_CHAT);
+	if (subject != null) {
+	    this.subject = getChatTitle();
+	} else {
+	    this.subject = "";
+	}
+	this.oldColor = 0;
+	this.input = "";
+	this.listener = listener;
+	this.sessionUserType = currentSessionUser.getUserType();
     }
 
     public void addMessage(final String userId, final String message) {
-        String userColor;
+	String userColor;
 
-        GroupChatUser user = userList.get(userId);
-        if (user != null) {
-            userColor = user.getColor();
-        } else {
-            Log.error("User " + userId + " not in our users list");
-            userColor = "black";
-        }
-        view.addMessage(userId, userColor, message);
-        listener.onMessageReceived(this);
+	final GroupChatUser user = userList.get(userId);
+	if (user != null) {
+	    userColor = user.getColor();
+	} else {
+	    Log.error("User " + userId + " not in our users list");
+	    userColor = "black";
+	}
+	view.addMessage(userId, userColor, message);
+	listener.onMessageReceived(this);
     }
 
     public void addUser(final GroupChatUser user) {
-        user.setColor(getNextColor());
-        userList.add(user);
-    }
-
-    public void removeUser(final String userAlias) {
-        GroupChatUser user = userList.get(userAlias);
-        userList.remove(user);
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(final String subject) {
-        this.subject = subject;
-    }
-
-    public GroupChatUserListView getUsersListView() {
-        return userList.getView();
+	user.setColor(getNextColor());
+	userList.add(user);
     }
 
     public GroupChatUserType getSessionUserType() {
-        return sessionUserType;
+	return sessionUserType;
     }
 
-    private String getNextColor() {
-        String color = USERCOLORS[oldColor++];
-        if (oldColor >= USERCOLORS.length) {
-            oldColor = 0;
-        }
-        return color;
+    public String getSubject() {
+	return subject;
+    }
+
+    public GroupChatUserListView getUsersListView() {
+	return userList.getView();
+    }
+
+    public void init(final GroupChatView view) {
+	this.view = view;
+	closeConfirmed = false;
     }
 
     public void onActivate() {
-        listener.onActivate(this);
+	listener.onActivate(this);
     }
 
     public void onDeactivate() {
-        listener.onDeactivate(this);
+	listener.onDeactivate(this);
+    }
+
+    public void removeUser(final String userAlias) {
+	final GroupChatUser user = userList.get(userAlias);
+	userList.remove(user);
+    }
+
+    public void setSessionUserType(final GroupChatUserType groupChatUserType) {
+	this.sessionUserType = groupChatUserType;
+    }
+
+    public void setSubject(final String subject) {
+	this.subject = subject;
+    }
+
+    public void setUserList(final GroupChatUserList userList) {
+	this.userList = userList;
+    }
+
+    private String getNextColor() {
+	final String color = USERCOLORS[oldColor++];
+	if (oldColor >= USERCOLORS.length) {
+	    oldColor = 0;
+	}
+	return color;
     }
 
 }

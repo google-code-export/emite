@@ -16,9 +16,9 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.MessageType;
 
-public class ChatManagerDefault extends DispatcherComponent {
+public class ChatManagerDefault extends DispatcherComponent implements ChatManager {
 
-    private final HashSet<ChatDefault> chatDefaults;
+    private final HashSet<ChatDefault> chats;
     private final Dispatcher dispatcher;
     private final Globals globals;
     private final ArrayList<ChatManagerListener> listeners;
@@ -28,7 +28,7 @@ public class ChatManagerDefault extends DispatcherComponent {
 	this.dispatcher = dispatcher;
 	this.globals = globals;
 	this.listeners = new ArrayList<ChatManagerListener>();
-	this.chatDefaults = new HashSet<ChatDefault>();
+	this.chats = new HashSet<ChatDefault>();
     }
 
     public void addListener(final ChatManagerListener listener) {
@@ -46,10 +46,10 @@ public class ChatManagerDefault extends DispatcherComponent {
     }
 
     public Collection<ChatDefault> getChats() {
-	return chatDefaults;
+	return chats;
     }
 
-    public ChatDefault newChat(final XmppURI xmppURI) {
+    public Chat newChat(final XmppURI xmppURI) {
 	final String thread = String.valueOf(Math.random() * 1000000);
 	return createChat(xmppURI, thread);
     }
@@ -70,19 +70,19 @@ public class ChatManagerDefault extends DispatcherComponent {
     }
 
     private ChatDefault createChat(final XmppURI from, final String thread) {
-	final ChatDefault chatDefault = new ChatDefault(from, globals.getOwnURI(), thread, this);
-	chatDefaults.add(chatDefault);
+	final ChatDefault chat = new ChatDefault(from, globals.getOwnURI(), thread, this);
+	chats.add(chat);
 	for (final ChatManagerListener listener : listeners) {
-	    listener.onChatCreated(chatDefault);
+	    listener.onChatCreated(chat);
 	}
-	return chatDefault;
+	return chat;
     }
 
     private ChatDefault findChat(final XmppURI from, final String thread) {
 	ChatDefault selected = null;
 
-	for (final ChatDefault c : chatDefaults) {
-	    if (c.getFromURI().equals(from)) {
+	for (final ChatDefault c : chats) {
+	    if (c.getOtherURI().equals(from)) {
 		selected = c;
 		if (c.getThread().equals(thread)) {
 		    return c;
@@ -99,11 +99,11 @@ public class ChatManagerDefault extends DispatcherComponent {
 	String thread = message.getThread();
 	thread = thread != null ? thread : "";
 
-	ChatDefault chatDefault = findChat(from, thread);
-	if (chatDefault == null) {
-	    chatDefault = createChat(from, thread);
+	ChatDefault chat = findChat(from, thread);
+	if (chat == null) {
+	    chat = createChat(from, thread);
 	}
-	chatDefault.process(message);
+	chat.process(message);
     }
 
     void sendMessage(final Message message) {

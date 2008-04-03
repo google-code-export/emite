@@ -18,7 +18,7 @@ public class TestChatManager {
 
     private Dispatcher dispatcher;
     private Globals globals;
-    private ChatManagerDefault manager;
+    private ChatManager manager;
 
     @Before
     public void createManager() {
