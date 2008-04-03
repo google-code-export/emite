@@ -3,6 +3,7 @@ package com.calclab.emite.client.core.bosh;
 import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
@@ -11,7 +12,6 @@ import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Connector;
 import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
-import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.core.services.Scheduler;
 
 public class BoshManager extends DispatcherComponent implements ConnectorCallback {

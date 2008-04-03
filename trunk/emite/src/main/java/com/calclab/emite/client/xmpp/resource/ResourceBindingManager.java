@@ -1,13 +1,14 @@
 package com.calclab.emite.client.xmpp.resource;
 
+import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.core.services.Globals;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class ResourceBindingManager extends EmiteComponent {
 	public static class Events {
@@ -36,7 +37,8 @@ public class ResourceBindingManager extends EmiteComponent {
 		when(new IQ("bindRequest", IQ.Type.result, null), new PacketListener() {
 			public void handle(final Packet iq) {
 				final String jid = iq.getFirstChild("bind").getFirstChild("jid").getText();
-				globals.setXmppURI(jid);
+				final XmppURI uri = XmppURI.parse(jid);
+				globals.setOwnURI(uri);
 				emite.publish(Events.binded);
 			}
 		});

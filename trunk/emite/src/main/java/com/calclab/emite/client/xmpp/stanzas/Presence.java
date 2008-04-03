@@ -21,9 +21,9 @@ public class Presence extends BasicStanza {
 		super(stanza);
 	}
 
-	public Presence(final String from) {
+	public Presence(final XmppURI from) {
 		this();
-		setFrom(from);
+		setFrom(from.toString());
 	}
 
 	public int getPriority() {

@@ -21,8 +21,8 @@ public class IQ extends BasicStanza {
 		setType(type.toString());
 	}
 
-	public IQ From(final String from) {
-		setFrom(from);
+	public IQ From(final XmppURI from) {
+		setFrom(from.toString());
 		return this;
 	}
 

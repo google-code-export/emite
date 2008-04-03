@@ -124,7 +124,7 @@ public class UserGrid extends GridPanel {
 			private void showMenu(final int rowIndex, final EventObject e) {
 				final Record record = store.getRecordAt(rowIndex);
 				final String jid = record.getAsString(JID);
-				final UserGridMenu menu = menuMap.get(XmppURI.parseURI(jid));
+				final UserGridMenu menu = menuMap.get(XmppURI.parse(jid));
 				menu.showMenu(e);
 			}
 
