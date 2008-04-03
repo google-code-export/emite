@@ -21,7 +21,7 @@ public class RosterItem {
 		return groups;
 	}
 
-	public String getJid() {
+	public String getXmppURI() {
 		return jid;
 	}
 
