@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -37,6 +38,7 @@ public class SwingClient {
 
     private final RosterPanel rosterPanel;
     private Xmpp xmpp;
+    private JFrame frame;
 
     public SwingClient() {
 	root = new JPanel(new BorderLayout());
@@ -96,7 +98,7 @@ public class SwingClient {
 	xmpp.getChat().addListener(new ChatManagerListener() {
 	    public void onChatCreated(final Chat chat) {
 		final ChatPanel chatPanel = conversationsPanel.createChat(chat.getID(), new ChatPanelListener() {
-		    public void onSend(ChatPanel source, String text) {
+		    public void onSend(final ChatPanel source, final String text) {
 			chat.send(text);
 			source.clearMessage();
 		    }
@@ -128,6 +130,11 @@ public class SwingClient {
 	    }
 
 	    public void onSubscriptionRequest(final Presence presence) {
+		final Object message = presence.getFrom() + " solicita añadirse a tu roster. ¿quires?";
+		final int result = JOptionPane.showConfirmDialog(frame, message);
+		if (result == JOptionPane.OK_OPTION) {
+		    xmpp.getPresenceManager().acceptSubscription(presence);
+		}
 		print("SUBSCRIPTION: " + presence);
 	    }
 	});
@@ -138,7 +145,7 @@ public class SwingClient {
     }
 
     private void start() {
-	final JFrame frame = new JFrame("emite swing client");
+	frame = new JFrame("emite swing client");
 	frame.setContentPane(root);
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.setSize(600, 400);

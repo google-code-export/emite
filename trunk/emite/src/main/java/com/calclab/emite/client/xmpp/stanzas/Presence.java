@@ -3,87 +3,100 @@ package com.calclab.emite.client.xmpp.stanzas;
 import com.calclab.emite.client.core.packet.Packet;
 
 public class Presence extends BasicStanza {
-	public static enum Show {
-		available, // Dani: he añadido available que faltaba, espero que no
-		// afecte...
-		away, chat, dnd, xa
-	}
+    public static enum Show {
+	available, // Dani: he añadido available que faltaba, espero
+	// que no
+	// afecte...
+	away, chat, dnd, xa
+    }
 
-	public enum Type {
-		available, error, probe, subscribe, subscribed, unavailable, unsubscribe, unsubscribed
-	}
+    public enum Type {
+	available, error, probe, subscribe, subscribed, unavailable, unsubscribe, unsubscribed
+    }
 
-	public Presence() {
-		super("presence", "jabber:client");
-	}
+    public Presence() {
+	this(null, null, null);
+    }
 
-	public Presence(final Packet stanza) {
-		super(stanza);
-	}
+    public Presence(final Packet stanza) {
+	super(stanza);
+    }
 
-	public Presence(final XmppURI from) {
-		this();
-		setFrom(from.toString());
+    public Presence(final Type type, final XmppURI from, final XmppURI to) {
+	super("presence", "jabber:client");
+	if (type != null) {
+	    setType(type.toString());
 	}
+	if (from != null) {
+	    setFrom(from.toString());
+	}
+	if (to != null) {
+	    setTo(to.toString());
+	}
+    }
 
-	public int getPriority() {
-		int value = 0;
-		final Packet priority = getFirstChild("priority");
-		if (priority != null) {
-			try {
-				value = Integer.parseInt(priority.getText());
-			} catch (final NumberFormatException e) {
-				value = 0;
-			}
-		}
-		return value;
-	}
+    public Presence(final XmppURI from) {
+	this(null, from, null);
+    }
 
-	public Show getShow() {
-		final Packet show = getFirstChild("show");
-		final String value = show != null ? show.getText() : null;
-		return value != null ? Show.valueOf(value) : null;
+    public int getPriority() {
+	int value = 0;
+	final Packet priority = getFirstChild("priority");
+	if (priority != null) {
+	    try {
+		value = Integer.parseInt(priority.getText());
+	    } catch (final NumberFormatException e) {
+		value = 0;
+	    }
 	}
+	return value;
+    }
 
-	public String getStatus() {
-		final Packet status = getFirstChild("status");
-		return status != null ? status.getText() : null;
-	}
+    public Show getShow() {
+	final Packet show = getFirstChild("show");
+	final String value = show != null ? show.getText() : null;
+	return value != null ? Show.valueOf(value) : null;
+    }
 
-	// TODO: revisar esto (type == null -> available)
-	// http://www.xmpp.org/rfcs/rfc3921.html#presence
-	public Type getType() {
-		final String type = getAttribute(BasicStanza.TYPE);
-		return type != null ? Type.valueOf(type) : Type.available;
-	}
+    public String getStatus() {
+	final Packet status = getFirstChild("status");
+	return status != null ? status.getText() : null;
+    }
 
-	public void setPriority(final int value) {
-		Packet priority = getFirstChild("priority");
-		if (priority == null) {
-			priority = add("priority", null);
-		}
-		priority.setText(Integer.toString(value >= 0 ? value : 0));
-	}
+    // TODO: revisar esto (type == null -> available)
+    // http://www.xmpp.org/rfcs/rfc3921.html#presence
+    public Type getType() {
+	final String type = getAttribute(BasicStanza.TYPE);
+	return type != null ? Type.valueOf(type) : Type.available;
+    }
 
-	public void setShow(final Show value) {
-		Packet show = getFirstChild("show");
-		if (show == null) {
-			show = add("show", null);
-		}
-		show.setText(value.toString());
+    public void setPriority(final int value) {
+	Packet priority = getFirstChild("priority");
+	if (priority == null) {
+	    priority = add("priority", null);
 	}
+	priority.setText(Integer.toString(value >= 0 ? value : 0));
+    }
 
-	public void setStatus(final String statusMessage) {
-		Packet status = getFirstChild("status");
-		if (status == null) {
-			status = add("status", null);
-		}
-		status.setText(statusMessage);
+    public void setShow(final Show value) {
+	Packet show = getFirstChild("show");
+	if (show == null) {
+	    show = add("show", null);
 	}
+	show.setText(value.toString());
+    }
 
-	public Presence With(final Show value) {
-		setShow(value);
-		return this;
+    public void setStatus(final String statusMessage) {
+	Packet status = getFirstChild("status");
+	if (status == null) {
+	    status = add("status", null);
 	}
+	status.setText(statusMessage);
+    }
+
+    public Presence With(final Show value) {
+	setShow(value);
+	return this;
+    }
 
 }

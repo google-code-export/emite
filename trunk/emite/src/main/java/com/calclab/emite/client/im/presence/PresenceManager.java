@@ -13,86 +13,96 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class PresenceManager extends EmiteComponent {
-	private Presence currentPresence;
-	private final Globals globals;
-	private final ArrayList<PresenceListener> listeners;
+    private Presence currentPresence;
+    private final Globals globals;
+    private final ArrayList<PresenceListener> listeners;
 
-	public PresenceManager(final Emite emite, final Globals globals) {
-		super(emite);
-		this.globals = globals;
-		this.listeners = new ArrayList<PresenceListener>();
-		this.currentPresence = null;
+    public PresenceManager(final Emite emite, final Globals globals) {
+	super(emite);
+	this.globals = globals;
+	this.listeners = new ArrayList<PresenceListener>();
+	this.currentPresence = null;
+    }
+
+    public void acceptSubscription(final Presence presence) {
+	if (presence.getType() == Presence.Type.subscribe) {
+	    final Presence response = new Presence(Presence.Type.subscribed, globals.getOwnURI(), presence.getFromURI());
+	    emite.send(response);
+	} else {
+	    // throw exception: its a programming error
+	    throw new RuntimeException("Tryng to accept a non subscription request");
 	}
+    }
 
-	public void addListener(final PresenceListener presenceListener) {
-		this.listeners.add(presenceListener);
+    public void addListener(final PresenceListener presenceListener) {
+	this.listeners.add(presenceListener);
+    }
+
+    public Packet answerTo(final Presence presence) {
+	return new Presence(globals.getOwnURI()).To(presence.getFrom());
+    }
+
+    public Packet answerToSessionLogout() {
+	return new Presence(globals.getOwnURI()).With("type", "unavailable");
+    }
+
+    /**
+     * Upon connecting to the server and becoming an active resource, a client
+     * SHOULD request the roster before sending initial presence
+     */
+    @Override
+    public void attach() {
+	when(Roster.Events.ready, new PacketListener() {
+	    public void handle(final Packet received) {
+		currentPresence = createInitialPresence();
+		emite.send(currentPresence);
+	    }
+	});
+
+	when("presence", new PacketListener() {
+	    public void handle(final Packet received) {
+		onPresenceReceived(new Presence(received));
+	    }
+	});
+
+	when(Session.Events.loggedOut, new PacketListener() {
+	    public void handle(final Packet received) {
+		emite.send(answerToSessionLogout());
+	    }
+	});
+
+    }
+
+    protected void onPresenceReceived(final Presence presence) {
+	final Type type = presence.getType();
+	switch (type) {
+	case subscribe:
+	    fireSubscriptionRequest(presence);
+	    break;
+	case probe:
+	    emite.send(currentPresence);
+	    break;
+	case error:
+	    break;
+	default:
+	    firePresenceReceived(presence);
+	    break;
 	}
+    }
 
-	public Packet answerTo(final Presence presence) {
-		return new Presence(globals.getOwnURI()).To(presence.getFrom());
+    private Presence createInitialPresence() {
+	return new Presence(globals.getOwnURI()).With(Presence.Show.chat);
+    }
+
+    private void firePresenceReceived(final Presence presence) {
+	for (final PresenceListener listener : listeners) {
+	    listener.onPresenceReceived(presence);
 	}
+    }
 
-	public Packet answerToSessionLogout() {
-		return new Presence(globals.getOwnURI()).With("type", "unavailable");
+    private void fireSubscriptionRequest(final Presence presence) {
+	for (final PresenceListener listener : listeners) {
+	    listener.onSubscriptionRequest(presence);
 	}
-
-	/**
-	 * Upon connecting to the server and becoming an active resource, a client
-	 * SHOULD request the roster before sending initial presence
-	 */
-	@Override
-	public void attach() {
-		when(Roster.Events.ready, new PacketListener() {
-			public void handle(final Packet received) {
-				currentPresence = createInitialPresence();
-				emite.send(currentPresence);
-			}
-		});
-
-		when("presence", new PacketListener() {
-			public void handle(final Packet received) {
-				onPresenceReceived(new Presence(received));
-			}
-		});
-
-		when(Session.Events.loggedOut, new PacketListener() {
-			public void handle(final Packet received) {
-				emite.send(answerToSessionLogout());
-			}
-		});
-
-	}
-
-	protected void onPresenceReceived(final Presence presence) {
-		final Type type = presence.getType();
-		switch (type) {
-		case subscribe:
-			fireSubscriptionRequest(presence);
-			break;
-		case probe:
-			emite.send(currentPresence);
-			break;
-		case error:
-			break;
-		default:
-			firePresenceReceived(presence);
-			break;
-		}
-	}
-
-	private Presence createInitialPresence() {
-		return new Presence(globals.getOwnURI()).With(Presence.Show.chat);
-	}
-
-	private void firePresenceReceived(final Presence presence) {
-		for (final PresenceListener listener : listeners) {
-			listener.onPresenceReceived(presence);
-		}
-	}
-
-	private void fireSubscriptionRequest(final Presence presence) {
-		for (final PresenceListener listener : listeners) {
-			listener.onSubscriptionRequest(presence);
-		}
-	}
+    }
 }
