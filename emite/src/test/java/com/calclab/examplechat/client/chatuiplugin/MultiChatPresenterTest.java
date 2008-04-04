@@ -12,7 +12,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
+import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.ChatMessageParam;
 
@@ -21,7 +21,7 @@ public class MultiChatPresenterTest {
     private ChatDialogFactory factory;
     private MultiChatPresenter multiChat;
     private PairChatUser otherUser;
-    private PairChat pairChat;
+    private PairChatPresenter pairChat;
     private PairChatUser sessionUser;
     private Chat chat;
     private ChatListener chatListener;
@@ -43,7 +43,7 @@ public class MultiChatPresenterTest {
         chat = Mockito.mock(Chat.class);
         chatListener = Mockito.mock(ChatListener.class);
         chat.addListener(chatListener);
-        pairChat = Mockito.mock(PairChat.class);
+        pairChat = Mockito.mock(PairChatPresenter.class);
         Mockito.stub(factory.createPairChat(chat, multiChat, sessionUser, otherUser)).toReturn(pairChat);
         Mockito.stub(pairChat.getChat()).toReturn(chat);
         Mockito.stub(pairChat.getChat().getOtherURI()).toReturn(otherUri);
@@ -77,7 +77,14 @@ public class MultiChatPresenterTest {
         sendMessageFromOther();
     }
 
-    // Probar a cerrar room y volver a escribir...
+    @Test
+    public void removeAndCreateChat2() {
+        multiChat.onCurrentUserSend(messageBody);
+        multiChat.closePairChat(pairChat);
+        multiChat.createPairChat(chat);
+        multiChat.onCurrentUserSend(messageBody);
+        Mockito.verify(chat, Mockito.times(2)).send(messageBody);
+    }
 
     @Test
     public void removeAndCreateChat() {

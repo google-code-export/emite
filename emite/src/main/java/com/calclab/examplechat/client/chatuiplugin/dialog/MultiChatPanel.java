@@ -125,6 +125,7 @@ public class MultiChatPanel implements MultiChatView {
         String panelId = chatPanel.getId();
         panelIdToChat.put(panelId, chat);
         activateChat(chat);
+        // TODO put in presenter
         if (centerPanel.hasItem(infoPanelId)) {
             centerPanel.remove(infoPanelId);
         }
@@ -137,6 +138,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void closeAllChats() {
+        // TODO put in presenter
         Component[] items = centerPanel.getItems();
         for (int i = 0; i < items.length; i++) {
             centerPanel.remove(items[i].getId());
@@ -362,6 +364,7 @@ public class MultiChatPanel implements MultiChatView {
                     // Closing empty chats info
                     return true;
                 }
+                // FIXME: Move to presenter...
                 final AbstractChatPresenter chatPresenter = (AbstractChatPresenter) panelIdToChat.get(panelId);
                 if (presenter.isCloseAllConfirmed() || chatPresenter.isCloseConfirmed()) {
                     panelIdToChat.remove(panelId);
@@ -641,7 +644,8 @@ public class MultiChatPanel implements MultiChatView {
         infoPanel = new Panel();
         infoPanel.setTitle(i18n.t("Info"));
         infoPanel.setClosable(false);
-        infoPanel.add(new Label(i18n.t("To start a chat, select a buddy or join to a chat room")));
+        infoPanel.add(new Label(i18n.t("To start a chat, select a buddy or join to a chat room. "
+                + "If you don't have buddies you can add them.")));
         infoPanel.setPaddings(7);
         infoPanelId = infoPanel.getId();
         addInfoPanel();
