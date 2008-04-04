@@ -11,51 +11,58 @@ import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 
 public class SessionManager extends EmiteComponent {
-	private final Globals globals;
-	private final Session session;
+    private final Globals globals;
+    private final Session session;
 
-	public SessionManager(final Emite emite, final Globals globals, final Session session) {
-		super(emite);
-		this.globals = globals;
-		this.session = session;
+    public SessionManager(final Emite emite, final Globals globals, final Session session) {
+	super(emite);
+	this.globals = globals;
+	this.session = session;
 
-	}
+    }
 
-	@Override
-	public void attach() {
+    @Override
+    public void attach() {
 
-		when(SASLManager.Events.authorized, new PacketListener() {
-			public void handle(final Packet received) {
-				emite.publish(BoshManager.Events.restart);
-			}
-		});
+	when(SASLManager.Events.authorized, new PacketListener() {
+	    public void handle(final Packet received) {
+		emite.publish(BoshManager.Events.restart);
+	    }
+	});
 
-		when(SASLManager.Events.authorized, new PacketListener() {
-			public void handle(final Packet received) {
-				session.setState(Session.State.authorized);
-			}
-		});
+	when(SASLManager.Events.authorized, new PacketListener() {
+	    public void handle(final Packet received) {
+		session.setState(Session.State.authorized);
+	    }
+	});
 
-		when(Session.Events.loggedOut, new PacketListener() {
-			public void handle(final Packet received) {
-				emite.publish(BoshManager.Events.stop);
-			}
-		});
+	when(Session.Events.loggedOut, new PacketListener() {
+	    public void handle(final Packet received) {
+		emite.publish(BoshManager.Events.stop);
+	    }
+	});
 
-		when(ResourceBindingManager.Events.binded, new PacketListener() {
-			public void handle(final Packet received) {
-				final IQ iq = new IQ("requestSession", IQ.Type.set).From(globals.getOwnURI()).To(globals.getDomain());
-				iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
-				emite.send(iq);
-			}
+	when(BoshManager.Events.error, new PacketListener() {
+	    public void handle(final Packet received) {
+		session.setState(Session.State.error);
+		session.setState(Session.State.disconnected);
+	    }
+	});
 
-		});
-		when(new IQ("requestSession", IQ.Type.result, null), new PacketListener() {
-			public void handle(final Packet received) {
-				session.setState(Session.State.connected);
-				emite.publish(Session.Events.loggedIn);
-			}
-		});
+	when(ResourceBindingManager.Events.binded, new PacketListener() {
+	    public void handle(final Packet received) {
+		final IQ iq = new IQ("requestSession", IQ.Type.set).From(globals.getOwnURI()).To(globals.getDomain());
+		iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
+		emite.send(iq);
+	    }
 
-	}
+	});
+	when(new IQ("requestSession", IQ.Type.result, null), new PacketListener() {
+	    public void handle(final Packet received) {
+		session.setState(Session.State.connected);
+		emite.publish(Session.Events.loggedIn);
+	    }
+	});
+
+    }
 }

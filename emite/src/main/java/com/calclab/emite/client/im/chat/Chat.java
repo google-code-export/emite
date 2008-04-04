@@ -4,12 +4,14 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public interface Chat {
 
-    public abstract void addListener(final ChatListener listener);
+    public void addListener(final ChatListener listener);
 
-    public abstract XmppURI getOtherURI();
+    public String getID();
 
-    public abstract String getID();
+    public XmppURI getOtherURI();
 
-    public abstract void send(final String body);
+    public String getThread();
+
+    public void send(final String body);
 
 }

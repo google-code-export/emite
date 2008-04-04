@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.EmiteBosh;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
@@ -50,8 +51,7 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
     }
 
     public Chat newChat(final XmppURI xmppURI) {
-	final String thread = String.valueOf(Math.random() * 1000000);
-	return createChat(xmppURI, thread);
+	return createChat(xmppURI, null);
     }
 
     public void onReceived(final Message message) {
@@ -69,8 +69,13 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
 	dispatcher.publish(new Event(EmiteBosh.Events.send).With(message));
     }
 
+    void sendMessage(final Message message) {
+	dispatcher.publish(new Event(EmiteBosh.Events.send).With(message));
+    }
+
     private ChatDefault createChat(final XmppURI from, final String thread) {
-	final ChatDefault chat = new ChatDefault(from, globals.getOwnURI(), thread, this);
+	final String theThread = thread != null ? thread : String.valueOf(Math.random() * 1000000);
+	final ChatDefault chat = new ChatDefault(from, globals.getOwnURI(), theThread, this);
 	chats.add(chat);
 	for (final ChatManagerListener listener : listeners) {
 	    listener.onChatCreated(chat);
@@ -78,32 +83,32 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
 	return chat;
     }
 
+    /**
+     * We choose a chat by the thread, if no thread specified we look for the
+     * same XmppURI, and if no resource specified we look for the same
+     * node@domain
+     * 
+     * @param from
+     * @param thread
+     * @return
+     */
     private ChatDefault findChat(final XmppURI from, final String thread) {
 	ChatDefault selected = null;
 
-	for (final ChatDefault c : chats) {
-	    if (from.equalsNoResource(c.getOtherURI())) {
-
-		if (thread == null) {
-		    if (!c.getOtherURI().hasResource()) {
-			selected = c;
-		    } else if (c.getOtherURI().equals(from)) {
-			return selected;
-		    }
-		} else {
-		    if (!c.getOtherURI().hasResource() && thread.equals(c.getThread())) {
-			selected = c;
-		    } else if (c.getOtherURI().equals(from) && thread.equals(c.getThread())) {
-			return selected;
-		    }
+	Log.debug("Finding chat for: " + from + ", " + thread);
+	for (final ChatDefault chat : chats) {
+	    if (thread != null) {
+		if (thread.equals(chat.getThread())) {
+		    return chat;
+		}
+	    } else {
+		XmppURI chatTargetURI = chat.getOtherURI();
+		if (from.hasResource() && from.equals(chatTargetURI)) {
+		    selected = chat;
+		} else if (from.equalsNoResource(chatTargetURI)) {
+		    selected = chat;
 		}
 	    }
-	}
-
-	if (selected != null && !selected.getOtherURI().hasResource()) {
-	    final XmppURI old = selected.getOtherURI();
-	    new XmppURI(old.getNode(), old.getHost(), from.getResource());
-	    selected.setOtherURI(selected.getOtherURI());
 	}
 
 	return selected;
@@ -119,10 +124,6 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
 	    chat = createChat(from, thread);
 	}
 	chat.process(message);
-    }
-
-    void sendMessage(final Message message) {
-	dispatcher.publish(new Event(EmiteBosh.Events.send).With(message));
     }
 
 }
