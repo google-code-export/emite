@@ -1,38 +1,60 @@
 #summary How to get the example running
 #labels Featured
 
+#summary How to get the example running
+
 
 = Introduction =
 
-Bundled with the library there is a gwt ui example.
+Bundled with the library there is a gwt ui example. This is the guide to get the example running.
 
-You need a running xmpp server with bosh connection linked to localhost:8383/http-bind (i will change this in the near future) as pre-requisites (openfire is the easyiest way to obtain that).
+== Server proxy: why? ==
+
+Emite its a pure xmpp library. That means that there is no need of server processing to acomplish the tasks... but we need install a server... The reason is because as a security feature, you cannot call pages on 3rd-party domains using the browser HttpRequest object (this may change in the near future: http://ejohn.org/blog/cross-site-xmlhttprequest/)
+
+So we need to install a proxy that redirect all the local HttpRequest coming from the client to the real Xmpp Server.
+
+One java implementation of this proxy is included for testing purposes in the emite library, but in production envirorments we usually delegate this task in the real server (i.e. Apache2)
+
+== Pre-requsites ==
+
+You need a running xmpp server with bosh manager. By default we use: localhost:8383/http-bind (but you can change it easily in the web.xml configuration file). 
+OpenFire is the easiest way to get this, but any other xmpp server with bosh support can handle (i.e. Tigase server)
 
 Install gwt and maven2, get the source code.
+
+
+== Compile the gwt:sources ==
 
 Inside the project folder type:
 {{{
 mvn gwt:compile
 }}}
 to compile the sources
-and, if you use a linux envirorment, write:
+
+
+== Run the servlet proxy ==
+
+if you use a linux envirorment, write:
 {{{
 ./script/server.sh
 }}}
-to copy the compiled js to the destination folder and run the proxy servlet
-
-
-if you are not unix', take a look to the script to know which are
-the folders you have to copy and then 
+to copy the compiled js to the destination folder and run the proxy servlet.
+If you are not unix', take a look to the script to know which are
+the folders you have to copy and then:
 {{{
 mvn jetty:run
 }}}
 to run the proxy
 
+== Run the example ==
+
 Point the browser to:
 http://localhost:8888/gwt/com.calclab.examplechat.Example/ChatExample.html
 
-== Example of .m2/settings.xml ==
+= Appendix =
+
+== 1. Example of maven .m2/settings.xml to work with gwt-maven plugin ==
 
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
