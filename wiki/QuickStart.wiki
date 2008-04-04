@@ -21,7 +21,11 @@ One java implementation of this proxy is included for testing purposes in the em
 You need a running xmpp server with bosh manager. By default we use: localhost:8383/http-bind (but you can change it easily in the web.xml configuration file). 
 OpenFire is the easiest way to get this, but any other xmpp server with bosh support can handle (i.e. Tigase server)
 
-Install gwt and maven2, get the source code.
+  # install maven2 ( http://maven.apache.org/ )
+  # Install GWT *version 1.5*. It doesn't work with earlier versions (we are currently using 1.5 Milestone 1)
+  # Create or configure .m2/settings.xml file to use the 1.5 distribution of gwt (see Appendix 1)
+
+
 
 
 == Compile the gwt:sources ==
