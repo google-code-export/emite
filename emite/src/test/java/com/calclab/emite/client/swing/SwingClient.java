@@ -1,6 +1,8 @@
 package com.calclab.emite.client.swing;
 
 import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -147,8 +149,14 @@ public class SwingClient {
     private void start() {
 	frame = new JFrame("emite swing client");
 	frame.setContentPane(root);
-	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.setSize(600, 400);
 	frame.setVisible(true);
+	frame.addWindowListener(new WindowAdapter() {
+	    @Override
+	    public void windowClosing(final WindowEvent e) {
+		xmpp.logout();
+		System.exit(0);
+	    }
+	});
     }
 }

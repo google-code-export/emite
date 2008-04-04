@@ -3,96 +3,97 @@ package com.calclab.emite.client.core.bosh;
 import com.allen_sauer.gwt.log.client.Log;
 
 public class BoshState {
-	private int currentConnections;
-	private boolean isLastResponseEmpty;
-	private boolean isRunning;
-	private boolean isTerminating;
-	private long lastSendTime;
-	private int poll;
-	private String sid;
+    private int currentConnections;
+    private boolean isLastResponseEmpty;
+    private boolean isRunning;
+    private boolean isTerminating;
+    private long lastSendTime;
+    private int poll;
+    private String sid;
 
-	public BoshState() {
-		init();
+    public BoshState() {
+	init();
+    }
+
+    public void decreaseRequests() {
+	currentConnections--;
+    }
+
+    public int getCurrentRequestsCount() {
+	return currentConnections;
+    }
+
+    public long getLastSendTime() {
+	return lastSendTime;
+    }
+
+    public int getPoll() {
+	return poll;
+    }
+
+    public String getSID() {
+	return sid;
+    }
+
+    public void increaseRequests() {
+	currentConnections++;
+    }
+
+    public boolean isFirstResponse() {
+	return sid == null;
+    }
+
+    public boolean isLastResponseEmpty() {
+	return isLastResponseEmpty;
+    }
+
+    public boolean isRunning() {
+	return isRunning;
+    }
+
+    public boolean isTerminating() {
+	return isTerminating;
+    }
+
+    public void setLastResponseEmpty(final boolean isLastResponseEmpty) {
+	this.isLastResponseEmpty = isLastResponseEmpty;
+
+    }
+
+    public void setLastSend(final long lastSendTime) {
+	this.lastSendTime = lastSendTime;
+
+    }
+
+    public void setPoll(final int poll) {
+	this.poll = poll;
+    }
+
+    public void setRunning(final boolean isRunning) {
+	if (isRunning) {
+	    this.isRunning = isRunning;
+	} else {
+	    init();
 	}
+    }
 
-	public void decreaseRequests() {
-		currentConnections--;
-	}
+    public void setSID(final String sid) {
+	Log.debug("Setting SID!" + sid);
+	this.sid = sid;
+    }
 
-	public int getCurrentRequestsCount() {
-		return currentConnections;
-	}
+    public void setTerminating() {
+	this.isTerminating = true;
 
-	public long getLastSendTime() {
-		return lastSendTime;
-	}
+    }
 
-	public int getPoll() {
-		return poll;
-	}
-
-	public String getSID() {
-		return sid;
-	}
-
-	public void increaseRequests() {
-		currentConnections++;
-	}
-
-	public boolean isFirstResponse() {
-		return sid == null;
-	}
-
-	public boolean isLastResponseEmpty() {
-		return isLastResponseEmpty;
-	}
-
-	public boolean isRunning() {
-		return isRunning;
-	}
-
-	public boolean isTerminating() {
-		return isTerminating;
-	}
-
-	public void setLastResponseEmpty(final boolean isLastResponseEmpty) {
-		this.isLastResponseEmpty = isLastResponseEmpty;
-
-	}
-
-	public void setLastSend(final long lastSendTime) {
-		this.lastSendTime = lastSendTime;
-
-	}
-
-	public void setPoll(final int poll) {
-		this.poll = poll;
-	}
-
-	public void setRunning(final boolean isRunning) {
-		if (isRunning) {
-			this.isRunning = isRunning;
-		} else {
-			init();
-		}
-	}
-
-	public void setSID(final String sid) {
-		Log.debug("Setting SID!" + sid);
-		this.sid = sid;
-	}
-
-	public void setTerminating() {
-		this.isTerminating = true;
-
-	}
-
-	private void init() {
-		Log.debug("INIT BOSH STATE");
-		this.isRunning = false;
-		this.sid = null;
-		this.currentConnections = 0;
-		this.poll = 1;
-	}
+    private void init() {
+	Log.debug("INIT BOSH STATE");
+	this.isRunning = false;
+	this.sid = null;
+	this.currentConnections = 0;
+	this.poll = 1;
+	this.isTerminating = false;
+    }
 
 }
