@@ -70,6 +70,7 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
     }
 
     void sendMessage(final Message message) {
+	// FIXME
 	dispatcher.publish(new Event(EmiteBosh.Events.send).With(message));
     }
 
@@ -102,7 +103,7 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
 		    return chat;
 		}
 	    } else {
-		XmppURI chatTargetURI = chat.getOtherURI();
+		final XmppURI chatTargetURI = chat.getOtherURI();
 		if (from.hasResource() && from.equals(chatTargetURI)) {
 		    selected = chat;
 		} else if (from.equalsNoResource(chatTargetURI)) {

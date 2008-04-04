@@ -7,7 +7,7 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.im.roster.Roster;
+import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
@@ -52,7 +52,7 @@ public class PresenceManager extends EmiteComponent {
      */
     @Override
     public void attach() {
-	when(Roster.Events.ready, new PacketListener() {
+	when(RosterManager.Events.ready, new PacketListener() {
 	    public void handle(final Packet received) {
 		currentPresence = createInitialPresence();
 		emite.send(currentPresence);
