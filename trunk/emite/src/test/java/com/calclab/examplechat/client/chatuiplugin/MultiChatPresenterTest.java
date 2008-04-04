@@ -25,6 +25,8 @@ public class MultiChatPresenterTest {
     private PairChatUser sessionUser;
     private Chat chat;
     private ChatListener chatListener;
+    private MultiChatView multiChatPanel;
+    private String messageBody;
 
     @Before
     public void begin() {
@@ -36,8 +38,8 @@ public class MultiChatPresenterTest {
         XmppURI otherUri = XmppURI.parse("matt@example.com");
         otherUser = new PairChatUser("", otherUri, "matt", "blue", new Presence());
         multiChat = new MultiChatPresenter(factory, sessionUser, multiChatlistener);
-        final MultiChatView panel = Mockito.mock(MultiChatView.class);
-        multiChat.init(panel);
+        multiChatPanel = Mockito.mock(MultiChatView.class);
+        multiChat.init(multiChatPanel);
         chat = Mockito.mock(Chat.class);
         chatListener = Mockito.mock(ChatListener.class);
         chat.addListener(chatListener);
@@ -47,12 +49,11 @@ public class MultiChatPresenterTest {
         Mockito.stub(pairChat.getChat().getOtherURI()).toReturn(otherUri);
         multiChat.addPresenceBuddy(otherUser);
         multiChat.createPairChat(chat);
+        messageBody = "hello world :)";
     }
 
     @Test
     public void testOnSendMessage() {
-        final String messageBody = "hello world :)";
-        final Message message = new Message(sessionUser.getUri(), otherUser.getUri(), messageBody);
         multiChat.onCurrentUserSend(messageBody);
         Mockito.verify(chat).send(messageBody);
     }
@@ -63,7 +64,6 @@ public class MultiChatPresenterTest {
     }
 
     private void sendMessageFromOther() {
-        String messageBody = "hello world :)";
         final Message message = new Message(otherUser.getUri(), sessionUser.getUri(), messageBody);
         ChatMessageParam param = new ChatMessageParam(chat, message);
         multiChat.messageReceived(param);
@@ -78,5 +78,14 @@ public class MultiChatPresenterTest {
     }
 
     // Probar a cerrar room y volver a escribir...
+
+    @Test
+    public void removeAndCreateChat() {
+        multiChat.onCurrentUserSend(messageBody);
+        multiChat.closeAllChats(false);
+        multiChat.createPairChat(chat);
+        multiChat.onCurrentUserSend(messageBody);
+        Mockito.verify(chat, Mockito.times(2)).send(messageBody);
+    }
 
 }
