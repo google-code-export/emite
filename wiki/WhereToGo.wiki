@@ -1,0 +1,13 @@
+
+some things i would like to explore or implement
+
+in generally i'm interested in use xmpp not only as IM engine but also as a communication framework, maybe integrating it with other projects like any of the gwt-JSON libraries.
+
+Here's a list of XEP that may be useful to support:
+  # XEP-0045: Multi-User Chat (http://www.xmpp.org/extensions/xep-0045.html)
+  # XEP-0126: Invisibility (http://www.xmpp.org/extensions/xep-0126.html)
+  # XEP-0055: Jabber Search (http://www.xmpp.org/extensions/xep-0055.html)
+  # *XEP-0228: Requirements for Shared Editing*: (http://www.xmpp.org/extensions/xep-0228.html)
+
+
+
