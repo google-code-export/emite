@@ -5,6 +5,13 @@ import java.util.ArrayList;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
+/**
+ * 
+ * About Chat ids: Other sender Uri plus thread identifies a chat (associated
+ * with a chat panel in the UI). If no thread is specified, we join all messages
+ * in one chat panel.
+ * 
+ */
 class ChatDefault implements Chat {
     private final String from;
     private final boolean hasThread;
@@ -69,6 +76,33 @@ class ChatDefault implements Chat {
         for (final ChatListener listener : listeners) {
             listener.onMessageReceived(this, message);
         }
+    }
+
+    // TODO: Dani: check this
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        final ChatDefault other = (ChatDefault) obj;
+        if (this.other == null) {
+            if (other.other != null) {
+                return false;
+            }
+        } else if (!this.other.equals(other.other)) {
+            return false;
+        }
+        if (thread == null) {
+            if (other.thread != null) {
+                return false;
+            }
+        } else if (!thread.equals(other.thread)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
