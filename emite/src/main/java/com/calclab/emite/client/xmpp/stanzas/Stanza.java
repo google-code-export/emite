@@ -3,17 +3,17 @@ package com.calclab.emite.client.xmpp.stanzas;
 import com.calclab.emite.client.core.packet.Packet;
 
 public interface Stanza extends Packet {
-	public Stanza To(String to);
+    public Stanza To(String to);
 
-	String getFrom();
+    String getFrom();
 
-	XmppURI getFromURI();
+    XmppURI getFromURI();
 
-	String getTo();
+    String getTo();
 
-	XmppURI getToURI();
+    XmppURI getToURI();
 
-	void setFrom(String from);
+    void setFrom(String from);
 
-	void setTo(String to);
+    void setTo(String to);
 }
