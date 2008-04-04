@@ -39,6 +39,7 @@ public class SessionManager extends EmiteComponent {
 	when(Session.Events.loggedOut, new PacketListener() {
 	    public void handle(final Packet received) {
 		emite.publish(BoshManager.Events.stop);
+		session.setState(Session.State.disconnected);
 	    }
 	});
 
