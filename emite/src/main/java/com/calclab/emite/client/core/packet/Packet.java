@@ -10,67 +10,69 @@ import java.util.List;
  * 
  */
 public interface Packet {
-	/**
-	 * 
-	 * 
-	 * @param the
-	 *            attribute name
-	 * @return the integer value
-	 * @throws an
-	 *             exception
-	 */
-	public int getAttributeAsInt(String name);
+    /**
+     * 
+     * 
+     * @param the
+     *                attribute name
+     * @return the integer value
+     * @throws an
+     *                 exception
+     */
+    public int getAttributeAsInt(String name);
 
-	public HashMap<String, String> getAttributes();
+    public HashMap<String, String> getAttributes();
 
-	public int getChildrenCount();
+    public int getChildrenCount();
 
-	public boolean hasAttribute(String name);
+    public boolean hasAttribute(String name);
 
-	public boolean hasAttribute(String name, String value);
+    public boolean hasAttribute(String name, String value);
 
-	public Packet With(final Packet child);
+    public Packet With(final Packet child);
 
-	Packet add(String nodeName, String xmlns);
+    Packet add(String nodeName, String xmlns);
 
-	void addChild(Packet child);
+    void addChild(Packet child);
 
-	void addText(String text);
+    void addText(String text);
 
-	String getAttribute(String name);
+    String getAttribute(String name);
 
-	List<? extends Packet> getChildren();
+    List<? extends Packet> getChildren();
 
-	/**
-	 * Return all the descendant childs with node name
-	 * 
-	 * @param name
-	 */
-	List<Packet> getChildren(String name);
+    /**
+     * Return all the descendant childs with node name
+     * 
+     * @param name
+     */
+    List<Packet> getChildren(String name);
 
-	Packet getFirstChild(String childName);
+    Packet getFirstChild(String childName);
 
-	String getName();
+    String getName();
 
-	Packet getParent();
+    Packet getParent();
 
-	String getText();
+    String getText();
 
-	void render(StringBuffer buffer);
+    void render(StringBuffer buffer);
 
-	void setAttribute(String name, String value);
+    void setAttribute(String name, String value);
 
-	void setText(String text);
+    void setText(String text);
 
-	Packet With(String name, long value);
+    Packet With(String name, long value);
 
-	/**
-	 * Chain-able method to add a attribute
-	 * 
-	 * @param name
-	 * @param value
-	 * @return
-	 */
-	Packet With(String name, String value);
+    /**
+     * Chain-able method to add a attribute
+     * 
+     * @param name
+     * @param value
+     * @return
+     */
+    Packet With(String name, String value);
+
+    Packet WithText(String text);
 
 }

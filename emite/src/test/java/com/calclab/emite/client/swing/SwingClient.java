@@ -26,13 +26,13 @@ import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class SwingClient {
 
     public static void main(final String args[]) {
-	new SwingClient().start();
+	new SwingClient(new JFrame("emite swing client")).start();
     }
-
     private final ConversationsPanel conversationsPanel;
     private final LoginPanel loginPanel;
 
@@ -40,9 +40,10 @@ public class SwingClient {
 
     private final RosterPanel rosterPanel;
     private Xmpp xmpp;
-    private JFrame frame;
+    private final JFrame frame;
 
-    public SwingClient() {
+    public SwingClient(final JFrame frame) {
+	this.frame = frame;
 	root = new JPanel(new BorderLayout());
 
 	loginPanel = new LoginPanel(new LoginPanelListener() {
@@ -55,7 +56,11 @@ public class SwingClient {
 	    }
 
 	});
-	rosterPanel = new RosterPanel(new RosterPanelListener() {
+	rosterPanel = new RosterPanel(frame, new RosterPanelListener() {
+	    public void onAddRosterItem(final String uri, final String name) {
+		xmpp.getRoster().requestAddItem(uri, name, null);
+	    }
+
 	    public void onStartChat(final RosterItem item) {
 		xmpp.getChat().newChat(item.getXmppURI());
 	    }
@@ -147,7 +152,6 @@ public class SwingClient {
     }
 
     private void start() {
-	frame = new JFrame("emite swing client");
 	frame.setContentPane(root);
 	frame.setSize(600, 400);
 	frame.setVisible(true);

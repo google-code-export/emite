@@ -10,72 +10,86 @@ import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.XMLService;
 
 public class EmiteBosh extends DispatcherComponent implements Emite {
-	public static class Events {
-		public static final Event send = new Event("connection:do:send");
-	}
+    public static class Events {
+	public static final Event send = new Event("connection:do:send");
+    }
 
-	private Body body;
+    private Body body;
 
-	private long rid;
+    private long rid;
 
-	private final XMLService xmler;
+    private final XMLService xmler;
 
-	public EmiteBosh(final Dispatcher dispatcher, final XMLService xmler) {
-		super(dispatcher);
-		this.xmler = xmler;
-		clear();
-	}
+    private final boolean isDispatching;
 
-	@Override
-	public void attach() {
-		when(EmiteBosh.Events.send, new PacketListener() {
-			public void handle(final Packet received) {
-				final List<? extends Packet> children = received.getChildren();
-				for (final Packet child : children) {
-					send(child);
-				}
-			}
-		});
-	}
+    public EmiteBosh(final Dispatcher dispatcher, final XMLService xmler) {
+	super(dispatcher);
+	this.xmler = xmler;
+	isDispatching = false;
 
-	public Packet bodyFromResponse(final String content) {
-		return xmler.toXML(content);
-	}
+	// dispatcher.addListener(new DispatcherStateListener() {
+	// public void afterDispatching() {
+	// isDispatching = false;
+	// }
+	//
+	// public void beforeDispatching() {
+	// isDispatching = true;
+	// }
+	// });
 
-	public void clearBody() {
-		body = null;
-	}
+	clear();
+    }
 
-	public Body getBody() {
-		return body;
-	}
-
-	public Dispatcher getDispatcher() {
-		return dispatcher;
-	}
-
-	public String getResponse() {
-		return xmler.toString(body);
-	}
-
-	public void initBody(final String sid) {
-		if (this.body == null) {
-			rid++;
-			body = new Body(rid, sid);
+    @Override
+    public void attach() {
+	when(EmiteBosh.Events.send, new PacketListener() {
+	    public void handle(final Packet received) {
+		final List<? extends Packet> children = received.getChildren();
+		for (final Packet child : children) {
+		    send(child);
 		}
-	}
+	    }
+	});
+    }
 
-	public void clear() {
-		rid = (long) (Math.random() * 1245234);
-		this.body = null;
-	}
+    public Packet bodyFromResponse(final String content) {
+	return xmler.toXML(content);
+    }
 
-	public void publish(final Event event) {
-		dispatcher.publish(event);
-	}
+    public void clear() {
+	rid = (long) (Math.random() * 1245234);
+	this.body = null;
+    }
 
-	public void send(final Packet packet) {
-		body.addChild(packet);
+    public void clearBody() {
+	body = null;
+    }
+
+    public Body getBody() {
+	return body;
+    }
+
+    public Dispatcher getDispatcher() {
+	return dispatcher;
+    }
+
+    public String getResponse() {
+	return xmler.toString(body);
+    }
+
+    public void initBody(final String sid) {
+	if (this.body == null) {
+	    rid++;
+	    body = new Body(rid, sid);
 	}
+    }
+
+    public void publish(final Event event) {
+	dispatcher.publish(event);
+    }
+
+    public void send(final Packet packet) {
+	body.addChild(packet);
+    }
 
 }
