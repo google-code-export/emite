@@ -68,3 +68,15 @@
 .userf-icon {
   background-image: url(img/userf.gif) !important;
 }
+
+.useradd-icon {
+  background-image: url(img/useradd.gif) !important;
+}
+
+.load-icon {
+  background-image: url(img/extload.gif) !important;
+}
+
+.form-label-bpadding {
+  padding-bottom: 10px;
+}

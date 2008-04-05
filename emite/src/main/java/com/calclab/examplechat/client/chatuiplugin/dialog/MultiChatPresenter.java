@@ -191,14 +191,14 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.setInputText(nextChat.getSavedInput());
         if (nextChat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
             view.setGroupChatUsersPanelVisible(true);
-            view.setInviteToGroupChatButtonEnabled(true);
+            view.setInviteToGroupChatButtonVisible(true);
             final GroupChatPresenter groupChat = (GroupChatPresenter) nextChat;
             view.setSubject(groupChat.getSubject());
             view.setSubjectEditable(groupChat.getSessionUserType().equals(GroupChatUser.MODERADOR));
             view.showUserList(groupChat.getUsersListView());
         } else {
             view.setGroupChatUsersPanelVisible(false);
-            view.setInviteToGroupChatButtonEnabled(false);
+            view.setInviteToGroupChatButtonVisible(false);
             view.clearSubject();
             view.setSubjectEditable(false);
         }
@@ -255,6 +255,10 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void setStatus(final int status) {
         view.setStatus(status);
+    }
+
+    public void setStatusChanging(final boolean changing) {
+        view.setLoadingVisible(changing);
     }
 
     public void show() {
@@ -317,7 +321,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     private void setInputEnabled(final boolean enabled) {
         view.setSendEnabled(enabled);
         view.setInputEditable(enabled);
-        view.setEmoticonButton(enabled);
+        view.setEmoticonButtonEnabled(enabled);
     }
 
     public void onPresenceAccepted(final Presence presence) {
@@ -334,6 +338,10 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void addRosterItem(final String name, final String jid) {
         listener.addRosterItem(name, jid);
+    }
+
+    public void setAddRosterItemButtonVisible(final boolean visible) {
+        view.setAddRosterItemButtonVisible(visible);
     }
 
 }

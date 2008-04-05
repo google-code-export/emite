@@ -51,7 +51,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.RegionPosition;
 import com.gwtext.client.widgets.Button;
-import com.gwtext.client.widgets.ColorPalette;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Container;
 import com.gwtext.client.widgets.MessageBox;
@@ -59,9 +58,7 @@ import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.Toolbar;
 import com.gwtext.client.widgets.ToolbarButton;
-import com.gwtext.client.widgets.ToolbarMenuButton;
 import com.gwtext.client.widgets.Window;
-import com.gwtext.client.widgets.MessageBox.PromptCallback;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.KeyListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
@@ -72,15 +69,6 @@ import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.BorderLayout;
 import com.gwtext.client.widgets.layout.BorderLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-import com.gwtext.client.widgets.menu.BaseItem;
-import com.gwtext.client.widgets.menu.CheckItem;
-import com.gwtext.client.widgets.menu.ColorMenu;
-import com.gwtext.client.widgets.menu.Item;
-import com.gwtext.client.widgets.menu.Menu;
-import com.gwtext.client.widgets.menu.MenuItem;
-import com.gwtext.client.widgets.menu.TextItem;
-import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
-import com.gwtext.client.widgets.menu.event.ColorMenuListener;
 
 public class MultiChatPanel implements MultiChatView {
     private static final ChatIcons icons = ChatIcons.App.getInstance();
@@ -94,13 +82,6 @@ public class MultiChatPanel implements MultiChatView {
     private final HashMap<String, AbstractChat> panelIdToChat;
     private EmoticonPalettePanel emoticonPalettePanel;
     private PopupPanel emoticonPopup;
-    private Menu statusMenu;
-    private CheckItem onlineMenuItem;
-    private CheckItem offlineMenuItem;
-    private CheckItem busyMenuItem;
-    private CheckItem awayMenuItem;
-    private ToolbarMenuButton statusButton;
-    private ToolbarButton inviteUserToGroupChat;
     private TabPanel centerPanel;
     private Panel usersPanel;
     private final I18nTranslationService i18n;
@@ -108,10 +89,10 @@ public class MultiChatPanel implements MultiChatView {
     private Panel groupChatUsersPanel;
     private String infoPanelId;
     private Panel buddiesPanel;
-    private Item closeAllOption;
     private BottomTrayIcon bottomIcon;
     private UserGrid buddiesGrid;
     private ToolbarButton emoticonButton;
+    private MultiChatPanelTopBar topToolbar;
 
     public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
@@ -188,10 +169,6 @@ public class MultiChatPanel implements MultiChatView {
         }
     }
 
-    public void setCloseAllOptionEnabled(boolean enabled) {
-        closeAllOption.setDisabled(!enabled);
-    }
-
     public void setSubject(final String text) {
         subject.setValue(text);
     }
@@ -204,7 +181,7 @@ public class MultiChatPanel implements MultiChatView {
         input.setDisabled(!editable);
     }
 
-    public void setEmoticonButton(final boolean enabled) {
+    public void setEmoticonButtonEnabled(final boolean enabled) {
         emoticonButton.setDisabled(!enabled);
     }
 
@@ -252,27 +229,6 @@ public class MultiChatPanel implements MultiChatView {
         buddiesGrid.removeUser(user);
     }
 
-    public void setStatus(final int status) {
-        switch (status) {
-        case STATUS_ONLINE:
-            onlineMenuItem.setChecked(true);
-            break;
-        case STATUS_OFFLINE:
-            offlineMenuItem.setChecked(true);
-            break;
-        case STATUS_BUSY:
-            busyMenuItem.setChecked(true);
-            break;
-        case STATUS_AWAY:
-            awayMenuItem.setChecked(true);
-            break;
-        default:
-            break;
-        }
-        String icon = StatusUtil.getStatusIcon(status).getHTML();
-        statusButton.setText(icon);
-    }
-
     public void setGroupChatUsersPanelVisible(final boolean visible) {
         groupChatUsersPanel.setVisible(visible);
         if (visible == true) {
@@ -282,21 +238,41 @@ public class MultiChatPanel implements MultiChatView {
         }
     }
 
-    public void setInviteToGroupChatButtonEnabled(final boolean enable) {
-        inviteUserToGroupChat.setVisible(enable);
+    public void setInviteToGroupChatButtonVisible(final boolean visible) {
+        topToolbar.setInviteToGroupChatButtonVisible(visible);
+    }
+
+    public void setAddRosterItemButtonVisible(final boolean visible) {
+        topToolbar.setAddRosterItemButtonVisible(visible);
+    }
+
+    public void confirmSusbscriptionRequest(final Presence presence) {
+        MessageBox.confirm(i18n.t("Confirm"), i18n.t("[%s] want to add you as a buddy. Do you want to permit?",
+                presence.getFrom()), new MessageBox.ConfirmCallback() {
+            public void execute(final String btnID) {
+                if (btnID.equals("yes")) {
+                    presenter.onPresenceAccepted(presence);
+                } else {
+                    presenter.onPresenceNotAccepted(presence);
+                }
+            }
+        });
+    }
+
+    public void setLoadingVisible(final boolean visible) {
+        topToolbar.setLoadingVisible(visible);
     }
 
     public void confirmCloseAll() {
-        MessageBox.confirm(i18n.t("Confirm"), i18n.t("Are you sure you want to exit all the chats?"),
-                new MessageBox.ConfirmCallback() {
-                    public void execute(final String btnID) {
-                        if (btnID.equals("yes")) {
-                            presenter.onCloseAllConfirmed();
-                        } else {
-                            presenter.onCloseAllNotConfirmed();
-                        }
-                    }
-                });
+        topToolbar.confirmCloseAll();
+    }
+
+    public void setCloseAllOptionEnabled(final boolean enabled) {
+        topToolbar.setCloseAllOptionEnabled(enabled);
+    }
+
+    public void setStatus(final int status) {
+        topToolbar.setStatus(status);
     }
 
     private void createLayout() {
@@ -433,149 +409,6 @@ public class MultiChatPanel implements MultiChatView {
         return usersPanel;
     }
 
-    private Toolbar createTopToolbar() {
-        final Toolbar topToolbar = new Toolbar();
-
-        Menu optionsMenu = new Menu();
-        optionsMenu.setShadow(true);
-        Item joinOption = new Item();
-        joinOption.setText(i18n.t("Join a chat room"));
-        joinOption.addListener(new BaseItemListenerAdapter() {
-            public void onClick(final BaseItem item, final EventObject e) {
-                MessageBox.alert("In development");
-            }
-        });
-        closeAllOption = new Item();
-        closeAllOption.setText(i18n.t("Close all chats"));
-        ColorMenu colorMenu = new ColorMenu();
-        colorMenu.addListener(new ColorMenuListener() {
-            public void onSelect(final ColorPalette colorPalette, final String color) {
-                presenter.onUserColorChanged(color);
-            }
-        });
-        MenuItem colorMenuItem = new MenuItem("Choose your color", colorMenu);
-        colorMenuItem.setIconCls("colors-icon");
-        colorMenuItem.setIcon("css/img/colors.gif");
-        optionsMenu.addItem(joinOption);
-        optionsMenu.addItem(colorMenuItem);
-        optionsMenu.addItem(closeAllOption);
-        ToolbarMenuButton optionsMenuButton = new ToolbarMenuButton(i18n.t("Options"));
-        optionsMenuButton.setMenu(optionsMenu);
-        topToolbar.addButton(optionsMenuButton);
-        topToolbar.addSeparator();
-        closeAllOption.setIconCls("exit-icon");
-        closeAllOption.addListener(new BaseItemListenerAdapter() {
-            public void onClick(final BaseItem item, final EventObject e) {
-                confirmCloseAll();
-            }
-        });
-
-        statusMenu = new Menu();
-        statusMenu.setShadow(true);
-
-        statusMenu.addItem(new TextItem("<b class=\"menu-title\">" + i18n.t("Change your status") + "</b>"));
-
-        onlineMenuItem = createStatusCheckItem(STATUS_ONLINE);
-        offlineMenuItem = createStatusCheckItem(STATUS_OFFLINE);
-        busyMenuItem = createStatusCheckItem(STATUS_BUSY);
-        awayMenuItem = createStatusCheckItem(STATUS_AWAY);
-        Item setStatusText = new Item();
-        final String setStatusTextTitle = i18n.t("Set your status message");
-        setStatusText.setText(setStatusTextTitle);
-        setStatusText.addListener(new BaseItemListenerAdapter() {
-            public void onClick(final BaseItem item, final EventObject e) {
-                MessageBox.prompt(setStatusTextTitle, i18n
-                        .t("Set your current status text (something like 'Out for dinner' or 'Working)"),
-                        new PromptCallback() {
-                            public void execute(final String btnID, final String text) {
-                                presenter.setPresenceStatusText(text);
-                            }
-                        });
-            }
-        });
-        statusMenu.addItem(onlineMenuItem);
-        statusMenu.addItem(offlineMenuItem);
-        statusMenu.addItem(busyMenuItem);
-        statusMenu.addItem(awayMenuItem);
-        statusMenu.addItem(setStatusText);
-        statusButton = new ToolbarMenuButton("Set status", statusMenu);
-        statusButton.setTooltip(i18n.t("Set status"));
-
-        topToolbar.addButton(statusButton);
-
-        statusButton.addListener(new ButtonListenerAdapter() {
-            public void onClick(final Button button, final EventObject e) {
-                statusMenu.show("chat-menu-button");
-            }
-        });
-
-        topToolbar.addSeparator();
-
-        inviteUserToGroupChat = new ToolbarButton();
-        inviteUserToGroupChat.setIcon("images/group_add.png");
-        inviteUserToGroupChat.setCls("x-btn-icon");
-        inviteUserToGroupChat.setTooltip(i18n.t("Invite another user to this chat room"));
-
-        ToolbarButton buddyAdd = new ToolbarButton();
-        buddyAdd.setIcon("images/user_add.png");
-        buddyAdd.setCls("x-btn-icon");
-        buddyAdd.setTooltip(i18n.t("Add a new buddy"));
-
-        // final EntityLiveSearchListener inviteUserToRoomListener = new
-        // EntityLiveSearchListener() {
-        // public void onSelection(String shortName, String longName) {
-        // presenter.inviteUserToRoom(shortName, longName);
-        // }
-        // };
-
-        // final EntityLiveSearchListener addBuddyListener = new
-        // EntityLiveSearchListener() {
-        // public void onSelection(String shortName, String longName) {
-        // presenter.addBuddy(shortName, longName);
-        // }
-        // };
-
-        buddyAdd.addListener(new ButtonListenerAdapter() {
-            private RosterItemDialog rosterItemDialog;
-
-            public void onClick(final Button button, final EventObject e) {
-                if (rosterItemDialog == null) {
-                    rosterItemDialog = new RosterItemDialog(i18n, presenter);
-                }
-                rosterItemDialog.show();
-                // DefaultDispatcher.getInstance().fire(PlatformEvents.ADD_USERLIVESEARCH,
-                // addBuddyListener, null);
-            }
-        });
-
-        inviteUserToGroupChat.addListener(new ButtonListenerAdapter() {
-            public void onClick(final Button button, final EventObject e) {
-                MessageBox.alert("In development");
-                // DefaultDispatcher.getInstance().fire(PlatformEvents.ADD_USERLIVESEARCH,
-                // inviteUserToRoomListener, null);
-            }
-        });
-
-        topToolbar.addButton(buddyAdd);
-
-        topToolbar.addButton(inviteUserToGroupChat);
-
-        return topToolbar;
-    }
-
-    private CheckItem createStatusCheckItem(final int status) {
-        CheckItem checkItem = new CheckItem();
-        checkItem.setText(StatusUtil.getStatusIconAndText(i18n, status));
-        checkItem.setGroup("chatstatus");
-
-        checkItem.addListener(new BaseItemListenerAdapter() {
-            public void onClick(final BaseItem item, final EventObject e) {
-                presenter.onStatusSelected(status);
-            }
-        });
-        return checkItem;
-    }
-
     private Panel createSubjectPanel() {
         FormPanel subjectForm = createGenericInputForm();
 
@@ -590,7 +423,7 @@ public class MultiChatPanel implements MultiChatView {
             }
         });
 
-        final Toolbar topToolbar = createTopToolbar();
+        topToolbar = new MultiChatPanelTopBar(i18n, presenter);
 
         subjectForm.add(subject, new AnchorLayoutData("100% 100%"));
 
@@ -696,20 +529,6 @@ public class MultiChatPanel implements MultiChatView {
     private void reset() {
         subject.reset();
         setGroupChatUsersPanelVisible(false);
-        setInviteToGroupChatButtonEnabled(false);
-    }
-
-    public void confirmSusbscriptionRequest(final Presence presence) {
-        MessageBox.confirm(i18n.t("Confirm"), i18n.t("[%s] want to add you as a buddy. Do you want to permit?",
-                presence.getFrom()), new MessageBox.ConfirmCallback() {
-            public void execute(final String btnID) {
-                if (btnID.equals("yes")) {
-                    presenter.onPresenceAccepted(presence);
-                } else {
-                    presenter.onPresenceNotAccepted(presence);
-                }
-            }
-        });
-
+        setInviteToGroupChatButtonVisible(false);
     }
 }

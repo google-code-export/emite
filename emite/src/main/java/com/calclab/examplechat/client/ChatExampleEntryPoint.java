@@ -21,7 +21,6 @@
  */
 package com.calclab.examplechat.client;
 
-import org.ourproject.kune.platf.client.dispatch.Action;
 import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 import org.ourproject.kune.platf.client.extend.PluginManager;
 import org.ourproject.kune.platf.client.extend.UIExtensionPointManager;
@@ -51,8 +50,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ChatExampleEntryPoint implements EntryPoint {
-    private Button btnLogin;
-    private Button btnLogout;
     private DefaultDispatcher dispatcher;
     private PasswordTextBox passwordInput;
     private Presence presenceForTest;
@@ -98,18 +95,6 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
     private HorizontalPanel createButtonsPane() {
         final HorizontalPanel buttons = new HorizontalPanel();
-        btnLogin = new Button("Login", new ClickListener() {
-            public void onClick(final Widget source) {
-                login();
-            }
-        });
-        buttons.add(btnLogin);
-        btnLogout = new Button("Logout", new ClickListener() {
-            public void onClick(final Widget arg0) {
-                logout();
-            }
-        });
-        buttons.add(btnLogout);
 
         final Button btnPanic = new Button("Panic!", new ClickListener() {
             public void onClick(final Widget arg0) {
@@ -130,26 +115,12 @@ public class ChatExampleEntryPoint implements EntryPoint {
         dispatcher.fire(EmiteUiPlugin.OPEN_MULTI_CHAT_DIALOG, new MultiChatCreationParam(xmpp, new PairChatUser(
                 "images/person-def.gif", XmppURI.parse(userNameInput.getText()), userNameInput.getText(),
                 MultiChatView.DEF_USER_COLOR, presenceForTest), passwordInput.getText()));
-        dispatcher.subscribe(EmiteUiPlugin.ON_STATE_CONNECTED, new Action<Object>() {
-            public void execute(final Object param) {
-                btnLogin.setEnabled(false);
-                btnLogout.setEnabled(true);
-            }
-        });
-
-        dispatcher.subscribe(EmiteUiPlugin.ON_STATE_DISCONNECTED, new Action<Object>() {
-            public void execute(final Object param) {
-                btnLogin.setEnabled(true);
-                btnLogout.setEnabled(false);
-            }
-        });
     }
 
     private void createInterface() {
         final VerticalPanel vertical = new VerticalPanel();
-        vertical.add(createButtonsPane());
         vertical.add(createLoginPane());
-        vertical.add(createOutputPane());
+        vertical.add(createButtonsPane());
 
         RootPanel.get().add(vertical);
     }
@@ -162,15 +133,9 @@ public class ChatExampleEntryPoint implements EntryPoint {
         passwordInput.setText("easyeasy");
         login.add(new Label("user name:"));
         login.add(userNameInput);
-        login.add(new Label("Resource:"));
         login.add(new Label("password"));
         login.add(passwordInput);
         return login;
-    }
-
-    private HorizontalPanel createOutputPane() {
-        final HorizontalPanel split = new HorizontalPanel();
-        return split;
     }
 
     private void createPresenceForTest() {
@@ -180,22 +145,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
         presenceForTest.setStatus("I\'m out for dinner");
     }
 
-    private void login() {
-        xmpp.login(userNameInput.getText(), passwordInput.getText());
-    }
-
-    private void logout() {
-        xmpp.logout();
-        btnLogout.setEnabled(false);
-        btnLogin.setEnabled(true);
-        dispatcher.fire(EmiteUiPlugin.SET_STATUS, MultiChatView.STATUS_OFFLINE);
-    }
-
     private void panic() {
         xmpp.getDispatcher().publish(BoshManager.Events.error);
-        btnLogin.setEnabled(true);
-        btnLogout.setEnabled(true);
-
     }
 
 }

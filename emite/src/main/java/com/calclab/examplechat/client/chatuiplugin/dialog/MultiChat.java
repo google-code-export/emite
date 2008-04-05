@@ -56,4 +56,8 @@ public interface MultiChat {
 
     public void onSubscriptionRequest(Presence presence);
 
+    public void setStatusChanging(boolean changing);
+
+    public void setAddRosterItemButtonVisible(boolean visible);
+
 }
