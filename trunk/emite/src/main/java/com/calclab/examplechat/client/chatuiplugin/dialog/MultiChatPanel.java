@@ -45,7 +45,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.DeckPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.EventObject;
@@ -85,14 +84,13 @@ public class MultiChatPanel implements MultiChatView {
     private TabPanel centerPanel;
     private Panel usersPanel;
     private final I18nTranslationService i18n;
-    private Panel infoPanel;
     private Panel groupChatUsersPanel;
-    private String infoPanelId;
-    private Panel buddiesPanel;
+    private Panel rosterPanel;
     private BottomTrayIcon bottomIcon;
-    private UserGrid buddiesGrid;
+    private UserGrid rosterGrid;
     private ToolbarButton emoticonButton;
     private MultiChatPanelTopBar topToolbar;
+    private MultiChatPanelInfoTab infoPanel;
 
     public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
@@ -110,8 +108,8 @@ public class MultiChatPanel implements MultiChatView {
         panelIdToChat.put(panelId, chat);
         activateChat(chat);
         // TODO put in presenter
-        if (centerPanel.hasItem(infoPanelId)) {
-            centerPanel.remove(infoPanelId);
+        if (centerPanel.hasItem(infoPanel.getId())) {
+            centerPanel.remove(infoPanel.getId());
         }
         input.focus();
     }
@@ -218,15 +216,27 @@ public class MultiChatPanel implements MultiChatView {
         return input.getValueAsString();
     }
 
+    public void setRosterVisible(final boolean visible) {
+        rosterPanel.setVisible(visible);
+        if (visible) {
+            rosterPanel.doLayout();
+            rosterPanel.expand();
+        }
+    }
+
+    public void clearRoster() {
+        rosterGrid.removeAllUsers();
+    }
+
     public void addRosterItem(final PairChatUser user) {
         UserGridMenu menu = new UserGridMenu(presenter);
         menu.addMenuOption(i18n.t("Start a chat with this person"), "chat-icon", EmiteUiPlugin.ON_PAIR_CHAT_START, user
                 .getUri());
-        buddiesGrid.addUser(user, menu);
+        rosterGrid.addUser(user, menu);
     }
 
-    public void removePresenceBuddy(final PairChatUser user) {
-        buddiesGrid.removeUser(user);
+    public void removeRosterItem(final PairChatUser user) {
+        rosterGrid.removeUser(user);
     }
 
     public void setGroupChatUsersPanelVisible(final boolean visible) {
@@ -273,6 +283,14 @@ public class MultiChatPanel implements MultiChatView {
 
     public void setStatus(final int status) {
         topToolbar.setStatus(status);
+    }
+
+    public void setOfflineInfo() {
+        infoPanel.setOfflineInfo();
+    }
+
+    public void setOnlineInfo() {
+        infoPanel.setOnlineInfo();
     }
 
     private void createLayout() {
@@ -326,7 +344,7 @@ public class MultiChatPanel implements MultiChatView {
         centerPanel.setEnableTabScroll(true);
         centerPanel.setAutoScroll(false);
         BorderLayoutData centerData = new BorderLayoutData(RegionPosition.CENTER);
-        createInfoPanel();
+        infoPanel = new MultiChatPanelInfoTab(i18n);
         centerPanel.add(infoPanel);
         dialog.add(centerPanel, centerData);
 
@@ -392,19 +410,19 @@ public class MultiChatPanel implements MultiChatView {
         // deckpanel
         groupChatUsersDeckPanel = new DeckPanel();
         groupChatUsersDeckPanel.addStyleName("emite-MultiChatPanel-User");
-        buddiesPanel = new Panel(i18n.t("My buddies"));
-        buddiesPanel.setLayout(new FitLayout());
-        buddiesPanel.setAutoScroll(true);
-        buddiesPanel.setIconCls("userf-icon");
-        buddiesPanel.setBorder(false);
-        buddiesGrid = new UserGrid();
-        buddiesPanel.add(buddiesGrid);
+        rosterPanel = new Panel(i18n.t("My buddies"));
+        rosterPanel.setLayout(new FitLayout());
+        rosterPanel.setAutoScroll(true);
+        rosterPanel.setIconCls("userf-icon");
+        rosterPanel.setBorder(false);
+        rosterGrid = new UserGrid();
+        rosterPanel.add(rosterGrid);
         groupChatUsersPanel = new Panel(i18n.t("Now in this room"));
         groupChatUsersPanel.setLayout(new FitLayout());
         groupChatUsersPanel.setAutoScroll(true);
         groupChatUsersPanel.setIconCls("group-icon");
         groupChatUsersPanel.add(groupChatUsersDeckPanel);
-        usersPanel.add(buddiesPanel);
+        usersPanel.add(rosterPanel);
         usersPanel.add(groupChatUsersPanel);
         return usersPanel;
     }
@@ -502,22 +520,11 @@ public class MultiChatPanel implements MultiChatView {
         emoticonPopup.setVisible(true);
     }
 
-    private void createInfoPanel() {
-        infoPanel = new Panel();
-        infoPanel.setTitle(i18n.t("Info"));
-        infoPanel.setClosable(false);
-        infoPanel.add(new Label(i18n.t("To start a chat, select a buddy or join to a chat room. "
-                + "If you don't have buddies you can add them.")));
-        infoPanel.setPaddings(7);
-        infoPanelId = infoPanel.getId();
-        addInfoPanel();
-    }
-
     private void addInfoPanel() {
         reset();
         centerPanel.add(infoPanel);
         infoPanel.show();
-        centerPanel.activate(infoPanelId);
+        centerPanel.activate(infoPanel.getId());
     }
 
     private void doSend(final EventObject e) {

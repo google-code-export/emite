@@ -119,23 +119,31 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
     private void createInterface() {
         final VerticalPanel vertical = new VerticalPanel();
-        vertical.add(createLoginPane());
+        vertical.add(createUserNamePane());
+        vertical.add(createPasswdPane());
+        vertical.add(new Label("Note: Currently we are only support PLAIN authentication, "
+                + "them for you security, only use jabber test accounts)"));
         vertical.add(createButtonsPane());
 
         RootPanel.get().add(vertical);
     }
 
-    private HorizontalPanel createLoginPane() {
-        final HorizontalPanel login = new HorizontalPanel();
+    private HorizontalPanel createUserNamePane() {
+        final HorizontalPanel userNamePanel = new HorizontalPanel();
         userNameInput = new TextBox();
         userNameInput.setText("admin@localhost");
+        userNamePanel.add(new Label("user name:"));
+        userNamePanel.add(userNameInput);
+        return userNamePanel;
+    }
+
+    private HorizontalPanel createPasswdPane() {
+        final HorizontalPanel passwdPanel = new HorizontalPanel();
         passwordInput = new PasswordTextBox();
         passwordInput.setText("easyeasy");
-        login.add(new Label("user name:"));
-        login.add(userNameInput);
-        login.add(new Label("password"));
-        login.add(passwordInput);
-        return login;
+        passwdPanel.add(new Label("password:"));
+        passwdPanel.add(passwordInput);
+        return passwdPanel;
     }
 
     private void createPresenceForTest() {

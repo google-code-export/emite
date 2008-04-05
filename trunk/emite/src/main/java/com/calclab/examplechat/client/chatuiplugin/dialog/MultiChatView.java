@@ -51,7 +51,7 @@ public interface MultiChatView {
 
     void highlightChat(AbstractChat chat);
 
-    void removePresenceBuddy(PairChatUser user);
+    void removeRosterItem(PairChatUser user);
 
     void setInputEditable(boolean editable);
 
@@ -92,5 +92,13 @@ public interface MultiChatView {
     void setLoadingVisible(boolean visible);
 
     void setAddRosterItemButtonVisible(boolean visible);
+
+    void setOnlineInfo();
+
+    void setOfflineInfo();
+
+    void setRosterVisible(boolean visible);
+
+    void clearRoster();
 
 }
