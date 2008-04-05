@@ -40,7 +40,7 @@ Attach the following notices to each source of the program at the begining:
 
 In Java, something like this (also you can use your name):
 
-/**
+/*
  *
  * ((e)) emite: A pure gwt (Google Web Toolkit) xmpp (jabber) library
  *

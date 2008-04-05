@@ -1,4 +1,4 @@
-/**
+/*
  *
  * ((e)) emite: A pure gwt (Google Web Toolkit) xmpp (jabber) library
  *
