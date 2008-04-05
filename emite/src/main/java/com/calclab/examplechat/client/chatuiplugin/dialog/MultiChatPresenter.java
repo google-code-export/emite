@@ -83,7 +83,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void removePresenceBuddy(final PairChatUser user) {
         roster.remove(user.getUri().getJid());
-        view.removePresenceBuddy(user);
+        view.removeRosterItem(user);
     }
 
     public void addUsetToGroupChat(final String chatId, final GroupChatUser groupChatUser) {
@@ -253,14 +253,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         listener.onUserColorChanged(color);
     }
 
-    public void setStatus(final int status) {
-        view.setStatus(status);
-    }
-
-    public void setStatusChanging(final boolean changing) {
-        view.setLoadingVisible(changing);
-    }
-
     public void show() {
         view.show();
         closeAllConfirmed = false;
@@ -268,6 +260,42 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void onSubscriptionRequest(final Presence presence) {
         view.confirmSusbscriptionRequest(presence);
+    }
+
+    public void onPresenceAccepted(final Presence presence) {
+        listener.onPresenceAccepted(presence);
+    }
+
+    public void onPresenceNotAccepted(final Presence presence) {
+        listener.onPresenceNotAccepted(presence);
+    }
+
+    public void setPresenceStatusText(final String statusMessageText) {
+        listener.setPresenceStatusText(statusMessageText);
+    }
+
+    public void addRosterItem(final String name, final String jid) {
+        listener.addRosterItem(name, jid);
+    }
+
+    public void doAfterLogin() {
+        view.setStatus(MultiChatView.STATUS_ONLINE);
+        view.setLoadingVisible(false);
+        view.setAddRosterItemButtonVisible(true);
+        view.setOnlineInfo();
+        view.setRosterVisible(true);
+    }
+
+    public void doAfterLogout() {
+        view.setStatus(MultiChatView.STATUS_OFFLINE);
+        view.setLoadingVisible(false);
+        view.setAddRosterItemButtonVisible(false);
+        view.setOfflineInfo();
+        view.setRosterVisible(false);
+    }
+
+    public void doConnecting() {
+        view.setLoadingVisible(true);
     }
 
     private void checkIsGroupChat(final AbstractChat chat) {
@@ -322,26 +350,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.setSendEnabled(enabled);
         view.setInputEditable(enabled);
         view.setEmoticonButtonEnabled(enabled);
-    }
-
-    public void onPresenceAccepted(final Presence presence) {
-        listener.onPresenceAccepted(presence);
-    }
-
-    public void onPresenceNotAccepted(final Presence presence) {
-        listener.onPresenceNotAccepted(presence);
-    }
-
-    public void setPresenceStatusText(final String statusMessageText) {
-        listener.setPresenceStatusText(statusMessageText);
-    }
-
-    public void addRosterItem(final String name, final String jid) {
-        listener.addRosterItem(name, jid);
-    }
-
-    public void setAddRosterItemButtonVisible(final boolean visible) {
-        view.setAddRosterItemButtonVisible(visible);
     }
 
 }

@@ -171,6 +171,10 @@ public class UserGrid extends GridPanel {
         // countriesGrid.setDdGroup("myDDGroup");
     }
 
+    public void removeAllUsers() {
+        store.removeAll();
+    }
+
     // public void addList() {
     // Use this to set a list of Users
     // Object[][] data = new Object[rows][cols];

@@ -31,7 +31,7 @@ public class RosterItemDialog {
         if (dialog == null) {
             dialog = new BasicDialog(i18n.t("Add a new buddy"), false, false, 350, 260);
             dialog.setLayout(new FitLayout());
-            dialog.setCollapsed(false);
+            dialog.setCollapsible(false);
             dialog.setButtonAlign(Position.RIGHT);
             dialog.setIconCls("useradd-icon");
 

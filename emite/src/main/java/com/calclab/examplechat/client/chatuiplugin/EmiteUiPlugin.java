@@ -55,7 +55,6 @@ public class EmiteUiPlugin extends Plugin {
 
     // Input events
     public static final String OPEN_MULTI_CHAT_DIALOG = "emiteuiplugin.openchatdialog";
-    public static final String SET_STATUS = "emiteuiplugin.setstatus";
     public static final String ACTIVATE_CHAT = "emiteuiplugin.activatechat";
     public static final String CLOSE_CHAT_DIALOG = "emiteuiplugin.closechatdialog";
 
@@ -163,12 +162,6 @@ public class EmiteUiPlugin extends Plugin {
                     }
                 });
 
-                dispatcher.subscribe(SET_STATUS, new Action<Integer>() {
-                    public void execute(final Integer status) {
-                        multiChatDialog.setStatus(status);
-                    }
-                });
-
                 dispatcher.subscribe(ACTIVATE_CHAT, new Action<Chat>() {
                     public void execute(final Chat chat) {
                         multiChatDialog.activateChat(chat);
@@ -192,18 +185,14 @@ public class EmiteUiPlugin extends Plugin {
                 Log.info("STATE CHANGED: " + current + " - old: " + old);
                 switch (current) {
                 case connected:
-                    multiChatDialog.setStatus(MultiChatView.STATUS_ONLINE);
-                    multiChatDialog.setStatusChanging(false);
-                    multiChatDialog.setAddRosterItemButtonVisible(true);
+                    multiChatDialog.doAfterLogin();
                     dispatcher.fire(ON_STATE_CONNECTED, null);
                     break;
                 case connecting:
-                    multiChatDialog.setStatusChanging(true);
+                    multiChatDialog.doConnecting();
                     break;
                 case disconnected:
-                    multiChatDialog.setStatus(MultiChatView.STATUS_OFFLINE);
-                    multiChatDialog.setStatusChanging(false);
-                    multiChatDialog.setAddRosterItemButtonVisible(false);
+                    multiChatDialog.doAfterLogout();
                     dispatcher.fire(ON_STATE_DISCONNECTED, null);
                     break;
                 }

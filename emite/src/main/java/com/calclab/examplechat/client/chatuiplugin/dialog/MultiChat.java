@@ -34,8 +34,6 @@ public interface MultiChat {
 
     public void closeAllChats(final boolean withConfirmation);
 
-    public void setStatus(int status);
-
     public void show();
 
     public GroupChat createGroupChat(Chat chat, String userAlias, GroupChatUserType groupChatUserType);
@@ -56,8 +54,10 @@ public interface MultiChat {
 
     public void onSubscriptionRequest(Presence presence);
 
-    public void setStatusChanging(boolean changing);
+    public void doAfterLogin();
 
-    public void setAddRosterItemButtonVisible(boolean visible);
+    public void doAfterLogout();
+
+    public void doConnecting();
 
 }
