@@ -3,8 +3,8 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.user.client.ui.Label;
 import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.form.Label;
 
 public class MultiChatPanelInfoTab extends Panel {
     private final Label infoLabel;

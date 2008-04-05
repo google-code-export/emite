@@ -169,6 +169,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     public void init(final MultiChatView view) {
         this.view = view;
         reset();
+        view.setStatus(MultiChatView.STATUS_OFFLINE);
     }
 
     public void inviteUserToRoom(final String shortName, final String longName) {
@@ -344,7 +345,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     private void reset() {
         currentChat = null;
         closeAllConfirmed = false;
-        view.setStatus(MultiChatView.STATUS_OFFLINE);
         view.setCloseAllOptionEnabled(false);
         view.setSubjectEditable(false);
         setInputEnabled(false);
