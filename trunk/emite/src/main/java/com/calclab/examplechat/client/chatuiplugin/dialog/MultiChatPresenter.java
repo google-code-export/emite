@@ -30,6 +30,7 @@ import org.ourproject.kune.platf.client.extend.UIExtensionPoint;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
@@ -40,7 +41,6 @@ import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
-import com.calclab.examplechat.client.chatuiplugin.params.ChatMessageParam;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 
@@ -76,7 +76,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     public void addBuddy(final String shortName, final String longName) {
     }
 
-    public void addPresenceBuddy(final PairChatUser user) {
+    public void addRosterItem(final PairChatUser user) {
         roster.put(user.getUri().getJid(), user);
         view.addPresenceBuddy(user);
     }
@@ -178,9 +178,8 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         return closeAllConfirmed;
     }
 
-    public void messageReceived(final ChatMessageParam param) {
-        final Message message = param.getMessage();
-        final AbstractChat abstractChat = getChat(param.getChat());
+    public void messageReceived(final Chat chat, final Message message) {
+        final AbstractChat abstractChat = getChat(chat);
         if (abstractChat.getType() == AbstractChat.TYPE_GROUP_CHAT) {
             ((GroupChat) abstractChat).addMessage(message.getFrom().toString(), message.getBody());
         } else {
@@ -263,6 +262,10 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         closeAllConfirmed = false;
     }
 
+    public void onSubscriptionRequest(final Presence presence) {
+        view.confirmSusbscriptionRequest(presence);
+    }
+
     private void checkIsGroupChat(final AbstractChat chat) {
         if (chat.getType() != AbstractChat.TYPE_GROUP_CHAT) {
             new RuntimeException("You cannot do this operation in a this kind of chat");
@@ -315,6 +318,14 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.setSendEnabled(enabled);
         view.setInputEditable(enabled);
         view.setEmoticonButton(enabled);
+    }
+
+    public void onPresenceAccepted(final Presence presence) {
+        listener.onPresenceAccepted(presence);
+    }
+
+    public void onPresenceNotAccepted(final Presence presence) {
+        listener.onPresenceNotAccepted(presence);
     }
 
 }

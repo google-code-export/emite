@@ -14,7 +14,6 @@ import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
-import com.calclab.examplechat.client.chatuiplugin.params.ChatMessageParam;
 
 public class MultiChatPresenterTest {
 
@@ -47,7 +46,7 @@ public class MultiChatPresenterTest {
         Mockito.stub(factory.createPairChat(chat, multiChat, sessionUser, otherUser)).toReturn(pairChat);
         Mockito.stub(pairChat.getChat()).toReturn(chat);
         Mockito.stub(pairChat.getChat().getOtherURI()).toReturn(otherUri);
-        multiChat.addPresenceBuddy(otherUser);
+        multiChat.addRosterItem(otherUser);
         multiChat.createPairChat(chat);
         messageBody = "hello world :)";
     }
@@ -65,15 +64,14 @@ public class MultiChatPresenterTest {
 
     private void sendMessageFromOther() {
         final Message message = new Message(otherUser.getUri(), sessionUser.getUri(), messageBody);
-        ChatMessageParam param = new ChatMessageParam(chat, message);
-        multiChat.messageReceived(param);
+        multiChat.messageReceived(chat, message);
         Mockito.verify(pairChat).addMessage(otherUser.getUri(), messageBody);
     }
 
     @Test
     public void removeAndAddPresenceAndSend() {
         multiChat.removePresenceBuddy(otherUser);
-        multiChat.addPresenceBuddy(otherUser);
+        multiChat.addRosterItem(otherUser);
         sendMessageFromOther();
     }
 

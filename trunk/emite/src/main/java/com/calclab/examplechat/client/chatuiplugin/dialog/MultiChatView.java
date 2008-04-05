@@ -21,6 +21,7 @@
  */
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListView;
@@ -85,5 +86,7 @@ public interface MultiChatView {
     void addPresenceBuddy(PairChatUser user);
 
     void setEmoticonButton(boolean enabled);
+
+    void confirmSusbscriptionRequest(Presence presence);
 
 }

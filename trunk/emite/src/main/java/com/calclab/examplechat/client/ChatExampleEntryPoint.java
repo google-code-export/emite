@@ -21,8 +21,6 @@
  */
 package com.calclab.examplechat.client;
 
-import java.util.List;
-
 import org.ourproject.kune.platf.client.dispatch.Action;
 import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 import org.ourproject.kune.platf.client.extend.PluginManager;
@@ -33,22 +31,12 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatListener;
-import com.calclab.emite.client.im.chat.ChatManagerListener;
-import com.calclab.emite.client.im.presence.PresenceListener;
-import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emite.client.im.roster.RosterListener;
-import com.calclab.emite.client.xmpp.session.SessionListener;
-import com.calclab.emite.client.xmpp.session.Session.State;
-import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.examplechat.client.chatuiplugin.ChatDialogPlugin;
+import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
-import com.calclab.examplechat.client.chatuiplugin.params.ChatMessageParam;
-import com.calclab.examplechat.client.chatuiplugin.params.GroupChatSubjectParam;
+import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -101,71 +89,11 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
     public void onModuleLoadCont() {
 
-        createPresenceForTest();
-
-        createInterface();
-        createExtUI();
-
         this.xmpp = Xmpp.create(new BoshOptions("http-bind", "localhost"));
 
-        xmpp.getSession().addListener(new SessionListener() {
-            public void onStateChanged(final State old, final State current) {
-                Log.info("STATE CHANGED: " + current + " - old: " + old);
-                switch (current) {
-                case connected:
-                    btnLogin.setEnabled(false);
-                    btnLogout.setEnabled(true);
-                    dispatcher.fire(ChatDialogPlugin.SET_STATUS, MultiChatView.STATUS_ONLINE);
-                    break;
-                case connecting:
-                    btnLogin.setEnabled(false);
-                    break;
-                case disconnected:
-                    btnLogin.setEnabled(true);
-                    btnLogout.setEnabled(false);
-                    dispatcher.fire(ChatDialogPlugin.SET_STATUS, MultiChatView.STATUS_OFFLINE);
-                    break;
-                }
-            }
-        });
-
-        xmpp.getRoster().addListener(new RosterListener() {
-            public void onRosterInitialized(final List<RosterItem> roster) {
-                for (final RosterItem item : roster) {
-                    Log.info("Rooster, adding: " + item.getXmppURI() + " name: " + item.getName() + " subsc: "
-                            + item.getSubscription());
-                    dispatcher.fire(ChatDialogPlugin.ADD_PRESENCE_BUDDY, new PairChatUser("images/person-def.gif", item
-                            .getXmppURI(), item.getXmppURI().toString(), "maroon", presenceForTest));
-                }
-            }
-        });
-
-        xmpp.getChat().addListener(new ChatManagerListener() {
-            public void onChatCreated(final Chat chat) {
-                dispatcher.fire(ChatDialogPlugin.CREATE_PAIR_CHAT, chat);
-
-                chat.addListener(new ChatListener() {
-                    public void onMessageReceived(final Chat chat, final Message message) {
-                        dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatMessageParam(chat, message));
-                    }
-
-                    public void onMessageSent(final Chat chat, final Message message) {
-                        dispatcher.fire(ChatDialogPlugin.MESSAGE_RECEIVED, new ChatMessageParam(chat, message));
-                    }
-                });
-            }
-        });
-
-        xmpp.getPresenceManager().addListener(new PresenceListener() {
-            public void onPresenceReceived(final Presence presence) {
-                Log.debug("PRESENCE: " + presence.getFromURI());
-            }
-
-            public void onSubscriptionRequest(final Presence presence) {
-                Log.debug("SUBSCRIPTION REQUEST: " + presence);
-            }
-        });
-
+        createPresenceForTest();
+        createInterface();
+        createExtUI();
     }
 
     private HorizontalPanel createButtonsPane() {
@@ -197,45 +125,22 @@ public class ChatExampleEntryPoint implements EntryPoint {
         dispatcher = DefaultDispatcher.getInstance();
         final PluginManager kunePluginManager = new PluginManager(dispatcher, new UIExtensionPointManager(),
                 new I18nTranslationServiceMocked());
-        kunePluginManager.install(new ChatDialogPlugin());
+        kunePluginManager.install(new EmiteUiPlugin());
 
-        dispatcher.fire(ChatDialogPlugin.OPEN_CHAT_DIALOG,
-                new PairChatUser("images/person-def.gif", XmppURI.parse(userNameInput.getText()), userNameInput
-                        .getText(), MultiChatView.DEF_USER_COLOR, presenceForTest));
-
-        dispatcher.subscribe(ChatDialogPlugin.ON_STATUS_SELECTED, new Action<Integer>() {
-            public void execute(final Integer status) {
-                switch (status) {
-                case MultiChatView.STATUS_ONLINE:
-                    login();
-                    break;
-                case MultiChatView.STATUS_OFFLINE:
-                    logout();
-                    break;
-                case MultiChatView.STATUS_BUSY:
-                    break;
-                case MultiChatView.STATUS_INVISIBLE:
-                    break;
-                case MultiChatView.STATUS_XA:
-                    break;
-                case MultiChatView.STATUS_AWAY:
-                    break;
-                default:
-                    throw new IndexOutOfBoundsException("Xmpp status unknown");
-                }
+        dispatcher.fire(EmiteUiPlugin.OPEN_MULTI_CHAT_DIALOG, new MultiChatCreationParam(xmpp, new PairChatUser(
+                "images/person-def.gif", XmppURI.parse(userNameInput.getText()), userNameInput.getText(),
+                MultiChatView.DEF_USER_COLOR, presenceForTest), passwordInput.getText()));
+        dispatcher.subscribe(EmiteUiPlugin.ON_STATE_CONNECTED, new Action<Object>() {
+            public void execute(final Object param) {
+                btnLogin.setEnabled(false);
+                btnLogout.setEnabled(true);
             }
         });
 
-        dispatcher.subscribe(ChatDialogPlugin.ON_GROUP_CHAT_SUBJECT_CHANGED, new Action<GroupChatSubjectParam>() {
-            public void execute(final GroupChatSubjectParam param) {
-                Log.info("Group '" + param.getChat() + "' changed subject to '" + param.getSubject()
-                        + "' (not implemented yet emite connection");
-            }
-        });
-
-        dispatcher.subscribe(ChatDialogPlugin.ON_PAIR_CHAT_START, new Action<XmppURI>() {
-            public void execute(final XmppURI param) {
-                xmpp.getChat().newChat(param);
+        dispatcher.subscribe(EmiteUiPlugin.ON_STATE_DISCONNECTED, new Action<Object>() {
+            public void execute(final Object param) {
+                btnLogin.setEnabled(true);
+                btnLogout.setEnabled(false);
             }
         });
     }
@@ -277,17 +182,13 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
     private void login() {
         xmpp.login(userNameInput.getText(), passwordInput.getText());
-        // btnLogin.setEnabled(false);
-        // btnLogout.setEnabled(true);
-        // dispatcher.fire(ChatDialogPlugin.SET_STATUS,
-        // MultiChatView.STATUS_ONLINE);
     }
 
     private void logout() {
         xmpp.logout();
         btnLogout.setEnabled(false);
         btnLogin.setEnabled(true);
-        dispatcher.fire(ChatDialogPlugin.SET_STATUS, MultiChatView.STATUS_OFFLINE);
+        dispatcher.fire(EmiteUiPlugin.SET_STATUS, MultiChatView.STATUS_OFFLINE);
     }
 
     private void panic() {
