@@ -55,6 +55,8 @@ public class RosterItemDialog {
             dialog.addButton(cancel);
 
             createForm();
+
+            // TODO define a UI Extension Point here
         }
         dialog.show();
     }

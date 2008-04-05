@@ -142,7 +142,7 @@ public class EmiteUiPlugin extends Plugin {
                             }
 
                             public void addRosterItem(final String name, final String jid) {
-                                Log.info("Adding " + name + "(" + jid + ") to you roster.");
+                                Log.info("Adding " + name + "(" + jid + ") to your roster.");
                                 xmpp.getRoster().requestAddItem(jid, name, null);
                             }
 
