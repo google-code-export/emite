@@ -193,12 +193,17 @@ public class EmiteUiPlugin extends Plugin {
                 switch (current) {
                 case connected:
                     multiChatDialog.setStatus(MultiChatView.STATUS_ONLINE);
+                    multiChatDialog.setStatusChanging(false);
+                    multiChatDialog.setAddRosterItemButtonVisible(true);
                     dispatcher.fire(ON_STATE_CONNECTED, null);
                     break;
                 case connecting:
+                    multiChatDialog.setStatusChanging(true);
                     break;
                 case disconnected:
                     multiChatDialog.setStatus(MultiChatView.STATUS_OFFLINE);
+                    multiChatDialog.setStatusChanging(false);
+                    multiChatDialog.setAddRosterItemButtonVisible(false);
                     dispatcher.fire(ON_STATE_DISCONNECTED, null);
                     break;
                 }

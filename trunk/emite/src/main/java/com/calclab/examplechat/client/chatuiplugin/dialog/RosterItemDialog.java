@@ -29,10 +29,11 @@ public class RosterItemDialog {
 
     public void show() {
         if (dialog == null) {
-            dialog = new BasicDialog(i18n.t("Add a new buddy"), true, false, 350, 260);
+            dialog = new BasicDialog(i18n.t("Add a new buddy"), false, false, 350, 260);
             dialog.setLayout(new FitLayout());
-            dialog.setPaddings(5);
+            dialog.setCollapsed(false);
             dialog.setButtonAlign(Position.RIGHT);
+            dialog.setIconCls("useradd-icon");
 
             Button add = new Button(i18n.tWithNT("Add", "used in button"));
             add.addListener(new ButtonListenerAdapter() {
@@ -71,16 +72,13 @@ public class RosterItemDialog {
 
         Label label = new Label();
         label.setText(i18n.t("Please fill this form with the info of your new buddy. "
-                + "Note tha the 'Jabber Id' sometimes is the same as the email " + "(in gmail accounts for instance). "
+                + "Note that the 'Jabber Id' sometimes is the same as the email "
+                + "(in gmail accounts for instance). "
                 + "As a 'Name' use something meaningful for you to refer your buddy (a nickname is ok)."));
-        label.setCls("simple-form-label");
+        label.setCls("form-label-bpadding");
         label.setWidth(270);
         label.setHeight(40);
-        Label space = new Label();
-        label.setHtml("&nbsp;");
-        space.setHeight(10);
         formPanel.add(label);
-        formPanel.add(space);
 
         name = new TextField(i18n.t("Buddy Name"), "name", 150);
         name.setAllowBlank(false);

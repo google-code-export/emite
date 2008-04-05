@@ -73,7 +73,7 @@ public interface MultiChatView {
 
     void setGroupChatUsersPanelVisible(boolean visible);
 
-    void setInviteToGroupChatButtonEnabled(boolean enabled);
+    void setInviteToGroupChatButtonVisible(boolean visible);
 
     void closeAllChats();
 
@@ -85,8 +85,12 @@ public interface MultiChatView {
 
     void addRosterItem(PairChatUser user);
 
-    void setEmoticonButton(boolean enabled);
+    void setEmoticonButtonEnabled(boolean enabled);
 
     void confirmSusbscriptionRequest(Presence presence);
+
+    void setLoadingVisible(boolean visible);
+
+    void setAddRosterItemButtonVisible(boolean visible);
 
 }
