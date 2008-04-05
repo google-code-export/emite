@@ -284,6 +284,9 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.setAddRosterItemButtonVisible(true);
         view.setOnlineInfo();
         view.setRosterVisible(true);
+        if (chats.size() > 0) {
+            view.setInputEditable(true);
+        }
     }
 
     public void doAfterLogout() {
@@ -292,6 +295,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         view.setAddRosterItemButtonVisible(false);
         view.setOfflineInfo();
         view.setRosterVisible(false);
+        view.setInputEditable(false);
     }
 
     public void doConnecting() {

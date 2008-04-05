@@ -121,8 +121,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
         final VerticalPanel vertical = new VerticalPanel();
         vertical.add(createUserNamePane());
         vertical.add(createPasswdPane());
-        vertical.add(new Label("Note: Currently we are only support PLAIN authentication, "
-                + "them for you security, only use jabber test accounts)"));
+        vertical.add(new Label("Note: Currently we are only supporting PLAIN authentication, "
+                + "them for your security, only use jabber test accounts)"));
         vertical.add(createButtonsPane());
 
         RootPanel.get().add(vertical);
