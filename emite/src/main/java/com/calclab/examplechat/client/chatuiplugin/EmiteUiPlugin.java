@@ -140,6 +140,15 @@ public class EmiteUiPlugin extends Plugin {
                             public void onPresenceNotAccepted(final Presence presence) {
                                 Log.info("Presence not accepted in ui");
                             }
+
+                            public void addRosterItem(final String name, final String jid) {
+                                Log.info("Adding " + name + "(" + jid + ") to you roster.");
+                                xmpp.getRoster().requestAddItem(jid, name, null);
+                            }
+
+                            public void setPresenceStatusText(final String statusMessageText) {
+                                Log.info("Setting status text" + statusMessageText);
+                            }
                         });
 
                 dispatcher.subscribe(EmiteUiPlugin.ON_PAIR_CHAT_START, new Action<XmppURI>() {
@@ -199,10 +208,11 @@ public class EmiteUiPlugin extends Plugin {
         xmpp.getRoster().addListener(new RosterListener() {
             public void onRosterInitialized(final List<RosterItem> roster) {
                 for (final RosterItem item : roster) {
-                    Log.info("Rooster, adding: " + item.getXmppURI() + " name: " + item.getName() + " subsc: "
+                    String name = item.getName();
+                    Log.info("Rooster, adding: " + item.getXmppURI() + " name: " + name + " subsc: "
                             + item.getSubscription());
-                    multiChatDialog.addRosterItem(new PairChatUser("images/person-def.gif", item.getXmppURI(), item
-                            .getXmppURI().toString(), "maroon", createPresenceForTest()));
+                    multiChatDialog.addRosterItem(new PairChatUser("images/person-def.gif", item.getXmppURI(),
+                            name != null ? name : item.getXmppURI().getNode(), "maroon", createPresenceForTest()));
                 }
             }
         });
@@ -233,9 +243,6 @@ public class EmiteUiPlugin extends Plugin {
             }
         });
     }
-
-    // TODO
-    // xmpp.getRoster().requestAddItem(uri, name, null);
 
     private Presence createPresenceForTest() {
         Presence presence = new Presence();

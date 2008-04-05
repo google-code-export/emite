@@ -78,7 +78,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void addRosterItem(final PairChatUser user) {
         roster.put(user.getUri().getJid(), user);
-        view.addPresenceBuddy(user);
+        view.addRosterItem(user);
     }
 
     public void removePresenceBuddy(final PairChatUser user) {
@@ -326,6 +326,14 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void onPresenceNotAccepted(final Presence presence) {
         listener.onPresenceNotAccepted(presence);
+    }
+
+    public void setPresenceStatusText(final String statusMessageText) {
+        listener.setPresenceStatusText(statusMessageText);
+    }
+
+    public void addRosterItem(final String name, final String jid) {
+        listener.addRosterItem(name, jid);
     }
 
 }
