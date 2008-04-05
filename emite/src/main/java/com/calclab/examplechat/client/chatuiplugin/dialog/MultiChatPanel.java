@@ -27,7 +27,8 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
-import com.calclab.examplechat.client.chatuiplugin.ChatDialogPlugin;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
@@ -240,8 +241,8 @@ public class MultiChatPanel implements MultiChatView {
 
     public void addPresenceBuddy(final PairChatUser user) {
         UserGridMenu menu = new UserGridMenu(presenter);
-        menu.addMenuOption(i18n.t("Start a chat with this person"), "chat-icon", ChatDialogPlugin.ON_PAIR_CHAT_START,
-                user.getUri());
+        menu.addMenuOption(i18n.t("Start a chat with this person"), "chat-icon", EmiteUiPlugin.ON_PAIR_CHAT_START, user
+                .getUri());
         buddiesGrid.addUser(user, menu);
     }
 
@@ -669,5 +670,19 @@ public class MultiChatPanel implements MultiChatView {
         subject.reset();
         setGroupChatUsersPanelVisible(false);
         setInviteToGroupChatButtonEnabled(false);
+    }
+
+    public void confirmSusbscriptionRequest(final Presence presence) {
+        MessageBox.confirm(i18n.t("Confirm"), i18n.t("[%s] want to add you as a buddy. Do you want to permit?",
+                presence.getFrom()), new MessageBox.ConfirmCallback() {
+            public void execute(final String btnID) {
+                if (btnID.equals("yes")) {
+                    presenter.onPresenceAccepted(presence);
+                } else {
+                    presenter.onPresenceNotAccepted(presence);
+                }
+            }
+        });
+
     }
 }

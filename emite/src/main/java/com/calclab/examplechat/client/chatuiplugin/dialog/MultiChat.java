@@ -22,10 +22,11 @@
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
-import com.calclab.examplechat.client.chatuiplugin.params.ChatMessageParam;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 
@@ -37,20 +38,22 @@ public interface MultiChat {
 
     public void show();
 
-    GroupChat createGroupChat(Chat chat, String userAlias, GroupChatUserType groupChatUserType);
+    public GroupChat createGroupChat(Chat chat, String userAlias, GroupChatUserType groupChatUserType);
 
-    PairChat createPairChat(Chat chat);
+    public PairChat createPairChat(Chat chat);
 
-    void groupChatSubjectChanged(final Chat groupChat, String newSubject);
-
-    void messageReceived(final ChatMessageParam param);
+    public void groupChatSubjectChanged(final Chat groupChat, String newSubject);
 
     public void addUsetToGroupChat(String groupChatId, GroupChatUser groupChatUser);
 
-    public void addPresenceBuddy(PairChatUser param);
+    public void addRosterItem(PairChatUser param);
 
     public void activateChat(Chat chat);
 
     public void destroy();
+
+    public void messageReceived(Chat chat, Message message);
+
+    public void onSubscriptionRequest(Presence presence);
 
 }
