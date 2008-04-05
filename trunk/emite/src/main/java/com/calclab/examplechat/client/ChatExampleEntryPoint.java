@@ -121,8 +121,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
         final VerticalPanel vertical = new VerticalPanel();
         vertical.add(createUserNamePane());
         vertical.add(createPasswdPane());
-        vertical.add(new Label("Note: Currently we are only supporting PLAIN authentication, "
-                + "them for your security, only use jabber test accounts)"));
+        vertical.add(new Label("Currently we are only supporting PLAIN authentication, "
+                + "them for your security, only use jabber test accounts."));
         vertical.add(createButtonsPane());
 
         RootPanel.get().add(vertical);
@@ -132,7 +132,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
         final HorizontalPanel userNamePanel = new HorizontalPanel();
         userNameInput = new TextBox();
         userNameInput.setText("admin@localhost");
-        userNamePanel.add(new Label("user name:"));
+        userNamePanel.add(new Label("user name: "));
         userNamePanel.add(userNameInput);
         return userNamePanel;
     }
@@ -141,7 +141,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
         final HorizontalPanel passwdPanel = new HorizontalPanel();
         passwordInput = new PasswordTextBox();
         passwordInput.setText("easyeasy");
-        passwdPanel.add(new Label("password:"));
+        passwdPanel.add(new Label("password: "));
         passwdPanel.add(passwordInput);
         return passwdPanel;
     }
