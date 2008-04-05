@@ -83,7 +83,7 @@ public interface MultiChatView {
 
     void activateChat(AbstractChat chat);
 
-    void addPresenceBuddy(PairChatUser user);
+    void addRosterItem(PairChatUser user);
 
     void setEmoticonButton(boolean enabled);
 

@@ -48,4 +48,8 @@ public interface MultiChatListener {
 
     void onPresenceNotAccepted(Presence presence);
 
+    void setPresenceStatusText(String statusMessageText);
+
+    void addRosterItem(String name, String jid);
+
 }

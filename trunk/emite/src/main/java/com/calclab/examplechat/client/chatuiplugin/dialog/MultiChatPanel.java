@@ -61,6 +61,7 @@ import com.gwtext.client.widgets.Toolbar;
 import com.gwtext.client.widgets.ToolbarButton;
 import com.gwtext.client.widgets.ToolbarMenuButton;
 import com.gwtext.client.widgets.Window;
+import com.gwtext.client.widgets.MessageBox.PromptCallback;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.KeyListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
@@ -131,6 +132,7 @@ public class MultiChatPanel implements MultiChatView {
         if (centerPanel.hasItem(infoPanelId)) {
             centerPanel.remove(infoPanelId);
         }
+        input.focus();
     }
 
     public void activateChat(final AbstractChat chat) {
@@ -239,7 +241,7 @@ public class MultiChatPanel implements MultiChatView {
         return input.getValueAsString();
     }
 
-    public void addPresenceBuddy(final PairChatUser user) {
+    public void addRosterItem(final PairChatUser user) {
         UserGridMenu menu = new UserGridMenu(presenter);
         menu.addMenuOption(i18n.t("Start a chat with this person"), "chat-icon", EmiteUiPlugin.ON_PAIR_CHAT_START, user
                 .getUri());
@@ -438,6 +440,11 @@ public class MultiChatPanel implements MultiChatView {
         optionsMenu.setShadow(true);
         Item joinOption = new Item();
         joinOption.setText(i18n.t("Join a chat room"));
+        joinOption.addListener(new BaseItemListenerAdapter() {
+            public void onClick(final BaseItem item, final EventObject e) {
+                MessageBox.alert("In development");
+            }
+        });
         closeAllOption = new Item();
         closeAllOption.setText(i18n.t("Close all chats"));
         ColorMenu colorMenu = new ColorMenu();
@@ -472,12 +479,25 @@ public class MultiChatPanel implements MultiChatView {
         offlineMenuItem = createStatusCheckItem(STATUS_OFFLINE);
         busyMenuItem = createStatusCheckItem(STATUS_BUSY);
         awayMenuItem = createStatusCheckItem(STATUS_AWAY);
-
+        Item setStatusText = new Item();
+        final String setStatusTextTitle = i18n.t("Set your status message");
+        setStatusText.setText(setStatusTextTitle);
+        setStatusText.addListener(new BaseItemListenerAdapter() {
+            public void onClick(final BaseItem item, final EventObject e) {
+                MessageBox.prompt(setStatusTextTitle, i18n
+                        .t("Set your current status text (something like 'Out for dinner' or 'Working)"),
+                        new PromptCallback() {
+                            public void execute(final String btnID, final String text) {
+                                presenter.setPresenceStatusText(text);
+                            }
+                        });
+            }
+        });
         statusMenu.addItem(onlineMenuItem);
         statusMenu.addItem(offlineMenuItem);
         statusMenu.addItem(busyMenuItem);
         statusMenu.addItem(awayMenuItem);
-
+        statusMenu.addItem(setStatusText);
         statusButton = new ToolbarMenuButton("Set status", statusMenu);
         statusButton.setTooltip(i18n.t("Set status"));
 
@@ -516,7 +536,13 @@ public class MultiChatPanel implements MultiChatView {
         // };
 
         buddyAdd.addListener(new ButtonListenerAdapter() {
+            private RosterItemDialog rosterItemDialog;
+
             public void onClick(final Button button, final EventObject e) {
+                if (rosterItemDialog == null) {
+                    rosterItemDialog = new RosterItemDialog(i18n, presenter);
+                }
+                rosterItemDialog.show();
                 // DefaultDispatcher.getInstance().fire(PlatformEvents.ADD_USERLIVESEARCH,
                 // addBuddyListener, null);
             }
@@ -524,6 +550,7 @@ public class MultiChatPanel implements MultiChatView {
 
         inviteUserToGroupChat.addListener(new ButtonListenerAdapter() {
             public void onClick(final Button button, final EventObject e) {
+                MessageBox.alert("In development");
                 // DefaultDispatcher.getInstance().fire(PlatformEvents.ADD_USERLIVESEARCH,
                 // inviteUserToRoomListener, null);
             }
@@ -577,7 +604,7 @@ public class MultiChatPanel implements MultiChatView {
         final FormPanel inputForm = createGenericInputForm();
         input = new TextArea();
         // As height 100% doesn't works
-        input.setHeight(46);
+        input.setHeight(47);
         input.addKeyListener(13, new KeyListener() {
             public void onKey(final int key, final EventObject e) {
                 doSend(e);
