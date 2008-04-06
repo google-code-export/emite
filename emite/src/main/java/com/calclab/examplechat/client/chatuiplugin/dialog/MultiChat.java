@@ -23,7 +23,6 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
@@ -51,13 +50,5 @@ public interface MultiChat {
     public void destroy();
 
     public void messageReceived(Chat chat, Message message);
-
-    public void onSubscriptionRequest(Presence presence);
-
-    public void doAfterLogin();
-
-    public void doAfterLogout();
-
-    public void doConnecting();
 
 }

@@ -10,8 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.AbstractXmpp;
 import com.calclab.emite.client.TestHelper;
-import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.connector.HttpConnectorListener;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
@@ -39,7 +39,7 @@ public class SwingClient {
     private final JPanel root;
 
     private final RosterPanel rosterPanel;
-    private Xmpp xmpp;
+    private AbstractXmpp xmpp;
     private final JFrame frame;
 
     public SwingClient(final JFrame frame) {

@@ -71,16 +71,16 @@ public class RosterItemDialog {
         formPanel.setPaddings(10);
 
         Label label = new Label();
-        label.setText(i18n.t("Please fill this form with the info of your new buddy. "
-                + "Note that the 'Jabber Id' sometimes is the same as the email "
-                + "(in gmail accounts for instance). "
-                + "As a 'Name' use something meaningful for you to refer your buddy (a nickname is ok)."));
+        label.setText(i18n
+                .t("Please fill this form with the info of your new buddy. "
+                        + "Note that the 'Jabber Id' sometimes is the same as the email "
+                        + "(in gmail accounts for instance)."));
         label.setCls("form-label-bpadding");
         label.setWidth(270);
         label.setHeight(40);
         formPanel.add(label);
 
-        name = new TextField(i18n.t("Buddy Name"), "name", 150);
+        name = new TextField(i18n.t("Buddy Nickname"), "name", 150);
         name.setAllowBlank(false);
         formPanel.add(name);
 

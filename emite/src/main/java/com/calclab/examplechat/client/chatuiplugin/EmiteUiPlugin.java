@@ -21,8 +21,6 @@
  */
 package com.calclab.examplechat.client.chatuiplugin;
 
-import java.util.List;
-
 import org.ourproject.kune.platf.client.PlatformEvents;
 import org.ourproject.kune.platf.client.dispatch.Action;
 import org.ourproject.kune.platf.client.dispatch.Dispatcher;
@@ -31,21 +29,13 @@ import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.AbstractXmpp;
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatListener;
-import com.calclab.emite.client.im.chat.ChatManagerListener;
-import com.calclab.emite.client.im.presence.PresenceListener;
-import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emite.client.im.roster.RosterListener;
-import com.calclab.emite.client.xmpp.session.SessionListener;
-import com.calclab.emite.client.xmpp.session.Session.State;
-import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
-import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
@@ -63,6 +53,7 @@ public class EmiteUiPlugin extends Plugin {
     public static final String ON_PAIR_CHAT_START = "emiteuiplugin.onpairchatstart";
     public static final String ON_STATE_CONNECTED = "emiteuiplugin.onstateconnected";
     public static final String ON_STATE_DISCONNECTED = "emiteuiplugin.onstatedisconnected";
+    public static final String ON_PANIC = "emiteuiplugin.onpanic";
 
     private MultiChat multiChatDialog;
 
@@ -72,6 +63,7 @@ public class EmiteUiPlugin extends Plugin {
 
     @Override
     protected void start() {
+
         final Dispatcher dispatcher = getDispatcher();
         dispatcher.subscribe(OPEN_MULTI_CHAT_DIALOG, new Action<MultiChatCreationParam>() {
             public void execute(final MultiChatCreationParam param) {
@@ -83,9 +75,11 @@ public class EmiteUiPlugin extends Plugin {
 
             private void createChatDialog(final MultiChatCreationParam param) {
                 final PairChatUser sessionUser = param.getSessionUser();
-                final Xmpp xmpp = param.getXmpp();
-                multiChatDialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(sessionUser,
-                        new I18nTranslationServiceMocked(), new MultiChatListener() {
+
+                final AbstractXmpp xmpp = Xmpp.create(param.getBoshOptions());
+
+                multiChatDialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(xmpp, sessionUser,
+                        param.getUserPassword(), new I18nTranslationServiceMocked(), new MultiChatListener() {
 
                             public void attachToExtPoint(final UIExtensionElement extensionElement) {
                                 dispatcher.fire(PlatformEvents.ATTACH_TO_EXT_POINT, extensionElement);
@@ -101,27 +95,6 @@ public class EmiteUiPlugin extends Plugin {
                             public void onClosePairChat(final PairChatPresenter pairChat) {
                             }
 
-                            public void onStatusSelected(final int status) {
-                                switch (status) {
-                                case MultiChatView.STATUS_ONLINE:
-                                    xmpp.login(sessionUser.getUri().toString(), param.getUserPassword());
-                                    break;
-                                case MultiChatView.STATUS_OFFLINE:
-                                    xmpp.logout();
-                                    break;
-                                case MultiChatView.STATUS_BUSY:
-                                    break;
-                                case MultiChatView.STATUS_INVISIBLE:
-                                    break;
-                                case MultiChatView.STATUS_XA:
-                                    break;
-                                case MultiChatView.STATUS_AWAY:
-                                    break;
-                                default:
-                                    throw new IndexOutOfBoundsException("Xmpp status unknown");
-                                }
-                            }
-
                             public void onUserColorChanged(final String color) {
                                 dispatcher.fire(EmiteUiPlugin.ON_USER_COLOR_SELECTED, color);
                             }
@@ -129,20 +102,6 @@ public class EmiteUiPlugin extends Plugin {
                             public void setGroupChatSubject(final Chat groupChat, final String subject) {
                                 Log.info("Group '" + groupChat + "' changed subject to '" + subject
                                         + "' (not implemented yet emite connection");
-                            }
-
-                            public void onPresenceAccepted(final Presence presence) {
-                                Log.info("Presence accepted in ui");
-                                xmpp.getPresenceManager().acceptSubscription(presence);
-                            }
-
-                            public void onPresenceNotAccepted(final Presence presence) {
-                                Log.info("Presence not accepted in ui");
-                            }
-
-                            public void addRosterItem(final String name, final String jid) {
-                                Log.info("Adding " + name + "(" + jid + ") to your roster.");
-                                xmpp.getRoster().requestAddItem(jid, name, null);
                             }
 
                             public void setPresenceStatusText(final String statusMessageText) {
@@ -168,7 +127,11 @@ public class EmiteUiPlugin extends Plugin {
                     }
                 });
 
-                createXmppListeners(dispatcher, xmpp);
+                dispatcher.subscribe(ON_PANIC, new Action<Object>() {
+                    public void execute(final Object obj) {
+                        xmpp.getDispatcher().publish(BoshManager.Events.error);
+                    }
+                });
 
             }
         });
@@ -177,73 +140,6 @@ public class EmiteUiPlugin extends Plugin {
     @Override
     protected void stop() {
         multiChatDialog.destroy();
-    }
-
-    private void createXmppListeners(final Dispatcher dispatcher, final Xmpp xmpp) {
-        xmpp.getSession().addListener(new SessionListener() {
-            public void onStateChanged(final State old, final State current) {
-                Log.info("STATE CHANGED: " + current + " - old: " + old);
-                switch (current) {
-                case connected:
-                    multiChatDialog.doAfterLogin();
-                    dispatcher.fire(ON_STATE_CONNECTED, null);
-                    break;
-                case connecting:
-                    multiChatDialog.doConnecting();
-                    break;
-                case disconnected:
-                    multiChatDialog.doAfterLogout();
-                    dispatcher.fire(ON_STATE_DISCONNECTED, null);
-                    break;
-                }
-            }
-        });
-
-        xmpp.getRoster().addListener(new RosterListener() {
-            public void onRosterInitialized(final List<RosterItem> roster) {
-                for (final RosterItem item : roster) {
-                    String name = item.getName();
-                    Log.info("Rooster, adding: " + item.getXmppURI() + " name: " + name + " subsc: "
-                            + item.getSubscription());
-                    multiChatDialog.addRosterItem(new PairChatUser("images/person-def.gif", item.getXmppURI(),
-                            name != null ? name : item.getXmppURI().getNode(), "maroon", createPresenceForTest()));
-                }
-            }
-        });
-
-        xmpp.getChat().addListener(new ChatManagerListener() {
-            public void onChatCreated(final Chat chat) {
-                multiChatDialog.createPairChat(chat);
-                chat.addListener(new ChatListener() {
-                    public void onMessageReceived(final Chat chat, final Message message) {
-                        multiChatDialog.messageReceived(chat, message);
-                    }
-
-                    public void onMessageSent(final Chat chat, final Message message) {
-                        multiChatDialog.messageReceived(chat, message);
-                    }
-                });
-            }
-        });
-
-        xmpp.getPresenceManager().addListener(new PresenceListener() {
-            public void onPresenceReceived(final Presence presence) {
-                Log.debug("PRESENCE: " + presence.getFromURI());
-            }
-
-            public void onSubscriptionRequest(final Presence presence) {
-                Log.debug("SUBSCRIPTION REQUEST: " + presence);
-                multiChatDialog.onSubscriptionRequest(presence);
-            }
-        });
-    }
-
-    private Presence createPresenceForTest() {
-        Presence presence = new Presence();
-        presence.setShow(Presence.Show.available);
-        presence.setType(Presence.Type.available.toString());
-        presence.setStatus("I\'m out for dinner");
-        return presence;
     }
 
 }
