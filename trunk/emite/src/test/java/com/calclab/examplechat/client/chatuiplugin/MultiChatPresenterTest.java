@@ -7,6 +7,10 @@ import org.mockito.Mockito;
 import com.calclab.emite.client.AbstractXmpp;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
+import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.im.presence.PresenceManager;
+import com.calclab.emite.client.im.roster.Roster;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -28,6 +32,10 @@ public class MultiChatPresenterTest {
     private MultiChatView multiChatPanel;
     private String messageBody;
     private AbstractXmpp xmpp;
+    private Session session;
+    private Roster roster;
+    private ChatManagerDefault chatManager;
+    private PresenceManager presenceManager;
 
     @Before
     public void begin() {
@@ -39,11 +47,21 @@ public class MultiChatPresenterTest {
         XmppURI otherUri = XmppURI.parse("matt@example.com");
         otherUser = new PairChatUser("", otherUri, "matt", "blue", new Presence());
 
+        // Xmpp creation
         xmpp = Mockito.mock(AbstractXmpp.class);
-        // Mockito.stub(xmpp.getSession()).return(session);
+        session = Mockito.mock(Session.class);
+        roster = Mockito.mock(Roster.class);
+        chatManager = Mockito.mock(ChatManagerDefault.class);
+        presenceManager = Mockito.mock(PresenceManager.class);
+        Mockito.stub(xmpp.getSession()).toReturn(session);
+        Mockito.stub(xmpp.getRoster()).toReturn(roster);
+        Mockito.stub(xmpp.getChat()).toReturn(chatManager);
+        Mockito.stub(xmpp.getPresenceManager()).toReturn(presenceManager);
         multiChat = new MultiChatPresenter(xmpp, factory, sessionUser, "passwdofuser", multiChatlistener);
         multiChatPanel = Mockito.mock(MultiChatView.class);
         multiChat.init(multiChatPanel);
+
+        // Basic chat creation
         chat = Mockito.mock(Chat.class);
         chatListener = Mockito.mock(ChatListener.class);
         chat.addListener(chatListener);
