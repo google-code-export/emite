@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.calclab.emite.client.AbstractXmpp;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -26,6 +27,7 @@ public class MultiChatPresenterTest {
     private ChatListener chatListener;
     private MultiChatView multiChatPanel;
     private String messageBody;
+    private AbstractXmpp xmpp;
 
     @Before
     public void begin() {
@@ -36,7 +38,10 @@ public class MultiChatPresenterTest {
         sessionUser = new PairChatUser("", meUri, "lutherb", "red", new Presence());
         XmppURI otherUri = XmppURI.parse("matt@example.com");
         otherUser = new PairChatUser("", otherUri, "matt", "blue", new Presence());
-        multiChat = new MultiChatPresenter(factory, sessionUser, multiChatlistener);
+
+        xmpp = Mockito.mock(AbstractXmpp.class);
+        // Mockito.stub(xmpp.getSession()).return(session);
+        multiChat = new MultiChatPresenter(xmpp, factory, sessionUser, "passwdofuser", multiChatlistener);
         multiChatPanel = Mockito.mock(MultiChatView.class);
         multiChat.init(multiChatPanel);
         chat = Mockito.mock(Chat.class);

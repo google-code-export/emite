@@ -1,22 +1,19 @@
 package com.calclab.examplechat.client.chatuiplugin.params;
 
-import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 
 public class MultiChatCreationParam {
 
-    private final Xmpp xmpp;
     private final PairChatUser sessionUser;
     private final String userPassword;
+    private final BoshOptions boshOptions;
 
-    public MultiChatCreationParam(final Xmpp xmpp, final PairChatUser sessionUser, final String userPassword) {
-        this.xmpp = xmpp;
+    public MultiChatCreationParam(final BoshOptions boshOptions, final PairChatUser sessionUser,
+            final String userPassword) {
+        this.boshOptions = boshOptions;
         this.sessionUser = sessionUser;
         this.userPassword = userPassword;
-    }
-
-    public Xmpp getXmpp() {
-        return xmpp;
     }
 
     public PairChatUser getSessionUser() {
@@ -25,6 +22,10 @@ public class MultiChatCreationParam {
 
     public String getUserPassword() {
         return userPassword;
+    }
+
+    public BoshOptions getBoshOptions() {
+        return boshOptions;
     }
 
 }

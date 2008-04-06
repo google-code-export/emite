@@ -27,8 +27,6 @@ import org.ourproject.kune.platf.client.extend.UIExtensionPointManager;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -54,7 +52,6 @@ public class ChatExampleEntryPoint implements EntryPoint {
     private PasswordTextBox passwordInput;
     private Presence presenceForTest;
     private TextBox userNameInput;
-    private Xmpp xmpp;
 
     public void onModuleLoad() {
         /*
@@ -70,8 +67,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
         // At the moment, in runtime:
         Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
 
-        Log.getDivLogger().moveTo(10, 60);
-        Log.getDivLogger().setSize("1200", "400");
+        // Log.getDivLogger().moveTo(10, 60);
+        // Log.getDivLogger().setSize("1200", "400");
 
         /*
          * Use a deferred command so that the UncaughtExceptionHandler catches
@@ -85,9 +82,6 @@ public class ChatExampleEntryPoint implements EntryPoint {
     }
 
     public void onModuleLoadCont() {
-
-        this.xmpp = Xmpp.create(new BoshOptions("http-bind", "localhost"));
-
         createPresenceForTest();
         createInterface();
         createExtUI();
@@ -112,9 +106,9 @@ public class ChatExampleEntryPoint implements EntryPoint {
                 new I18nTranslationServiceMocked());
         kunePluginManager.install(new EmiteUiPlugin());
 
-        dispatcher.fire(EmiteUiPlugin.OPEN_MULTI_CHAT_DIALOG, new MultiChatCreationParam(xmpp, new PairChatUser(
-                "images/person-def.gif", XmppURI.parse(userNameInput.getText()), userNameInput.getText(),
-                MultiChatView.DEF_USER_COLOR, presenceForTest), passwordInput.getText()));
+        dispatcher.fire(EmiteUiPlugin.OPEN_MULTI_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions("http-bind",
+                "localhost"), new PairChatUser("images/person-def.gif", XmppURI.parse(userNameInput.getText()),
+                userNameInput.getText(), MultiChatView.DEF_USER_COLOR, presenceForTest), passwordInput.getText()));
     }
 
     private void createInterface() {
@@ -154,7 +148,7 @@ public class ChatExampleEntryPoint implements EntryPoint {
     }
 
     private void panic() {
-        xmpp.getDispatcher().publish(BoshManager.Events.error);
+        dispatcher.fire(EmiteUiPlugin.ON_PANIC, null);
     }
 
 }
