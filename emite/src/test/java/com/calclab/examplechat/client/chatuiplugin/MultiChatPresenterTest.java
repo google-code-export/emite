@@ -99,3 +99,5 @@ public class MultiChatPresenterTest {
     }
 
 }
+
+// src/test/java/com/calclab/examplechat/client/chatuiplugin/MultiChatPresenterTest.java
