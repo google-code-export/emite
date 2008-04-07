@@ -26,12 +26,18 @@ import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 
 public class SessionManager extends EmiteComponent {
+    public static class Events {
+	public static final Event loggedIn = new Event("session:on:login");
+	public static final Event loggedOut = new Event("session:on:logout");
+    }
+
     private final Globals globals;
     private final Session session;
 
@@ -57,7 +63,7 @@ public class SessionManager extends EmiteComponent {
 	    }
 	});
 
-	when(Session.Events.loggedOut, new PacketListener() {
+	when(SessionManager.Events.loggedOut, new PacketListener() {
 	    public void handle(final Packet received) {
 		emite.publish(BoshManager.Events.stop);
 		session.setState(Session.State.disconnected);
@@ -82,7 +88,7 @@ public class SessionManager extends EmiteComponent {
 	when(new IQ("requestSession", IQ.Type.result, null), new PacketListener() {
 	    public void handle(final Packet received) {
 		session.setState(Session.State.connected);
-		emite.publish(Session.Events.loggedIn);
+		emite.publish(SessionManager.Events.loggedIn);
 	    }
 	});
 

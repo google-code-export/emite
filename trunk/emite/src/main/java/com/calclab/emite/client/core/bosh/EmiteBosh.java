@@ -58,7 +58,7 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	// }
 	// });
 
-	clear();
+	restartRID();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	    public void handle(final Packet received) {
 		final List<? extends Packet> children = received.getChildren();
 		for (final Packet child : children) {
-		    send(child);
+		    body.addChild(child);
 		}
 	    }
 	});
@@ -77,7 +77,7 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	return xmler.toXML(content);
     }
 
-    public void clear() {
+    public void restartRID() {
 	rid = (long) (Math.random() * 1245234);
 	this.body = null;
     }
@@ -110,7 +110,7 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
     }
 
     public void send(final Packet packet) {
-	body.addChild(packet);
+	dispatcher.publish(new Event(EmiteBosh.Events.send).With(packet));
     }
 
 }

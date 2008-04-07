@@ -26,14 +26,8 @@ import java.util.ArrayList;
 import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.core.packet.Event;
 
 public class Session {
-
-    public static class Events {
-	public static final Event loggedIn = new Event("session:login");
-	public static final Event loggedOut = new Event("session:logout");
-    }
 
     public static enum State {
 	authorized, connected, connecting, disconnected, error
@@ -73,7 +67,8 @@ public class Session {
     }
 
     public void logout() {
-	dispatcher.publish(Events.loggedOut);
+	dispatcher.publish(BoshManager.Events.stop);
+	dispatcher.publish(SessionManager.Events.loggedOut);
     }
 
     public void setState(final State newState) {
