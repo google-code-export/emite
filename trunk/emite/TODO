@@ -7,7 +7,11 @@ SHORT-TERM (URGENT):
 --------------------------------------------------------------------------------
 
 <vjrj> http bind port in properties
-
+--> vjrj
+<vjrj> status icons ...
+--> vjrj
+<vjrj> Loading (...) in example...
+--> vjrj
 <dani> Remove Bosh connection bugs (bosh), mainly reconections, and error handling
 --> dani
 <dani> Add support to MUC (xmpp)
@@ -15,12 +19,11 @@ SHORT-TERM (URGENT):
 <dani> Better presence support (xmpp)
 --> dani
 
-
 --------------------------------------------------------------------------------
 
 MID-TERM
 <dani> Support XEP-0030
-
+<vjrj> group support in roster
 
 --------------------------------------------------------------------------------
 

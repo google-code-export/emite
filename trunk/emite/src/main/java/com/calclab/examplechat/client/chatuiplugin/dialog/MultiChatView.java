@@ -101,4 +101,6 @@ public interface MultiChatView {
 
     void clearRoster();
 
+    void updateRosterItem(PairChatUser user);
+
 }

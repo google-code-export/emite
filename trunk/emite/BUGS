@@ -5,17 +5,12 @@ For reports please use:
   http://code.google.com/p/emite/issues/list
 
 - Bosh is buggy
-- Don't show roster offline mode, and clear it also
 
 - when deploy
 06-abr-2008 6:21:54 org.apache.catalina.startup.Catalina start
 INFO: Server startup in 2489 ms
 ERROR: gwt-log failed to initialize valid server-side logging implementation
 
-- Presence accept in gwt no works (PresencePlugin issue)
-this$static.emite.body_0 has no properties
-$acceptSubscription(com.calclab.emite.client.im.presence.PresenceManager@d, com.calclab.emite.client.core.packet.gwt.GWTPacket@c)3E3807786C87FB2C3... (line 2835)
-$onPresenceAccepted(com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter@f xmpp=com.calclab.emite.client.Xmpp@10, com.calclab.emite.client.core.packet.gwt.GWTPacket@c)3E3807786C87FB2C3... (line 7628)
-execute_7("yes")3E3807786C87FB2C3... (line 6466)
-confirm("yes")3E3807786C87FB2C3... (line 14640)
-createDelegate()
+- chat title textare enabled with no chat?
+
+- falta tratar unavailable...
