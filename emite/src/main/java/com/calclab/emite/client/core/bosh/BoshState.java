@@ -60,6 +60,15 @@ public class BoshState {
 	currentConnections++;
     }
 
+    public void init() {
+	Log.debug("INIT BOSH STATE");
+	this.isRunning = false;
+	this.sid = null;
+	this.currentConnections = 0;
+	this.poll = 1;
+	this.isTerminating = false;
+    }
+
     public boolean isFirstResponse() {
 	return sid == null;
     }
@@ -103,18 +112,9 @@ public class BoshState {
 	this.sid = sid;
     }
 
-    public void setTerminating() {
-	this.isTerminating = true;
+    public void setTerminating(final boolean isTerminating) {
+	this.isTerminating = isTerminating;
 
-    }
-
-    private void init() {
-	Log.debug("INIT BOSH STATE");
-	this.isRunning = false;
-	this.sid = null;
-	this.currentConnections = 0;
-	this.poll = 1;
-	this.isTerminating = false;
     }
 
 }

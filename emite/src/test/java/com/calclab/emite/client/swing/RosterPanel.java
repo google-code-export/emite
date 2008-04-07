@@ -31,7 +31,7 @@ public class RosterPanel extends JPanel {
 
 	@Override
 	public String toString() {
-	    return name;
+	    return name + "(" + item.getXmppURI() + ")";
 	}
     }
 
@@ -55,6 +55,10 @@ public class RosterPanel extends JPanel {
 
     public void add(final String name, final RosterItem item) {
 	model.addElement(new RosterListItem(name, item));
+    }
+
+    public void clear() {
+	model.clear();
     }
 
     protected void closeDialog() {

@@ -39,10 +39,10 @@ import com.calclab.emite.client.core.services.Scheduler;
 public class BoshManager extends DispatcherComponent implements ConnectorCallback {
 
     public static class Events {
-	public static final Event error = new Event("connection:on:error");
+	public static final Event onError = new Event("connection:on:error");
 	public static final Event restart = new Event("connection:do:restart");
 	public static final Event start = new Event("connection:do:start");
-	public static final Event stop = new Event("connection:do:stop");;
+	public static final Event stop = new Event("connection:do:stop");
     }
 
     private Activator activator;
@@ -94,7 +94,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 		emite.getBody().setCreationState(options.getDomain());
 	    }
 	});
-	when(BoshManager.Events.error, new PacketListener() {
+	when(BoshManager.Events.onError, new PacketListener() {
 	    public void handle(final Packet stanza) {
 		state.setRunning(false);
 	    }
@@ -120,7 +120,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
      */
     public void onError(final Throwable throwable) {
 	state.decreaseRequests();
-	dispatcher.publish(BoshManager.Events.error);
+	dispatcher.publish(BoshManager.Events.onError);
     }
 
     /**
@@ -130,14 +130,21 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
      */
     public void onResponseReceived(final int statusCode, final String content) {
 	state.decreaseRequests();
+	// FIXME: which status codes are errors?
 	if (statusCode >= 400) {
-	    dispatcher.publish(BoshManager.Events.error);
+	    dispatcher.publish(BoshManager.Events.onError);
 	} else {
 	    final Packet response = emite.bodyFromResponse(content);
-	    if ("body".equals(response.getName())) {
+	    if (!state.isRunning()) {
+
+	    } else if (state.isTerminating()) {
+		state.setRunning(false);
+		state.setTerminating(false);
+		emite.restartRID();
+	    } else if ("body".equals(response.getName())) {
 		dispatcher.publish(response);
 	    } else {
-		dispatcher.publish(BoshManager.Events.error);
+		dispatcher.publish(BoshManager.Events.onError);
 	    }
 	}
     }
@@ -148,7 +155,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 
     public void setTerminate() {
 	emite.getBody().setTerminate();
-	state.setTerminating();
+	state.setTerminating(true);
     }
 
     void sendResponse() {
@@ -163,7 +170,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	    state.setLastSend(now);
 	    state.increaseRequests();
 	} catch (final ConnectorException e) {
-	    dispatcher.publish(BoshManager.Events.error);
+	    dispatcher.publish(BoshManager.Events.onError);
 	}
     }
 
@@ -201,9 +208,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
     }
 
     private void publishBodyStanzas(final Body response) {
-	if (state.isTerminating()) {
-	    onStopComponent();
-	} else if (state.isFirstResponse()) {
+	if (state.isFirstResponse()) {
 	    final String sid = response.getSID();
 	    state.setSID(sid);
 	    emite.getBody().setSID(sid);
@@ -211,7 +216,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	}
 	state.setLastResponseEmpty(response.isEmpty());
 	if (response.isTerminal()) {
-	    dispatcher.publish(new Event(BoshManager.Events.error).Because(response.getCondition()));
+	    dispatcher.publish(new Event(BoshManager.Events.onError).Because(response.getCondition()));
 	} else {
 	    final List<? extends Packet> children = response.getChildren();
 	    for (final Packet stanza : children) {

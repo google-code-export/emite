@@ -132,7 +132,7 @@ public class EmiteUiPlugin extends Plugin {
 
                 dispatcher.subscribe(ON_PANIC, new Action<Object>() {
                     public void execute(final Object obj) {
-                        xmpp.getDispatcher().publish(BoshManager.Events.error);
+                        xmpp.getDispatcher().publish(BoshManager.Events.onError);
                     }
                 });
 

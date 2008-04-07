@@ -70,7 +70,7 @@ public class SessionManager extends EmiteComponent {
 	    }
 	});
 
-	when(BoshManager.Events.error, new PacketListener() {
+	when(BoshManager.Events.onError, new PacketListener() {
 	    public void handle(final Packet received) {
 		session.setState(Session.State.error);
 		session.setState(Session.State.disconnected);
