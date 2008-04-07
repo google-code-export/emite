@@ -161,12 +161,11 @@ public class MultiChatPanelTopBar extends Toolbar {
         Menu submenu = new Menu();
         submenu.setShadow(true);
         submenu.setMinWidth(10);
-        submenu.addItem(new TextItem("<b class=\"menu-title\">" + i18n.t("Subscription options") + "</b>"));
         autoAcceptSubsItem = createSubscritionItem(i18n.t("Automatically accept other users requests"), submenu,
                 SubscriptionMode.auto_accept_all);
         autoRejectSubsItem = createSubscritionItem(i18n.t("Automatically reject other users requests"), submenu,
                 SubscriptionMode.auto_reject_all);
-        manualSubsItem = createSubscritionItem(i18n.t("Manual accept/reject users requests"), submenu,
+        manualSubsItem = createSubscritionItem(i18n.t("Manual accept or reject users requests"), submenu,
                 SubscriptionMode.manual);
         return submenu;
     }
@@ -313,13 +312,13 @@ public class MultiChatPanelTopBar extends Toolbar {
     public void setSubscritionMode(final SubscriptionMode mode) {
         switch (mode) {
         case auto_accept_all:
-
-            onlineMenuItem.setChecked(true);
+            autoAcceptSubsItem.setChecked(true);
             break;
         case auto_reject_all:
-            offlineMenuItem.setChecked(true);
+            autoRejectSubsItem.setChecked(true);
             break;
         default:
+            manualSubsItem.setChecked(true);
             break;
         }
     }
