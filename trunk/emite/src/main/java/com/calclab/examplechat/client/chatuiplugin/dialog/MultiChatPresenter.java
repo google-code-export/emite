@@ -36,6 +36,7 @@ import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterListener;
+import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
 import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -43,6 +44,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
 import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
+import com.calclab.examplechat.client.chatuiplugin.UserChatOptions;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
@@ -51,6 +53,7 @@ import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 
@@ -62,19 +65,21 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     private final ChatDialogFactory factory;
     private final MultiChatListener listener;
     private MultiChatView view;
-    private final HashMap<String, PairChatUser> roster;
+    private final HashMap<String, PairChatUser> rosterMap;
     private final AbstractXmpp xmpp;
     private final String currentUserPasswd;
+    private final UserChatOptions userChatOptions;
 
     public MultiChatPresenter(final AbstractXmpp xmpp, final ChatDialogFactory factory,
-            final PairChatUser currentSessionUser, final String currentUserPasswd, final MultiChatListener listener) {
+            final MultiChatCreationParam param, final MultiChatListener listener) {
         this.xmpp = xmpp;
         this.factory = factory;
-        this.currentSessionUser = currentSessionUser;
-        this.currentUserPasswd = currentUserPasswd;
+        this.currentSessionUser = param.getSessionUser();
+        this.currentUserPasswd = param.getUserPassword();
+        this.userChatOptions = param.getUserChatOptions();
         this.listener = listener;
         chats = new HashMap<Chat, AbstractChat>();
-        roster = new HashMap<String, PairChatUser>();
+        rosterMap = new HashMap<String, PairChatUser>();
     }
 
     public void activateChat(final AbstractChat chat) {
@@ -91,12 +96,12 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     }
 
     public void addRosterItem(final PairChatUser user) {
-        roster.put(user.getUri().getJid(), user);
+        rosterMap.put(user.getUri().getJid(), user);
         view.addRosterItem(user);
     }
 
     public void removePresenceBuddy(final PairChatUser user) {
-        roster.remove(user.getUri().getJid());
+        rosterMap.remove(user.getUri().getJid());
         view.removeRosterItem(user);
     }
 
@@ -152,7 +157,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
             activateChat(abstractChat);
             return (PairChat) abstractChat;
         }
-        PairChatUser otherUser = roster.get(chat.getOtherURI().getJid());
+        PairChatUser otherUser = rosterMap.get(chat.getOtherURI().getJid());
         if (otherUser == null) {
 
             String error = "Message from user not in roster";
@@ -282,7 +287,14 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         for (final AbstractChat chat : chats.values()) {
             chat.setSessionUserColor(color);
         }
+        userChatOptions.setColor(color);
         listener.onUserColorChanged(color);
+    }
+
+    public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
+        xmpp.getRoster().setSubscriptionMode(subscriptionMode);
+        userChatOptions.setSubscriptionMode(subscriptionMode);
+        listener.onUserSubscriptionModeChanged(subscriptionMode);
     }
 
     public void show() {
@@ -291,12 +303,10 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     }
 
     public void onPresenceAccepted(final Presence presence) {
-        Log.info("Presence accepted in ui");
         xmpp.getPresenceManager().acceptSubscription(presence);
     }
 
     public void onPresenceNotAccepted(final Presence presence) {
-        Log.info("Presence not accepted in ui");
         xmpp.getPresenceManager().denySubscription(presence);
     }
 
@@ -438,6 +448,10 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
                 Log.debug("PRESENCE: " + presence.getFromURI());
             }
 
+            public void onUnsubscriptionReceived(final Presence presence) {
+                view.removeRosterItem(rosterMap.get(presence.getFromURI().getJid()));
+            }
+
             public void onSubscriptionRequest(final Presence presence) {
                 Log.debug("SUBSCRIPTION REQUEST: " + presence);
                 view.confirmSusbscriptionRequest(presence);
@@ -451,6 +465,10 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         presence.setType(Presence.Type.available.toString());
         presence.setStatus("I\'m out for dinner");
         return presence;
+    }
+
+    public UserChatOptions getUserChatOptions() {
+        return userChatOptions;
     }
 
 }

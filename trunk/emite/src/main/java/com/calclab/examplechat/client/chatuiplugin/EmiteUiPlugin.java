@@ -33,12 +33,12 @@ import com.calclab.emite.client.AbstractXmpp;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 
 public class EmiteUiPlugin extends Plugin {
@@ -54,6 +54,7 @@ public class EmiteUiPlugin extends Plugin {
     public static final String ON_STATE_CONNECTED = "emiteuiplugin.onstateconnected";
     public static final String ON_STATE_DISCONNECTED = "emiteuiplugin.onstatedisconnected";
     public static final String ON_PANIC = "emiteuiplugin.onpanic";
+    public static final String ON_USER_SUBSCRIPTION_CHANGED = "emiteuiplugin.usersubschanged";
 
     private MultiChat multiChatDialog;
 
@@ -74,12 +75,10 @@ public class EmiteUiPlugin extends Plugin {
             }
 
             private void createChatDialog(final MultiChatCreationParam param) {
-                final PairChatUser sessionUser = param.getSessionUser();
-
                 final AbstractXmpp xmpp = Xmpp.create(param.getBoshOptions());
 
-                multiChatDialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(xmpp, sessionUser,
-                        param.getUserPassword(), new I18nTranslationServiceMocked(), new MultiChatListener() {
+                multiChatDialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(xmpp, param,
+                        new I18nTranslationServiceMocked(), new MultiChatListener() {
 
                             public void attachToExtPoint(final UIExtensionElement extensionElement) {
                                 dispatcher.fire(PlatformEvents.ATTACH_TO_EXT_POINT, extensionElement);
@@ -97,6 +96,10 @@ public class EmiteUiPlugin extends Plugin {
 
                             public void onUserColorChanged(final String color) {
                                 dispatcher.fire(EmiteUiPlugin.ON_USER_COLOR_SELECTED, color);
+                            }
+
+                            public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
+                                dispatcher.fire(EmiteUiPlugin.ON_USER_SUBSCRIPTION_CHANGED, subscriptionMode);
                             }
 
                             public void setGroupChatSubject(final Chat groupChat, final String subject) {

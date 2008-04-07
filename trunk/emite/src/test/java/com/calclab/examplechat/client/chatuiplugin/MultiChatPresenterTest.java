@@ -19,6 +19,7 @@ import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 
 public class MultiChatPresenterTest {
 
@@ -57,7 +58,9 @@ public class MultiChatPresenterTest {
         Mockito.stub(xmpp.getRoster()).toReturn(roster);
         Mockito.stub(xmpp.getChat()).toReturn(chatManager);
         Mockito.stub(xmpp.getPresenceManager()).toReturn(presenceManager);
-        multiChat = new MultiChatPresenter(xmpp, factory, sessionUser, "passwdofuser", multiChatlistener);
+        MultiChatCreationParam param = new MultiChatCreationParam(null, sessionUser, "passwdofuser",
+                new UserChatOptions("color", Roster.DEF_SUBSCRIPTION_MODE));
+        multiChat = new MultiChatPresenter(xmpp, factory, param, multiChatlistener);
         multiChatPanel = Mockito.mock(MultiChatView.class);
         multiChat.init(multiChatPanel);
 

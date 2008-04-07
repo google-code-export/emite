@@ -24,9 +24,8 @@ package com.calclab.emite.client.xmpp.stanzas;
 import com.calclab.emite.client.core.packet.Packet;
 
 public class Presence extends BasicStanza {
+
     public static enum Show {
-        // TODO: Dani: he añadido 'available' que faltaba, espero que no
-        // afecte...
         available, away, chat, dnd, xa
     }
 

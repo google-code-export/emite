@@ -237,6 +237,7 @@ public class MultiChatPanel implements MultiChatView {
 
     public void removeRosterItem(final PairChatUser user) {
         rosterGrid.removeUser(user);
+        MessageBox.alert(i18n.t("[%s] has removed you from his/her buddie list", user.getUri().toString()));
     }
 
     public void setGroupChatUsersPanelVisible(final boolean visible) {
@@ -294,7 +295,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private void createLayout() {
-        dialog = new BasicDialog(i18n.t("Chats"), false, false, 600, 415, 300, 300);
+        dialog = new BasicDialog(i18n.t("Emite chat"), false, false, 600, 415, 300, 300);
         dialog.setBorder(false);
         dialog.setCollapsible(true);
         dialog.setIconCls("chat-icon");

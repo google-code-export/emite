@@ -28,6 +28,7 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -38,10 +39,12 @@ public class PresenceManager extends EmiteComponent {
     private Presence currentPresence;
     private final Globals globals;
     private final ArrayList<PresenceListener> listeners;
+    private final Roster roster;
 
-    public PresenceManager(final Emite emite, final Globals globals) {
+    public PresenceManager(final Emite emite, final Globals globals, final Roster roster) {
         super(emite);
         this.globals = globals;
+        this.roster = roster;
         this.listeners = new ArrayList<PresenceListener>();
         this.currentPresence = null;
     }
@@ -123,7 +126,19 @@ public class PresenceManager extends EmiteComponent {
         final Type type = presence.getType();
         switch (type) {
         case subscribe:
-            fireSubscriptionRequest(presence);
+            switch (roster.getSubscriptionMode()) {
+            case auto_accept_all:
+                this.acceptSubscription(presence);
+                break;
+            case auto_reject_all:
+                this.denySubscription(presence);
+                break;
+            default:
+                fireSubscriptionRequest(presence);
+            }
+            break;
+        case unsubscribed:
+            fireUnsubscriptionReceived(presence);
             break;
         case probe:
             emite.send(currentPresence);
@@ -133,6 +148,12 @@ public class PresenceManager extends EmiteComponent {
         default:
             firePresenceReceived(presence);
             break;
+        }
+    }
+
+    private void fireUnsubscriptionReceived(final Presence presence) {
+        for (final PresenceListener listener : listeners) {
+            listener.onUnsubscriptionReceived(presence);
         }
     }
 
