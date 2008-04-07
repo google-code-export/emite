@@ -23,24 +23,32 @@ package com.calclab.emite.client.components;
 
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
+// FIXME: leer este comentario
+/**
+ * creo que se podrían eliminar globals si, por ejemplo, con el evento
+ * SessionManager.Events.loggedIn llega el ownURI... y así para cada parámetro
+ * 
+ * @author dani
+ * 
+ */
 public interface Globals {
-	String getDomain();
+    String getDomain();
 
-	XmppURI getOwnURI();
+    XmppURI getOwnURI();
 
-	String getPassword();
+    String getPassword();
 
-	String getResourceName();
+    String getResourceName();
 
-	String getUserName();
+    String getUserName();
 
-	void setDomain(String domain);
+    void setDomain(String domain);
 
-	void setOwnURI(XmppURI uri);
+    void setOwnURI(XmppURI uri);
 
-	void setPassword(String password);
+    void setPassword(String password);
 
-	void setResourceName(String resource);
+    void setResourceName(String resource);
 
-	void setUserName(String userName);
+    void setUserName(String userName);
 }

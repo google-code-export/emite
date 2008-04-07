@@ -24,13 +24,16 @@ package com.calclab.emite.client.im.roster;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class RosterItem {
     private final ArrayList<String> groups;
     private final String name;
     private final String subscription;
     private final XmppURI uri;
+    private Presence presence;
 
     public RosterItem(final XmppURI uri, final String subscription, final String name) {
 	this.uri = uri;
@@ -47,6 +50,14 @@ public class RosterItem {
 	return name;
     }
 
+    public Presence getPresence() {
+	return presence;
+    }
+
+    public Type getPresenceType() {
+	return presence != null ? presence.getType() : Type.unavailable;
+    }
+
     public String getSubscription() {
 	return subscription;
     }
@@ -55,4 +66,7 @@ public class RosterItem {
 	return uri;
     }
 
+    public void setPresence(final Presence presence) {
+	this.presence = presence;
+    }
 }

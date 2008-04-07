@@ -3,9 +3,9 @@ package com.calclab.emite.client.swing;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.List;
-
+import java.util.Collection;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -40,6 +40,7 @@ public class SwingClient {
     private final RosterPanel rosterPanel;
     private AbstractXmpp xmpp;
     private final JFrame frame;
+    private final JLabel status;
 
     public SwingClient(final JFrame frame) {
 	this.frame = frame;
@@ -65,9 +66,12 @@ public class SwingClient {
 	    }
 	});
 	conversationsPanel = new ConversationsPanel();
+	status = new JLabel("emite test client");
+
 	root.add(loginPanel, BorderLayout.NORTH);
 	root.add(rosterPanel, BorderLayout.EAST);
 	root.add(conversationsPanel, BorderLayout.CENTER);
+	root.add(status, BorderLayout.SOUTH);
 
 	initXMPP();
     }
@@ -126,7 +130,12 @@ public class SwingClient {
 	    }
 	});
 	xmpp.getRoster().addListener(new RosterListener() {
-	    public void onRosterInitialized(final List<RosterItem> items) {
+	    public void onItemPresenceChanged(final RosterItem item) {
+		print("ROSTER ITEM PRESENCE CHANGED");
+		rosterPanel.refresh();
+	    }
+
+	    public void onRosterInitialized(final Collection<RosterItem> items) {
 		print("ROSTER INITIALIZED");
 		for (final RosterItem item : items) {
 		    rosterPanel.add(item.getName(), item);
@@ -155,6 +164,7 @@ public class SwingClient {
 
     private void print(final String message) {
 	Log.info(message);
+	status.setText(message);
     }
 
     private void start() {

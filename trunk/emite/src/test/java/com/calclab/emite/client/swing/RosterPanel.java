@@ -31,7 +31,7 @@ public class RosterPanel extends JPanel {
 
 	@Override
 	public String toString() {
-	    return name + "(" + item.getXmppURI() + ")";
+	    return name + "(" + item.getXmppURI() + ") " + item.getPresenceType();
 	}
     }
 
@@ -45,6 +45,7 @@ public class RosterPanel extends JPanel {
     private JPanel creationPanel;
     private JDialog currentDialog;
     private final RosterPanelListener listener;
+    private JList list;
 
     public RosterPanel(final JFrame owner, final RosterPanelListener listener) {
 	super(new BorderLayout());
@@ -59,6 +60,10 @@ public class RosterPanel extends JPanel {
 
     public void clear() {
 	model.clear();
+    }
+
+    public void refresh() {
+	list.repaint();
     }
 
     protected void closeDialog() {
@@ -87,7 +92,7 @@ public class RosterPanel extends JPanel {
 
     private void init(final JFrame owner) {
 	model = new DefaultListModel();
-	final JList list = new JList(model);
+	list = new JList(model);
 	list.addListSelectionListener(new ListSelectionListener() {
 	    public void valueChanged(final ListSelectionEvent e) {
 	    }
