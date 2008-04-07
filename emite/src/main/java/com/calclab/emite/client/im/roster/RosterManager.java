@@ -93,24 +93,12 @@ public class RosterManager extends EmiteComponent {
      */
     protected void onPresenceReceived(final Presence presence) {
 
-	// PSEUDOCÓDIGO: lo que yo imagino que debe hacer el RosterManager con
-	// la presencia
-	// item = roster.getItemByURI(presence.getFromURI());
-	// if (item != null) {
-	// item.setPresence(presence);
-	// }
+	final RosterItem item = roster.findItemByURI(presence.getFromURI());
+	if (item != null) {
+	    item.setPresence(presence);
+	    roster.fireItemPresenceChanged(item);
+	}
 
-	// NO VEO MUY CLARO ESTO!!
-	// switch (roster.getSubscriptionMode()) {
-	// case auto_accept_all:
-	// // this.acceptSubscription(presence);
-	// break;
-	// case auto_reject_all:
-	// // this.denySubscription(presence);
-	// break;
-	// default:
-	// // fireSubscriptionRequest(presence);
-	// }
     }
 
     private RosterItem convert(final Packet item) {

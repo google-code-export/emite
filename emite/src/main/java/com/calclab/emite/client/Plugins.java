@@ -29,6 +29,7 @@ import com.calclab.emite.client.core.services.Connector;
 import com.calclab.emite.client.core.services.Scheduler;
 import com.calclab.emite.client.core.services.ServicesPlugin;
 import com.calclab.emite.client.core.services.XMLService;
+import com.calclab.emite.client.extra.muc.MUCPlugin;
 import com.calclab.emite.client.im.chat.ChatPlugin;
 import com.calclab.emite.client.im.presence.PresencePlugin;
 import com.calclab.emite.client.im.room.RoomPlugin;
@@ -39,33 +40,38 @@ import com.calclab.emite.client.xmpp.session.SessionPlugin;
 
 public class Plugins {
 
-	public static void installDefaultPlugins(final Container container, final XMLService xmlService,
-			final Connector connector, final Scheduler scheduler, final BoshOptions options) {
+    public static void installDefaultPlugins(final Container container, final XMLService xmlService,
+	    final Connector connector, final Scheduler scheduler, final BoshOptions options) {
 
-		installCorePlugins(container, xmlService, connector, scheduler, options);
-		installXMPPPlugins(container);
-		installIMPlugins(container);
-	}
+	installCorePlugins(container, xmlService, connector, scheduler, options);
+	installXMPPPlugins(container);
+	installIMPlugins(container);
+	installExtraPlugins(container);
+    }
 
-	private static void installCorePlugins(final Container container, final XMLService xmlService,
-			final Connector connector, final Scheduler scheduler, final BoshOptions options) {
-		DispatcherPlugin.install(container);
-		ServicesPlugin.install(container, connector, xmlService, scheduler);
-		BoshPlugin.install(container, options);
-	}
+    private static void installCorePlugins(final Container container, final XMLService xmlService,
+	    final Connector connector, final Scheduler scheduler, final BoshOptions options) {
+	DispatcherPlugin.install(container);
+	ServicesPlugin.install(container, connector, xmlService, scheduler);
+	BoshPlugin.install(container, options);
+    }
 
-	private static void installIMPlugins(final Container container) {
-		// Instant Messaging
-		ChatPlugin.install(container);
-		SessionPlugin.install(container);
-		RosterPlugin.install(container);
-		PresencePlugin.install(container);
-		RoomPlugin.install(container);
-	}
+    private static void installExtraPlugins(final Container container) {
+	MUCPlugin.install(container);
+    }
 
-	private static void installXMPPPlugins(final Container container) {
-		SASLPlugin.install(container);
-		ResourceBindingPlugin.install(container);
-	}
+    private static void installIMPlugins(final Container container) {
+	// Instant Messaging
+	ChatPlugin.install(container);
+	SessionPlugin.install(container);
+	RosterPlugin.install(container);
+	PresencePlugin.install(container);
+	RoomPlugin.install(container);
+    }
+
+    private static void installXMPPPlugins(final Container container) {
+	SASLPlugin.install(container);
+	ResourceBindingPlugin.install(container);
+    }
 
 }
