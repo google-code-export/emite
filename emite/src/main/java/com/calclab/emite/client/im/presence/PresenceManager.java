@@ -31,6 +31,7 @@ import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class PresenceManager extends EmiteComponent {
@@ -39,32 +40,56 @@ public class PresenceManager extends EmiteComponent {
     private final ArrayList<PresenceListener> listeners;
 
     public PresenceManager(final Emite emite, final Globals globals) {
-	super(emite);
-	this.globals = globals;
-	this.listeners = new ArrayList<PresenceListener>();
-	this.currentPresence = null;
+        super(emite);
+        this.globals = globals;
+        this.listeners = new ArrayList<PresenceListener>();
+        this.currentPresence = null;
     }
 
+    /**
+     * subscribed -- The sender has allowed the recipient to receive their
+     * presence.
+     */
     public void acceptSubscription(final Presence presence) {
-	if (presence.getType() == Presence.Type.subscribe) {
-	    final Presence response = new Presence(Presence.Type.subscribed, globals.getOwnURI(), presence.getFromURI());
-	    emite.send(response);
-	} else {
-	    // throw exception: its a programming error
-	    throw new RuntimeException("Tryng to accept a non subscription request");
-	}
+        replySubscription(presence, Presence.Type.subscribed);
+    }
+
+    /**
+     * unsubscribed -- The subscription request has been denied or a
+     * previously-granted subscription has been cancelled.
+     */
+    public void denySubscription(final Presence presence) {
+        replySubscription(presence, Presence.Type.unsubscribed);
+    }
+
+    /**
+     * If a user would like to cancel a previously-granted subscription request,
+     * it sends a presence stanza of type "unsubscribed".
+     */
+    public void cancelSubscriptor(final XmppURI to) {
+        final Presence unsubscription = new Presence(Presence.Type.unsubscribed, globals.getOwnURI(), to);
+        emite.send(unsubscription);
+    }
+
+    /**
+     * If a user would like to unsubscribe from the presence of another entity,
+     * it sends a presence stanza of type "unsubscribe".
+     */
+    public void requestUnsubscribe(final XmppURI to) {
+        final Presence unsubscribeRequest = new Presence(Presence.Type.unsubscribe, globals.getOwnURI(), to);
+        emite.send(unsubscribeRequest);
     }
 
     public void addListener(final PresenceListener presenceListener) {
-	this.listeners.add(presenceListener);
+        this.listeners.add(presenceListener);
     }
 
     public Packet answerTo(final Presence presence) {
-	return new Presence(globals.getOwnURI()).To(presence.getFrom());
+        return new Presence(globals.getOwnURI()).To(presence.getFrom());
     }
 
     public Packet answerToSessionLogout() {
-	return new Presence(globals.getOwnURI()).With("type", "unavailable");
+        return new Presence(globals.getOwnURI()).With("type", "unavailable");
     }
 
     /**
@@ -73,57 +98,67 @@ public class PresenceManager extends EmiteComponent {
      */
     @Override
     public void attach() {
-	when(RosterManager.Events.ready, new PacketListener() {
-	    public void handle(final Packet received) {
-		currentPresence = createInitialPresence();
-		emite.send(currentPresence);
-	    }
-	});
+        when(RosterManager.Events.ready, new PacketListener() {
+            public void handle(final Packet received) {
+                currentPresence = createInitialPresence();
+                emite.send(currentPresence);
+            }
+        });
 
-	when("presence", new PacketListener() {
-	    public void handle(final Packet received) {
-		onPresenceReceived(new Presence(received));
-	    }
-	});
+        when("presence", new PacketListener() {
+            public void handle(final Packet received) {
+                onPresenceReceived(new Presence(received));
+            }
+        });
 
-	when(Session.Events.loggedOut, new PacketListener() {
-	    public void handle(final Packet received) {
-		emite.send(answerToSessionLogout());
-	    }
-	});
+        when(Session.Events.loggedOut, new PacketListener() {
+            public void handle(final Packet received) {
+                emite.send(answerToSessionLogout());
+            }
+        });
 
     }
 
     protected void onPresenceReceived(final Presence presence) {
-	final Type type = presence.getType();
-	switch (type) {
-	case subscribe:
-	    fireSubscriptionRequest(presence);
-	    break;
-	case probe:
-	    emite.send(currentPresence);
-	    break;
-	case error:
-	    break;
-	default:
-	    firePresenceReceived(presence);
-	    break;
-	}
+        final Type type = presence.getType();
+        switch (type) {
+        case subscribe:
+            fireSubscriptionRequest(presence);
+            break;
+        case probe:
+            emite.send(currentPresence);
+            break;
+        case error:
+            break;
+        default:
+            firePresenceReceived(presence);
+            break;
+        }
     }
 
     private Presence createInitialPresence() {
-	return new Presence(globals.getOwnURI()).With(Presence.Show.chat);
+        return new Presence(globals.getOwnURI()).With(Presence.Show.chat);
     }
 
     private void firePresenceReceived(final Presence presence) {
-	for (final PresenceListener listener : listeners) {
-	    listener.onPresenceReceived(presence);
-	}
+        for (final PresenceListener listener : listeners) {
+            listener.onPresenceReceived(presence);
+        }
     }
 
     private void fireSubscriptionRequest(final Presence presence) {
-	for (final PresenceListener listener : listeners) {
-	    listener.onSubscriptionRequest(presence);
-	}
+        for (final PresenceListener listener : listeners) {
+            listener.onSubscriptionRequest(presence);
+        }
+    }
+
+    private void replySubscription(final Presence presence, final Presence.Type type) {
+        if (presence.getType() == Presence.Type.subscribe) {
+            final Presence response = new Presence(type, globals.getOwnURI(), presence.getFromURI());
+            emite.send(response);
+        } else {
+            // throw exception: its a programming error
+            throw new RuntimeException("Tryng to accept/deny a non subscription request");
+        }
     }
 }

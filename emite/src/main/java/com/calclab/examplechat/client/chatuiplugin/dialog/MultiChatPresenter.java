@@ -235,7 +235,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void onCurrentUserSend(final String message) {
         currentChat.getChat().send(message);
-        // messageReceived(outputMessage);
         view.clearInputText();
     }
 
@@ -298,6 +297,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void onPresenceNotAccepted(final Presence presence) {
         Log.info("Presence not accepted in ui");
+        xmpp.getPresenceManager().denySubscription(presence);
     }
 
     public void setPresenceStatusText(final String statusMessageText) {
@@ -307,7 +307,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     public void addRosterItem(final String name, final String jid) {
         Log.info("Adding " + name + "(" + jid + ") to your roster.");
         xmpp.getRoster().requestAddItem(jid, name, null);
-
     }
 
     public void doAfterLogin() {
