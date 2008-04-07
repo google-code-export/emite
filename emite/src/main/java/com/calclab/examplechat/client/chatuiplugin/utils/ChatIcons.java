@@ -64,6 +64,11 @@ public interface ChatIcons extends ImageBundle {
     AbstractImagePrototype invisible();
 
     /**
+     * @gwt.resource info.png
+     */
+    AbstractImagePrototype info();
+
+    /**
      * @gwt.resource xa.png
      */
     AbstractImagePrototype extendedAway();

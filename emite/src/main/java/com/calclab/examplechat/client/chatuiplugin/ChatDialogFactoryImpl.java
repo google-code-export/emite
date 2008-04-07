@@ -38,6 +38,7 @@ import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPanel;
@@ -55,10 +56,9 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         }
     }
 
-    public MultiChat createMultiChat(final AbstractXmpp xmpp, final PairChatUser currentSessionUser,
-            final String currentUserPasswd, final I18nTranslationService i18n, final MultiChatListener listener) {
-        final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, App.getInstance(), currentSessionUser,
-                currentUserPasswd, listener);
+    public MultiChat createMultiChat(final AbstractXmpp xmpp, final MultiChatCreationParam param,
+            final I18nTranslationService i18n, final MultiChatListener listener) {
+        final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, App.getInstance(), param, listener);
         final MultiChatPanel panel = new MultiChatPanel(i18n, presenter);
         presenter.init(panel);
         return presenter;

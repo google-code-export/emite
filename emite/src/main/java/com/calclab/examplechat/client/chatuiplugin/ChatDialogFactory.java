@@ -32,6 +32,7 @@ import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
 
@@ -42,8 +43,8 @@ public interface ChatDialogFactory {
 
     public GroupChatUserList createGroupChatUserList();
 
-    public MultiChat createMultiChat(final AbstractXmpp xmpp, final PairChatUser currentSessionUser,
-            final String currentUserPasswd, final I18nTranslationService i18n, final MultiChatListener listener);
+    public MultiChat createMultiChat(final AbstractXmpp xmpp, MultiChatCreationParam param,
+            final I18nTranslationService i18n, final MultiChatListener listener);
 
     public PairChat createPairChat(final Chat chat, final PairChatListener listener,
             final PairChatUser currentSessionUser, final PairChatUser otherUser);

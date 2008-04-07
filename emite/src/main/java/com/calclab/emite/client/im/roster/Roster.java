@@ -28,48 +28,64 @@ import com.calclab.emite.client.core.packet.BasicPacket;
 import com.calclab.emite.client.core.packet.Packet;
 
 public class Roster {
+    public static final SubscriptionMode DEF_SUBSCRIPTION_MODE = SubscriptionMode.manual;
+
+    public static enum SubscriptionMode {
+        auto_accept_all, auto_reject_all, manual
+    }
+
     private final ArrayList<RosterItem> items;
     private final ArrayList<RosterListener> listeners;
     private final Dispatcher dispatcher;
+    private SubscriptionMode subscriptionMode;
 
     public Roster(final Dispatcher dispatcher) {
-	this.dispatcher = dispatcher;
-	listeners = new ArrayList<RosterListener>();
-	items = new ArrayList<RosterItem>();
+        this.dispatcher = dispatcher;
+        listeners = new ArrayList<RosterListener>();
+        items = new ArrayList<RosterItem>();
+        subscriptionMode = DEF_SUBSCRIPTION_MODE;
+    }
+
+    public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
+        this.subscriptionMode = subscriptionMode;
+    }
+
+    public SubscriptionMode getSubscriptionMode() {
+        return subscriptionMode;
     }
 
     public void addListener(final RosterListener listener) {
-	listeners.add(listener);
+        listeners.add(listener);
     }
 
     public void clear() {
-	items.clear();
+        items.clear();
     }
 
     public RosterItem getItem(final int index) {
-	return items.get(index);
+        return items.get(index);
     }
 
     public int getSize() {
-	return items.size();
+        return items.size();
     }
 
     public void requestAddItem(final String uri, final String name, final String group) {
-	final Packet item = new BasicPacket("item").With("jid", uri).With("name", name);
-	if (group != null) {
-	    item.addChild(new BasicPacket("group").WithText(group));
-	}
-	dispatcher.publish(RosterManager.Events.addItem.With(item));
+        final Packet item = new BasicPacket("item").With("jid", uri).With("name", name);
+        if (group != null) {
+            item.addChild(new BasicPacket("group").WithText(group));
+        }
+        dispatcher.publish(RosterManager.Events.addItem.With(item));
     }
 
     void add(final RosterItem item) {
-	items.add(item);
+        items.add(item);
     }
 
     void fireRosterInitialized() {
-	for (final RosterListener listener : listeners) {
-	    listener.onRosterInitialized(items);
-	}
+        for (final RosterListener listener : listeners) {
+            listener.onRosterInitialized(items);
+        }
     }
 
 }

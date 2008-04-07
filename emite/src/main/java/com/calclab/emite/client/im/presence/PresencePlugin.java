@@ -26,19 +26,21 @@ import com.calclab.emite.client.components.ContainerPlugin;
 import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.BoshPlugin;
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.im.roster.Roster;
+import com.calclab.emite.client.im.roster.RosterPlugin;
 
 public class PresencePlugin {
-	private static final String COMPONENT_MANAGER = "presence:manager";
+    private static final String COMPONENT_MANAGER = "presence:manager";
 
-	public static PresenceManager getManager(final Container container) {
-		return (PresenceManager) container.get(COMPONENT_MANAGER);
-	}
+    public static PresenceManager getManager(final Container container) {
+        return (PresenceManager) container.get(COMPONENT_MANAGER);
+    }
 
-	public static void install(final Container container) {
-		final Emite emite = BoshPlugin.getEmite(container);
-		final Globals globals = ContainerPlugin.getGlobals(container);
-		final PresenceManager manager = new PresenceManager(emite, globals);
-		container.install(COMPONENT_MANAGER, manager);
-	}
-
+    public static void install(final Container container) {
+        final Emite emite = BoshPlugin.getEmite(container);
+        final Globals globals = ContainerPlugin.getGlobals(container);
+        final Roster roster = RosterPlugin.getRoster(container);
+        final PresenceManager manager = new PresenceManager(emite, globals, roster);
+        container.install(COMPONENT_MANAGER, manager);
+    }
 }

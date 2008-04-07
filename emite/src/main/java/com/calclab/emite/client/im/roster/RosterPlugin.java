@@ -28,16 +28,19 @@ import com.calclab.emite.client.core.dispatcher.DispatcherPlugin;
 
 public class RosterPlugin {
 
+    private static final String COMPONENT_ROSTER = " roster";
+    private static final String COMPONENT_ROSTER_MANAGER = " roster:manager";
+
     public static Roster getRoster(final Container container) {
-	return (Roster) container.get("roster");
+        return (Roster) container.get(COMPONENT_ROSTER);
     }
 
     public static void install(final Container container) {
-	final Emite emite = BoshPlugin.getEmite(container);
-	final Roster roster = new Roster(DispatcherPlugin.getDispatcher(container));
-	final RosterManager rosterManager = new RosterManager(emite, roster);
-	container.register("roster", roster);
-	container.install("rosterManager", rosterManager);
+        final Emite emite = BoshPlugin.getEmite(container);
+        final Roster roster = new Roster(DispatcherPlugin.getDispatcher(container));
+        final RosterManager rosterManager = new RosterManager(emite, roster);
+        container.register(COMPONENT_ROSTER, roster);
+        container.install(COMPONENT_ROSTER_MANAGER, rosterManager);
     }
 
 }
