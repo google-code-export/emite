@@ -149,7 +149,7 @@ public class MultiChatPanelTopBar extends Toolbar {
         colorMenuItem.setIconCls("colors-icon");
         colorMenuItem.setIcon("css/img/colors.gif");
 
-        MenuItem subsItem = new MenuItem(i18n.t("Subscription options"), createUserSubscriptionMenu());
+        MenuItem subsItem = new MenuItem(i18n.t("New buddies options"), createUserSubscriptionMenu());
 
         submenu.addItem(colorMenuItem);
         submenu.addItem(subsItem);
@@ -161,12 +161,13 @@ public class MultiChatPanelTopBar extends Toolbar {
         Menu submenu = new Menu();
         submenu.setShadow(true);
         submenu.setMinWidth(10);
-        autoAcceptSubsItem = createSubscritionItem(i18n.t("Automatically accept other users requests"), submenu,
+        autoAcceptSubsItem = createSubscritionItem(i18n
+                .t("Automatically accept users as buddies when a user request it"), submenu,
                 SubscriptionMode.auto_accept_all);
-        autoRejectSubsItem = createSubscritionItem(i18n.t("Automatically reject other users requests"), submenu,
-                SubscriptionMode.auto_reject_all);
-        manualSubsItem = createSubscritionItem(i18n.t("Manual accept or reject users requests"), submenu,
-                SubscriptionMode.manual);
+        autoRejectSubsItem = createSubscritionItem(i18n.t("Automatically reject new buddies inclusion requests"),
+                submenu, SubscriptionMode.auto_reject_all);
+        manualSubsItem = createSubscritionItem(i18n.t("Manual accept or reject new buddies inclusion requests"),
+                submenu, SubscriptionMode.manual);
         return submenu;
     }
 
@@ -227,24 +228,6 @@ public class MultiChatPanelTopBar extends Toolbar {
         });
         return closeAllOption;
     }
-
-    // private Item createOptionsMenu() {
-    // Item optionsItem = new Item();
-    // optionsItem.setText(i18n.t("Options"));
-    // // optionsItem.setIconCls("exit-icon");
-    // optionsItem.addListener(new BaseItemListenerAdapter() {
-    // private MultiChatOptionsDialog optionsDialog;
-    //
-    // public void onClick(final BaseItem item, final EventObject e) {
-    // if (optionsDialog == null) {
-    // optionsDialog = new MultiChatOptionsDialog(i18n, presenter);
-    // }
-    // optionsDialog.setChatOptions(presenter.getUserChatOptions());
-    // optionsDialog.show();
-    // }
-    // });
-    // return optionsItem;
-    // }
 
     private CheckItem createStatusCheckItem(final int status) {
         CheckItem checkItem = new CheckItem();

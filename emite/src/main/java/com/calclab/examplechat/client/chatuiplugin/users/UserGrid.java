@@ -23,6 +23,7 @@ package com.calclab.examplechat.client.chatuiplugin.users;
 
 import java.util.HashMap;
 
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.dialog.StatusUtil;
@@ -69,6 +70,27 @@ public class UserGrid extends GridPanel {
         addUser(user, "<img src=\"" + img + "\">", "FIXME");
     }
 
+    public void udpateRosterItem(final PairChatUser user) {
+        Record recordToUpdate = store.getById(user.getUri().toString());
+        recordToUpdate.set(ALIAS, user.getAlias());
+        recordToUpdate.set(JID, user.getUri());
+        recordToUpdate.set(COLOR, user.getColor());
+        // FIXME: maybe use default status messages
+        recordToUpdate.set(STATUSTEXT, calculePresenceStatus(user.getPresence()));
+        recordToUpdate.set(STATUSIMG, StatusUtil.getStatusIcon(user.getPresence()).getHTML());
+        recordToUpdate.set(IMG, user.getIconUrl());
+    }
+
+    private String calculePresenceStatus(final Presence presence) {
+        String statusText;
+        if (presence == null) {
+            statusText = "";
+        } else {
+            statusText = presence.getStatus();
+        }
+        return statusText != null ? statusText : "";
+    }
+
     public void addUser(final PairChatUser user, final UserGridMenu menu) {
         final AbstractImagePrototype statusAbsIcon = StatusUtil.getStatusIcon(user.getPresence());
         // Image img = new Image();
@@ -76,7 +98,7 @@ public class UserGrid extends GridPanel {
         // KuneUiUtils.setQuickTip(img.getElement(), user.getStatusText());
 
         final String statusIcon = statusAbsIcon.getHTML();
-        addUser(user, statusIcon, user.getPresence().getStatus());
+        addUser(user, statusIcon, calculePresenceStatus(user.getPresence()));
         menuMap.put(user.getUri(), menu);
     }
 
@@ -101,6 +123,7 @@ public class UserGrid extends GridPanel {
         final MemoryProxy proxy = new MemoryProxy(new Object[][] {});
 
         final ArrayReader reader = new ArrayReader(recordDef);
+        reader.setId(1);
         store = new Store(proxy, reader);
         store.load();
         this.setStore(store);

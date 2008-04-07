@@ -25,6 +25,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
@@ -60,7 +61,21 @@ public class StatusUtil {
         // return icons.away();
         // return icons.message();
 
-        switch (presence.getType()) {
+        // FIXME!!!
+
+        // final String subscription,
+        // if (subscription.equals("both") {
+        // else {
+        // }
+
+        Type statusType;
+        if (presence == null) {
+            statusType = Presence.Type.unavailable;
+        } else {
+            statusType = presence.getType();
+        }
+
+        switch (statusType) {
         case available:
             switch (presence.getShow()) {
             case available:

@@ -25,7 +25,7 @@ public class RosterItemDialog {
 
     public void show() {
         if (dialog == null) {
-            dialog = new BasicDialogExtended(i18n.t("Add a new buddy"), false, false, 320, 180, "useradd-icon", i18n
+            dialog = new BasicDialogExtended(i18n.t("Add a new buddy"), false, false, 330, 200, "useradd-icon", i18n
                     .tWithNT("Add", "used in button"), i18n.tWithNT("Cancel", "used in button"),
                     new BasicDialogListener() {
 
@@ -40,7 +40,7 @@ public class RosterItemDialog {
                             reset();
                         }
                     });
-
+            dialog.setResizable(false);
             createForm();
 
             // TODO define a UI Extension Point here
@@ -51,6 +51,7 @@ public class RosterItemDialog {
     private void createForm() {
         formPanel = new FormPanel();
         formPanel.setFrame(true);
+        formPanel.setAutoScroll(false);
 
         formPanel.setWidth(333);
         formPanel.setLabelWidth(100);

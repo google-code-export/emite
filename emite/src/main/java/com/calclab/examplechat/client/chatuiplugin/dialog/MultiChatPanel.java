@@ -137,6 +137,10 @@ public class MultiChatPanel implements MultiChatView {
         // TODO
     }
 
+    public void updateRosterItem(final PairChatUser user) {
+        rosterGrid.udpateRosterItem(user);
+    }
+
     public void show() {
         dialog.show();
         dialog.expand();

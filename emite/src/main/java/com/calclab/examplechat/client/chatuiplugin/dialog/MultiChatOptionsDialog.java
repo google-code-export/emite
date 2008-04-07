@@ -13,6 +13,11 @@ import com.gwtext.client.widgets.form.Label;
 import com.gwtext.client.widgets.form.Radio;
 import com.gwtext.client.widgets.form.TextField;
 
+/**
+ * 
+ * Not used currently (Maybe in the future with more options)
+ * 
+ */
 public class MultiChatOptionsDialog {
 
     private static final String TYPEOFSUBS_FIELD = "subscription";

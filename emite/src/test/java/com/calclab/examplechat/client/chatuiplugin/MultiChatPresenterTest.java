@@ -72,7 +72,7 @@ public class MultiChatPresenterTest {
         Mockito.stub(factory.createPairChat(chat, multiChat, sessionUser, otherUser)).toReturn(pairChat);
         Mockito.stub(pairChat.getChat()).toReturn(chat);
         Mockito.stub(pairChat.getChat().getOtherURI()).toReturn(otherUri);
-        multiChat.addRosterItem(otherUser);
+        // TODO multiChat.addRosterItem(otherUser);
         multiChat.createPairChat(chat);
         messageBody = "hello world :)";
     }
@@ -97,7 +97,7 @@ public class MultiChatPresenterTest {
     @Test
     public void removeAndAddPresenceAndSend() {
         multiChat.removePresenceBuddy(otherUser);
-        multiChat.addRosterItem(otherUser);
+        // TODO: multiChat.addRosterItem(otherUser);
         sendMessageFromOther();
     }
 
