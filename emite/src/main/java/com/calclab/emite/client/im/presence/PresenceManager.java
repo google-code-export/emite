@@ -119,7 +119,7 @@ public class PresenceManager extends EmiteComponent {
 	emite.send(unsubscribeRequest);
     }
 
-    protected void onPresenceReceived(final Presence presence) {
+    void onPresenceReceived(final Presence presence) {
 	final Type type = presence.getType();
 	switch (type) {
 	case subscribe:

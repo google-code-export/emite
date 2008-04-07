@@ -39,7 +39,7 @@ import com.calclab.emite.client.core.services.Scheduler;
 public class BoshManager extends DispatcherComponent implements ConnectorCallback {
 
     public static class Events {
-	public static final Event error = new Event("connection:has:error");
+	public static final Event error = new Event("connection:on:error");
 	public static final Event restart = new Event("connection:do:restart");
 	public static final Event start = new Event("connection:do:start");
 	public static final Event stop = new Event("connection:do:stop");;
