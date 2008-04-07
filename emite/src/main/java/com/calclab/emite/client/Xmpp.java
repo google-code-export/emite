@@ -57,7 +57,7 @@ public class Xmpp implements AbstractXmpp {
 
         final Container container = ContainerPlugin.create();
         Plugins.installDefaultPlugins(container, xmlService, connector, scheduler, options);
-        container.start();
+        container.onStartComponent();
         return new Xmpp(container);
     }
 

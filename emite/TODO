@@ -16,23 +16,13 @@ SHORT-TERM (URGENT):
 --> dani
 
 
-MIND-TERM:
-
-<dani> Better plugin system 
-	* more declarative interface (exported events, subscriptions, etc...)
-
-<dani> Better matching system (infraestructure)
---> dani
-	
-<dani> Remove Bosh connection bugs
-<dani> Add suport to RosterManagment
-<dani> Add MD5 SASL mechanism
 
 --------------------------------------------------------------------------------
 
 LONG-TERM:
 <dani> Remove Bosh connection bugs
 <dani> Hot remove of plugins
+<dani> Add MD5 SASL mechanism
 --------------------------------------------------------------------------------
 
 IDEAS:

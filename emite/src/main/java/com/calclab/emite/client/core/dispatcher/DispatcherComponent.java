@@ -35,11 +35,11 @@ public abstract class DispatcherComponent implements Startable {
 
 	public abstract void attach();
 
-	public void start() {
+	public void onStartComponent() {
 		attach();
 	}
 
-	public void stop() {
+	public void onStopComponent() {
 	}
 
 	public void when(final Packet packet, final PacketListener packetListener) {

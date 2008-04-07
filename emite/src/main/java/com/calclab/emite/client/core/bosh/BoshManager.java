@@ -89,12 +89,14 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	when(BoshManager.Events.start, new PacketListener() {
 	    public void handle(final Packet received) {
 		state.setRunning(true);
+		emite.restartRID();
+		emite.initBody(null);
 		emite.getBody().setCreationState(options.getDomain());
 	    }
 	});
 	when(BoshManager.Events.error, new PacketListener() {
 	    public void handle(final Packet stanza) {
-		stop();
+		state.setRunning(false);
 	    }
 	});
 
@@ -111,6 +113,11 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	});
     }
 
+    /**
+     * When connector has an error
+     * 
+     * @see ConnectorCallback
+     */
     public void onError(final Throwable throwable) {
 	state.decreaseRequests();
 	dispatcher.publish(BoshManager.Events.error);
@@ -142,12 +149,6 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
     public void setTerminate() {
 	emite.getBody().setTerminate();
 	state.setTerminating();
-    }
-
-    @Override
-    public void stop() {
-	state.setRunning(false);
-	emite.clear();
     }
 
     void sendResponse() {
@@ -201,7 +202,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 
     private void publishBodyStanzas(final Body response) {
 	if (state.isTerminating()) {
-	    stop();
+	    onStopComponent();
 	} else if (state.isFirstResponse()) {
 	    final String sid = response.getSID();
 	    state.setSID(sid);

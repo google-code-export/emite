@@ -48,15 +48,15 @@ public class DefaultContainer extends HashMap<String, Object> implements Contain
 	super.put(name, component);
     }
 
-    public void start() {
+    public void onStartComponent() {
 	for (final Startable c : startables) {
-	    c.start();
+	    c.onStartComponent();
 	}
     }
 
-    public void stop() {
+    public void onStopComponent() {
 	for (final Startable c : startables) {
-	    c.stop();
+	    c.onStopComponent();
 	}
     }
 }

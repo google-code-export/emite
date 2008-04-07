@@ -28,8 +28,9 @@ import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.xmpp.session.Session;
+import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class RosterManager extends EmiteComponent {
@@ -54,9 +55,15 @@ public class RosterManager extends EmiteComponent {
      */
     @Override
     public void attach() {
-	when(Session.Events.loggedIn, new PacketListener() {
+	when(SessionManager.Events.loggedIn, new PacketListener() {
 	    public void handle(final Packet received) {
 		emite.send(new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster", null));
+	    }
+	});
+
+	when("presence", new PacketListener() {
+	    public void handle(final Packet received) {
+		onPresenceReceived(new Presence(received));
 	    }
 	});
 
@@ -74,6 +81,36 @@ public class RosterManager extends EmiteComponent {
 		emite.send(iq);
 	    }
 	});
+    }
+
+    /**
+     * VICENTE: aquí es donde se gestiona la presencia de los roster items yo
+     * creo que auto_acept y auto_reject debería ser lóigica del UI y no de la
+     * libraría En este método creo que lo único que habría que hacer es
+     * actualizar el estado de la presencia de los rosterItems
+     * 
+     * @param presence
+     */
+    protected void onPresenceReceived(final Presence presence) {
+
+	// PSEUDOCÓDIGO: lo que yo imagino que debe hacer el RosterManager con
+	// la presencia
+	// item = roster.getItemByURI(presence.getFromURI());
+	// if (item != null) {
+	// item.setPresence(presence);
+	// }
+
+	// NO VEO MUY CLARO ESTO!!
+	// switch (roster.getSubscriptionMode()) {
+	// case auto_accept_all:
+	// // this.acceptSubscription(presence);
+	// break;
+	// case auto_reject_all:
+	// // this.denySubscription(presence);
+	// break;
+	// default:
+	// // fireSubscriptionRequest(presence);
+	// }
     }
 
     private RosterItem convert(final Packet item) {
