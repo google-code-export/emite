@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.core.packet;
 
-class TextPacket extends ABasicPacket {
+class TextPacket extends Packet {
     private final String value;
 
     public TextPacket(final String value) {

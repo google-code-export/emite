@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.core.dispatcher.matcher;
 
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 
 public interface Matcher {
     Matcher ANYTHING = new Matcher() {
@@ -29,7 +29,7 @@ public interface Matcher {
 	    return null;
 	}
 
-	public boolean matches(final APacket stanza) {
+	public boolean matches(final IPacket stanza) {
 	    return true;
 	}
 
@@ -37,5 +37,5 @@ public interface Matcher {
 
     String getElementName();
 
-    boolean matches(APacket stanza);
+    boolean matches(IPacket stanza);
 }

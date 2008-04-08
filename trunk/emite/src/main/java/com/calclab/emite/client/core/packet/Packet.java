@@ -25,34 +25,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ABasicPacket extends DSLPacket {
+public class Packet extends DSLPacket {
 	private final HashMap<String, String> attributes;
-	private final ArrayList<APacket> children;
+	private final ArrayList<IPacket> children;
 	private final String name;
-	private ABasicPacket parent;
+	private Packet parent;
 
-	public ABasicPacket(final String name) {
+	public Packet(final String name) {
 		this(name, null);
 	}
 
-	public ABasicPacket(final String name, final String xmlns) {
+	public Packet(final String name, final String xmlns) {
 		this.name = name;
 		this.attributes = new HashMap<String, String>();
-		this.children = new ArrayList<APacket>();
+		this.children = new ArrayList<IPacket>();
 		if (xmlns != null) {
 			setAttribute("xmlns", xmlns);
 		}
 		parent = null;
 	}
 
-	public APacket add(final String name, final String xmlns) {
-		final ABasicPacket child = new ABasicPacket(name, xmlns);
+	public IPacket add(final String name, final String xmlns) {
+		final Packet child = new Packet(name, xmlns);
 		child.parent = this;
 		add(child);
 		return child;
 	}
 
-	public void addChild(final APacket child) {
+	public void addChild(final IPacket child) {
 		children.add(child);
 	}
 
@@ -72,13 +72,13 @@ public class ABasicPacket extends DSLPacket {
 		return attributes;
 	}
 
-	public List<? extends APacket> getChildren() {
+	public List<? extends IPacket> getChildren() {
 		return children;
 	}
 
-	public List<APacket> getChildren(final String name) {
-		final List<APacket> selected = new ArrayList<APacket>();
-		for (final APacket child : children) {
+	public List<IPacket> getChildren(final String name) {
+		final List<IPacket> selected = new ArrayList<IPacket>();
+		for (final IPacket child : children) {
 			if (name.equals(child.getName())) {
 				selected.add(child);
 			}
@@ -90,8 +90,8 @@ public class ABasicPacket extends DSLPacket {
 		return children.size();
 	}
 
-	public APacket getFirstChild(final String childName) {
-		for (final APacket child : children) {
+	public IPacket getFirstChild(final String childName) {
+		for (final IPacket child : children) {
 			if (childName.equals(child.getName())) {
 				return child;
 			}
@@ -103,7 +103,7 @@ public class ABasicPacket extends DSLPacket {
 		return name;
 	}
 
-	public APacket getParent() {
+	public IPacket getParent() {
 		return parent;
 	}
 
@@ -111,7 +111,7 @@ public class ABasicPacket extends DSLPacket {
 	 * si tiene un hijo de texto, lo devuelve
 	 */
 	public String getText() {
-		for (final APacket child : children) {
+		for (final IPacket child : children) {
 			if (child.getName() == null) {
 				return child.toString();
 			}
@@ -128,7 +128,7 @@ public class ABasicPacket extends DSLPacket {
 		}
 		if (children.size() > 0) {
 			buffer.append(">");
-			for (final APacket child : children) {
+			for (final IPacket child : children) {
 				child.render(buffer);
 			}
 			buffer.append("</").append(name).append(">");
@@ -153,7 +153,7 @@ public class ABasicPacket extends DSLPacket {
 		return buffer.toString();
 	}
 
-	protected void add(final ABasicPacket node) {
+	protected void add(final Packet node) {
 		children.add(node);
 	}
 }

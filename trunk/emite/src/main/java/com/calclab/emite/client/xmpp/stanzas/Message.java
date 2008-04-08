@@ -21,8 +21,8 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
-import com.calclab.emite.client.core.packet.ABasicPacket;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.IPacket;
 
 public class Message extends BasicStanza {
     public static enum MessageType {
@@ -31,8 +31,8 @@ public class Message extends BasicStanza {
 
     private static final String TYPE_CHAT = "chat";
 
-    public Message(final APacket aPacket) {
-	super(aPacket);
+    public Message(final IPacket iPacket) {
+	super(iPacket);
     }
 
     public Message(final String from, final String to, final String msg) {
@@ -52,7 +52,7 @@ public class Message extends BasicStanza {
     }
 
     public String getThread() {
-	final APacket thread = getFirstChild("thread");
+	final IPacket thread = getFirstChild("thread");
 	return thread != null ? thread.getText() : null;
     }
 
@@ -67,14 +67,14 @@ public class Message extends BasicStanza {
     }
 
     private void setMessage(final String msg) {
-	final APacket body = add("body", null);
+	final IPacket body = add("body", null);
 	body.addText(msg);
     }
 
     private void setThread(final String thread) {
-	APacket node = getFirstChild("thread");
+	IPacket node = getFirstChild("thread");
 	if (node == null) {
-	    node = new ABasicPacket("thread");
+	    node = new Packet("thread");
 	    this.addChild(node);
 	}
 	node.setText(thread);

@@ -22,13 +22,23 @@
 package com.calclab.emite.client.core.bosh;
 
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 
 public interface Emite {
-	Dispatcher getDispatcher();
+    Dispatcher getDispatcher();
 
-	void publish(Event event);
+    void publish(Event event);
 
-	void send(APacket aPacket);
+    void send(IPacket iPacket);
+
+    /**
+     * Sends a packet with ID and handle response
+     * 
+     * @param category
+     * @param withQuery
+     * @param listener
+     */
+    void send(String category, IPacket packet, PacketListener listener);
 }

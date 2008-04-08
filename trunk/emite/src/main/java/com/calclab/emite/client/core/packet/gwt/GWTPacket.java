@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.calclab.emite.client.core.packet.DSLPacket;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -40,13 +40,13 @@ public class GWTPacket extends DSLPacket {
 		this.element = element;
 	}
 
-	public APacket add(final String nodeName, final String xmlns) {
+	public IPacket add(final String nodeName, final String xmlns) {
 		final Element child = element.getOwnerDocument().createElement(nodeName);
 		element.appendChild(child);
 		return new GWTPacket(child);
 	}
 
-	public void addChild(final APacket child) {
+	public void addChild(final IPacket child) {
 		final GWTPacket p = (GWTPacket) child;
 		element.appendChild(p.element);
 	}
@@ -73,11 +73,11 @@ public class GWTPacket extends DSLPacket {
 		return attributes;
 	}
 
-	public List<? extends APacket> getChildren() {
+	public List<? extends IPacket> getChildren() {
 		return wrap(element.getChildNodes());
 	}
 
-	public List<APacket> getChildren(final String name) {
+	public List<IPacket> getChildren(final String name) {
 		final NodeList nodes = element.getElementsByTagName(name);
 		return wrap(nodes);
 	}
@@ -86,7 +86,7 @@ public class GWTPacket extends DSLPacket {
 		return element.getChildNodes().getLength();
 	}
 
-	public APacket getFirstChild(final String childName) {
+	public IPacket getFirstChild(final String childName) {
 		final NodeList nodes = element.getElementsByTagName(childName);
 		return nodes.getLength() > 0 ? new GWTPacket((Element) nodes.item(0)) : null;
 	}
@@ -95,7 +95,7 @@ public class GWTPacket extends DSLPacket {
 		return element.getNodeName();
 	}
 
-	public APacket getParent() {
+	public IPacket getParent() {
 		return new GWTPacket((Element) element.getParentNode());
 	}
 
@@ -125,8 +125,8 @@ public class GWTPacket extends DSLPacket {
 		addText(text);
 	}
 
-	private List<APacket> wrap(final NodeList nodes) {
-		final ArrayList<APacket> selected = new ArrayList<APacket>();
+	private List<IPacket> wrap(final NodeList nodes) {
+		final ArrayList<IPacket> selected = new ArrayList<IPacket>();
 		for (int index = 0; index < nodes.getLength(); index++) {
 			selected.add(new GWTPacket((Element) nodes.item(index)));
 		}

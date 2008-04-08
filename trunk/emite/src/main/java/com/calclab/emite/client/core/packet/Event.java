@@ -25,8 +25,8 @@ public class Event extends DelegatedPacket {
 
 	private static final String TYPE = "type";
 
-	private static APacket cloneEvent(final Event event) {
-		return new ABasicPacket("event", "emite:event").With(TYPE, event
+	private static IPacket cloneEvent(final Event event) {
+		return new Packet("event", "emite:event").With(TYPE, event
 				.getType());
 	}
 
@@ -35,7 +35,7 @@ public class Event extends DelegatedPacket {
 	}
 
 	public Event(final String type) {
-		super(new ABasicPacket("event", "emite:event"));
+		super(new Packet("event", "emite:event"));
 		setAttribute(TYPE, type);
 	}
 

@@ -26,42 +26,41 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class ResourceBindingManager extends EmiteComponent {
-	public static class Events {
-		public static final Event binded = new Event("resource:binded");
-	}
+    public static class Events {
+	public static final Event binded = new Event("resource:binded");
+    }
 
-	private final Globals globals;
+    private final Globals globals;
 
-	public ResourceBindingManager(final Emite emite, final Globals globals) {
-		super(emite);
-		this.globals = globals;
+    public ResourceBindingManager(final Emite emite, final Globals globals) {
+	super(emite);
+	this.globals = globals;
 
-	}
+    }
 
-	@Override
-	public void attach() {
-		when(SASLManager.Events.authorized, new PacketListener() {
-			public void handle(final APacket received) {
-				final IQ iq = new IQ("bindRequest", IQ.Type.set);
-				iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).addText(
-						globals.getResourceName());
+    @Override
+    public void attach() {
+	when(SASLManager.Events.authorized, new PacketListener() {
+	    public void handle(final IPacket received) {
+		final IQ iq = new IQ(IQ.Type.set);
+		iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).addText(
+			globals.getResourceName());
 
-				emite.send(iq);
-			}
+		emite.send("bind", iq, new PacketListener() {
+		    public void handle(final IPacket received) {
+			final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
+			final XmppURI uri = XmppURI.parse(jid);
+			globals.setOwnURI(uri);
+			emite.publish(Events.binded);
+		    }
 		});
-		when(new IQ("bindRequest", IQ.Type.result, null), new PacketListener() {
-			public void handle(final APacket iq) {
-				final String jid = iq.getFirstChild("bind").getFirstChild("jid").getText();
-				final XmppURI uri = XmppURI.parse(jid);
-				globals.setOwnURI(uri);
-				emite.publish(Events.binded);
-			}
-		});
-	}
+	    }
+	});
+    }
 }

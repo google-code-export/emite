@@ -26,8 +26,9 @@ import java.util.List;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.services.XMLService;
 
 public class EmiteBosh extends DispatcherComponent implements Emite {
@@ -36,44 +37,35 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
     }
 
     private Body body;
-
-    private final boolean isDispatching;
-
+    private final IDManager manager;
     private long rid;
-
     private final XMLService xmler;
 
     public EmiteBosh(final Dispatcher dispatcher, final XMLService xmler) {
 	super(dispatcher);
 	this.xmler = xmler;
-	isDispatching = false;
-
-	// dispatcher.addListener(new DispatcherStateListener() {
-	// public void afterDispatching() {
-	// isDispatching = false;
-	// }
-	//
-	// public void beforeDispatching() {
-	// isDispatching = true;
-	// }
-	// });
-
+	this.manager = new IDManager();
 	restartRID();
     }
 
     @Override
     public void attach() {
 	when(EmiteBosh.Events.send, new PacketListener() {
-	    public void handle(final APacket received) {
-		final List<? extends APacket> children = received.getChildren();
-		for (final APacket child : children) {
+	    public void handle(final IPacket received) {
+		final List<? extends IPacket> children = received.getChildren();
+		for (final IPacket child : children) {
 		    body.addChild(child);
 		}
 	    }
 	});
+	when(Matcher.ANYTHING, new PacketListener() {
+	    public void handle(final IPacket received) {
+		manager.handle(received);
+	    }
+	});
     }
 
-    public APacket bodyFromResponse(final String content) {
+    public IPacket bodyFromResponse(final String content) {
 	return xmler.toXML(content);
     }
 
@@ -109,8 +101,14 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	this.body = null;
     }
 
-    public void send(final APacket aPacket) {
-	dispatcher.publish(new Event(EmiteBosh.Events.send).With(aPacket));
+    public void send(final IPacket packet) {
+	dispatcher.publish(new Event(EmiteBosh.Events.send).With(packet));
+    }
+
+    public void send(final String category, final IPacket packet, final PacketListener packetListener) {
+	final String id = manager.register(category, packetListener);
+	packet.setAttribute("id", id);
+	send(packet);
     }
 
 }

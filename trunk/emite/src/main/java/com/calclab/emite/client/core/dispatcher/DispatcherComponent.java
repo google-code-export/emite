@@ -22,8 +22,9 @@
 package com.calclab.emite.client.core.dispatcher;
 
 import com.calclab.emite.client.components.Startable;
+import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 
 public abstract class DispatcherComponent implements Startable {
 
@@ -42,11 +43,11 @@ public abstract class DispatcherComponent implements Startable {
     public void onStopComponent() {
     }
 
-    public void when(final APacket aPacket, final PacketListener packetListener) {
-	when(new PacketMatcher(aPacket), packetListener);
+    public void when(final IPacket packet, final PacketListener packetListener) {
+	when(new PacketMatcher(packet), packetListener);
     }
 
-    public void when(final PacketMatcher matcher, final PacketListener packetListener) {
+    public void when(final Matcher matcher, final PacketListener packetListener) {
 	dispatcher.subscribe(matcher, packetListener);
     }
 

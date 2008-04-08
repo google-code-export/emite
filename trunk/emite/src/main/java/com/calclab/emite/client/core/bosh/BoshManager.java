@@ -30,7 +30,7 @@ import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.services.Connector;
 import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
@@ -82,12 +82,12 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
     @Override
     public void attach() {
 	when(BoshManager.Events.restart, new PacketListener() {
-	    public void handle(final APacket received) {
+	    public void handle(final IPacket received) {
 		setRestart();
 	    }
 	});
 	when(BoshManager.Events.start, new PacketListener() {
-	    public void handle(final APacket received) {
+	    public void handle(final IPacket received) {
 		state.setRunning(true);
 		emite.restartRID();
 		emite.initBody(null);
@@ -95,19 +95,19 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	    }
 	});
 	when(BoshManager.Events.onError, new PacketListener() {
-	    public void handle(final APacket stanza) {
+	    public void handle(final IPacket stanza) {
 		state.setRunning(false);
 	    }
 	});
 
 	// on Body received
 	when("body", new PacketListener() {
-	    public void handle(final APacket aPacket) {
-		publishBodyStanzas(new Body(aPacket));
+	    public void handle(final IPacket iPacket) {
+		publishBodyStanzas(new Body(iPacket));
 	    }
 	});
 	when(BoshManager.Events.stop, new PacketListener() {
-	    public void handle(final APacket received) {
+	    public void handle(final IPacket received) {
 		setTerminate();
 	    }
 	});
@@ -134,7 +134,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	if (statusCode >= 400) {
 	    dispatcher.publish(BoshManager.Events.onError);
 	} else {
-	    final APacket response = emite.bodyFromResponse(content);
+	    final IPacket response = emite.bodyFromResponse(content);
 	    if (!state.isRunning()) {
 
 	    } else if (state.isTerminating()) {
@@ -218,8 +218,8 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	if (response.isTerminal()) {
 	    dispatcher.publish(new Event(BoshManager.Events.onError).Because(response.getCondition()));
 	} else {
-	    final List<? extends APacket> children = response.getChildren();
-	    for (final APacket stanza : children) {
+	    final List<? extends IPacket> children = response.getChildren();
+	    for (final IPacket stanza : children) {
 		dispatcher.publish(stanza);
 	    }
 	}

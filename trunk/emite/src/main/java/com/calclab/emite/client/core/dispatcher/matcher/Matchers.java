@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.core.dispatcher.matcher;
 
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 
 public class Matchers {
 
@@ -30,7 +30,7 @@ public class Matchers {
 			return null;
 		}
 
-		public boolean matches(APacket stanza) {
+		public boolean matches(IPacket stanza) {
 			return true;
 		}
 	};

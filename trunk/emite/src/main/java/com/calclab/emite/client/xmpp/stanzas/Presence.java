@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 
 public class Presence extends BasicStanza {
 
@@ -37,7 +37,7 @@ public class Presence extends BasicStanza {
 	this(null, (String) null, (String) null);
     }
 
-    public Presence(final APacket stanza) {
+    public Presence(final IPacket stanza) {
 	super(stanza);
     }
 
@@ -64,7 +64,7 @@ public class Presence extends BasicStanza {
 
     public int getPriority() {
 	int value = 0;
-	final APacket priority = getFirstChild("priority");
+	final IPacket priority = getFirstChild("priority");
 	if (priority != null) {
 	    try {
 		value = Integer.parseInt(priority.getText());
@@ -76,13 +76,13 @@ public class Presence extends BasicStanza {
     }
 
     public Show getShow() {
-	final APacket show = getFirstChild("show");
+	final IPacket show = getFirstChild("show");
 	final String value = show != null ? show.getText() : null;
 	return value != null ? Show.valueOf(value) : null;
     }
 
     public String getStatus() {
-	final APacket status = getFirstChild("status");
+	final IPacket status = getFirstChild("status");
 	return status != null ? status.getText() : null;
     }
 
@@ -94,7 +94,7 @@ public class Presence extends BasicStanza {
     }
 
     public void setPriority(final int value) {
-	APacket priority = getFirstChild("priority");
+	IPacket priority = getFirstChild("priority");
 	if (priority == null) {
 	    priority = add("priority", null);
 	}
@@ -102,7 +102,7 @@ public class Presence extends BasicStanza {
     }
 
     public void setShow(final Show value) {
-	APacket show = getFirstChild("show");
+	IPacket show = getFirstChild("show");
 	if (show == null) {
 	    show = add("show", null);
 	}
@@ -110,7 +110,7 @@ public class Presence extends BasicStanza {
     }
 
     public void setStatus(final String statusMessage) {
-	APacket status = getFirstChild("status");
+	IPacket status = getFirstChild("status");
 	if (status == null) {
 	    status = add("status", null);
 	}
