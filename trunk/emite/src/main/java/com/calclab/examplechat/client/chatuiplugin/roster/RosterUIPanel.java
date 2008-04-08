@@ -3,10 +3,10 @@ package com.calclab.examplechat.client.chatuiplugin.roster;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGrid;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenu;
+import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItemList;
 import com.gwtext.client.widgets.MessageBox;
 
 public class RosterUIPanel extends UserGrid implements RosterUIView {
@@ -19,15 +19,16 @@ public class RosterUIPanel extends UserGrid implements RosterUIView {
         this.presenter = presenter;
     }
 
-    public void addRosterItem(final PairChatUser user) {
+    public void addRosterItem(final PairChatUser user, final UserGridMenuItemList menuItemList) {
         UserGridMenu menu = new UserGridMenu(presenter);
-        menu.addMenuOption(i18n.t("Start a chat with this person"), "chat-icon", EmiteUiPlugin.ON_PAIR_CHAT_START, user
-                .getUri());
+        menu.setMenuItemList(menuItemList);
         super.addUser(user, menu);
     }
 
-    public void updateRosterItem(final PairChatUser user) {
-        super.udpateRosterItem(user);
+    public void updateRosterItem(final PairChatUser user, final UserGridMenuItemList menuItemList) {
+        UserGridMenu menu = new UserGridMenu(presenter);
+        menu.setMenuItemList(menuItemList);
+        super.udpateRosterItem(user, menu);
     }
 
     public void removeRosterItem(final PairChatUser user) {

@@ -21,6 +21,8 @@
  */
 package com.calclab.examplechat.client.chatuiplugin.users;
 
+import java.util.Iterator;
+
 import com.calclab.examplechat.client.chatuiplugin.AbstractPresenter;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.menu.BaseItem;
@@ -37,18 +39,27 @@ public class UserGridMenu {
         menu = new Menu();
     }
 
-    public void addMenuOption(final String title, final String iconCls, final String eventId, final Object param) {
-        Item menuItem = new Item(title);
-        menuItem.setIconCls(iconCls);
+    public void showMenu(final EventObject e) {
+        menu.showAt(e.getXY());
+    }
+
+    public void setMenuItemList(final UserGridMenuItemList list) {
+        menu.removeAll();
+        for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
+            UserGridMenuItem<?> item = (UserGridMenuItem<?>) iterator.next();
+            addMenuItem(item);
+        }
+    }
+
+    public void addMenuItem(final UserGridMenuItem<?> menuOpt) {
+        Item menuItem = new Item(menuOpt.getTitle());
+        menuItem.setIconCls(menuOpt.getIconCls());
         menu.addItem(menuItem);
         menuItem.addListener(new BaseItemListenerAdapter() {
             public void onClick(final BaseItem item, final EventObject e) {
-                presenter.doAction(eventId, param);
+                presenter.doAction(menuOpt.getEventName(), menuOpt.getParam());
             }
         });
     }
 
-    public void showMenu(final EventObject e) {
-        menu.showAt(e.getXY());
-    }
 }

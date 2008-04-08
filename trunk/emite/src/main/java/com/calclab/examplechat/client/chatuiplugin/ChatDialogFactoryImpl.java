@@ -93,7 +93,7 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
     }
 
     public RosterUI createrRosterUI(final AbstractXmpp xmpp, final I18nTranslationService i18n) {
-        RosterUIPresenter presenter = new RosterUIPresenter(xmpp);
+        RosterUIPresenter presenter = new RosterUIPresenter(xmpp, i18n);
         RosterUIPanel panel = new RosterUIPanel(i18n, presenter);
         presenter.init(panel);
         return presenter;

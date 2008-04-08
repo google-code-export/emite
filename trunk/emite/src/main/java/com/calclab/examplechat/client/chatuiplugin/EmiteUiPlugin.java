@@ -55,6 +55,7 @@ public class EmiteUiPlugin extends Plugin {
     public static final String ON_STATE_DISCONNECTED = "emiteuiplugin.onstatedisconnected";
     public static final String ON_PANIC = "emiteuiplugin.onpanic";
     public static final String ON_USER_SUBSCRIPTION_CHANGED = "emiteuiplugin.usersubschanged";
+    public static final String ON_CANCEL_SUBSCRITOR = "emiteuiplugin.oncancelsubscriptor";
 
     private MultiChat multiChatDialog;
 

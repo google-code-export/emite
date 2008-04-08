@@ -39,7 +39,7 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
             final PairChatUser otherUser) {
         super(chat, AbstractChat.Type.pairchat);
         this.currentSessionJid = currentSessionJid;
-        this.currenUserColor = MultiChatView.DEF_PAIR_USER_COLOR;
+        this.currenUserColor = MultiChatView.DEF_USER_COLOR;
         this.otherUser = otherUser;
         this.input = "";
         this.listener = listener;

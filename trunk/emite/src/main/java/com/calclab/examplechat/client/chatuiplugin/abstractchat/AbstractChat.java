@@ -57,4 +57,6 @@ public interface AbstractChat {
 
     void setChatTitle(String chatTitle);
 
+    boolean isGroupChat();
+
 }
