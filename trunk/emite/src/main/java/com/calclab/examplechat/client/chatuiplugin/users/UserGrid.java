@@ -77,6 +77,7 @@ public class UserGrid extends Panel {
     public void udpateRosterItem(final PairChatUser user, final UserGridMenu menu) {
         removeUser(user);
         addUser(user, menu);
+        this.doLayout();
         // menuMap.remove(user.getUri());
         // menuMap.put(user.getUri(), menu);
         // Record recordToUpdate = store.getById(user.getUri().toString());

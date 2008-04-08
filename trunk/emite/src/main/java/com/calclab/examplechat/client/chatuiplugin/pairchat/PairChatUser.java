@@ -47,5 +47,4 @@ public class PairChatUser extends AbstractChatUser {
     public Subscription getSubscription() {
         return rosterItem.getSubscription();
     }
-
 }

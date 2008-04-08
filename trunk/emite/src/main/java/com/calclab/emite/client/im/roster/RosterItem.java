@@ -96,4 +96,5 @@ public class RosterItem {
     public void setPresence(final Presence presence) {
         this.presence = presence;
     }
+
 }

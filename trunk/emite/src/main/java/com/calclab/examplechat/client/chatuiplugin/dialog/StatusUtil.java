@@ -80,13 +80,13 @@ public class StatusUtil {
                 case away:
                     return icons.away();
                 default:
-                    Log.debug("Status unknown " + presence.getShow());
+                    Log.debug("Status unknown, show: " + presence.getShow());
                     return icons.question();
                 }
             case unavailable:
                 return icons.offline();
             default:
-                Log.error("Programatic error");
+                Log.error("Programatic error, status: " + statusType);
                 return icons.question();
             }
         case from:
