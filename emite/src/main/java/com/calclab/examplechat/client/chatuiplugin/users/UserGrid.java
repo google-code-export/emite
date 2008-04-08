@@ -118,8 +118,10 @@ public class UserGrid extends Panel {
     }
 
     private void addUser(final AbstractChatUser user, final String statusIcon, final String statusText) {
-        final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getUri(),
-                user.getAlias(), user.getColor(), statusIcon, statusText });
+        // FIXME, maybe better in accept subscription...
+        String name = user.getAlias() != null ? user.getAlias() : user.getUri().getNode();
+        final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getUri(), name,
+                user.getColor(), statusIcon, statusText });
         store.add(newUserRecord);
     }
 
