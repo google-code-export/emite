@@ -23,6 +23,7 @@ package com.calclab.examplechat.client.chatuiplugin.users;
 
 import java.util.HashMap;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
@@ -112,17 +113,20 @@ public class UserGrid extends Panel {
     }
 
     public void removeUser(final AbstractChatUser user) {
-        final Record newUserRecord = recordDef.createRecord(new Object[] { "", user.getUri(), user.getAlias(),
-                user.getColor(), "" });
-        store.remove(newUserRecord);
-        menuMap.remove(user.getUri());
+        Record storeToRemove = store.getById(user.getUri().toString());
+        if (storeToRemove == null) {
+            Log.error("Trying to remove a non existing roster item");
+        } else {
+            store.remove(storeToRemove);
+            menuMap.remove(user.getUri());
+        }
     }
 
     private void addUser(final AbstractChatUser user, final String statusIcon, final String statusText) {
         // FIXME, maybe better in accept subscription...
         String name = user.getAlias() != null ? user.getAlias() : user.getUri().getNode();
-        final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getUri(), name,
-                user.getColor(), statusIcon, statusText });
+        final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getUri().toString(),
+                name, user.getColor(), statusIcon, statusText });
         store.add(newUserRecord);
     }
 
@@ -134,8 +138,7 @@ public class UserGrid extends Panel {
 
         final MemoryProxy proxy = new MemoryProxy(new Object[][] {});
 
-        final ArrayReader reader = new ArrayReader(recordDef);
-        reader.setId(1);
+        final ArrayReader reader = new ArrayReader(1, recordDef);
         store = new Store(proxy, reader);
         store.load();
         grid.setStore(store);
