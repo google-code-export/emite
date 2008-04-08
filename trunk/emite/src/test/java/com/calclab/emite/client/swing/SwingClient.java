@@ -84,23 +84,21 @@ public class SwingClient {
     private void initXMPP() {
 	this.xmpp = TestHelper.createXMPP(new HttpConnectorListener() {
 	    public void onError(final String id, final String cause) {
-		Log.debug("CONN # " + id + "-ERROR: " + cause);
+		System.out.println("CONN # " + id + "-ERROR: " + cause);
 	    }
 
 	    public void onFinish(final String id, final long duration) {
-		Log.debug("CONN # " + id + "-FINISH " + duration + "ms");
 	    }
 
 	    public void onResponse(final String id, final String response) {
-		Log.debug("CONN # " + id + "-RESPONSE: " + response);
+		System.out.println("IN: " + response);
 	    }
 
 	    public void onSend(final String id, final String xml) {
-		Log.debug("CONN # " + id + "-SENDING: " + xml);
+		System.out.println("OUT: " + xml);
 	    }
 
 	    public void onStart(final String id) {
-		Log.debug("CONN # " + id + "-STARTED: " + id);
 	    }
 
 	});
@@ -140,8 +138,9 @@ public class SwingClient {
 		rosterPanel.refresh();
 	    }
 
-	    public void onRosterInitialized(final Collection<RosterItem> items) {
+	    public void onRosterChanged(final Collection<RosterItem> items) {
 		print("ROSTER INITIALIZED");
+		rosterPanel.clear();
 		for (final RosterItem item : items) {
 		    rosterPanel.add(item.getName(), item);
 		}

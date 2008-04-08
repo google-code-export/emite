@@ -32,11 +32,6 @@ public class IQ extends BasicStanza {
 	super(stanza);
     }
 
-    @Deprecated
-    public IQ(final String id, final Type type) {
-	this(id, type, "jabber:client");
-    }
-
     public IQ(final String id, final Type type, final String xmlns) {
 	super(NAME, xmlns);
 	if (id != null) {

@@ -55,8 +55,11 @@ public class MUCRooms extends EmiteComponent implements Rooms {
      * @see http://www.xmpp.org/extensions/xep-0045.html#disco-rooms
      */
     protected void sendRoomsQuery() {
-	final IQ iq = new IQ("rooms_1", Type.get).From(globals.getOwnURI()).To(globals.getDomain());
+	final IQ iq = new IQ(Type.get).From(globals.getOwnURI()).To(globals.getDomain());
 	iq.setQuery("http://jabber.org/protocol/disco#items");
-	emite.send(iq);
+	emite.send("rooms", iq, new PacketListener() {
+	    public void handle(final IPacket received) {
+	    }
+	});
     }
 }

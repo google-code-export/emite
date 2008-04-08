@@ -78,7 +78,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                 }
             }
 
-            public void onRosterInitialized(final Collection<RosterItem> roster) {
+            public void onRosterChanged(final Collection<RosterItem> roster) {
                 for (final RosterItem item : roster) {
                     final String name = item.getName();
                     Log.info("Adding roster item: " + item.getXmppURI() + " name: " + name + " subsc: "

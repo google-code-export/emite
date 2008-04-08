@@ -125,10 +125,10 @@ public class RosterManager extends EmiteComponent {
     }
 
     private void setRosterItems(final Roster roster, final IPacket received) {
-	roster.clear();
+	roster.initStart();
 	for (final IPacket item : getItems(received)) {
 	    roster.add(convert(item));
 	}
-	roster.fireRosterInitialized();
+	roster.initEnds();
     }
 }
