@@ -99,7 +99,8 @@ public class RosterManager extends EmiteComponent {
     }
 
     // FIXME: Dani, revisa: he hecho esto público para poder hacer pruebas del
-    // roster...
+    // roster... (estoy por quitarlo, pero tengo que ver como hacer mejor mis
+    // pruebas)
     public void onPresenceReceived(final Presence presence) {
         final RosterItem item = roster.findItemByURI(presence.getFromURI());
         if (item != null) {
