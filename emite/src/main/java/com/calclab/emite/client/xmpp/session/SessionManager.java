@@ -27,7 +27,7 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
@@ -52,33 +52,33 @@ public class SessionManager extends EmiteComponent {
     public void attach() {
 
 	when(SASLManager.Events.authorized, new PacketListener() {
-	    public void handle(final Packet received) {
+	    public void handle(final APacket received) {
 		emite.publish(BoshManager.Events.restart);
 	    }
 	});
 
 	when(SASLManager.Events.authorized, new PacketListener() {
-	    public void handle(final Packet received) {
+	    public void handle(final APacket received) {
 		session.setState(Session.State.authorized);
 	    }
 	});
 
 	when(SessionManager.Events.loggedOut, new PacketListener() {
-	    public void handle(final Packet received) {
+	    public void handle(final APacket received) {
 		emite.publish(BoshManager.Events.stop);
 		session.setState(Session.State.disconnected);
 	    }
 	});
 
 	when(BoshManager.Events.onError, new PacketListener() {
-	    public void handle(final Packet received) {
+	    public void handle(final APacket received) {
 		session.setState(Session.State.error);
 		session.setState(Session.State.disconnected);
 	    }
 	});
 
 	when(ResourceBindingManager.Events.binded, new PacketListener() {
-	    public void handle(final Packet received) {
+	    public void handle(final APacket received) {
 		final IQ iq = new IQ("requestSession", IQ.Type.set).From(globals.getOwnURI()).To(globals.getDomain());
 		iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
 		emite.send(iq);
@@ -86,7 +86,7 @@ public class SessionManager extends EmiteComponent {
 
 	});
 	when(new IQ("requestSession", IQ.Type.result, null), new PacketListener() {
-	    public void handle(final Packet received) {
+	    public void handle(final APacket received) {
 		session.setState(Session.State.connected);
 		emite.publish(SessionManager.Events.loggedIn);
 	    }

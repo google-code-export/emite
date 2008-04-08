@@ -26,28 +26,29 @@ import java.util.List;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.packet.ABasicPacket;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class RosterManager extends EmiteComponent {
 
     public static class Events {
-        public static final Event ready = new Event("roster:on:ready");
-        public static final Event addItem = new Event("roster:do:addItem");
+	public static final Event ready = new Event("roster:on:ready");
     }
 
-    private final Roster roster;
     private int id;
+    private final Roster roster;
 
     public RosterManager(final Emite emite, final Roster roster) {
-        super(emite);
-        this.roster = roster;
-        id = 1;
+	super(emite);
+	this.roster = roster;
+	id = 1;
     }
 
     /**
@@ -56,73 +57,75 @@ public class RosterManager extends EmiteComponent {
      */
     @Override
     public void attach() {
-        when(SessionManager.Events.loggedIn, new PacketListener() {
-            public void handle(final Packet received) {
-                emite.send(new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster", null));
-            }
-        });
+	when(SessionManager.Events.loggedIn, new PacketListener() {
+	    public void handle(final APacket received) {
+		emite.send(new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster", null));
+	    }
+	});
 
-        when("presence", new PacketListener() {
-            public void handle(final Packet received) {
-                onPresenceReceived(new Presence(received));
-            }
-        });
+	when("presence", new PacketListener() {
+	    public void handle(final APacket received) {
+		onPresenceReceived(new Presence(received));
+	    }
+	});
 
-        when(new IQ("roster", IQ.Type.result, null), new PacketListener() {
-            public void handle(final Packet received) {
-                setRosterItems(roster, received);
-                emite.publish(RosterManager.Events.ready);
-            }
-        });
+	when(new IQ("roster", IQ.Type.result, null), new PacketListener() {
+	    public void handle(final APacket received) {
+		setRosterItems(roster, received);
+		emite.publish(RosterManager.Events.ready);
+	    }
+	});
 
-        when(RosterManager.Events.addItem, new PacketListener() {
-            public void handle(final Packet received) {
-                final Packet iq = new IQ(nextID(), IQ.Type.set, null).WithQuery("jabber:iq:roster", received
-                        .getFirstChild("item"));
-                emite.send(iq);
-            }
-        });
     }
 
-    /**
-     * VICENTE: aquí es donde se gestiona la presencia de los roster items yo
-     * creo que auto_acept y auto_reject debería ser lóigica del UI y no de la
-     * libraría En este método creo que lo único que habría que hacer es
-     * actualizar el estado de la presencia de los rosterItems
-     * 
-     * @param presence
-     */
+    public void requestAddItem(final String uri, final String name, final String group) {
+	final APacket item = new ABasicPacket("item").With("jid", uri).With("name", name);
+	if (group != null) {
+	    item.addChild(new ABasicPacket("group").WithText(group));
+	}
+	final APacket iq = new IQ(nextID(), IQ.Type.set, null).WithQuery("jabber:iq:roster", item);
+	emite.send(iq);
+	final Presence presenceRequest = new Presence(Type.subscribe, null, XmppURI.parse(uri));
+	emite.send(presenceRequest);
+    }
+
+    public void requestRemoveItem(final String JID) {
+	final IQ iq = new IQ(nextID(), IQ.Type.set, null).WithQuery("jabber:iq:roster", new ABasicPacket("item").With(
+		"jid", JID).With("subscription", "remove"));
+	emite.send(iq);
+    }
+
     protected void onPresenceReceived(final Presence presence) {
 
-        final RosterItem item = roster.findItemByURI(presence.getFromURI());
-        if (item != null) {
-            item.setPresence(presence);
-            roster.fireItemPresenceChanged(item);
-        }
+	final RosterItem item = roster.findItemByURI(presence.getFromURI());
+	if (item != null) {
+	    item.setPresence(presence);
+	    roster.fireItemPresenceChanged(item);
+	}
 
     }
 
-    private RosterItem convert(final Packet item) {
-        final String jid = item.getAttribute("jid");
-        final XmppURI uri = XmppURI.parse(jid);
-        final Subscription subscription = RosterItem.Subscription.valueOf(item.getAttribute("subscription"));
-        return new RosterItem(uri, subscription, item.getAttribute("name"));
+    private RosterItem convert(final APacket item) {
+	final String jid = item.getAttribute("jid");
+	final XmppURI uri = XmppURI.parse(jid);
+	final Subscription subscription = RosterItem.Subscription.valueOf(item.getAttribute("subscription"));
+	return new RosterItem(uri, subscription, item.getAttribute("name"));
     }
 
-    private List<? extends Packet> getItems(final Packet packet) {
-        final List<? extends Packet> items = packet.getFirstChild("query").getChildren();
-        return items;
+    private List<? extends APacket> getItems(final APacket aPacket) {
+	final List<? extends APacket> items = aPacket.getFirstChild("query").getChildren();
+	return items;
     }
 
     private String nextID() {
-        return "roster_" + id++;
+	return "roster_" + id++;
     }
 
-    private void setRosterItems(final Roster roster, final Packet received) {
-        roster.clear();
-        for (final Packet item : getItems(received)) {
-            roster.add(convert(item));
-        }
-        roster.fireRosterInitialized();
+    private void setRosterItems(final Roster roster, final APacket received) {
+	roster.clear();
+	for (final APacket item : getItems(received)) {
+	    roster.add(convert(item));
+	}
+	roster.fireRosterInitialized();
     }
 }

@@ -21,14 +21,14 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 public class IQ extends BasicStanza {
     public static enum Type {
 	error, get, result, set
     }
 
-    public IQ(final Packet stanza) {
+    public IQ(final APacket stanza) {
 	super(stanza);
     }
 
@@ -47,12 +47,12 @@ public class IQ extends BasicStanza {
 	return this;
     }
 
-    public Packet Include(final String name, final String xmlns) {
+    public APacket Include(final String name, final String xmlns) {
 	add(name, xmlns);
 	return this;
     }
 
-    public Packet setQuery(final String namespace) {
+    public APacket setQuery(final String namespace) {
 	return add("query", namespace);
     }
 
@@ -62,8 +62,8 @@ public class IQ extends BasicStanza {
 	return this;
     }
 
-    public IQ WithQuery(final String queryNamespace, final Packet child) {
-	final Packet query = add("query", queryNamespace);
+    public IQ WithQuery(final String queryNamespace, final APacket child) {
+	final APacket query = add("query", queryNamespace);
 	if (child != null) {
 	    query.addChild(child);
 	}

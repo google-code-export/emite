@@ -6,14 +6,14 @@ import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 public class MockDispatcher implements Dispatcher {
 
-	private final ArrayList<Packet> published;
+	private final ArrayList<APacket> published;
 
 	public MockDispatcher() {
-		this.published = new ArrayList<Packet>();
+		this.published = new ArrayList<APacket>();
 	}
 
 	public void addListener(final DispatcherStateListener listener) {
@@ -23,12 +23,12 @@ public class MockDispatcher implements Dispatcher {
 		return published.size();
 	}
 
-	public Packet getPublished(final int index) {
+	public APacket getPublished(final int index) {
 		return published.get(index);
 	}
 
-	public void publish(final Packet packet) {
-		published.add(packet);
+	public void publish(final APacket aPacket) {
+		published.add(aPacket);
 	}
 
 	public void subscribe(final Matcher matcher, final PacketListener packetListener) {

@@ -21,9 +21,9 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
-public interface Stanza extends Packet {
+public interface Stanza extends APacket {
     public Stanza To(String to);
 
     String getFrom();

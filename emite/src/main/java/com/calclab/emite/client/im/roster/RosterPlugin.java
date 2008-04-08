@@ -24,7 +24,6 @@ package com.calclab.emite.client.im.roster;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.core.bosh.BoshPlugin;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.dispatcher.DispatcherPlugin;
 
 public class RosterPlugin {
 
@@ -32,15 +31,19 @@ public class RosterPlugin {
     private static final String COMPONENT_ROSTER_MANAGER = "roster:manager";
 
     public static Roster getRoster(final Container container) {
-        return (Roster) container.get(COMPONENT_ROSTER);
+	return (Roster) container.get(COMPONENT_ROSTER);
+    }
+
+    public static RosterManager getRosterManager(final Container container) {
+	return (RosterManager) container.get(COMPONENT_ROSTER_MANAGER);
     }
 
     public static void install(final Container container) {
-        final Emite emite = BoshPlugin.getEmite(container);
-        final Roster roster = new Roster(DispatcherPlugin.getDispatcher(container));
-        final RosterManager rosterManager = new RosterManager(emite, roster);
-        container.register(COMPONENT_ROSTER, roster);
-        container.install(COMPONENT_ROSTER_MANAGER, rosterManager);
+	final Emite emite = BoshPlugin.getEmite(container);
+	final Roster roster = new Roster();
+	final RosterManager rosterManager = new RosterManager(emite, roster);
+	container.register(COMPONENT_ROSTER, roster);
+	container.install(COMPONENT_ROSTER_MANAGER, rosterManager);
     }
 
 }

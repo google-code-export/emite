@@ -21,11 +21,11 @@
  */
 package com.calclab.emite.client.core.services;
 
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 
 public interface XMLService {
-    String toString(Packet packet);
+    String toString(APacket aPacket);
 
-    Packet toXML(String xml);
+    APacket toXML(String xml);
 }

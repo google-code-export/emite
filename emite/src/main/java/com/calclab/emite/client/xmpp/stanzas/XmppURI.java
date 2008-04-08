@@ -118,7 +118,7 @@ public class XmppURI {
     }
 
     // I need a way to get only the jid to use in HashMaps
-    public String getJid() {
+    public String getJID() {
         return node + "@" + host;
     }
 }

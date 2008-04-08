@@ -25,9 +25,7 @@ package com.calclab.emite.client.im.roster;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.core.packet.BasicPacket;
-import com.calclab.emite.client.core.packet.Packet;
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class Roster {
@@ -39,11 +37,10 @@ public class Roster {
 
     private final HashMap<String, RosterItem> items;
     private final ArrayList<RosterListener> listeners;
-    private final Dispatcher dispatcher;
+
     private SubscriptionMode subscriptionMode;
 
-    public Roster(final Dispatcher dispatcher) {
-	this.dispatcher = dispatcher;
+    public Roster() {
 	listeners = new ArrayList<RosterListener>();
 	items = new HashMap<String, RosterItem>();
 	subscriptionMode = DEF_SUBSCRIPTION_MODE;
@@ -58,7 +55,7 @@ public class Roster {
     }
 
     public RosterItem findItemByURI(final XmppURI uri) {
-	return items.get(uri.toString());
+	return items.get(uri.getJID());
     }
 
     public RosterItem getItem(final int index) {
@@ -73,14 +70,6 @@ public class Roster {
 	return subscriptionMode;
     }
 
-    public void requestAddItem(final String uri, final String name, final String group) {
-	final Packet item = new BasicPacket("item").With("jid", uri).With("name", name);
-	if (group != null) {
-	    item.addChild(new BasicPacket("group").WithText(group));
-	}
-	dispatcher.publish(RosterManager.Events.addItem.With(item));
-    }
-
     public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
 	this.subscriptionMode = subscriptionMode;
     }
@@ -90,6 +79,7 @@ public class Roster {
     }
 
     void fireItemPresenceChanged(final RosterItem item) {
+	Log.debug("ROSTER ITEM PRESENCE CHANGED!");
 	for (final RosterListener listener : listeners) {
 	    listener.onItemPresenceChanged(item);
 	}

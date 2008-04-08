@@ -5,7 +5,7 @@ import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 public class LoggerDispatcher implements Dispatcher {
 
@@ -19,9 +19,9 @@ public class LoggerDispatcher implements Dispatcher {
 		dispatcher.addListener(listener);
 	}
 
-	public void publish(final Packet packet) {
-		Log.debug("PUBLISHED: " + packet.toString());
-		dispatcher.publish(packet);
+	public void publish(final APacket aPacket) {
+		Log.debug("PUBLISHED: " + aPacket.toString());
+		dispatcher.publish(aPacket);
 	}
 
 	public void subscribe(final Matcher matcher, final PacketListener packetListener) {

@@ -25,9 +25,9 @@ import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.packet.BasicPacket;
+import com.calclab.emite.client.core.packet.ABasicPacket;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 public class SASLManager extends EmiteComponent {
 	public static class Events {
@@ -45,14 +45,14 @@ public class SASLManager extends EmiteComponent {
 
 	@Override
 	public void attach() {
-		when(new BasicPacket("stream:features"), new PacketListener() {
-			public void handle(final Packet received) {
+		when(new ABasicPacket("stream:features"), new PacketListener() {
+			public void handle(final APacket received) {
 				emite.send(createPlainAuthorization());
 			}
 		});
 
-		when(new BasicPacket("success", "urn:ietf:params:xml:ns:xmpp-sasl"), new PacketListener() {
-			public void handle(final Packet received) {
+		when(new ABasicPacket("success", "urn:ietf:params:xml:ns:xmpp-sasl"), new PacketListener() {
+			public void handle(final APacket received) {
 				emite.publish(Events.authorized);
 			}
 		});
@@ -64,8 +64,8 @@ public class SASLManager extends EmiteComponent {
 		return Base64Coder.encodeString(auth);
 	}
 
-	private Packet createPlainAuthorization() {
-		final Packet auth = new BasicPacket("auth", "urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism", "PLAIN");
+	private APacket createPlainAuthorization() {
+		final APacket auth = new ABasicPacket("auth", "urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism", "PLAIN");
 		final String encoded = encode(globals.getDomain(), globals.getUserName(), globals.getPassword());
 		auth.addText(encoded);
 		return auth;

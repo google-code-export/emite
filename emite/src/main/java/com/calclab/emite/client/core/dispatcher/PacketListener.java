@@ -21,9 +21,9 @@
  */
 package com.calclab.emite.client.core.dispatcher;
 
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 public interface PacketListener {
-	void handle(Packet received);
+	void handle(APacket received);
 
 }

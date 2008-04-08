@@ -31,9 +31,9 @@ import com.calclab.emite.client.core.bosh.EmiteBosh;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.packet.BasicPacket;
+import com.calclab.emite.client.core.packet.ABasicPacket;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.MessageType;
@@ -60,8 +60,8 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
 
     @Override
     public void attach() {
-	when(new BasicPacket("message", null), new PacketListener() {
-	    public void handle(final Packet received) {
+	when(new ABasicPacket("message", null), new PacketListener() {
+	    public void handle(final APacket received) {
 		onReceived(new Message(received));
 	    }
 	});

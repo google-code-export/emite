@@ -21,9 +21,9 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
-import com.calclab.emite.client.core.packet.BasicPacket;
+import com.calclab.emite.client.core.packet.ABasicPacket;
 import com.calclab.emite.client.core.packet.DelegatedPacket;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 public class BasicStanza extends DelegatedPacket implements Stanza {
 	protected static final String NAME = "iq";
@@ -32,12 +32,12 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
 	private static final String ID = "id";
 	private static final String TO = "to";
 
-	protected BasicStanza(final Packet stanza) {
+	protected BasicStanza(final APacket stanza) {
 		super(stanza);
 	}
 
 	protected BasicStanza(final String name, final String xmlns) {
-		super(new BasicPacket(name, xmlns));
+		super(new ABasicPacket(name, xmlns));
 	}
 
 	public String getFrom() {

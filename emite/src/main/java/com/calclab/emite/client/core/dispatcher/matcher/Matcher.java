@@ -21,10 +21,21 @@
  */
 package com.calclab.emite.client.core.dispatcher.matcher;
 
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 public interface Matcher {
-	String getElementName();
+    Matcher ANYTHING = new Matcher() {
+	public String getElementName() {
+	    return null;
+	}
 
-	boolean matches(Packet stanza);
+	public boolean matches(final APacket stanza) {
+	    return true;
+	}
+
+    };
+
+    String getElementName();
+
+    boolean matches(APacket stanza);
 }

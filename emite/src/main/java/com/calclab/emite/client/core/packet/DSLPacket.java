@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.core.packet;
 
-public abstract class AbstractPacket implements Packet {
+public abstract class DSLPacket implements APacket {
 
     public int getAttributeAsInt(final String name) {
 	final String value = getAttribute(name);
@@ -36,21 +36,21 @@ public abstract class AbstractPacket implements Packet {
 	return value.equals(getAttribute(name));
     }
 
-    public Packet With(final Packet child) {
+    public APacket With(final APacket child) {
 	addChild(child);
 	return this;
     }
 
-    public Packet With(final String name, final long value) {
+    public APacket With(final String name, final long value) {
 	return With(name, String.valueOf(value));
     }
 
-    public Packet With(final String name, final String value) {
+    public APacket With(final String name, final String value) {
 	setAttribute(name, value);
 	return this;
     }
 
-    public Packet WithText(final String text) {
+    public APacket WithText(final String text) {
 	addText(text);
 	return this;
     }

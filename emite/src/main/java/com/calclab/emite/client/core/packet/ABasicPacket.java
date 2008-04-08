@@ -25,34 +25,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class BasicPacket extends AbstractPacket {
+public class ABasicPacket extends DSLPacket {
 	private final HashMap<String, String> attributes;
-	private final ArrayList<Packet> children;
+	private final ArrayList<APacket> children;
 	private final String name;
-	private BasicPacket parent;
+	private ABasicPacket parent;
 
-	public BasicPacket(final String name) {
+	public ABasicPacket(final String name) {
 		this(name, null);
 	}
 
-	public BasicPacket(final String name, final String xmlns) {
+	public ABasicPacket(final String name, final String xmlns) {
 		this.name = name;
 		this.attributes = new HashMap<String, String>();
-		this.children = new ArrayList<Packet>();
+		this.children = new ArrayList<APacket>();
 		if (xmlns != null) {
 			setAttribute("xmlns", xmlns);
 		}
 		parent = null;
 	}
 
-	public Packet add(final String name, final String xmlns) {
-		final BasicPacket child = new BasicPacket(name, xmlns);
+	public APacket add(final String name, final String xmlns) {
+		final ABasicPacket child = new ABasicPacket(name, xmlns);
 		child.parent = this;
 		add(child);
 		return child;
 	}
 
-	public void addChild(final Packet child) {
+	public void addChild(final APacket child) {
 		children.add(child);
 	}
 
@@ -72,13 +72,13 @@ public class BasicPacket extends AbstractPacket {
 		return attributes;
 	}
 
-	public List<? extends Packet> getChildren() {
+	public List<? extends APacket> getChildren() {
 		return children;
 	}
 
-	public List<Packet> getChildren(final String name) {
-		final List<Packet> selected = new ArrayList<Packet>();
-		for (final Packet child : children) {
+	public List<APacket> getChildren(final String name) {
+		final List<APacket> selected = new ArrayList<APacket>();
+		for (final APacket child : children) {
 			if (name.equals(child.getName())) {
 				selected.add(child);
 			}
@@ -90,8 +90,8 @@ public class BasicPacket extends AbstractPacket {
 		return children.size();
 	}
 
-	public Packet getFirstChild(final String childName) {
-		for (final Packet child : children) {
+	public APacket getFirstChild(final String childName) {
+		for (final APacket child : children) {
 			if (childName.equals(child.getName())) {
 				return child;
 			}
@@ -103,7 +103,7 @@ public class BasicPacket extends AbstractPacket {
 		return name;
 	}
 
-	public Packet getParent() {
+	public APacket getParent() {
 		return parent;
 	}
 
@@ -111,7 +111,7 @@ public class BasicPacket extends AbstractPacket {
 	 * si tiene un hijo de texto, lo devuelve
 	 */
 	public String getText() {
-		for (final Packet child : children) {
+		for (final APacket child : children) {
 			if (child.getName() == null) {
 				return child.toString();
 			}
@@ -128,7 +128,7 @@ public class BasicPacket extends AbstractPacket {
 		}
 		if (children.size() > 0) {
 			buffer.append(">");
-			for (final Packet child : children) {
+			for (final APacket child : children) {
 				child.render(buffer);
 			}
 			buffer.append("</").append(name).append(">");
@@ -153,7 +153,7 @@ public class BasicPacket extends AbstractPacket {
 		return buffer.toString();
 	}
 
-	protected void add(final BasicPacket node) {
+	protected void add(final ABasicPacket node) {
 		children.add(node);
 	}
 }

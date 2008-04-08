@@ -26,27 +26,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.calclab.emite.client.core.packet.AbstractPacket;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.DSLPacket;
+import com.calclab.emite.client.core.packet.APacket;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 
-public class GWTPacket extends AbstractPacket {
+public class GWTPacket extends DSLPacket {
 	private final Element element;
 
 	public GWTPacket(final Element element) {
 		this.element = element;
 	}
 
-	public Packet add(final String nodeName, final String xmlns) {
+	public APacket add(final String nodeName, final String xmlns) {
 		final Element child = element.getOwnerDocument().createElement(nodeName);
 		element.appendChild(child);
 		return new GWTPacket(child);
 	}
 
-	public void addChild(final Packet child) {
+	public void addChild(final APacket child) {
 		final GWTPacket p = (GWTPacket) child;
 		element.appendChild(p.element);
 	}
@@ -73,11 +73,11 @@ public class GWTPacket extends AbstractPacket {
 		return attributes;
 	}
 
-	public List<? extends Packet> getChildren() {
+	public List<? extends APacket> getChildren() {
 		return wrap(element.getChildNodes());
 	}
 
-	public List<Packet> getChildren(final String name) {
+	public List<APacket> getChildren(final String name) {
 		final NodeList nodes = element.getElementsByTagName(name);
 		return wrap(nodes);
 	}
@@ -86,7 +86,7 @@ public class GWTPacket extends AbstractPacket {
 		return element.getChildNodes().getLength();
 	}
 
-	public Packet getFirstChild(final String childName) {
+	public APacket getFirstChild(final String childName) {
 		final NodeList nodes = element.getElementsByTagName(childName);
 		return nodes.getLength() > 0 ? new GWTPacket((Element) nodes.item(0)) : null;
 	}
@@ -95,7 +95,7 @@ public class GWTPacket extends AbstractPacket {
 		return element.getNodeName();
 	}
 
-	public Packet getParent() {
+	public APacket getParent() {
 		return new GWTPacket((Element) element.getParentNode());
 	}
 
@@ -125,8 +125,8 @@ public class GWTPacket extends AbstractPacket {
 		addText(text);
 	}
 
-	private List<Packet> wrap(final NodeList nodes) {
-		final ArrayList<Packet> selected = new ArrayList<Packet>();
+	private List<APacket> wrap(final NodeList nodes) {
+		final ArrayList<APacket> selected = new ArrayList<APacket>();
 		for (int index = 0; index < nodes.getLength(); index++) {
 			selected.add(new GWTPacket((Element) nodes.item(index)));
 		}
