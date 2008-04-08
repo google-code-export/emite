@@ -28,8 +28,8 @@ import com.calclab.emite.client.core.dispatcher.DispatcherPlugin;
 
 public class RosterPlugin {
 
-    private static final String COMPONENT_ROSTER = " roster";
-    private static final String COMPONENT_ROSTER_MANAGER = " roster:manager";
+    private static final String COMPONENT_ROSTER = "roster";
+    private static final String COMPONENT_ROSTER_MANAGER = "roster:manager";
 
     public static Roster getRoster(final Container container) {
         return (Roster) container.get(COMPONENT_ROSTER);
