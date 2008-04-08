@@ -4,6 +4,7 @@ import org.ourproject.kune.platf.client.View;
 
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItemList;
 
 public interface RosterUIView extends View {
 
@@ -11,9 +12,9 @@ public interface RosterUIView extends View {
 
     void confirmSusbscriptionRequest(Presence presence);
 
-    void addRosterItem(PairChatUser user);
+    void addRosterItem(PairChatUser user, UserGridMenuItemList menuItemList);
 
-    void updateRosterItem(PairChatUser user);
+    void updateRosterItem(PairChatUser user, UserGridMenuItemList menuItemList);
 
     void clearRoster();
 

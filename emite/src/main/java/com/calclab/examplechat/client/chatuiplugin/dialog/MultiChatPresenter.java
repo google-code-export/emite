@@ -219,7 +219,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void messageReceived(final Chat chat, final Message message) {
         final AbstractChat abstractChat = getChat(chat);
-        if (abstractChat.getType() == AbstractChat.Type.groupchat) {
+        if (abstractChat.isGroupChat()) {
             ((GroupChat) abstractChat).addMessage(message.getFrom().toString(), message.getBody());
         } else {
             ((PairChat) abstractChat).addMessage(XmppURI.parse(message.getFrom()), message.getBody());
@@ -228,7 +228,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void onActivate(final AbstractChat nextChat) {
         view.setInputText(nextChat.getSavedInput());
-        if (nextChat.getType() == AbstractChat.Type.groupchat) {
+        if (nextChat.isGroupChat()) {
             view.setGroupChatUsersPanelVisible(true);
             view.setInviteToGroupChatButtonVisible(true);
             final GroupChatPresenter groupChat = (GroupChatPresenter) nextChat;
@@ -302,7 +302,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void onUserColorChanged(final String color) {
         for (final AbstractChat chat : chats.values()) {
-            if (chat.getType() == AbstractChat.Type.groupchat) {
+            if (chat.isGroupChat()) {
                 // TODO
             } else {
                 ((PairChat) chat).setSessionUserColor(color);
@@ -328,7 +328,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     }
 
     private void checkIsGroupChat(final AbstractChat chat) {
-        if (chat.getType() != AbstractChat.Type.groupchat) {
+        if (!chat.isGroupChat()) {
             new RuntimeException("You cannot do this operation in a this kind of chat");
         }
     }

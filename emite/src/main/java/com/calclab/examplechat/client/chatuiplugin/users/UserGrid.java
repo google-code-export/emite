@@ -74,15 +74,22 @@ public class UserGrid extends Panel {
         addUser(user, "<img src=\"" + img + "\">", "FIXME");
     }
 
-    public void udpateRosterItem(final PairChatUser user) {
-        Record recordToUpdate = store.getById(user.getUri().toString());
-        recordToUpdate.set(ALIAS, user.getAlias());
-        recordToUpdate.set(JID, user.getUri());
-        recordToUpdate.set(COLOR, user.getColor());
-        // FIXME: maybe use default status messages
-        recordToUpdate.set(STATUSTEXT, calculePresenceStatus(user.getPresence()));
-        recordToUpdate.set(STATUSIMG, StatusUtil.getStatusIcon(user.getSubscription(), user.getPresence()).getHTML());
-        recordToUpdate.set(IMG, user.getIconUrl());
+    public void udpateRosterItem(final PairChatUser user, final UserGridMenu menu) {
+        removeUser(user);
+        addUser(user, menu);
+        // menuMap.remove(user.getUri());
+        // menuMap.put(user.getUri(), menu);
+        // Record recordToUpdate = store.getById(user.getUri().toString());
+        // recordToUpdate.set(ALIAS, user.getAlias());
+        // recordToUpdate.set(JID, user.getUri());
+        // recordToUpdate.set(COLOR, user.getColor());
+        // // FIXME: maybe use default status messages
+        // recordToUpdate.set(STATUSTEXT,
+        // calculePresenceStatus(user.getPresence()));
+        // recordToUpdate.set(STATUSIMG,
+        // StatusUtil.getStatusIcon(user.getSubscription(),
+        // user.getPresence()).getHTML());
+        // recordToUpdate.set(IMG, user.getIconUrl());
     }
 
     private String calculePresenceStatus(final Presence presence) {

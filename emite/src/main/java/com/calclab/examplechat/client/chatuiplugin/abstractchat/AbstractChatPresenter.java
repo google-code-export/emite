@@ -77,6 +77,14 @@ public class AbstractChatPresenter implements AbstractChat {
         return chatType;
     }
 
+    public boolean isGroupChat() {
+        return chatType.equals(Type.groupchat);
+    }
+
+    public boolean isPairChat() {
+        return chatType.equals(Type.pairchat);
+    }
+
     public View getView() {
         return view;
     }
