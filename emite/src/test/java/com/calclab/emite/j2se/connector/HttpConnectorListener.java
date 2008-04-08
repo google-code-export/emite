@@ -1,4 +1,4 @@
-package com.calclab.emite.client.connector;
+package com.calclab.emite.j2se.connector;
 
 public interface HttpConnectorListener {
 	void onError(String id, String cause);
