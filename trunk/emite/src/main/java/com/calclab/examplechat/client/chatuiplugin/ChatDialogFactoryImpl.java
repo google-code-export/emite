@@ -39,10 +39,13 @@ import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
-import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
+import com.calclab.examplechat.client.chatuiplugin.roster.RosterUI;
+import com.calclab.examplechat.client.chatuiplugin.roster.RosterUIPanel;
+import com.calclab.examplechat.client.chatuiplugin.roster.RosterUIPresenter;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPanel;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPresenter;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 
 public class ChatDialogFactoryImpl implements ChatDialogFactory {
     public static class App {
@@ -58,16 +61,16 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
 
     public MultiChat createMultiChat(final AbstractXmpp xmpp, final MultiChatCreationParam param,
             final I18nTranslationService i18n, final MultiChatListener listener) {
-        final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, App.getInstance(), param, listener);
+        final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, App.getInstance(), param, listener);
         final MultiChatPanel panel = new MultiChatPanel(i18n, presenter);
         presenter.init(panel);
         return presenter;
     }
 
     public GroupChat createGroupChat(final Chat chat, final GroupChatListener listener,
-            final GroupChatUser currentSessionUser) {
+            final GroupChatUserType groupChatUserType) {
         final GroupChatUserList userList = createGroupChatUserList();
-        final GroupChatPresenter presenter = new GroupChatPresenter(chat, listener, currentSessionUser);
+        final GroupChatPresenter presenter = new GroupChatPresenter(chat, listener, groupChatUserType);
         presenter.setUserList(userList);
         final GroupChatPanel panel = new GroupChatPanel(presenter);
         presenter.init(panel);
@@ -81,10 +84,17 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         return userListPresenter;
     }
 
-    public PairChat createPairChat(final Chat chat, final PairChatListener listener,
-            final PairChatUser currentSessionUser, final PairChatUser otherUser) {
-        final PairChatPresenter presenter = new PairChatPresenter(chat, listener, currentSessionUser, otherUser);
+    public PairChat createPairChat(final Chat chat, final PairChatListener listener, final String currentSessionJid,
+            final PairChatUser otherUser) {
+        final PairChatPresenter presenter = new PairChatPresenter(chat, listener, currentSessionJid, otherUser);
         final PairChatPanel panel = new PairChatPanel(presenter);
+        presenter.init(panel);
+        return presenter;
+    }
+
+    public RosterUI createrRosterUI(final AbstractXmpp xmpp, final I18nTranslationService i18n) {
+        RosterUIPresenter presenter = new RosterUIPresenter(xmpp);
+        RosterUIPanel panel = new RosterUIPanel(i18n, presenter);
         presenter.init(panel);
         return presenter;
     }

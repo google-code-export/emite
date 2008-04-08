@@ -26,8 +26,10 @@ import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 
 public interface PairChat extends AbstractChat {
 
-	void addMessage(XmppURI userJid, String message);
+    void addMessage(XmppURI userJid, String message);
 
-	PairChatUser getOtherUser();
+    PairChatUser getOtherUser();
+
+    void setSessionUserColor(String color);
 
 }

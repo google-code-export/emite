@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.examplechat.client.chatuiplugin.utils;
+package com.calclab.examplechat.client.chatuiplugin.utils.emoticons;
 
 public interface EmoticonPaletteListener {
 

@@ -23,24 +23,20 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import java.util.HashMap;
 
+import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
-import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPanel;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListView;
-import com.calclab.examplechat.client.chatuiplugin.users.UserGrid;
-import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenu;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
-import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPaletteListener;
-import com.calclab.examplechat.client.chatuiplugin.utils.EmoticonPalettePanel;
+import com.calclab.examplechat.client.chatuiplugin.utils.emoticons.EmoticonPaletteListener;
+import com.calclab.examplechat.client.chatuiplugin.utils.emoticons.EmoticonPalettePanel;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -87,7 +83,6 @@ public class MultiChatPanel implements MultiChatView {
     private Panel groupChatUsersPanel;
     private Panel rosterPanel;
     private BottomTrayIcon bottomIcon;
-    private UserGrid rosterGrid;
     private ToolbarButton emoticonButton;
     private MultiChatPanelTopBar topToolbar;
     private MultiChatPanelInfoTab infoPanel;
@@ -135,10 +130,6 @@ public class MultiChatPanel implements MultiChatView {
 
     public void unHighlightChat(final AbstractChat chat) {
         // TODO
-    }
-
-    public void updateRosterItem(final PairChatUser user) {
-        rosterGrid.udpateRosterItem(user);
     }
 
     public void show() {
@@ -228,22 +219,6 @@ public class MultiChatPanel implements MultiChatView {
         }
     }
 
-    public void clearRoster() {
-        rosterGrid.removeAllUsers();
-    }
-
-    public void addRosterItem(final PairChatUser user) {
-        UserGridMenu menu = new UserGridMenu(presenter);
-        menu.addMenuOption(i18n.t("Start a chat with this person"), "chat-icon", EmiteUiPlugin.ON_PAIR_CHAT_START, user
-                .getUri());
-        rosterGrid.addUser(user, menu);
-    }
-
-    public void removeRosterItem(final PairChatUser user) {
-        rosterGrid.removeUser(user);
-        MessageBox.alert(i18n.t("[%s] has removed you from his/her buddie list", user.getUri().toString()));
-    }
-
     public void setGroupChatUsersPanelVisible(final boolean visible) {
         groupChatUsersPanel.setVisible(visible);
         if (visible == true) {
@@ -259,19 +234,6 @@ public class MultiChatPanel implements MultiChatView {
 
     public void setAddRosterItemButtonVisible(final boolean visible) {
         topToolbar.setAddRosterItemButtonVisible(visible);
-    }
-
-    public void confirmSusbscriptionRequest(final Presence presence) {
-        MessageBox.confirm(i18n.t("Confirm"), i18n.t("[%s] want to add you as a buddy. Do you want to permit?",
-                presence.getFrom()), new MessageBox.ConfirmCallback() {
-            public void execute(final String btnID) {
-                if (btnID.equals("yes")) {
-                    presenter.onPresenceAccepted(presence);
-                } else {
-                    presenter.onPresenceNotAccepted(presence);
-                }
-            }
-        });
     }
 
     public void setLoadingVisible(final boolean visible) {
@@ -371,7 +333,7 @@ public class MultiChatPanel implements MultiChatView {
                 final AbstractChatPresenter chatPresenter = (AbstractChatPresenter) panelIdToChat.get(panelId);
                 if (presenter.isCloseAllConfirmed() || chatPresenter.isCloseConfirmed()) {
                     panelIdToChat.remove(panelId);
-                    if (chatPresenter.getType() == AbstractChat.TYPE_PAIR_CHAT) {
+                    if (chatPresenter.getType() == AbstractChat.Type.pairchat) {
                         presenter.closePairChat((PairChatPresenter) chatPresenter);
                     } else {
                         removeGroupChatUsersPanel(((GroupChatPresenter) chatPresenter).getUsersListView());
@@ -420,8 +382,6 @@ public class MultiChatPanel implements MultiChatView {
         rosterPanel.setAutoScroll(true);
         rosterPanel.setIconCls("userf-icon");
         rosterPanel.setBorder(false);
-        rosterGrid = new UserGrid();
-        rosterPanel.add(rosterGrid);
         groupChatUsersPanel = new Panel(i18n.t("Now in this room"));
         groupChatUsersPanel.setLayout(new FitLayout());
         groupChatUsersPanel.setAutoScroll(true);
@@ -430,6 +390,10 @@ public class MultiChatPanel implements MultiChatView {
         usersPanel.add(rosterPanel);
         usersPanel.add(groupChatUsersPanel);
         return usersPanel;
+    }
+
+    public void attachRoster(final View view) {
+        rosterPanel.add((Panel) view);
     }
 
     private Panel createSubjectPanel() {

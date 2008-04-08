@@ -30,11 +30,9 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
 import com.calclab.examplechat.client.chatuiplugin.UserChatOptions;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
@@ -109,9 +107,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
         kunePluginManager.install(new EmiteUiPlugin());
 
         dispatcher.fire(EmiteUiPlugin.OPEN_MULTI_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions("http-bind",
-                "localhost"), new PairChatUser("images/person-def.gif", XmppURI.parse(userNameInput.getText()),
-                userNameInput.getText(), MultiChatView.DEF_USER_COLOR, presenceForTest), passwordInput.getText(),
-                new UserChatOptions(MultiChatView.DEF_USER_COLOR, Roster.DEF_SUBSCRIPTION_MODE)));
+                "localhost"), userNameInput.getText(), passwordInput.getText(), new UserChatOptions(
+                MultiChatView.DEF_USER_COLOR, Roster.DEF_SUBSCRIPTION_MODE)));
     }
 
     private void createInterface() {

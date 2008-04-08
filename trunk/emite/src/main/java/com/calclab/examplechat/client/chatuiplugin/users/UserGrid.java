@@ -28,6 +28,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.dialog.StatusUtil;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.ArrayReader;
@@ -38,6 +39,7 @@ import com.gwtext.client.data.RecordDef;
 import com.gwtext.client.data.Store;
 import com.gwtext.client.data.StringFieldDef;
 import com.gwtext.client.util.Format;
+import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.grid.CellMetadata;
 import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
@@ -46,7 +48,7 @@ import com.gwtext.client.widgets.grid.GridView;
 import com.gwtext.client.widgets.grid.Renderer;
 import com.gwtext.client.widgets.grid.event.GridRowListener;
 
-public class UserGrid extends GridPanel {
+public class UserGrid extends Panel {
 
     private static final String ALIAS = "alias";
     private static final String COLOR = "color";
@@ -58,14 +60,16 @@ public class UserGrid extends GridPanel {
     private final HashMap<XmppURI, UserGridMenu> menuMap;
     private RecordDef recordDef;
     private Store store;
+    private GridPanel grid;
 
     public UserGrid() {
+        setBorder(false);
         createGrid();
         menuMap = new HashMap<XmppURI, UserGridMenu>();
     }
 
     public void addUser(final GroupChatUser user) {
-        final String img = user.getUserType().equals(GroupChatUser.MODERADOR) ? "images/moderatoruser.gif"
+        final String img = user.getUserType().equals(GroupChatUserType.moderator) ? "images/moderatoruser.gif"
                 : "images/normaluser.gif";
         addUser(user, "<img src=\"" + img + "\">", "FIXME");
     }
@@ -77,7 +81,7 @@ public class UserGrid extends GridPanel {
         recordToUpdate.set(COLOR, user.getColor());
         // FIXME: maybe use default status messages
         recordToUpdate.set(STATUSTEXT, calculePresenceStatus(user.getPresence()));
-        recordToUpdate.set(STATUSIMG, StatusUtil.getStatusIcon(user.getPresence()).getHTML());
+        recordToUpdate.set(STATUSIMG, StatusUtil.getStatusIcon(user.getSubscription(), user.getPresence()).getHTML());
         recordToUpdate.set(IMG, user.getIconUrl());
     }
 
@@ -92,11 +96,8 @@ public class UserGrid extends GridPanel {
     }
 
     public void addUser(final PairChatUser user, final UserGridMenu menu) {
-        final AbstractImagePrototype statusAbsIcon = StatusUtil.getStatusIcon(user.getPresence());
-        // Image img = new Image();
-        // statusAbsIcon.applyTo(img);
-        // KuneUiUtils.setQuickTip(img.getElement(), user.getStatusText());
-
+        final AbstractImagePrototype statusAbsIcon = StatusUtil.getStatusIcon(user.getSubscription(), user
+                .getPresence());
         final String statusIcon = statusAbsIcon.getHTML();
         addUser(user, statusIcon, calculePresenceStatus(user.getPresence()));
         menuMap.put(user.getUri(), menu);
@@ -116,6 +117,7 @@ public class UserGrid extends GridPanel {
     }
 
     private void createGrid() {
+        grid = new GridPanel();
         fieldDefs = new FieldDef[] { new StringFieldDef(IMG), new StringFieldDef(JID), new StringFieldDef(ALIAS),
                 new StringFieldDef(COLOR), new StringFieldDef(STATUSIMG), new StringFieldDef(STATUSTEXT) };
         recordDef = new RecordDef(fieldDefs);
@@ -126,7 +128,7 @@ public class UserGrid extends GridPanel {
         reader.setId(1);
         store = new Store(proxy, reader);
         store.load();
-        this.setStore(store);
+        grid.setStore(store);
 
         // GroupingStore store = new GroupingStore();
         // store.setReader(reader);
@@ -156,9 +158,9 @@ public class UserGrid extends GridPanel {
                 new ColumnConfig("Image", IMG, 24, false, iconRender, IMG),
                 new ColumnConfig("Alias", ALIAS, 120, true, userAliasRender, ALIAS) };
         final ColumnModel columnModel = new ColumnModel(columnsConfigs);
-        this.setColumnModel(columnModel);
+        grid.setColumnModel(columnModel);
 
-        this.addGridRowListener(new GridRowListener() {
+        grid.addGridRowListener(new GridRowListener() {
 
             public void onRowClick(final GridPanel grid, final int rowIndex, final EventObject e) {
                 showMenu(rowIndex, e);
@@ -181,40 +183,22 @@ public class UserGrid extends GridPanel {
 
         });
 
-        // this.setAutoExpandColumn(ALIAS);
-        this.stripeRows(true);
+        // grid.setAutoExpandColumn(ALIAS);
+        grid.stripeRows(true);
         final GridView view = new GridView();
         // i18n
         view.setEmptyText("Nobody");
         // view.setAutoFill(true);
-        this.setView(view);
-        this.setHideColumnHeader(true);
-        this.setBorder(false);
+        grid.setView(view);
+        grid.setHideColumnHeader(true);
+        grid.setBorder(false);
         // countriesGrid.setEnableDragDrop(true);
         // countriesGrid.setDdGroup("myDDGroup");
+        super.add(grid);
     }
 
     public void removeAllUsers() {
         store.removeAll();
     }
-
-    // public void addList() {
-    // Use this to set a list of Users
-    // Object[][] data = new Object[rows][cols];
-    //
-    // RecordDef recordDef = new RecordDef(fields);
-    // ColumnModel columnModel = new ColumnModel(columns);
-    //
-    //
-    //
-    // MemoryProxy proxy = new MemoryProxy(data);
-    // ArrayReader reader = new ArrayReader(recordDef);
-    // store = new Store(proxy, reader);
-    // store.load();
-    //
-    // this.reconfigure(store, columnModel);
-    // }
-    //
-    // }
 
 }

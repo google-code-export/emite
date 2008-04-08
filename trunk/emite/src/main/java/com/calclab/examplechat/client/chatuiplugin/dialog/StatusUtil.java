@@ -24,6 +24,7 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
@@ -45,7 +46,7 @@ public class StatusUtil {
         case MultiChatView.STATUS_INVISIBLE:
             return icons.invisible();
         case MultiChatView.STATUS_XA:
-            return icons.extendedAway();
+            return icons.xa();
         case MultiChatView.STATUS_AWAY:
             return icons.away();
         case MultiChatView.STATUS_MESSAGE:
@@ -55,19 +56,7 @@ public class StatusUtil {
         }
     }
 
-    public static AbstractImagePrototype getStatusIcon(final Presence presence) {
-        // Other icons to use
-        // return icons.invisible();
-        // return icons.away();
-        // return icons.message();
-
-        // FIXME!!!
-
-        // final String subscription,
-        // if (subscription.equals("both") {
-        // else {
-        // }
-
+    public static AbstractImagePrototype getStatusIcon(final Subscription subscription, final Presence presence) {
         Type statusType;
         if (presence == null) {
             statusType = Presence.Type.unavailable;
@@ -75,24 +64,38 @@ public class StatusUtil {
             statusType = presence.getType();
         }
 
-        switch (statusType) {
-        case available:
-            switch (presence.getShow()) {
+        switch (subscription) {
+        case both:
+        case to:
+            switch (statusType) {
             case available:
-            case chat:
-                return icons.online();
-            case dnd:
-                return icons.busy();
-            case xa:
-                return icons.extendedAway();
+                switch (presence.getShow()) {
+                case available:
+                case chat:
+                    return icons.online();
+                case dnd:
+                    return icons.busy();
+                case xa:
+                    return icons.xa();
+                case away:
+                    return icons.away();
+                default:
+                    Log.debug("Status unknown" + presence.getShow());
+                    return icons.question();
+                }
+            case unavailable:
+                return icons.offline();
             default:
-                Log.debug("Status unknown" + presence.getShow());
-                return icons.online();
+                Log.error("Programatic error");
+                return icons.question();
             }
-        case unavailable:
-            return icons.offline();
+        case from:
+            return icons.notAuthorized();
+        case none:
+            return icons.notAuthorized();
         default:
-            throw new IndexOutOfBoundsException("Xmpp status unknown");
+            Log.error("Programatic error");
+            return icons.question();
         }
     }
 

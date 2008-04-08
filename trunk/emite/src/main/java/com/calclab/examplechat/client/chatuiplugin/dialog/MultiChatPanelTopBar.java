@@ -3,6 +3,7 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
+import com.calclab.examplechat.client.chatuiplugin.roster.RosterItemDialog;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.ColorPalette;

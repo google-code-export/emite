@@ -2,25 +2,24 @@ package com.calclab.examplechat.client.chatuiplugin.params;
 
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.examplechat.client.chatuiplugin.UserChatOptions;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 
 public class MultiChatCreationParam {
 
-    private final PairChatUser sessionUser;
-    private final String userPassword;
     private final BoshOptions boshOptions;
+    private final String userJid;
+    private final String userPassword;
     private final UserChatOptions userChatOptions;
 
-    public MultiChatCreationParam(final BoshOptions boshOptions, final PairChatUser sessionUser,
-            final String userPassword, final UserChatOptions userOptions) {
+    public MultiChatCreationParam(final BoshOptions boshOptions, final String userJid, final String userPasswd,
+            final UserChatOptions userChatOptions) {
         this.boshOptions = boshOptions;
-        this.sessionUser = sessionUser;
-        this.userPassword = userPassword;
-        this.userChatOptions = userOptions;
+        this.userJid = userJid;
+        this.userPassword = userPasswd;
+        this.userChatOptions = userChatOptions;
     }
 
-    public PairChatUser getSessionUser() {
-        return sessionUser;
+    public String getUserJid() {
+        return userJid;
     }
 
     public String getUserPassword() {

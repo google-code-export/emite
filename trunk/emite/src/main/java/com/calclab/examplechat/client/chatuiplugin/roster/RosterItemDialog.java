@@ -1,8 +1,11 @@
-package com.calclab.examplechat.client.chatuiplugin.dialog;
+package com.calclab.examplechat.client.chatuiplugin.roster;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
+import com.calclab.examplechat.client.chatuiplugin.dialog.BasicDialogExtended;
+import com.calclab.examplechat.client.chatuiplugin.dialog.BasicDialogListener;
+import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
 import com.gwtext.client.widgets.ToolTip;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.Label;

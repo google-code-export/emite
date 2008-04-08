@@ -21,9 +21,9 @@
  */
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
-import com.calclab.emite.client.xmpp.stanzas.Presence;
+import org.ourproject.kune.platf.client.View;
+
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListView;
 
 public interface MultiChatView {
@@ -38,6 +38,7 @@ public interface MultiChatView {
     public static final int STATUS_MESSAGE = 6;
 
     public static final String DEF_USER_COLOR = "blue";
+    public static final String DEF_PAIR_USER_COLOR = "maroon";
 
     void addChat(AbstractChat chat);
 
@@ -50,8 +51,6 @@ public interface MultiChatView {
     String getInputText();
 
     void highlightChat(AbstractChat chat);
-
-    void removeRosterItem(PairChatUser user);
 
     void setInputEditable(boolean editable);
 
@@ -83,11 +82,7 @@ public interface MultiChatView {
 
     void activateChat(AbstractChat chat);
 
-    void addRosterItem(PairChatUser user);
-
     void setEmoticonButtonEnabled(boolean enabled);
-
-    void confirmSusbscriptionRequest(Presence presence);
 
     void setLoadingVisible(boolean visible);
 
@@ -99,8 +94,6 @@ public interface MultiChatView {
 
     void setRosterVisible(boolean visible);
 
-    void clearRoster();
-
-    void updateRosterItem(PairChatUser user);
+    void attachRoster(View view);
 
 }
