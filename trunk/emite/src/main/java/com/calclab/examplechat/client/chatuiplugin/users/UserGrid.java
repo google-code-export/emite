@@ -59,6 +59,7 @@ public class UserGrid extends Panel {
     private static final String STATUSTEXT = "statustext";
     private FieldDef[] fieldDefs;
     private final HashMap<XmppURI, UserGridMenu> menuMap;
+    private final HashMap<XmppURI, Record> recordMap;
     private RecordDef recordDef;
     private Store store;
     private GridPanel grid;
@@ -67,6 +68,7 @@ public class UserGrid extends Panel {
         setBorder(false);
         createGrid();
         menuMap = new HashMap<XmppURI, UserGridMenu>();
+        recordMap = new HashMap<XmppURI, Record>();
     }
 
     public void addUser(final GroupChatUser user) {
@@ -113,12 +115,14 @@ public class UserGrid extends Panel {
     }
 
     public void removeUser(final AbstractChatUser user) {
-        Record storeToRemove = store.getById(user.getUri().toString());
+        XmppURI userUri = user.getUri();
+        Record storeToRemove = recordMap.get(userUri);
         if (storeToRemove == null) {
             Log.error("Trying to remove a non existing roster item");
         } else {
             store.remove(storeToRemove);
-            menuMap.remove(user.getUri());
+            menuMap.remove(userUri);
+            recordMap.remove(userUri);
         }
     }
 
@@ -127,6 +131,7 @@ public class UserGrid extends Panel {
         String name = user.getAlias() != null ? user.getAlias() : user.getUri().getNode();
         final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getUri().toString(),
                 name, user.getColor(), statusIcon, statusText });
+        recordMap.put(user.getUri(), newUserRecord);
         store.add(newUserRecord);
     }
 
@@ -138,7 +143,7 @@ public class UserGrid extends Panel {
 
         final MemoryProxy proxy = new MemoryProxy(new Object[][] {});
 
-        final ArrayReader reader = new ArrayReader(1, recordDef);
+        final ArrayReader reader = new ArrayReader(2, recordDef);
         store = new Store(proxy, reader);
         store.load();
         grid.setStore(store);
@@ -212,6 +217,8 @@ public class UserGrid extends Panel {
 
     public void removeAllUsers() {
         store.removeAll();
+        recordMap.clear();
+        menuMap.clear();
     }
 
 }
