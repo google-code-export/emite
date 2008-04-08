@@ -73,7 +73,8 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                 if (user == null) {
                     Log.error("Trying to update a user non in roster");
                 } else {
-                    Log.info("Updating Roster item");
+                    Log.info("Updating roster item: " + item.getXmppURI() + " name: " + item.getName() + " subsc: "
+                            + item.getSubscription() + "show: " + item.getPresence().getShow());
                     view.updateRosterItem(user, createMenuItemList(item));
                 }
             }
@@ -82,7 +83,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                 for (final RosterItem item : roster) {
                     final String name = item.getName();
                     Log.info("Adding roster item: " + item.getXmppURI() + " name: " + name + " subsc: "
-                            + item.getSubscription());
+                            + item.getSubscription() + "show: " + item.getPresence().getShow());
                     PairChatUser user = new PairChatUser("images/person-def.gif", item);
                     rosterMap.put(user.getUri().getJID(), user);
                     view.addRosterItem(user, createMenuItemList(item));
@@ -123,14 +124,13 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                     case unavailable:
                         break;
                     default:
-                        Log.error("Programatic error");
+                        Log.error("Programatic error, show: " + presence.getShow());
                     }
                 case from:
-
                 case none:
                     break;
                 default:
-                    Log.error("Programatic error");
+                    Log.error("Programatic error, subscription: " + subscription);
                 }
                 return itemList;
             }

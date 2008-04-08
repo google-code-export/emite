@@ -80,7 +80,7 @@ public class StatusUtil {
                 case away:
                     return icons.away();
                 default:
-                    Log.debug("Status unknown" + presence.getShow());
+                    Log.debug("Status unknown " + presence.getShow());
                     return icons.question();
                 }
             case unavailable:
@@ -94,7 +94,7 @@ public class StatusUtil {
         case none:
             return icons.notAuthorized();
         default:
-            Log.error("Programatic error");
+            Log.error("Programatic error, subscription: " + subscription);
             return icons.question();
         }
     }

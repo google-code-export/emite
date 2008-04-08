@@ -167,7 +167,7 @@ public class PresenceManager extends EmiteComponent {
             emite.send(response);
         } else {
             // throw exception: its a programming error
-            throw new RuntimeException("Tryng to accept/deny a non subscription request");
+            throw new RuntimeException("Trying to accept/deny a non subscription request");
         }
     }
 }
