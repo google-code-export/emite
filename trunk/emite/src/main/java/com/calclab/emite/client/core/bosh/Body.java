@@ -21,12 +21,12 @@
  */
 package com.calclab.emite.client.core.bosh;
 
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 
 public class Body extends BasicStanza {
 
-	public Body(final Packet delegated) {
+	public Body(final APacket delegated) {
 		super(delegated);
 	}
 

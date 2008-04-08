@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Collection;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -33,14 +34,14 @@ public class SwingClient {
 	new SwingClient(new JFrame("emite swing client")).start();
     }
     private final ConversationsPanel conversationsPanel;
+    private final JFrame frame;
+
     private final LoginPanel loginPanel;
 
     private final JPanel root;
-
     private final RosterPanel rosterPanel;
-    private AbstractXmpp xmpp;
-    private final JFrame frame;
     private final JLabel status;
+    private AbstractXmpp xmpp;
 
     public SwingClient(final JFrame frame) {
 	this.frame = frame;
@@ -58,7 +59,11 @@ public class SwingClient {
 	});
 	rosterPanel = new RosterPanel(frame, new RosterPanelListener() {
 	    public void onAddRosterItem(final String uri, final String name) {
-		xmpp.getRoster().requestAddItem(uri, name, null);
+		xmpp.getRosterManager().requestAddItem(uri, name, null);
+	    }
+
+	    public void onRemoveItem(final RosterItem item) {
+		xmpp.getRosterManager().requestRemoveItem(item.getXmppURI().toString());
 	    }
 
 	    public void onStartChat(final RosterItem item) {
@@ -79,23 +84,23 @@ public class SwingClient {
     private void initXMPP() {
 	this.xmpp = TestHelper.createXMPP(new HttpConnectorListener() {
 	    public void onError(final String id, final String cause) {
-		print((id + "-ERROR: " + cause));
+		Log.debug("CONN # " + id + "-ERROR: " + cause);
 	    }
 
 	    public void onFinish(final String id, final long duration) {
-		print((id + "-FINISH " + duration + "ms"));
+		Log.debug("CONN # " + id + "-FINISH " + duration + "ms");
 	    }
 
 	    public void onResponse(final String id, final String response) {
-		print((id + "-RESPONSE: " + response));
+		Log.debug("CONN # " + id + "-RESPONSE: " + response);
 	    }
 
 	    public void onSend(final String id, final String xml) {
-		print((id + "-SENDING: " + xml));
+		Log.debug("CONN # " + id + "-SENDING: " + xml);
 	    }
 
 	    public void onStart(final String id) {
-		print((id + "-STARTED: " + id));
+		Log.debug("CONN # " + id + "-STARTED: " + id);
 	    }
 
 	});

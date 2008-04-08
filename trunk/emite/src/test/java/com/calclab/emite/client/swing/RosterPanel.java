@@ -1,6 +1,7 @@
 package com.calclab.emite.client.swing;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -38,14 +39,16 @@ public class RosterPanel extends JPanel {
     public static interface RosterPanelListener {
 	void onAddRosterItem(String uri, String name);
 
+	void onRemoveItem(RosterItem item);
+
 	void onStartChat(RosterItem item);
     }
 
-    private DefaultListModel model;
     private JPanel creationPanel;
     private JDialog currentDialog;
-    private final RosterPanelListener listener;
     private JList list;
+    private final RosterPanelListener listener;
+    private DefaultListModel model;
 
     public RosterPanel(final JFrame owner, final RosterPanelListener listener) {
 	super(new BorderLayout());
@@ -120,9 +123,22 @@ public class RosterPanel extends JPanel {
 		currentDialog.setVisible(true);
 	    }
 	});
-	final JPanel buttons = new JPanel();
+
+	final JButton btnRemoveContact = new JButton("remove contact");
+	btnRemoveContact.addActionListener(new ActionListener() {
+	    public void actionPerformed(final ActionEvent e) {
+		final RosterListItem item = (RosterListItem) list.getSelectedValue();
+		if (item != null) {
+		    listener.onRemoveItem(item.item);
+		}
+	    }
+
+	});
+
+	final JPanel buttons = new JPanel(new GridLayout(3, 1));
 	buttons.add(btnChat);
 	buttons.add(btnAddContact);
+	buttons.add(btnRemoveContact);
 	add(buttons, BorderLayout.SOUTH);
     }
 

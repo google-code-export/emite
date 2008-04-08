@@ -6,22 +6,22 @@ import java.util.List;
 
 import tigase.xml.Element;
 
-import com.calclab.emite.client.core.packet.AbstractPacket;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.DSLPacket;
+import com.calclab.emite.client.core.packet.APacket;
 
-public class TigasePacket extends AbstractPacket {
+public class TigasePacket extends DSLPacket {
     private final Element delegate;
 
     public TigasePacket(final Element element) {
 	this.delegate = element;
     }
 
-    public Packet add(final String nodeName, final String xmlns) {
+    public APacket add(final String nodeName, final String xmlns) {
 	throw new RuntimeException("not implemented");
     }
 
     // TODO
-    public void addChild(final Packet toBeSend) {
+    public void addChild(final APacket toBeSend) {
 	throw new RuntimeException("not implemented");
     }
 
@@ -39,12 +39,12 @@ public class TigasePacket extends AbstractPacket {
 	throw new RuntimeException("not implemented");
     }
 
-    public List<? extends Packet> getChildren() {
+    public List<? extends APacket> getChildren() {
 	final List<Element> children = delegate.getChildren();
 	return wrap(children);
     }
 
-    public List<Packet> getChildren(final String name) {
+    public List<APacket> getChildren(final String name) {
 	return wrap(delegate.getChildren(name));
     }
 
@@ -53,7 +53,7 @@ public class TigasePacket extends AbstractPacket {
 	return children != null ? children.size() : 0;
     }
 
-    public Packet getFirstChild(final String childName) {
+    public APacket getFirstChild(final String childName) {
 	final Element child = delegate.getChild(childName);
 	return child != null ? new TigasePacket(child) : null;
     }
@@ -63,7 +63,7 @@ public class TigasePacket extends AbstractPacket {
     }
 
     // TODO
-    public Packet getParent() {
+    public APacket getParent() {
 	throw new RuntimeException("not implemented");
     }
 
@@ -89,8 +89,8 @@ public class TigasePacket extends AbstractPacket {
 	return delegate.toString();
     }
 
-    private List<Packet> wrap(final List<Element> children) {
-	final ArrayList<Packet> result = new ArrayList<Packet>();
+    private List<APacket> wrap(final List<Element> children) {
+	final ArrayList<APacket> result = new ArrayList<APacket>();
 	if (children != null) {
 	    for (final Element e : children) {
 		result.add(new TigasePacket(e));

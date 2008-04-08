@@ -23,34 +23,34 @@ package com.calclab.emite.client.core.dispatcher;
 
 import com.calclab.emite.client.components.Startable;
 import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 public abstract class DispatcherComponent implements Startable {
 
-	protected Dispatcher dispatcher;
+    protected Dispatcher dispatcher;
 
-	public DispatcherComponent(final Dispatcher dispatcher) {
-		this.dispatcher = dispatcher;
-	}
+    public DispatcherComponent(final Dispatcher dispatcher) {
+	this.dispatcher = dispatcher;
+    }
 
-	public abstract void attach();
+    public abstract void attach();
 
-	public void onStartComponent() {
-		attach();
-	}
+    public void onStartComponent() {
+	attach();
+    }
 
-	public void onStopComponent() {
-	}
+    public void onStopComponent() {
+    }
 
-	public void when(final Packet packet, final PacketListener packetListener) {
-		when(new PacketMatcher(packet), packetListener);
-	}
+    public void when(final APacket aPacket, final PacketListener packetListener) {
+	when(new PacketMatcher(aPacket), packetListener);
+    }
 
-	public void when(final String packetName, final PacketListener packetListener) {
-		when(new PacketMatcher(packetName), packetListener);
-	}
+    public void when(final PacketMatcher matcher, final PacketListener packetListener) {
+	dispatcher.subscribe(matcher, packetListener);
+    }
 
-	private void when(final PacketMatcher matcher, final PacketListener packetListener) {
-		dispatcher.subscribe(matcher, packetListener);
-	}
+    public void when(final String packetName, final PacketListener packetListener) {
+	when(new PacketMatcher(packetName), packetListener);
+    }
 }

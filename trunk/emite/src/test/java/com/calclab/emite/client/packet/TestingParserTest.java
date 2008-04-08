@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 public class TestingParserTest {
 
@@ -21,14 +21,14 @@ public class TestingParserTest {
 	@Test
 	public void testReal() {
 		final TigaseXMLService parser = new TigaseXMLService();
-		final Packet body = parser.toXML(response);
-		final List<? extends Packet> stanzas = body.getChildren();
+		final APacket body = parser.toXML(response);
+		final List<? extends APacket> stanzas = body.getChildren();
 		assertEquals(1, stanzas.size());
-		final Packet features = stanzas.get(0);
+		final APacket features = stanzas.get(0);
 		assertEquals("stream:features", features.getName());
-		final Packet mechanisms = features.getChildren().get(0);
+		final APacket mechanisms = features.getChildren().get(0);
 		assertEquals("mechanisms", mechanisms.getName());
-		final Packet mec1 = mechanisms.getChildren().get(0);
+		final APacket mec1 = mechanisms.getChildren().get(0);
 		assertEquals("mechanism", mec1.getName());
 		assertEquals("DIGEST-MD5", mec1.getText());
 	}

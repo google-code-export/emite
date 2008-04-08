@@ -30,7 +30,7 @@ import java.util.List;
  * @author dani
  * 
  */
-public interface Packet {
+public interface APacket {
     /**
      * 
      * 
@@ -50,30 +50,30 @@ public interface Packet {
 
     public boolean hasAttribute(String name, String value);
 
-    public Packet With(final Packet child);
+    public APacket With(final APacket child);
 
-    Packet add(String nodeName, String xmlns);
+    APacket add(String nodeName, String xmlns);
 
-    void addChild(Packet child);
+    void addChild(APacket child);
 
     void addText(String text);
 
     String getAttribute(String name);
 
-    List<? extends Packet> getChildren();
+    List<? extends APacket> getChildren();
 
     /**
      * Return all the descendant childs with node name
      * 
      * @param name
      */
-    List<Packet> getChildren(String name);
+    List<APacket> getChildren(String name);
 
-    Packet getFirstChild(String childName);
+    APacket getFirstChild(String childName);
 
     String getName();
 
-    Packet getParent();
+    APacket getParent();
 
     String getText();
 
@@ -83,7 +83,7 @@ public interface Packet {
 
     void setText(String text);
 
-    Packet With(String name, long value);
+    APacket With(String name, long value);
 
     /**
      * Chain-able method to add a attribute
@@ -92,8 +92,8 @@ public interface Packet {
      * @param value
      * @return
      */
-    Packet With(String name, String value);
+    APacket With(String name, String value);
 
-    Packet WithText(String text);
+    APacket WithText(String text);
 
 }

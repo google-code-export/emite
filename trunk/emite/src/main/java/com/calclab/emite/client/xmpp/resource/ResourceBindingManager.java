@@ -26,7 +26,7 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -47,7 +47,7 @@ public class ResourceBindingManager extends EmiteComponent {
 	@Override
 	public void attach() {
 		when(SASLManager.Events.authorized, new PacketListener() {
-			public void handle(final Packet received) {
+			public void handle(final APacket received) {
 				final IQ iq = new IQ("bindRequest", IQ.Type.set);
 				iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).addText(
 						globals.getResourceName());
@@ -56,7 +56,7 @@ public class ResourceBindingManager extends EmiteComponent {
 			}
 		});
 		when(new IQ("bindRequest", IQ.Type.result, null), new PacketListener() {
-			public void handle(final Packet iq) {
+			public void handle(final APacket iq) {
 				final String jid = iq.getFirstChild("bind").getFirstChild("jid").getText();
 				final XmppURI uri = XmppURI.parse(jid);
 				globals.setOwnURI(uri);

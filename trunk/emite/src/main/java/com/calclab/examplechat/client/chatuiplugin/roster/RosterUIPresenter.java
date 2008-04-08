@@ -69,7 +69,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
     private void createXmppListeners() {
         roster.addListener(new RosterListener() {
             public void onItemPresenceChanged(final RosterItem item) {
-                PairChatUser user = rosterMap.get(item.getXmppURI().getJid());
+                PairChatUser user = rosterMap.get(item.getXmppURI().getJID());
                 if (user == null) {
                     Log.error("Trying to update a user non in roster");
                 } else {
@@ -84,7 +84,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                     Log.info("Adding roster item: " + item.getXmppURI() + " name: " + name + " subsc: "
                             + item.getSubscription());
                     PairChatUser user = new PairChatUser("images/person-def.gif", item);
-                    rosterMap.put(user.getUri().getJid(), user);
+                    rosterMap.put(user.getUri().getJID(), user);
                     view.addRosterItem(user, createMenuItemList(item));
                 }
             }
@@ -159,7 +159,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
 
             public void onUnsubscriptionReceived(final Presence presence) {
                 Log.info("UNSUBS RECEIVED");
-                view.removeRosterItem(rosterMap.get(presence.getFromURI().getJid()));
+                view.removeRosterItem(rosterMap.get(presence.getFromURI().getJID()));
             }
         });
     }

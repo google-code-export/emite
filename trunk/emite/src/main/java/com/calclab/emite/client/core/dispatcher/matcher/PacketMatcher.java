@@ -23,14 +23,14 @@ package com.calclab.emite.client.core.dispatcher.matcher;
 
 import java.util.HashMap;
 
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 public class PacketMatcher implements Matcher {
 	private final HashMap<String, String> attributes;
 	private final String name;
 
-	public PacketMatcher(final Packet packet) {
-		this(packet.getName(), packet.getAttributes());
+	public PacketMatcher(final APacket aPacket) {
+		this(aPacket.getName(), aPacket.getAttributes());
 	}
 
 	public PacketMatcher(final String packetName) {
@@ -46,7 +46,7 @@ public class PacketMatcher implements Matcher {
 		return name;
 	}
 
-	public boolean matches(final Packet stanza) {
+	public boolean matches(final APacket stanza) {
 		if (attributes == null) {
 			return true;
 		}

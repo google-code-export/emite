@@ -27,7 +27,7 @@ import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 
 public class DispatcherDefault implements Dispatcher {
     private static class Subscriptor {
@@ -43,14 +43,15 @@ public class DispatcherDefault implements Dispatcher {
 
     private boolean isCurrentlyDispatching;
     private final DispatcherStateListenerCollection listeners;
-    private final ArrayList<Packet> queue;
+    private final ArrayList<APacket> queue;
 
     private final HashMap<String, List<Subscriptor>> subscriptors;
 
     public DispatcherDefault() {
 	this.subscriptors = new HashMap<String, List<Subscriptor>>();
+	subscriptors.put(null, new ArrayList<Subscriptor>());
 	this.listeners = new DispatcherStateListenerCollection();
-	this.queue = new ArrayList<Packet>();
+	this.queue = new ArrayList<APacket>();
 	this.isCurrentlyDispatching = false;
     }
 
@@ -62,28 +63,24 @@ public class DispatcherDefault implements Dispatcher {
 
     }
 
-    public void publish(final Packet packet) {
-	Log.debug("PUBLISHING: " + packet);
-	queue.add(packet);
+    public void publish(final APacket aPacket) {
+	Log.debug("PUBLISHING: " + aPacket);
+	queue.add(aPacket);
 	if (!isCurrentlyDispatching) {
 	    start();
 	}
     }
 
     public void subscribe(final Matcher matcher, final PacketListener packetListener) {
-	// Log.debug("Subscribing to: " + matcher.getElementName());
 	final List<Subscriptor> list = getSubscriptorList(matcher.getElementName());
 	list.add(new Subscriptor(matcher, packetListener));
     }
 
-    private void fireActions(final Packet packet, final List<Subscriptor> subscriptors) {
-	// Log.debug("Found " + subscriptors.size() + " subscriptors to
-	// " +
-	// packet.getName());
+    private void fireActions(final APacket aPacket, final List<Subscriptor> subscriptors) {
 	for (final Subscriptor subscriptor : subscriptors) {
-	    if (subscriptor.matcher.matches(packet)) {
+	    if (subscriptor.matcher.matches(aPacket)) {
 		Log.debug("Subscriptor found!");
-		subscriptor.packetListener.handle(packet);
+		subscriptor.packetListener.handle(aPacket);
 	    }
 	}
     }
@@ -103,14 +100,12 @@ public class DispatcherDefault implements Dispatcher {
     private void start() {
 	listeners.fireBeforeDispatch();
 	isCurrentlyDispatching = true;
-	// Log.debug("begin dispatch loop");
 	while (queue.size() > 0) {
-	    final Packet next = queue.remove(0);
-	    // Log.debug("dispatching: " + next);
+	    final APacket next = queue.remove(0);
+	    fireActions(next, subscriptors.get(null));
 	    fireActions(next, getSubscriptorList(next.getName()));
 	}
 	isCurrentlyDispatching = false;
-	// Log.debug("end dispatch loop");
 	listeners.fireAfterDispatch();
     }
 

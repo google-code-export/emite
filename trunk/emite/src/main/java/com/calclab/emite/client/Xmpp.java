@@ -38,6 +38,7 @@ import com.calclab.emite.client.im.chat.ChatPlugin;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.presence.PresencePlugin;
 import com.calclab.emite.client.im.roster.Roster;
+import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterPlugin;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionOptions;
@@ -46,60 +47,64 @@ import com.calclab.emite.client.xmpp.session.SessionPlugin;
 public class Xmpp implements AbstractXmpp {
 
     public static AbstractXmpp create(final BoshOptions options) {
-        final GWTXMLService xmlService = new GWTXMLService();
-        final GWTConnector connector = new GWTConnector();
-        final GWTScheduler scheduler = new GWTScheduler();
-        return create(connector, xmlService, scheduler, options);
+	final GWTXMLService xmlService = new GWTXMLService();
+	final GWTConnector connector = new GWTConnector();
+	final GWTScheduler scheduler = new GWTScheduler();
+	return create(connector, xmlService, scheduler, options);
     }
 
     public static AbstractXmpp create(final Connector connector, final XMLService xmlService,
-            final Scheduler scheduler, final BoshOptions options) {
+	    final Scheduler scheduler, final BoshOptions options) {
 
-        final Container container = ContainerPlugin.create();
-        Plugins.installDefaultPlugins(container, xmlService, connector, scheduler, options);
-        container.onStartComponent();
-        return new Xmpp(container);
+	final Container container = ContainerPlugin.create();
+	Plugins.installDefaultPlugins(container, xmlService, connector, scheduler, options);
+	container.onStartComponent();
+	return new Xmpp(container);
     }
 
     private final Container container;
     private final Session session;
 
     public Xmpp(final Container container) {
-        this.container = container;
-        this.session = SessionPlugin.getSession(container);
+	this.container = container;
+	this.session = SessionPlugin.getSession(container);
     }
 
     public ChatManagerDefault getChat() {
-        return ChatPlugin.getChat(container);
+	return ChatPlugin.getChat(container);
     }
 
     public Container getComponents() {
-        return container;
+	return container;
     }
 
     public Dispatcher getDispatcher() {
-        return DispatcherPlugin.getDispatcher(container);
+	return DispatcherPlugin.getDispatcher(container);
     }
 
     public PresenceManager getPresenceManager() {
-        return PresencePlugin.getManager(container);
+	return PresencePlugin.getManager(container);
     }
 
     public Roster getRoster() {
-        return RosterPlugin.getRoster(container);
+	return RosterPlugin.getRoster(container);
+    }
+
+    public RosterManager getRosterManager() {
+	return RosterPlugin.getRosterManager(container);
     }
 
     public Session getSession() {
-        return session;
+	return session;
     }
 
     public void login(final String userName, final String userPassword) {
-        Log.debug("XMPP Login " + userName + " : " + userPassword);
-        session.login(new SessionOptions(userName, userPassword));
+	Log.debug("XMPP Login " + userName + " : " + userPassword);
+	session.login(new SessionOptions(userName, userPassword));
     }
 
     public void logout() {
-        session.logout();
+	session.logout();
     }
 
 }

@@ -24,18 +24,18 @@ package com.calclab.emite.client.core.packet;
 import java.util.HashMap;
 import java.util.List;
 
-public class DelegatedPacket extends AbstractPacket {
-	private final Packet delegate;
+public class DelegatedPacket extends DSLPacket {
+	private final APacket delegate;
 
-	public DelegatedPacket(final Packet delegate) {
+	public DelegatedPacket(final APacket delegate) {
 		this.delegate = delegate;
 	}
 
-	public final Packet add(final String nodeName, final String xmlns) {
+	public final APacket add(final String nodeName, final String xmlns) {
 		return delegate.add(nodeName, xmlns);
 	}
 
-	public void addChild(final Packet child) {
+	public void addChild(final APacket child) {
 		delegate.addChild(child);
 	}
 
@@ -51,11 +51,11 @@ public class DelegatedPacket extends AbstractPacket {
 		return delegate.getAttributes();
 	}
 
-	public List<? extends Packet> getChildren() {
+	public List<? extends APacket> getChildren() {
 		return delegate.getChildren();
 	}
 
-	public List<Packet> getChildren(final String name) {
+	public List<APacket> getChildren(final String name) {
 		return delegate.getChildren(name);
 	}
 
@@ -63,7 +63,7 @@ public class DelegatedPacket extends AbstractPacket {
 		return delegate.getChildrenCount();
 	}
 
-	public final Packet getFirstChild(final String childName) {
+	public final APacket getFirstChild(final String childName) {
 		return delegate.getFirstChild(childName);
 	}
 
@@ -71,7 +71,7 @@ public class DelegatedPacket extends AbstractPacket {
 		return delegate.getName();
 	}
 
-	public Packet getParent() {
+	public APacket getParent() {
 		return delegate.getParent();
 	}
 

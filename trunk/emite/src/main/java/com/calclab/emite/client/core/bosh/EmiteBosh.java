@@ -27,7 +27,7 @@ import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.APacket;
 import com.calclab.emite.client.core.services.XMLService;
 
 public class EmiteBosh extends DispatcherComponent implements Emite {
@@ -37,11 +37,11 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 
     private Body body;
 
+    private final boolean isDispatching;
+
     private long rid;
 
     private final XMLService xmler;
-
-    private final boolean isDispatching;
 
     public EmiteBosh(final Dispatcher dispatcher, final XMLService xmler) {
 	super(dispatcher);
@@ -64,22 +64,17 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
     @Override
     public void attach() {
 	when(EmiteBosh.Events.send, new PacketListener() {
-	    public void handle(final Packet received) {
-		final List<? extends Packet> children = received.getChildren();
-		for (final Packet child : children) {
+	    public void handle(final APacket received) {
+		final List<? extends APacket> children = received.getChildren();
+		for (final APacket child : children) {
 		    body.addChild(child);
 		}
 	    }
 	});
     }
 
-    public Packet bodyFromResponse(final String content) {
+    public APacket bodyFromResponse(final String content) {
 	return xmler.toXML(content);
-    }
-
-    public void restartRID() {
-	rid = (long) (Math.random() * 1245234);
-	this.body = null;
     }
 
     public void clearBody() {
@@ -109,8 +104,13 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	dispatcher.publish(event);
     }
 
-    public void send(final Packet packet) {
-	dispatcher.publish(new Event(EmiteBosh.Events.send).With(packet));
+    public void restartRID() {
+	rid = (long) (Math.random() * 1245234);
+	this.body = null;
+    }
+
+    public void send(final APacket aPacket) {
+	dispatcher.publish(new Event(EmiteBosh.Events.send).With(aPacket));
     }
 
 }
