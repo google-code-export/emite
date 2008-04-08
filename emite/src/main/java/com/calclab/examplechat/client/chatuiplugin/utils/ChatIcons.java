@@ -39,11 +39,6 @@ public interface ChatIcons extends ImageBundle {
     }
 
     /**
-     * @gwt.resource chat.png
-     */
-    AbstractImagePrototype chat();
-
-    /**
      * @gwt.resource away.png
      */
     AbstractImagePrototype away();
@@ -54,14 +49,19 @@ public interface ChatIcons extends ImageBundle {
     AbstractImagePrototype busy();
 
     /**
-     * @gwt.resource message.png
+     * @gwt.resource chat.png
      */
-    AbstractImagePrototype message();
+    AbstractImagePrototype chat();
 
     /**
-     * @gwt.resource invisible.png
+     * @gwt.resource group-chat.png
      */
-    AbstractImagePrototype invisible();
+    AbstractImagePrototype groupChat();
+
+    /**
+     * @gwt.resource info-lamp.png
+     */
+    AbstractImagePrototype infoLamp();
 
     /**
      * @gwt.resource info.png
@@ -69,9 +69,34 @@ public interface ChatIcons extends ImageBundle {
     AbstractImagePrototype info();
 
     /**
-     * @gwt.resource xa.png
+     * @gwt.resource invisible.png
      */
-    AbstractImagePrototype extendedAway();
+    AbstractImagePrototype invisible();
+
+    /**
+     * @gwt.resource message.png
+     */
+    AbstractImagePrototype message();
+
+    /**
+     * @gwt.resource new-chat.png
+     */
+    AbstractImagePrototype newChat();
+
+    /**
+     * @gwt.resource new-email.png
+     */
+    AbstractImagePrototype newEmail();
+
+    /**
+     * @gwt.resource new-message.png
+     */
+    AbstractImagePrototype newMessage();
+
+    /**
+     * @gwt.resource not-authorized.png
+     */
+    AbstractImagePrototype notAuthorized();
 
     /**
      * @gwt.resource offline.png
@@ -84,8 +109,23 @@ public interface ChatIcons extends ImageBundle {
     AbstractImagePrototype online();
 
     /**
+     * @gwt.resource question.png
+     */
+    AbstractImagePrototype question();
+
+    /**
+     * @gwt.resource unavailable.png
+     */
+    AbstractImagePrototype unavailable();
+
+    /**
      * @gwt.resource user_add.png
      */
     AbstractImagePrototype userAdd();
+
+    /**
+     * @gwt.resource xa.png
+     */
+    AbstractImagePrototype xa();
 
 }

@@ -24,16 +24,22 @@ package com.calclab.examplechat.client.chatuiplugin.pairchat;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 
 public class PairChatPresenter extends AbstractChatPresenter implements PairChat {
 
     private final PairChatUser otherUser;
     final PairChatListener listener;
+    private String currenUserColor;
+    private final String currentSessionJid;
 
-    public PairChatPresenter(final Chat chat, final PairChatListener listener, final PairChatUser currentSessionUser,
+    public PairChatPresenter(final Chat chat, final PairChatListener listener, final String currentSessionJid,
             final PairChatUser otherUser) {
-        super(chat, currentSessionUser, TYPE_PAIR_CHAT);
+        super(chat, AbstractChat.Type.pairchat);
+        this.currentSessionJid = currentSessionJid;
+        this.currenUserColor = MultiChatView.DEF_PAIR_USER_COLOR;
         this.otherUser = otherUser;
         this.input = "";
         this.listener = listener;
@@ -42,8 +48,8 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
     public void addMessage(final XmppURI userUri, final String message) {
         String userColor;
 
-        if (sessionUser.getUri().equals(userUri) || sessionUser.getUri().getJid().equals(userUri.getJid())) {
-            userColor = sessionUser.getColor();
+        if (currentSessionJid.equals(userUri) || currentSessionJid.equals(userUri.getJid())) {
+            userColor = currenUserColor;
         } else if (otherUser.getUri().equals(userUri) || otherUser.getUri().getJid().equals(userUri.getJid())) {
             // FIXME Roster / Jids Problems...
             userColor = otherUser.getColor();
@@ -71,6 +77,10 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
 
     public void onDeactivate() {
         listener.onDeactivate(this);
+    }
+
+    public void setSessionUserColor(final String color) {
+        this.currenUserColor = color;
     }
 
 }

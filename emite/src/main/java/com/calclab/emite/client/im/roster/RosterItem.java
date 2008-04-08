@@ -29,44 +29,71 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class RosterItem {
+
+    public static enum Subscription {
+        /**
+         * "both" -- both the user and the contact have subscriptions to each
+         * other's presence information
+         */
+        both,
+        /**
+         * "from" -- the contact has a subscription to the user's presence
+         * information, but the user does not have a subscription to the
+         * contact's presence information
+         */
+        from,
+        /**
+         * "none" -- the user does not have a subscription to the contact's
+         * presence information, and the contact does not have a subscription to
+         * the user's presence information
+         */
+        none,
+        /**
+         * "to" -- the user has a subscription to the contact's presence
+         * information, but the contact does not have a subscription to the
+         * user's presence information
+         */
+        to
+    }
+
     private final ArrayList<String> groups;
     private final String name;
-    private final String subscription;
+    private final Subscription subscription;
     private final XmppURI uri;
     private Presence presence;
 
-    public RosterItem(final XmppURI uri, final String subscription, final String name) {
-	this.uri = uri;
-	this.subscription = subscription;
-	this.name = name;
-	this.groups = new ArrayList<String>();
+    public RosterItem(final XmppURI uri, final Subscription subscription, final String name) {
+        this.uri = uri;
+        this.subscription = subscription;
+        this.name = name;
+        this.groups = new ArrayList<String>();
     }
 
     public List<String> getGroups() {
-	return groups;
+        return groups;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public Presence getPresence() {
-	return presence;
+        return presence;
     }
 
     public Type getPresenceType() {
-	return presence != null ? presence.getType() : Type.unavailable;
+        return presence != null ? presence.getType() : Type.unavailable;
     }
 
-    public String getSubscription() {
-	return subscription;
+    public Subscription getSubscription() {
+        return subscription;
     }
 
     public XmppURI getXmppURI() {
-	return uri;
+        return uri;
     }
 
     public void setPresence(final Presence presence) {
-	this.presence = presence;
+        this.presence = presence;
     }
 }

@@ -23,6 +23,7 @@ package com.calclab.examplechat.client.chatuiplugin.groupchat;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
@@ -37,8 +38,9 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
     private GroupChatUserList userList;
     final GroupChatListener listener;
 
-    public GroupChatPresenter(final Chat chat, final GroupChatListener listener, final GroupChatUser currentSessionUser) {
-        super(chat, currentSessionUser, TYPE_GROUP_CHAT);
+    public GroupChatPresenter(final Chat chat, final GroupChatListener listener,
+            final GroupChatUserType sessionGroupChatUserType) {
+        super(chat, AbstractChat.Type.groupchat);
         if (subject != null) {
             this.subject = getChatTitle();
         } else {
@@ -47,7 +49,7 @@ public class GroupChatPresenter extends AbstractChatPresenter implements GroupCh
         this.oldColor = 0;
         this.input = "";
         this.listener = listener;
-        this.sessionUserType = currentSessionUser.getUserType();
+        this.sessionUserType = sessionGroupChatUserType;
     }
 
     public void addMessage(final String userId, final String message) {

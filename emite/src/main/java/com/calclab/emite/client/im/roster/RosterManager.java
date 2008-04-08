@@ -28,6 +28,7 @@ import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -36,17 +37,17 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 public class RosterManager extends EmiteComponent {
 
     public static class Events {
-	public static final Event ready = new Event("roster:on:ready");
-	public static final Event addItem = new Event("roster:do:addItem");
+        public static final Event ready = new Event("roster:on:ready");
+        public static final Event addItem = new Event("roster:do:addItem");
     }
 
     private final Roster roster;
     private int id;
 
     public RosterManager(final Emite emite, final Roster roster) {
-	super(emite);
-	this.roster = roster;
-	id = 1;
+        super(emite);
+        this.roster = roster;
+        id = 1;
     }
 
     /**
@@ -55,32 +56,32 @@ public class RosterManager extends EmiteComponent {
      */
     @Override
     public void attach() {
-	when(SessionManager.Events.loggedIn, new PacketListener() {
-	    public void handle(final Packet received) {
-		emite.send(new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster", null));
-	    }
-	});
+        when(SessionManager.Events.loggedIn, new PacketListener() {
+            public void handle(final Packet received) {
+                emite.send(new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster", null));
+            }
+        });
 
-	when("presence", new PacketListener() {
-	    public void handle(final Packet received) {
-		onPresenceReceived(new Presence(received));
-	    }
-	});
+        when("presence", new PacketListener() {
+            public void handle(final Packet received) {
+                onPresenceReceived(new Presence(received));
+            }
+        });
 
-	when(new IQ("roster", IQ.Type.result, null), new PacketListener() {
-	    public void handle(final Packet received) {
-		setRosterItems(roster, received);
-		emite.publish(RosterManager.Events.ready);
-	    }
-	});
+        when(new IQ("roster", IQ.Type.result, null), new PacketListener() {
+            public void handle(final Packet received) {
+                setRosterItems(roster, received);
+                emite.publish(RosterManager.Events.ready);
+            }
+        });
 
-	when(RosterManager.Events.addItem, new PacketListener() {
-	    public void handle(final Packet received) {
-		final Packet iq = new IQ(nextID(), IQ.Type.set, null).WithQuery("jabber:iq:roster", received
-			.getFirstChild("item"));
-		emite.send(iq);
-	    }
-	});
+        when(RosterManager.Events.addItem, new PacketListener() {
+            public void handle(final Packet received) {
+                final Packet iq = new IQ(nextID(), IQ.Type.set, null).WithQuery("jabber:iq:roster", received
+                        .getFirstChild("item"));
+                emite.send(iq);
+            }
+        });
     }
 
     /**
@@ -93,34 +94,35 @@ public class RosterManager extends EmiteComponent {
      */
     protected void onPresenceReceived(final Presence presence) {
 
-	final RosterItem item = roster.findItemByURI(presence.getFromURI());
-	if (item != null) {
-	    item.setPresence(presence);
-	    roster.fireItemPresenceChanged(item);
-	}
+        final RosterItem item = roster.findItemByURI(presence.getFromURI());
+        if (item != null) {
+            item.setPresence(presence);
+            roster.fireItemPresenceChanged(item);
+        }
 
     }
 
     private RosterItem convert(final Packet item) {
-	final String jid = item.getAttribute("jid");
-	final XmppURI uri = XmppURI.parse(jid);
-	return new RosterItem(uri, item.getAttribute("subscription"), item.getAttribute("name"));
+        final String jid = item.getAttribute("jid");
+        final XmppURI uri = XmppURI.parse(jid);
+        final Subscription subscription = RosterItem.Subscription.valueOf(item.getAttribute("subscription"));
+        return new RosterItem(uri, subscription, item.getAttribute("name"));
     }
 
     private List<? extends Packet> getItems(final Packet packet) {
-	final List<? extends Packet> items = packet.getFirstChild("query").getChildren();
-	return items;
+        final List<? extends Packet> items = packet.getFirstChild("query").getChildren();
+        return items;
     }
 
     private String nextID() {
-	return "roster_" + id++;
+        return "roster_" + id++;
     }
 
     private void setRosterItems(final Roster roster, final Packet received) {
-	roster.clear();
-	for (final Packet item : getItems(received)) {
-	    roster.add(convert(item));
-	}
-	roster.fireRosterInitialized();
+        roster.clear();
+        for (final Packet item : getItems(received)) {
+            roster.add(convert(item));
+        }
+        roster.fireRosterInitialized();
     }
 }

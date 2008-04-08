@@ -23,6 +23,7 @@ package com.calclab.examplechat.client.chatuiplugin.utils;
 
 import org.ourproject.kune.platf.client.ui.KuneStringUtils;
 
+import com.calclab.examplechat.client.chatuiplugin.utils.emoticons.Emoticons;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;

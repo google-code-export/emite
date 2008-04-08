@@ -27,9 +27,9 @@ import com.calclab.emite.client.im.chat.Chat;
 
 public interface AbstractChat {
 
-    final int TYPE_GROUP_CHAT = 2;
-
-    final int TYPE_PAIR_CHAT = 1;
+    public static enum Type {
+        pairchat, groupchat
+    }
 
     void activate();
 
@@ -47,9 +47,7 @@ public interface AbstractChat {
 
     String getSavedInput();
 
-    String getSessionUserAlias();
-
-    int getType();
+    Type getType();
 
     View getView();
 
@@ -58,7 +56,5 @@ public interface AbstractChat {
     void saveOtherProperties();
 
     void setChatTitle(String chatTitle);
-
-    void setSessionUserColor(String color);
 
 }

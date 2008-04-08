@@ -21,7 +21,7 @@
  */
 package com.calclab.examplechat.client.chatuiplugin.users;
 
-import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
+import com.calclab.examplechat.client.chatuiplugin.AbstractPresenter;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.menu.BaseItem;
 import com.gwtext.client.widgets.menu.Item;
@@ -30,9 +30,9 @@ import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 
 public class UserGridMenu {
     private final Menu menu;
-    private final MultiChatPresenter presenter;
+    private final AbstractPresenter presenter;
 
-    public UserGridMenu(final MultiChatPresenter presenter) {
+    public UserGridMenu(final AbstractPresenter presenter) {
         this.presenter = presenter;
         menu = new Menu();
     }
