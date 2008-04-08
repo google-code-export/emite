@@ -82,7 +82,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                 for (final RosterItem item : roster) {
                     logPresence("Adding", item);
                     PairChatUser user = new PairChatUser("images/person-def.gif", item);
-                    rosterMap.put(user.getUri().getJID(), user);
+                    rosterMap.put(user.getJid(), user);
                     view.addRosterItem(user, createMenuItemList(item));
                 }
             }
@@ -94,62 +94,22 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                         + item.getSubscription() + " show: " + (presence == null ? null : presence.getShow()));
             }
 
-            private UserGridMenuItemList createMenuItemList(final RosterItem item) {
-                Type statusType;
-                UserGridMenuItemList itemList = new UserGridMenuItemList();
-                Presence presence = item.getPresence();
-                Subscription subscription = item.getSubscription();
-                if (presence == null) {
-                    statusType = Presence.Type.unavailable;
-                } else {
-                    statusType = presence.getType();
-                }
-                itemList.addItem(createStartChatMenuItem(item));
-                switch (subscription) {
-                case both:
-                case to:
-                    switch (statusType) {
-                    case available:
-                        switch (presence.getShow()) {
-                        case available:
-                        case chat:
-                        case dnd:
-                        case xa:
-                        case away:
-                            itemList.addItem(createRemoveBuddyMenuItem(item));
-                            break;
-                        default:
-                            Log.debug("Status unknown, show: " + presence.getShow());
-                        }
-                    case unavailable:
-                        break;
-                    default:
-                        Log.error("Programatic error, show: " + presence.getShow());
-                    }
-                    break;
-                case from:
-                case none:
-                    break;
-                default:
-                    Log.error("Programatic error, subscription: " + subscription);
-                }
-                return itemList;
-            }
-
-            private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final RosterItem item) {
-                return new UserGridMenuItem<XmppURI>("chat-icon", i18n.t("Remove from my buddies list"),
-                        EmiteUiPlugin.ON_CANCEL_SUBSCRITOR, item.getXmppURI());
-            }
-
-            private UserGridMenuItem<XmppURI> createStartChatMenuItem(final RosterItem item) {
-                return new UserGridMenuItem<XmppURI>("chat-icon", i18n.t("Start a chat with this buddie"),
-                        EmiteUiPlugin.ON_PAIR_CHAT_START, item.getXmppURI());
-            }
         });
 
         presenceManager.addListener(new PresenceListener() {
             public void onPresenceReceived(final Presence presence) {
                 Log.info("PRESENCE: " + presence.getFromURI());
+                PairChatUser user = rosterMap.get(presence.getFromURI().getJID());
+                if (user != null) {
+                    RosterItem rosterItem = roster.findItemByURI(user.getUri());
+                    if (rosterItem != null) {
+                        view.addRosterItem(user, createMenuItemList(rosterItem));
+                    } else {
+                        Log.error("Rootitem, not found of Presence received");
+                    }
+                } else {
+                    Log.error("User not found of Presence received");
+                }
             }
 
             public void onSubscriptionRequest(final Presence presence) {
@@ -173,6 +133,58 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                 view.removeRosterItem(rosterMap.get(presence.getFromURI().getJID()));
             }
         });
+    }
+
+    private UserGridMenuItemList createMenuItemList(final RosterItem item) {
+        Type statusType;
+        UserGridMenuItemList itemList = new UserGridMenuItemList();
+        Presence presence = item.getPresence();
+        Subscription subscription = item.getSubscription();
+        if (presence == null) {
+            statusType = Presence.Type.unavailable;
+        } else {
+            statusType = presence.getType();
+        }
+        itemList.addItem(createStartChatMenuItem(item));
+        switch (subscription) {
+        case both:
+        case to:
+            switch (statusType) {
+            case available:
+                switch (presence.getShow()) {
+                case available:
+                case chat:
+                case dnd:
+                case xa:
+                case away:
+                    itemList.addItem(createRemoveBuddyMenuItem(item));
+                    break;
+                default:
+                    Log.debug("Status unknown, show: " + presence.getShow());
+                }
+            case unavailable:
+                break;
+            default:
+                Log.error("Programatic error, show: " + presence.getShow());
+            }
+            break;
+        case from:
+        case none:
+            break;
+        default:
+            Log.error("Programatic error, subscription: " + subscription);
+        }
+        return itemList;
+    }
+
+    private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final RosterItem item) {
+        return new UserGridMenuItem<XmppURI>("chat-icon", i18n.t("Remove from my buddies list"),
+                EmiteUiPlugin.ON_CANCEL_SUBSCRITOR, item.getXmppURI());
+    }
+
+    private UserGridMenuItem<XmppURI> createStartChatMenuItem(final RosterItem item) {
+        return new UserGridMenuItem<XmppURI>("chat-icon", i18n.t("Start a chat with this buddie"),
+                EmiteUiPlugin.ON_PAIR_CHAT_START, item.getXmppURI());
     }
 
     @Override
