@@ -35,7 +35,9 @@ public class Roster {
 
     public static final SubscriptionMode DEF_SUBSCRIPTION_MODE = SubscriptionMode.manual;
 
+    private boolean isInit;
     private final HashMap<String, RosterItem> items;
+
     private final ArrayList<RosterListener> listeners;
 
     private SubscriptionMode subscriptionMode;
@@ -48,10 +50,6 @@ public class Roster {
 
     public void addListener(final RosterListener listener) {
 	listeners.add(listener);
-    }
-
-    public void clear() {
-	items.clear();
     }
 
     public RosterItem findItemByURI(final XmppURI uri) {
@@ -70,6 +68,11 @@ public class Roster {
 	return subscriptionMode;
     }
 
+    public void initStart() {
+	items.clear();
+	this.isInit = true;
+    }
+
     public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
 	this.subscriptionMode = subscriptionMode;
     }
@@ -85,9 +88,14 @@ public class Roster {
 	}
     }
 
-    void fireRosterInitialized() {
+    void initEnds() {
+	isInit = false;
+	fireRosterChanged();
+    }
+
+    private void fireRosterChanged() {
 	for (final RosterListener listener : listeners) {
-	    listener.onRosterInitialized(items.values());
+	    listener.onRosterChanged(items.values());
 	}
     }
 
