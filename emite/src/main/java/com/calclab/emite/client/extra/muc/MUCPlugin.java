@@ -8,10 +8,16 @@ import com.calclab.emite.client.core.bosh.Emite;
 
 public class MUCPlugin {
 
+    private static final String COMPONENTS_MANAGER = "muc:manager";
+
+    public static RoomManager getRoomManager(final Container components) {
+	return (RoomManager) components.get(COMPONENTS_MANAGER);
+    }
+
     public static void install(final Container container) {
 	final Emite emite = BoshPlugin.getEmite(container);
 	final Globals globals = ContainerPlugin.getGlobals(container);
-	final MUCRooms rooms = new MUCRooms(emite, globals);
-	container.install("rooms", rooms);
+	final MUCRoomManager rooms = new MUCRoomManager(emite, globals);
+	container.install(COMPONENTS_MANAGER, rooms);
     }
 }

@@ -31,7 +31,7 @@ public class MockitoXmpp implements AbstractXmpp {
 	session = mock(Session.class);
     }
 
-    public ChatManager getChat() {
+    public ChatManager getChatManager() {
 	return chat;
     }
 

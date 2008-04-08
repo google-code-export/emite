@@ -115,7 +115,7 @@ public class EmiteUiPlugin extends Plugin {
 
                 dispatcher.subscribe(EmiteUiPlugin.ON_PAIR_CHAT_START, new Action<XmppURI>() {
                     public void execute(final XmppURI param) {
-                        xmpp.getChat().newChat(param);
+                        xmpp.getChatManager().newChat(param);
                     }
                 });
 
