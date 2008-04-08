@@ -1,4 +1,4 @@
-package com.calclab.emite.client.scheduler;
+package com.calclab.emite.j2se.scheduler;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.services.ScheduledAction;

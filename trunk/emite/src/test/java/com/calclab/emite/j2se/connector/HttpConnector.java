@@ -1,4 +1,4 @@
-package com.calclab.emite.client.connector;
+package com.calclab.emite.j2se.connector;
 
 import java.io.IOException;
 import java.text.MessageFormat;
