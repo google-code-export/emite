@@ -10,7 +10,7 @@ import com.calclab.emite.client.xmpp.session.Session;
 
 public interface AbstractXmpp {
 
-    public ChatManager getChat();
+    public ChatManager getChatManager();
 
     public Container getComponents();
 

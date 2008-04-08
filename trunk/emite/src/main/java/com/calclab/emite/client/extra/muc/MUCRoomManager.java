@@ -1,6 +1,7 @@
 package com.calclab.emite.client.extra.muc;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.Emite;
@@ -13,19 +14,19 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.client.xmpp.stanzas.Message.MessageType;
 
-public class MUCRooms extends EmiteComponent implements Rooms {
+public class MUCRoomManager extends EmiteComponent implements RoomManager {
     private final Globals globals;
-    private final ArrayList<RoomsListener> listeners;
+    private final ArrayList<RoomManagerListener> listeners;
     private final ArrayList<Room> rooms;
 
-    public MUCRooms(final Emite emite, final Globals globals) {
+    public MUCRoomManager(final Emite emite, final Globals globals) {
 	super(emite);
 	this.globals = globals;
-	this.listeners = new ArrayList<RoomsListener>();
+	this.listeners = new ArrayList<RoomManagerListener>();
 	this.rooms = new ArrayList<Room>();
     }
 
-    public void addListener(final RoomsListener listener) {
+    public void addListener(final RoomManagerListener listener) {
 	listeners.add(listener);
     }
 
@@ -33,7 +34,7 @@ public class MUCRooms extends EmiteComponent implements Rooms {
     public void attach() {
 	when(SessionManager.Events.loggedIn, new PacketListener() {
 	    public void handle(final IPacket received) {
-		sendRoomsQuery();
+		sendMUCSupportQuery();
 	    }
 	});
 	when("message", new PacketListener() {
@@ -51,6 +52,17 @@ public class MUCRooms extends EmiteComponent implements Rooms {
 	}
     }
 
+    protected void sendMUCSupportQuery() {
+	final IQ iq = new IQ(Type.get).From(globals.getOwnURI()).To(globals.getDomain());
+	iq.setQuery("http://jabber.org/protocol/disco#info");
+	emite.send("disco", iq, new PacketListener() {
+	    public void handle(final IPacket received) {
+		System.out.println("MUC!!: " + received);
+		sendRoomsQuery();
+	    }
+	});
+    }
+
     /**
      * @see http://www.xmpp.org/extensions/xep-0045.html#disco-rooms
      */
@@ -59,7 +71,23 @@ public class MUCRooms extends EmiteComponent implements Rooms {
 	iq.setQuery("http://jabber.org/protocol/disco#items");
 	emite.send("rooms", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
+		onRoomsQuery(received);
 	    }
 	});
+    }
+
+    private void fireRoomsChanged() {
+	for (final RoomManagerListener listener : listeners) {
+	    listener.onRoomsChanged(rooms);
+	}
+    }
+
+    private void onRoomsQuery(final IPacket received) {
+	final List<? extends IPacket> items = received.getFirstChild("query").getChildren();
+	rooms.clear();
+	for (final IPacket packet : items) {
+	    rooms.add(new Room(packet.getAttribute("jid"), packet.getAttribute("name")));
+	}
+	fireRoomsChanged();
     }
 }

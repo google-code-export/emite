@@ -9,10 +9,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.AbstractXmpp;
 import com.calclab.emite.client.TestHelper;
+import com.calclab.emite.client.extra.muc.MUCPlugin;
+import com.calclab.emite.client.extra.muc.Room;
+import com.calclab.emite.client.extra.muc.RoomManager;
+import com.calclab.emite.client.extra.muc.RoomManagerListener;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
@@ -38,9 +43,11 @@ public class SwingClient {
 
     private final LoginPanel loginPanel;
 
+    private final RoomsPanel roomsPanel;
     private final JPanel root;
     private final RosterPanel rosterPanel;
     private final JLabel status;
+    private final JTabbedPane tabs;
     private AbstractXmpp xmpp;
 
     public SwingClient(final JFrame frame) {
@@ -67,16 +74,25 @@ public class SwingClient {
 	    }
 
 	    public void onStartChat(final RosterItem item) {
-		xmpp.getChat().newChat(item.getXmppURI());
+		xmpp.getChatManager().newChat(item.getXmppURI());
 	    }
 	});
+
+	roomsPanel = new RoomsPanel(new RoomsPanelListener() {
+	});
+
 	conversationsPanel = new ConversationsPanel();
 	status = new JLabel("emite test client");
 
 	root.add(loginPanel, BorderLayout.NORTH);
-	root.add(rosterPanel, BorderLayout.EAST);
 	root.add(conversationsPanel, BorderLayout.CENTER);
 	root.add(status, BorderLayout.SOUTH);
+
+	tabs = new JTabbedPane();
+	tabs.add("chats", rosterPanel);
+	tabs.add("rooms", roomsPanel);
+
+	root.add(tabs, BorderLayout.EAST);
 
 	initXMPP();
     }
@@ -105,13 +121,15 @@ public class SwingClient {
 	xmpp.getSession().addListener(new SessionListener() {
 	    public void onStateChanged(final State old, final State current) {
 		print("STATE: " + current);
-		loginPanel.showState("state: " + current.toString(), current == State.connected);
+		final boolean isConnected = current == State.connected;
+		loginPanel.showState("state: " + current.toString(), isConnected);
+		tabs.setEnabled(isConnected);
 		if (current == State.disconnected) {
 		    rosterPanel.clear();
 		}
 	    }
 	});
-	xmpp.getChat().addListener(new ChatManagerListener() {
+	xmpp.getChatManager().addListener(new ChatManagerListener() {
 	    public void onChatCreated(final Chat chat) {
 		final ChatPanel chatPanel = conversationsPanel.createChat(chat.getID(), new ChatPanelListener() {
 		    public void onSend(final ChatPanel source, final String text) {
@@ -162,6 +180,12 @@ public class SwingClient {
 
 	    public void onUnsubscriptionReceived(final Presence presence) {
 		print("UNSUBSCRIPTION!!: " + presence);
+	    }
+	});
+	final RoomManager roomManager = MUCPlugin.getRoomManager(xmpp.getComponents());
+	roomManager.addListener(new RoomManagerListener() {
+	    public void onRoomsChanged(final Collection<Room> rooms) {
+		roomsPanel.setRooms(rooms);
 	    }
 	});
     }

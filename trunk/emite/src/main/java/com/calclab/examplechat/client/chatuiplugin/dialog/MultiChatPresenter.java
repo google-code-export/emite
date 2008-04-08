@@ -367,7 +367,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 	    }
 	});
 
-	xmpp.getChat().addListener(new ChatManagerListener() {
+	xmpp.getChatManager().addListener(new ChatManagerListener() {
 	    public void onChatCreated(final Chat chat) {
 		createPairChat(chat);
 		chat.addListener(new ChatListener() {

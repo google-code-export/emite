@@ -132,7 +132,6 @@ public class RosterPanel extends JPanel {
 		    listener.onRemoveItem(item.item);
 		}
 	    }
-
 	});
 
 	final JPanel buttons = new JPanel(new GridLayout(3, 1));

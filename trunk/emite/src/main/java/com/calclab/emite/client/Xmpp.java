@@ -70,7 +70,7 @@ public class Xmpp implements AbstractXmpp {
 	this.session = SessionPlugin.getSession(container);
     }
 
-    public ChatManagerDefault getChat() {
+    public ChatManagerDefault getChatManager() {
 	return ChatPlugin.getChat(container);
     }
 
