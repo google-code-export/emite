@@ -33,7 +33,7 @@ public class RosterUIPanel extends UserGrid implements RosterUIView {
 
     public void removeRosterItem(final PairChatUser user) {
         super.removeUser(user);
-        MessageBox.alert(i18n.t("[%s] has removed you from his/her buddie list", user.getUri().toString()));
+        MessageBox.alert(i18n.t("[%s] has removed you from his/her buddies list", user.getUri().toString()));
     }
 
     public void confirmSusbscriptionRequest(final Presence presence) {
