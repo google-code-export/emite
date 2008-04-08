@@ -27,7 +27,7 @@ import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -58,11 +58,11 @@ public class PresenceManager extends EmiteComponent {
         this.listeners.add(presenceListener);
     }
 
-    public APacket answerTo(final Presence presence) {
+    public IPacket answerTo(final Presence presence) {
         return new Presence(globals.getOwnURI()).To(presence.getFrom());
     }
 
-    public APacket answerToSessionLogout() {
+    public IPacket answerToSessionLogout() {
         return new Presence(globals.getOwnURI()).With("type", "unavailable");
     }
 
@@ -73,20 +73,20 @@ public class PresenceManager extends EmiteComponent {
     @Override
     public void attach() {
         when(RosterManager.Events.ready, new PacketListener() {
-            public void handle(final APacket received) {
+            public void handle(final IPacket received) {
                 currentPresence = createInitialPresence();
                 emite.send(currentPresence);
             }
         });
 
         when("presence", new PacketListener() {
-            public void handle(final APacket received) {
+            public void handle(final IPacket received) {
                 onPresenceReceived(new Presence(received));
             }
         });
 
         when(SessionManager.Events.loggedOut, new PacketListener() {
-            public void handle(final APacket received) {
+            public void handle(final IPacket received) {
                 emite.send(answerToSessionLogout());
             }
         });

@@ -25,17 +25,17 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DelegatedPacket extends DSLPacket {
-	private final APacket delegate;
+	private final IPacket delegate;
 
-	public DelegatedPacket(final APacket delegate) {
+	public DelegatedPacket(final IPacket delegate) {
 		this.delegate = delegate;
 	}
 
-	public final APacket add(final String nodeName, final String xmlns) {
+	public final IPacket add(final String nodeName, final String xmlns) {
 		return delegate.add(nodeName, xmlns);
 	}
 
-	public void addChild(final APacket child) {
+	public void addChild(final IPacket child) {
 		delegate.addChild(child);
 	}
 
@@ -51,11 +51,11 @@ public class DelegatedPacket extends DSLPacket {
 		return delegate.getAttributes();
 	}
 
-	public List<? extends APacket> getChildren() {
+	public List<? extends IPacket> getChildren() {
 		return delegate.getChildren();
 	}
 
-	public List<APacket> getChildren(final String name) {
+	public List<IPacket> getChildren(final String name) {
 		return delegate.getChildren(name);
 	}
 
@@ -63,7 +63,7 @@ public class DelegatedPacket extends DSLPacket {
 		return delegate.getChildrenCount();
 	}
 
-	public final APacket getFirstChild(final String childName) {
+	public final IPacket getFirstChild(final String childName) {
 		return delegate.getFirstChild(childName);
 	}
 
@@ -71,7 +71,7 @@ public class DelegatedPacket extends DSLPacket {
 		return delegate.getName();
 	}
 
-	public APacket getParent() {
+	public IPacket getParent() {
 		return delegate.getParent();
 	}
 

@@ -21,25 +21,34 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 
 public class IQ extends BasicStanza {
     public static enum Type {
 	error, get, result, set
     }
 
-    public IQ(final APacket stanza) {
+    public IQ(final IPacket stanza) {
 	super(stanza);
     }
 
+    @Deprecated
     public IQ(final String id, final Type type) {
 	this(id, type, "jabber:client");
     }
 
     public IQ(final String id, final Type type, final String xmlns) {
 	super(NAME, xmlns);
-	setId(id);
-	setType(type.toString());
+	if (id != null) {
+	    setId(id);
+	}
+	if (type != null) {
+	    setType(type.toString());
+	}
+    }
+
+    public IQ(final Type type) {
+	this(null, type, "jabber:client");
     }
 
     public IQ From(final XmppURI from) {
@@ -47,12 +56,12 @@ public class IQ extends BasicStanza {
 	return this;
     }
 
-    public APacket Include(final String name, final String xmlns) {
+    public IPacket Include(final String name, final String xmlns) {
 	add(name, xmlns);
 	return this;
     }
 
-    public APacket setQuery(final String namespace) {
+    public IPacket setQuery(final String namespace) {
 	return add("query", namespace);
     }
 
@@ -62,8 +71,8 @@ public class IQ extends BasicStanza {
 	return this;
     }
 
-    public IQ WithQuery(final String queryNamespace, final APacket child) {
-	final APacket query = add("query", queryNamespace);
+    public IQ WithQuery(final String queryNamespace, final IPacket child) {
+	final IPacket query = add("query", queryNamespace);
 	if (child != null) {
 	    query.addChild(child);
 	}

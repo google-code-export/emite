@@ -6,7 +6,7 @@ import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -32,12 +32,12 @@ public class MUCRooms extends EmiteComponent implements Rooms {
     @Override
     public void attach() {
 	when(SessionManager.Events.loggedIn, new PacketListener() {
-	    public void handle(final APacket received) {
+	    public void handle(final IPacket received) {
 		sendRoomsQuery();
 	    }
 	});
 	when("message", new PacketListener() {
-	    public void handle(final APacket received) {
+	    public void handle(final IPacket received) {
 		onMessageReceived(new Message(received));
 	    }
 	});

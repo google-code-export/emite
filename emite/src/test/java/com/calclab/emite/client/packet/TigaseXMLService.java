@@ -2,7 +2,7 @@ package com.calclab.emite.client.packet;
 
 import java.util.Queue;
 
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.services.XMLService;
 
 import tigase.xml.DomBuilderHandler;
@@ -16,11 +16,11 @@ public class TigaseXMLService implements XMLService {
 		parser = new SimpleParser();
 	}
 
-	public String toString(final APacket aPacket) {
-		return aPacket.toString();
+	public String toString(final IPacket iPacket) {
+		return iPacket.toString();
 	}
 
-	public APacket toXML(final String xml) {
+	public IPacket toXML(final String xml) {
 		final DomBuilderHandler handler = new DomBuilderHandler();
 		parser.parse(handler, xml.toCharArray(), 0, xml.length());
 		final Queue<Element> parsedElements = handler.getParsedElements();

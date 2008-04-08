@@ -26,9 +26,9 @@ import java.util.List;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.packet.ABasicPacket;
 import com.calclab.emite.client.core.packet.Event;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
@@ -58,40 +58,43 @@ public class RosterManager extends EmiteComponent {
     @Override
     public void attach() {
 	when(SessionManager.Events.loggedIn, new PacketListener() {
-	    public void handle(final APacket received) {
-		emite.send(new IQ("roster", IQ.Type.get).WithQuery("jabber:iq:roster", null));
+	    public void handle(final IPacket received) {
+		emite.send("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
+		    public void handle(final IPacket received) {
+			setRosterItems(roster, received);
+			emite.publish(RosterManager.Events.ready);
+		    }
+		});
 	    }
 	});
 
 	when("presence", new PacketListener() {
-	    public void handle(final APacket received) {
+	    public void handle(final IPacket received) {
 		onPresenceReceived(new Presence(received));
 	    }
 	});
 
-	when(new IQ("roster", IQ.Type.result, null), new PacketListener() {
-	    public void handle(final APacket received) {
-		setRosterItems(roster, received);
-		emite.publish(RosterManager.Events.ready);
-	    }
-	});
-
     }
 
-    public void requestAddItem(final String uri, final String name, final String group) {
-	final APacket item = new ABasicPacket("item").With("jid", uri).With("name", name);
+    public void requestAddItem(final String JID, final String name, final String group) {
+	final IPacket item = new Packet("item").With("jid", JID).With("name", name);
 	if (group != null) {
-	    item.addChild(new ABasicPacket("group").WithText(group));
+	    item.addChild(new Packet("group").WithText(group));
 	}
-	final APacket iq = new IQ(nextID(), IQ.Type.set, null).WithQuery("jabber:iq:roster", item);
-	emite.send(iq);
-	final Presence presenceRequest = new Presence(Type.subscribe, null, XmppURI.parse(uri));
-	emite.send(presenceRequest);
+
+	final IPacket iq = new IQ(nextID(), IQ.Type.set, null).WithQuery("jabber:iq:roster", item);
+	emite.send("roster", iq, new PacketListener() {
+	    public void handle(final IPacket received) {
+		final Presence presenceRequest = new Presence(Type.subscribe, null, XmppURI.parse(JID));
+		emite.send(presenceRequest);
+	    }
+	});
+	roster.add(new RosterItem(XmppURI.parse(JID), RosterItem.Subscription.from, name));
     }
 
     public void requestRemoveItem(final String JID) {
-	final IQ iq = new IQ(nextID(), IQ.Type.set, null).WithQuery("jabber:iq:roster", new ABasicPacket("item").With(
-		"jid", JID).With("subscription", "remove"));
+	final IQ iq = new IQ(nextID(), IQ.Type.set, null).WithQuery("jabber:iq:roster", new Packet("item").With("jid",
+		JID).With("subscription", "remove"));
 	emite.send(iq);
     }
 
@@ -105,15 +108,15 @@ public class RosterManager extends EmiteComponent {
 
     }
 
-    private RosterItem convert(final APacket item) {
+    private RosterItem convert(final IPacket item) {
 	final String jid = item.getAttribute("jid");
 	final XmppURI uri = XmppURI.parse(jid);
 	final Subscription subscription = RosterItem.Subscription.valueOf(item.getAttribute("subscription"));
 	return new RosterItem(uri, subscription, item.getAttribute("name"));
     }
 
-    private List<? extends APacket> getItems(final APacket aPacket) {
-	final List<? extends APacket> items = aPacket.getFirstChild("query").getChildren();
+    private List<? extends IPacket> getItems(final IPacket iPacket) {
+	final List<? extends IPacket> items = iPacket.getFirstChild("query").getChildren();
 	return items;
     }
 
@@ -121,9 +124,9 @@ public class RosterManager extends EmiteComponent {
 	return "roster_" + id++;
     }
 
-    private void setRosterItems(final Roster roster, final APacket received) {
+    private void setRosterItems(final Roster roster, final IPacket received) {
 	roster.clear();
-	for (final APacket item : getItems(received)) {
+	for (final IPacket item : getItems(received)) {
 	    roster.add(convert(item));
 	}
 	roster.fireRosterInitialized();

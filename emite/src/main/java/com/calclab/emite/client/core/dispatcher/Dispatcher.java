@@ -22,13 +22,13 @@
 package com.calclab.emite.client.core.dispatcher;
 
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 
 public interface Dispatcher {
 
 	public void addListener(DispatcherStateListener listener);
 
-	public void publish(APacket aPacket);
+	public void publish(IPacket iPacket);
 
 	public void subscribe(Matcher matcher, PacketListener packetListener);
 

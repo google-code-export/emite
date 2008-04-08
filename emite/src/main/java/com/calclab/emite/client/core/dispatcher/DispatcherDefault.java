@@ -27,7 +27,7 @@ import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 
 public class DispatcherDefault implements Dispatcher {
     private static class Subscriptor {
@@ -43,7 +43,7 @@ public class DispatcherDefault implements Dispatcher {
 
     private boolean isCurrentlyDispatching;
     private final DispatcherStateListenerCollection listeners;
-    private final ArrayList<APacket> queue;
+    private final ArrayList<IPacket> queue;
 
     private final HashMap<String, List<Subscriptor>> subscriptors;
 
@@ -51,7 +51,7 @@ public class DispatcherDefault implements Dispatcher {
 	this.subscriptors = new HashMap<String, List<Subscriptor>>();
 	subscriptors.put(null, new ArrayList<Subscriptor>());
 	this.listeners = new DispatcherStateListenerCollection();
-	this.queue = new ArrayList<APacket>();
+	this.queue = new ArrayList<IPacket>();
 	this.isCurrentlyDispatching = false;
     }
 
@@ -63,9 +63,9 @@ public class DispatcherDefault implements Dispatcher {
 
     }
 
-    public void publish(final APacket aPacket) {
-	Log.debug("PUBLISHING: " + aPacket);
-	queue.add(aPacket);
+    public void publish(final IPacket iPacket) {
+	Log.debug("PUBLISHING: " + iPacket);
+	queue.add(iPacket);
 	if (!isCurrentlyDispatching) {
 	    start();
 	}
@@ -76,11 +76,11 @@ public class DispatcherDefault implements Dispatcher {
 	list.add(new Subscriptor(matcher, packetListener));
     }
 
-    private void fireActions(final APacket aPacket, final List<Subscriptor> subscriptors) {
+    private void fireActions(final IPacket iPacket, final List<Subscriptor> subscriptors) {
 	for (final Subscriptor subscriptor : subscriptors) {
-	    if (subscriptor.matcher.matches(aPacket)) {
+	    if (subscriptor.matcher.matches(iPacket)) {
 		Log.debug("Subscriptor found!");
-		subscriptor.packetListener.handle(aPacket);
+		subscriptor.packetListener.handle(iPacket);
 	    }
 	}
     }
@@ -101,7 +101,7 @@ public class DispatcherDefault implements Dispatcher {
 	listeners.fireBeforeDispatch();
 	isCurrentlyDispatching = true;
 	while (queue.size() > 0) {
-	    final APacket next = queue.remove(0);
+	    final IPacket next = queue.remove(0);
 	    fireActions(next, subscriptors.get(null));
 	    fireActions(next, getSubscriptorList(next.getName()));
 	}

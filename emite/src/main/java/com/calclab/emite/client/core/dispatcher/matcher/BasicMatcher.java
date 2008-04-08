@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.core.dispatcher.matcher;
 
-import com.calclab.emite.client.core.packet.APacket;
+import com.calclab.emite.client.core.packet.IPacket;
 
 public class BasicMatcher implements Matcher {
 	private final String attName;
@@ -43,7 +43,7 @@ public class BasicMatcher implements Matcher {
 		return name;
 	}
 
-	public boolean matches(final APacket stanza) {
+	public boolean matches(final IPacket stanza) {
 		final boolean isCorrectName = stanza.getName().equals(name);
 		if (isCorrectName) {
 			if (attName != null) {
