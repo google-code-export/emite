@@ -30,7 +30,7 @@ import com.calclab.emite.client.core.dispatcher.Dispatcher;
 public class Session {
 
     public static enum State {
-	authorized, connected, connecting, disconnected, error
+        authorized, connected, connecting, disconnected, error
     }
 
     private final Dispatcher dispatcher;
@@ -39,10 +39,10 @@ public class Session {
     private State state;
 
     public Session(final Dispatcher dispatcher, final Globals globals) {
-	this.globals = globals;
-	this.dispatcher = dispatcher;
-	state = State.disconnected;
-	this.listeners = new ArrayList<SessionListener>();
+        this.globals = globals;
+        this.dispatcher = dispatcher;
+        state = State.disconnected;
+        this.listeners = new ArrayList<SessionListener>();
     }
 
     /**
@@ -51,39 +51,45 @@ public class Session {
      * @param listener
      */
     public void addListener(final SessionListener listener) {
-	listeners.add(listener);
-	listener.onStateChanged(state, state);
+        listeners.add(listener);
+        listener.onStateChanged(state, state);
     }
 
     public State getState() {
-	return state;
+        return state;
     }
 
     public boolean isLoggedIn() {
-	return state == State.connected;
+        return state == State.connected;
     }
 
     public boolean isLoggedOut() {
-	return state == State.disconnected;
+        return state == State.disconnected;
+    }
+
+    // FIXME: Dani: he añadido esto (puedo intentar cambiar la propia presencia
+    // estando connecting... y claro, cascaría)
+    public boolean isConnecting() {
+        return state == State.connecting;
     }
 
     public void login(final SessionOptions sessionOptions) {
-	globals.setUserName(sessionOptions.getUserName());
-	globals.setPassword(sessionOptions.getPassword());
-	setState(State.connecting);
-	dispatcher.publish(BoshManager.Events.start);
+        globals.setUserName(sessionOptions.getUserName());
+        globals.setPassword(sessionOptions.getPassword());
+        setState(State.connecting);
+        dispatcher.publish(BoshManager.Events.start);
     }
 
     public void logout() {
-	dispatcher.publish(BoshManager.Events.stop);
-	dispatcher.publish(SessionManager.Events.loggedOut);
+        dispatcher.publish(BoshManager.Events.stop);
+        dispatcher.publish(SessionManager.Events.loggedOut);
     }
 
     public void setState(final State newState) {
-	final State oldState = this.state;
-	this.state = newState;
-	for (final SessionListener listener : listeners) {
-	    listener.onStateChanged(oldState, newState);
-	}
+        final State oldState = this.state;
+        this.state = newState;
+        for (final SessionListener listener : listeners) {
+            listener.onStateChanged(oldState, newState);
+        }
     }
 }
