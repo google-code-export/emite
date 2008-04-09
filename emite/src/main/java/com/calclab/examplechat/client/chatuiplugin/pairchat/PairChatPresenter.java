@@ -48,9 +48,10 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
     public void addMessage(final XmppURI userUri, final String message) {
         String userColor;
 
-        if (currentSessionJid.equals(userUri) || currentSessionJid.equals(userUri.getJIDAsString())) {
+        if (currentSessionJid.equals(userUri) || currentSessionJid.equals(userUri.getJID().toString())) {
             userColor = currenUserColor;
-        } else if (otherUser.getUri().equals(userUri) || otherUser.getUri().getJIDAsString().equals(userUri.getJIDAsString())) {
+        } else if (otherUser.getUri().equals(userUri)
+                || otherUser.getUri().getJID().toString().equals(userUri.getJID().toString())) {
             // FIXME Roster / Jids Problems...
             userColor = otherUser.getColor();
         } else {
