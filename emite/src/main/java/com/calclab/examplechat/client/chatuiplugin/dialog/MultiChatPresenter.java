@@ -38,6 +38,7 @@ import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
 import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
@@ -59,6 +60,7 @@ import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChat
 
 public class MultiChatPresenter implements MultiChat, GroupChatListener, PairChatListener {
     private static final OwnPresence OFFLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.offline);
+    private static final OwnPresence ONLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.online);
     private final HashMap<Chat, AbstractChat> chats;
     private boolean closeAllConfirmed;
     private AbstractChat currentChat;
@@ -179,8 +181,8 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         if (chats.size() > 0) {
             view.setInputEditable(true);
         }
-        // view.setOwnPresence(new
-        // OwnPresence(presenceManager.getCurrentPresence()));
+        Presence currentPresence = presenceManager.getCurrentPresence();
+        view.setOwnPresence(currentPresence != null ? new OwnPresence(currentPresence) : ONLINE_OWN_PRESENCE);
     }
 
     public void doAfterLogout() {
