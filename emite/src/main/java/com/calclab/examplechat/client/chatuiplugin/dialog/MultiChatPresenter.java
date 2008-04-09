@@ -232,7 +232,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         checkIsGroupChat(abstractChat);
         ((GroupChat) abstractChat).setSubject(newSubject);
         view.setSubject(newSubject);
-
     }
 
     public void init(final MultiChatView view) {
@@ -310,12 +309,20 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         case onlinecustom:
         case busy:
         case busycustom:
-            if (!xmpp.getSession().isLoggedOut()) {
+            if (xmpp.getSession().isLoggedOut()) {
                 xmpp.login(currentUserJid, currentUserPasswd);
+                // FIXME: (Vicente) sí, pensar en cambiar currentOwnPresence por
+                // delayed...
                 // this.delayedPresence = ....
                 // enviar el delayedPresence cuando se haya conectado
             } else {
-                xmpp.getPresenceManager().setOwnPresence(ownPresence.getStatusText(), Show.dnd);
+                if (xmpp.getSession().isConnecting()) {
+                    // do nothing, wait until online to set status
+                } else {
+                    // FIXME: Dani (Presence), si no está ni connecting, ni
+                    // login/logout esto cascaría ¿qué se te ocurre?
+                    xmpp.getPresenceManager().setOwnPresence(ownPresence.getStatusText(), Show.dnd);
+                }
             }
             break;
         case offline:
