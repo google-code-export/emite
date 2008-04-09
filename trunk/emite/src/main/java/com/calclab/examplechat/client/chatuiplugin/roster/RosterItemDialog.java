@@ -53,16 +53,17 @@ public class RosterItemDialog {
                     .tWithNT("Add", "used in button"), i18n.tWithNT("Cancel", "used in button"),
                     new BasicDialogListener() {
 
-                        public void onCancelButtonClick() {
+                        public void onFirstButtonClick() {
                             presenter.addRosterItem(name.getValueAsString(), jid.getValueAsString());
                             dialog.hide();
                             reset();
                         }
 
-                        public void onFirstButtonClick() {
+                        public void onCancelButtonClick() {
                             dialog.hide();
                             reset();
                         }
+
                     });
             dialog.setResizable(false);
             createForm();

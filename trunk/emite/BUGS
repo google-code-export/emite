@@ -23,4 +23,6 @@ ERROR: gwt-log failed to initialize valid server-side logging implementation
 [ERROR] Programatic error, status: subscribe
 
 - Other:
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message from="localhost" to="admin@localhost"><body>A server or plugin update was found: Openfire 3.5.0</body></message></body>
+causing:
 [FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: type has no properties

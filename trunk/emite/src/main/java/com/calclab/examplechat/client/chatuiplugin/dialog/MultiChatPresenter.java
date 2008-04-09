@@ -187,6 +187,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         case busy:
         case busycustom:
             presenceManager.setBusyPresence(ownPresence.getStatusText());
+            break;
         case offline:
             // We go online via external action (for instance a kune event)
             view.setOwnPresence(ownPresence = new OwnPresence(OwnStatus.online));
