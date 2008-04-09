@@ -39,6 +39,8 @@ public class OwnPresence {
         case away:
         case xa:
             Log.error("Code error: Show : " + show + " is not support in current UI");
+        default:
+            ownStatus = OwnStatus.online;
         }
     }
 
