@@ -53,7 +53,7 @@ public class AbstractChatUser {
     }
 
     public String getJid() {
-        return uri.getJIDAsString();
+        return uri.getJID().toString();
     }
 
     public void setAlias(final String alias) {

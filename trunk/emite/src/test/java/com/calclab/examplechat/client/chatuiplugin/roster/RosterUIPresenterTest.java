@@ -10,7 +10,6 @@ import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
-import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.MockitoXmpp;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
@@ -19,7 +18,6 @@ import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 
 public class RosterUIPresenterTest {
 
-    private String sessionUserJid;
     private PairChatUser otherUser;
     private PresenceManager presenceManager;
     private PresenceListener presenceListener;
@@ -34,7 +32,6 @@ public class RosterUIPresenterTest {
         final XmppURI otherUri = XmppURI.parse("matt@example.com");
         final RosterItem rosterItem = new RosterItem(otherUri, Subscription.both, "matt");
 
-        sessionUserJid = "lutherb@example.com";
         otherUser = new PairChatUser("", rosterItem, MultiChatView.DEF_PAIR_USER_COLOR);
 
         // Mocks creation
@@ -50,7 +47,7 @@ public class RosterUIPresenterTest {
         // Stubs
         Mockito.stub(factory.createrRosterUI(xmpp, i18n)).toReturn(rosterUI);
         Mockito.stub(rosterUI.getView()).toReturn(rosterUIView);
-        Mockito.stub(rosterUI.getUserByJid(otherUri.getJIDAsString())).toReturn(otherUser);
+        Mockito.stub(rosterUI.getUserByJid(otherUri.getJID().toString())).toReturn(otherUser);
     }
 
     @Test
@@ -61,7 +58,8 @@ public class RosterUIPresenterTest {
     @Test
     public void someTest() {
         rosterManager.requestAddItem(otherUser.getJid(), otherUser.getAlias(), "FIXME");
-        Presence presence = new Presence(Presence.Type.available, otherUser.getJid(), sessionUserJid);
+        // Presence presence = new Presence(Presence.Type.available,
+        // otherUser.getJid(), sessionUserJid);
         // rosterManager.onPresenceReceived(presence);
         // RosterItem item = roster.findItemByURI(otherUser.getUri());
         // assertTrue(item != null);

@@ -59,7 +59,7 @@ public class MultiChatPresenterTest {
         // Stubs
         Mockito.stub(factory.createrRosterUI(xmpp, i18n)).toReturn(rosterUI);
         Mockito.stub(rosterUI.getView()).toReturn(rosterUIView);
-        Mockito.stub(rosterUI.getUserByJid(otherUri.getJIDAsString())).toReturn(otherUser);
+        Mockito.stub(rosterUI.getUserByJid(otherUri.getJID().toString())).toReturn(otherUser);
         Mockito.stub(pairChat.getChat()).toReturn(chat);
         Mockito.stub(pairChat.getChat().getOtherURI()).toReturn(otherUri);
         Mockito.stub(

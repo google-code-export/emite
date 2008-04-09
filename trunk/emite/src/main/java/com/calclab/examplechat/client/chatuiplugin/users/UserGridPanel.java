@@ -29,6 +29,7 @@ import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser
 import com.calclab.examplechat.client.chatuiplugin.dialog.StatusUtil;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.ArrayReader;
@@ -57,8 +58,8 @@ public class UserGridPanel extends Panel {
     private static final String STATUSIMG = "status";
     private static final String STATUSTEXT = "statustext";
     private FieldDef[] fieldDefs;
-    private final HashMap<String, UserGridMenu> menuMap;
-    private final HashMap<String, Record> recordMap;
+    private final HashMap<XmppJID, UserGridMenu> menuMap;
+    private final HashMap<XmppJID, Record> recordMap;
     private RecordDef recordDef;
     private Store store;
     private GridPanel grid;
@@ -66,8 +67,8 @@ public class UserGridPanel extends Panel {
     public UserGridPanel() {
         setBorder(false);
         createGrid();
-        menuMap = new HashMap<String, UserGridMenu>();
-        recordMap = new HashMap<String, Record>();
+        menuMap = new HashMap<XmppJID, UserGridMenu>();
+        recordMap = new HashMap<XmppJID, Record>();
     }
 
     public void addUser(final GroupChatUser user) {
@@ -110,7 +111,7 @@ public class UserGridPanel extends Panel {
                 .getPresence());
         final String statusIcon = statusAbsIcon.getHTML();
         addUser(user, statusIcon, calculePresenceStatus(user.getPresence()));
-        menuMap.put(user.getJid(), menu);
+        menuMap.put(user.getJID(), menu);
         this.doLayout();
     }
 
@@ -132,7 +133,7 @@ public class UserGridPanel extends Panel {
         String statusText = statusTextOrig != null ? statusTextOrig : "";
         final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getUri().toString(),
                 name, user.getColor(), statusIcon, statusText });
-        recordMap.put(user.getJid(), newUserRecord);
+        recordMap.put(new XmppJID(user.getUri()), newUserRecord);
         store.add(newUserRecord);
     }
 
@@ -196,7 +197,7 @@ public class UserGridPanel extends Panel {
             private void showMenu(final int rowIndex, final EventObject e) {
                 final Record record = store.getRecordAt(rowIndex);
                 final String jid = record.getAsString(JID);
-                final UserGridMenu menu = menuMap.get(jid);
+                final UserGridMenu menu = menuMap.get(new XmppJID(jid));
                 menu.showMenu(e);
             }
 

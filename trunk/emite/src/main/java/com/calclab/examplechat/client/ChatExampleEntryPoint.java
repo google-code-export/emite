@@ -29,7 +29,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.im.roster.Roster;
-import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
 import com.calclab.examplechat.client.chatuiplugin.UserChatOptions;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
@@ -37,21 +36,16 @@ import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.form.FormPanel;
+import com.gwtext.client.widgets.form.Label;
+import com.gwtext.client.widgets.form.TextField;
 
 public class ChatExampleEntryPoint implements EntryPoint {
     private DefaultDispatcher dispatcher;
-    private PasswordTextBox passwordInput;
-    private Presence presenceForTest;
-    private TextBox userNameInput;
+    private TextField passwd;
+    private TextField jid;
 
     public void onModuleLoad() {
         /*
@@ -83,22 +77,8 @@ public class ChatExampleEntryPoint implements EntryPoint {
     }
 
     public void onModuleLoadCont() {
-        createPresenceForTest();
-        createInterface();
+        createFormPanel();
         createExtUI();
-    }
-
-    private HorizontalPanel createButtonsPane() {
-        final HorizontalPanel buttons = new HorizontalPanel();
-
-        final Button btnPanic = new Button("Panic!", new ClickListener() {
-            public void onClick(final Widget arg0) {
-                panic();
-            }
-        });
-        buttons.add(btnPanic);
-
-        return buttons;
     }
 
     private void createExtUI() {
@@ -108,48 +88,44 @@ public class ChatExampleEntryPoint implements EntryPoint {
         kunePluginManager.install(new EmiteUiPlugin());
 
         dispatcher.fire(EmiteUiPlugin.OPEN_MULTI_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions("http-bind",
-                "localhost"), userNameInput.getText(), passwordInput.getText(), new UserChatOptions(
+                "localhost"), jid.getRawValue(), passwd.getRawValue(), new UserChatOptions(
                 MultiChatView.DEF_USER_COLOR, Roster.DEF_SUBSCRIPTION_MODE)));
     }
 
-    private void createInterface() {
-        final VerticalPanel vertical = new VerticalPanel();
-        vertical.add(createUserNamePane());
-        vertical.add(createPasswdPane());
-        vertical.add(new Label("Currently we are only supporting PLAIN authentication, "
-                + "them for your security, only use jabber test accounts."));
-        vertical.add(createButtonsPane());
+    private void createFormPanel() {
+        Panel panel = new Panel();
+        panel.setBorder(false);
+        panel.setPaddings(15);
 
-        RootPanel.get().add(vertical);
-    }
+        final FormPanel formPanel = new FormPanel();
+        formPanel.setFrame(true);
+        formPanel.setTitle("Some external Login Form");
 
-    private HorizontalPanel createUserNamePane() {
-        final HorizontalPanel userNamePanel = new HorizontalPanel();
-        userNameInput = new TextBox();
-        userNameInput.setText("admin@localhost");
-        userNamePanel.add(new Label("user name: "));
-        userNamePanel.add(userNameInput);
-        return userNamePanel;
-    }
+        formPanel.setWidth(350);
+        formPanel.setLabelWidth(75);
+        formPanel.setUrl("save-form.php");
 
-    private HorizontalPanel createPasswdPane() {
-        final HorizontalPanel passwdPanel = new HorizontalPanel();
-        passwordInput = new PasswordTextBox();
-        passwordInput.setText("easyeasy");
-        passwdPanel.add(new Label("password: "));
-        passwdPanel.add(passwordInput);
-        return passwdPanel;
-    }
+        Label label = new Label();
+        label.setHtml("<p>Currently we are only supporting PLAIN authentication, "
+                + "them for your security, only use jabber test accounts..</p>");
+        label.setCls("simple-form-label");
+        label.setWidth(350);
+        label.setHeight(20);
 
-    private void createPresenceForTest() {
-        presenceForTest = new Presence();
-        presenceForTest.setShow(Presence.Show.available);
-        presenceForTest.setType(Presence.Type.available.toString());
-        presenceForTest.setStatus("I\'m out for dinner");
-    }
+        jid = new TextField("Jabber id", "jid", 230);
+        jid.setAllowBlank(false);
+        jid.setValue("admin@localhost");
+        formPanel.add(jid);
 
-    private void panic() {
-        dispatcher.fire(EmiteUiPlugin.ON_PANIC, null);
+        passwd = new TextField("Password", "last", 230);
+        passwd.setAllowBlank(false);
+        passwd.setValue("easyeasy");
+        passwd.setPassword(true);
+        formPanel.add(passwd);
+
+        panel.add(formPanel);
+
+        RootPanel.get().add(panel);
     }
 
 }
