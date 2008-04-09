@@ -25,7 +25,6 @@ import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.dialog.StatusUtil;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
@@ -197,7 +196,7 @@ public class UserGridPanel extends Panel {
             private void showMenu(final int rowIndex, final EventObject e) {
                 final Record record = store.getRecordAt(rowIndex);
                 final String jid = record.getAsString(JID);
-                final UserGridMenu menu = menuMap.get(XmppURI.parse(jid));
+                final UserGridMenu menu = menuMap.get(jid);
                 menu.showMenu(e);
             }
 
