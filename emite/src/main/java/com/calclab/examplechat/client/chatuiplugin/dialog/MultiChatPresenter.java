@@ -179,7 +179,8 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         if (chats.size() > 0) {
             view.setInputEditable(true);
         }
-        view.setOwnPresence(new OwnPresence(presenceManager.getCurrentPresence()));
+        // view.setOwnPresence(new
+        // OwnPresence(presenceManager.getCurrentPresence()));
     }
 
     public void doAfterLogout() {
