@@ -307,6 +307,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         case connecting:
         case connected:
             presenceManager.setOwnPresence(statusText, status);
+            break;
         case error:
             Log.error("Trying to set status and whe have a internal error");
         }
