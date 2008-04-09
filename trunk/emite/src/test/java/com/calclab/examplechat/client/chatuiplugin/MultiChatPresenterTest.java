@@ -9,7 +9,6 @@ import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -35,7 +34,6 @@ public class MultiChatPresenterTest {
     private PairChatPresenter pairChat;
     private String sessionUserJid;
     private MockitoXmpp xmpp;
-    private RosterManager rosterManager;
 
     @Before
     public void begin() {
@@ -57,7 +55,6 @@ public class MultiChatPresenterTest {
         chatListener = Mockito.mock(ChatListener.class);
         pairChat = Mockito.mock(PairChatPresenter.class);
         chat = Mockito.mock(Chat.class);
-        rosterManager = xmpp.getRosterManager();
 
         // Stubs
         Mockito.stub(factory.createrRosterUI(xmpp, i18n)).toReturn(rosterUI);

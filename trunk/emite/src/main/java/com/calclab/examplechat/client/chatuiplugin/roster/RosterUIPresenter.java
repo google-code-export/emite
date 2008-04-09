@@ -149,6 +149,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                 case auto_reject_all:
                     Log.info("Rejecting because we are auto rejecting");
                     onPresenceNotAccepted(presence);
+                    break;
                 default:
                     Log.info("Manual accept/reject");
                     view.confirmSusbscriptionRequest(presence);
