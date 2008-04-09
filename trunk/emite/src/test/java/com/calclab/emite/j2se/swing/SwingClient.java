@@ -58,7 +58,7 @@ public class SwingClient {
 
 	loginPanel = new LoginPanel(new LoginPanelListener() {
 	    public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
-		xmpp.login(userName, password);
+		xmpp.login(userName, password, null, "hola!");
 	    }
 
 	    public void onLogout() {

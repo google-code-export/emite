@@ -43,6 +43,7 @@ import com.calclab.emite.client.im.roster.RosterPlugin;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionOptions;
 import com.calclab.emite.client.xmpp.session.SessionPlugin;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 
 public class Xmpp implements AbstractXmpp {
 
@@ -98,9 +99,10 @@ public class Xmpp implements AbstractXmpp {
 	return session;
     }
 
-    public void login(final String userName, final String userPassword) {
+    public void login(final String userName, final String userPassword, final Presence.Show show, final String status) {
 	Log.debug("XMPP Login " + userName + " : " + userPassword);
 	session.login(new SessionOptions(userName, userPassword));
+	getPresenceManager().setOwnPresence(status, show);
     }
 
     public void logout() {

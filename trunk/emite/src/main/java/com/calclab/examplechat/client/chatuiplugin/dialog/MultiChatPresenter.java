@@ -187,7 +187,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 	    break;
 	case busy:
 	case busycustom:
-	    presenceManager.setBusyPresence(currentOwnPresence.getStatusText());
+	    presenceManager.setOwnPresence(currentOwnPresence.getStatusText(), Show.dnd);
 	    break;
 	case offline:
 	    // We go online via external action (for instance a kune event)
@@ -311,7 +311,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 	case busycustom:
 	    switch (xmpp.getSession().getState()) {
 	    case disconnected:
-		xmpp.login(currentUserJid, currentUserPasswd);
+		xmpp.login(currentUserJid, currentUserPasswd, null, null);
 	    case authorized:
 	    case connecting:
 		// this.delayedPresence = ownPresence;

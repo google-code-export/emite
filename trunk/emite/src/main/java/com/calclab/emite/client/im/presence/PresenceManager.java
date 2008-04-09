@@ -39,7 +39,7 @@ public class PresenceManager extends EmiteComponent {
     private Presence currentPresence;
     private final Globals globals;
     private final ArrayList<PresenceListener> listeners;
-    private Presence ownPresence;
+    private Presence delayedPresence;
 
     public PresenceManager(final Emite emite, final Globals globals) {
 	super(emite);
@@ -65,22 +65,6 @@ public class PresenceManager extends EmiteComponent {
     }
 
     /**
-     * 5.1.5. Unavailable Presence (rfc 3921)
-     * 
-     * Before ending its session with a server, a client SHOULD gracefully
-     * become unavailable by sending a final presence stanza that possesses no
-     * 'to' attribute and that possesses a 'type' attribute whose value is
-     * "unavailable" (optionally, the final presence stanza MAY contain one or
-     * more <status/> elements specifying the reason why the user is no longer
-     * available).
-     */
-    public IPacket answerToSessionLogout() {
-	final Presence presence = new Presence(Type.unavailable, globals.getOwnURI().toString(), globals.getDomain());
-	currentPresence = presence;
-	return presence;
-    }
-
-    /**
      * Upon connecting to the server and becoming an active resource, a client
      * SHOULD request the roster before sending initial presence
      */
@@ -101,7 +85,7 @@ public class PresenceManager extends EmiteComponent {
 
 	when(SessionManager.Events.loggedOut, new PacketListener() {
 	    public void handle(final IPacket received) {
-		emite.send(answerToSessionLogout());
+		onLogoutSession();
 	    }
 	});
 
@@ -129,7 +113,24 @@ public class PresenceManager extends EmiteComponent {
     }
 
     public Presence getOwnPresence() {
-	return ownPresence;
+	return currentPresence;
+    }
+
+    /**
+     * 5.1.5. Unavailable Presence (rfc 3921)
+     * 
+     * Before ending its session with a server, a client SHOULD gracefully
+     * become unavailable by sending a final presence stanza that possesses no
+     * 'to' attribute and that possesses a 'type' attribute whose value is
+     * "unavailable" (optionally, the final presence stanza MAY contain one or
+     * more <status/> elements specifying the reason why the user is no longer
+     * available).
+     */
+    public void onLogoutSession() {
+	final Presence presence = new Presence(Type.unavailable, globals.getOwnURI().toString(), globals.getDomain());
+	emite.send(presence);
+	delayedPresence = null;
+	currentPresence = null;
     }
 
     /**
@@ -139,15 +140,6 @@ public class PresenceManager extends EmiteComponent {
     public void requestUnsubscribe(final XmppURI to) {
 	final Presence unsubscribeRequest = new Presence(Presence.Type.unsubscribe, globals.getOwnURI(), to);
 	emite.send(unsubscribeRequest);
-    }
-
-    public void setBusyPresence(final String statusMessage) {
-	ownPresence = new Presence(globals.getOwnURI()).With(Presence.Show.dnd);
-	if (statusMessage != null) {
-	    ownPresence.setStatus(statusMessage);
-	}
-	emite.send(ownPresence);
-	currentPresence = ownPresence;
     }
 
     // FIXME Dani (Presence): pienso que la librería debe tener está lógica de
@@ -162,15 +154,23 @@ public class PresenceManager extends EmiteComponent {
      */
     public void setOwnPresence(final String statusMessage, final Show show) {
 	final Show showValue = show != null ? show : Presence.Show.available;
-	ownPresence = new Presence(globals.getOwnURI()).With(showValue);
+	final Presence presence = new Presence().With(showValue);
 	if (statusMessage != null) {
-	    ownPresence.setStatus(statusMessage);
+	    presence.setStatus(statusMessage);
 	}
-	emite.send(ownPresence);
-	currentPresence = ownPresence;
+
+	if (isLoggedIn()) {
+	    setOwnPresence(presence);
+	} else {
+	    delayedPresence = presence;
+	}
     }
 
     void onPresenceReceived(final Presence presence) {
+	if (delayedPresence != null) {
+	    setOwnPresence(delayedPresence);
+	    delayedPresence = null;
+	}
 	final Type type = presence.getType();
 	switch (type) {
 	case subscribe:
@@ -208,6 +208,10 @@ public class PresenceManager extends EmiteComponent {
 	}
     }
 
+    private boolean isLoggedIn() {
+	return currentPresence != null;
+    }
+
     private void replySubscription(final Presence presence, final Presence.Type type) {
 	if (presence.getType() == Presence.Type.subscribe) {
 	    final Presence response = new Presence(type, globals.getOwnURI(), presence.getFromURI());
@@ -216,5 +220,10 @@ public class PresenceManager extends EmiteComponent {
 	    // throw exception: its a programming error
 	    throw new RuntimeException("Trying to accept/deny a non subscription request");
 	}
+    }
+
+    private void setOwnPresence(final Presence presence) {
+	emite.send(presence);
+	currentPresence = presence;
     }
 }
