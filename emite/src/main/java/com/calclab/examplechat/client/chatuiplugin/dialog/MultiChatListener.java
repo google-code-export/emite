@@ -42,8 +42,6 @@ public interface MultiChatListener {
 
     void doAction(String eventId, Object param);
 
-    void setPresenceStatusText(String statusMessageText);
-
     void onUserSubscriptionModeChanged(SubscriptionMode subscriptionMode);
 
 }

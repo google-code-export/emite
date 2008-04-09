@@ -92,35 +92,40 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
             public void onItemPresenceChanged(final RosterItem item) {
                 PairChatUser user = rosterMap.get(item.getXmppURI().getJID());
                 if (user == null) {
-                    Log.error("Trying to update a user is not in roster");
+                    Log.error("Trying to update a user is not in roster: " + item.getXmppURI() + " ----> Roster: "
+                            + rosterMap);
                 } else {
-                    logPresence("Updating", item);
+                    logRosterItem("Updating", item);
                     view.updateRosterItem(user, createMenuItemList(item));
                 }
             }
 
             public void onRosterChanged(final Collection<RosterItem> roster) {
                 for (final RosterItem item : roster) {
-                    logPresence("Adding", item);
+                    logRosterItem("Adding", item);
                     PairChatUser user = new PairChatUser("images/person-def.gif", item);
                     rosterMap.put(user.getJid(), user);
                     view.addRosterItem(user, createMenuItemList(item));
                 }
             }
 
-            private void logPresence(final String operation, final RosterItem item) {
+            private void logRosterItem(final String operation, final RosterItem item) {
                 final String name = item.getName();
                 Presence presence = item.getPresence();
                 Log.info(operation + " roster item: " + item.getXmppURI() + " name: " + name + " subsc: "
-                        + item.getSubscription() + " show: " + (presence == null ? null : presence.getShow()));
+                        + item.getSubscription());
+                if (presence != null) {
+                    logPresence(presence);
+                } else {
+                    Log.info("with null presence");
+                }
             }
 
         });
 
         presenceManager.addListener(new PresenceListener() {
             public void onPresenceReceived(final Presence presence) {
-                Log.info("PRESENCE: " + presence.toString() + presence.getFrom() + " show: " + presence.getShow()
-                        + " status: " + presence.getStatus() + " text: " + presence.getText());
+                logPresence(presence);
                 // PairChatUser user =
                 // rosterMap.get(presence.getFromURI().getJID());
                 // if (user != null) {
@@ -186,6 +191,16 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                     default:
                         Log.debug("Status unknown, show: " + presence.getShow());
                     }
+
+                } else {
+                    /*
+                     * 2.2.2.1. Show
+                     * 
+                     * If no <show/> element is provided, the entity is assumed
+                     * to be online and available.
+                     * 
+                     */
+                    itemList.addItem(createRemoveBuddyMenuItem(item));
                 }
             case unavailable:
                 break;
@@ -195,7 +210,18 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
             case subscribed:
                 break;
             default:
-                Log.error("Code bug, status: " + statusType);
+                /**
+                 * 2.2.1. Types of Presence
+                 * 
+                 * The 'type' attribute of a presence stanza is OPTIONAL. A
+                 * presence stanza that does not possess a 'type' attribute is
+                 * used to signal to the server that the sender is online and
+                 * available for communication. If included, the 'type'
+                 * attribute specifies a lack of availability, a request to
+                 * manage a subscription to another entity's presence, a request
+                 * for another entity's current presence, or an error related to
+                 * a previously-sent presence stanza.
+                 */
             }
             break;
         case from:
@@ -228,5 +254,10 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
 
         }
         super.doAction(eventName, param);
+    }
+
+    private void logPresence(final Presence presence) {
+        Log.info("PRESENCE: type: " + presence.getType() + " from: " + presence.getFrom() + " show: "
+                + presence.getShow() + " status: " + presence.getStatus() + " text: " + presence.getText());
     }
 }

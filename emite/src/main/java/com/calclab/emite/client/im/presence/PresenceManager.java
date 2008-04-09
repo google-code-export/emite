@@ -38,6 +38,7 @@ public class PresenceManager extends EmiteComponent {
     private Presence currentPresence;
     private final Globals globals;
     private final ArrayList<PresenceListener> listeners;
+    private Presence presence;
 
     public PresenceManager(final Emite emite, final Globals globals) {
         super(emite);
@@ -62,8 +63,11 @@ public class PresenceManager extends EmiteComponent {
         return new Presence(globals.getOwnURI()).To(presence.getFrom());
     }
 
+    // FIXME: Dani (Presence) check this (currentPresence update)
     public IPacket answerToSessionLogout() {
-        return new Presence(globals.getOwnURI()).With("type", "unavailable");
+        Presence presence = new Presence(globals.getOwnURI());
+        currentPresence = presence;
+        return presence.With("type", "unavailable");
     }
 
     /**
@@ -85,6 +89,18 @@ public class PresenceManager extends EmiteComponent {
             }
         });
 
+        // FIXME: Dani (Presence) pienso que esto se está enviando después del
+        // Bosh stop... y no llega...
+        /**
+         * 5.1.5. Unavailable Presence (rfc 3921)
+         * 
+         * Before ending its session with a server, a client SHOULD gracefully
+         * become unavailable by sending a final presence stanza that possesses
+         * no 'to' attribute and that possesses a 'type' attribute whose value
+         * is "unavailable" (optionally, the final presence stanza MAY contain
+         * one or more <status/> elements specifying the reason why the user is
+         * no longer available).
+         */
         when(SessionManager.Events.loggedOut, new PacketListener() {
             public void handle(final IPacket received) {
                 emite.send(answerToSessionLogout());
@@ -139,8 +155,37 @@ public class PresenceManager extends EmiteComponent {
         }
     }
 
-    private Presence createInitialPresence() {
+    public Presence createInitialPresence() {
         return new Presence(globals.getOwnURI()).With(Presence.Show.chat);
+    }
+
+    // FIXME Dani (Presence): check this (I thick that xmpp.login/logout must
+    // update this
+    // (now in MCPresenter))
+    /**
+     * 5.1.2. Presence Broadcast
+     * 
+     * After sending initial presence, the user MAY update its presence
+     * information for broadcasting at any time during its session by sending a
+     * presence stanza with no 'to' address and either no 'type' attribute or a
+     * 'type' attribute with a value of "unavailable". (
+     */
+    public void setOnlinePresence(final String statusMessage) {
+        presence = new Presence(globals.getOwnURI()).With(Presence.Show.available);
+        if (statusMessage != null) {
+            presence.setStatus(statusMessage);
+        }
+        emite.send(presence);
+        currentPresence = presence;
+    }
+
+    public void setBusyPresence(final String statusMessage) {
+        presence = new Presence(globals.getOwnURI()).With(Presence.Show.dnd);
+        if (statusMessage != null) {
+            presence.setStatus(statusMessage);
+        }
+        emite.send(presence);
+        currentPresence = presence;
     }
 
     private void firePresenceReceived(final Presence presence) {

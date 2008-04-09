@@ -124,8 +124,9 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void highlightChat(final AbstractChat chat) {
-        // TODO
-        // centerPanel.getActiveTab().setIconCls("emite-icon");
+        // TODO (testing)
+        ((Panel) chat.getView()).setIconCls("chat-icon");
+        // before: tab.getTextEl().highlight()
     }
 
     public void unHighlightChat(final AbstractChat chat) {
@@ -248,8 +249,8 @@ public class MultiChatPanel implements MultiChatView {
         topToolbar.setCloseAllOptionEnabled(enabled);
     }
 
-    public void setStatus(final int status) {
-        topToolbar.setStatus(status);
+    public void setOwnPresence(final OwnPresence ownPresence) {
+        topToolbar.setOwnPresence(ownPresence);
     }
 
     public void setOfflineInfo() {

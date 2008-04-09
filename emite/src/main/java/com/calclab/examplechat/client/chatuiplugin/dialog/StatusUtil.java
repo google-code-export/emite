@@ -27,34 +27,13 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
+import com.calclab.examplechat.client.chatuiplugin.dialog.OwnPresence.OwnStatus;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 public class StatusUtil {
 
     private static final ChatIcons icons = ChatIcons.App.getInstance();
-
-    @Deprecated
-    public static AbstractImagePrototype getStatusIcon(final int status) {
-        switch (status) {
-        case MultiChatView.STATUS_ONLINE:
-            return icons.online();
-        case MultiChatView.STATUS_OFFLINE:
-            return icons.offline();
-        case MultiChatView.STATUS_BUSY:
-            return icons.busy();
-        case MultiChatView.STATUS_INVISIBLE:
-            return icons.invisible();
-        case MultiChatView.STATUS_XA:
-            return icons.xa();
-        case MultiChatView.STATUS_AWAY:
-            return icons.away();
-        case MultiChatView.STATUS_MESSAGE:
-            return icons.message();
-        default:
-            throw new IndexOutOfBoundsException("Xmpp status unknown");
-        }
-    }
 
     public static AbstractImagePrototype getStatusIcon(final Subscription subscription, final Presence presence) {
         Type statusType;
@@ -81,11 +60,18 @@ public class StatusUtil {
                     case away:
                         return icons.away();
                     default:
-                        Log.debug("Status unknown, show: " + presence.getShow());
+                        Log.info("Status unknown, show: " + presence.getShow());
                         return icons.question();
                     }
                 } else {
-                    return icons.question();
+                    /*
+                     * 2.2.2.1. Show
+                     * 
+                     * If no <show/> element is provided, the entity is assumed
+                     * to be online and available.
+                     * 
+                     */
+                    return icons.online();
                 }
             case unavailable:
                 return icons.offline();
@@ -94,8 +80,19 @@ public class StatusUtil {
             case subscribed:
                 return icons.question();
             default:
-                Log.error("Programatic error, status: " + statusType);
-                return icons.question();
+                /**
+                 * 2.2.1. Types of Presence
+                 * 
+                 * The 'type' attribute of a presence stanza is OPTIONAL. A
+                 * presence stanza that does not possess a 'type' attribute is
+                 * used to signal to the server that the sender is online and
+                 * available for communication. If included, the 'type'
+                 * attribute specifies a lack of availability, a request to
+                 * manage a subscription to another entity's presence, a request
+                 * for another entity's current presence, or an error related to
+                 * a previously-sent presence stanza.
+                 */
+                return icons.online();
             }
         case from:
             return icons.notAuthorized();
@@ -107,37 +104,51 @@ public class StatusUtil {
         }
     }
 
-    @Deprecated
-    public static String getStatusText(final I18nTranslationService i18n, final int status) {
+    public static AbstractImagePrototype getStatusIcon(final OwnStatus ownStatus) {
+        ChatIcons icons = ChatIcons.App.getInstance();
+        switch (ownStatus) {
+        case online:
+        case onlinecustom:
+            return icons.online();
+        case busy:
+        case busycustom:
+            return icons.busy();
+        case offline:
+            return icons.offline();
+        default:
+            Log.error("Code error in OwnPresence getStatusIcon");
+            return icons.offline();
+        }
+    }
+
+    public static String getStatusText(final I18nTranslationService i18n, final OwnStatus ownStatus) {
         String textLabel;
 
-        switch (status) {
-        case MultiChatView.STATUS_ONLINE:
+        switch (ownStatus) {
+        case online:
             textLabel = i18n.t("online");
             break;
-        case MultiChatView.STATUS_OFFLINE:
+        case offline:
             textLabel = i18n.t("offline");
             break;
-        case MultiChatView.STATUS_BUSY:
+        case busy:
             textLabel = i18n.t("busy");
             break;
-        case MultiChatView.STATUS_INVISIBLE:
-            textLabel = i18n.t("invisible");
+        case busycustom:
+            textLabel = i18n.t("busy with custom message");
             break;
-        case MultiChatView.STATUS_XA:
-            textLabel = i18n.t("extended away");
-            break;
-        case MultiChatView.STATUS_AWAY:
-            textLabel = i18n.t("away");
+        case onlinecustom:
+            textLabel = i18n.t("online with custom message");
             break;
         default:
-            throw new IndexOutOfBoundsException("Xmpp status unknown");
+            Log.error("Code error in OwnPresence getStatusText");
+            return null;
         }
         return textLabel;
     }
 
-    public static String getStatusIconAndText(final I18nTranslationService i18n, final int status) {
-        return getStatusIcon(status).getHTML() + "&nbsp;" + getStatusText(i18n, status);
+    public static String getStatusIconAndText(final I18nTranslationService i18n, final OwnStatus ownStatus) {
+        return getStatusIcon(ownStatus).getHTML() + "&nbsp;" + getStatusText(i18n, ownStatus);
     }
 
 }

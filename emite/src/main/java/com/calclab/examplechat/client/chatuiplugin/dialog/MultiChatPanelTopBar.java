@@ -24,6 +24,7 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
+import com.calclab.examplechat.client.chatuiplugin.dialog.OwnPresence.OwnStatus;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterItemDialog;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
@@ -49,8 +50,9 @@ public class MultiChatPanelTopBar extends Toolbar {
     private final Menu statusMenu;
     private CheckItem onlineMenuItem;
     private CheckItem offlineMenuItem;
+    private CheckItem busyCustomMenuItem;
+    private CheckItem onlineCustomMenuItem;
     private CheckItem busyMenuItem;
-    private CheckItem awayMenuItem;
     private final ToolbarMenuButton statusButton;
     private final ToolbarButton inviteUserToGroupChat;
     private final I18nTranslationService i18n;
@@ -213,29 +215,17 @@ public class MultiChatPanelTopBar extends Toolbar {
         Menu statusMenu = new Menu();
         statusMenu.setShadow(true);
         statusMenu.addItem(new TextItem("<b class=\"menu-title\">" + i18n.t("Change your status") + "</b>"));
-        onlineMenuItem = createStatusCheckItem(MultiChatView.STATUS_ONLINE);
-        offlineMenuItem = createStatusCheckItem(MultiChatView.STATUS_OFFLINE);
-        busyMenuItem = createStatusCheckItem(MultiChatView.STATUS_BUSY);
-        awayMenuItem = createStatusCheckItem(MultiChatView.STATUS_AWAY);
-        Item setStatusText = new Item();
-        final String setStatusTextTitle = i18n.t("Set your status message");
-        setStatusText.setText(setStatusTextTitle);
-        setStatusText.addListener(new BaseItemListenerAdapter() {
-            public void onClick(final BaseItem item, final EventObject e) {
-                MessageBox.prompt(setStatusTextTitle, i18n
-                        .t("Set your current status text (something like 'Out for dinner' or 'Working)"),
-                        new PromptCallback() {
-                            public void execute(final String btnID, final String text) {
-                                presenter.setPresenceStatusText(text);
-                            }
-                        });
-            }
-        });
+        onlineMenuItem = createStatusCheckItem(OwnStatus.online);
+        onlineCustomMenuItem = createStatusCheckItem(OwnStatus.onlinecustom);
+        busyMenuItem = createStatusCheckItem(OwnStatus.busy);
+        busyCustomMenuItem = createStatusCheckItem(OwnStatus.busycustom);
+        offlineMenuItem = createStatusCheckItem(OwnStatus.offline);
         statusMenu.addItem(onlineMenuItem);
-        statusMenu.addItem(offlineMenuItem);
+        statusMenu.addItem(onlineCustomMenuItem);
         statusMenu.addItem(busyMenuItem);
-        statusMenu.addItem(awayMenuItem);
-        statusMenu.addItem(setStatusText);
+        statusMenu.addItem(busyCustomMenuItem);
+        statusMenu.addSeparator();
+        statusMenu.addItem(offlineMenuItem);
         return statusMenu;
     }
 
@@ -251,16 +241,36 @@ public class MultiChatPanelTopBar extends Toolbar {
         return closeAllOption;
     }
 
-    private CheckItem createStatusCheckItem(final int status) {
-        CheckItem checkItem = new CheckItem();
-        checkItem.setText(StatusUtil.getStatusIconAndText(i18n, status));
-        checkItem.setGroup("chatstatus");
+    private CheckItem createStatusCheckItem(final OwnStatus ownStatus) {
 
-        checkItem.addListener(new BaseItemListenerAdapter() {
-            public void onClick(final BaseItem item, final EventObject e) {
-                presenter.onStatusSelected(status);
-            }
-        });
+        CheckItem checkItem = new CheckItem();
+        checkItem.setText(StatusUtil.getStatusIconAndText(i18n, ownStatus));
+        checkItem.setGroup("chatstatus");
+        switch (ownStatus) {
+        case offline:
+        case online:
+        case busy:
+            checkItem.addListener(new BaseItemListenerAdapter() {
+                public void onClick(final BaseItem item, final EventObject e) {
+                    presenter.onStatusSelected(new OwnPresence(ownStatus));
+                }
+            });
+            break;
+        case busycustom:
+        case onlinecustom:
+            checkItem.addListener(new BaseItemListenerAdapter() {
+                public void onClick(final BaseItem item, final EventObject e) {
+                    MessageBox.prompt(i18n.t("Set your status message"), i18n
+                            .t("Set your status text (something like 'Out for dinner' or 'Working')"),
+                            new PromptCallback() {
+                                public void execute(final String btnID, final String text) {
+                                    presenter.onStatusSelected(new OwnPresence(ownStatus, text));
+                                }
+                            });
+                }
+            });
+            break;
+        }
         return checkItem;
     }
 
@@ -293,24 +303,26 @@ public class MultiChatPanelTopBar extends Toolbar {
                 });
     }
 
-    public void setStatus(final int status) {
-        switch (status) {
-        case MultiChatView.STATUS_ONLINE:
+    public void setOwnPresence(final OwnPresence ownPresence) {
+        switch (ownPresence.getStatus()) {
+        case online:
             onlineMenuItem.setChecked(true);
             break;
-        case MultiChatView.STATUS_OFFLINE:
+        case onlinecustom:
+            onlineCustomMenuItem.setChecked(true);
+            break;
+        case offline:
             offlineMenuItem.setChecked(true);
             break;
-        case MultiChatView.STATUS_BUSY:
+        case busy:
             busyMenuItem.setChecked(true);
             break;
-        case MultiChatView.STATUS_AWAY:
-            awayMenuItem.setChecked(true);
-            break;
-        default:
+        case busycustom:
+            busyCustomMenuItem.setChecked(true);
             break;
         }
-        String icon = StatusUtil.getStatusIcon(status).getHTML();
+
+        String icon = StatusUtil.getStatusIcon(ownPresence.getStatus()).getHTML();
         statusButton.setText(icon);
     }
 

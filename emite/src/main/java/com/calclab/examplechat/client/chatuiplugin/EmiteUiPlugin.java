@@ -108,9 +108,6 @@ public class EmiteUiPlugin extends Plugin {
                                         + "' (not implemented yet emite connection");
                             }
 
-                            public void setPresenceStatusText(final String statusMessageText) {
-                                Log.info("Setting status text" + statusMessageText);
-                            }
                         });
 
                 dispatcher.subscribe(EmiteUiPlugin.ON_PAIR_CHAT_START, new Action<XmppURI>() {
