@@ -127,13 +127,13 @@ public class PresenceManager extends EmiteComponent {
      * available).
      */
     public void onLogoutSession() {
-	if (isLoggedIn()) {
-	    final Presence presence = new Presence(Type.unavailable, globals.getOwnURI().toString(), globals
-		    .getDomain());
-	    emite.send(presence);
-	    delayedPresence = null;
-	    currentPresence = null;
-	}
+        if (isLoggedIn()) {
+            final Presence presence = new Presence(Type.unavailable, globals.getOwnURI().toString(), globals
+                    .getDomain());
+            emite.send(presence);
+            delayedPresence = null;
+            currentPresence = null;
+        }
     }
 
     /**
@@ -168,27 +168,27 @@ public class PresenceManager extends EmiteComponent {
     }
 
     void onPresenceReceived(final Presence presence) {
-	if (delayedPresence != null) {
-	    sendDelayedPresence();
-	}
+        if (delayedPresence != null) {
+            sendDelayedPresence();
+        }
 
-	final Type type = presence.getType();
-	switch (type) {
-	case subscribe:
-	    fireSubscriptionRequest(presence);
-	    break;
-	case unsubscribed:
-	    fireUnsubscriptionReceived(presence);
-	    break;
-	case probe:
-	    emite.send(currentPresence);
-	    break;
-	case error:
-	    break;
-	default:
-	    firePresenceReceived(presence);
-	    break;
-	}
+        final Type type = presence.getType();
+        switch (type) {
+        case subscribe:
+            fireSubscriptionRequest(presence);
+            break;
+        case unsubscribed:
+            fireUnsubscriptionReceived(presence);
+            break;
+        case probe:
+            emite.send(currentPresence);
+            break;
+        case error:
+            break;
+        default:
+            firePresenceReceived(presence);
+            break;
+        }
     }
 
     private void firePresenceReceived(final Presence presence) {
@@ -224,15 +224,17 @@ public class PresenceManager extends EmiteComponent {
     }
 
     private void sendDelayedPresence() {
-	delayedPresence.setFrom(globals.getOwnURI().toString());
-	delayedPresence.setTo(globals.getDomain());
-	setOwnPresence(delayedPresence);
-	delayedPresence = null;
+        delayedPresence.setFrom(globals.getOwnURI().toString());
+        delayedPresence.setTo(globals.getDomain());
+        setOwnPresence(delayedPresence);
+        delayedPresence = null;
     }
 
     private void setOwnPresence(final Presence presence) {
         emite.send(presence);
         currentPresence = presence;
+        // FIXME: Dani: sounds logical:
+        delayedPresence = null;
     }
 
     // FIXME: Dani (Presence) I need this... I think

@@ -302,11 +302,13 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         switch (xmpp.getSession().getState()) {
         case disconnected:
             xmpp.login(currentUserJid, currentUserPasswd, status, statusText);
+            break;
         case authorized:
         case connecting:
-            // this.delayedPresence = ownPresence;
         case connected:
+            presenceManager.setOwnPresence(statusText, status);
         case error:
+            Log.error("Trying to set status and whe have a internal error");
         }
     }
 
