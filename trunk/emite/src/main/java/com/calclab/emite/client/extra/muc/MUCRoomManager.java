@@ -36,8 +36,6 @@ import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.client.xmpp.stanzas.Message.MessageType;
 
 public class MUCRoomManager extends EmiteComponent implements RoomManager {
     private final Globals globals;
@@ -75,24 +73,24 @@ public class MUCRoomManager extends EmiteComponent implements RoomManager {
     }
 
     public Room enterRoom(final String jid, final String alias) {
-	final XmppURI uri = XmppURI.parse(jid + "/" + alias);
-	// FIXME: Dani (de dani)
-	final Room room = new Room(uri, "fix me!");
-	rooms.put(uri, room);
-	final Presence presence = new Presence(null, globals.getOwnURI().toString(), jid + "/" + alias);
+	final XmppURI ownURI = globals.getOwnURI();
+	final XmppURI roomURI = XmppURI.parse(jid + "/" + alias);
+	final Room room = new Room(ownURI, roomURI, "fix me!", emite);
+	rooms.put(roomURI.getJID(), room);
+	final Presence presence = new Presence(null, ownURI.toString(), jid + "/" + alias);
 	presence.addChild(new Packet("x", "http://jabber.org/protocol/muc"));
 	emite.send(presence);
-	fireRoomsChanged();
+	fireRoomCreated(room);
 	return room;
     }
 
     protected void sendMUCSupportQuery() {
-	final IQ iq = new IQ(Type.get).From(globals.getOwnURI()).To(globals.getDomain());
+	final IQ iq = new IQ(IQ.Type.get).From(globals.getOwnURI()).To(globals.getDomain());
 	iq.setQuery("http://jabber.org/protocol/disco#info");
 	emite.send("disco", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		System.out.println("MUC!!: " + received);
-		sendRoomsQuery();
+		// sendRoomsQuery();
 	    }
 	});
     }
@@ -101,7 +99,7 @@ public class MUCRoomManager extends EmiteComponent implements RoomManager {
      * @see http://www.xmpp.org/extensions/xep-0045.html#disco-rooms
      */
     protected void sendRoomsQuery() {
-	final IQ iq = new IQ(Type.get).From(globals.getOwnURI()).To(globals.getDomain());
+	final IQ iq = new IQ(IQ.Type.get).From(globals.getOwnURI()).To(globals.getDomain());
 	iq.setQuery("http://jabber.org/protocol/disco#items");
 	emite.send("rooms", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
@@ -111,37 +109,40 @@ public class MUCRoomManager extends EmiteComponent implements RoomManager {
     }
 
     void onMessageReceived(final Message message) {
-	if (message.getType() == MessageType.groupchat) {
-	    // mensaje a una habitación
-	    // Room room = this.getRoom(message.getFrom());
-	    // room.dispatch(message);
-	}
-    }
-
-    void onPresenceReceived(final Presence presence) {
-	final Room room = rooms.get(presence.getFromURI());
-	if (room != null) {
-	    final IPacket xtension = presence.getFirstChild("x");
-	    if (xtension != null && xtension.hasAttribute("xmlns", "http://jabber.org/protocol/muc#user")) {
-		final IPacket item = xtension.getFirstChild("item");
-		room.addUser(new RoomUser());
+	if (message.getType() == Message.Type.groupchat) {
+	    final Room room = rooms.get(message.getFromURI());
+	    if (room != null) {
+		room.dispatch(message);
 	    }
 	}
     }
 
-    private void fireRoomsChanged() {
-	for (final RoomManagerListener listener : listeners) {
-	    listener.onRoomsChanged(rooms.values());
+    void onPresenceReceived(final Presence presence) {
+	final Room room = rooms.get(presence.getFromURI().getJID());
+	if (room != null) {
+	    final IPacket xtension = presence.getFirstChild("x");
+	    if (xtension != null && xtension.hasAttribute("xmlns", "http://jabber.org/protocol/muc#user")) {
+		final IPacket item = xtension.getFirstChild("item");
+		room.addUser(new RoomUser(presence.getFromURI(), item.getAttribute("affiliation"), item
+			.getAttribute("role")));
+	    }
 	}
     }
 
+    private void fireRoomCreated(final Room room) {
+	for (final RoomManagerListener listener : listeners) {
+	    listener.onRoomCreated(room);
+	}
+    }
+
+    // FIXME: (dani de dani) no entiendo bien...
     private void onRoomsQuery(final IPacket received) {
 	final List<? extends IPacket> items = received.getFirstChild("query").getChildren();
 	rooms.clear();
+	final XmppURI ownURI = globals.getOwnURI();
 	for (final IPacket packet : items) {
 	    final XmppURI uri = XmppURI.parse(packet.getAttribute("jid"));
-	    rooms.put(uri, new Room(uri, packet.getAttribute("name")));
+	    rooms.put(uri, new Room(ownURI, uri, packet.getAttribute("name"), emite));
 	}
-	fireRoomsChanged();
     }
 }

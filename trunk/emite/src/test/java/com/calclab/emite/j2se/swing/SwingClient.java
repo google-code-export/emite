@@ -16,8 +16,10 @@ import com.calclab.emite.client.AbstractXmpp;
 import com.calclab.emite.client.TestHelper;
 import com.calclab.emite.client.extra.muc.MUCPlugin;
 import com.calclab.emite.client.extra.muc.Room;
+import com.calclab.emite.client.extra.muc.RoomListener;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.extra.muc.RoomManagerListener;
+import com.calclab.emite.client.extra.muc.RoomUser;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
@@ -154,6 +156,32 @@ public class SwingClient {
 		chatPanel.clearMessage();
 	    }
 	});
+
+	final RoomManager roomManager = MUCPlugin.getRoomManager(xmpp.getComponents());
+	roomManager.addListener(new RoomManagerListener() {
+	    public void onRoomCreated(final Room room) {
+		final RoomPanel roomPanel = conversationsPanel.createRoom(room.getURI(), new ChatPanelListener() {
+		    public void onSend(final ChatPanel source, final String text) {
+			room.send(text);
+			source.clearMessage();
+		    }
+		});
+		room.addListener(new RoomListener() {
+		    public void onMessageReceived(final Chat chat, final Message message) {
+			roomPanel.showIcomingMessage(message.getFrom(), message.getBody());
+		    }
+
+		    public void onMessageSent(final Chat chat, final Message message) {
+			roomPanel.showOutMessage(message.getBody());
+		    }
+
+		    public void onUserChanged(final Collection<RoomUser> users) {
+			roomPanel.setUsers(users);
+		    }
+		});
+	    }
+	});
+
 	xmpp.getRoster().addListener(new RosterListener() {
 	    public void onItemPresenceChanged(final RosterItem item) {
 		print("ROSTER ITEM PRESENCE CHANGED");
@@ -186,12 +214,7 @@ public class SwingClient {
 		print("UNSUBSCRIPTION!!: " + presence);
 	    }
 	});
-	final RoomManager roomManager = MUCPlugin.getRoomManager(xmpp.getComponents());
-	roomManager.addListener(new RoomManagerListener() {
-	    public void onRoomsChanged(final Collection<Room> rooms) {
-		roomsPanel.setRooms(rooms);
-	    }
-	});
+
     }
 
     private void print(final String message) {

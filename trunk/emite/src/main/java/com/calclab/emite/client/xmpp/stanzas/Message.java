@@ -25,7 +25,7 @@ import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.packet.IPacket;
 
 public class Message extends BasicStanza {
-    public static enum MessageType {
+    public static enum Type {
 	chat, error, groupchat, headlines, normal
     }
 
@@ -56,9 +56,13 @@ public class Message extends BasicStanza {
 	return thread != null ? thread.getText() : null;
     }
 
-    public MessageType getType() {
+    public Type getType() {
 	final String type = getAttribute(TYPE);
-	return type != null ? MessageType.valueOf(type) : null;
+	return type != null ? Type.valueOf(type) : null;
+    }
+
+    public void setType(final Type type) {
+	setType(type.toString());
     }
 
     public Message Thread(final String thread) {
