@@ -31,7 +31,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
  * @author dani
  * 
  */
-public interface Globals {
+public interface Globals extends Component {
     String getDomain();
 
     XmppURI getOwnURI();

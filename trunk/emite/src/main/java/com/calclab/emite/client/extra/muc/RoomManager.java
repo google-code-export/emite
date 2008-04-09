@@ -21,8 +21,7 @@
  */
 package com.calclab.emite.client.extra.muc;
 
-public interface RoomManager {
-    void addListener(RoomManagerListener roomManagerListener);
+import com.calclab.emite.client.im.chat.ChatManager;
 
-    Room enterRoom(String jid, String alias);
+public interface RoomManager extends ChatManager {
 }

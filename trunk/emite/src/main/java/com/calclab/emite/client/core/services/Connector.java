@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.client.core.services;
 
-public interface Connector {
+import com.calclab.emite.client.components.Component;
+
+public interface Connector extends Component {
     void send(String httpBase, String request, ConnectorCallback callback) throws ConnectorException;
 }

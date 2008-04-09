@@ -127,10 +127,13 @@ public class PresenceManager extends EmiteComponent {
      * available).
      */
     public void onLogoutSession() {
-	final Presence presence = new Presence(Type.unavailable, globals.getOwnURI().toString(), globals.getDomain());
-	emite.send(presence);
-	delayedPresence = null;
-	currentPresence = null;
+	if (isLoggedIn()) {
+	    final Presence presence = new Presence(Type.unavailable, globals.getOwnURI().toString(), globals
+		    .getDomain());
+	    emite.send(presence);
+	    delayedPresence = null;
+	    currentPresence = null;
+	}
     }
 
     /**
@@ -168,9 +171,9 @@ public class PresenceManager extends EmiteComponent {
 
     void onPresenceReceived(final Presence presence) {
 	if (delayedPresence != null) {
-	    setOwnPresence(delayedPresence);
-	    delayedPresence = null;
+	    sendDelayedPresence();
 	}
+
 	final Type type = presence.getType();
 	switch (type) {
 	case subscribe:
@@ -220,6 +223,13 @@ public class PresenceManager extends EmiteComponent {
 	    // throw exception: its a programming error
 	    throw new RuntimeException("Trying to accept/deny a non subscription request");
 	}
+    }
+
+    private void sendDelayedPresence() {
+	delayedPresence.setFrom(globals.getOwnURI().toString());
+	delayedPresence.setTo(globals.getDomain());
+	setOwnPresence(delayedPresence);
+	delayedPresence = null;
     }
 
     private void setOwnPresence(final Presence presence) {

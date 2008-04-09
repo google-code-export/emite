@@ -12,10 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.AbstractXmpp;
+import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.TestHelper;
 import com.calclab.emite.client.extra.muc.MUCPlugin;
-import com.calclab.emite.client.extra.muc.Room;
 import com.calclab.emite.client.extra.muc.RoomListener;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.extra.muc.RoomManagerListener;
@@ -30,6 +29,7 @@ import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.j2se.connector.HttpConnectorListener;
 import com.calclab.emite.j2se.swing.ChatPanel.ChatPanelListener;
 import com.calclab.emite.j2se.swing.LoginPanel.LoginPanelListener;
@@ -50,7 +50,7 @@ public class SwingClient {
     private final RosterPanel rosterPanel;
     private final JLabel status;
     private final JTabbedPane tabs;
-    private AbstractXmpp xmpp;
+    private Xmpp xmpp;
 
     public SwingClient(final JFrame frame) {
 	this.frame = frame;
@@ -76,14 +76,14 @@ public class SwingClient {
 	    }
 
 	    public void onStartChat(final RosterItem item) {
-		xmpp.getChatManager().newChat(item.getXmppURI());
+		xmpp.getChatManager().openChat(item.getXmppURI());
 	    }
 	});
 
 	roomsPanel = new RoomsPanel(new RoomsPanelListener() {
 	    public void onRoomEnterd(final String roomName) {
 		final RoomManager roomManager = MUCPlugin.getRoomManager(xmpp.getComponents());
-		roomManager.enterRoom("testroom1@conference.localhost", "nick");
+		roomManager.openChat(XmppURI.parse("testroom1@conference.localhost/nick"));
 	    }
 	});
 
@@ -136,8 +136,16 @@ public class SwingClient {
 	    }
 	});
 	xmpp.getChatManager().addListener(new ChatManagerListener() {
+	    public void onChatClosed(final Chat chat) {
+	    }
+
 	    public void onChatCreated(final Chat chat) {
 		final ChatPanel chatPanel = conversationsPanel.createChat(chat.getID(), new ChatPanelListener() {
+		    public void onClose(final ChatPanel source) {
+			xmpp.getChatManager().close(chat);
+			conversationsPanel.close(source);
+		    }
+
 		    public void onSend(final ChatPanel source, final String text) {
 			chat.send(text);
 			source.clearMessage();
@@ -159,8 +167,17 @@ public class SwingClient {
 
 	final RoomManager roomManager = MUCPlugin.getRoomManager(xmpp.getComponents());
 	roomManager.addListener(new RoomManagerListener() {
-	    public void onRoomCreated(final Room room) {
-		final RoomPanel roomPanel = conversationsPanel.createRoom(room.getURI(), new ChatPanelListener() {
+	    public void onChatClosed(final Chat chat) {
+
+	    }
+
+	    public void onChatCreated(final Chat room) {
+		final RoomPanel roomPanel = conversationsPanel.createRoom(room.getOtherURI(), new ChatPanelListener() {
+		    public void onClose(final ChatPanel source) {
+			MUCPlugin.getRoomManager(xmpp.getComponents()).close(room);
+			conversationsPanel.close(source);
+		    }
+
 		    public void onSend(final ChatPanel source, final String text) {
 			room.send(text);
 			source.clearMessage();
@@ -229,7 +246,7 @@ public class SwingClient {
 	frame.addWindowListener(new WindowAdapter() {
 	    @Override
 	    public void windowClosing(final WindowEvent e) {
-		xmpp.logout();
+		xmpp.stop();
 		System.exit(0);
 	    }
 	});

@@ -23,11 +23,12 @@ package com.calclab.emite.client.xmpp.session;
 
 import java.util.ArrayList;
 
+import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 
-public class Session {
+public class Session implements Component {
 
     public static enum State {
 	authorized, connected, connecting, disconnected, error

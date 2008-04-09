@@ -18,7 +18,7 @@ public class RoomPanel extends ChatPanel {
 	super(listener);
 	users = new DefaultListModel();
 	usersList = new JList(users);
-	add(usersList, BorderLayout.WEST);
+	add(usersList, BorderLayout.EAST);
     }
 
     public void setUsers(final Collection<RoomUser> users) {

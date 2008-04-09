@@ -29,7 +29,7 @@ public class RoomsPanel extends JPanel {
 	public String toString() {
 	    String name = room.getName();
 	    name = name != null ? name : "(no name)";
-	    final XmppURI uri = room.getURI();
+	    final XmppURI uri = room.getOtherURI();
 	    return name + " - " + uri;
 	}
     }

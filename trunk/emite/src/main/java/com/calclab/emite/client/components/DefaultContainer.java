@@ -27,14 +27,14 @@ import java.util.HashMap;
 import com.allen_sauer.gwt.log.client.Log;
 
 @SuppressWarnings("serial")
-public class DefaultContainer extends HashMap<String, Object> implements Container {
+public class DefaultContainer extends HashMap<String, Component> implements Container {
     private final ArrayList<Startable> startables;
 
     DefaultContainer() {
 	this.startables = new ArrayList<Startable>();
     }
 
-    public Object get(final String componentName) {
+    public Component get(final String componentName) {
 	return super.get(componentName);
     }
 
@@ -43,9 +43,7 @@ public class DefaultContainer extends HashMap<String, Object> implements Contain
 	startables.add(startable);
     }
 
-    public void register(final String name, final Object component) {
-	Log.debug("Registering component " + name);
-	super.put(name, component);
+    public void onInstallComponent() {
     }
 
     public void onStartComponent() {
@@ -59,4 +57,10 @@ public class DefaultContainer extends HashMap<String, Object> implements Contain
 	    c.onStopComponent();
 	}
     }
+
+    public void register(final String name, final Component component) {
+	Log.debug("Registering component " + name);
+	super.put(name, component);
+    }
+
 }
