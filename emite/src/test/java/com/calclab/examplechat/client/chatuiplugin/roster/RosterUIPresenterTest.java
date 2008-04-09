@@ -7,7 +7,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.presence.PresenceManager;
-import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
@@ -22,7 +21,6 @@ public class RosterUIPresenterTest {
 
     private String sessionUserJid;
     private PairChatUser otherUser;
-    private Roster roster;
     private PresenceManager presenceManager;
     private PresenceListener presenceListener;
     private RosterUI rosterUI;
@@ -41,7 +39,6 @@ public class RosterUIPresenterTest {
 
         // Mocks creation
         MockitoXmpp xmpp = new MockitoXmpp();
-        roster = xmpp.getRoster();
         rosterManager = xmpp.getRosterManager();
         presenceManager = xmpp.getPresenceManager();
         presenceListener = Mockito.mock(PresenceListener.class);
@@ -65,7 +62,7 @@ public class RosterUIPresenterTest {
     public void someTest() {
         rosterManager.requestAddItem(otherUser.getJid(), otherUser.getAlias(), "FIXME");
         Presence presence = new Presence(Presence.Type.available, otherUser.getJid(), sessionUserJid);
-        rosterManager.onPresenceReceived(presence);
+        // rosterManager.onPresenceReceived(presence);
         // RosterItem item = roster.findItemByURI(otherUser.getUri());
         // assertTrue(item != null);
         // Mockito.verify(rosterUIView,

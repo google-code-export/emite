@@ -28,15 +28,6 @@ import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListView;
 
 public interface MultiChatView {
 
-    // FIXME: emite constants?
-    // public static final int STATUS_ONLINE = 0;
-    // public static final int STATUS_OFFLINE = 1;
-    // public static final int STATUS_BUSY = 2;
-    // public static final int STATUS_INVISIBLE = 3;
-    // public static final int STATUS_XA = 4;
-    // public static final int STATUS_AWAY = 5;
-    // public static final int STATUS_MESSAGE = 6;
-
     public static final String DEF_USER_COLOR = "blue";
     public static final String DEF_PAIR_USER_COLOR = "maroon";
 
