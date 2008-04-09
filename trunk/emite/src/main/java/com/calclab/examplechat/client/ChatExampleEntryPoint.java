@@ -61,8 +61,9 @@ public class ChatExampleEntryPoint implements EntryPoint {
 
         /*
          * Currently we let firebug to catch the error:
-         * Log.setUncaughtExceptionHandler();
+         * 
          */
+        Log.setUncaughtExceptionHandler();
 
         // At the moment, in runtime:
         Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);

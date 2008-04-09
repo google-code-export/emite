@@ -69,22 +69,30 @@ public class StatusUtil {
         case to:
             switch (statusType) {
             case available:
-                switch (presence.getShow()) {
-                case available:
-                case chat:
-                    return icons.online();
-                case dnd:
-                    return icons.busy();
-                case xa:
-                    return icons.xa();
-                case away:
-                    return icons.away();
-                default:
-                    Log.debug("Status unknown, show: " + presence.getShow());
+                if (presence.getShow() != null) {
+                    switch (presence.getShow()) {
+                    case available:
+                    case chat:
+                        return icons.online();
+                    case dnd:
+                        return icons.busy();
+                    case xa:
+                        return icons.xa();
+                    case away:
+                        return icons.away();
+                    default:
+                        Log.debug("Status unknown, show: " + presence.getShow());
+                        return icons.question();
+                    }
+                } else {
                     return icons.question();
                 }
             case unavailable:
                 return icons.offline();
+            case unsubscribed:
+                return icons.notAuthorized();
+            case subscribed:
+                return icons.question();
             default:
                 Log.error("Programatic error, status: " + statusType);
                 return icons.question();
