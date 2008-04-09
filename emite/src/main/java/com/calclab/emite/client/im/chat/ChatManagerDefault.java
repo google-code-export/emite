@@ -27,27 +27,22 @@ import java.util.HashSet;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.bosh.EmiteBosh;
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
+import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.client.xmpp.stanzas.Message.MessageType;
+import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 
-public class ChatManagerDefault extends DispatcherComponent implements ChatManager {
-
+public class ChatManagerDefault extends EmiteComponent implements ChatManager {
     private final HashSet<ChatDefault> chats;
-    private final Dispatcher dispatcher;
     private final Globals globals;
     private final ArrayList<ChatManagerListener> listeners;
 
-    public ChatManagerDefault(final Dispatcher dispatcher, final Globals globals) {
-	super(dispatcher);
-	this.dispatcher = dispatcher;
+    public ChatManagerDefault(final Emite emite, final Globals globals) {
+	super(emite);
 	this.globals = globals;
 	this.listeners = new ArrayList<ChatManagerListener>();
 	this.chats = new HashSet<ChatDefault>();
@@ -76,7 +71,7 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
     }
 
     public void onReceived(final Message message) {
-	final MessageType type = message.getType();
+	final Type type = message.getType();
 	switch (type) {
 	case chat:
 	case normal:
@@ -84,20 +79,9 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
 	}
     }
 
-    @Deprecated
-    public void send(final String to, final String msg) {
-	final Message message = new Message(globals.getOwnURI().toString(), to, msg);
-	dispatcher.publish(new Event(EmiteBosh.Events.send).With(message));
-    }
-
-    void sendMessage(final Message message) {
-	// FIXME
-	dispatcher.publish(new Event(EmiteBosh.Events.send).With(message));
-    }
-
     private ChatDefault createChat(final XmppURI from, final String thread) {
 	final String theThread = thread != null ? thread : String.valueOf(Math.random() * 1000000);
-	final ChatDefault chat = new ChatDefault(from, globals.getOwnURI(), theThread, this);
+	final ChatDefault chat = new ChatDefault(from, globals.getOwnURI(), theThread, emite);
 	chats.add(chat);
 	for (final ChatManagerListener listener : listeners) {
 	    listener.onChatCreated(chat);
@@ -145,7 +129,7 @@ public class ChatManagerDefault extends DispatcherComponent implements ChatManag
 	if (chat == null) {
 	    chat = createChat(from, thread);
 	}
-	chat.process(message);
+	chat.fireMessageReceived(message);
     }
 
 }

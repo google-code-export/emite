@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
@@ -18,10 +18,10 @@ public class ChatManagerTests {
 
     @Before
     public void a() {
-	final Dispatcher dispatcher = Mockito.mock(Dispatcher.class);
+	final Emite emite = Mockito.mock(Emite.class);
 	final Globals globals = Mockito.mock(Globals.class);
 	Mockito.stub(globals.getOwnURI()).toReturn(XmppURI.parse(MYSELF));
-	chatManagerDefault = new ChatManagerDefault(dispatcher, globals);
+	chatManagerDefault = new ChatManagerDefault(emite, globals);
 	listener = Mockito.mock(ChatManagerListener.class);
 	chatManagerDefault.addListener(listener);
     }
