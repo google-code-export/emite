@@ -79,7 +79,6 @@ public class DispatcherDefault implements Dispatcher {
     private void fireActions(final IPacket iPacket, final List<Subscriptor> subscriptors) {
 	for (final Subscriptor subscriptor : subscriptors) {
 	    if (subscriptor.matcher.matches(iPacket)) {
-		Log.debug("Subscriptor found!");
 		subscriptor.packetListener.handle(iPacket);
 	    }
 	}

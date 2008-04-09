@@ -45,11 +45,6 @@ public class Session {
 	this.listeners = new ArrayList<SessionListener>();
     }
 
-    /**
-     * EXPERIMENTAL: every listener receives the current state
-     * 
-     * @param listener
-     */
     public void addListener(final SessionListener listener) {
 	listeners.add(listener);
 	listener.onStateChanged(state, state);
@@ -60,9 +55,9 @@ public class Session {
     }
 
     public void login(final SessionOptions sessionOptions) {
+	setState(State.connecting);
 	globals.setUserName(sessionOptions.getUserName());
 	globals.setPassword(sessionOptions.getPassword());
-	setState(State.connecting);
 	dispatcher.publish(BoshManager.Events.start);
     }
 

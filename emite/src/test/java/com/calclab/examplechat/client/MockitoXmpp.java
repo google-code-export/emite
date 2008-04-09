@@ -10,6 +10,7 @@ import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.Session;
+import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 
 public class MockitoXmpp implements AbstractXmpp {
 
@@ -59,7 +60,7 @@ public class MockitoXmpp implements AbstractXmpp {
 	return session;
     }
 
-    public void login(final String userName, final String userPassword) {
+    public void login(final String userName, final String userPassword, final Show show, final String blah) {
 	throw new RuntimeException("not implemented");
     }
 

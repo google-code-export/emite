@@ -28,6 +28,7 @@ import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.Session;
+import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 
 public interface AbstractXmpp {
 
@@ -45,7 +46,7 @@ public interface AbstractXmpp {
 
     public Session getSession();
 
-    public void login(final String userName, final String userPassword);
+    public void login(final String userName, final String userPassword, Show show, String status);
 
     public void logout();
 
