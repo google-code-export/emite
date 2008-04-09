@@ -173,12 +173,12 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
         } else {
             statusType = presence.getType();
         }
-        itemList.addItem(createStartChatMenuItem(item));
         switch (subscription) {
         case both:
         case to:
             switch (statusType) {
             case available:
+                itemList.addItem(createStartChatMenuItem(item));
                 if (presence.getShow() != null) {
                     switch (presence.getShow()) {
                     case available:
@@ -202,12 +202,14 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                      */
                     itemList.addItem(createRemoveBuddyMenuItem(item));
                 }
-            case unavailable:
                 break;
-            case unsubscribed:
+            case unavailable:
                 itemList.addItem(createRemoveBuddyMenuItem(item));
                 break;
+            case unsubscribed:
             case subscribed:
+                itemList.addItem(createStartChatMenuItem(item));
+                itemList.addItem(createRemoveBuddyMenuItem(item));
                 break;
             default:
                 /**
@@ -222,10 +224,12 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                  * for another entity's current presence, or an error related to
                  * a previously-sent presence stanza.
                  */
+                itemList.addItem(createStartChatMenuItem(item));
             }
             break;
         case from:
         case none:
+            itemList.addItem(createStartChatMenuItem(item));
             break;
         default:
             Log.error("Programatic error, subscription: " + subscription);
@@ -234,12 +238,12 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
     }
 
     private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final RosterItem item) {
-        return new UserGridMenuItem<XmppURI>("chat-icon", i18n.t("Remove from my buddies list"),
+        return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Remove from my buddies list"),
                 EmiteUiPlugin.ON_CANCEL_SUBSCRITOR, item.getXmppURI());
     }
 
     private UserGridMenuItem<XmppURI> createStartChatMenuItem(final RosterItem item) {
-        return new UserGridMenuItem<XmppURI>("chat-icon", i18n.t("Start a chat with this buddie"),
+        return new UserGridMenuItem<XmppURI>("newchat-icon", i18n.t("Start a chat with this buddie"),
                 EmiteUiPlugin.ON_PAIR_CHAT_START, item.getXmppURI());
     }
 
