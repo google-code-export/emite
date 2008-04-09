@@ -2,6 +2,8 @@ package com.calclab.emite.j2se.swing;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.DefaultListModel;
@@ -11,6 +13,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 
 import com.calclab.emite.client.extra.muc.Room;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 @SuppressWarnings("serial")
 public class RoomsPanel extends JPanel {
@@ -26,8 +29,8 @@ public class RoomsPanel extends JPanel {
 	public String toString() {
 	    String name = room.getName();
 	    name = name != null ? name : "(no name)";
-	    final String jid = room.getJid();
-	    return name + " - " + jid;
+	    final XmppURI uri = room.getURI();
+	    return name + " - " + uri;
 	}
     }
 
@@ -41,7 +44,11 @@ public class RoomsPanel extends JPanel {
 	this.listener = listener;
 
 	final JButton btnEnter = new JButton("enter room");
-
+	btnEnter.addActionListener(new ActionListener() {
+	    public void actionPerformed(final ActionEvent e) {
+		listener.onRoomEnterd("testroom1");
+	    }
+	});
 	listModel = new DefaultListModel();
 	list = new JList(listModel);
 	add(list, BorderLayout.CENTER);

@@ -23,7 +23,7 @@ package com.calclab.emite.client.components;
 
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-// FIXME: leer este comentario
+// FIXME: Dani (de dani)
 /**
  * creo que se podrían eliminar globals si, por ejemplo, con el evento
  * SessionManager.Events.loggedIn llega el ownURI... y así para cada parámetro

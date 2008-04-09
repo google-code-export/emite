@@ -21,21 +21,40 @@
  */
 package com.calclab.emite.client.extra.muc;
 
+import java.util.ArrayList;
+
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+
 public class Room {
-    private final String jid;
+    private final XmppURI uri;
     private final String name;
+    private final ArrayList<RoomUser> users;
+    private final ArrayList<RoomListener> listeners;
 
-    public Room(final String JID, final String name) {
-	jid = JID;
+    public Room(final XmppURI uri, final String name) {
+	this.uri = uri;
 	this.name = name;
-    }
-
-    public String getJid() {
-	return jid;
+	this.users = new ArrayList<RoomUser>();
+	this.listeners = new ArrayList<RoomListener>();
     }
 
     public String getName() {
 	return name;
+    }
+
+    public XmppURI getURI() {
+	return uri;
+    }
+
+    void addUser(final RoomUser roomUser) {
+	users.add(roomUser);
+	fireUserChanged();
+    }
+
+    private void fireUserChanged() {
+	for (final RoomListener listener : listeners) {
+	    listener.onUserChanged(users);
+	}
     }
 
 }

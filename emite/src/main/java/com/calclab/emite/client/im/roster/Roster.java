@@ -53,7 +53,7 @@ public class Roster {
     }
 
     public RosterItem findItemByURI(final XmppURI uri) {
-	return items.get(uri.getJID());
+	return items.get(uri.getJIDAsString());
     }
 
     public RosterItem getItem(final int index) {
