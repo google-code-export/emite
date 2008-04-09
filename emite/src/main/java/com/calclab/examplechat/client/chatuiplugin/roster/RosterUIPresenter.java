@@ -71,7 +71,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
             public void onItemPresenceChanged(final RosterItem item) {
                 PairChatUser user = rosterMap.get(item.getXmppURI().getJID());
                 if (user == null) {
-                    Log.error("Trying to update a user non in roster");
+                    Log.error("Trying to update a user is not in roster");
                 } else {
                     logPresence("Updating", item);
                     view.updateRosterItem(user, createMenuItemList(item));
@@ -98,18 +98,20 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
 
         presenceManager.addListener(new PresenceListener() {
             public void onPresenceReceived(final Presence presence) {
-                Log.info("PRESENCE: " + presence.getFromURI());
-                PairChatUser user = rosterMap.get(presence.getFromURI().getJID());
-                if (user != null) {
-                    RosterItem rosterItem = roster.findItemByURI(user.getUri());
-                    if (rosterItem != null) {
-                        view.addRosterItem(user, createMenuItemList(rosterItem));
-                    } else {
-                        Log.error("Rootitem, not found of Presence received");
-                    }
-                } else {
-                    Log.error("User not found of Presence received");
-                }
+                Log.info("PRESENCE: " + presence.toString() + presence.getFrom() + " show: " + presence.getShow()
+                        + " status: " + presence.getStatus() + " text: " + presence.getText());
+                // PairChatUser user =
+                // rosterMap.get(presence.getFromURI().getJID());
+                // if (user != null) {
+                // RosterItem rosterItem = roster.findItemByURI(user.getUri());
+                // if (rosterItem != null) {
+                // view.addRosterItem(user, createMenuItemList(rosterItem));
+                // } else {
+                // Log.error("Rootitem, not found of Presence received");
+                // }
+                // } else {
+                // Log.error("User not found of Presence received");
+                // }
             }
 
             public void onSubscriptionRequest(final Presence presence) {
@@ -151,21 +153,28 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
         case to:
             switch (statusType) {
             case available:
-                switch (presence.getShow()) {
-                case available:
-                case chat:
-                case dnd:
-                case xa:
-                case away:
-                    itemList.addItem(createRemoveBuddyMenuItem(item));
-                    break;
-                default:
-                    Log.debug("Status unknown, show: " + presence.getShow());
+                if (presence.getShow() != null) {
+                    switch (presence.getShow()) {
+                    case available:
+                    case chat:
+                    case dnd:
+                    case xa:
+                    case away:
+                        itemList.addItem(createRemoveBuddyMenuItem(item));
+                        break;
+                    default:
+                        Log.debug("Status unknown, show: " + presence.getShow());
+                    }
                 }
             case unavailable:
                 break;
+            case unsubscribed:
+                itemList.addItem(createRemoveBuddyMenuItem(item));
+                break;
+            case subscribed:
+                break;
             default:
-                Log.error("Programatic error, show: " + presence.getShow());
+                Log.error("Code bug, status: " + statusType);
             }
             break;
         case from:

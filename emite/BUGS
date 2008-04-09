@@ -11,4 +11,15 @@ For reports please use:
 INFO: Server startup in 2489 ms
 ERROR: gwt-log failed to initialize valid server-side logging implementation
 
-- rosterui item update problems
+- rosterui item update problems (try to update, remove works)
+
+- subject already is editable with no chats
+
+- unavailable: you can't start a chat (menu item)
+
+- We can start more than one chat with the same user uri...
+
+- When adding as a friend from a ext client:
+[INFO] Updating roster item: vjrj@localhost name: null subsc: to show: null77FCB59F762BC9659... (line 136)
+[ERROR] Code bug, status: subscribe77FCB59F762BC9659... (line 130)
+[ERROR] Programatic error, status: subscribe

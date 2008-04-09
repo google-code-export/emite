@@ -118,7 +118,7 @@ public class UserGrid extends Panel {
         XmppURI userUri = user.getUri();
         Record storeToRemove = recordMap.get(userUri);
         if (storeToRemove == null) {
-            Log.error("Trying to remove a non existing roster item");
+            Log.error("Trying to remove a non existing roster item: " + userUri);
         } else {
             store.remove(storeToRemove);
             menuMap.remove(userUri);
@@ -126,9 +126,9 @@ public class UserGrid extends Panel {
         }
     }
 
-    private void addUser(final AbstractChatUser user, final String statusIcon, final String statusText) {
-        // FIXME, maybe better in accept subscription...
+    private void addUser(final AbstractChatUser user, final String statusIcon, final String statusTextOrig) {
         String name = user.getAlias() != null ? user.getAlias() : user.getUri().getNode();
+        String statusText = statusTextOrig != null ? statusTextOrig : "";
         final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getUri().toString(),
                 name, user.getColor(), statusIcon, statusText });
         recordMap.put(user.getUri(), newUserRecord);
