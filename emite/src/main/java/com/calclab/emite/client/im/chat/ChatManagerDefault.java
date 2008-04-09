@@ -32,14 +32,15 @@ import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 
 public class ChatManagerDefault extends EmiteComponent implements ChatManager {
-    private final HashSet<ChatDefault> chats;
-    private final Globals globals;
-    private final ArrayList<ChatManagerListener> listeners;
+    protected final Globals globals;
+    protected final HashSet<ChatDefault> chats;
+    protected final ArrayList<ChatManagerListener> listeners;
 
     public ChatManagerDefault(final Emite emite, final Globals globals) {
 	super(emite);
@@ -55,22 +56,56 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
 
     @Override
     public void attach() {
-	when(new Packet("message", null), new PacketListener() {
+	when(SessionManager.Events.loggedOut, new PacketListener() {
 	    public void handle(final IPacket received) {
-		onReceived(new Message(received));
+		onLoggedOut();
 	    }
 	});
+	when(new Packet("message", null), new PacketListener() {
+	    public void handle(final IPacket received) {
+		onMessageReceived(new Message(received));
+	    }
+	});
+    }
+
+    public void close(final Chat chat) {
+	chats.remove(chat);
+	fireChatClosed(chat);
     }
 
     public Collection<ChatDefault> getChats() {
 	return chats;
     }
 
-    public Chat newChat(final XmppURI xmppURI) {
-	return createChat(xmppURI, null);
+    public void onLoggedOut() {
+	final ArrayList<Chat> toBeRemoved = new ArrayList<Chat>();
+	toBeRemoved.addAll(chats);
+	for (final Chat chat : toBeRemoved) {
+	    close(chat);
+	}
     }
 
-    public void onReceived(final Message message) {
+    public Chat openChat(final XmppURI to) {
+	ChatDefault chat = findChat(to, null);
+	if (chat == null) {
+	    chat = createChat(to, null);
+	}
+	return chat;
+    }
+
+    protected void fireChatClosed(final Chat chat) {
+	for (final ChatManagerListener listener : listeners) {
+	    listener.onChatClosed(chat);
+	}
+    }
+
+    protected void fireChatCreated(final Chat chat) {
+	for (final ChatManagerListener listener : listeners) {
+	    listener.onChatCreated(chat);
+	}
+    }
+
+    protected void onMessageReceived(final Message message) {
 	final Type type = message.getType();
 	switch (type) {
 	case chat:
@@ -83,9 +118,7 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
 	final String theThread = thread != null ? thread : String.valueOf(Math.random() * 1000000);
 	final ChatDefault chat = new ChatDefault(from, globals.getOwnURI(), theThread, emite);
 	chats.add(chat);
-	for (final ChatManagerListener listener : listeners) {
-	    listener.onChatCreated(chat);
-	}
+	fireChatCreated(chat);
 	return chat;
     }
 
@@ -122,7 +155,6 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
 
     private void onChatMessageReceived(final Message message) {
 	final XmppURI from = message.getFromURI();
-
 	final String thread = message.getThread();
 
 	ChatDefault chat = findChat(from, thread);

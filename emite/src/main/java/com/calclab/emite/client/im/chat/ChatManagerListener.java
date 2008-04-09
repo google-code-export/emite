@@ -22,5 +22,7 @@
 package com.calclab.emite.client.im.chat;
 
 public interface ChatManagerListener {
+    void onChatClosed(Chat chat);
+
     void onChatCreated(Chat chat);
 }

@@ -33,7 +33,7 @@ import com.calclab.emite.client.core.services.XMLService;
 import com.calclab.emite.client.core.services.gwt.GWTConnector;
 import com.calclab.emite.client.core.services.gwt.GWTScheduler;
 import com.calclab.emite.client.core.services.gwt.GWTXMLService;
-import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.chat.ChatPlugin;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.presence.PresencePlugin;
@@ -45,33 +45,34 @@ import com.calclab.emite.client.xmpp.session.SessionOptions;
 import com.calclab.emite.client.xmpp.session.SessionPlugin;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 
-public class Xmpp implements AbstractXmpp {
+public class Xmpp {
 
-    public static AbstractXmpp create(final BoshOptions options) {
+    public static Xmpp create(final BoshOptions options) {
 	final GWTXMLService xmlService = new GWTXMLService();
 	final GWTConnector connector = new GWTConnector();
 	final GWTScheduler scheduler = new GWTScheduler();
 	return create(connector, xmlService, scheduler, options);
     }
 
-    public static AbstractXmpp create(final Connector connector, final XMLService xmlService,
-	    final Scheduler scheduler, final BoshOptions options) {
+    public static Xmpp create(final Connector connector, final XMLService xmlService, final Scheduler scheduler,
+	    final BoshOptions options) {
 
 	final Container container = ContainerPlugin.create();
 	Plugins.installDefaultPlugins(container, xmlService, connector, scheduler, options);
-	container.onStartComponent();
 	return new Xmpp(container);
     }
 
     private final Container container;
     private final Session session;
+    private final boolean isStarted;
 
     public Xmpp(final Container container) {
+	this.isStarted = false;
 	this.container = container;
 	this.session = SessionPlugin.getSession(container);
     }
 
-    public ChatManagerDefault getChatManager() {
+    public ChatManager getChatManager() {
 	return ChatPlugin.getChat(container);
     }
 
@@ -100,6 +101,7 @@ public class Xmpp implements AbstractXmpp {
     }
 
     public void login(final String userName, final String userPassword, final Presence.Show show, final String status) {
+	start();
 	Log.debug("XMPP Login " + userName + " : " + userPassword);
 	session.login(new SessionOptions(userName, userPassword));
 	getPresenceManager().setOwnPresence(status, show);
@@ -107,6 +109,19 @@ public class Xmpp implements AbstractXmpp {
 
     public void logout() {
 	session.logout();
+    }
+
+    public void start() {
+	if (!isStarted) {
+	    container.onStartComponent();
+	}
+    }
+
+    public void stop() {
+	if (isStarted) {
+	    logout();
+	    container.onStopComponent();
+	}
     }
 
 }

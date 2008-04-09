@@ -21,48 +21,35 @@
  */
 package com.calclab.emite.client.extra.muc;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class MUCRoomManager extends EmiteComponent implements RoomManager {
-    private final Globals globals;
-    private final ArrayList<RoomManagerListener> listeners;
+public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     private final HashMap<XmppURI, Room> rooms;
 
     public MUCRoomManager(final Emite emite, final Globals globals) {
-	super(emite);
-	this.globals = globals;
-	this.listeners = new ArrayList<RoomManagerListener>();
+	super(emite, globals);
 	this.rooms = new HashMap<XmppURI, Room>();
-    }
-
-    public void addListener(final RoomManagerListener listener) {
-	listeners.add(listener);
     }
 
     @Override
     public void attach() {
+	super.attach();
 	when(SessionManager.Events.loggedIn, new PacketListener() {
 	    public void handle(final IPacket received) {
-		sendMUCSupportQuery();
-	    }
-	});
-	when("message", new PacketListener() {
-	    public void handle(final IPacket received) {
-		onMessageReceived(new Message(received));
 	    }
 	});
 	when("presence", new PacketListener() {
@@ -72,16 +59,35 @@ public class MUCRoomManager extends EmiteComponent implements RoomManager {
 	});
     }
 
-    public Room enterRoom(final String jid, final String alias) {
+    @Override
+    public void close(final Chat whatToClose) {
+	final Room room = rooms.remove(whatToClose.getOtherURI().getJID());
+	if (room != null) {
+	    room.close();
+	    fireChatClosed(room);
+	}
+    }
+
+    @Override
+    public Room openChat(final XmppURI roomURI) {
 	final XmppURI ownURI = globals.getOwnURI();
-	final XmppURI roomURI = XmppURI.parse(jid + "/" + alias);
-	final Room room = new Room(ownURI, roomURI, "fix me!", emite);
+	final Room room = new Room(ownURI, roomURI.getJID(), "the name of the room", emite);
 	rooms.put(roomURI.getJID(), room);
-	final Presence presence = new Presence(null, ownURI.toString(), jid + "/" + alias);
+	final Presence presence = new Presence(null, ownURI, roomURI);
 	presence.addChild(new Packet("x", "http://jabber.org/protocol/muc"));
 	emite.send(presence);
-	fireRoomCreated(room);
+	fireChatCreated(room);
 	return room;
+    }
+
+    @Override
+    protected void onMessageReceived(final Message message) {
+	if (message.getType() == Message.Type.groupchat) {
+	    final Room room = rooms.get(message.getFromURI().getJID());
+	    if (room != null) {
+		room.dispatch(message);
+	    }
+	}
     }
 
     protected void sendMUCSupportQuery() {
@@ -108,15 +114,6 @@ public class MUCRoomManager extends EmiteComponent implements RoomManager {
 	});
     }
 
-    void onMessageReceived(final Message message) {
-	if (message.getType() == Message.Type.groupchat) {
-	    final Room room = rooms.get(message.getFromURI());
-	    if (room != null) {
-		room.dispatch(message);
-	    }
-	}
-    }
-
     void onPresenceReceived(final Presence presence) {
 	final Room room = rooms.get(presence.getFromURI().getJID());
 	if (room != null) {
@@ -126,12 +123,6 @@ public class MUCRoomManager extends EmiteComponent implements RoomManager {
 		room.addUser(new RoomUser(presence.getFromURI(), item.getAttribute("affiliation"), item
 			.getAttribute("role")));
 	    }
-	}
-    }
-
-    private void fireRoomCreated(final Room room) {
-	for (final RoomManagerListener listener : listeners) {
-	    listener.onRoomCreated(room);
 	}
     }
 

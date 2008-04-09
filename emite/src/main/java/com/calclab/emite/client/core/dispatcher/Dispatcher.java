@@ -21,15 +21,16 @@
  */
 package com.calclab.emite.client.core.dispatcher;
 
+import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.packet.IPacket;
 
-public interface Dispatcher {
+public interface Dispatcher extends Component {
 
-	public void addListener(DispatcherStateListener listener);
+    public void addListener(DispatcherStateListener listener);
 
-	public void publish(IPacket iPacket);
+    public void publish(IPacket iPacket);
 
-	public void subscribe(Matcher matcher, PacketListener packetListener);
+    public void subscribe(Matcher matcher, PacketListener packetListener);
 
 }

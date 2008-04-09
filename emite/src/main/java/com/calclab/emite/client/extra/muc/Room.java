@@ -27,13 +27,15 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class Room implements Chat {
     private final XmppURI roomURI;
     private final String name;
     private final ArrayList<RoomUser> users;
-    private final ArrayList<RoomListener> listeners;
+    private final ArrayList<ChatListener> listeners;
     private final Emite emite;
     private final XmppURI userURI;
 
@@ -43,15 +45,26 @@ public class Room implements Chat {
 	this.name = name;
 	this.emite = emite;
 	this.users = new ArrayList<RoomUser>();
-	this.listeners = new ArrayList<RoomListener>();
+	this.listeners = new ArrayList<ChatListener>();
     }
 
     public void addListener(final ChatListener listener) {
-
+	listeners.add(listener);
     }
 
     public void addListener(final RoomListener listener) {
 	listeners.add(listener);
+    }
+
+    /**
+     * In order to exit a multi-user chat room, an occupant sends a presence
+     * stanza of type "unavailable" to the <room@service/nick> it is currently
+     * using in the room.
+     * 
+     * @see http://www.xmpp.org/extensions/xep-0045.html#exit
+     */
+    public void close() {
+	emite.send(new Presence(Type.unavailable, userURI, roomURI));
     }
 
     public String getID() {
@@ -70,15 +83,11 @@ public class Room implements Chat {
 	return roomURI.getNode();
     }
 
-    public XmppURI getURI() {
-	return roomURI;
-    }
-
     public void send(final String text) {
 	final Message message = new Message(userURI, roomURI, text);
 	message.setType(Message.Type.groupchat);
 	emite.send(message);
-	for (final RoomListener listener : listeners) {
+	for (final ChatListener listener : listeners) {
 	    listener.onMessageSent(this, message);
 	}
     }
@@ -89,12 +98,17 @@ public class Room implements Chat {
     }
 
     void dispatch(final Message message) {
-
+	for (final ChatListener listener : listeners) {
+	    listener.onMessageReceived(this, message);
+	}
     }
 
     private void fireUserChanged() {
-	for (final RoomListener listener : listeners) {
-	    listener.onUserChanged(users);
+	for (final ChatListener listener : listeners) {
+	    try {
+		((RoomListener) listener).onUserChanged(users);
+	    } catch (final ClassCastException e) {
+	    }
 	}
     }
 

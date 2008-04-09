@@ -23,7 +23,7 @@ package com.calclab.examplechat.client.chatuiplugin;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.AbstractXmpp;
+import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
@@ -59,7 +59,7 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         }
     }
 
-    public MultiChat createMultiChat(final AbstractXmpp xmpp, final MultiChatCreationParam param,
+    public MultiChat createMultiChat(final Xmpp xmpp, final MultiChatCreationParam param,
             final I18nTranslationService i18n, final MultiChatListener listener) {
         final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, App.getInstance(), param, listener);
         final MultiChatPanel panel = new MultiChatPanel(i18n, presenter);
@@ -92,7 +92,7 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         return presenter;
     }
 
-    public RosterUI createrRosterUI(final AbstractXmpp xmpp, final I18nTranslationService i18n) {
+    public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n) {
         RosterUIPresenter presenter = new RosterUIPresenter(xmpp, i18n);
         RosterUIPanel panel = new RosterUIPanel(i18n, presenter);
         presenter.init(panel);

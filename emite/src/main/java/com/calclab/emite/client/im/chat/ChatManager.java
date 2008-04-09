@@ -29,8 +29,10 @@ public interface ChatManager {
 
     public abstract void addListener(final ChatManagerListener listener);
 
+    public abstract void close(Chat chat);
+
     public abstract Collection<ChatDefault> getChats();
 
-    public abstract Chat newChat(final XmppURI xmppURI);
+    public abstract Chat openChat(final XmppURI xmppURI);
 
 }

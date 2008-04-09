@@ -26,9 +26,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class Roster {
+public class Roster implements Component {
     public static enum SubscriptionMode {
 	auto_accept_all, auto_reject_all, manual
     }

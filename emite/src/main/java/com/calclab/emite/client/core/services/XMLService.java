@@ -21,10 +21,10 @@
  */
 package com.calclab.emite.client.core.services;
 
+import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.core.packet.IPacket;
 
-
-public interface XMLService {
+public interface XMLService extends Component {
     String toString(IPacket iPacket);
 
     IPacket toXML(String xml);

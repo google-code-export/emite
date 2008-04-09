@@ -23,7 +23,7 @@ package com.calclab.examplechat.client.chatuiplugin;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.AbstractXmpp;
+import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
@@ -44,12 +44,12 @@ public interface ChatDialogFactory {
 
     public GroupChatUserList createGroupChatUserList();
 
-    public MultiChat createMultiChat(final AbstractXmpp xmpp, MultiChatCreationParam param,
+    public MultiChat createMultiChat(final Xmpp xmpp, MultiChatCreationParam param,
             final I18nTranslationService i18n, final MultiChatListener listener);
 
     public PairChat createPairChat(final Chat chat, final PairChatListener listener, String currentUserJid,
             final PairChatUser otherUser);
 
-    public RosterUI createrRosterUI(final AbstractXmpp xmpp, final I18nTranslationService i18n);
+    public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n);
 
 }

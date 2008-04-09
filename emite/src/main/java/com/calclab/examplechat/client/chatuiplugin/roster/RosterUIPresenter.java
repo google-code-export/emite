@@ -28,7 +28,7 @@ import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.AbstractXmpp;
+import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
@@ -47,13 +47,13 @@ import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItemList;
 public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
 
     private RosterUIView view;
-    private final AbstractXmpp xmpp;
+    private final Xmpp xmpp;
     private final HashMap<String, PairChatUser> rosterMap;
     private final I18nTranslationService i18n;
     private final PresenceManager presenceManager;
     private final Roster roster;
 
-    public RosterUIPresenter(final AbstractXmpp xmpp, final I18nTranslationService i18n) {
+    public RosterUIPresenter(final Xmpp xmpp, final I18nTranslationService i18n) {
         this.xmpp = xmpp;
         this.i18n = i18n;
         rosterMap = new HashMap<String, PairChatUser>();

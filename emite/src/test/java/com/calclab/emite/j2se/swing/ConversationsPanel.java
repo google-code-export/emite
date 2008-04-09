@@ -19,6 +19,10 @@ public class ConversationsPanel extends JPanel {
 	this.add(new JScrollPane(tabs));
     }
 
+    public void close(final ChatPanel panel) {
+	tabs.remove(panel);
+    }
+
     public ChatPanel createChat(final String title, final ChatPanelListener listener) {
 	final ChatPanel panel = new ChatPanel(listener);
 	tabs.addTab(title, panel);

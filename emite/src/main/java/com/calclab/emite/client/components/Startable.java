@@ -21,8 +21,8 @@
  */
 package com.calclab.emite.client.components;
 
-public interface Startable {
-	public void onStartComponent();
+public interface Startable extends Component {
+    public void onStartComponent();
 
-	public void onStopComponent();
+    public void onStopComponent();
 }

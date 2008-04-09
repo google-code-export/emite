@@ -13,6 +13,8 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class ChatPanel extends JPanel {
     public static interface ChatPanelListener {
+	void onClose(ChatPanel source);
+
 	void onSend(ChatPanel source, String text);
     }
 
@@ -34,9 +36,22 @@ public class ChatPanel extends JPanel {
 	final JButton btnSend = new JButton("send");
 	fieldBody.addActionListener(actionListener);
 	btnSend.addActionListener(actionListener);
+
+	final JButton btnClose = new JButton("close");
+	btnClose.addActionListener(new ActionListener() {
+	    public void actionPerformed(final ActionEvent e) {
+		listener.onClose(ChatPanel.this);
+	    }
+	});
+
 	final JPanel panel = new JPanel(new BorderLayout());
 	panel.add(fieldBody);
-	panel.add(btnSend, BorderLayout.EAST);
+
+	final JPanel buttons = new JPanel();
+	buttons.add(btnSend);
+	buttons.add(btnClose);
+
+	panel.add(buttons, BorderLayout.EAST);
 	add(panel, BorderLayout.SOUTH);
 
     }

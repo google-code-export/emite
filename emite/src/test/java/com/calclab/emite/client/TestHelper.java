@@ -11,7 +11,7 @@ import com.calclab.emite.j2se.scheduler.ThreadScheduler;
 
 public class TestHelper {
 
-    public static AbstractXmpp createXMPP() {
+    public static Xmpp createXMPP() {
 	return createXMPP(new HttpConnectorListener() {
 	    public void onError(final String id, final String cause) {
 	    }
@@ -31,7 +31,7 @@ public class TestHelper {
 	});
     }
 
-    public static AbstractXmpp createXMPP(final BoshOptions options, final HttpConnectorListener listener) {
+    public static Xmpp createXMPP(final BoshOptions options, final HttpConnectorListener listener) {
 
 	final TigaseXMLService xmlService = new TigaseXMLService();
 	final HttpConnector connector = new HttpConnector(listener);
@@ -39,9 +39,9 @@ public class TestHelper {
 	return Xmpp.create(connector, xmlService, scheduler, options);
     }
 
-    public static AbstractXmpp createXMPP(final HttpConnectorListener httpConnectorListener) {
+    public static Xmpp createXMPP(final HttpConnectorListener httpConnectorListener) {
 
-	final AbstractXmpp xmpp = createXMPP(new BoshOptions("http://localhost:8383/http-bind/", "localhost"),
+	final Xmpp xmpp = createXMPP(new BoshOptions("http://localhost:8383/http-bind/", "localhost"),
 		httpConnectorListener);
 	final Container container = xmpp.getComponents();
 	final Dispatcher dispatcher = DispatcherPlugin.getDispatcher(container);

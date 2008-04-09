@@ -29,7 +29,7 @@ import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.AbstractXmpp;
+import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.im.chat.Chat;
@@ -76,7 +76,7 @@ public class EmiteUiPlugin extends Plugin {
             }
 
             private void createChatDialog(final MultiChatCreationParam param) {
-                final AbstractXmpp xmpp = Xmpp.create(param.getBoshOptions());
+                final Xmpp xmpp = Xmpp.create(param.getBoshOptions());
 
                 multiChatDialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(xmpp, param,
                         new I18nTranslationServiceMocked(), new MultiChatListener() {
@@ -112,7 +112,7 @@ public class EmiteUiPlugin extends Plugin {
 
                 dispatcher.subscribe(EmiteUiPlugin.ON_PAIR_CHAT_START, new Action<XmppURI>() {
                     public void execute(final XmppURI param) {
-                        xmpp.getChatManager().newChat(param);
+                        xmpp.getChatManager().openChat(param);
                     }
                 });
 

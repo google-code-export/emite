@@ -29,7 +29,7 @@ import org.ourproject.kune.platf.client.extend.UIExtensionPoint;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.AbstractXmpp;
+import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
@@ -68,11 +68,11 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     private final RosterUI rosterUI;
     private final UserChatOptions userChatOptions;
     private MultiChatView view;
-    private final AbstractXmpp xmpp;
+    private final Xmpp xmpp;
     private final PresenceManager presenceManager;
     private OwnPresence currentOwnPresence;
 
-    public MultiChatPresenter(final AbstractXmpp xmpp, final I18nTranslationService i18n,
+    public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n,
 	    final ChatDialogFactory factory, final MultiChatCreationParam param, final MultiChatListener listener) {
 	this.xmpp = xmpp;
 	presenceManager = xmpp.getPresenceManager();
@@ -398,6 +398,9 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 	});
 
 	xmpp.getChatManager().addListener(new ChatManagerListener() {
+	    public void onChatClosed(final Chat chat) {
+	    }
+
 	    public void onChatCreated(final Chat chat) {
 		createPairChat(chat);
 		chat.addListener(new ChatListener() {
