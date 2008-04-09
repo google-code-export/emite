@@ -76,3 +76,29 @@
 .load-icon {
   background-image: url(img/extload.gif) !important;
 }
+
+.newchat-icon {
+  background-image: url(img/new-chat.gif) !important;
+}
+
+.newmessage-icon {
+  background-image: url(img/new-message.gif) !important;
+}
+
+.groupchat-icon {
+  background-image: url(img/group-chat.gif) !important;
+}
+
+.add-icon {
+  background-image: url(img/add.gif) !important;
+}
+
+.del-icon {
+  background-image: url(img/del.gif) !important;
+}
+
+.cancel-icon {
+  background-image: url(img/cancel.gif) !important;
+}
+
+
