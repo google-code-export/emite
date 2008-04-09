@@ -25,12 +25,12 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
-import com.calclab.examplechat.client.chatuiplugin.users.UserGrid;
+import com.calclab.examplechat.client.chatuiplugin.users.UserGridPanel;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenu;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItemList;
 import com.gwtext.client.widgets.MessageBox;
 
-public class RosterUIPanel extends UserGrid implements RosterUIView {
+public class RosterUIPanel extends UserGridPanel implements RosterUIView {
 
     private final RosterUIPresenter presenter;
     private final I18nTranslationService i18n;

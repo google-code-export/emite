@@ -25,20 +25,20 @@ import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.layout.FitLayout;
 
 public class GroupChatUserListPanel extends Panel implements GroupChatUserListView {
-    private final UserGrid userGrid;
+    private final UserGridPanel userGridPanel;
 
     public GroupChatUserListPanel() {
-        userGrid = new UserGrid();
-        super.add(userGrid);
+        userGridPanel = new UserGridPanel();
+        super.add(userGridPanel);
         super.setLayout(new FitLayout());
         // super.setBorder(false);
     }
 
     public void addUser(final GroupChatUser user) {
-        userGrid.addUser(user);
+        userGridPanel.addUser(user);
     }
 
     public void remove(final GroupChatUser user) {
-        userGrid.addUser(user);
+        userGridPanel.addUser(user);
     }
 }

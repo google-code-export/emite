@@ -49,7 +49,7 @@ import com.gwtext.client.widgets.grid.GridView;
 import com.gwtext.client.widgets.grid.Renderer;
 import com.gwtext.client.widgets.grid.event.GridRowListener;
 
-public class UserGrid extends Panel {
+public class UserGridPanel extends Panel {
 
     private static final String ALIAS = "alias";
     private static final String COLOR = "color";
@@ -58,17 +58,17 @@ public class UserGrid extends Panel {
     private static final String STATUSIMG = "status";
     private static final String STATUSTEXT = "statustext";
     private FieldDef[] fieldDefs;
-    private final HashMap<XmppURI, UserGridMenu> menuMap;
-    private final HashMap<XmppURI, Record> recordMap;
+    private final HashMap<String, UserGridMenu> menuMap;
+    private final HashMap<String, Record> recordMap;
     private RecordDef recordDef;
     private Store store;
     private GridPanel grid;
 
-    public UserGrid() {
+    public UserGridPanel() {
         setBorder(false);
         createGrid();
-        menuMap = new HashMap<XmppURI, UserGridMenu>();
-        recordMap = new HashMap<XmppURI, Record>();
+        menuMap = new HashMap<String, UserGridMenu>();
+        recordMap = new HashMap<String, Record>();
     }
 
     public void addUser(final GroupChatUser user) {
@@ -111,19 +111,21 @@ public class UserGrid extends Panel {
                 .getPresence());
         final String statusIcon = statusAbsIcon.getHTML();
         addUser(user, statusIcon, calculePresenceStatus(user.getPresence()));
-        menuMap.put(user.getUri(), menu);
+        menuMap.put(user.getJid(), menu);
+        this.doLayout();
     }
 
     public void removeUser(final AbstractChatUser user) {
-        XmppURI userUri = user.getUri();
-        Record storeToRemove = recordMap.get(userUri);
+        String userJid = user.getJid();
+        Record storeToRemove = recordMap.get(userJid);
         if (storeToRemove == null) {
-            Log.error("Trying to remove a non existing roster item: " + userUri);
+            Log.error("Trying to remove a non existing roster item: " + userJid);
         } else {
             store.remove(storeToRemove);
-            menuMap.remove(userUri);
-            recordMap.remove(userUri);
+            menuMap.remove(userJid);
+            recordMap.remove(userJid);
         }
+        this.doLayout();
     }
 
     private void addUser(final AbstractChatUser user, final String statusIcon, final String statusTextOrig) {
@@ -131,7 +133,7 @@ public class UserGrid extends Panel {
         String statusText = statusTextOrig != null ? statusTextOrig : "";
         final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getUri().toString(),
                 name, user.getColor(), statusIcon, statusText });
-        recordMap.put(user.getUri(), newUserRecord);
+        recordMap.put(user.getJid(), newUserRecord);
         store.add(newUserRecord);
     }
 
