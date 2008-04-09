@@ -53,7 +53,7 @@ public class RosterUIPresenterTest {
         // Stubs
         Mockito.stub(factory.createrRosterUI(xmpp, i18n)).toReturn(rosterUI);
         Mockito.stub(rosterUI.getView()).toReturn(rosterUIView);
-        Mockito.stub(rosterUI.getUserByJid(otherUri.getJID())).toReturn(otherUser);
+        Mockito.stub(rosterUI.getUserByJid(otherUri.getJIDAsString())).toReturn(otherUser);
     }
 
     @Test

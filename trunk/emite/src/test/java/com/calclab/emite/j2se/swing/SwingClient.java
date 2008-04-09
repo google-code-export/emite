@@ -79,6 +79,10 @@ public class SwingClient {
 	});
 
 	roomsPanel = new RoomsPanel(new RoomsPanelListener() {
+	    public void onRoomEnterd(final String roomName) {
+		final RoomManager roomManager = MUCPlugin.getRoomManager(xmpp.getComponents());
+		roomManager.enterRoom("testroom1@conference.localhost", "nick");
+	    }
 	});
 
 	conversationsPanel = new ConversationsPanel();

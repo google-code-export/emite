@@ -59,6 +59,14 @@ public class Session {
 	return state;
     }
 
+    public boolean isLoggedIn() {
+	return state == State.connected;
+    }
+
+    public boolean isLoggedOut() {
+	return state == State.disconnected;
+    }
+
     public void login(final SessionOptions sessionOptions) {
 	globals.setUserName(sessionOptions.getUserName());
 	globals.setPassword(sessionOptions.getPassword());

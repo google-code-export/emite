@@ -22,6 +22,7 @@
 package com.calclab.emite.client.extra.muc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.calclab.emite.client.components.Globals;
@@ -29,22 +30,25 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.client.xmpp.stanzas.Message.MessageType;
 
 public class MUCRoomManager extends EmiteComponent implements RoomManager {
     private final Globals globals;
     private final ArrayList<RoomManagerListener> listeners;
-    private final ArrayList<Room> rooms;
+    private final HashMap<XmppURI, Room> rooms;
 
     public MUCRoomManager(final Emite emite, final Globals globals) {
 	super(emite);
 	this.globals = globals;
 	this.listeners = new ArrayList<RoomManagerListener>();
-	this.rooms = new ArrayList<Room>();
+	this.rooms = new HashMap<XmppURI, Room>();
     }
 
     public void addListener(final RoomManagerListener listener) {
@@ -63,14 +67,23 @@ public class MUCRoomManager extends EmiteComponent implements RoomManager {
 		onMessageReceived(new Message(received));
 	    }
 	});
+	when("presence", new PacketListener() {
+	    public void handle(final IPacket received) {
+		onPresenceReceived(new Presence(received));
+	    }
+	});
     }
 
-    protected void onMessageReceived(final Message message) {
-	if (message.getType() == MessageType.groupchat) {
-	    // mensaje a una habitación
-	    // Room room = this.getRoom(message.getFrom());
-	    // room.dispatch(message);
-	}
+    public Room enterRoom(final String jid, final String alias) {
+	final XmppURI uri = XmppURI.parse(jid + "/" + alias);
+	// FIXME: Dani (de dani)
+	final Room room = new Room(uri, "fix me!");
+	rooms.put(uri, room);
+	final Presence presence = new Presence(null, globals.getOwnURI().toString(), jid + "/" + alias);
+	presence.addChild(new Packet("x", "http://jabber.org/protocol/muc"));
+	emite.send(presence);
+	fireRoomsChanged();
+	return room;
     }
 
     protected void sendMUCSupportQuery() {
@@ -97,9 +110,28 @@ public class MUCRoomManager extends EmiteComponent implements RoomManager {
 	});
     }
 
+    void onMessageReceived(final Message message) {
+	if (message.getType() == MessageType.groupchat) {
+	    // mensaje a una habitación
+	    // Room room = this.getRoom(message.getFrom());
+	    // room.dispatch(message);
+	}
+    }
+
+    void onPresenceReceived(final Presence presence) {
+	final Room room = rooms.get(presence.getFromURI());
+	if (room != null) {
+	    final IPacket xtension = presence.getFirstChild("x");
+	    if (xtension != null && xtension.hasAttribute("xmlns", "http://jabber.org/protocol/muc#user")) {
+		final IPacket item = xtension.getFirstChild("item");
+		room.addUser(new RoomUser());
+	    }
+	}
+    }
+
     private void fireRoomsChanged() {
 	for (final RoomManagerListener listener : listeners) {
-	    listener.onRoomsChanged(rooms);
+	    listener.onRoomsChanged(rooms.values());
 	}
     }
 
@@ -107,7 +139,8 @@ public class MUCRoomManager extends EmiteComponent implements RoomManager {
 	final List<? extends IPacket> items = received.getFirstChild("query").getChildren();
 	rooms.clear();
 	for (final IPacket packet : items) {
-	    rooms.add(new Room(packet.getAttribute("jid"), packet.getAttribute("name")));
+	    final XmppURI uri = XmppURI.parse(packet.getAttribute("jid"));
+	    rooms.put(uri, new Room(uri, packet.getAttribute("name")));
 	}
 	fireRoomsChanged();
     }

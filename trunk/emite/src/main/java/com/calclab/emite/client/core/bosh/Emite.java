@@ -34,7 +34,10 @@ public interface Emite {
     void send(IPacket iPacket);
 
     /**
-     * Sends a packet with ID and handle response
+     * Sends a packet with ID and handle response When you send a packet with
+     * this method, emite will generate a id using the category, put the id as
+     * attribute in the packet and wait for a response Is mainly for use with IQ
+     * query objects
      * 
      * @param category
      * @param withQuery

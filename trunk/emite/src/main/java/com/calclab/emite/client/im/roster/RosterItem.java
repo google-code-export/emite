@@ -26,34 +26,35 @@ import java.util.List;
 
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class RosterItem {
 
     public static enum Subscription {
-        /**
-         * "both" -- both the user and the contact have subscriptions to each
-         * other's presence information
-         */
-        both,
-        /**
-         * "from" -- the contact has a subscription to the user's presence
-         * information, but the user does not have a subscription to the
-         * contact's presence information
-         */
-        from,
-        /**
-         * "none" -- the user does not have a subscription to the contact's
-         * presence information, and the contact does not have a subscription to
-         * the user's presence information
-         */
-        none,
-        /**
-         * "to" -- the user has a subscription to the contact's presence
-         * information, but the contact does not have a subscription to the
-         * user's presence information
-         */
-        to
+	/**
+	 * "both" -- both the user and the contact have subscriptions to each
+	 * other's presence information
+	 */
+	both,
+	/**
+	 * "from" -- the contact has a subscription to the user's presence
+	 * information, but the user does not have a subscription to the
+	 * contact's presence information
+	 */
+	from,
+	/**
+	 * "none" -- the user does not have a subscription to the contact's
+	 * presence information, and the contact does not have a subscription to
+	 * the user's presence information
+	 */
+	none,
+	/**
+	 * "to" -- the user has a subscription to the contact's presence
+	 * information, but the contact does not have a subscription to the
+	 * user's presence information
+	 */
+	to
     }
 
     private final ArrayList<String> groups;
@@ -63,38 +64,39 @@ public class RosterItem {
     private Presence presence;
 
     public RosterItem(final XmppURI uri, final Subscription subscription, final String name) {
-        this.uri = uri;
-        this.subscription = subscription;
-        this.name = name;
-        this.groups = new ArrayList<String>();
+	this.uri = uri;
+	this.subscription = subscription;
+	this.name = name;
+	this.groups = new ArrayList<String>();
+	setPresence(null);
     }
 
     public List<String> getGroups() {
-        return groups;
+	return groups;
     }
 
     public String getName() {
-        return name;
+	return name;
     }
 
     public Presence getPresence() {
-        return presence;
-    }
-
-    public Type getPresenceType() {
-        return presence != null ? presence.getType() : Type.unavailable;
+	return presence;
     }
 
     public Subscription getSubscription() {
-        return subscription;
+	return subscription;
     }
 
     public XmppURI getXmppURI() {
-        return uri;
+	return uri;
     }
 
     public void setPresence(final Presence presence) {
-        this.presence = presence;
+	if (presence == null) {
+	    this.presence = new Presence(Type.unavailable, (String) null, null).With(Show.away);
+	} else {
+	    this.presence = presence;
+	}
     }
 
 }

@@ -16,23 +16,26 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.calclab.emite.client.im.roster.RosterItem;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.j2se.swing.AddRosterItemPanel.AddRosterItemPanelListener;
 
 @SuppressWarnings("serial")
 public class RosterPanel extends JPanel {
 
-    public static class RosterListItem {
+    public static class RosterItemWrapper {
 	final RosterItem item;
 	final String name;
 
-	public RosterListItem(final String name, final RosterItem item) {
+	public RosterItemWrapper(final String name, final RosterItem item) {
 	    this.item = item;
 	    this.name = name;
 	}
 
 	@Override
 	public String toString() {
-	    return name + "(" + item.getXmppURI() + ") " + item.getPresenceType();
+	    final Presence presence = item.getPresence();
+	    final String status = presence.getType() + ":" + presence.getStatus() + ":" + presence.getShow();
+	    return name + "(" + item.getXmppURI() + ") - " + status;
 	}
     }
 
@@ -58,7 +61,7 @@ public class RosterPanel extends JPanel {
     }
 
     public void add(final String name, final RosterItem item) {
-	model.addElement(new RosterListItem(name, item));
+	model.addElement(new RosterItemWrapper(name, item));
     }
 
     public void clear() {
@@ -106,8 +109,8 @@ public class RosterPanel extends JPanel {
 	    public void actionPerformed(final ActionEvent e) {
 		final Object value = list.getSelectedValue();
 		if (value != null) {
-		    final RosterListItem item = (RosterListItem) value;
-		    listener.onStartChat(item.item);
+		    final RosterItemWrapper wrapper = (RosterItemWrapper) value;
+		    listener.onStartChat(wrapper.item);
 		}
 	    }
 	});
@@ -127,9 +130,9 @@ public class RosterPanel extends JPanel {
 	final JButton btnRemoveContact = new JButton("remove contact");
 	btnRemoveContact.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		final RosterListItem item = (RosterListItem) list.getSelectedValue();
-		if (item != null) {
-		    listener.onRemoveItem(item.item);
+		final RosterItemWrapper wrapper = (RosterItemWrapper) list.getSelectedValue();
+		if (wrapper != null) {
+		    listener.onRemoveItem(wrapper.item);
 		}
 	    }
 	});
