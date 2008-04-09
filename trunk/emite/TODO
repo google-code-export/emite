@@ -5,6 +5,7 @@ TODO-list for kune
 
 SHORT-TERM (URGENT):
 --------------------------------------------------------------------------------
+<vjrj> AbstractXmpp -> Xmpp, Xmpp -> XmppDefault
 <vjrj> Presence probe for refresh status
 --> vjrj
 <vjrj> http bind port in properties
