@@ -21,11 +21,14 @@
  */
 package com.calclab.emite.client;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.components.DefaultContainer;
 import com.calclab.emite.client.core.CorePlugin;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.services.gwt.GWTServicesPlugin;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.chat.ChatPlugin;
@@ -44,17 +47,21 @@ public class Xmpp {
     public static Xmpp create(final BoshOptions options) {
 	final DefaultContainer c = new DefaultContainer();
 	GWTServicesPlugin.install(c);
-	return new Xmpp(c, options);
+	return new Xmpp(c, options, new DispatcherMonitor() {
+	    public void publishing(final IPacket packet) {
+		Log.debug("dispatching: " + packet.toString());
+	    }
+	});
     }
 
     private final Container container;
     private final Session session;
-    private final boolean isStarted;
+    private boolean isStarted;
 
-    public Xmpp(final Container container, final BoshOptions options) {
+    public Xmpp(final Container container, final BoshOptions options, final DispatcherMonitor monitor) {
 	this.isStarted = false;
 	this.container = container;
-	Plugins.installDefaultPlugins(container, options);
+	Plugins.installDefaultPlugins(container, options, monitor);
 	this.session = SessionPlugin.getSession(container);
     }
 
@@ -98,6 +105,7 @@ public class Xmpp {
 
     public void start() {
 	if (!isStarted) {
+	    isStarted = true;
 	    container.onStartComponent();
 	}
     }

@@ -4,42 +4,29 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 
 public class EmiteTests {
-
-    private EmiteBosh emite;
-    private Dispatcher dispathcer;
+    private BoshStream stream;
 
     @Before
     public void aaCreate() {
-	dispathcer = mock(Dispatcher.class);
-	emite = new EmiteBosh(dispathcer);
+	stream = new BoshStream();
     }
 
     @Test
-    public void shouldDispatchSend() {
-	emite.send(new Packet("packet"));
-	verify(dispathcer).publish((IPacket) anyObject());
-    }
-
-    @Test
-    public void shouldGenerateRID() {
-	emite.start("domain");
-	assertNotNull(emite.getBody());
-	final String att = emite.getBody().getAttribute("rid");
+    public void shouldGenerateConsecutiveRIDs() {
+	stream.start("domain");
+	Packet body = stream.clearBody();
+	assertNotNull(body);
+	final String att = body.getAttribute("rid");
 	assertNotNull(att);
 	final long rid = Long.parseLong(att);
 	assertTrue(rid > 1000);
-	emite.clearBody();
-	assertNull(emite.getBody());
-	emite.newRequest(null);
-	assertNotNull(emite.getBody());
-	assertEquals(Long.parseLong(emite.getBody().getAttribute("rid")), rid + 1);
+
+	stream.newRequest(null);
+	body = stream.clearBody();
+	assertEquals(Long.parseLong(body.getAttribute("rid")), rid + 1);
 
     }
 

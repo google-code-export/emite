@@ -16,6 +16,8 @@ import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.components.DefaultContainer;
 import com.calclab.emite.client.core.bosh.BoshOptions;
+import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.extra.muc.MUCPlugin;
 import com.calclab.emite.client.extra.muc.RoomListener;
 import com.calclab.emite.client.extra.muc.RoomManager;
@@ -128,7 +130,11 @@ public class SwingClient {
 	    }
 
 	});
-	this.xmpp = new Xmpp(container, new BoshOptions("http://localhost:8383/http-bind/"));
+	this.xmpp = new Xmpp(container, new BoshOptions("http://localhost:8383/http-bind/"), new DispatcherMonitor() {
+	    public void publishing(final IPacket packet) {
+		System.out.println("DISPATCH: " + packet);
+	    }
+	});
 
 	xmpp.getSession().addListener(new SessionListener() {
 	    public void onStateChanged(final State old, final State current) {
@@ -143,21 +149,23 @@ public class SwingClient {
 	});
 	xmpp.getChatManager().addListener(new ChatManagerListener() {
 	    public void onChatClosed(final Chat chat) {
+		conversationsPanel.close(chat.getID());
 	    }
 
 	    public void onChatCreated(final Chat chat) {
-		final ChatPanel chatPanel = conversationsPanel.createChat(chat.getID(), new ChatPanelListener() {
-		    public void onClose(final ChatPanel source) {
-			xmpp.getChatManager().close(chat);
-			conversationsPanel.close(source);
-		    }
+		final ChatPanel chatPanel = conversationsPanel.createChat(chat.getOtherURI().toString(), chat.getID(),
+			new ChatPanelListener() {
+			    public void onClose(final ChatPanel source) {
+				xmpp.getChatManager().close(chat);
 
-		    public void onSend(final ChatPanel source, final String text) {
-			chat.send(text);
-			source.clearMessage();
-		    }
+			    }
 
-		});
+			    public void onSend(final ChatPanel source, final String text) {
+				chat.send(text);
+				source.clearMessage();
+			    }
+
+			});
 		chat.addListener(new ChatListener() {
 		    public void onMessageReceived(final Chat chat, final Message message) {
 			chatPanel.showIcomingMessage(message.getFrom(), message.getBody());
@@ -174,21 +182,21 @@ public class SwingClient {
 	final RoomManager roomManager = MUCPlugin.getRoomManager(xmpp.getComponents());
 	roomManager.addListener(new RoomManagerListener() {
 	    public void onChatClosed(final Chat chat) {
-
+		conversationsPanel.close(chat.getID());
 	    }
 
 	    public void onChatCreated(final Chat room) {
-		final RoomPanel roomPanel = conversationsPanel.createRoom(room.getOtherURI(), new ChatPanelListener() {
-		    public void onClose(final ChatPanel source) {
-			MUCPlugin.getRoomManager(xmpp.getComponents()).close(room);
-			conversationsPanel.close(source);
-		    }
+		final RoomPanel roomPanel = conversationsPanel.createRoom(room.getOtherURI(), room.getID(),
+			new ChatPanelListener() {
+			    public void onClose(final ChatPanel source) {
+				MUCPlugin.getRoomManager(xmpp.getComponents()).close(room);
+			    }
 
-		    public void onSend(final ChatPanel source, final String text) {
-			room.send(text);
-			source.clearMessage();
-		    }
-		});
+			    public void onSend(final ChatPanel source, final String text) {
+				room.send(text);
+				source.clearMessage();
+			    }
+			});
 		room.addListener(new RoomListener() {
 		    public void onMessageReceived(final Chat chat, final Message message) {
 			roomPanel.showIcomingMessage(message.getFrom(), message.getBody());
@@ -224,6 +232,9 @@ public class SwingClient {
 		print("PRESENCE!!: " + presence);
 	    }
 
+	    public void onSubscribedReceived(final Presence presence) {
+	    }
+
 	    public void onSubscriptionRequest(final Presence presence) {
 		final Object message = presence.getFrom() + " solicita añadirse a tu roster. ¿quires?";
 		final int result = JOptionPane.showConfirmDialog(frame, message);
@@ -233,8 +244,7 @@ public class SwingClient {
 		print("SUBSCRIPTION: " + presence);
 	    }
 
-	    public void onUnsubscriptionReceived(final Presence presence) {
-		print("UNSUBSCRIPTION!!: " + presence);
+	    public void onUnsubscribedReceived(final Presence presence) {
 	    }
 	});
 
@@ -247,7 +257,7 @@ public class SwingClient {
 
     private void start() {
 	frame.setContentPane(root);
-	frame.setSize(600, 400);
+	frame.setSize(900, 400);
 	frame.setVisible(true);
 	frame.addWindowListener(new WindowAdapter() {
 	    @Override

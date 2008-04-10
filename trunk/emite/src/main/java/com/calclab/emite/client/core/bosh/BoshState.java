@@ -21,82 +21,95 @@
  */
 package com.calclab.emite.client.core.bosh;
 
-import com.allen_sauer.gwt.log.client.Log;
-
 public class BoshState {
+    public static final int TIME_NOW = 0;
+    public static final int TIME_NEVER = -1;
+
     private int currentConnections;
-    private boolean isLastResponseEmpty;
     private boolean isTerminating;
     private long lastSendTime;
     private int poll;
     private String sid;
 
+    private boolean isCurrentResponseEmpty;
+
     public BoshState() {
-	Log.debug("INIT BOSH STATE");
 	this.sid = null;
 	this.currentConnections = 0;
 	this.poll = 1;
 	this.isTerminating = false;
     }
 
-    public void decreaseRequests() {
-	currentConnections--;
-    }
-
     public int getCurrentRequestsCount() {
 	return currentConnections;
-    }
-
-    public long getLastSendTime() {
-	return lastSendTime;
-    }
-
-    public int getPoll() {
-	return poll;
     }
 
     public String getSID() {
 	return sid;
     }
 
-    public void increaseRequests() {
-	currentConnections++;
+    public int getState(final long currentTime) {
+	int time = 0;
+	if (!isCurrentResponseEmpty) {
+	    time = TIME_NOW;
+	} else {
+	    if (currentConnections > 0) {
+		time = TIME_NEVER;
+	    } else {
+		final int delay = getNecesaryDelayFromLastRequest(currentTime);
+		if (delay > 0) {
+		    time = delay;
+		} else {
+		    time = TIME_NOW;
+		}
+	    }
+	}
+	return time;
     }
 
     public boolean isFirstResponse() {
 	return sid == null;
     }
 
-    public boolean isLastResponseEmpty() {
-	return isLastResponseEmpty;
-    }
-
     public boolean isTerminateSent() {
 	return isTerminating;
     }
 
-    public void setLastResponseEmpty(final boolean isLastResponseEmpty) {
-	this.isLastResponseEmpty = isLastResponseEmpty;
+    public void requestSentAt(final long lastSendTime) {
+	this.lastSendTime = lastSendTime;
+	currentConnections++;
 
     }
 
-    public void setLastSend(final long lastSendTime) {
-	this.lastSendTime = lastSendTime;
-
+    public void responseRecevied() {
+	currentConnections--;
     }
 
     public void setPoll(final int poll) {
 	this.poll = poll;
     }
 
+    public void setResponseEmpty(final boolean isResponseEmpty) {
+	this.isCurrentResponseEmpty = isResponseEmpty;
+    }
+
     public void setSID(final String sid) {
-	Log.debug("Setting SID!" + sid);
+	if (this.sid != null) {
+	    throw new RuntimeException("can't change the sid");
+	}
 	this.sid = sid;
     }
 
     public void setTerminating(final boolean isTerminating) {
 	this.isTerminating = isTerminating;
 
+    }
+
+    private int getNecesaryDelayFromLastRequest(final long currentTime) {
+	final int ms = poll;
+	final int diference = (int) (currentTime - lastSendTime);
+	final int total = ms - diference;
+	return total;
     }
 
 }

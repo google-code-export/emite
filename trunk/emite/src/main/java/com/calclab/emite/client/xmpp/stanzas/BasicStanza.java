@@ -36,7 +36,7 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
 		super(stanza);
 	}
 
-	protected BasicStanza(final String name, final String xmlns) {
+	public BasicStanza(final String name, final String xmlns) {
 		super(new Packet(name, xmlns));
 	}
 

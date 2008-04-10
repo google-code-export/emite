@@ -24,8 +24,11 @@ package com.calclab.emite.client.core;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.BoshOptions;
+import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
+import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
+import com.calclab.emite.client.core.emite.BoshStream;
 import com.calclab.emite.client.core.emite.Emite;
 import com.calclab.emite.client.core.emite.EmiteBosh;
 import com.calclab.emite.client.core.services.Services;
@@ -44,15 +47,21 @@ public class CorePlugin {
 	return (Emite) container.get(COMPONENT_EMITE);
     }
 
-    public static void install(final Container container, final BoshOptions options) {
-	final DispatcherDefault dispatcher = new DispatcherDefault();
-	container.register(COMPONENT_DISPATCHER, dispatcher);
+    public static void install(final Container container, final BoshOptions options, final DispatcherMonitor monitor) {
+	// dependencies
 	final Services services = ServicesPlugin.getServices(container);
 
-	final EmiteBosh emite = new EmiteBosh(dispatcher);
-	container.install(COMPONENT_EMITE, emite);
-	final BoshManager boshManager = new BoshManager(services, emite, options);
+	// injections
+	final DispatcherDefault dispatcher = new DispatcherDefault(monitor);
+	container.register(COMPONENT_DISPATCHER, dispatcher);
+
+	final Stream stream = new BoshStream();
+
+	final BoshManager boshManager = new BoshManager(services, dispatcher, stream, options);
 	container.install(COMPONENT_BOSH, boshManager);
+
+	final EmiteBosh emite = new EmiteBosh(dispatcher, stream);
+	container.install(COMPONENT_EMITE, emite);
 
     }
 

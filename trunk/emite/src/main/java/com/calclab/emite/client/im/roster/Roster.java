@@ -25,7 +25,6 @@ package com.calclab.emite.client.im.roster;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
@@ -81,7 +80,6 @@ public class Roster implements Component {
     }
 
     void fireItemPresenceChanged(final RosterItem item) {
-	Log.debug("ROSTER ITEM PRESENCE CHANGED!");
 	for (final RosterListener listener : listeners) {
 	    listener.onItemPresenceChanged(item);
 	}

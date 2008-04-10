@@ -23,7 +23,7 @@ package com.calclab.emite.client.core.emite;
 
 import java.util.List;
 
-import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
@@ -32,8 +32,7 @@ import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 
 /**
- * REPONSABILITIES: mantains a body handle id iq's SEND - put the body childs
- * inside the body
+ * REPONSABILITIES: mantains a body handle id iq's SEND
  * 
  * @author dani
  * 
@@ -43,12 +42,12 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	public static final Event send = new Event("connection:do:send");
     }
 
-    private Body body;
     private final IDManager manager;
-    private long requestID;
+    private final Stream stream;
 
-    public EmiteBosh(final Dispatcher dispatcher) {
+    public EmiteBosh(final Dispatcher dispatcher, final Stream stream) {
 	super(dispatcher);
+	this.stream = stream;
 	this.manager = new IDManager();
     }
 
@@ -58,7 +57,7 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	    public void handle(final IPacket received) {
 		final List<? extends IPacket> children = received.getChildren();
 		for (final IPacket child : children) {
-		    body.addChild(child);
+		    stream.addResponse(child);
 		}
 	    }
 	});
@@ -69,26 +68,8 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	});
     }
 
-    public void clearBody() {
-	body = null;
-    }
-
-    public Body getBody() {
-	return body;
-    }
-
     public Dispatcher getDispatcher() {
 	return dispatcher;
-    }
-
-    public void newRequest(final String sid) {
-	if (this.body == null) {
-	    requestID++;
-	    body = new Body(requestID, sid);
-	    Log.debug("@@@@ NEW REUEST: " + body);
-	} else {
-	    Log.debug("@@@@ sSkip body creation. We have already one: " + this.body);
-	}
     }
 
     public void publish(final Event event) {
@@ -103,14 +84,6 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	final String id = manager.register(category, packetListener);
 	packet.setAttribute("id", id);
 	send(packet);
-    }
-
-    public void start(final String domain) {
-	Log.debug("@@@@ Starting bosh");
-	this.requestID = (int) (Math.random() * 1245234);
-	this.body = null;
-	body = new Body(requestID, null);
-	this.getBody().setCreationState(domain);
     }
 
 }
