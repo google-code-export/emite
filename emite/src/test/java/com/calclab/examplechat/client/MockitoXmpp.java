@@ -4,7 +4,7 @@ import static org.mockito.Mockito.mock;
 
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.components.ContainerPlugin;
+import com.calclab.emite.client.components.DefaultContainer;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
@@ -25,7 +25,7 @@ public class MockitoXmpp extends Xmpp {
     private final Session session;
 
     public MockitoXmpp() {
-	super(ContainerPlugin.create(), null);
+	super(new DefaultContainer(), null);
 	chat = mock(ChatManager.class);
 	components = mock(Container.class);
 	dispatcher = mock(Dispatcher.class);
