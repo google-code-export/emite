@@ -28,7 +28,7 @@ import java.util.HashMap;
 public class DefaultContainer extends HashMap<String, Component> implements Container {
     private final ArrayList<Startable> startables;
 
-    DefaultContainer() {
+    public DefaultContainer() {
 	this.startables = new ArrayList<Startable>();
     }
 

@@ -25,12 +25,14 @@ import com.calclab.emite.client.components.Container;
 
 public class ServicesPlugin {
 
+    private static final String COMPONENT_SERVICES = "services";
+
     public static Services getServices(final Container container) {
-	return (Services) container.get("services");
+	return (Services) container.get(COMPONENT_SERVICES);
     }
 
     public static void install(final Container container, final Services services) {
-	container.register("services", services);
+	container.register(COMPONENT_SERVICES, services);
     }
 
 }
