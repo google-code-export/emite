@@ -19,38 +19,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.core.bosh;
+package com.calclab.emite.client.core;
 
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.components.ContainerPlugin;
-import com.calclab.emite.client.components.Globals;
+import com.calclab.emite.client.core.bosh.BoshManager;
+import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.core.dispatcher.DispatcherPlugin;
-import com.calclab.emite.client.core.services.Connector;
-import com.calclab.emite.client.core.services.Scheduler;
+import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
+import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.emite.EmiteBosh;
+import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesPlugin;
-import com.calclab.emite.client.core.services.XMLService;
 
-public class BoshPlugin {
+public class CorePlugin {
+    private static final String COMPONENT_DISPATCHER = "dispatcher";
     private static final String COMPONENT_BOSH = "bosh:manager";
     private static final String COMPONENT_EMITE = "emite";
+
+    public static Dispatcher getDispatcher(final Container container) {
+	return (Dispatcher) container.get(COMPONENT_DISPATCHER);
+    }
 
     public static Emite getEmite(final Container container) {
 	return (Emite) container.get(COMPONENT_EMITE);
     }
 
     public static void install(final Container container, final BoshOptions options) {
-	final Dispatcher dispatcher = DispatcherPlugin.getDispatcher(container);
-	final Globals globals = ContainerPlugin.getGlobals(container);
-	final Connector connector = ServicesPlugin.getConnector(container);
-	final XMLService xmler = ServicesPlugin.getXMLService(container);
-	final Scheduler scheduler = ServicesPlugin.getScheduler(container);
+	final DispatcherDefault dispatcher = new DispatcherDefault();
+	container.register(COMPONENT_DISPATCHER, dispatcher);
+	final Services services = ServicesPlugin.getServices(container);
 
-	final EmiteBosh emite = new EmiteBosh(dispatcher, xmler);
+	final EmiteBosh emite = new EmiteBosh(dispatcher);
 	container.install(COMPONENT_EMITE, emite);
-
-	final BoshManager boshManager = new BoshManager(dispatcher, globals, connector, scheduler, emite, options);
-
+	final BoshManager boshManager = new BoshManager(services, emite, options);
 	container.install(COMPONENT_BOSH, boshManager);
 
     }

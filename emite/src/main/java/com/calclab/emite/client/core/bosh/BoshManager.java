@@ -24,56 +24,54 @@ package com.calclab.emite.client.core.bosh;
 import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.emite.Body;
+import com.calclab.emite.client.core.emite.EmiteBosh;
+import com.calclab.emite.client.core.emite.EmiteComponent;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.core.services.Connector;
 import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
-import com.calclab.emite.client.core.services.Scheduler;
+import com.calclab.emite.client.core.services.Services;
 
-public class BoshManager extends DispatcherComponent implements ConnectorCallback {
+/**
+ * 
+ * @author dani
+ * 
+ */
+public class BoshManager extends EmiteComponent implements ConnectorCallback {
 
     public static class Events {
 	public static final Event onError = new Event("connection:on:error");
+	/** ATTRIBUTE: domain */
 	public static final Event restart = new Event("connection:do:restart");
+	/** ATTRIBUTE: domain */
 	public static final Event start = new Event("connection:do:start");
 	public static final Event stop = new Event("connection:do:stop");
     }
 
     private Activator activator;
-    private final Connector connector;
-    private final Dispatcher dispatcher;
-    private final EmiteBosh emite;
-    private final BoshOptions options;
-    private final Scheduler scheduler;
-    private final BoshState state;
+    private BoshState state;
+    private boolean isRunning;
+    private final EmiteBosh bosh;
+    private final String httpBase;
+    private final Services services;
 
-    public BoshManager(final Dispatcher dispatcher, final Globals globals, final Connector connector,
-	    final Scheduler scheduler, final EmiteBosh emite, final BoshOptions options) {
-	super(dispatcher);
-	this.dispatcher = dispatcher;
-	this.connector = connector;
-	this.scheduler = scheduler;
-	this.emite = emite;
-	this.options = options;
+    public BoshManager(final Services services, final EmiteBosh emite, final BoshOptions options) {
+	super(emite);
+	this.services = services;
+	this.bosh = emite;
+	this.httpBase = options.getHttpBase();
 	this.activator = new Activator(this);
-	this.state = new BoshState();
-
-	globals.setDomain(options.getDomain());
-	globals.setResourceName(options.getResource());
 
 	dispatcher.addListener(new DispatcherStateListener() {
 	    public void afterDispatching() {
-		firePackets();
+		sendBody();
 	    }
 
 	    public void beforeDispatching() {
-		catchPackets();
+		prepareBody();
 	    }
 	});
 
@@ -83,32 +81,30 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
     public void attach() {
 	when(BoshManager.Events.restart, new PacketListener() {
 	    public void handle(final IPacket received) {
-		setRestart();
+		onRestartStream(received.getAttribute("domain"));
 	    }
 	});
 	when(BoshManager.Events.start, new PacketListener() {
 	    public void handle(final IPacket received) {
-		state.setRunning(true);
-		emite.restartRID();
-		emite.initBody(null);
-		emite.getBody().setCreationState(options.getDomain());
+		onStartBosh(received.getAttribute("domain"));
 	    }
+
 	});
 	when(BoshManager.Events.onError, new PacketListener() {
 	    public void handle(final IPacket stanza) {
-		state.setRunning(false);
+		onError();
 	    }
 	});
 
-	// on Body received
 	when("body", new PacketListener() {
 	    public void handle(final IPacket iPacket) {
 		publishBodyStanzas(new Body(iPacket));
 	    }
 	});
+
 	when(BoshManager.Events.stop, new PacketListener() {
 	    public void handle(final IPacket received) {
-		setTerminate();
+		onSendStop();
 	    }
 	});
     }
@@ -134,13 +130,11 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	if (statusCode >= 400) {
 	    dispatcher.publish(BoshManager.Events.onError);
 	} else {
-	    final IPacket response = emite.bodyFromResponse(content);
-	    if (!state.isRunning()) {
+	    final IPacket response = services.toXML(content);
+	    if (!isRunning) {
 
-	    } else if (state.isTerminating()) {
-		state.setRunning(false);
-		state.setTerminating(false);
-		emite.restartRID();
+	    } else if (state.isTerminateSent()) {
+		isRunning = false;
 	    } else if ("body".equals(response.getName())) {
 		dispatcher.publish(response);
 	    } else {
@@ -149,22 +143,22 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	}
     }
 
-    public void setRestart() {
-	emite.getBody().setRestart(options.getDomain());
+    public void onRestartStream(final String domain) {
+	bosh.getBody().setRestart(domain);
     }
 
-    public void setTerminate() {
-	emite.getBody().setTerminate();
+    public void onSendStop() {
+	bosh.getBody().setTerminate();
 	state.setTerminating(true);
     }
 
     void sendResponse() {
 	try {
 	    Log.debug("SENDING. Current: " + state.getCurrentRequestsCount() + ", after: "
-		    + (scheduler.getCurrentTime() - state.getLastSendTime()));
-	    connector.send(options.getHttpBase(), emite.getResponse(), this);
-	    emite.clearBody();
-	    final long now = scheduler.getCurrentTime();
+		    + (services.getCurrentTime() - state.getLastSendTime()));
+	    services.send(httpBase, services.toString(bosh.getBody()), this);
+	    bosh.clearBody();
+	    final long now = services.getCurrentTime();
 	    final long last = state.getLastSendTime();
 	    Log.debug("BOSH SEND: " + last + " -> " + now + "(" + (now - last) + ")");
 	    state.setLastSend(now);
@@ -174,36 +168,31 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	}
     }
 
-    private void catchPackets() {
-	emite.initBody(state.getSID());
-    }
-
     private void delaySend() {
 	this.activator = new Activator(this);
 	final int ms = state.getPoll();
-	final int diference = (int) (scheduler.getCurrentTime() - state.getLastSendTime());
+	final int diference = (int) (services.getCurrentTime() - state.getLastSendTime());
 	int total = ms - diference;
 	Log.debug("DELAYING - poll: " + ms + ", diff: " + diference + ", total: " + total);
 	if (total < 1) {
 	    total = 1;
 	}
-	scheduler.schedule(total, activator);
+	services.schedule(total, activator);
     }
 
-    private void firePackets() {
-	activator.cancel();
-	if (state.isRunning()) {
-	    if (emite.getBody().isEmpty()) {
-		if (state.getCurrentRequestsCount() > 0) {
-		    // no need
-		} else {
-		    delaySend();
-		}
-	    } else {
-		sendResponse();
-	    }
-	} else {
-	    Log.debug("FIRE PACKETS CANCELLED BECAUSE WE'RE STOPPED");
+    private void onError() {
+	isRunning = false;
+    }
+
+    private void onStartBosh(final String domain) {
+	isRunning = true;
+	this.state = new BoshState();
+	this.bosh.start(domain);
+    }
+
+    private void prepareBody() {
+	if (isRunning) {
+	    bosh.newRequest(state.getSID());
 	}
     }
 
@@ -211,7 +200,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	if (state.isFirstResponse()) {
 	    final String sid = response.getSID();
 	    state.setSID(sid);
-	    emite.getBody().setSID(sid);
+	    bosh.getBody().setSID(sid);
 	    state.setPoll(response.getPoll() + 500);
 	}
 	state.setLastResponseEmpty(response.isEmpty());
@@ -222,6 +211,23 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	    for (final IPacket stanza : children) {
 		dispatcher.publish(stanza);
 	    }
+	}
+    }
+
+    private void sendBody() {
+	activator.cancel();
+	if (isRunning) {
+	    if (bosh.getBody().isEmpty()) {
+		if (state.getCurrentRequestsCount() > 0) {
+		    // no need
+		} else {
+		    delaySend();
+		}
+	    } else {
+		sendResponse();
+	    }
+	} else {
+	    Log.debug("BOSH IS STOP. NO NEED TO SEND ANYTHING");
 	}
     }
 

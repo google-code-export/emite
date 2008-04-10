@@ -26,14 +26,17 @@ import com.allen_sauer.gwt.log.client.Log;
 public class BoshState {
     private int currentConnections;
     private boolean isLastResponseEmpty;
-    private boolean isRunning;
     private boolean isTerminating;
     private long lastSendTime;
     private int poll;
     private String sid;
 
     public BoshState() {
-	init();
+	Log.debug("INIT BOSH STATE");
+	this.sid = null;
+	this.currentConnections = 0;
+	this.poll = 1;
+	this.isTerminating = false;
     }
 
     public void decreaseRequests() {
@@ -60,15 +63,6 @@ public class BoshState {
 	currentConnections++;
     }
 
-    public void init() {
-	Log.debug("INIT BOSH STATE");
-	this.isRunning = false;
-	this.sid = null;
-	this.currentConnections = 0;
-	this.poll = 1;
-	this.isTerminating = false;
-    }
-
     public boolean isFirstResponse() {
 	return sid == null;
     }
@@ -77,11 +71,7 @@ public class BoshState {
 	return isLastResponseEmpty;
     }
 
-    public boolean isRunning() {
-	return isRunning;
-    }
-
-    public boolean isTerminating() {
+    public boolean isTerminateSent() {
 	return isTerminating;
     }
 
@@ -97,14 +87,6 @@ public class BoshState {
 
     public void setPoll(final int poll) {
 	this.poll = poll;
-    }
-
-    public void setRunning(final boolean isRunning) {
-	if (isRunning) {
-	    this.isRunning = isRunning;
-	} else {
-	    init();
-	}
     }
 
     public void setSID(final String sid) {

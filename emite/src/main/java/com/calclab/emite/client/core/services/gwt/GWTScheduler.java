@@ -24,22 +24,21 @@ package com.calclab.emite.client.core.services.gwt;
 import java.util.Date;
 
 import com.calclab.emite.client.core.services.ScheduledAction;
-import com.calclab.emite.client.core.services.Scheduler;
 import com.google.gwt.user.client.Timer;
 
-public class GWTScheduler implements Scheduler {
+public class GWTScheduler {
 
-	public long getCurrentTime() {
-		return new Date().getTime();
-	}
+    public static long getCurrentTime() {
+	return new Date().getTime();
+    }
 
-	public void schedule(final int msecs, final ScheduledAction action) {
-		new Timer() {
-			@Override
-			public void run() {
-				action.run();
-			}
-		}.schedule(msecs);
-	}
+    public static void schedule(final int msecs, final ScheduledAction action) {
+	new Timer() {
+	    @Override
+	    public void run() {
+		action.run();
+	    }
+	}.schedule(msecs);
+    }
 
 }

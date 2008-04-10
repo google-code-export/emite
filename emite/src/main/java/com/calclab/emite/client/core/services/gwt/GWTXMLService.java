@@ -23,23 +23,22 @@ package com.calclab.emite.client.core.services.gwt;
 
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.gwt.GWTPacket;
-import com.calclab.emite.client.core.services.XMLService;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
 
-public class GWTXMLService implements XMLService {
+public class GWTXMLService {
 
     // TODO?
-    public String toString(final IPacket iPacket) {
-        return iPacket.toString();
+    public static String toString(final IPacket iPacket) {
+	return iPacket.toString();
     }
 
-    public IPacket toXML(final String xml) {
-        final Document parsed = XMLParser.parse(xml);
-        final Node body = parsed.getChildNodes().item(0);
-        return new GWTPacket((Element) body);
+    public static IPacket toXML(final String xml) {
+	final Document parsed = XMLParser.parse(xml);
+	final Node body = parsed.getChildNodes().item(0);
+	return new GWTPacket((Element) body);
     }
 
 }

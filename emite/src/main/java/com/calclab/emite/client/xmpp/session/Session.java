@@ -24,9 +24,7 @@ package com.calclab.emite.client.xmpp.session;
 import java.util.ArrayList;
 
 import com.calclab.emite.client.components.Component;
-import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.bosh.BoshManager;
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class Session implements Component {
 
@@ -34,14 +32,12 @@ public class Session implements Component {
 	authorized, connected, connecting, disconnected, error
     }
 
-    private final Dispatcher dispatcher;
-    private final Globals globals;
     private final ArrayList<SessionListener> listeners;
     private State state;
+    private final SessionManager manager;
 
-    public Session(final Dispatcher dispatcher, final Globals globals) {
-	this.globals = globals;
-	this.dispatcher = dispatcher;
+    public Session(final SessionManager manager) {
+	this.manager = manager;
 	state = State.disconnected;
 	this.listeners = new ArrayList<SessionListener>();
     }
@@ -55,16 +51,14 @@ public class Session implements Component {
 	return state;
     }
 
-    public void login(final SessionOptions sessionOptions) {
+    public void login(final XmppURI uri, final String password) {
 	setState(State.connecting);
-	globals.setUserName(sessionOptions.getUserName());
-	globals.setPassword(sessionOptions.getPassword());
-	dispatcher.publish(BoshManager.Events.start);
+	manager.doLogin(uri, password);
+
     }
 
     public void logout() {
-	dispatcher.publish(BoshManager.Events.stop);
-	dispatcher.publish(SessionManager.Events.loggedOut);
+	manager.doLogout();
     }
 
     public void setState(final State newState) {

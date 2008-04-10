@@ -24,8 +24,6 @@ package com.calclab.emite.client.components;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.allen_sauer.gwt.log.client.Log;
-
 @SuppressWarnings("serial")
 public class DefaultContainer extends HashMap<String, Component> implements Container {
     private final ArrayList<Startable> startables;
@@ -59,7 +57,6 @@ public class DefaultContainer extends HashMap<String, Component> implements Cont
     }
 
     public void register(final String name, final Component component) {
-	Log.debug("Registering component " + name);
 	super.put(name, component);
     }
 

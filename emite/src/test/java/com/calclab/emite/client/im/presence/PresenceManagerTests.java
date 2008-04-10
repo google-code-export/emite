@@ -4,8 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.emite.Emite;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
@@ -17,9 +16,8 @@ public class PresenceManagerTests {
 
     @Before
     public void aaaCreateManager() {
-	final Globals globals = Mockito.mock(Globals.class);
 	final Emite emite = Mockito.mock(Emite.class);
-	manager = new PresenceManager(emite, globals);
+	manager = new PresenceManager(emite);
 	presenceListener = Mockito.mock(PresenceListener.class);
 	manager.addListener(presenceListener);
     }

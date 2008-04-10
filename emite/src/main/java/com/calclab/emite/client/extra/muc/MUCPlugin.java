@@ -22,10 +22,8 @@
 package com.calclab.emite.client.extra.muc;
 
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.components.ContainerPlugin;
-import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.bosh.BoshPlugin;
-import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.CorePlugin;
+import com.calclab.emite.client.core.emite.Emite;
 
 public class MUCPlugin {
 
@@ -36,9 +34,8 @@ public class MUCPlugin {
     }
 
     public static void install(final Container container) {
-	final Emite emite = BoshPlugin.getEmite(container);
-	final Globals globals = ContainerPlugin.getGlobals(container);
-	final MUCRoomManager rooms = new MUCRoomManager(emite, globals);
+	final Emite emite = CorePlugin.getEmite(container);
+	final MUCRoomManager rooms = new MUCRoomManager(emite);
 	container.install(COMPONENTS_MANAGER, rooms);
     }
 }

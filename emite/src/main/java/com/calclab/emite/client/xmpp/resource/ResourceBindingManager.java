@@ -21,13 +21,13 @@
  */
 package com.calclab.emite.client.xmpp.resource;
 
-import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.emite.EmiteComponent;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
+import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
@@ -36,28 +36,30 @@ public class ResourceBindingManager extends EmiteComponent {
 	public static final Event binded = new Event("resource:binded");
     }
 
-    private final Globals globals;
+    private String resource;
 
-    public ResourceBindingManager(final Emite emite, final Globals globals) {
+    public ResourceBindingManager(final Emite emite) {
 	super(emite);
-	this.globals = globals;
 
     }
 
     @Override
     public void attach() {
+	when(SessionManager.Events.logIn, new PacketListener() {
+
+	    public void handle(final IPacket received) {
+		resource = XmppURI.parse(received.getAttribute("uri")).getResource();
+	    }
+	});
 	when(SASLManager.Events.authorized, new PacketListener() {
 	    public void handle(final IPacket received) {
 		final IQ iq = new IQ(IQ.Type.set);
-		iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).addText(
-			globals.getResourceName());
+		iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).addText(resource);
 
 		emite.send("bind", iq, new PacketListener() {
 		    public void handle(final IPacket received) {
 			final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
-			final XmppURI uri = XmppURI.parse(jid);
-			globals.setOwnURI(uri);
-			emite.publish(Events.binded);
+			emite.publish(Events.binded.Params("uri", jid));
 		    }
 		});
 	    }

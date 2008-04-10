@@ -1,4 +1,4 @@
-package com.calclab.emite.j2se.packet;
+package com.calclab.emite.j2se.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;

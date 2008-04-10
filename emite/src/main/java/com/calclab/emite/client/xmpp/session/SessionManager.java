@@ -21,31 +21,30 @@
  */
 package com.calclab.emite.client.xmpp.session;
 
-import com.calclab.emite.client.components.Globals;
 import com.calclab.emite.client.core.bosh.BoshManager;
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.emite.EmiteComponent;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class SessionManager extends EmiteComponent {
     public static class Events {
+	/** ATTIBUTES: uri, password */
+	public static final Event logIn = new Event("session:do:login");
+	/** ATTRIBUTES: uri */
 	public static final Event loggedIn = new Event("session:on:login");
 	public static final Event loggedOut = new Event("session:on:logout");
     }
 
-    private final Globals globals;
-    private final Session session;
+    private Session session;
 
-    public SessionManager(final Emite emite, final Globals globals, final Session session) {
+    public SessionManager(final Emite emite) {
 	super(emite);
-	this.globals = globals;
-	this.session = session;
-
     }
 
     @Override
@@ -79,16 +78,32 @@ public class SessionManager extends EmiteComponent {
 
 	when(ResourceBindingManager.Events.binded, new PacketListener() {
 	    public void handle(final IPacket received) {
-		final IQ iq = new IQ(IQ.Type.set).From(globals.getOwnURI()).To(globals.getDomain());
+		final XmppURI ownURI = XmppURI.parse(received.getAttribute("uri"));
+		final IQ iq = new IQ(IQ.Type.set).From(ownURI).To(ownURI.getHost());
 		iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
+
 		emite.send("session", iq, new PacketListener() {
 		    public void handle(final IPacket received) {
 			session.setState(Session.State.connected);
-			emite.publish(SessionManager.Events.loggedIn);
+			emite.publish(SessionManager.Events.loggedIn.Params("uri", ownURI.toString()));
 		    }
 		});
 	    }
 
 	});
+    }
+
+    public void doLogin(final XmppURI uri, final String password) {
+	dispatcher.publish(SessionManager.Events.logIn.Params("uri", uri.toString()).With("password", password));
+	dispatcher.publish(BoshManager.Events.start.Params("domain", uri.getHost()));
+    }
+
+    public void doLogout() {
+	dispatcher.publish(BoshManager.Events.stop);
+	dispatcher.publish(SessionManager.Events.loggedOut);
+    }
+
+    public void setSession(final Session session) {
+	this.session = session;
     }
 }
