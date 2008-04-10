@@ -1,4 +1,4 @@
-package com.calclab.emite.j2se.packet;
+package com.calclab.emite.j2se.services;
 
 import static org.junit.Assert.assertEquals;
 

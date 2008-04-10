@@ -22,10 +22,8 @@
 package com.calclab.emite.client.im.presence;
 
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.components.ContainerPlugin;
-import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.bosh.BoshPlugin;
-import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.CorePlugin;
+import com.calclab.emite.client.core.emite.Emite;
 
 public class PresencePlugin {
     private static final String COMPONENT_MANAGER = "presence:manager";
@@ -35,9 +33,8 @@ public class PresencePlugin {
     }
 
     public static void install(final Container container) {
-	final Emite emite = BoshPlugin.getEmite(container);
-	final Globals globals = ContainerPlugin.getGlobals(container);
-	final PresenceManager manager = new PresenceManager(emite, globals);
+	final Emite emite = CorePlugin.getEmite(container);
+	final PresenceManager manager = new PresenceManager(emite);
 	container.install(COMPONENT_MANAGER, manager);
     }
 }

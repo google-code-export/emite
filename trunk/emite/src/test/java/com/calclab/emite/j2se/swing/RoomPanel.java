@@ -24,7 +24,7 @@ public class RoomPanel extends ChatPanel {
     public void setUsers(final Collection<RoomUser> users) {
 	this.users.clear();
 	for (final RoomUser user : users) {
-	    this.users.addElement(users);
+	    this.users.addElement(user);
 	}
     }
 

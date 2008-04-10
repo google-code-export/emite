@@ -23,7 +23,7 @@ package com.calclab.emite.client.extra.muc;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.emite.Emite;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -48,11 +48,10 @@ public class Room implements Chat {
 	this.listeners = new ArrayList<ChatListener>();
     }
 
+    /**
+     * RoomListener are welcomed!
+     */
     public void addListener(final ChatListener listener) {
-	listeners.add(listener);
-    }
-
-    public void addListener(final RoomListener listener) {
 	listeners.add(listener);
     }
 
@@ -90,6 +89,11 @@ public class Room implements Chat {
 	for (final ChatListener listener : listeners) {
 	    listener.onMessageSent(this, message);
 	}
+    }
+
+    @Override
+    public String toString() {
+	return "ROOM: " + roomURI;
     }
 
     void addUser(final RoomUser roomUser) {

@@ -13,7 +13,9 @@ import javax.swing.JTabbedPane;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.TestHelper;
+import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.components.ContainerPlugin;
+import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.extra.muc.MUCPlugin;
 import com.calclab.emite.client.extra.muc.RoomListener;
 import com.calclab.emite.client.extra.muc.RoomManager;
@@ -30,7 +32,8 @@ import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.j2se.connector.HttpConnectorListener;
+import com.calclab.emite.j2se.services.HttpConnectorListener;
+import com.calclab.emite.j2se.services.J2SEPlugin;
 import com.calclab.emite.j2se.swing.ChatPanel.ChatPanelListener;
 import com.calclab.emite.j2se.swing.LoginPanel.LoginPanelListener;
 import com.calclab.emite.j2se.swing.RosterPanel.RosterPanelListener;
@@ -58,7 +61,8 @@ public class SwingClient {
 
 	loginPanel = new LoginPanel(new LoginPanelListener() {
 	    public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
-		xmpp.login(userName, password, null, "hola!");
+		final String resource = "emite-swing";
+		xmpp.login(new XmppURI(userName, domain, resource), password, null, "hola!");
 	    }
 
 	    public void onLogout() {
@@ -104,7 +108,7 @@ public class SwingClient {
     }
 
     private void initXMPP() {
-	this.xmpp = TestHelper.createXMPP(new HttpConnectorListener() {
+	final Container container = J2SEPlugin.install(ContainerPlugin.create(), new HttpConnectorListener() {
 	    public void onError(final String id, final String cause) {
 		System.out.println("CONN # " + id + "-ERROR: " + cause);
 	    }
@@ -124,6 +128,8 @@ public class SwingClient {
 	    }
 
 	});
+	this.xmpp = new Xmpp(container, new BoshOptions("http://localhost:8383/http-bind/"));
+
 	xmpp.getSession().addListener(new SessionListener() {
 	    public void onStateChanged(final State old, final State current) {
 		print("STATE: " + current);

@@ -26,10 +26,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.emite.EmiteComponent;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.SessionManager;
@@ -38,13 +37,12 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 
 public class ChatManagerDefault extends EmiteComponent implements ChatManager {
-    protected final Globals globals;
-    protected final HashSet<ChatDefault> chats;
-    protected final ArrayList<ChatManagerListener> listeners;
+    protected XmppURI userURI;
+    private final ArrayList<ChatManagerListener> listeners;
+    private final HashSet<ChatDefault> chats;
 
-    public ChatManagerDefault(final Emite emite, final Globals globals) {
+    public ChatManagerDefault(final Emite emite) {
 	super(emite);
-	this.globals = globals;
 	this.listeners = new ArrayList<ChatManagerListener>();
 	this.chats = new HashSet<ChatDefault>();
     }
@@ -59,6 +57,11 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
 	when(SessionManager.Events.loggedOut, new PacketListener() {
 	    public void handle(final IPacket received) {
 		onLoggedOut();
+	    }
+	});
+	when(SessionManager.Events.loggedIn, new PacketListener() {
+	    public void handle(final IPacket received) {
+		setUserURI(received.getAttribute("uri"));
 	    }
 	});
 	when(new Packet("message", null), new PacketListener() {
@@ -78,11 +81,8 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
     }
 
     public void onLoggedOut() {
-	final ArrayList<Chat> toBeRemoved = new ArrayList<Chat>();
-	toBeRemoved.addAll(chats);
-	for (final Chat chat : toBeRemoved) {
-	    close(chat);
-	}
+	final HashSet<ChatDefault> remove = chats;
+	closeAll(remove);
     }
 
     public Chat openChat(final XmppURI to) {
@@ -91,6 +91,26 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
 	    chat = createChat(to, null);
 	}
 	return chat;
+    }
+
+    public void setUserURI(final String uri) {
+	this.userURI = XmppURI.parse(uri);
+    }
+
+    /**
+     * TEMPLATE METHOD PATTERN no me gusta mucho, la verdad... existe demasiada
+     * conexión entre ChatManager y RoomManager :(
+     * 
+     * @param remove
+     */
+    @Deprecated
+    protected void closeAll(final Collection<? extends Chat> remove) {
+	userURI = null;
+	final ArrayList<Chat> toBeRemoved = new ArrayList<Chat>();
+	toBeRemoved.addAll(remove);
+	for (final Chat chat : toBeRemoved) {
+	    close(chat);
+	}
     }
 
     protected void fireChatClosed(final Chat chat) {
@@ -116,7 +136,7 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
 
     private ChatDefault createChat(final XmppURI from, final String thread) {
 	final String theThread = thread != null ? thread : String.valueOf(Math.random() * 1000000);
-	final ChatDefault chat = new ChatDefault(from, globals.getOwnURI(), theThread, emite);
+	final ChatDefault chat = new ChatDefault(from, userURI, theThread, emite);
 	chats.add(chat);
 	fireChatCreated(chat);
 	return chat;

@@ -35,13 +35,11 @@ public class RoomsPanel extends JPanel {
     }
 
     private final JList list;
-    private final RoomsPanelListener listener;
 
     private final DefaultListModel listModel;
 
     public RoomsPanel(final RoomsPanelListener listener) {
 	super(new BorderLayout());
-	this.listener = listener;
 
 	final JButton btnEnter = new JButton("enter room");
 	btnEnter.addActionListener(new ActionListener() {

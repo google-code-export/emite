@@ -19,25 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.core.dispatcher;
+package com.calclab.emite.client.core.emite;
 
-import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 
-public class DispatcherPlugin {
+public abstract class EmiteComponent extends DispatcherComponent {
+	protected final Emite emite;
 
-	private static final String COMPONENT_DISPATCHER = "dispatcher";
-
-	public static Dispatcher getDispatcher(final Container container) {
-		return (Dispatcher) container.get(COMPONENT_DISPATCHER);
-	}
-
-	public static void install(final Container container) {
-		final DispatcherDefault dispatcher = new DispatcherDefault();
-		setDispatcher(container, dispatcher);
-	}
-
-	public static void setDispatcher(final Container container, final Dispatcher dispatcher) {
-		container.register(COMPONENT_DISPATCHER, dispatcher);
+	public EmiteComponent(final Emite emite) {
+		super(emite.getDispatcher());
+		this.emite = emite;
 	}
 
 }

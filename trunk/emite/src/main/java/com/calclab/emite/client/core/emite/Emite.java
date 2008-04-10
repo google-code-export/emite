@@ -19,36 +19,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.components;
+package com.calclab.emite.client.core.emite;
 
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.packet.Event;
+import com.calclab.emite.client.core.packet.IPacket;
 
-// FIXME: Dani (de dani)
-/**
- * creo que se podrían eliminar globals si, por ejemplo, con el evento
- * SessionManager.Events.loggedIn llega el ownURI... y así para cada parámetro
- * 
- * @author dani
- * 
- */
-public interface Globals extends Component {
-    String getDomain();
+public interface Emite {
+    Dispatcher getDispatcher();
 
-    XmppURI getOwnURI();
+    void publish(Event event);
 
-    String getPassword();
+    void send(IPacket iPacket);
 
-    String getResourceName();
-
-    String getUserName();
-
-    void setDomain(String domain);
-
-    void setOwnURI(XmppURI uri);
-
-    void setPassword(String password);
-
-    void setResourceName(String resource);
-
-    void setUserName(String userName);
+    /**
+     * Sends a packet with ID and handle response When you send a packet with
+     * this method, emite will generate a id using the category, put the id as
+     * attribute in the packet and wait for a response Is mainly for use with IQ
+     * query objects
+     * 
+     * @param category
+     * @param withQuery
+     * @param listener
+     */
+    void send(String category, IPacket packet, PacketListener listener);
 }

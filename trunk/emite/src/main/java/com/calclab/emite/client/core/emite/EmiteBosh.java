@@ -19,18 +19,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.core.bosh;
+package com.calclab.emite.client.core.emite;
 
 import java.util.List;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.core.services.XMLService;
 
+/**
+ * REPONSABILITIES: mantains a body handle id iq's SEND - put the body childs
+ * inside the body
+ * 
+ * @author dani
+ * 
+ */
 public class EmiteBosh extends DispatcherComponent implements Emite {
     public static class Events {
 	public static final Event send = new Event("connection:do:send");
@@ -38,14 +45,11 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 
     private Body body;
     private final IDManager manager;
-    private long rid;
-    private final XMLService xmler;
+    private long requestID;
 
-    public EmiteBosh(final Dispatcher dispatcher, final XMLService xmler) {
+    public EmiteBosh(final Dispatcher dispatcher) {
 	super(dispatcher);
-	this.xmler = xmler;
 	this.manager = new IDManager();
-	restartRID();
     }
 
     @Override
@@ -65,10 +69,6 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	});
     }
 
-    public IPacket bodyFromResponse(final String content) {
-	return xmler.toXML(content);
-    }
-
     public void clearBody() {
 	body = null;
     }
@@ -81,24 +81,18 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	return dispatcher;
     }
 
-    public String getResponse() {
-	return xmler.toString(body);
-    }
-
-    public void initBody(final String sid) {
+    public void newRequest(final String sid) {
 	if (this.body == null) {
-	    rid++;
-	    body = new Body(rid, sid);
+	    requestID++;
+	    body = new Body(requestID, sid);
+	    Log.debug("@@@@ NEW REUEST: " + body);
+	} else {
+	    Log.debug("@@@@ sSkip body creation. We have already one: " + this.body);
 	}
     }
 
     public void publish(final Event event) {
 	dispatcher.publish(event);
-    }
-
-    public void restartRID() {
-	rid = (long) (Math.random() * 1245234);
-	this.body = null;
     }
 
     public void send(final IPacket packet) {
@@ -109,6 +103,14 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	final String id = manager.register(category, packetListener);
 	packet.setAttribute("id", id);
 	send(packet);
+    }
+
+    public void start(final String domain) {
+	Log.debug("@@@@ Starting bosh");
+	this.requestID = (int) (Math.random() * 1245234);
+	this.body = null;
+	body = new Body(requestID, null);
+	this.getBody().setCreationState(domain);
     }
 
 }

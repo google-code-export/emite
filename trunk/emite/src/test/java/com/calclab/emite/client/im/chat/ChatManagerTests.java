@@ -5,8 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.bosh.Emite;
+
+import com.calclab.emite.client.core.emite.Emite;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
@@ -19,11 +19,10 @@ public class ChatManagerTests {
     @Before
     public void a() {
 	final Emite emite = Mockito.mock(Emite.class);
-	final Globals globals = Mockito.mock(Globals.class);
-	Mockito.stub(globals.getOwnURI()).toReturn(XmppURI.parse(MYSELF));
-	chatManagerDefault = new ChatManagerDefault(emite, globals);
+	chatManagerDefault = new ChatManagerDefault(emite);
 	listener = Mockito.mock(ChatManagerListener.class);
 	chatManagerDefault.addListener(listener);
+	chatManagerDefault.setUserURI(MYSELF);
     }
 
     @Test
@@ -49,8 +48,8 @@ public class ChatManagerTests {
     @Test
     public void shouldUseSameRoomWhenAnswering() {
 	final Chat chat = chatManagerDefault.openChat(XmppURI.parse("someone@domain"));
-	chatManagerDefault
-		.onMessageReceived(new Message("someone@domain/resource", MYSELF, "answer").Thread(chat.getThread()));
+	chatManagerDefault.onMessageReceived(new Message("someone@domain/resource", MYSELF, "answer").Thread(chat
+		.getThread()));
 	Mockito.verify(listener, Mockito.times(1)).onChatCreated(chat);
     }
 }

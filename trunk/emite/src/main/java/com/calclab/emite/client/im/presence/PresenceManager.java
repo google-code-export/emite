@@ -23,10 +23,9 @@ package com.calclab.emite.client.im.presence;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.emite.EmiteComponent;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.SessionManager;
@@ -37,15 +36,15 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class PresenceManager extends EmiteComponent {
     private Presence currentPresence;
-    private final Globals globals;
     private final ArrayList<PresenceListener> listeners;
     private Presence delayedPresence;
+    private XmppURI userURI;
 
-    public PresenceManager(final Emite emite, final Globals globals) {
-        super(emite);
-        this.globals = globals;
-        this.listeners = new ArrayList<PresenceListener>();
-        this.currentPresence = null;
+    public PresenceManager(final Emite emite) {
+	super(emite);
+	this.listeners = new ArrayList<PresenceListener>();
+	this.currentPresence = null;
+	this.userURI = null;
     }
 
     /**
@@ -53,15 +52,15 @@ public class PresenceManager extends EmiteComponent {
      * presence.
      */
     public void acceptSubscription(final Presence presence) {
-        replySubscription(presence, Presence.Type.subscribed);
+	replySubscription(presence, Presence.Type.subscribed);
     }
 
     public void addListener(final PresenceListener presenceListener) {
-        this.listeners.add(presenceListener);
+	this.listeners.add(presenceListener);
     }
 
     public IPacket answerTo(final Presence presence) {
-        return new Presence(globals.getOwnURI()).To(presence.getFrom());
+	return new Presence(userURI).To(presence.getFrom());
     }
 
     /**
@@ -70,24 +69,31 @@ public class PresenceManager extends EmiteComponent {
      */
     @Override
     public void attach() {
-        when(RosterManager.Events.ready, new PacketListener() {
-            public void handle(final IPacket received) {
-                currentPresence = createInitialPresence();
-                emite.send(currentPresence);
-            }
-        });
+	when(RosterManager.Events.ready, new PacketListener() {
+	    public void handle(final IPacket received) {
+		currentPresence = createInitialPresence();
+		emite.send(currentPresence);
+	    }
+	});
 
-        when("presence", new PacketListener() {
-            public void handle(final IPacket received) {
-                onPresenceReceived(new Presence(received));
-            }
-        });
+	when("presence", new PacketListener() {
+	    public void handle(final IPacket received) {
+		onPresenceReceived(new Presence(received));
+	    }
+	});
 
-        when(SessionManager.Events.loggedOut, new PacketListener() {
-            public void handle(final IPacket received) {
-                onLogoutSession();
-            }
-        });
+	when(SessionManager.Events.loggedOut, new PacketListener() {
+	    public void handle(final IPacket received) {
+		onLogoutSession();
+		userURI = null;
+	    }
+	});
+	when(SessionManager.Events.loggedIn, new PacketListener() {
+	    public void handle(final IPacket received) {
+		userURI = XmppURI.parse(received.getAttribute("uri"));
+	    }
+
+	});
 
     }
 
@@ -96,12 +102,12 @@ public class PresenceManager extends EmiteComponent {
      * it sends a presence stanza of type "unsubscribed".
      */
     public void cancelSubscriptor(final XmppURI to) {
-        final Presence unsubscription = new Presence(Presence.Type.unsubscribed, globals.getOwnURI(), to);
-        emite.send(unsubscription);
+	final Presence unsubscription = new Presence(Presence.Type.unsubscribed, userURI, to);
+	emite.send(unsubscription);
     }
 
     public Presence createInitialPresence() {
-        return new Presence(globals.getOwnURI()).With(Presence.Show.chat);
+	return new Presence(userURI).With(Presence.Show.chat);
     }
 
     /**
@@ -109,11 +115,16 @@ public class PresenceManager extends EmiteComponent {
      * previously-granted subscription has been cancelled.
      */
     public void denySubscription(final Presence presence) {
-        replySubscription(presence, Presence.Type.unsubscribed);
+	replySubscription(presence, Presence.Type.unsubscribed);
+    }
+
+    // FIXME: Dani (Presence) I need this... I think
+    public Presence getCurrentPresence() {
+	return currentPresence;
     }
 
     public Presence getOwnPresence() {
-        return currentPresence;
+	return currentPresence;
     }
 
     /**
@@ -127,13 +138,12 @@ public class PresenceManager extends EmiteComponent {
      * available).
      */
     public void onLogoutSession() {
-        if (isLoggedIn()) {
-            final Presence presence = new Presence(Type.unavailable, globals.getOwnURI().toString(), globals
-                    .getDomain());
-            emite.send(presence);
-            delayedPresence = null;
-            currentPresence = null;
-        }
+	if (isLoggedIn()) {
+	    final Presence presence = new Presence(Type.unavailable, userURI.toString(), userURI.getHost());
+	    emite.send(presence);
+	    delayedPresence = null;
+	    currentPresence = null;
+	}
     }
 
     /**
@@ -141,8 +151,8 @@ public class PresenceManager extends EmiteComponent {
      * it sends a presence stanza of type "unsubscribe".
      */
     public void requestUnsubscribe(final XmppURI to) {
-        final Presence unsubscribeRequest = new Presence(Presence.Type.unsubscribe, globals.getOwnURI(), to);
-        emite.send(unsubscribeRequest);
+	final Presence unsubscribeRequest = new Presence(Presence.Type.unsubscribe, userURI, to);
+	emite.send(unsubscribeRequest);
     }
 
     /**
@@ -154,91 +164,86 @@ public class PresenceManager extends EmiteComponent {
      * 'type' attribute with a value of "unavailable". (
      */
     public void setOwnPresence(final String statusMessage, final Show show) {
-        final Show showValue = show != null ? show : Presence.Show.available;
-        final Presence presence = new Presence().With(showValue);
-        if (statusMessage != null) {
-            presence.setStatus(statusMessage);
-        }
+	final Show showValue = show != null ? show : Presence.Show.available;
+	final Presence presence = new Presence().With(showValue);
+	if (statusMessage != null) {
+	    presence.setStatus(statusMessage);
+	}
 
-        if (isLoggedIn()) {
-            setOwnPresence(presence);
-        } else {
-            delayedPresence = presence;
-        }
+	if (isLoggedIn()) {
+	    setOwnPresence(presence);
+	} else {
+	    delayedPresence = presence;
+	}
     }
 
     void onPresenceReceived(final Presence presence) {
-        if (delayedPresence != null) {
-            sendDelayedPresence();
-        }
+	if (delayedPresence != null) {
+	    sendDelayedPresence();
+	}
 
-        final Type type = presence.getType();
-        switch (type) {
-        case subscribe:
-            fireSubscriptionRequest(presence);
-            break;
-        case unsubscribed:
-            fireUnsubscriptionReceived(presence);
-            break;
-        case probe:
-            emite.send(currentPresence);
-            break;
-        case error:
-            break;
-        default:
-            firePresenceReceived(presence);
-            break;
-        }
+	final Type type = presence.getType();
+	switch (type) {
+	case subscribe:
+	    fireSubscriptionRequest(presence);
+	    break;
+	case unsubscribed:
+	    fireUnsubscriptionReceived(presence);
+	    break;
+	case probe:
+	    emite.send(currentPresence);
+	    break;
+	case error:
+	    break;
+	default:
+	    firePresenceReceived(presence);
+	    break;
+	}
     }
 
     private void firePresenceReceived(final Presence presence) {
-        for (final PresenceListener listener : listeners) {
-            listener.onPresenceReceived(presence);
-        }
+	for (final PresenceListener listener : listeners) {
+	    listener.onPresenceReceived(presence);
+	}
     }
 
     private void fireSubscriptionRequest(final Presence presence) {
-        for (final PresenceListener listener : listeners) {
-            listener.onSubscriptionRequest(presence);
-        }
+	for (final PresenceListener listener : listeners) {
+	    listener.onSubscriptionRequest(presence);
+	}
     }
 
     private void fireUnsubscriptionReceived(final Presence presence) {
-        for (final PresenceListener listener : listeners) {
-            listener.onUnsubscriptionReceived(presence);
-        }
+	for (final PresenceListener listener : listeners) {
+	    listener.onUnsubscriptionReceived(presence);
+	}
     }
 
     private boolean isLoggedIn() {
-        return currentPresence != null;
+	return currentPresence != null;
     }
 
     private void replySubscription(final Presence presence, final Presence.Type type) {
-        if (presence.getType() == Presence.Type.subscribe) {
-            final Presence response = new Presence(type, globals.getOwnURI(), presence.getFromURI());
-            emite.send(response);
-        } else {
-            // throw exception: its a programming error
-            throw new RuntimeException("Trying to accept/deny a non subscription request");
-        }
+	if (presence.getType() == Presence.Type.subscribe) {
+	    final Presence response = new Presence(type, userURI, presence.getFromURI());
+	    emite.send(response);
+	} else {
+	    // throw exception: its a programming error
+	    throw new RuntimeException("Trying to accept/deny a non subscription request");
+	}
     }
 
     private void sendDelayedPresence() {
-        delayedPresence.setFrom(globals.getOwnURI().toString());
-        delayedPresence.setTo(globals.getDomain());
-        setOwnPresence(delayedPresence);
-        delayedPresence = null;
+	delayedPresence.setFrom(userURI.toString());
+	delayedPresence.setTo(userURI.getHost());
+	setOwnPresence(delayedPresence);
+	delayedPresence = null;
     }
 
     private void setOwnPresence(final Presence presence) {
-        emite.send(presence);
-        currentPresence = presence;
-        // FIXME: Dani: sounds logical:
-        delayedPresence = null;
-    }
-
-    // FIXME: Dani (Presence) I need this... I think
-    public Presence getCurrentPresence() {
-        return currentPresence;
+	emite.send(presence);
+	currentPresence = presence;
+	// FIXME: Dani: sounds logical:
+	delayedPresence = null;
     }
 }

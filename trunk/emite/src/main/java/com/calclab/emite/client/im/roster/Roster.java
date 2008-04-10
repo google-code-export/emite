@@ -31,12 +31,11 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class Roster implements Component {
     public static enum SubscriptionMode {
-        auto_accept_all, auto_reject_all, manual
+	auto_accept_all, auto_reject_all, manual
     }
 
     public static final SubscriptionMode DEF_SUBSCRIPTION_MODE = SubscriptionMode.manual;
 
-    private boolean isInit;
     private final HashMap<String, RosterItem> items;
 
     private final ArrayList<RosterListener> listeners;
@@ -44,60 +43,58 @@ public class Roster implements Component {
     private SubscriptionMode subscriptionMode;
 
     public Roster() {
-        listeners = new ArrayList<RosterListener>();
-        items = new HashMap<String, RosterItem>();
-        subscriptionMode = DEF_SUBSCRIPTION_MODE;
+	listeners = new ArrayList<RosterListener>();
+	items = new HashMap<String, RosterItem>();
+	subscriptionMode = DEF_SUBSCRIPTION_MODE;
     }
 
     public void addListener(final RosterListener listener) {
-        listeners.add(listener);
+	listeners.add(listener);
     }
 
     public RosterItem findItemByURI(final XmppURI uri) {
-        return items.get(uri.getJID().toString());
+	return items.get(uri.getJID().toString());
     }
 
     public RosterItem getItem(final int index) {
-        return items.get(index);
+	return items.get(index);
     }
 
     public int getSize() {
-        return items.size();
+	return items.size();
     }
 
     public SubscriptionMode getSubscriptionMode() {
-        return subscriptionMode;
+	return subscriptionMode;
     }
 
     public void initStart() {
-        items.clear();
-        this.isInit = true;
+	items.clear();
     }
 
     public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
-        this.subscriptionMode = subscriptionMode;
+	this.subscriptionMode = subscriptionMode;
     }
 
     void add(final RosterItem item) {
-        items.put(item.getXmppURI().toString(), item);
+	items.put(item.getXmppURI().toString(), item);
     }
 
     void fireItemPresenceChanged(final RosterItem item) {
-        Log.debug("ROSTER ITEM PRESENCE CHANGED!");
-        for (final RosterListener listener : listeners) {
-            listener.onItemPresenceChanged(item);
-        }
+	Log.debug("ROSTER ITEM PRESENCE CHANGED!");
+	for (final RosterListener listener : listeners) {
+	    listener.onItemPresenceChanged(item);
+	}
     }
 
     void initEnds() {
-        isInit = false;
-        fireRosterChanged();
+	fireRosterChanged();
     }
 
     private void fireRosterChanged() {
-        for (final RosterListener listener : listeners) {
-            listener.onRosterChanged(items.values());
-        }
+	for (final RosterListener listener : listeners) {
+	    listener.onRosterChanged(items.values());
+	}
     }
 
 }

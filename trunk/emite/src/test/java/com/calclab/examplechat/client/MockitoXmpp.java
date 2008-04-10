@@ -11,6 +11,7 @@ import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.Session;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 
 public class MockitoXmpp extends Xmpp {
@@ -24,7 +25,7 @@ public class MockitoXmpp extends Xmpp {
     private final Session session;
 
     public MockitoXmpp() {
-	super(ContainerPlugin.create());
+	super(ContainerPlugin.create(), null);
 	chat = mock(ChatManager.class);
 	components = mock(Container.class);
 	dispatcher = mock(Dispatcher.class);
@@ -70,7 +71,7 @@ public class MockitoXmpp extends Xmpp {
     }
 
     @Override
-    public void login(final String userName, final String userPassword, final Show show, final String blah) {
+    public void login(final XmppURI uri, final String password, final Show show, final String status) {
 	throw new RuntimeException("not implemented");
     }
 

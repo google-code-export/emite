@@ -22,13 +22,8 @@
 package com.calclab.emite.client;
 
 import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.core.CorePlugin;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.core.bosh.BoshPlugin;
-import com.calclab.emite.client.core.dispatcher.DispatcherPlugin;
-import com.calclab.emite.client.core.services.Connector;
-import com.calclab.emite.client.core.services.Scheduler;
-import com.calclab.emite.client.core.services.ServicesPlugin;
-import com.calclab.emite.client.core.services.XMLService;
 import com.calclab.emite.client.extra.muc.MUCPlugin;
 import com.calclab.emite.client.im.chat.ChatPlugin;
 import com.calclab.emite.client.im.presence.PresencePlugin;
@@ -39,20 +34,12 @@ import com.calclab.emite.client.xmpp.session.SessionPlugin;
 
 public class Plugins {
 
-    public static void installDefaultPlugins(final Container container, final XMLService xmlService,
-	    final Connector connector, final Scheduler scheduler, final BoshOptions options) {
+    public static void installDefaultPlugins(final Container container, final BoshOptions options) {
 
-	installCorePlugins(container, xmlService, connector, scheduler, options);
+	CorePlugin.install(container, options);
 	installXMPPPlugins(container);
 	installIMPlugins(container);
 	installExtraPlugins(container);
-    }
-
-    private static void installCorePlugins(final Container container, final XMLService xmlService,
-	    final Connector connector, final Scheduler scheduler, final BoshOptions options) {
-	DispatcherPlugin.install(container);
-	ServicesPlugin.install(container, connector, xmlService, scheduler);
-	BoshPlugin.install(container, options);
     }
 
     private static void installExtraPlugins(final Container container) {

@@ -21,13 +21,14 @@
  */
 package com.calclab.emite.client.xmpp.sasl;
 
-import com.calclab.emite.client.components.Globals;
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.emite.EmiteComponent;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.xmpp.session.SessionManager;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class SASLManager extends EmiteComponent {
     public static class Events {
@@ -37,16 +38,24 @@ public class SASLManager extends EmiteComponent {
     private static final String SEP = new String(new char[] { 0 });
 
     private static final String XMLNS = "urn:ietf:params:xml:ns:xmpp-sasl";
-    private final Globals globals;
 
-    public SASLManager(final Emite emite, final Globals globals) {
+    protected String password;
+    protected XmppURI uri;
+
+    public SASLManager(final Emite emite) {
 	super(emite);
-	this.globals = globals;
 
     }
 
     @Override
     public void attach() {
+	when(SessionManager.Events.logIn, new PacketListener() {
+	    public void handle(final IPacket received) {
+		uri = XmppURI.parse(received.getAttribute("uri"));
+		password = received.getAttribute("password");
+	    }
+	});
+
 	when(new Packet("stream:features"), new PacketListener() {
 	    public void handle(final IPacket received) {
 		startAuthorizationRequest();
@@ -56,6 +65,8 @@ public class SASLManager extends EmiteComponent {
 
 	when(new Packet("success", XMLNS), new PacketListener() {
 	    public void handle(final IPacket received) {
+		uri = null;
+		password = null;
 		emite.publish(Events.authorized);
 	    }
 	});
@@ -74,13 +85,13 @@ public class SASLManager extends EmiteComponent {
 
     private IPacket createPlainAuthorization() {
 	final IPacket auth = new Packet("auth", XMLNS).With("mechanism", "PLAIN");
-	final String encoded = encode(globals.getDomain(), globals.getUserName(), globals.getPassword());
+	final String encoded = encode(uri.getHost(), uri.getNode(), password);
 	auth.addText(encoded);
 	return auth;
     }
 
     private void startAuthorizationRequest() {
-	final String userName = globals.getUserName();
+	final String userName = uri.getNode();
 	final boolean hasUserName = userName == null || userName.trim().length() > 0;
 	final IPacket response = hasUserName ? createPlainAuthorization() : createAnonymousAuthorization();
 	emite.send(response);

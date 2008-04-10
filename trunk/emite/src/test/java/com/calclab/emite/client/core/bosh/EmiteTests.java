@@ -6,8 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.emite.EmiteBosh;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.core.services.XMLService;
 
 public class EmiteTests {
 
@@ -16,8 +17,7 @@ public class EmiteTests {
     @Before
     public void aaCreate() {
 	final Dispatcher dispatcher = mock(Dispatcher.class);
-	final XMLService xmler = mock(XMLService.class);
-	emite = new EmiteBosh(dispatcher, xmler);
+	emite = new EmiteBosh(dispatcher);
     }
 
     @Test
