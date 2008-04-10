@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.emite.Emite;
 import com.calclab.emite.client.core.emite.EmiteComponent;
@@ -154,7 +153,6 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
     private ChatDefault findChat(final XmppURI from, final String thread) {
 	ChatDefault selected = null;
 
-	Log.debug("Finding chat for: " + from + ", " + thread);
 	for (final ChatDefault chat : chats) {
 	    if (thread != null) {
 		if (thread.equals(chat.getThread())) {

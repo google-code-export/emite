@@ -24,6 +24,7 @@ package com.calclab.emite.client;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.core.CorePlugin;
 import com.calclab.emite.client.core.bosh.BoshOptions;
+import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
 import com.calclab.emite.client.extra.muc.MUCPlugin;
 import com.calclab.emite.client.im.chat.ChatPlugin;
 import com.calclab.emite.client.im.presence.PresencePlugin;
@@ -34,9 +35,10 @@ import com.calclab.emite.client.xmpp.session.SessionPlugin;
 
 public class Plugins {
 
-    public static void installDefaultPlugins(final Container container, final BoshOptions options) {
+    public static void installDefaultPlugins(final Container container, final BoshOptions options,
+	    final DispatcherMonitor monitor) {
 
-	CorePlugin.install(container, options);
+	CorePlugin.install(container, options, monitor);
 	installXMPPPlugins(container);
 	installIMPlugins(container);
 	installExtraPlugins(container);

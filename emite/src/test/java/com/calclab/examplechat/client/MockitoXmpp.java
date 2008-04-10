@@ -6,6 +6,8 @@ import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.components.DefaultContainer;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
+import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
@@ -25,7 +27,10 @@ public class MockitoXmpp extends Xmpp {
     private final Session session;
 
     public MockitoXmpp() {
-	super(new DefaultContainer(), null);
+	super(new DefaultContainer(), null, new DispatcherMonitor() {
+	    public void publishing(final IPacket packet) {
+	    }
+	});
 	chat = mock(ChatManager.class);
 	components = mock(Container.class);
 	dispatcher = mock(Dispatcher.class);

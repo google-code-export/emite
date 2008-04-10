@@ -38,9 +38,10 @@ public class Event extends DelegatedPacket {
 	setAttribute(TYPE, type);
     }
 
-    public Event Because(final String cause) {
-	setAttribute("cause", cause);
-	return this;
+    public Event Because(final IPacket info) {
+	final Event event = new Event(this);
+	event.addChild(info);
+	return event;
     }
 
     public String getType() {
