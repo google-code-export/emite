@@ -23,7 +23,7 @@ package com.calclab.emite.client.im.chat;
 
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.core.CorePlugin;
-import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.bosh.Emite;
 
 public class ChatPlugin {
     private static final String COMPONENT_CHAT = "chat";

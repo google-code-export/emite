@@ -19,11 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.core.emite;
+package com.calclab.emite.client.core.bosh;
 
 import java.util.List;
 
-import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;

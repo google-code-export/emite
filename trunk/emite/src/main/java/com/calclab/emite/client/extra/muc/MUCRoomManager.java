@@ -24,8 +24,8 @@ package com.calclab.emite.client.extra.muc;
 import java.util.HashMap;
 import java.util.List;
 
+import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.emite.Emite;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.im.chat.Chat;

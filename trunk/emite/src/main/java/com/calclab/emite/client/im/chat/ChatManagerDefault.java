@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.emite.Emite;
-import com.calclab.emite.client.core.emite.EmiteComponent;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.SessionManager;

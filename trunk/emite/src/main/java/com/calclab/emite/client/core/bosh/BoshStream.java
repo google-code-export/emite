@@ -1,6 +1,5 @@
-package com.calclab.emite.client.core.emite;
+package com.calclab.emite.client.core.bosh;
 
-import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 

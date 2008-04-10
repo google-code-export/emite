@@ -40,12 +40,21 @@ public class DispatcherDefault implements Dispatcher {
 
     }
 
+    private static final DispatcherMonitor MONITOR_NULL = new DispatcherMonitor() {
+	public void publishing(final IPacket packet) {
+	}
+    };
+
     private boolean isCurrentlyDispatching;
     private final DispatcherStateListenerCollection listeners;
     private final ArrayList<IPacket> queue;
 
     private final HashMap<String, List<Subscriptor>> subscriptors;
     private final DispatcherMonitor monitor;
+
+    public DispatcherDefault() {
+	this(MONITOR_NULL);
+    }
 
     public DispatcherDefault(final DispatcherMonitor monitor) {
 	this.monitor = monitor;

@@ -24,6 +24,7 @@ package com.calclab.emite.client.im.roster;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -35,7 +36,8 @@ public class Roster implements Component {
 
     public static final SubscriptionMode DEF_SUBSCRIPTION_MODE = SubscriptionMode.manual;
 
-    private final HashMap<String, RosterItem> items;
+    // Only JIDs
+    private final HashMap<XmppURI, RosterItem> items;
 
     private final ArrayList<RosterListener> listeners;
 
@@ -43,7 +45,7 @@ public class Roster implements Component {
 
     public Roster() {
 	listeners = new ArrayList<RosterListener>();
-	items = new HashMap<String, RosterItem>();
+	items = new HashMap<XmppURI, RosterItem>();
 	subscriptionMode = DEF_SUBSCRIPTION_MODE;
     }
 
@@ -52,7 +54,13 @@ public class Roster implements Component {
     }
 
     public RosterItem findItemByURI(final XmppURI uri) {
-	return items.get(uri.getJID().toString());
+	return items.get(uri.getJID());
+    }
+
+    public void fireItemPresenceChanged(final RosterItem item) {
+	for (final RosterListener listener : listeners) {
+	    listener.onItemPresenceChanged(item);
+	}
     }
 
     public RosterItem getItem(final int index) {
@@ -67,25 +75,20 @@ public class Roster implements Component {
 	return subscriptionMode;
     }
 
-    public void initStart() {
-	items.clear();
-    }
-
     public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
 	this.subscriptionMode = subscriptionMode;
     }
 
     void add(final RosterItem item) {
-	items.put(item.getXmppURI().toString(), item);
+	items.put(item.getXmppURI().getJID(), item);
+	fireRosterChanged();
     }
 
-    void fireItemPresenceChanged(final RosterItem item) {
-	for (final RosterListener listener : listeners) {
-	    listener.onItemPresenceChanged(item);
+    void setItems(final List<RosterItem> itemCollection) {
+	items.clear();
+	for (final RosterItem item : itemCollection) {
+	    items.put(item.getXmppURI().getJID(), item);
 	}
-    }
-
-    void initEnds() {
 	fireRosterChanged();
     }
 

@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+
+import com.calclab.emite.client.core.bosh.BoshStream;
 import com.calclab.emite.client.core.packet.Packet;
 
 public class EmiteTests {

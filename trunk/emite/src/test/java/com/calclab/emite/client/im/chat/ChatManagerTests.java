@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 

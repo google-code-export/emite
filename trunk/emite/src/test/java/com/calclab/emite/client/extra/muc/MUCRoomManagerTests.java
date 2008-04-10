@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class MUCRoomManagerTests {
