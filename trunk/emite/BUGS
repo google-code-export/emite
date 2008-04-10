@@ -4,7 +4,7 @@ Known bugs in Emite
 For reports please use:
   http://code.google.com/p/emite/issues/list
 
-- Bosh is buggy
+- Bosh is less buggy now
 
 - when deploy
 06-abr-2008 6:21:54 org.apache.catalina.startup.Catalina start

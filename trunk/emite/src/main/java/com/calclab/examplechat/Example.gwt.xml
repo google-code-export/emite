@@ -9,6 +9,7 @@
   <entry-point
     class="com.calclab.examplechat.client.ChatExampleEntryPoint" />
 
+  <servlet path="/com.calclab.examplechat.Example/http-bind" class="de.spieleck.servlets.ProxyServlet"/>
 
   <!--
     The default log level is `OFF`. In development you'll usually want
