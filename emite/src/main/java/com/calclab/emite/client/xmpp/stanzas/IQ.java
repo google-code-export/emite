@@ -28,6 +28,8 @@ public class IQ extends BasicStanza {
 	error, get, result, set
     }
 
+    private static final String NAME = "iq";
+
     public IQ(final IPacket stanza) {
 	super(stanza);
     }

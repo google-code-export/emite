@@ -23,9 +23,9 @@ package com.calclab.emite.client.im.presence;
 
 import java.util.ArrayList;
 
+import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.emite.Emite;
-import com.calclab.emite.client.core.emite.EmiteComponent;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.SessionManager;

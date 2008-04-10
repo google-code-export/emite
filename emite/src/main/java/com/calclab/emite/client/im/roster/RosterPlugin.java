@@ -23,7 +23,7 @@ package com.calclab.emite.client.im.roster;
 
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.core.CorePlugin;
-import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.bosh.Emite;
 
 public class RosterPlugin {
 

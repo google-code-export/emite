@@ -23,7 +23,7 @@ package com.calclab.emite.client.extra.muc;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.core.emite.Emite;
+import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.xmpp.stanzas.Message;

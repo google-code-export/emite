@@ -24,13 +24,13 @@ package com.calclab.emite.client.core;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.BoshOptions;
+import com.calclab.emite.client.core.bosh.BoshStream;
+import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.bosh.EmiteBosh;
 import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
-import com.calclab.emite.client.core.emite.BoshStream;
-import com.calclab.emite.client.core.emite.Emite;
-import com.calclab.emite.client.core.emite.EmiteBosh;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesPlugin;
 
