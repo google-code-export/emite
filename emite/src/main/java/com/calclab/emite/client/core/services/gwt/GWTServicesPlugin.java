@@ -6,11 +6,12 @@ import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
+import com.calclab.emite.client.core.services.ServicesPlugin;
 
 public class GWTServicesPlugin implements Services {
 
-    public static Container install(final Container create) {
-	return null;
+    public static void install(final Container container) {
+	ServicesPlugin.install(container, new GWTServicesPlugin());
     }
 
     public long getCurrentTime() {

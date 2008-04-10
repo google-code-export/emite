@@ -22,7 +22,7 @@
 package com.calclab.emite.client;
 
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.components.ContainerPlugin;
+import com.calclab.emite.client.components.DefaultContainer;
 import com.calclab.emite.client.core.CorePlugin;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
@@ -42,8 +42,9 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 public class Xmpp {
 
     public static Xmpp create(final BoshOptions options) {
-	final Container container = GWTServicesPlugin.install(ContainerPlugin.create());
-	return new Xmpp(container, options);
+	final DefaultContainer c = new DefaultContainer();
+	GWTServicesPlugin.install(c);
+	return new Xmpp(c, options);
     }
 
     private final Container container;
