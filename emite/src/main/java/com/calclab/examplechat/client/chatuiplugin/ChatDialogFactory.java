@@ -36,6 +36,7 @@ import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUI;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public interface ChatDialogFactory {
 
@@ -44,10 +45,10 @@ public interface ChatDialogFactory {
 
     public GroupChatUserList createGroupChatUserList();
 
-    public MultiChat createMultiChat(final Xmpp xmpp, MultiChatCreationParam param,
-            final I18nTranslationService i18n, final MultiChatListener listener);
+    public MultiChat createMultiChat(final Xmpp xmpp, MultiChatCreationParam param, final I18nTranslationService i18n,
+            final MultiChatListener listener);
 
-    public PairChat createPairChat(final Chat chat, final PairChatListener listener, String currentUserJid,
+    public PairChat createPairChat(final Chat chat, final PairChatListener listener, XmppJID currentUserJid,
             final PairChatUser otherUser);
 
     public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n);

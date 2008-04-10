@@ -58,6 +58,7 @@ import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUI;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public class MultiChatPresenter implements MultiChat, GroupChatListener, PairChatListener {
     private static final OwnPresence OFFLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.offline);
@@ -65,7 +66,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     private final HashMap<Chat, AbstractChat> chats;
     private boolean closeAllConfirmed;
     private AbstractChat currentChat;
-    private final String currentUserJid;
+    private final XmppJID currentUserJid;
     private final String currentUserPasswd;
     private final ChatDialogFactory factory;
     private final MultiChatListener listener;
@@ -76,16 +77,16 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     private final PresenceManager presenceManager;
 
     public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final ChatDialogFactory factory,
-	    final MultiChatCreationParam param, final MultiChatListener listener) {
-	this.xmpp = xmpp;
-	presenceManager = xmpp.getPresenceManager();
-	this.factory = factory;
-	this.currentUserJid = param.getUserJid();
-	this.currentUserPasswd = param.getUserPassword();
-	this.userChatOptions = param.getUserChatOptions();
-	this.listener = listener;
-	chats = new HashMap<Chat, AbstractChat>();
-	rosterUI = factory.createrRosterUI(xmpp, i18n);
+            final MultiChatCreationParam param, final MultiChatListener listener) {
+        this.xmpp = xmpp;
+        presenceManager = xmpp.getPresenceManager();
+        this.factory = factory;
+        this.currentUserJid = new XmppJID(param.getUserJid());
+        this.currentUserPasswd = param.getUserPassword();
+        this.userChatOptions = param.getUserChatOptions();
+        this.listener = listener;
+        chats = new HashMap<Chat, AbstractChat>();
+        rosterUI = factory.createrRosterUI(xmpp, i18n);
     }
 
     public void activateChat(final AbstractChat chat) {
@@ -151,18 +152,18 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     }
 
     public PairChat createPairChat(final Chat chat) {
-	final AbstractChat abstractChat = chats.get(chat);
-	if (abstractChat != null) {
-	    activateChat(abstractChat);
-	    return (PairChat) abstractChat;
-	}
-	final PairChatUser otherUser = rosterUI.getUserByJid(chat.getOtherURI().getJID().toString());
-	if (otherUser == null) {
-	    Log.info("Message from user not in roster");
-	    return null;
-	}
-	final PairChat pairChat = factory.createPairChat(chat, this, currentUserJid, otherUser);
-	return (PairChat) finishChatCreation(pairChat, chat.getOtherURI().toString());
+        final AbstractChat abstractChat = chats.get(chat);
+        if (abstractChat != null) {
+            activateChat(abstractChat);
+            return (PairChat) abstractChat;
+        }
+        final PairChatUser otherUser = rosterUI.getUserByJid(new XmppJID(chat.getOtherURI()));
+        if (otherUser == null) {
+            Log.info("Message from user not in roster");
+            return null;
+        }
+        final PairChat pairChat = factory.createPairChat(chat, this, currentUserJid, otherUser);
+        return (PairChat) finishChatCreation(pairChat, chat.getOtherURI().toString());
     }
 
     public void destroy() {
@@ -227,12 +228,12 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     }
 
     public void messageReceived(final Chat chat, final Message message) {
-	final AbstractChat abstractChat = getChat(chat);
-	if (abstractChat.isGroupChat()) {
-	    ((GroupChat) abstractChat).addMessage(message.getFrom().toString(), message.getBody());
-	} else {
-	    ((PairChat) abstractChat).addMessage(XmppURI.parse(message.getFrom()), message.getBody());
-	}
+        final AbstractChat abstractChat = getChat(chat);
+        if (abstractChat.isGroupChat()) {
+            ((GroupChat) abstractChat).addMessage(message.getFrom().toString(), message.getBody());
+        } else {
+            ((PairChat) abstractChat).addMessage(new XmppJID(XmppURI.parse(message.getFrom())), message.getBody());
+        }
     }
 
     public void onActivate(final AbstractChat nextChat) {
@@ -413,7 +414,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 	switch (xmpp.getSession().getState()) {
 	case disconnected:
 	    final String resource = "emite-ui" + new Date().getTime();
-	    xmpp.login(new XmppURI(currentUserJid, "localhost", resource), currentUserPasswd, status, statusText);
+	    xmpp.login(new XmppURI(currentUserJid.toString(), "localhost", resource), currentUserPasswd, status, statusText);
 	    break;
 	case authorized:
 	case connecting:

@@ -23,19 +23,19 @@ package com.calclab.examplechat.client.chatuiplugin.pairchat;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public class PairChatPresenter extends AbstractChatPresenter implements PairChat {
 
     private final PairChatUser otherUser;
     final PairChatListener listener;
     private String currenUserColor;
-    private final String currentSessionJid;
+    private final XmppJID currentSessionJid;
 
-    public PairChatPresenter(final Chat chat, final PairChatListener listener, final String currentSessionJid,
+    public PairChatPresenter(final Chat chat, final PairChatListener listener, final XmppJID currentSessionJid,
             final PairChatUser otherUser) {
         super(chat, AbstractChat.Type.pairchat);
         this.currentSessionJid = currentSessionJid;
@@ -45,21 +45,23 @@ public class PairChatPresenter extends AbstractChatPresenter implements PairChat
         this.listener = listener;
     }
 
-    public void addMessage(final XmppURI userUri, final String message) {
+    public void addMessage(final XmppJID userJid, final String message) {
         String userColor;
 
-        if (currentSessionJid.equals(userUri) || currentSessionJid.equals(userUri.getJID().toString())) {
+        String userAlias;
+        if (currentSessionJid.equals(userJid)) {
             userColor = currenUserColor;
-        } else if (otherUser.getUri().equals(userUri)
-                || otherUser.getUri().getJID().toString().equals(userUri.getJID().toString())) {
-            // FIXME Roster / Jids Problems...
+            userAlias = currentSessionJid.getNode();
+        } else if (otherUser.getJid().equals(userJid)) {
             userColor = otherUser.getColor();
+            // FIXME: Duplicate code in UserGridPanel
+            userAlias = otherUser.getAlias() != null ? otherUser.getAlias() : otherUser.getJid().getNode();
         } else {
-            final String error = "Unexpected message from user '" + userUri + "' in " + "chat '" + otherUser.getUri();
+            final String error = "Unexpected message from user '" + userJid + "' in " + "chat '" + otherUser.getJid();
             Log.error(error);
             throw new RuntimeException(error);
         }
-        view.addMessage(userUri.getNode(), userColor, message);
+        view.addMessage(userAlias, userColor, message);
         listener.onMessageAdded(this);
     }
 
