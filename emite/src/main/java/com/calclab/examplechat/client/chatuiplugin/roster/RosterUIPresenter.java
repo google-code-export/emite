@@ -82,6 +82,8 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
 
     public void onPresenceAccepted(final Presence presence) {
         presenceManager.acceptSubscription(presence);
+        // Auto requesting the subscription to contact, I think is useful
+        presenceManager.requestSubscribe(presence.getFromURI());
     }
 
     public void onPresenceNotAccepted(final Presence presence) {
@@ -146,9 +148,16 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                 }
             }
 
-            public void onUnsubscriptionReceived(final Presence presence) {
+            public void onSubscribedReceived(final Presence presence) {
+                Log.info("SUBS RECEIVED");
+                // FIXME: Try to update roster
+            }
+
+            public void onUnsubscribedReceived(final Presence presence) {
                 Log.info("UNSUBS RECEIVED");
-                view.removeRosterItem(rosterMap.get(new XmppJID(presence.getFromURI())));
+                // FIXME: Try to update roster
+                // Wrong: view.removeRosterItem(rosterMap.get(new
+                // XmppJID(presence.getFromURI())));
             }
         });
     }
@@ -190,16 +199,19 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
                      * to be online and available.
                      * 
                      */
-                    itemList.addItem(createRemoveBuddyMenuItem(item));
+                    itemList.addItem(createUnsubscribeBuddyMenuItem(item));
                 }
                 break;
             case unavailable:
-                itemList.addItem(createRemoveBuddyMenuItem(item));
+                itemList.addItem(createUnsubscribeBuddyMenuItem(item));
                 break;
-            case unsubscribed:
             case subscribed:
                 itemList.addItem(createStartChatMenuItem(item));
-                itemList.addItem(createRemoveBuddyMenuItem(item));
+                itemList.addItem(createUnsubscribeBuddyMenuItem(item));
+                break;
+            case unsubscribed:
+                itemList.addItem(createStartChatMenuItem(item));
+                itemList.addItem(createSubscribeBuddyMenuItem(item));
                 break;
             default:
                 /**
@@ -218,23 +230,35 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
             }
             break;
         case from:
+            itemList.addItem(createSubscribeBuddyMenuItem(item));
         case none:
             itemList.addItem(createStartChatMenuItem(item));
             break;
         default:
-            Log.error("Programatic error, subscription: " + subscription);
+            Log.error("Code bug, subscription: " + subscription);
         }
+        itemList.addItem(createRemoveBuddyMenuItem(item));
         return itemList;
     }
 
-    private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final RosterItem item) {
-        return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Remove from my buddies list"),
+    private UserGridMenuItem<XmppURI> createSubscribeBuddyMenuItem(final RosterItem item) {
+        return new UserGridMenuItem<XmppURI>("add-icon", i18n.t("Request to see when this buddy is connected or not"),
+                EmiteUiPlugin.ON_REQUEST_SUBSCRIBE, item.getXmppURI());
+    }
+
+    private UserGridMenuItem<XmppURI> createUnsubscribeBuddyMenuItem(final RosterItem item) {
+        return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Stop to see when this buddy is connected or not"),
                 EmiteUiPlugin.ON_CANCEL_SUBSCRITOR, item.getXmppURI());
     }
 
     private UserGridMenuItem<XmppURI> createStartChatMenuItem(final RosterItem item) {
-        return new UserGridMenuItem<XmppURI>("newchat-icon", i18n.t("Start a chat with this buddie"),
+        return new UserGridMenuItem<XmppURI>("newchat-icon", i18n.t("Start a chat with this buddy"),
                 EmiteUiPlugin.ON_PAIR_CHAT_START, item.getXmppURI());
+    }
+
+    private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final RosterItem item) {
+        return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Remove this buddy"), EmiteUiPlugin.ON_PAIR_CHAT_START,
+                item.getXmppURI());
     }
 
     @Override
@@ -244,8 +268,9 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
             presenceManager.cancelSubscriptor(userURI);
             // view.removeRosterItem(getUserByJid(userURI.getJid()));
             // rosterMap.remove(userURI.getJid());
-        } else {
-
+        } else if (eventName.equals(EmiteUiPlugin.ON_REQUEST_REMOVE_ROSTERITEM)) {
+            XmppURI userURI = (XmppURI) param;
+            xmpp.getRosterManager().requestRemoveItem(userURI.toString());
         }
         super.doAction(eventName, param);
     }

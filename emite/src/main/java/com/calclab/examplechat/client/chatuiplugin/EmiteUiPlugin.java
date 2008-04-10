@@ -30,7 +30,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -52,9 +51,10 @@ public class EmiteUiPlugin extends Plugin {
     public static final String ON_PAIR_CHAT_START = "emiteuiplugin.onpairchatstart";
     public static final String ON_STATE_CONNECTED = "emiteuiplugin.onstateconnected";
     public static final String ON_STATE_DISCONNECTED = "emiteuiplugin.onstatedisconnected";
-    public static final String ON_PANIC = "emiteuiplugin.onpanic";
     public static final String ON_USER_SUBSCRIPTION_CHANGED = "emiteuiplugin.usersubschanged";
     public static final String ON_CANCEL_SUBSCRITOR = "emiteuiplugin.oncancelsubscriptor";
+    public static final String ON_REQUEST_REMOVE_ROSTERITEM = "emiteuiplugin.onrequestremoveitem";
+    public static final String ON_REQUEST_SUBSCRIBE = "emiteuiplugin.onrequestsubscribeitem";
 
     private MultiChat multiChatDialog;
 
@@ -124,12 +124,6 @@ public class EmiteUiPlugin extends Plugin {
                 dispatcher.subscribe(ACTIVATE_CHAT, new Action<Chat>() {
                     public void execute(final Chat chat) {
                         multiChatDialog.activateChat(chat);
-                    }
-                });
-
-                dispatcher.subscribe(ON_PANIC, new Action<Object>() {
-                    public void execute(final Object obj) {
-                        xmpp.getDispatcher().publish(BoshManager.Events.onError);
                     }
                 });
 

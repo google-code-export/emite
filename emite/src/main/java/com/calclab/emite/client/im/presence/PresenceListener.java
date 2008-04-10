@@ -29,5 +29,7 @@ public interface PresenceListener {
 
     void onSubscriptionRequest(Presence presence);
 
-    void onUnsubscriptionReceived(Presence presence);
+    void onUnsubscribedReceived(Presence presence);
+
+    void onSubscribedReceived(Presence presence);
 }
