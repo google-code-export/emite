@@ -52,13 +52,16 @@ public class Session implements Component {
     }
 
     public void login(final XmppURI uri, final String password) {
-	setState(State.connecting);
-	manager.doLogin(uri, password);
-
+	if (state == State.disconnected) {
+	    setState(State.connecting);
+	    manager.doLogin(uri, password);
+	}
     }
 
     public void logout() {
-	manager.doLogout();
+	if (state != State.disconnected) {
+	    manager.doLogout();
+	}
     }
 
     public void setState(final State newState) {
