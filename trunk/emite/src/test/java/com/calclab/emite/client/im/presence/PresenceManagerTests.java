@@ -47,7 +47,7 @@ public class PresenceManagerTests {
     public void managerShouldFireUnsubscribeEvents() {
 	final Presence presence = createPresence(Type.unsubscribed);
 	manager.onPresenceReceived(presence);
-	Mockito.verify(presenceListener).onUnsubscriptionReceived(presence);
+	Mockito.verify(presenceListener).onUnsubscribedReceived(presence);
     }
 
     private Presence createPresence(final Type type) {
