@@ -49,7 +49,7 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
     public void updateRosterItem(final PairChatUser user, final UserGridMenuItemList menuItemList) {
         UserGridMenu menu = new UserGridMenu(presenter);
         menu.setMenuItemList(menuItemList);
-        super.udpateRosterItem(user, menu);
+        super.updateRosterItem(user, menu);
     }
 
     public void removeRosterItem(final PairChatUser user) {

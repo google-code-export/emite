@@ -89,14 +89,14 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         rosterUI = factory.createrRosterUI(xmpp, i18n);
     }
 
-    public void activateChat(final AbstractChat chat) {
-        view.activateChat(chat);
-        onActivate(chat);
-    }
-
     public void activateChat(final Chat chat) {
         final AbstractChat abstractChat = getChat(chat);
         activateChat(abstractChat);
+    }
+
+    public void activateChat(final AbstractChat chat) {
+        view.activateChat(chat);
+        onActivate(chat);
     }
 
     public void addBuddy(final String shortName, final String longName) {
@@ -148,7 +148,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         final GroupChat groupChat = factory.createGroupChat(chat, this, groupChatUserType);
         view.addGroupChatUsersPanel(groupChat.getUsersListView());
         view.setSubject("");
-        return (GroupChat) finishChatCreation(groupChat, chat.getOtherURI().toString());
+        return (GroupChat) finishChatCreation(groupChat, chat.getOtherURI().getNode());
     }
 
     public PairChat createPairChat(final Chat chat) {
@@ -163,7 +163,7 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
             return null;
         }
         final PairChat pairChat = factory.createPairChat(chat, this, currentUserJid, otherUser);
-        return (PairChat) finishChatCreation(pairChat, chat.getOtherURI().toString());
+        return (PairChat) finishChatCreation(pairChat, otherUser.getAlias());
     }
 
     public void destroy() {
