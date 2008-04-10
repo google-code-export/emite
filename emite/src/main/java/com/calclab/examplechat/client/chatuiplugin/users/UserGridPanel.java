@@ -77,10 +77,9 @@ public class UserGridPanel extends Panel {
         addUser(user, "<img src=\"" + img + "\">", "FIXME");
     }
 
-    public void udpateRosterItem(final PairChatUser user, final UserGridMenu menu) {
+    public void updateRosterItem(final PairChatUser user, final UserGridMenu menu) {
         removeUser(user);
         addUser(user, menu);
-        this.doLayout();
         // menuMap.remove(user.getUri());
         // menuMap.put(user.getUri(), menu);
         // Record recordToUpdate = store.getById(user.getUri().toString());
@@ -94,6 +93,7 @@ public class UserGridPanel extends Panel {
         // StatusUtil.getStatusIcon(user.getSubscription(),
         // user.getPresence()).getHTML());
         // recordToUpdate.set(IMG, user.getIconUrl());
+        // this.doLayout();
     }
 
     private String calculePresenceStatus(final Presence presence) {
@@ -103,7 +103,11 @@ public class UserGridPanel extends Panel {
         } else {
             statusText = presence.getStatus();
         }
-        return statusText != null ? statusText : "";
+        String statusToReturn = statusText != null ? statusText : "";
+        if (statusToReturn == "null") {
+            Log.error("null string in status from Presence from: " + presence.getFrom());
+        }
+        return statusToReturn;
     }
 
     public void addUser(final PairChatUser user, final UserGridMenu menu) {
@@ -212,6 +216,7 @@ public class UserGridPanel extends Panel {
         grid.setView(view);
         grid.setHideColumnHeader(true);
         grid.setBorder(false);
+        grid.setAutoHeight(true);
         // countriesGrid.setEnableDragDrop(true);
         // countriesGrid.setDdGroup("myDDGroup");
         super.add(grid);

@@ -126,6 +126,7 @@ public class MultiChatPanel implements MultiChatView {
     public void highlightChat(final AbstractChat chat) {
         // TODO (testing)
         ((Panel) chat.getView()).setIconCls("chat-icon");
+        ((Panel) chat.getView()).doLayout();
         // before: tab.getTextEl().highlight()
     }
 
@@ -224,7 +225,6 @@ public class MultiChatPanel implements MultiChatView {
         groupChatUsersPanel.setVisible(visible);
         if (visible == true) {
             usersPanel.setActiveItemID(groupChatUsersPanel.getId());
-            // buddiesPanel.collapse();
             groupChatUsersPanel.expand();
         }
     }
@@ -417,6 +417,7 @@ public class MultiChatPanel implements MultiChatView {
 
         Panel northPanel = createInputFormWithToolBar(subjectForm, topToolbar);
         northPanel.addStyleName("emite-MultiChatPanel-Subject");
+        setSubjectEditable(false);
 
         return northPanel;
     }
@@ -495,6 +496,7 @@ public class MultiChatPanel implements MultiChatView {
         centerPanel.add(infoPanel);
         infoPanel.show();
         centerPanel.activate(infoPanel.getId());
+        setSubjectEditable(false);
     }
 
     private void doSend(final EventObject e) {

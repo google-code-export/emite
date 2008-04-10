@@ -17,12 +17,30 @@ ERROR: gwt-log failed to initialize valid server-side logging implementation
 
 - We can start more than one chat with the same user uri...
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 - When adding as a friend from a ext client:
 [INFO] Updating roster item: vjrj@localhost name: null subsc: to show: null77FCB59F762BC9659... (line 136)
 [ERROR] Code bug, status: subscribe77FCB59F762BC9659... (line 130)
 [ERROR] Programatic error, status: subscribe
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 - Other:
 [DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message from="localhost" to="admin@localhost"><body>A server or plugin update was found: Openfire 3.5.0</body></message></body>
 causing:
 [FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: type has no properties
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+- Invalid SIDs (sometimes) in revision r218. After that the Invalid SID happens all times you try to login...
+
+POST http://localhost:8888/gwt/com.calclab.examplechat.Example/http-bind (60349ms)C3FC21767C386C6D0... (line 10420)
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns="http://jabber.org/protocol/httpbind"></body>C3FC21767C386C6D0... (line 139)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@6eC3FC21767C386C6D0... (line 139)
+[DEBUG] >>>> 0C3FC21767C386C6D0... (line 139)
+[DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="1224278" sid="6d3fba11" />C3FC21767C386C6D0... (line 139)
+POST http://localhost:8888/gwt/com.calclab.examplechat.Example/http-bind (115741ms)C3FC21767C386C6D0... (line 10420)
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns="http://jabber.org/protocol/httpbind"></body>C3FC21767C386C6D0... (line 139)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@6fC3FC21767C386C6D0... (line 139)
+[DEBUG] >>>> 0C3FC21767C386C6D0... (line 139)
+[DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="1224279" sid="6d3fba11" />C3FC21767C386C6D0... (line 139)
+POST http://localhost:8888/gwt/com.calclab.examplechat.Example/http-bind404 (6759ms)C3FC21767C386C6D0... (line 10420)
+[DEBUG] GWT CONNECTOR RECEIVED: <html> [DEBUG] <head> [DEBUG] <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/> [DEBUG] <title>Error 404 </title> [DEBUG] </head> [DEBUG] <body><h2>HTTP ERROR: 404</h2><pre>Invalid SID.</pre>
