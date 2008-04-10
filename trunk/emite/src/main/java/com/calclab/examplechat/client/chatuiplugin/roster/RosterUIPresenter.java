@@ -43,12 +43,13 @@ import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItem;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItemList;
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
 
     private RosterUIView view;
     private final Xmpp xmpp;
-    private final HashMap<String, PairChatUser> rosterMap;
+    private final HashMap<XmppJID, PairChatUser> rosterMap;
     private final I18nTranslationService i18n;
     private final PresenceManager presenceManager;
     private final Roster roster;
@@ -56,7 +57,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
     public RosterUIPresenter(final Xmpp xmpp, final I18nTranslationService i18n) {
         this.xmpp = xmpp;
         this.i18n = i18n;
-        rosterMap = new HashMap<String, PairChatUser>();
+        rosterMap = new HashMap<XmppJID, PairChatUser>();
         presenceManager = xmpp.getPresenceManager();
         roster = xmpp.getRoster();
     }
@@ -66,7 +67,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
         createXmppListeners();
     }
 
-    public PairChatUser getUserByJid(final String jid) {
+    public PairChatUser getUserByJid(final XmppJID jid) {
         return rosterMap.get(jid);
     }
 
@@ -90,7 +91,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
     private void createXmppListeners() {
         roster.addListener(new RosterListener() {
             public void onItemPresenceChanged(final RosterItem item) {
-                PairChatUser user = rosterMap.get(item.getXmppURI().getJID().toString());
+                PairChatUser user = rosterMap.get(new XmppJID(item.getXmppURI()));
                 if (user == null) {
                     Log.error("Trying to update a user is not in roster: " + item.getXmppURI() + " ----> Roster: "
                             + rosterMap);
@@ -147,7 +148,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
 
             public void onUnsubscriptionReceived(final Presence presence) {
                 Log.info("UNSUBS RECEIVED");
-                view.removeRosterItem(rosterMap.get(presence.getFromURI().getJID().toString()));
+                view.removeRosterItem(rosterMap.get(new XmppJID(presence.getFromURI())));
             }
         });
     }

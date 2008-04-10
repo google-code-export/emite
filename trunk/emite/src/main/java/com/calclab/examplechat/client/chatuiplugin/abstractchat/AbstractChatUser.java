@@ -21,17 +21,17 @@
  */
 package com.calclab.examplechat.client.chatuiplugin.abstractchat;
 
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public class AbstractChatUser {
     private String alias;
     private String color;
     private final String iconUrl;
-    private final XmppURI uri;
+    private final XmppJID jid;
 
-    public AbstractChatUser(final String iconUrl, final XmppURI uri, final String alias, final String color) {
+    public AbstractChatUser(final String iconUrl, final XmppJID jid, final String alias, final String color) {
         this.iconUrl = iconUrl;
-        this.uri = uri;
+        this.jid = jid;
         this.alias = alias;
         this.color = color;
     }
@@ -48,12 +48,8 @@ public class AbstractChatUser {
         return iconUrl;
     }
 
-    public XmppURI getUri() {
-        return uri;
-    }
-
-    public String getJid() {
-        return uri.getJID().toString();
+    public XmppJID getJid() {
+        return jid;
     }
 
     public void setAlias(final String alias) {

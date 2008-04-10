@@ -111,12 +111,12 @@ public class UserGridPanel extends Panel {
                 .getPresence());
         final String statusIcon = statusAbsIcon.getHTML();
         addUser(user, statusIcon, calculePresenceStatus(user.getPresence()));
-        menuMap.put(user.getJID(), menu);
+        menuMap.put(user.getJid(), menu);
         this.doLayout();
     }
 
     public void removeUser(final AbstractChatUser user) {
-        String userJid = user.getJid();
+        XmppJID userJid = user.getJid();
         Record storeToRemove = recordMap.get(userJid);
         if (storeToRemove == null) {
             Log.error("Trying to remove a non existing roster item: " + userJid);
@@ -129,11 +129,11 @@ public class UserGridPanel extends Panel {
     }
 
     private void addUser(final AbstractChatUser user, final String statusIcon, final String statusTextOrig) {
-        String name = user.getAlias() != null ? user.getAlias() : user.getUri().getNode();
+        String name = user.getAlias() != null ? user.getAlias() : user.getJid().getNode();
         String statusText = statusTextOrig != null ? statusTextOrig : "";
-        final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getUri().toString(),
+        final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getJid().toString(),
                 name, user.getColor(), statusIcon, statusText });
-        recordMap.put(new XmppJID(user.getUri()), newUserRecord);
+        recordMap.put(user.getJid(), newUserRecord);
         store.add(newUserRecord);
     }
 

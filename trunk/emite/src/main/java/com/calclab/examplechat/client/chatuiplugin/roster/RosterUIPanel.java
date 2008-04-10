@@ -25,9 +25,9 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
-import com.calclab.examplechat.client.chatuiplugin.users.UserGridPanel;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenu;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItemList;
+import com.calclab.examplechat.client.chatuiplugin.users.UserGridPanel;
 import com.gwtext.client.widgets.MessageBox;
 
 public class RosterUIPanel extends UserGridPanel implements RosterUIView {
@@ -54,7 +54,7 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
 
     public void removeRosterItem(final PairChatUser user) {
         super.removeUser(user);
-        MessageBox.alert(i18n.t("[%s] has removed you from his/her buddies list", user.getUri().toString()));
+        MessageBox.alert(i18n.t("[%s] has removed you from his/her buddies list", user.getJid().toString()));
     }
 
     public void confirmSusbscriptionRequest(final Presence presence) {

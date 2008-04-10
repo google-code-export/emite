@@ -15,6 +15,7 @@ import com.calclab.examplechat.client.MockitoXmpp;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public class RosterUIPresenterTest {
 
@@ -47,7 +48,7 @@ public class RosterUIPresenterTest {
         // Stubs
         Mockito.stub(factory.createrRosterUI(xmpp, i18n)).toReturn(rosterUI);
         Mockito.stub(rosterUI.getView()).toReturn(rosterUIView);
-        Mockito.stub(rosterUI.getUserByJid(otherUri.getJID().toString())).toReturn(otherUser);
+        Mockito.stub(rosterUI.getUserByJid(new XmppJID(otherUri.getJID()))).toReturn(otherUser);
     }
 
     @Test
@@ -57,7 +58,7 @@ public class RosterUIPresenterTest {
 
     @Test
     public void someTest() {
-        rosterManager.requestAddItem(otherUser.getJid(), otherUser.getAlias(), "FIXME");
+        rosterManager.requestAddItem(otherUser.getJid().toString(), otherUser.getAlias(), "FIXME");
         // Presence presence = new Presence(Presence.Type.available,
         // otherUser.getJid(), sessionUserJid);
         // rosterManager.onPresenceReceived(presence);

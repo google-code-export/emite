@@ -101,9 +101,9 @@ public class ChatExampleEntryPoint implements EntryPoint {
 	formPanel.setFrame(true);
 	formPanel.setTitle("Some external Login Form");
 
-	formPanel.setWidth(350);
-	formPanel.setLabelWidth(75);
-	formPanel.setUrl("save-form.php");
+        formPanel.setWidth(300);
+        formPanel.setLabelWidth(75);
+        formPanel.setUrl("save-form.php");
 
 	final Label label = new Label();
 	label.setHtml("<p>Currently we are only supporting PLAIN authentication, "
@@ -112,16 +112,16 @@ public class ChatExampleEntryPoint implements EntryPoint {
 	label.setWidth(350);
 	label.setHeight(20);
 
-	jid = new TextField("Jabber id", "jid", 230);
-	jid.setAllowBlank(false);
-	jid.setValue("admin@localhost");
-	formPanel.add(jid);
+        jid = new TextField("Jabber id", "jid", 180);
+        jid.setAllowBlank(false);
+        jid.setValue("admin@localhost");
+        formPanel.add(jid);
 
-	passwd = new TextField("Password", "last", 230);
-	passwd.setAllowBlank(false);
-	passwd.setValue("easyeasy");
-	passwd.setPassword(true);
-	formPanel.add(passwd);
+        passwd = new TextField("Password", "last", 180);
+        passwd.setAllowBlank(false);
+        passwd.setValue("easyeasy");
+        passwd.setPassword(true);
+        formPanel.add(passwd);
 
 	panel.add(formPanel);
 

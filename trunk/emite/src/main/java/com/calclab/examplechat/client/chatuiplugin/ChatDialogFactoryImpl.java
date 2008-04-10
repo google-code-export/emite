@@ -46,6 +46,7 @@ import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPanel;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPresenter;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public class ChatDialogFactoryImpl implements ChatDialogFactory {
     public static class App {
@@ -84,7 +85,7 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         return userListPresenter;
     }
 
-    public PairChat createPairChat(final Chat chat, final PairChatListener listener, final String currentSessionJid,
+    public PairChat createPairChat(final Chat chat, final PairChatListener listener, final XmppJID currentSessionJid,
             final PairChatUser otherUser) {
         final PairChatPresenter presenter = new PairChatPresenter(chat, listener, currentSessionJid, otherUser);
         final PairChatPanel panel = new PairChatPanel(presenter);

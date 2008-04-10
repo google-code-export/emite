@@ -31,13 +31,10 @@ import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 public class PairChatUser extends AbstractChatUser {
 
     private final RosterItem rosterItem;
-    private final XmppJID jid;
 
     public PairChatUser(final String iconUrl, final RosterItem rosterItem, final String color) {
-        super(iconUrl, rosterItem.getXmppURI(), rosterItem.getName(), color);
+        super(iconUrl, new XmppJID(rosterItem.getXmppURI()), rosterItem.getName(), color);
         this.rosterItem = rosterItem;
-        // While we don have a more interrelated uri-jid
-        jid = new XmppJID(rosterItem.getXmppURI());
     }
 
     public PairChatUser(final String string, final RosterItem item) {
@@ -50,9 +47,5 @@ public class PairChatUser extends AbstractChatUser {
 
     public Subscription getSubscription() {
         return rosterItem.getSubscription();
-    }
-
-    public XmppJID getJID() {
-        return jid;
     }
 }

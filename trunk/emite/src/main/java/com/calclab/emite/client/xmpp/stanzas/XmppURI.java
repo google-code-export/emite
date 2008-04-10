@@ -21,6 +21,7 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
+
 /**
  * 
  * http://www.xmpp.org/drafts/attic/draft-saintandre-xmpp-uri-00.html
@@ -97,26 +98,6 @@ public class XmppURI {
 
     public XmppURI getJID() {
         return new XmppURI(node, host, null);
-    }
-
-    // FIXME: Dani (Presence) vicente... a ver, en realidad este método
-    // no lo necesitas, porque si no pones resource en el xmppuri
-    // pues tienes un jid como un castillo
-    // <vjrj> lo se pero me da muchos muchos problemas tener un URI donde
-    // debería
-    // tener un
-    // JID...se cuelan resources, luego los objetos no son "equal", etc. Es
-    // una fuente de bugs y de errores constante que sufro en silencio como
-    // otros las almorranas :).
-    // Si tu no lo necesitas me creo un objeto interno en el UI y ya está. Pero
-    // vamos, las especificaciones están llenas de cosas donde se usa solo jids
-    // (y debe ser así), y donde se debe usar lo que a veces llaman "full jids"
-    // es decir URI con
-    // resource. Si yo tengo problemas, creo que la librería los va a tener
-    // también si no distinguimos bien, pero bueno, ... puedo estar equivocado
-    @Deprecated
-    public String getJIDAsString() {
-        return node + "@" + host;
     }
 
     public String getNode() {

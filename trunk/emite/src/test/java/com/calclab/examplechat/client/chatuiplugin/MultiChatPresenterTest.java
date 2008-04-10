@@ -21,6 +21,7 @@ import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUI;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUIView;
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public class MultiChatPresenterTest {
 
@@ -59,12 +60,12 @@ public class MultiChatPresenterTest {
         // Stubs
         Mockito.stub(factory.createrRosterUI(xmpp, i18n)).toReturn(rosterUI);
         Mockito.stub(rosterUI.getView()).toReturn(rosterUIView);
-        Mockito.stub(rosterUI.getUserByJid(otherUri.getJID().toString())).toReturn(otherUser);
+        Mockito.stub(rosterUI.getUserByJid(new XmppJID(otherUri))).toReturn(otherUser);
         Mockito.stub(pairChat.getChat()).toReturn(chat);
         Mockito.stub(pairChat.getChat().getOtherURI()).toReturn(otherUri);
         Mockito.stub(
                 factory.createPairChat((Chat) Mockito.anyObject(), (MultiChatPresenter) Mockito.anyObject(),
-                        (String) Mockito.anyObject(), (PairChatUser) Mockito.anyObject())).toReturn(pairChat);
+                        (XmppJID) Mockito.anyObject(), (PairChatUser) Mockito.anyObject())).toReturn(pairChat);
         final MultiChatCreationParam param = new MultiChatCreationParam(null, sessionUserJid, "passwdofuser",
                 new UserChatOptions("blue", Roster.DEF_SUBSCRIPTION_MODE));
 
@@ -107,9 +108,10 @@ public class MultiChatPresenterTest {
     }
 
     private void sendMessageFromOther() {
-        final Message message = new Message(otherUser.getUri(), XmppURI.parse(sessionUserJid), messageBody);
+        final Message message = new Message(XmppURI.parse(otherUser.getJid().toString()),
+                XmppURI.parse(sessionUserJid), messageBody);
         multiChat.messageReceived(chat, message);
-        Mockito.verify(pairChat).addMessage(otherUser.getUri(), messageBody);
+        Mockito.verify(pairChat).addMessage(otherUser.getJid(), messageBody);
     }
 
 }
