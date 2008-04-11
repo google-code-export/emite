@@ -30,7 +30,6 @@ import com.calclab.examplechat.client.chatuiplugin.dialog.StatusUtil;
 import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.ArrayReader;
 import com.gwtext.client.data.FieldDef;
@@ -78,25 +77,36 @@ public class UserGridPanel extends Panel {
     }
 
     public void updateRosterItem(final PairChatUser user, final UserGridMenu menu) {
-        removeUser(user);
-        addUser(user, menu);
-        // menuMap.remove(user.getUri());
-        // menuMap.put(user.getUri(), menu);
-        // Record recordToUpdate = store.getById(user.getUri().toString());
-        // recordToUpdate.set(ALIAS, user.getAlias());
-        // recordToUpdate.set(JID, user.getUri());
-        // recordToUpdate.set(COLOR, user.getColor());
-        // // FIXME: maybe use default status messages
-        // recordToUpdate.set(STATUSTEXT,
-        // calculePresenceStatus(user.getPresence()));
-        // recordToUpdate.set(STATUSIMG,
-        // StatusUtil.getStatusIcon(user.getSubscription(),
-        // user.getPresence()).getHTML());
-        // recordToUpdate.set(IMG, user.getIconUrl());
-        // this.doLayout();
+        // removeUser(user);
+        // addUser(user, menu);
+        Record recordToUpdate = recordMap.get(user.getJid());
+        recordToUpdate.set(IMG, user.getIconUrl());
+        recordToUpdate.set(ALIAS, formatAlias(user));
+        recordToUpdate.set(JID, formatJid(user));
+        recordToUpdate.set(COLOR, user.getColor());
+        recordToUpdate.set(STATUSTEXT, formatPresenceStatus(user.getPresence()));
+        recordToUpdate.set(STATUSIMG, formatStatusIcon(user));
+        menuMap.put(user.getJid(), menu);
+        this.doLayout();
     }
 
-    private String calculePresenceStatus(final Presence presence) {
+    private void addUser(final AbstractChatUser user, final String statusIcon, final String statusTextOrig) {
+        final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), formatJid(user),
+                formatAlias(user), user.getColor(), statusIcon, statusTextOrig });
+        recordMap.put(user.getJid(), newUserRecord);
+        store.add(newUserRecord);
+    }
+
+    private String formatJid(final AbstractChatUser user) {
+        return user.getJid().toString();
+    }
+
+    private String formatAlias(final AbstractChatUser user) {
+        return user.getAlias() != null ? user.getAlias() : user.getJid().getNode();
+    }
+
+    private String formatPresenceStatus(final Presence presence) {
+        // FIXME: maybe use default status messages
         String statusText;
         if (presence == null) {
             statusText = "";
@@ -111,12 +121,14 @@ public class UserGridPanel extends Panel {
     }
 
     public void addUser(final PairChatUser user, final UserGridMenu menu) {
-        final AbstractImagePrototype statusAbsIcon = StatusUtil.getStatusIcon(user.getSubscription(), user
-                .getPresence());
-        final String statusIcon = statusAbsIcon.getHTML();
-        addUser(user, statusIcon, calculePresenceStatus(user.getPresence()));
+        final String statusIcon = formatStatusIcon(user);
+        addUser(user, statusIcon, formatPresenceStatus(user.getPresence()));
         menuMap.put(user.getJid(), menu);
         this.doLayout();
+    }
+
+    private String formatStatusIcon(final PairChatUser user) {
+        return StatusUtil.getStatusIcon(user.getSubscription(), user.getPresence()).getHTML();
     }
 
     public void removeUser(final AbstractChatUser user) {
@@ -132,15 +144,6 @@ public class UserGridPanel extends Panel {
         this.doLayout();
     }
 
-    private void addUser(final AbstractChatUser user, final String statusIcon, final String statusTextOrig) {
-        String name = user.getAlias() != null ? user.getAlias() : user.getJid().getNode();
-        String statusText = statusTextOrig != null ? statusTextOrig : "";
-        final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), user.getJid().toString(),
-                name, user.getColor(), statusIcon, statusText });
-        recordMap.put(user.getJid(), newUserRecord);
-        store.add(newUserRecord);
-    }
-
     private void createGrid() {
         grid = new GridPanel();
         fieldDefs = new FieldDef[] { new StringFieldDef(IMG), new StringFieldDef(JID), new StringFieldDef(ALIAS),
@@ -149,7 +152,7 @@ public class UserGridPanel extends Panel {
 
         final MemoryProxy proxy = new MemoryProxy(new Object[][] {});
 
-        final ArrayReader reader = new ArrayReader(2, recordDef);
+        final ArrayReader reader = new ArrayReader(1, recordDef);
         store = new Store(proxy, reader);
         store.load();
         grid.setStore(store);
