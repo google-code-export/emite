@@ -31,7 +31,6 @@ import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
 import com.calclab.examplechat.client.chatuiplugin.UserChatOptions;
-import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
@@ -48,69 +47,68 @@ public class ChatExampleEntryPoint implements EntryPoint {
     private TextField jid;
 
     public void onModuleLoad() {
-	/*
-	 * Install an UncaughtExceptionHandler which will produce <code>FATAL</code>
-	 * log messages
-	 */
+        /*
+         * Install an UncaughtExceptionHandler which will produce <code>FATAL</code>
+         * log messages
+         */
 
-	/*
-	 * Currently we let firebug to catch the error:
-	 * 
-	 */
-	Log.setUncaughtExceptionHandler();
+        /*
+         * Currently we let firebug to catch the error:
+         * 
+         */
+        Log.setUncaughtExceptionHandler();
 
-	// At the moment, in runtime:
-	Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
+        // At the moment, in runtime:
+        Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
 
-	// Log.getDivLogger().moveTo(10, 60);
-	// Log.getDivLogger().setSize("1200", "400");
+        // Log.getDivLogger().moveTo(10, 60);
+        // Log.getDivLogger().setSize("1200", "400");
 
-	/*
-	 * Use a deferred command so that the UncaughtExceptionHandler catches
-	 * any exceptions in onModuleLoadCont()
-	 */
-	DeferredCommand.addCommand(new Command() {
-	    public void execute() {
-		onModuleLoadCont();
-	    }
-	});
+        /*
+         * Use a deferred command so that the UncaughtExceptionHandler catches
+         * any exceptions in onModuleLoadCont()
+         */
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                onModuleLoadCont();
+            }
+        });
     }
 
     public void onModuleLoadCont() {
-	createFormPanel();
-	createExtUI();
+        createFormPanel();
+        createExtUI();
     }
 
     private void createExtUI() {
-	dispatcher = DefaultDispatcher.getInstance();
-	final PluginManager kunePluginManager = new PluginManager(dispatcher, new UIExtensionPointManager(),
-		new I18nTranslationServiceMocked());
-	kunePluginManager.install(new EmiteUiPlugin());
+        dispatcher = DefaultDispatcher.getInstance();
+        final PluginManager kunePluginManager = new PluginManager(dispatcher, new UIExtensionPointManager(),
+                new I18nTranslationServiceMocked());
+        kunePluginManager.install(new EmiteUiPlugin());
 
-	dispatcher.fire(EmiteUiPlugin.OPEN_MULTI_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions("http-bind"),
-		jid.getRawValue(), passwd.getRawValue(), new UserChatOptions(MultiChatView.DEF_USER_COLOR,
-			Roster.DEF_SUBSCRIPTION_MODE)));
+        dispatcher.fire(EmiteUiPlugin.OPEN_MULTI_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions("http-bind"),
+                jid.getRawValue(), passwd.getRawValue(), new UserChatOptions("blue", Roster.DEF_SUBSCRIPTION_MODE)));
     }
 
     private void createFormPanel() {
-	final Panel panel = new Panel();
-	panel.setBorder(false);
-	panel.setPaddings(15);
+        final Panel panel = new Panel();
+        panel.setBorder(false);
+        panel.setPaddings(15);
 
-	final FormPanel formPanel = new FormPanel();
-	formPanel.setFrame(true);
-	formPanel.setTitle("Some external Login Form");
+        final FormPanel formPanel = new FormPanel();
+        formPanel.setFrame(true);
+        formPanel.setTitle("Some external Login Form");
 
         formPanel.setWidth(300);
         formPanel.setLabelWidth(75);
         formPanel.setUrl("save-form.php");
 
-	final Label label = new Label();
-	label.setHtml("<p>Currently we are only supporting PLAIN authentication, "
-		+ "them for your security, only use jabber test accounts..</p>");
-	label.setCls("simple-form-label");
-	label.setWidth(350);
-	label.setHeight(20);
+        final Label label = new Label();
+        label.setHtml("<p>Currently we are only supporting PLAIN authentication, "
+                + "them for your security, only use jabber test accounts..</p>");
+        label.setCls("simple-form-label");
+        label.setWidth(350);
+        label.setHeight(20);
 
         jid = new TextField("Jabber id", "jid", 180);
         jid.setAllowBlank(false);
@@ -123,9 +121,9 @@ public class ChatExampleEntryPoint implements EntryPoint {
         passwd.setPassword(true);
         formPanel.add(passwd);
 
-	panel.add(formPanel);
+        panel.add(formPanel);
 
-	RootPanel.get().add(panel);
+        RootPanel.get().add(panel);
     }
 
 }

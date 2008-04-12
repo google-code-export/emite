@@ -24,7 +24,7 @@ package com.calclab.examplechat.client.chatuiplugin.roster;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenu;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItemList;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridPanel;

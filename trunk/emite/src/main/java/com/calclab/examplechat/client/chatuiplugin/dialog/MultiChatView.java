@@ -23,15 +23,12 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 
 import org.ourproject.kune.platf.client.View;
 
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
+import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListView;
 
 public interface MultiChatView {
 
-    public static final String DEF_USER_COLOR = "blue";
-    public static final String DEF_PAIR_USER_COLOR = "maroon";
-
-    void addChat(AbstractChat chat);
+    void addChat(ChatUI chat);
 
     void addGroupChatUsersPanel(GroupChatUserListView view);
 
@@ -41,7 +38,7 @@ public interface MultiChatView {
 
     String getInputText();
 
-    void highlightChat(AbstractChat chat);
+    void highlightChat(ChatUI chatUI);
 
     void setInputEditable(boolean editable);
 
@@ -65,13 +62,11 @@ public interface MultiChatView {
 
     void setInviteToGroupChatButtonVisible(boolean visible);
 
-    void closeAllChats();
-
     void setCloseAllOptionEnabled(boolean enabled);
 
     void confirmCloseAll();
 
-    void activateChat(AbstractChat chat);
+    void activateChat(ChatUI chatUI);
 
     void setEmoticonButtonEnabled(boolean enabled);
 
@@ -86,5 +81,9 @@ public interface MultiChatView {
     void setRosterVisible(boolean visible);
 
     void attachRoster(View view);
+
+    void onCloseAllConfirmed();
+
+    void onCloseAllNotConfirmed();
 
 }

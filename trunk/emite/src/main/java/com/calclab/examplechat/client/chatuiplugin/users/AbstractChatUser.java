@@ -19,17 +19,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.examplechat.client.chatuiplugin.pairchat;
+package com.calclab.examplechat.client.chatuiplugin.users;
 
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
-public interface PairChat extends AbstractChat {
+public class AbstractChatUser {
+    private String alias;
+    private String color;
+    private final String iconUrl;
+    private final XmppJID jid;
 
-    void addMessage(XmppJID userJid, String message);
+    public AbstractChatUser(final String iconUrl, final XmppJID jid, final String alias, final String color) {
+        this.iconUrl = iconUrl;
+        this.jid = jid;
+        this.alias = alias;
+        this.color = color;
+    }
 
-    PairChatUser getOtherUser();
+    public String getAlias() {
+        return alias;
+    }
 
-    void setSessionUserColor(String color);
+    public String getColor() {
+        return color;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public XmppJID getJid() {
+        return jid;
+    }
+
+    public void setAlias(final String alias) {
+        this.alias = alias;
+    }
+
+    public void setColor(final String color) {
+        this.color = color;
+    }
 
 }

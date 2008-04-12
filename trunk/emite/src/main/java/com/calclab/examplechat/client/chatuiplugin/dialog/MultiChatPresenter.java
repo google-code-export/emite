@@ -21,8 +21,10 @@
  */
 package com.calclab.examplechat.client.chatuiplugin.dialog;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.extend.UIExtensionElement;
@@ -31,6 +33,11 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.extra.muc.MUCPlugin;
+import com.calclab.emite.client.extra.muc.RoomListener;
+import com.calclab.emite.client.extra.muc.RoomManager;
+import com.calclab.emite.client.extra.muc.RoomManagerListener;
+import com.calclab.emite.client.extra.muc.RoomUser;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
@@ -45,27 +52,21 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
 import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
 import com.calclab.examplechat.client.chatuiplugin.UserChatOptions;
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChat;
+import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
+import com.calclab.examplechat.client.chatuiplugin.chat.ChatUIListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.OwnPresence.OwnStatus;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
+import com.calclab.examplechat.client.chatuiplugin.room.RoomUI;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUI;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
-public class MultiChatPresenter implements MultiChat, GroupChatListener, PairChatListener {
+public class MultiChatPresenter implements MultiChat {
     private static final OwnPresence OFFLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.offline);
     private static final OwnPresence ONLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.online);
-    private final HashMap<Chat, AbstractChat> chats;
-    private boolean closeAllConfirmed;
-    private AbstractChat currentChat;
+    private final HashMap<Chat, ChatUI> chats;
+    private ChatUI currentChat;
     private final XmppJID currentUserJid;
     private final String currentUserPasswd;
     private final ChatDialogFactory factory;
@@ -85,18 +86,17 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         this.currentUserPasswd = param.getUserPassword();
         this.userChatOptions = param.getUserChatOptions();
         this.listener = listener;
-        chats = new HashMap<Chat, AbstractChat>();
+        chats = new HashMap<Chat, ChatUI>();
         rosterUI = factory.createrRosterUI(xmpp, i18n);
     }
 
     public void activateChat(final Chat chat) {
-        final AbstractChat abstractChat = getChat(chat);
+        final ChatUI abstractChat = getChat(chat);
         activateChat(abstractChat);
     }
 
-    public void activateChat(final AbstractChat chat) {
-        view.activateChat(chat);
-        onActivate(chat);
+    public void activateChat(final ChatUI chatUI) {
+        view.activateChat(chatUI);
     }
 
     public void addBuddy(final String shortName, final String longName) {
@@ -108,9 +108,8 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     }
 
     public void addUsetToGroupChat(final String chatId, final GroupChatUser groupChatUser) {
-        final GroupChat chat = (GroupChat) chats.get(chatId);
-        checkIsGroupChat(chat);
-        chat.addUser(groupChatUser);
+        // final RooChat chat = (GroupChat) chats.get(chatId);
+        // chat.addUser(groupChatUser);
     }
 
     public void attachIconToBottomBar(final View view) {
@@ -125,50 +124,80 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
         }
     }
 
-    public void closeGroupChat(final GroupChatPresenter groupChat) {
-        groupChat.doClose();
-        chats.remove(groupChat.getChat());
-        listener.onCloseGroupChat(groupChat);
+    public void closeChat(final ChatUI chatUI) {
+        chatUI.close();
         checkNoChats();
     }
 
-    public void closePairChat(final PairChatPresenter pairChat) {
-        pairChat.doClose();
-        chats.remove(pairChat.getChat());
-        listener.onClosePairChat(pairChat);
-        checkNoChats();
+    public RoomUI createGroupChat(final Chat chat, final String userAlias, final GroupChatUserType groupChatUserType) {
+        final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(new ChatUIListener() {
+            public void onMessageAdded(ChatUI chatUI) {
+                view.highlightChat(chatUI);
+            }
+
+            public void onActivate(ChatUI chatUI) {
+                RoomUI roomUI = (RoomUI) chatUI;
+                view.setInputText(roomUI.getSavedInput());
+                view.setGroupChatUsersPanelVisible(true);
+                view.setInviteToGroupChatButtonVisible(true);
+                view.setSubject(roomUI.getSubject());
+                view.setSubjectEditable(false);
+                currentChat = chatUI;
+                // view.setSubjectEditable(.getSessionUserType().equals(GroupChatUserType.moderator));
+                // view.showUserList(groupChat.getUsersListView());
+            }
+
+            public void onDeactivate(ChatUI chatUI) {
+                chatUI.saveInput(view.getInputText());
+            }
+
+            public void onCloseClick(ChatUI chatUI) {
+                xmpp.getChatManager().close(chat);
+            }
+
+            public void onCurrentUserSend(String message) {
+                chat.send(message);
+            }
+        }) : chats.get(chat));
+        // view.addGroupChatUsersPanel(groupChat.getUsersListView());
+        // view.setSubject("");
+        finishChatCreation(chat, roomUI, chat.getOtherURI().getNode());
+        return roomUI;
     }
 
-    public GroupChat createGroupChat(final Chat chat, final String userAlias, final GroupChatUserType groupChatUserType) {
-        final AbstractChat abstractChat = chats.get(chat);
-        if (abstractChat != null) {
-            activateChat(abstractChat);
-            return (GroupChat) abstractChat;
-        }
-        final GroupChat groupChat = factory.createGroupChat(chat, this, groupChatUserType);
-        view.addGroupChatUsersPanel(groupChat.getUsersListView());
-        view.setSubject("");
-        return (GroupChat) finishChatCreation(groupChat, chat.getOtherURI().getNode());
-    }
+    public ChatUI createPairChat(final Chat chat) {
+        final ChatUI chatUI = chats.get(chat) == null ? factory.createChatUI(new ChatUIListener() {
+            public void onMessageAdded(ChatUI chatUI) {
+                view.highlightChat(chatUI);
+            }
 
-    public PairChat createPairChat(final Chat chat) {
-        final AbstractChat abstractChat = chats.get(chat);
-        if (abstractChat != null) {
-            activateChat(abstractChat);
-            return (PairChat) abstractChat;
-        }
-        final PairChatUser otherUser = rosterUI.getUserByJid(new XmppJID(chat.getOtherURI()));
-        if (otherUser == null) {
-            Log.info("Message from user not in roster");
-            return null;
-        }
-        final PairChat pairChat = factory.createPairChat(chat, this, currentUserJid, otherUser);
-        return (PairChat) finishChatCreation(pairChat, otherUser.getAlias());
+            public void onActivate(ChatUI chatUI) {
+                view.setInputText(chatUI.getSavedInput());
+                view.setGroupChatUsersPanelVisible(false);
+                view.setInviteToGroupChatButtonVisible(false);
+                view.clearSubject();
+                view.setSubjectEditable(false);
+                currentChat = chatUI;
+            }
+
+            public void onCurrentUserSend(String message) {
+                chat.send(message);
+            }
+
+            public void onCloseClick(ChatUI chatUI) {
+                xmpp.getChatManager().close(chat);
+            }
+
+            public void onDeactivate(ChatUI chatUI) {
+                chatUI.saveInput(view.getInputText());
+            }
+        }) : chats.get(chat);
+        finishChatCreation(chat, chatUI, chat.getOtherURI().getNode());
+        return chatUI;
     }
 
     public void destroy() {
         view.destroy();
-
     }
 
     public void doAction(final String eventId, final Object param) {
@@ -190,8 +219,8 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     public void doAfterLogout() {
         view.setLoadingVisible(false);
         view.setAddRosterItemButtonVisible(false);
-        view.setOfflineInfo();
         view.setRosterVisible(false);
+        view.setOfflineInfo();
         view.setInputEditable(false);
         rosterUI.clearRoster();
         view.setOwnPresence(OFFLINE_OWN_PRESENCE);
@@ -206,9 +235,8 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     }
 
     public void groupChatSubjectChanged(final Chat groupChat, final String newSubject) {
-        final AbstractChat abstractChat = getChat(groupChat);
-        checkIsGroupChat(abstractChat);
-        ((GroupChat) abstractChat).setSubject(newSubject);
+        final ChatUI chatUI = getChat(groupChat);
+        ((RoomUI) chatUI).setSubject(newSubject);
         view.setSubject(newSubject);
     }
 
@@ -223,60 +251,34 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     public void inviteUserToRoom(final String shortName, final String longName) {
     }
 
-    public boolean isCloseAllConfirmed() {
-        return closeAllConfirmed;
+    void messageReceived(final Chat chat, final Message message) {
+        final ChatUI chatUI = getChat(chat);
+        chatUI.addMesage(message.getFromURI().getNode(), message.getBody());
     }
 
-    public void messageReceived(final Chat chat, final Message message) {
-        final AbstractChat abstractChat = getChat(chat);
-        if (abstractChat.isGroupChat()) {
-            ((GroupChat) abstractChat).addMessage(message.getFrom().toString(), message.getBody());
-        } else {
-            ((PairChat) abstractChat).addMessage(new XmppJID(XmppURI.parse(message.getFrom())), message.getBody());
+    protected void onCloseAllConfirmed() {
+        view.onCloseAllConfirmed();
+        for (Iterator<ChatUI> iterator = chats.values().iterator(); iterator.hasNext();) {
+            ChatUI chatUI = iterator.next();
+            chatUI.onCloseClick();
         }
-    }
-
-    public void onActivate(final AbstractChat nextChat) {
-        view.setInputText(nextChat.getSavedInput());
-        if (nextChat.isGroupChat()) {
-            view.setGroupChatUsersPanelVisible(true);
-            view.setInviteToGroupChatButtonVisible(true);
-            final GroupChatPresenter groupChat = (GroupChatPresenter) nextChat;
-            view.setSubject(groupChat.getSubject());
-            view.setSubjectEditable(groupChat.getSessionUserType().equals(GroupChatUserType.moderator));
-            view.showUserList(groupChat.getUsersListView());
-        } else {
-            view.setGroupChatUsersPanelVisible(false);
-            view.setInviteToGroupChatButtonVisible(false);
-            view.clearSubject();
-            view.setSubjectEditable(false);
-        }
-        view.setInputText(nextChat.getSavedInput());
-        nextChat.activate();
-        currentChat = nextChat;
-    }
-
-    public void onCloseAllConfirmed() {
-        closeAllConfirmed = true;
-        view.closeAllChats();
         reset();
     }
 
-    public void onCloseAllNotConfirmed() {
-        closeAllConfirmed = false;
+    protected void onCloseAllNotConfirmed() {
+        view.onCloseAllNotConfirmed();
     }
 
     public void onCurrentUserSend(final String message) {
-        currentChat.getChat().send(message);
+        currentChat.onCurrentUserSend(message);
         view.clearInputText();
     }
 
-    public void onDeactivate(final AbstractChat chat) {
+    public void onDeactivate(final ChatUI chat) {
         chat.saveInput(view.getInputText());
-        chat.saveOtherProperties();
     }
 
-    public void onMessageAdded(final AbstractChat chat) {
+    public void onMessageAdded(final ChatUI chat) {
         view.highlightChat(chat);
     }
 
@@ -301,20 +303,15 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
     }
 
     public void onSubjectChangedByCurrentUser(final String text) {
-        final GroupChat groupChat = (GroupChat) currentChat;
-        groupChat.setSubject(text);
-        listener.setGroupChatSubject(groupChat.getChat(), text);
+        final RoomUI roomUI = (RoomUI) currentChat;
+        roomUI.setSubject(text);
         // FIXME callback? erase this:
         view.setSubject(text);
     }
 
     public void onUserColorChanged(final String color) {
-        for (final AbstractChat chat : chats.values()) {
-            if (chat.isGroupChat()) {
-                // TODO
-            } else {
-                ((PairChat) chat).setSessionUserColor(color);
-            }
+        for (final ChatUI chat : chats.values()) {
+            chat.setUserColor(currentUserJid.getNode(), color);
         }
         userChatOptions.setColor(color);
         listener.onUserColorChanged(color);
@@ -328,13 +325,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     public void show() {
         view.show();
-        closeAllConfirmed = false;
-    }
-
-    private void checkIsGroupChat(final AbstractChat chat) {
-        if (!chat.isGroupChat()) {
-            new RuntimeException("You cannot do this operation in a this kind of chat");
-        }
     }
 
     private void checkNoChats() {
@@ -373,6 +363,8 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
         xmpp.getChatManager().addListener(new ChatManagerListener() {
             public void onChatClosed(final Chat chat) {
+                ChatUI chatUI = getChat(chat);
+                chatUI.close();
             }
 
             public void onChatCreated(final Chat chat) {
@@ -389,25 +381,48 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
             }
         });
 
+        final RoomManager roomManager = MUCPlugin.getRoomManager(xmpp.getComponents());
+        roomManager.addListener(new RoomManagerListener() {
+            public void onChatClosed(final Chat chat) {
+                closeChat(getChat(chat));
+            }
+
+            public void onChatCreated(final Chat room) {
+                final RoomUI roomUI = createGroupChat(room, currentUserJid.getNode(), GroupChatUserType.participant);
+                room.addListener(new RoomListener() {
+                    public void onMessageReceived(final Chat chat, final Message message) {
+                        messageReceived(chat, message);
+                    }
+
+                    public void onMessageSent(final Chat chat, final Message message) {
+                        messageReceived(chat, message);
+                    }
+
+                    public void onUserChanged(final Collection<RoomUser> users) {
+                        roomUI.setUsers(users);
+                    }
+                });
+            }
+        });
+
     }
 
-    private AbstractChat finishChatCreation(final AbstractChat abstractChat, final String chatTitle) {
-        abstractChat.setChatTitle(chatTitle);
-        currentChat = abstractChat;
-        view.addChat(abstractChat);
-        chats.put(abstractChat.getChat(), abstractChat);
+    private void finishChatCreation(final Chat chat, final ChatUI chatUI, final String chatTitle) {
+        chatUI.setChatTitle(chatTitle);
+        currentChat = chatUI;
+        view.addChat(chatUI);
+        chats.put(chat, chatUI);
         checkThereAreChats();
-        return abstractChat;
     }
 
-    private AbstractChat getChat(final Chat chat) {
-        final AbstractChat uiChat = chats.get(chat);
-        if (uiChat == null) {
+    private ChatUI getChat(final Chat chat) {
+        final ChatUI chatUI = chats.get(chat);
+        if (chatUI == null) {
             final String error = "Unexpected chatId '" + chat.getID().toString() + "'";
             Log.error(error);
             throw new RuntimeException(error);
         }
-        return uiChat;
+        return chatUI;
     }
 
     private void loginIfnecessary(final Show status, final String statusText) {
@@ -429,7 +444,6 @@ public class MultiChatPresenter implements MultiChat, GroupChatListener, PairCha
 
     private void reset() {
         currentChat = null;
-        closeAllConfirmed = false;
         view.setCloseAllOptionEnabled(false);
         view.setSubjectEditable(false);
         setInputEnabled(false);

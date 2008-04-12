@@ -24,29 +24,24 @@ package com.calclab.examplechat.client.chatuiplugin;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
+import com.calclab.examplechat.client.chatuiplugin.chat.ChatUIListener;
+import com.calclab.examplechat.client.chatuiplugin.chat.ChatUIPanel;
+import com.calclab.examplechat.client.chatuiplugin.chat.ChatUIPresenter;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPanel;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPanel;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPanel;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
+import com.calclab.examplechat.client.chatuiplugin.room.RoomUI;
+import com.calclab.examplechat.client.chatuiplugin.room.RoomUIPanel;
+import com.calclab.examplechat.client.chatuiplugin.room.RoomUIPresenter;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUI;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUIPanel;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUIPresenter;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPanel;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPresenter;
-import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
-import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public class ChatDialogFactoryImpl implements ChatDialogFactory {
     public static class App {
@@ -68,16 +63,6 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         return presenter;
     }
 
-    public GroupChat createGroupChat(final Chat chat, final GroupChatListener listener,
-            final GroupChatUserType groupChatUserType) {
-        final GroupChatUserList userList = createGroupChatUserList();
-        final GroupChatPresenter presenter = new GroupChatPresenter(chat, listener, groupChatUserType);
-        presenter.setUserList(userList);
-        final GroupChatPanel panel = new GroupChatPanel(presenter);
-        presenter.init(panel);
-        return presenter;
-    }
-
     public GroupChatUserList createGroupChatUserList() {
         final GroupChatUserListPresenter userListPresenter = new GroupChatUserListPresenter();
         final GroupChatUserListPanel panel = new GroupChatUserListPanel();
@@ -85,17 +70,23 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         return userListPresenter;
     }
 
-    public PairChat createPairChat(final Chat chat, final PairChatListener listener, final XmppJID currentSessionJid,
-            final PairChatUser otherUser) {
-        final PairChatPresenter presenter = new PairChatPresenter(chat, listener, currentSessionJid, otherUser);
-        final PairChatPanel panel = new PairChatPanel(presenter);
+    public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n) {
+        RosterUIPresenter presenter = new RosterUIPresenter(xmpp, i18n);
+        RosterUIPanel panel = new RosterUIPanel(i18n, presenter);
         presenter.init(panel);
         return presenter;
     }
 
-    public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n) {
-        RosterUIPresenter presenter = new RosterUIPresenter(xmpp, i18n);
-        RosterUIPanel panel = new RosterUIPanel(i18n, presenter);
+    public ChatUI createChatUI(final ChatUIListener listener) {
+        ChatUIPresenter presenter = new ChatUIPresenter(listener);
+        ChatUIPanel panel = new ChatUIPanel(presenter);
+        presenter.init(panel);
+        return presenter;
+    }
+
+    public RoomUI createRoomUI(final ChatUIListener listener) {
+        RoomUIPresenter presenter = new RoomUIPresenter(listener);
+        RoomUIPanel panel = new RoomUIPanel(presenter);
         presenter.init(panel);
         return presenter;
     }
