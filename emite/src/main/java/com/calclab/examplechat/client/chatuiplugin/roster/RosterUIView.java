@@ -24,18 +24,18 @@ package com.calclab.examplechat.client.chatuiplugin.roster;
 import org.ourproject.kune.platf.client.View;
 
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.examplechat.client.chatuiplugin.users.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.ChatUserUI;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItemList;
 
 public interface RosterUIView extends View {
 
-    void removeRosterItem(PairChatUser pairChatUser);
+    void removeRosterItem(ChatUserUI chatUserUI);
 
     void confirmSusbscriptionRequest(Presence presence);
 
-    void addRosterItem(PairChatUser user, UserGridMenuItemList menuItemList);
+    void addRosterItem(ChatUserUI user, UserGridMenuItemList menuItemList);
 
-    void updateRosterItem(PairChatUser user, UserGridMenuItemList menuItemList);
+    void updateRosterItem(ChatUserUI user, UserGridMenuItemList menuItemList);
 
     void clearRoster();
 

@@ -25,6 +25,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
 import com.calclab.examplechat.client.chatuiplugin.dialog.OwnPresence.OwnStatus;
+import com.calclab.examplechat.client.chatuiplugin.room.JoinRoomDialogPanel;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterItemDialog;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
@@ -63,6 +64,7 @@ public class MultiChatPanelTopBar extends Toolbar {
     private CheckItem manualSubsItem;
     private CheckItem autoRejectSubsItem;
     private CheckItem autoAcceptSubsItem;
+    private final Item joinOption;
 
     public MultiChatPanelTopBar(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
@@ -70,11 +72,17 @@ public class MultiChatPanelTopBar extends Toolbar {
 
         Menu chatMenu = new Menu();
         chatMenu.setShadow(true);
-        Item joinOption = new Item();
+        joinOption = new Item();
         joinOption.setText(i18n.t("Join a chat room"));
+        joinOption.setIcon("images/group-chat.gif");
         joinOption.addListener(new BaseItemListenerAdapter() {
+            private JoinRoomDialogPanel joinRoomDialogPanel;
+
             public void onClick(final BaseItem item, final EventObject e) {
-                MessageBox.alert("In development");
+                if (joinRoomDialogPanel == null) {
+                    joinRoomDialogPanel = new JoinRoomDialogPanel(i18n, presenter);
+                }
+                joinRoomDialogPanel.show();
             }
         });
         closeAllOption = createCloseAllMenuItem(i18n);
@@ -108,12 +116,12 @@ public class MultiChatPanelTopBar extends Toolbar {
         this.addFill();
 
         inviteUserToGroupChat = new ToolbarButton();
-        inviteUserToGroupChat.setIcon("images/group_add.png");
+        inviteUserToGroupChat.setIcon("images/group_add.gif");
         inviteUserToGroupChat.setCls("x-btn-icon");
         inviteUserToGroupChat.setTooltip(i18n.t("Invite another user to this chat room"));
 
         addRosterItem = new ToolbarButton();
-        addRosterItem.setIcon("images/user_add.png");
+        addRosterItem.setIcon("images/user_add.gif");
         addRosterItem.setCls("x-btn-icon");
         addRosterItem.setTooltip(i18n.t("Add a new buddy"));
 
@@ -159,137 +167,6 @@ public class MultiChatPanelTopBar extends Toolbar {
         setSubscritionMode(presenter.getUserChatOptions().getSubscriptionMode());
     }
 
-    private Menu createOptionsMenu() {
-        Menu submenu = new Menu();
-
-        ColorMenu colorMenu = new ColorMenu();
-        colorMenu.addListener(new ColorMenuListener() {
-            public void onSelect(final ColorPalette colorPalette, final String color) {
-                presenter.onUserColorChanged(color);
-            }
-        });
-
-        MenuItem colorMenuItem = new MenuItem(i18n.t("Choose your color"), colorMenu);
-        colorMenuItem.setIconCls("colors-icon");
-        colorMenuItem.setIcon("css/img/colors.gif");
-
-        MenuItem subsItem = new MenuItem(i18n.t("New buddies options"), createUserSubscriptionMenu());
-
-        submenu.addItem(colorMenuItem);
-        submenu.addItem(subsItem);
-
-        return submenu;
-    }
-
-    private Menu createUserSubscriptionMenu() {
-        Menu submenu = new Menu();
-        submenu.setShadow(true);
-        submenu.setMinWidth(10);
-        autoAcceptSubsItem = createSubscritionItem(i18n
-                .t("Automatically accept users as buddies when a user request it"), submenu,
-                SubscriptionMode.auto_accept_all);
-        autoRejectSubsItem = createSubscritionItem(i18n.t("Automatically reject new buddies inclusion requests"),
-                submenu, SubscriptionMode.auto_reject_all);
-        manualSubsItem = createSubscritionItem(i18n.t("Manual accept or reject new buddies inclusion requests"),
-                submenu, SubscriptionMode.manual);
-        return submenu;
-    }
-
-    private CheckItem createSubscritionItem(final String text, final Menu submenu, final SubscriptionMode mode) {
-        final CheckItemListenerAdapter listener = new CheckItemListenerAdapter() {
-            public void onCheckChange(CheckItem item, boolean checked) {
-                if (checked) {
-                    presenter.onUserSubscriptionModeChanged(mode);
-                }
-            }
-        };
-        CheckItem item = new CheckItem();
-        item.setText(text);
-        item.setGroup("subscription");
-        item.addListener(listener);
-        submenu.addItem(item);
-        return item;
-    }
-
-    private Menu createStatusMenu() {
-        Menu statusMenu = new Menu();
-        statusMenu.setShadow(true);
-        statusMenu.addItem(new TextItem("<b class=\"menu-title\">" + i18n.t("Change your status") + "</b>"));
-        onlineMenuItem = createStatusCheckItem(OwnStatus.online);
-        onlineCustomMenuItem = createStatusCheckItem(OwnStatus.onlinecustom);
-        busyMenuItem = createStatusCheckItem(OwnStatus.busy);
-        busyCustomMenuItem = createStatusCheckItem(OwnStatus.busycustom);
-        offlineMenuItem = createStatusCheckItem(OwnStatus.offline);
-        statusMenu.addItem(onlineMenuItem);
-        statusMenu.addItem(onlineCustomMenuItem);
-        statusMenu.addItem(busyMenuItem);
-        statusMenu.addItem(busyCustomMenuItem);
-        statusMenu.addSeparator();
-        statusMenu.addItem(offlineMenuItem);
-        return statusMenu;
-    }
-
-    private Item createCloseAllMenuItem(final I18nTranslationService i18n) {
-        Item closeAllOption = new Item();
-        closeAllOption.setText(i18n.t("Close all chats"));
-        closeAllOption.setIconCls("exit-icon");
-        closeAllOption.addListener(new BaseItemListenerAdapter() {
-            public void onClick(final BaseItem item, final EventObject e) {
-                confirmCloseAll();
-            }
-        });
-        return closeAllOption;
-    }
-
-    private CheckItem createStatusCheckItem(final OwnStatus ownStatus) {
-
-        CheckItem checkItem = new CheckItem();
-        checkItem.setText(StatusUtil.getStatusIconAndText(i18n, ownStatus));
-        checkItem.setGroup("chatstatus");
-        switch (ownStatus) {
-        case offline:
-        case online:
-        case busy:
-            checkItem.addListener(new BaseItemListenerAdapter() {
-                public void onClick(final BaseItem item, final EventObject e) {
-                    presenter.onStatusSelected(new OwnPresence(ownStatus));
-                }
-            });
-            break;
-        case busycustom:
-        case onlinecustom:
-            checkItem.addListener(new BaseItemListenerAdapter() {
-                public void onClick(final BaseItem item, final EventObject e) {
-                    MessageBox.prompt(i18n.t("Set your status message"), i18n
-                            .t("Set your status text (something like 'Out for dinner' or 'Working')"),
-                            new PromptCallback() {
-                                public void execute(final String btnID, final String text) {
-                                    presenter.onStatusSelected(new OwnPresence(ownStatus, text));
-                                }
-                            });
-                }
-            });
-            break;
-        }
-        return checkItem;
-    }
-
-    public void setCloseAllOptionEnabled(boolean enabled) {
-        closeAllOption.setDisabled(!enabled);
-    }
-
-    public void setInviteToGroupChatButtonVisible(final boolean enable) {
-        inviteUserToGroupChat.setVisible(enable);
-    }
-
-    public void setAddRosterItemButtonVisible(final boolean visible) {
-        addRosterItem.setVisible(visible);
-    }
-
-    public void setLoadingVisible(final boolean visible) {
-        loading.setVisible(visible);
-    }
-
     public void confirmCloseAll() {
         MessageBox.confirm(i18n.t("Confirm"), i18n.t("Are you sure you want to exit all the chats?"),
                 new MessageBox.ConfirmCallback() {
@@ -301,6 +178,22 @@ public class MultiChatPanelTopBar extends Toolbar {
                         }
                     }
                 });
+    }
+
+    public void setAddRosterItemButtonVisible(final boolean visible) {
+        addRosterItem.setVisible(visible);
+    }
+
+    public void setCloseAllOptionEnabled(boolean enabled) {
+        closeAllOption.setDisabled(!enabled);
+    }
+
+    public void setInviteToGroupChatButtonVisible(final boolean enable) {
+        inviteUserToGroupChat.setVisible(enable);
+    }
+
+    public void setLoadingVisible(final boolean visible) {
+        loading.setVisible(visible);
     }
 
     public void setOwnPresence(final OwnPresence ownPresence) {
@@ -338,5 +231,120 @@ public class MultiChatPanelTopBar extends Toolbar {
             manualSubsItem.setChecked(true);
             break;
         }
+    }
+
+    private Item createCloseAllMenuItem(final I18nTranslationService i18n) {
+        Item closeAllOption = new Item();
+        closeAllOption.setText(i18n.t("Close all chats"));
+        closeAllOption.setIconCls("exit-icon");
+        closeAllOption.addListener(new BaseItemListenerAdapter() {
+            public void onClick(final BaseItem item, final EventObject e) {
+                confirmCloseAll();
+            }
+        });
+        return closeAllOption;
+    }
+
+    private Menu createOptionsMenu() {
+        Menu submenu = new Menu();
+
+        ColorMenu colorMenu = new ColorMenu();
+        colorMenu.addListener(new ColorMenuListener() {
+            public void onSelect(final ColorPalette colorPalette, final String color) {
+                presenter.onUserColorChanged(color);
+            }
+        });
+
+        MenuItem colorMenuItem = new MenuItem(i18n.t("Choose your color"), colorMenu);
+        colorMenuItem.setIconCls("colors-icon");
+        colorMenuItem.setIcon("css/img/colors.gif");
+
+        MenuItem subsItem = new MenuItem(i18n.t("New buddies options"), createUserSubscriptionMenu());
+
+        submenu.addItem(colorMenuItem);
+        submenu.addItem(subsItem);
+
+        return submenu;
+    }
+
+    private CheckItem createStatusCheckItem(final OwnStatus ownStatus) {
+
+        CheckItem checkItem = new CheckItem();
+        checkItem.setText(StatusUtil.getStatusIconAndText(i18n, ownStatus));
+        checkItem.setGroup("chatstatus");
+        switch (ownStatus) {
+        case offline:
+        case online:
+        case busy:
+            checkItem.addListener(new BaseItemListenerAdapter() {
+                public void onClick(final BaseItem item, final EventObject e) {
+                    presenter.onStatusSelected(new OwnPresence(ownStatus));
+                }
+            });
+            break;
+        case busycustom:
+        case onlinecustom:
+            checkItem.addListener(new BaseItemListenerAdapter() {
+                public void onClick(final BaseItem item, final EventObject e) {
+                    MessageBox.prompt(i18n.t("Set your status message"), i18n
+                            .t("Set your status text (something like 'Out for dinner' or 'Working')"),
+                            new PromptCallback() {
+                                public void execute(final String btnID, final String text) {
+                                    presenter.onStatusSelected(new OwnPresence(ownStatus, text));
+                                }
+                            });
+                }
+            });
+            break;
+        }
+        return checkItem;
+    }
+
+    private Menu createStatusMenu() {
+        Menu statusMenu = new Menu();
+        statusMenu.setShadow(true);
+        statusMenu.addItem(new TextItem("<b class=\"menu-title\">" + i18n.t("Change your status") + "</b>"));
+        onlineMenuItem = createStatusCheckItem(OwnStatus.online);
+        onlineCustomMenuItem = createStatusCheckItem(OwnStatus.onlinecustom);
+        busyMenuItem = createStatusCheckItem(OwnStatus.busy);
+        busyCustomMenuItem = createStatusCheckItem(OwnStatus.busycustom);
+        offlineMenuItem = createStatusCheckItem(OwnStatus.offline);
+        statusMenu.addItem(onlineMenuItem);
+        statusMenu.addItem(onlineCustomMenuItem);
+        statusMenu.addItem(busyMenuItem);
+        statusMenu.addItem(busyCustomMenuItem);
+        statusMenu.addSeparator();
+        statusMenu.addItem(offlineMenuItem);
+        return statusMenu;
+    }
+
+    private CheckItem createSubscritionItem(final String text, final Menu submenu, final SubscriptionMode mode) {
+        final CheckItemListenerAdapter listener = new CheckItemListenerAdapter() {
+            public void onCheckChange(CheckItem item, boolean checked) {
+                if (checked) {
+                    presenter.onUserSubscriptionModeChanged(mode);
+                }
+            }
+        };
+        CheckItem item = new CheckItem();
+        item.setText(text);
+        item.setGroup("subscription");
+        item.addListener(listener);
+        submenu.addItem(item);
+        return item;
+    }
+
+    private Menu createUserSubscriptionMenu() {
+        Menu submenu = new Menu();
+        submenu.setShadow(true);
+        submenu.setMinWidth(10);
+        autoAcceptSubsItem = createSubscritionItem(i18n
+                .t("Automatically accept users as buddies when a user request it"), submenu,
+                SubscriptionMode.auto_accept_all);
+        autoRejectSubsItem = createSubscritionItem(i18n.t("Automatically reject new buddies inclusion requests"),
+                submenu, SubscriptionMode.auto_reject_all);
+        manualSubsItem = createSubscritionItem(i18n.t("Manual accept or reject new buddies inclusion requests"),
+                submenu, SubscriptionMode.manual);
+        return submenu;
     }
 }

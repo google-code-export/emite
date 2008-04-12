@@ -32,7 +32,6 @@ import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
@@ -53,6 +52,7 @@ public class EmiteUiPlugin extends Plugin {
     public static final String ON_CANCEL_SUBSCRITOR = "emiteuiplugin.oncancelsubscriptor";
     public static final String ON_REQUEST_REMOVE_ROSTERITEM = "emiteuiplugin.onrequestremoveitem";
     public static final String ON_REQUEST_SUBSCRIBE = "emiteuiplugin.onrequestsubscribeitem";
+    public static final String NO_ACTION = "emiteuiplugin.noaction";
 
     private MultiChat multiChatDialog;
 
@@ -84,11 +84,6 @@ public class EmiteUiPlugin extends Plugin {
 
                             public void doAction(final String eventId, final Object param) {
                                 dispatcher.fire(eventId, param);
-                            }
-
-                            public void onCloseChat(final ChatUI chatUI) {
-                                // TODO Auto-generated method stub
-
                             }
 
                             public void onUserColorChanged(final String color) {

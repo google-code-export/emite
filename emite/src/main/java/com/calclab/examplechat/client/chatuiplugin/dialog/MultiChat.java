@@ -24,25 +24,22 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
 import com.calclab.examplechat.client.chatuiplugin.room.RoomUI;
-import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser;
-import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
+import com.calclab.examplechat.client.chatuiplugin.users.RoomUserUI.RoomUserType;
 
 public interface MultiChat {
 
+    public void activateChat(Chat chat);
+
     public void closeAllChats(final boolean withConfirmation);
 
-    public void show();
-
-    public RoomUI createGroupChat(Chat chat, String userAlias, GroupChatUserType groupChatUserType);
+    public RoomUI createGroupChat(Chat chat, String userAlias, RoomUserType roomUserType);
 
     public ChatUI createPairChat(Chat chat);
 
+    public void destroy();
+
     public void groupChatSubjectChanged(final Chat groupChat, String newSubject);
 
-    public void addUsetToGroupChat(String groupChatId, GroupChatUser groupChatUser);
-
-    public void activateChat(Chat chat);
-
-    public void destroy();
+    public void show();
 
 }

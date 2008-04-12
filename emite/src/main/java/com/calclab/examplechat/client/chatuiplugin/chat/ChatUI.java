@@ -8,24 +8,26 @@ public interface ChatUI {
 
     void addInfoMessage(String message);
 
+    void addMesage(String userAlias, String message);
+
     void clearSavedInput();
+
+    void close();
+
+    String getColor(String userAlias);
 
     String getSavedInput();
 
     View getView();
 
+    void onCloseClick();
+
+    void onCurrentUserSend(String message);
+
     void saveInput(String inputText);
 
     void setChatTitle(String chatTitle);
 
-    void addMesage(String userAlias, String message);
-
     void setUserColor(String userAlias, String color);
-
-    void onCurrentUserSend(String message);
-
-    void onCloseClick();
-
-    void close();
 
 }

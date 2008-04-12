@@ -11,11 +11,9 @@ For reports please use:
 INFO: Server startup in 2489 ms
 ERROR: gwt-log failed to initialize valid server-side logging implementation
 
-- rosterui item update problems (try to update, remove works)
-
-- subject already is editable with no chats
-
 - We can start more than one chat with the same user uri...
+
+- Join room enabled when not logged
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 - When adding as a friend from a ext client:
@@ -44,3 +42,4 @@ POST http://localhost:8888/gwt/com.calclab.examplechat.Example/http-bind (115741
 [DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="1224279" sid="6d3fba11" />C3FC21767C386C6D0... (line 139)
 POST http://localhost:8888/gwt/com.calclab.examplechat.Example/http-bind404 (6759ms)C3FC21767C386C6D0... (line 10420)
 [DEBUG] GWT CONNECTOR RECEIVED: <html> [DEBUG] <head> [DEBUG] <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/> [DEBUG] <title>Error 404 </title> [DEBUG] </head> [DEBUG] <body><h2>HTTP ERROR: 404</h2><pre>Invalid SID.</pre>
+

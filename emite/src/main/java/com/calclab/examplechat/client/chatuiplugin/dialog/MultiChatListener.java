@@ -24,18 +24,15 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 
 import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
-import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
 
 public interface MultiChatListener {
-
-    void onCloseChat(ChatUI chatUI);
-
-    void onUserColorChanged(String color);
 
     void attachToExtPoint(UIExtensionElement extensionElement);
 
     void doAction(String eventId, Object param);
 
     void onUserSubscriptionModeChanged(SubscriptionMode subscriptionMode);
+
+    void onUserColorChanged(String color);
 
 }
