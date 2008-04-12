@@ -13,12 +13,12 @@ import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.MockitoXmpp;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
-import com.calclab.examplechat.client.chatuiplugin.users.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.ChatUserUI;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public class RosterUIPresenterTest {
 
-    private PairChatUser otherUser;
+    private ChatUserUI otherUser;
     private PresenceManager presenceManager;
     private PresenceListener presenceListener;
     private RosterUI rosterUI;
@@ -32,7 +32,7 @@ public class RosterUIPresenterTest {
         final XmppURI otherUri = XmppURI.parse("matt@example.com");
         final RosterItem rosterItem = new RosterItem(otherUri, Subscription.both, "matt");
 
-        otherUser = new PairChatUser("", rosterItem, "black");
+        otherUser = new ChatUserUI("", rosterItem, "black");
 
         // Mocks creation
         MockitoXmpp xmpp = new MockitoXmpp();

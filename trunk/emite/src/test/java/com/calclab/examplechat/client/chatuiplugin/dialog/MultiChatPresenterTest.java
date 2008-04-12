@@ -21,7 +21,7 @@ import com.calclab.examplechat.client.chatuiplugin.chat.ChatUIView;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUI;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUIView;
-import com.calclab.examplechat.client.chatuiplugin.users.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.ChatUserUI;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public class MultiChatPresenterTest {
@@ -32,7 +32,7 @@ public class MultiChatPresenterTest {
     private String messageBody;
     private MultiChatPresenter multiChat;
     private MultiChatView multiChatPanel;
-    private PairChatUser otherUser;
+    private ChatUserUI otherUser;
     private ChatUI chatUI;
     private String sessionUserJid;
     private MockitoXmpp xmpp;
@@ -47,7 +47,7 @@ public class MultiChatPresenterTest {
         final RosterItem rosterItem = new RosterItem(otherUri, Subscription.both, "matt");
 
         sessionUserJid = "lutherb@example.com";
-        otherUser = new PairChatUser("", rosterItem, "blue");
+        otherUser = new ChatUserUI("", rosterItem, "blue");
         messageBody = "hello world :)";
 
         // Mocks creation
@@ -107,7 +107,7 @@ public class MultiChatPresenterTest {
         final Message message = new Message(XmppURI.parse(otherUser.getJid().toString()),
                 XmppURI.parse(sessionUserJid), messageBody);
         multiChat.messageReceived(chat, message);
-        Mockito.verify(chatUIView).addMessage(otherUser.getJid().getNode(), message.getBody());
+        Mockito.verify(chatUIView).addMessage(otherUser.getJid().getNode(), "green", message.getBody());
     }
 
 }

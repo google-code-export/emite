@@ -29,17 +29,13 @@ import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
-import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListPanel;
-import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListView;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
 import com.calclab.examplechat.client.chatuiplugin.utils.emoticons.EmoticonPaletteListener;
 import com.calclab.examplechat.client.chatuiplugin.utils.emoticons.EmoticonPalettePanel;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.RegionPosition;
 import com.gwtext.client.widgets.Button;
@@ -68,16 +64,13 @@ public class MultiChatPanel implements MultiChatView {
     private Button sendBtn;
     private final MultiChatPresenter presenter;
     private TextArea subject;
-    private DeckPanel groupChatUsersDeckPanel;
     private TextArea input;
-    private final HashMap<GroupChatUserListView, Integer> userListToIndex;
     private final HashMap<String, ChatUI> panelIdToChat;
     private EmoticonPalettePanel emoticonPalettePanel;
     private PopupPanel emoticonPopup;
     private TabPanel centerPanel;
     private Panel usersPanel;
     private final I18nTranslationService i18n;
-    private Panel groupChatUsersPanel;
     private Panel rosterPanel;
     private BottomTrayIcon bottomIcon;
     private ToolbarButton emoticonButton;
@@ -89,10 +82,15 @@ public class MultiChatPanel implements MultiChatView {
     public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
         this.presenter = presenter;
-        this.userListToIndex = new HashMap<GroupChatUserListView, Integer>();
         panelIdToChat = new HashMap<String, ChatUI>();
         createLayout();
         reset();
+    }
+
+    public void activateChat(final ChatUI chat) {
+        Panel chatPanel = (Panel) chat.getView();
+        centerPanel.activate(chatPanel.getId());
+        centerPanel.scrollToTab(chatPanel, true);
     }
 
     public void addChat(final ChatUI chat) {
@@ -108,10 +106,23 @@ public class MultiChatPanel implements MultiChatView {
         input.focus();
     }
 
-    public void activateChat(final ChatUI chat) {
-        Panel chatPanel = (Panel) chat.getView();
-        centerPanel.activate(chatPanel.getId());
-        centerPanel.scrollToTab(chatPanel, true);
+    public void attachRoomUserList(final View userListView) {
+        Panel panel = (Panel) userListView;
+        usersPanel.add(panel);
+        usersPanel.setActiveItemID(panel.getId());
+        panel.expand();
+    }
+
+    public void attachRoster(final View view) {
+        rosterPanel.add((Panel) view);
+    }
+
+    public void clearInputText() {
+        input.reset();
+    }
+
+    public void clearSubject() {
+        subject.reset();
     }
 
     public void closeAllChats() {
@@ -122,11 +133,99 @@ public class MultiChatPanel implements MultiChatView {
         }
     }
 
+    public void confirmCloseAll() {
+        topToolbar.confirmCloseAll();
+    }
+
+    public void destroy() {
+        dialog.destroy();
+    }
+
+    public void dettachRoomUserList(final View userListView) {
+        usersPanel.remove((Panel) userListView);
+    }
+
+    public String getInputText() {
+        return input.getValueAsString();
+    }
+
     public void highlightChat(final ChatUI chat) {
         // TODO (testing)
         ((Panel) chat.getView()).setIconCls("chat-icon");
         ((Panel) chat.getView()).doLayout();
         // before: tab.getTextEl().highlight()
+    }
+
+    public void onCloseAllConfirmed() {
+        closeAllConfirmed = true;
+    }
+
+    public void onCloseAllNotConfirmed() {
+        closeAllConfirmed = false;
+    }
+
+    public void setAddRosterItemButtonVisible(final boolean visible) {
+        topToolbar.setAddRosterItemButtonVisible(visible);
+    }
+
+    public void setCloseAllOptionEnabled(final boolean enabled) {
+        topToolbar.setCloseAllOptionEnabled(enabled);
+    }
+
+    public void setEmoticonButtonEnabled(final boolean enabled) {
+        emoticonButton.setDisabled(!enabled);
+    }
+
+    public void setInputEditable(final boolean editable) {
+        input.setDisabled(!editable);
+    }
+
+    public void setInputText(final String text) {
+        input.setRawValue(text);
+    }
+
+    public void setInviteToGroupChatButtonVisible(final boolean visible) {
+        topToolbar.setInviteToGroupChatButtonVisible(visible);
+    }
+
+    public void setLoadingVisible(final boolean visible) {
+        topToolbar.setLoadingVisible(visible);
+    }
+
+    public void setOfflineInfo() {
+        infoPanel.setOfflineInfo();
+    }
+
+    public void setOnlineInfo() {
+        infoPanel.setOnlineInfo();
+    }
+
+    public void setOwnPresence(final OwnPresence ownPresence) {
+        topToolbar.setOwnPresence(ownPresence);
+    }
+
+    public void setRosterVisible(final boolean visible) {
+        rosterPanel.setVisible(visible);
+        if (visible) {
+            rosterPanel.doLayout();
+            rosterPanel.expand();
+        }
+    }
+
+    public void setSendEnabled(final boolean enabled) {
+        if (enabled) {
+            sendBtn.enable();
+        } else {
+            sendBtn.disable();
+        }
+    }
+
+    public void setSubject(final String text) {
+        subject.setValue(text);
+    }
+
+    public void setSubjectEditable(final boolean editable) {
+        subject.setDisabled(!editable);
     }
 
     public void show() {
@@ -147,121 +246,63 @@ public class MultiChatPanel implements MultiChatView {
         }
     }
 
-    public void destroy() {
-        dialog.destroy();
+    private void addInfoPanel() {
+        reset();
+        centerPanel.add(infoPanel);
+        infoPanel.show();
+        centerPanel.activate(infoPanel.getId());
+        setSubjectEditable(false);
     }
 
-    public void setSendEnabled(final boolean enabled) {
-        if (enabled) {
-            sendBtn.enable();
-        } else {
-            sendBtn.disable();
-        }
+    private FormPanel createGenericInputForm() {
+        FormPanel form = new FormPanel();
+        form.setLayout(new FitLayout());
+        form.setHideLabels(true);
+        form.setBorder(false);
+        return form;
     }
 
-    public void setSubject(final String text) {
-        subject.setValue(text);
+    private Panel createInputFormWithToolBar(final FormPanel inputForm, final Toolbar topToolbar) {
+        Panel panel = new Panel();
+        panel.setLayout(new FitLayout());
+        panel.setTopToolbar(topToolbar);
+        panel.add(inputForm, new AnchorLayoutData("100% 100%"));
+        inputForm.setWidth("100%");
+        return panel;
     }
 
-    public void setSubjectEditable(final boolean editable) {
-        subject.setDisabled(!editable);
-    }
+    private Panel createInputPanel() {
+        final FormPanel inputForm = createGenericInputForm();
+        input = new TextArea();
+        // As height 100% doesn't works
+        input.setHeight(47);
+        input.addKeyListener(13, new KeyListener() {
+            public void onKey(final int key, final EventObject e) {
+                doSend(e);
+                e.stopEvent();
+            }
+        });
 
-    public void setInputEditable(final boolean editable) {
-        input.setDisabled(!editable);
-    }
+        inputForm.add(input, new AnchorLayoutData("100% 100%"));
 
-    public void setEmoticonButtonEnabled(final boolean enabled) {
-        emoticonButton.setDisabled(!enabled);
-    }
+        /* Input toolbar */
+        final Toolbar inputToolbar = new Toolbar();
+        emoticonButton = new ToolbarButton();
+        emoticonButton.setIcon("images/smile.png");
+        emoticonButton.setCls("x-btn-icon x-btn-focus");
+        emoticonButton.setTooltip(i18n.t("Insert a emoticon"));
 
-    public void showUserList(final GroupChatUserListView view) {
-        Integer index = userListToIndex.get(view);
-        groupChatUsersDeckPanel.showWidget(index.intValue());
-        ((GroupChatUserListPanel) view).doLayout();
-        usersPanel.setActiveItem(1);
-    }
+        emoticonButton.addListener(new ButtonListenerAdapter() {
+            public void onClick(final Button button, final EventObject e) {
+                showEmoticonPalette(e.getXY()[0], e.getXY()[1]);
+            }
+        });
+        inputToolbar.addButton(emoticonButton);
+        inputToolbar.addSeparator();
 
-    public void addGroupChatUsersPanel(final GroupChatUserListView view) {
-        groupChatUsersDeckPanel.add((Widget) view);
-        userListToIndex.put(view, new Integer(groupChatUsersDeckPanel.getWidgetIndex((Widget) view)));
-    }
+        Panel southPanel = createInputFormWithToolBar(inputForm, inputToolbar);
 
-    public void removeGroupChatUsersPanel(final GroupChatUserListView view) {
-        groupChatUsersDeckPanel.remove((Widget) view);
-        userListToIndex.remove(view);
-    }
-
-    public void clearInputText() {
-        input.reset();
-    }
-
-    public void clearSubject() {
-        subject.reset();
-    }
-
-    public void setInputText(final String text) {
-        input.setRawValue(text);
-    }
-
-    public String getInputText() {
-        return input.getValueAsString();
-    }
-
-    public void setRosterVisible(final boolean visible) {
-        rosterPanel.setVisible(visible);
-        if (visible) {
-            rosterPanel.doLayout();
-            rosterPanel.expand();
-        }
-    }
-
-    public void setGroupChatUsersPanelVisible(final boolean visible) {
-        groupChatUsersPanel.setVisible(visible);
-        if (visible == true) {
-            usersPanel.setActiveItemID(groupChatUsersPanel.getId());
-            groupChatUsersPanel.expand();
-        }
-    }
-
-    public void setInviteToGroupChatButtonVisible(final boolean visible) {
-        topToolbar.setInviteToGroupChatButtonVisible(visible);
-    }
-
-    public void setAddRosterItemButtonVisible(final boolean visible) {
-        topToolbar.setAddRosterItemButtonVisible(visible);
-    }
-
-    public void setLoadingVisible(final boolean visible) {
-        topToolbar.setLoadingVisible(visible);
-    }
-
-    public void confirmCloseAll() {
-        topToolbar.confirmCloseAll();
-    }
-
-    public void onCloseAllConfirmed() {
-        closeAllConfirmed = true;
-    }
-
-    public void onCloseAllNotConfirmed() {
-        closeAllConfirmed = false;
-    }
-
-    public void setCloseAllOptionEnabled(final boolean enabled) {
-        topToolbar.setCloseAllOptionEnabled(enabled);
-    }
-
-    public void setOwnPresence(final OwnPresence ownPresence) {
-        topToolbar.setOwnPresence(ownPresence);
-    }
-
-    public void setOfflineInfo() {
-        infoPanel.setOfflineInfo();
-    }
-
-    public void setOnlineInfo() {
-        infoPanel.setOnlineInfo();
+        return southPanel;
     }
 
     private void createLayout() {
@@ -370,34 +411,6 @@ public class MultiChatPanel implements MultiChatView {
         });
     }
 
-    private Panel createUsersPanel() {
-        usersPanel = new Panel();
-        usersPanel.setLayout(new AccordionLayout(true));
-        usersPanel.setAutoScroll(false);
-        usersPanel.setBorder(false);
-        // Maybe use Accordion playing with visibility instead of gwt's
-        // deckpanel
-        groupChatUsersDeckPanel = new DeckPanel();
-        groupChatUsersDeckPanel.addStyleName("emite-MultiChatPanel-User");
-        rosterPanel = new Panel(i18n.t("My buddies"));
-        rosterPanel.setLayout(new FitLayout());
-        rosterPanel.setAutoScroll(true);
-        rosterPanel.setIconCls("userf-icon");
-        rosterPanel.setBorder(false);
-        groupChatUsersPanel = new Panel(i18n.t("Now in this room"));
-        groupChatUsersPanel.setLayout(new FitLayout());
-        groupChatUsersPanel.setAutoScroll(true);
-        groupChatUsersPanel.setIconCls("group-icon");
-        groupChatUsersPanel.add(groupChatUsersDeckPanel);
-        usersPanel.add(rosterPanel);
-        usersPanel.add(groupChatUsersPanel);
-        return usersPanel;
-    }
-
-    public void attachRoster(final View view) {
-        rosterPanel.add((Panel) view);
-    }
-
     private Panel createSubjectPanel() {
         FormPanel subjectForm = createGenericInputForm();
 
@@ -423,55 +436,32 @@ public class MultiChatPanel implements MultiChatView {
         return northPanel;
     }
 
-    private Panel createInputPanel() {
-        final FormPanel inputForm = createGenericInputForm();
-        input = new TextArea();
-        // As height 100% doesn't works
-        input.setHeight(47);
-        input.addKeyListener(13, new KeyListener() {
-            public void onKey(final int key, final EventObject e) {
-                doSend(e);
-                e.stopEvent();
-            }
-        });
+    private Panel createUsersPanel() {
+        usersPanel = new Panel();
+        usersPanel.setLayout(new AccordionLayout(true));
+        usersPanel.setAutoScroll(false);
+        usersPanel.setBorder(false);
+        rosterPanel = new Panel(i18n.t("My buddies"));
+        rosterPanel.setLayout(new FitLayout());
+        rosterPanel.setAutoScroll(true);
+        rosterPanel.setIconCls("userf-icon");
+        rosterPanel.setBorder(false);
+        usersPanel.add(rosterPanel);
 
-        inputForm.add(input, new AnchorLayoutData("100% 100%"));
-
-        /* Input toolbar */
-        final Toolbar inputToolbar = new Toolbar();
-        emoticonButton = new ToolbarButton();
-        emoticonButton.setIcon("images/smile.png");
-        emoticonButton.setCls("x-btn-icon x-btn-focus");
-        emoticonButton.setTooltip(i18n.t("Insert a emoticon"));
-
-        emoticonButton.addListener(new ButtonListenerAdapter() {
-            public void onClick(final Button button, final EventObject e) {
-                showEmoticonPalette(e.getXY()[0], e.getXY()[1]);
-            }
-        });
-        inputToolbar.addButton(emoticonButton);
-        inputToolbar.addSeparator();
-
-        Panel southPanel = createInputFormWithToolBar(inputForm, inputToolbar);
-
-        return southPanel;
+        return usersPanel;
     }
 
-    private FormPanel createGenericInputForm() {
-        FormPanel form = new FormPanel();
-        form.setLayout(new FitLayout());
-        form.setHideLabels(true);
-        form.setBorder(false);
-        return form;
+    private void doSend(final EventObject e) {
+        presenter.onCurrentUserSend(getInputText());
+        e.stopEvent();
+        input.focus();
     }
 
-    private Panel createInputFormWithToolBar(final FormPanel inputForm, final Toolbar topToolbar) {
-        Panel panel = new Panel();
-        panel.setLayout(new FitLayout());
-        panel.setTopToolbar(topToolbar);
-        panel.add(inputForm, new AnchorLayoutData("100% 100%"));
-        inputForm.setWidth("100%");
-        return panel;
+    private void reset() {
+        closeAllConfirmed = false;
+        closeConfirmed = false;
+        subject.reset();
+        setInviteToGroupChatButtonVisible(false);
     }
 
     private void showEmoticonPalette(final int x, final int y) {
@@ -490,27 +480,5 @@ public class MultiChatPanel implements MultiChatView {
         emoticonPopup.setPopupPosition(x + 2, y - 160);
         emoticonPopup.setWidget(emoticonPalettePanel);
         emoticonPopup.setVisible(true);
-    }
-
-    private void addInfoPanel() {
-        reset();
-        centerPanel.add(infoPanel);
-        infoPanel.show();
-        centerPanel.activate(infoPanel.getId());
-        setSubjectEditable(false);
-    }
-
-    private void doSend(final EventObject e) {
-        presenter.onCurrentUserSend(getInputText());
-        e.stopEvent();
-        input.focus();
-    }
-
-    private void reset() {
-        closeAllConfirmed = false;
-        closeConfirmed = false;
-        subject.reset();
-        setGroupChatUsersPanelVisible(false);
-        setInviteToGroupChatButtonVisible(false);
     }
 }

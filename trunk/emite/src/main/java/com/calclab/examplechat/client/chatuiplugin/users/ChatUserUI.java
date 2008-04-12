@@ -21,8 +21,25 @@
  */
 package com.calclab.examplechat.client.chatuiplugin.users;
 
-import org.ourproject.kune.platf.client.View;
+import com.calclab.emite.client.im.roster.RosterItem;
+import com.calclab.emite.client.im.roster.RosterItem.Subscription;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
-public interface GroupChatUserListView extends View {
+public class ChatUserUI extends AbstractChatUser {
 
+    private final RosterItem rosterItem;
+
+    public ChatUserUI(final String iconUrl, final RosterItem rosterItem, final String color) {
+        super(iconUrl, new XmppJID(rosterItem.getXmppURI()), rosterItem.getName(), color);
+        this.rosterItem = rosterItem;
+    }
+
+    public Presence getPresence() {
+        return rosterItem.getPresence();
+    }
+
+    public Subscription getSubscription() {
+        return rosterItem.getSubscription();
+    }
 }

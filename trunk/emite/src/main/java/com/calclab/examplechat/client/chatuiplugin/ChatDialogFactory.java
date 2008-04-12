@@ -31,19 +31,16 @@ import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 import com.calclab.examplechat.client.chatuiplugin.room.RoomUI;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUI;
-import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
 
 public interface ChatDialogFactory {
 
-    public GroupChatUserList createGroupChatUserList();
+    public ChatUI createChatUI(ChatUIListener listener);
 
     public MultiChat createMultiChat(final Xmpp xmpp, MultiChatCreationParam param, final I18nTranslationService i18n,
             final MultiChatListener listener);
 
+    public RoomUI createRoomUI(final I18nTranslationService i18n, ChatUIListener listener);
+
     public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n);
-
-    public ChatUI createChatUI(ChatUIListener listener);
-
-    public RoomUI createRoomUI(ChatUIListener listener);
 
 }

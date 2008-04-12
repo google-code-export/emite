@@ -23,12 +23,12 @@ package com.calclab.examplechat.client.chatuiplugin.roster;
 
 import org.ourproject.kune.platf.client.View;
 
-import com.calclab.examplechat.client.chatuiplugin.users.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.ChatUserUI;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public interface RosterUI {
 
-    PairChatUser getUserByJid(XmppJID jid);
+    ChatUserUI getUserByJid(XmppJID jid);
 
     View getView();
 

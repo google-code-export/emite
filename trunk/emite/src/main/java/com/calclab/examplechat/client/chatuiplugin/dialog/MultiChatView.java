@@ -24,66 +24,63 @@ package com.calclab.examplechat.client.chatuiplugin.dialog;
 import org.ourproject.kune.platf.client.View;
 
 import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
-import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserListView;
 
 public interface MultiChatView {
 
+    void activateChat(ChatUI chatUI);
+
     void addChat(ChatUI chat);
 
-    void addGroupChatUsersPanel(GroupChatUserListView view);
+    void attachRoomUserList(View userListView);
+
+    void attachRoster(View view);
 
     void clearInputText();
 
+    void clearSubject();
+
+    void confirmCloseAll();
+
     void destroy();
+
+    void dettachRoomUserList(View userListView);
 
     String getInputText();
 
     void highlightChat(ChatUI chatUI);
 
+    void onCloseAllConfirmed();
+
+    void onCloseAllNotConfirmed();
+
+    void setAddRosterItemButtonVisible(boolean visible);
+
+    void setCloseAllOptionEnabled(boolean enabled);
+
+    void setEmoticonButtonEnabled(boolean enabled);
+
     void setInputEditable(boolean editable);
 
     void setInputText(String savedInput);
 
-    void setSendEnabled(boolean enabled);
+    void setInviteToGroupChatButtonVisible(boolean visible);
+
+    void setLoadingVisible(boolean visible);
+
+    void setOfflineInfo();
+
+    void setOnlineInfo();
 
     void setOwnPresence(OwnPresence ownPresence);
+
+    void setRosterVisible(boolean visible);
+
+    void setSendEnabled(boolean enabled);
 
     void setSubject(String subject);
 
     void setSubjectEditable(boolean editable);
 
     void show();
-
-    void showUserList(GroupChatUserListView usersListView);
-
-    void clearSubject();
-
-    void setGroupChatUsersPanelVisible(boolean visible);
-
-    void setInviteToGroupChatButtonVisible(boolean visible);
-
-    void setCloseAllOptionEnabled(boolean enabled);
-
-    void confirmCloseAll();
-
-    void activateChat(ChatUI chatUI);
-
-    void setEmoticonButtonEnabled(boolean enabled);
-
-    void setLoadingVisible(boolean visible);
-
-    void setAddRosterItemButtonVisible(boolean visible);
-
-    void setOnlineInfo();
-
-    void setOfflineInfo();
-
-    void setRosterVisible(boolean visible);
-
-    void attachRoster(View view);
-
-    void onCloseAllConfirmed();
-
-    void onCloseAllNotConfirmed();
 
 }

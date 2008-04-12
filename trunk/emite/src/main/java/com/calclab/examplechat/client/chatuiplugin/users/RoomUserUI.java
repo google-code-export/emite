@@ -21,15 +21,27 @@
  */
 package com.calclab.examplechat.client.chatuiplugin.users;
 
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
-public interface GroupChatUserList {
+public class RoomUserUI extends AbstractChatUser {
 
-    public GroupChatUserListView getView();
+    public static enum RoomUserType {
+        moderator, none, participant, visitor
+    }
 
-    void add(GroupChatUser user);
+    private RoomUserType type;
 
-    void remove(GroupChatUser user);
+    public RoomUserUI(final XmppJID jid, final String alias, final String color,
+            final RoomUserType roomUserType) {
+        super("images/person-def.gif", jid, alias, color);
+        this.type = roomUserType;
+    }
 
-    public GroupChatUser get(String userAlias);
+    public RoomUserType getUserType() {
+        return type;
+    }
 
+    public void setUserType(final RoomUserType roomUserType) {
+        this.type = roomUserType;
+    }
 }

@@ -26,7 +26,7 @@ import java.util.HashMap;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.examplechat.client.chatuiplugin.dialog.StatusUtil;
-import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
+import com.calclab.examplechat.client.chatuiplugin.users.RoomUserUI.RoomUserType;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.ArrayReader;
@@ -68,13 +68,37 @@ public class UserGridPanel extends Panel {
         recordMap = new HashMap<XmppJID, Record>();
     }
 
-    public void addUser(final GroupChatUser user) {
-        final String img = user.getUserType().equals(GroupChatUserType.moderator) ? "images/moderatoruser.gif"
-                : "images/normaluser.gif";
-        addUser(user, "<img src=\"" + img + "\">", "FIXME");
+    public void addUser(final ChatUserUI user, final UserGridMenu menu) {
+        final String statusIcon = formatStatusIcon(user);
+        addUser(user, statusIcon, formatPresenceStatus(user.getPresence()), menu);
     }
 
-    public void updateRosterItem(final PairChatUser user, final UserGridMenu menu) {
+    public void addUser(final RoomUserUI user, final UserGridMenu menu, final String userType) {
+        final String img = user.getUserType().equals(RoomUserType.moderator) ? "images/moderatoruser.gif"
+                : "images/normaluser.gif";
+        addUser(user, "<img src=\"" + img + "\">", userType, menu);
+    }
+
+    public void removeAllUsers() {
+        store.removeAll();
+        recordMap.clear();
+        menuMap.clear();
+    }
+
+    public void removeUser(final AbstractChatUser user) {
+        XmppJID userJid = user.getJid();
+        Record storeToRemove = recordMap.get(userJid);
+        if (storeToRemove == null) {
+            Log.error("Trying to remove a non existing roster item: " + userJid);
+        } else {
+            store.remove(storeToRemove);
+            menuMap.remove(userJid);
+            recordMap.remove(userJid);
+        }
+        this.doLayout();
+    }
+
+    public void updateRosterItem(final ChatUserUI user, final UserGridMenu menu) {
         // removeUser(user);
         // addUser(user, menu);
         Record recordToUpdate = recordMap.get(user.getJid());
@@ -88,57 +112,13 @@ public class UserGridPanel extends Panel {
         this.doLayout();
     }
 
-    private void addUser(final AbstractChatUser user, final String statusIcon, final String statusTextOrig) {
+    private void addUser(final AbstractChatUser user, final String statusIcon, final String statusTextOrig,
+            final UserGridMenu menu) {
         final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), formatJid(user),
                 formatAlias(user), user.getColor(), statusIcon, statusTextOrig });
         recordMap.put(user.getJid(), newUserRecord);
         store.add(newUserRecord);
-    }
-
-    private String formatJid(final AbstractChatUser user) {
-        return user.getJid().toString();
-    }
-
-    private String formatAlias(final AbstractChatUser user) {
-        return user.getAlias() != null ? user.getAlias() : user.getJid().getNode();
-    }
-
-    private String formatPresenceStatus(final Presence presence) {
-        // FIXME: maybe use default status messages
-        String statusText;
-        if (presence == null) {
-            statusText = "";
-        } else {
-            statusText = presence.getStatus();
-        }
-        String statusToReturn = statusText != null ? statusText : "";
-        if (statusToReturn == "null") {
-            Log.error("null string in status from Presence from: " + presence.getFrom());
-        }
-        return statusToReturn;
-    }
-
-    public void addUser(final PairChatUser user, final UserGridMenu menu) {
-        final String statusIcon = formatStatusIcon(user);
-        addUser(user, statusIcon, formatPresenceStatus(user.getPresence()));
         menuMap.put(user.getJid(), menu);
-        this.doLayout();
-    }
-
-    private String formatStatusIcon(final PairChatUser user) {
-        return StatusUtil.getStatusIcon(user.getSubscription(), user.getPresence()).getHTML();
-    }
-
-    public void removeUser(final AbstractChatUser user) {
-        XmppJID userJid = user.getJid();
-        Record storeToRemove = recordMap.get(userJid);
-        if (storeToRemove == null) {
-            Log.error("Trying to remove a non existing roster item: " + userJid);
-        } else {
-            store.remove(storeToRemove);
-            menuMap.remove(userJid);
-            recordMap.remove(userJid);
-        }
         this.doLayout();
     }
 
@@ -223,10 +203,31 @@ public class UserGridPanel extends Panel {
         super.add(grid);
     }
 
-    public void removeAllUsers() {
-        store.removeAll();
-        recordMap.clear();
-        menuMap.clear();
+    private String formatAlias(final AbstractChatUser user) {
+        return user.getAlias() != null ? user.getAlias() : user.getJid().getNode();
+    }
+
+    private String formatJid(final AbstractChatUser user) {
+        return user.getJid().toString();
+    }
+
+    private String formatPresenceStatus(final Presence presence) {
+        // FIXME: maybe use default status messages
+        String statusText;
+        if (presence == null) {
+            statusText = "";
+        } else {
+            statusText = presence.getStatus();
+        }
+        String statusToReturn = statusText != null ? statusText : "";
+        if (statusToReturn == "null") {
+            Log.error("null string in status from Presence from: " + presence.getFrom());
+        }
+        return statusToReturn;
+    }
+
+    private String formatStatusIcon(final ChatUserUI user) {
+        return StatusUtil.getStatusIcon(user.getSubscription(), user.getPresence()).getHTML();
     }
 
 }

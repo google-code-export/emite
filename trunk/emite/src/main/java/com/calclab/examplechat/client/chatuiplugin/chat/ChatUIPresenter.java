@@ -1,32 +1,25 @@
 package com.calclab.examplechat.client.chatuiplugin.chat;
 
+import java.util.HashMap;
+
 import org.ourproject.kune.platf.client.View;
 
 public class ChatUIPresenter implements ChatUI {
 
+    private static final String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
+            "purple", "fuchsia", "maroon", "red" };
     private ChatUIView view;
     private String savedInput;
+
     private final ChatUIListener listener;
+
+    private int oldColor;
+
+    private final HashMap<String, String> userColors;
 
     public ChatUIPresenter(final ChatUIListener listener) {
         this.listener = listener;
-    }
-
-    public void init(final ChatUIView view) {
-        this.view = view;
-    }
-
-    public View getView() {
-        return view;
-    }
-
-    public void addMesage(final String userAlias, final String message) {
-        view.addMessage(userAlias, message);
-        listener.onMessageAdded(this);
-    }
-
-    public void setUserColor(final String userAlias, final String color) {
-        view.setUserColor(userAlias, color);
+        userColors = new HashMap<String, String>();
     }
 
     public void addDelimiter(final String date) {
@@ -37,12 +30,54 @@ public class ChatUIPresenter implements ChatUI {
         view.addInfoMessage(message);
     }
 
+    public void addMesage(final String userAlias, final String message) {
+        view.addMessage(userAlias, getColor(userAlias), message);
+        listener.onMessageAdded(this);
+    }
+
     public void clearSavedInput() {
         saveInput(null);
     }
 
+    public void close() {
+        view.destroy();
+    }
+
+    public String getColor(final String userAlias) {
+        String color = userColors.get(userAlias);
+        if (color == null) {
+            color = getNextColor();
+            setUserColor(userAlias, color);
+        }
+        return color;
+    }
+
     public String getSavedInput() {
         return savedInput;
+    }
+
+    public View getView() {
+        return view;
+    }
+
+    public void init(final ChatUIView view) {
+        this.view = view;
+    }
+
+    public void onActivated() {
+        listener.onActivate(this);
+    }
+
+    public void onCloseClick() {
+        listener.onCloseClick(this);
+    }
+
+    public void onCurrentUserSend(final String message) {
+        listener.onCurrentUserSend(message);
+    }
+
+    public void onDeactivated() {
+        listener.onDeactivate(this);
     }
 
     public void saveInput(final String inputText) {
@@ -53,23 +88,15 @@ public class ChatUIPresenter implements ChatUI {
         view.setChatTitle(chatTitle);
     }
 
-    public void onActivated() {
-        listener.onActivate(this);
+    public void setUserColor(final String userAlias, final String color) {
+        userColors.put(userAlias, color);
     }
 
-    public void onDeactivated() {
-        listener.onDeactivate(this);
-    }
-
-    public void onCloseClick() {
-        listener.onCloseClick(this);
-    }
-
-    public void close() {
-        view.destroy();
-    }
-
-    public void onCurrentUserSend(final String message) {
-        listener.onCurrentUserSend(message);
+    private String getNextColor() {
+        final String color = USERCOLORS[oldColor++];
+        if (oldColor >= USERCOLORS.length) {
+            oldColor = 0;
+        }
+        return color;
     }
 }

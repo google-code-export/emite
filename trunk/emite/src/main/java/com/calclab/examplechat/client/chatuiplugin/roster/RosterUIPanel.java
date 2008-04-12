@@ -24,7 +24,7 @@ package com.calclab.examplechat.client.chatuiplugin.roster;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.examplechat.client.chatuiplugin.users.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.ChatUserUI;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenu;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItemList;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridPanel;
@@ -40,19 +40,19 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
         this.presenter = presenter;
     }
 
-    public void addRosterItem(final PairChatUser user, final UserGridMenuItemList menuItemList) {
+    public void addRosterItem(final ChatUserUI user, final UserGridMenuItemList menuItemList) {
         UserGridMenu menu = new UserGridMenu(presenter);
         menu.setMenuItemList(menuItemList);
         super.addUser(user, menu);
     }
 
-    public void updateRosterItem(final PairChatUser user, final UserGridMenuItemList menuItemList) {
+    public void updateRosterItem(final ChatUserUI user, final UserGridMenuItemList menuItemList) {
         UserGridMenu menu = new UserGridMenu(presenter);
         menu.setMenuItemList(menuItemList);
         super.updateRosterItem(user, menu);
     }
 
-    public void removeRosterItem(final PairChatUser user) {
+    public void removeRosterItem(final ChatUserUI user) {
         super.removeUser(user);
         MessageBox.alert(i18n.t("[%s] has removed you from his/her buddies list", user.getJid().toString()));
     }
