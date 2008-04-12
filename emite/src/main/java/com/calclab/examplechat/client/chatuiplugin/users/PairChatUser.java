@@ -19,25 +19,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.examplechat.client.chatuiplugin.pairchat;
+package com.calclab.examplechat.client.chatuiplugin.users;
 
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatPanel;
-import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.event.PanelListenerAdapter;
+import com.calclab.emite.client.im.roster.RosterItem;
+import com.calclab.emite.client.im.roster.RosterItem.Subscription;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
-public class PairChatPanel extends AbstractChatPanel implements PairChatView {
+public class PairChatUser extends AbstractChatUser {
 
-    public PairChatPanel(final PairChatPresenter presenter) {
-        super(presenter);
-        this.addListener(new PanelListenerAdapter() {
-            public void onActivate(final Panel panel) {
-                presenter.onActivated();
-            }
+    private final RosterItem rosterItem;
 
-            public void onDeactivate(final Panel panel) {
-                presenter.onDeactivate();
-            }
-        });
+    public PairChatUser(final String iconUrl, final RosterItem rosterItem, final String color) {
+        super(iconUrl, new XmppJID(rosterItem.getXmppURI()), rosterItem.getName(), color);
+        this.rosterItem = rosterItem;
     }
 
+    public Presence getPresence() {
+        return rosterItem.getPresence();
+    }
+
+    public Subscription getSubscription() {
+        return rosterItem.getSubscription();
+    }
 }

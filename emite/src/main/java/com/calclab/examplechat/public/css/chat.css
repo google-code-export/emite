@@ -101,4 +101,7 @@
   background-image: url(img/cancel.gif) !important;
 }
 
+.forbidden-icon {
+  background-image: url(img/forbidden.gif) !important;
+}
 

@@ -24,33 +24,26 @@ package com.calclab.examplechat.client.chatuiplugin;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
+import com.calclab.examplechat.client.chatuiplugin.chat.ChatUIListener;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChatListener;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChat;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatListener;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
+import com.calclab.examplechat.client.chatuiplugin.room.RoomUI;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUI;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUserList;
-import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
-import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public interface ChatDialogFactory {
-
-    public GroupChat createGroupChat(final Chat chat, final GroupChatListener listener,
-            final GroupChatUserType sessionGroupChatUserType);
 
     public GroupChatUserList createGroupChatUserList();
 
     public MultiChat createMultiChat(final Xmpp xmpp, MultiChatCreationParam param, final I18nTranslationService i18n,
             final MultiChatListener listener);
 
-    public PairChat createPairChat(final Chat chat, final PairChatListener listener, XmppJID currentUserJid,
-            final PairChatUser otherUser);
-
     public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n);
+
+    public ChatUI createChatUI(ChatUIListener listener);
+
+    public RoomUI createRoomUI(ChatUIListener listener);
 
 }

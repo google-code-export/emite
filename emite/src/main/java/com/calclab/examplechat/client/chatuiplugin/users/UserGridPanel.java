@@ -25,9 +25,7 @@ import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.examplechat.client.chatuiplugin.abstractchat.AbstractChatUser;
 import com.calclab.examplechat.client.chatuiplugin.dialog.StatusUtil;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.GroupChatUser.GroupChatUserType;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 import com.gwtext.client.core.EventObject;

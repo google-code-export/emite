@@ -40,7 +40,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.examplechat.client.chatuiplugin.AbstractPresenter;
 import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItem;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItemList;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
@@ -186,7 +186,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
     }
 
     private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final RosterItem item) {
-        return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Remove this buddy"),
+        return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove this buddy"),
                 EmiteUiPlugin.ON_REQUEST_REMOVE_ROSTERITEM, item.getXmppURI());
     }
 
@@ -201,7 +201,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
     }
 
     private UserGridMenuItem<XmppURI> createUnsubscribeBuddyMenuItem(final RosterItem item) {
-        return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Stop to see when this buddy is connected or not"),
+        return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Stop to see when this buddy is connected or not"),
                 EmiteUiPlugin.ON_CANCEL_SUBSCRITOR, item.getXmppURI());
     }
 
@@ -221,7 +221,7 @@ public class RosterUIPresenter extends AbstractPresenter implements RosterUI {
             public void onRosterChanged(final Collection<RosterItem> roster) {
                 for (final RosterItem item : roster) {
                     logRosterItem("Adding", item);
-                    final PairChatUser user = new PairChatUser("images/person-def.gif", item);
+                    final PairChatUser user = new PairChatUser("images/person-def.gif", item, "black");
                     rosterMap.put(user.getJid(), user);
                     view.addRosterItem(user, createMenuItemList(item));
                 }

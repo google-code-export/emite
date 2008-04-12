@@ -13,8 +13,7 @@ import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.MockitoXmpp;
 import com.calclab.examplechat.client.chatuiplugin.ChatDialogFactory;
-import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatView;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public class RosterUIPresenterTest {
@@ -33,7 +32,7 @@ public class RosterUIPresenterTest {
         final XmppURI otherUri = XmppURI.parse("matt@example.com");
         final RosterItem rosterItem = new RosterItem(otherUri, Subscription.both, "matt");
 
-        otherUser = new PairChatUser("", rosterItem, MultiChatView.DEF_PAIR_USER_COLOR);
+        otherUser = new PairChatUser("", rosterItem, "black");
 
         // Mocks creation
         MockitoXmpp xmpp = new MockitoXmpp();

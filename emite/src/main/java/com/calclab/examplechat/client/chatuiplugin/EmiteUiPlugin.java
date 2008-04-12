@@ -28,15 +28,13 @@ import org.ourproject.kune.platf.client.extend.Plugin;
 import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
-import com.calclab.examplechat.client.chatuiplugin.groupchat.GroupChat;
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatPresenter;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
 
 public class EmiteUiPlugin extends Plugin {
@@ -88,10 +86,9 @@ public class EmiteUiPlugin extends Plugin {
                                 dispatcher.fire(eventId, param);
                             }
 
-                            public void onCloseGroupChat(final GroupChat groupChat) {
-                            }
+                            public void onCloseChat(final ChatUI chatUI) {
+                                // TODO Auto-generated method stub
 
-                            public void onClosePairChat(final PairChatPresenter pairChat) {
                             }
 
                             public void onUserColorChanged(final String color) {
@@ -100,11 +97,6 @@ public class EmiteUiPlugin extends Plugin {
 
                             public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
                                 dispatcher.fire(EmiteUiPlugin.ON_USER_SUBSCRIPTION_CHANGED, subscriptionMode);
-                            }
-
-                            public void setGroupChatSubject(final Chat groupChat, final String subject) {
-                                Log.info("Group '" + groupChat + "' changed subject to '" + subject
-                                        + "' (not implemented yet emite connection");
                             }
 
                         });

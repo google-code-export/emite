@@ -1,25 +1,6 @@
-/*
- *
- * ((e)) emite: A pure gwt (Google Web Toolkit) xmpp (jabber) library
- *
- * (c) 2008 The emite development team (see CREDITS for details)
- * This file is part of emite.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-package com.calclab.examplechat.client.chatuiplugin.abstractchat;
+package com.calclab.examplechat.client.chatuiplugin.chat;
+
+import java.util.HashMap;
 
 import org.ourproject.kune.platf.client.ui.HorizontalLine;
 
@@ -31,12 +12,20 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.event.PanelListenerAdapter;
 
-public abstract class AbstractChatPanel extends Panel implements AbstractChatView {
+public class ChatUIPanel extends Panel implements ChatUIView {
 
     private final Panel childPanel;
 
-    public AbstractChatPanel(final AbstractChatPresenter presenter) {
+    private static final String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
+            "purple", "fuchsia", "maroon", "red" };
+
+    private int oldColor;
+
+    private final HashMap<String, String> userColors;
+
+    public ChatUIPanel(final ChatUIPresenter presenter) {
         setClosable(true);
         setAutoScroll(true);
         setBorder(false);
@@ -47,6 +36,16 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
         // childPanel.setMargins(5);
         add(childPanel);
         addStyleName("emite-ChatPanel-Conversation");
+        userColors = new HashMap<String, String>();
+        this.addListener(new PanelListenerAdapter() {
+            public void onActivate(final Panel panel) {
+                presenter.onActivated();
+            }
+
+            public void onDeactivate(final Panel panel) {
+                presenter.onDeactivated();
+            }
+        });
     }
 
     public void setChatTitle(final String name) {
@@ -59,12 +58,12 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
         messageHtml.addStyleName("emite-ChatPanel-EventMessage");
     }
 
-    public void addMessage(final String userAlias, final String color, final String message) {
+    public void addMessage(final String userAlias, final String message) {
         // FIXME: Use gwt DOM.create... for this:
         // Element userAliasSpan = DOM.createSpan();
         // DOM.setInnerText(userAliasSpan, userAlias);
         // DOM.setStyleAttribute(userAliasSpan, "color", color);
-        String userHtml = "<span style=\"color: " + color + ";\">" + userAlias + "</span>:&nbsp;";
+        String userHtml = "<span style=\"color: " + getColor(userAlias) + ";\">" + userAlias + "</span>:&nbsp;";
         HTML messageHtml = new HTML(userHtml + ChatTextFormatter.format(message).getHTML());
         addWidget(messageHtml);
     }
@@ -80,15 +79,11 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
         hp.setStyleName("emite-ChatPanel-HorizDelimiter");
     }
 
-    public void restoreScrollPos(final int position) {
-        DOM.setElementPropertyInt(getScrollableElement(), "scrollTop", position);
+    public void setUserColor(final String userAlias, final String color) {
+        userColors.put(userAlias, color);
     }
 
-    public int getScrollPos() {
-        return DOM.getElementPropertyInt(getScrollableElement(), "scrollTop");
-    }
-
-    public void scrollDown() {
+    private void scrollDown() {
         DOM.setElementPropertyInt(getScrollableElement(), "scrollTop", childPanel.getOffsetHeight());
     }
 
@@ -101,6 +96,23 @@ public abstract class AbstractChatPanel extends Panel implements AbstractChatVie
         childPanel.doLayout();
         widget.addStyleName("emite-ChatPanel-Message");
         scrollDown();
+    }
+
+    private String getColor(final String userAlias) {
+        String color = userColors.get(userAlias);
+        if (color == null) {
+            color = getNextColor();
+            setUserColor(userAlias, color);
+        }
+        return color;
+    }
+
+    private String getNextColor() {
+        final String color = USERCOLORS[oldColor++];
+        if (oldColor >= USERCOLORS.length) {
+            oldColor = 0;
+        }
+        return color;
     }
 
 }

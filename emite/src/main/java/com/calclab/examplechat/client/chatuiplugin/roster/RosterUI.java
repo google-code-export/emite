@@ -23,7 +23,7 @@ package com.calclab.examplechat.client.chatuiplugin.roster;
 
 import org.ourproject.kune.platf.client.View;
 
-import com.calclab.examplechat.client.chatuiplugin.pairchat.PairChatUser;
+import com.calclab.examplechat.client.chatuiplugin.users.PairChatUser;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
 public interface RosterUI {
