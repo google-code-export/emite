@@ -8,6 +8,8 @@ For reports please use:
 
 - close all rooms, fails
 
+- When adding a new roster item (with no real jid like someone@example.com) , we receive addItem notificiations off all the roster (already added), instead of update.
+
 - Join a unexisting room, don't fails
 
 - Room chat send, echo the same with the room URI (from/to issue)

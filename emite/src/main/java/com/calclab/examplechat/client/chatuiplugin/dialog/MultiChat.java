@@ -32,9 +32,9 @@ public interface MultiChat {
 
     public void closeAllChats(final boolean withConfirmation);
 
-    public RoomUI createGroupChat(Chat chat, String userAlias, RoomUserType roomUserType);
+    public RoomUI createRoom(Chat chat, String userAlias, RoomUserType roomUserType);
 
-    public ChatUI createPairChat(Chat chat);
+    public ChatUI createChat(Chat chat);
 
     public void destroy();
 

@@ -119,42 +119,7 @@ public class MultiChatPresenter implements MultiChat {
         }
     }
 
-    public RoomUI createGroupChat(final Chat chat, final String userAlias, final RoomUserType roomUserType) {
-        final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(i18n, new ChatUIListener() {
-            public void onActivate(ChatUI chatUI) {
-                RoomUI roomUI = (RoomUI) chatUI;
-                view.setInputText(roomUI.getSavedInput());
-                view.setInviteToGroupChatButtonVisible(true);
-                view.setSubject(roomUI.getSubject());
-                view.setSubjectEditable(false);
-                currentChat = chatUI;
-                // view.setSubjectEditable(.getSessionUserType().equals(GroupChatUserType.moderator));
-                view.attachRoomUserList(((RoomUI) chatUI).getUserListView());
-            }
-
-            public void onCloseClick(ChatUI chatUI) {
-                xmpp.getChatManager().close(chat);
-            }
-
-            public void onCurrentUserSend(String message) {
-                chat.send(message);
-            }
-
-            public void onDeactivate(ChatUI chatUI) {
-                chatUI.saveInput(view.getInputText());
-                view.dettachRoomUserList(((RoomUI) chatUI).getUserListView());
-            }
-
-            public void onMessageAdded(ChatUI chatUI) {
-                view.highlightChat(chatUI);
-            }
-        }) : chats.get(chat));
-        // view.setSubject("");
-        finishChatCreation(chat, roomUI, chat.getOtherURI().getNode());
-        return roomUI;
-    }
-
-    public ChatUI createPairChat(final Chat chat) {
+    public ChatUI createChat(final Chat chat) {
         final ChatUI chatUI = chats.get(chat) == null ? factory.createChatUI(new ChatUIListener() {
             public void onActivate(ChatUI chatUI) {
                 view.setInputText(chatUI.getSavedInput());
@@ -164,8 +129,8 @@ public class MultiChatPresenter implements MultiChat {
                 currentChat = chatUI;
             }
 
-            public void onCloseClick(ChatUI chatUI) {
-                xmpp.getChatManager().close(chat);
+            public void onCloseConfirmed(ChatUI chatUI) {
+                doAfterCloseConfirmed(chat, chatUI);
             }
 
             public void onCurrentUserSend(String message) {
@@ -182,6 +147,43 @@ public class MultiChatPresenter implements MultiChat {
         }) : chats.get(chat);
         finishChatCreation(chat, chatUI, chat.getOtherURI().getNode());
         return chatUI;
+    }
+
+    public RoomUI createRoom(final Chat chat, final String userAlias, final RoomUserType roomUserType) {
+        final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(i18n, new ChatUIListener() {
+            public void onActivate(ChatUI chatUI) {
+                RoomUI roomUI = (RoomUI) chatUI;
+                view.setInputText(roomUI.getSavedInput());
+                view.setInviteToGroupChatButtonVisible(true);
+                view.setSubject(roomUI.getSubject());
+                view.setSubjectEditable(false);
+                currentChat = chatUI;
+                view.setSubjectEditable(roomUserType.equals(RoomUserType.moderator));
+                view.setRoomUserListVisible(true);
+                view.attachRoomUserList(((RoomUI) chatUI).getUserListView());
+            }
+
+            public void onCloseConfirmed(ChatUI chatUI) {
+                doAfterCloseConfirmed(chat, chatUI);
+            }
+
+            public void onCurrentUserSend(String message) {
+                chat.send(message);
+            }
+
+            public void onDeactivate(ChatUI chatUI) {
+                chatUI.saveInput(view.getInputText());
+                view.dettachRoomUserList(((RoomUI) chatUI).getUserListView());
+                view.setRoomUserListVisible(false);
+            }
+
+            public void onMessageAdded(ChatUI chatUI) {
+                view.highlightChat(chatUI);
+            }
+        }) : chats.get(chat));
+        // view.setSubject("");
+        finishChatCreation(chat, roomUI, chat.getOtherURI().getNode());
+        return roomUI;
     }
 
     public void destroy() {
@@ -314,13 +316,13 @@ public class MultiChatPresenter implements MultiChat {
 
     void closeChatUI(final ChatUI chatUI) {
         chatUI.setCloseConfirmed(true);
-        chatUI.onCloseClick();
+        chatUI.onCloseCloseConfirmed();
     }
 
-    void doAfterChatClosed(final Chat chat) {
-        ChatUI chatUI = getChat(chat);
+    void doAfterCloseConfirmed(final Chat chat, final ChatUI chatUI) {
+        xmpp.getChatManager().close(chat);
         chats.remove(chat);
-        chatUI.close();
+        chatUI.destroy();
         checkNoChats();
     }
 
@@ -365,12 +367,10 @@ public class MultiChatPresenter implements MultiChat {
 
         xmpp.getChatManager().addListener(new ChatManagerListener() {
             public void onChatClosed(final Chat chat) {
-                ChatUI chatUI = getChat(chat);
-                chatUI.close();
             }
 
             public void onChatCreated(final Chat chat) {
-                createPairChat(chat);
+                createChat(chat);
                 chat.addListener(new ChatListener() {
                     public void onMessageReceived(final Chat chat, final Message message) {
                         messageReceived(chat, message);
@@ -386,11 +386,10 @@ public class MultiChatPresenter implements MultiChat {
         final RoomManager roomManager = xmpp.getRoomManager();
         roomManager.addListener(new RoomManagerListener() {
             public void onChatClosed(final Chat chat) {
-                doAfterChatClosed(chat);
             }
 
             public void onChatCreated(final Chat room) {
-                final RoomUI roomUI = createGroupChat(room, currentUserJid.getNode(), RoomUserType.participant);
+                final RoomUI roomUI = createRoom(room, currentUserJid.getNode(), RoomUserType.participant);
                 room.addListener(new RoomListener() {
                     public void onMessageReceived(final Chat chat, final Message message) {
                         messageReceived(chat, message);

@@ -12,7 +12,7 @@ public interface ChatUI {
 
     void clearSavedInput();
 
-    void close();
+    void destroy();
 
     boolean getCloseConfirmed();
 
@@ -22,7 +22,7 @@ public interface ChatUI {
 
     View getView();
 
-    void onCloseClick();
+    void onCloseCloseConfirmed();
 
     void onCurrentUserSend(String message);
 
