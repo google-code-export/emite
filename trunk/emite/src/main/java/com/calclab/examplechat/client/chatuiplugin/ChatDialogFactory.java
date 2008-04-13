@@ -34,12 +34,13 @@ import com.calclab.examplechat.client.chatuiplugin.roster.RosterUI;
 
 public interface ChatDialogFactory {
 
-    public ChatUI createChatUI(ChatUIListener listener);
+    public ChatUI createChatUI(final String currentUserAlias, final String currentUserColor, ChatUIListener listener);
 
     public MultiChat createMultiChat(final Xmpp xmpp, MultiChatCreationParam param, final I18nTranslationService i18n,
             final MultiChatListener listener);
 
-    public RoomUI createRoomUI(final I18nTranslationService i18n, ChatUIListener listener);
+    public RoomUI createRoomUI(final String currentUserAlias, final String currentUserColor,
+            final I18nTranslationService i18n, ChatUIListener listener);
 
     public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n);
 

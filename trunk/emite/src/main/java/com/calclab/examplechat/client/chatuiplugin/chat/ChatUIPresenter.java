@@ -12,15 +12,14 @@ public class ChatUIPresenter implements ChatUI {
     private String savedInput;
 
     private final ChatUIListener listener;
-
     private int oldColor;
-
     private final HashMap<String, String> userColors;
     private boolean closeConfirmed;
 
-    public ChatUIPresenter(final ChatUIListener listener) {
+    public ChatUIPresenter(final String currentUserAlias, final String currentUserColor, final ChatUIListener listener) {
         this.listener = listener;
         userColors = new HashMap<String, String>();
+        userColors.put(currentUserAlias, currentUserColor);
     }
 
     public void addDelimiter(final String date) {

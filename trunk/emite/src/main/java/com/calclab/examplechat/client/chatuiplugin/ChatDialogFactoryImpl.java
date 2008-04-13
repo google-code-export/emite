@@ -53,8 +53,9 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         }
     }
 
-    public ChatUI createChatUI(final ChatUIListener listener) {
-        ChatUIPresenter presenter = new ChatUIPresenter(listener);
+    public ChatUI createChatUI(final String currentUserAlias, final String currentUserColor,
+            final ChatUIListener listener) {
+        ChatUIPresenter presenter = new ChatUIPresenter(currentUserAlias, currentUserColor, listener);
         ChatUIPanel panel = new ChatUIPanel(presenter);
         presenter.init(panel);
         return presenter;
@@ -68,8 +69,9 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         return presenter;
     }
 
-    public RoomUI createRoomUI(final I18nTranslationService i18n, final ChatUIListener listener) {
-        RoomUIPresenter presenter = new RoomUIPresenter(listener);
+    public RoomUI createRoomUI(final String currentUserAlias, final String currentUserColor,
+            final I18nTranslationService i18n, final ChatUIListener listener) {
+        RoomUIPresenter presenter = new RoomUIPresenter(currentUserAlias, currentUserColor, listener);
         RoomUserListUIPanel roomUserListUIPanel = new RoomUserListUIPanel(i18n, presenter);
         RoomUIPanel panel = new RoomUIPanel(presenter);
         presenter.init(panel, roomUserListUIPanel);
