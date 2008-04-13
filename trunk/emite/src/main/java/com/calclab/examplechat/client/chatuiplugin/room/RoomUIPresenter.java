@@ -78,6 +78,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
     }
 
     public void setUsers(final Collection<RoomUser> users) {
+        roomUserListUI.removeAllUsers();
         for (Iterator<RoomUser> iterator = users.iterator(); iterator.hasNext();) {
             RoomUser roomUser = iterator.next();
             XmppURI userUri = roomUser.getUri();

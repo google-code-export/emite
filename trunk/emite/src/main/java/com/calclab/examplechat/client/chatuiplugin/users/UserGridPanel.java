@@ -97,7 +97,7 @@ public class UserGridPanel extends Panel {
             menuMap.remove(userJid);
             recordMap.remove(userJid);
         }
-        this.doLayout();
+        doLayoutIfNeeded();
     }
 
     public void updateRosterItem(final ChatUserUI user, final UserGridMenu menu) {
@@ -111,7 +111,7 @@ public class UserGridPanel extends Panel {
         recordToUpdate.set(STATUSTEXT, formatPresenceStatus(user.getPresence()));
         recordToUpdate.set(STATUSIMG, formatStatusIcon(user));
         menuMap.put(user.getJid(), menu);
-        this.doLayout();
+        doLayoutIfNeeded();
     }
 
     private void addUser(final AbstractChatUser user, final String statusIcon, final String statusTextOrig,
@@ -121,7 +121,7 @@ public class UserGridPanel extends Panel {
         recordMap.put(user.getJid(), newUserRecord);
         store.add(newUserRecord);
         menuMap.put(user.getJid(), menu);
-        this.doLayout();
+        doLayoutIfNeeded();
     }
 
     private void createGrid() {
@@ -204,6 +204,18 @@ public class UserGridPanel extends Panel {
         // countriesGrid.setEnableDragDrop(true);
         // countriesGrid.setDdGroup("myDDGroup");
         super.add(grid);
+    }
+
+    private void doLayoutIfNeeded() {
+        // http://groups.google.com/group/gwt-ext/browse_thread/thread/6def43c434147596/69e487525d4c68e9?hl=en&lnk=gst&q=dolayout#69e487525d4c68e9
+        // You should only explicitly call doLayout() if you add a child
+        // component to a parent Container after the container has been
+        // rendered.
+
+        if (isRendered()) {
+            this.doLayout();
+            // this.syncSize();
+        }
     }
 
     private String formatAlias(final AbstractChatUser user) {

@@ -10,6 +10,23 @@ For reports please use:
 
 - When adding a new roster item (with no real jid like someone@example.com) , we receive addItem notificiations off all the roster (already added), instead of update.
 
+- Remove roster item not fire any listener. The packet:
+
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><iq type="set" id="392-73" to="admin@localhost/emite-ui1208127502333"><query xmlns="jabber:iq:roster"><item jid="asdfa@com.com" subscription="remove"/></query></iq></body>
+
+- Same with the unsubcribe:
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><iq type="set" id="1-75" to="admin@localhost/emite-ui1208127502333"><query xmlns="jabber:iq:roster"><item jid="vjrj@localhost" name="testuser1" subscription="to"/></query></iq></body>
+
+- [ui] Invite to this room, is visible after close all chats
+
+- [ui] Chat focus don't expand roster
+
+- [ui] Start a already opened chat dont' bring focus to the chat tab
+
+- [ui] Chat/Room activation, don't give the focus to input
+
+- [ui] input and room subject don't resize correctly
+
 - Room chat send, echo the same with the room URI (from/to issue)
 
 - Join a unexisting room, don't fails

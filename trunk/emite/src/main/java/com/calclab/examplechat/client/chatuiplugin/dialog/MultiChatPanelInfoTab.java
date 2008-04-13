@@ -39,14 +39,18 @@ public class MultiChatPanelInfoTab extends Panel {
         setPaddings(7);
     }
 
+    public void setOfflineInfo() {
+        infoLabel.setText(i18n.t("To start a chat you need to be 'online'."));
+        if (isRendered()) {
+            doLayout();
+        }
+    }
+
     public void setOnlineInfo() {
         infoLabel.setText(i18n.t("To start a chat, select a buddy or join to a chat room. "
                 + "If you don't have buddies you can add them. "));
-        doLayout();
-    }
-
-    public void setOfflineInfo() {
-        infoLabel.setText(i18n.t("To start a chat you need to be 'online'."));
-        doLayout();
+        if (isRendered()) {
+            doLayout();
+        }
     }
 }

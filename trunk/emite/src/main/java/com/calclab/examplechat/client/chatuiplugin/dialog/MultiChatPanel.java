@@ -40,7 +40,6 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.RegionPosition;
-import com.gwtext.client.widgets.BoxComponent;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Container;
@@ -51,7 +50,6 @@ import com.gwtext.client.widgets.Toolbar;
 import com.gwtext.client.widgets.ToolbarButton;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
-import com.gwtext.client.widgets.event.ContainerListenerAdapter;
 import com.gwtext.client.widgets.event.KeyListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.form.FormPanel;
@@ -110,13 +108,17 @@ public class MultiChatPanel implements MultiChatView {
         Log.info("Attach room user list");
         UserGridPanel panel = (UserGridPanel) userListView;
         roomUsersPanel.add(panel);
-        // panel.doLayout();
-        roomUsersPanel.doLayout();
+        if (roomUsersPanel.isRendered()) {
+            roomUsersPanel.doLayout();
+        }
         roomUsersPanel.expand();
     }
 
     public void attachRoster(final View view) {
         rosterPanel.add((Panel) view);
+        if (usersPanel.isRendered()) {
+            usersPanel.doLayout();
+        }
     }
 
     public void clearInputText() {
@@ -138,7 +140,9 @@ public class MultiChatPanel implements MultiChatView {
     public void dettachRoomUserList(final View userListView) {
         Log.info("Dettach room user list");
         roomUsersPanel.remove((Panel) userListView);
-        roomUsersPanel.doLayout();
+        if (usersPanel.isRendered()) {
+            usersPanel.doLayout();
+        }
     }
 
     public String getInputText() {
@@ -147,13 +151,16 @@ public class MultiChatPanel implements MultiChatView {
 
     public void highlightChat(final ChatUI chat) {
         // TODO (testing)
-        ((Panel) chat.getView()).setIconCls("chat-icon");
+        Panel view = (Panel) chat.getView();
+        view.setIconCls("chat-icon");
 
         // ((Panel) chat.getView()).setTitle("*", "chat-icon");
         // ((Panel) chat.getView()).getEl().highlight();
         // ((Panel) chat.getView()).getEl().frame();
-        ((Panel) chat.getView()).doLayout();
-        // before: tab.getTextEl().highlight()
+        if (view.isRendered()) {
+            view.doLayout();
+            // before: tab.getTextEl().highlight()
+        }
     }
 
     public void removeChat(final ChatUI chatUI) {
@@ -226,7 +233,10 @@ public class MultiChatPanel implements MultiChatView {
     public void setRosterVisible(final boolean visible) {
         rosterPanel.setVisible(visible);
         if (visible) {
-            rosterPanel.doLayout();
+            if (usersPanel.isRendered()) {
+                usersPanel.doLayout();
+            }
+            // rosterPanel.doLayout();
             rosterPanel.expand();
         }
     }
@@ -456,12 +466,13 @@ public class MultiChatPanel implements MultiChatView {
         usersPanel.add(rosterPanel);
         usersPanel.add(roomUsersPanel);
 
-        usersPanel.addListener(new ContainerListenerAdapter() {
-            public void onResize(final BoxComponent component, final int adjWidth, final int adjHeight,
-                    final int rawWidth, final int rawHeight) {
-                resizeUserPanelElements(rawWidth, rawHeight);
-            }
-        });
+        // usersPanel.addListener(new ContainerListenerAdapter() {
+        // public void onResize(final BoxComponent component, final int
+        // adjWidth, final int adjHeight,
+        // final int rawWidth, final int rawHeight) {
+        // resizeUserPanelElements(rawWidth, rawHeight);
+        // }
+        // });
         return usersPanel;
     }
 
@@ -474,13 +485,6 @@ public class MultiChatPanel implements MultiChatView {
     private void reset() {
         subject.reset();
         setInviteToGroupChatButtonVisible(false);
-    }
-
-    private void resizeUserPanelElements(final int width, final int height) {
-        int heightWithouTitles = height - 44;
-        rosterPanel.setSize(width, heightWithouTitles);
-        roomUsersPanel.setSize(width, heightWithouTitles);
-        Log.debug("user width: " + width + " height: " + height);
     }
 
     private void showEmoticonPalette(final int x, final int y) {

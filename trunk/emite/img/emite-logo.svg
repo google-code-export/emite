@@ -39,9 +39,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="815.1001"
-     inkscape:cy="442.93854"
+     inkscape:zoom="0.66666667"
+     inkscape:cx="219.90542"
+     inkscape:cy="937.34884"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -452,10 +452,10 @@
     </g>
     <g
        id="g2480"
-       transform="matrix(2.164207,0,0,2.164207,-560.2809,507.80901)"
-       inkscape:export-filename="/home/vjrj/Desktop/disenyo/emite.png"
-       inkscape:export-xdpi="22.908968"
-       inkscape:export-ydpi="22.908968">
+       transform="matrix(2.164207,0,0,2.164207,-581.7809,174.30901)"
+       inkscape:export-filename="/home/vjrj/proyectos/ourproject.org/kune/dev/emite/emite/img/emite-ui.png"
+       inkscape:export-xdpi="32.508678"
+       inkscape:export-ydpi="32.508678">
       <text
          sodipodi:linespacing="125%"
          id="text2460"
@@ -671,5 +671,32 @@
            height="58"
            x="904"
            y="611.36218" /></flowRegion><flowPara
-         id="flowPara3473"></flowPara></flowRoot>  </g>
+         id="flowPara3473" /></flowRoot>    <text
+       xml:space="preserve"
+       style="font-size:55.33492661px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:89.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;opacity:1;fill:#666666;fill-opacity:1;fill-rule:nonzero;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Emblem;-inkscape-font-specification:Emblem Bold"
+       x="71.914619"
+       y="-111.33508"
+       id="text2510"
+       sodipodi:linespacing="89.999998%"
+       transform="scale(0.9684286,1.0326006)"
+       inkscape:export-filename="/home/vjrj/proyectos/ourproject.org/kune/dev/emite/emite/img/emite-ui.png"
+       inkscape:export-xdpi="32.508678"
+       inkscape:export-ydpi="32.508678"><tspan
+         sodipodi:role="line"
+         x="71.914619"
+         y="-111.33508"
+         id="tspan2512">sample ui application</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:89.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;opacity:0.4;fill:#666666;fill-opacity:1;fill-rule:nonzero;marker:none;marker-start:none;marker-mid:none;marker-end:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Kedage;-inkscape-font-specification:Kedage"
+       x="-201.15735"
+       y="-661.19531"
+       id="text2514"
+       sodipodi:linespacing="89.999998%"
+       transform="matrix(0,1,-1,0,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan2516"
+         x="-201.15735"
+         y="-661.19531">beta</tspan></text>
+  </g>
 </svg>
