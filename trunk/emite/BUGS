@@ -8,9 +8,13 @@ For reports please use:
 
 - close all rooms, fails
 
+- set user color works now only in some circuntances 
+
 - When adding a new roster item (with no real jid like someone@example.com) , we receive addItem notificiations off all the roster (already added), instead of update.
 
 - Join a unexisting room, don't fails
+
+- Join when a user with the same alias exists in the room, don't throw any error
 
 - Room chat send, echo the same with the room URI (from/to issue)
 

@@ -124,6 +124,7 @@ public class MultiChatPresenter implements MultiChat {
             public void onActivate(ChatUI chatUI) {
                 view.setInputText(chatUI.getSavedInput());
                 view.setInviteToGroupChatButtonVisible(false);
+                view.setRoomUserListVisible(false);
                 view.clearSubject();
                 view.setSubjectEditable(false);
                 currentChat = chatUI;
@@ -174,7 +175,6 @@ public class MultiChatPresenter implements MultiChat {
             public void onDeactivate(ChatUI chatUI) {
                 chatUI.saveInput(view.getInputText());
                 view.dettachRoomUserList(((RoomUI) chatUI).getUserListView());
-                view.setRoomUserListVisible(false);
             }
 
             public void onMessageAdded(ChatUI chatUI) {
@@ -194,40 +194,6 @@ public class MultiChatPresenter implements MultiChat {
         listener.doAction(eventId, param);
     }
 
-    public void doAfterLogin() {
-        view.setLoadingVisible(false);
-        view.setAddRosterItemButtonVisible(true);
-        view.setJoinRoomEnabled(true);
-        view.setOnlineInfo();
-        view.setRosterVisible(true);
-        if (chats.size() > 0) {
-            view.setInputEditable(true);
-        } else {
-            view.setInputEditable(false);
-        }
-        final Presence currentPresence = presenceManager.getCurrentPresence();
-        view.setOwnPresence(currentPresence != null ? new OwnPresence(currentPresence) : ONLINE_OWN_PRESENCE);
-    }
-
-    public void doAfterLogout() {
-        view.setLoadingVisible(false);
-        view.setAddRosterItemButtonVisible(false);
-        view.setJoinRoomEnabled(false);
-        view.setRosterVisible(false);
-        view.setOfflineInfo();
-        view.setInputEditable(false);
-        rosterUI.clearRoster();
-        view.setOwnPresence(OFFLINE_OWN_PRESENCE);
-    }
-
-    public void doConnecting() {
-        view.setLoadingVisible(true);
-    }
-
-    public UserChatOptions getUserChatOptions() {
-        return userChatOptions;
-    }
-
     public void groupChatSubjectChanged(final Chat groupChat, final String newSubject) {
         final ChatUI chatUI = getChat(groupChat);
         ((RoomUI) chatUI).setSubject(newSubject);
@@ -242,27 +208,39 @@ public class MultiChatPresenter implements MultiChat {
         view.attachRoster(rosterUI.getView());
     }
 
-    public void inviteUserToRoom(final String shortName, final String longName) {
-    }
-
     public void joinRoom(final String roomName, final String serverName) {
         xmpp.getRoomManager().openChat(XmppURI.parse(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
     }
 
-    public void onCurrentUserSend(final String message) {
+    public void onSubjectChangedByCurrentUser(final String text) {
+        final RoomUI roomUI = (RoomUI) currentChat;
+        roomUI.setSubject(text);
+        // FIXME callback? erase this:
+        view.setSubject(text);
+    }
+
+    public void show() {
+        view.show();
+    }
+
+    protected void onCloseAllConfirmed() {
+        for (Iterator<ChatUI> iterator = chats.values().iterator(); iterator.hasNext();) {
+            ChatUI chatUI = iterator.next();
+            view.removeChat(chatUI);
+            closeChatUI(chatUI);
+        }
+    }
+
+    protected void onCurrentUserSend(final String message) {
         currentChat.onCurrentUserSend(message);
         view.clearInputText();
     }
 
-    public void onDeactivate(final ChatUI chat) {
-        chat.saveInput(view.getInputText());
-    }
-
-    public void onMessageAdded(final ChatUI chat) {
+    protected void onMessageAdded(final ChatUI chat) {
         view.highlightChat(chat);
     }
 
-    public void onStatusSelected(final OwnPresence ownPresence) {
+    protected void onStatusSelected(final OwnPresence ownPresence) {
         Show status;
         switch (ownPresence.getStatus()) {
         case online:
@@ -282,14 +260,7 @@ public class MultiChatPresenter implements MultiChat {
         view.setOwnPresence(ownPresence);
     }
 
-    public void onSubjectChangedByCurrentUser(final String text) {
-        final RoomUI roomUI = (RoomUI) currentChat;
-        roomUI.setSubject(text);
-        // FIXME callback? erase this:
-        view.setSubject(text);
-    }
-
-    public void onUserColorChanged(final String color) {
+    protected void onUserColorChanged(final String color) {
         for (final ChatUI chat : chats.values()) {
             chat.setUserColor(currentUserJid.getNode(), color);
         }
@@ -297,21 +268,10 @@ public class MultiChatPresenter implements MultiChat {
         listener.onUserColorChanged(color);
     }
 
-    public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
+    protected void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
         xmpp.getRoster().setSubscriptionMode(subscriptionMode);
         userChatOptions.setSubscriptionMode(subscriptionMode);
         listener.onUserSubscriptionModeChanged(subscriptionMode);
-    }
-
-    public void show() {
-        view.show();
-    }
-
-    protected void onCloseAllConfirmed() {
-        for (Iterator<ChatUI> iterator = chats.values().iterator(); iterator.hasNext();) {
-            ChatUI chatUI = iterator.next();
-            closeChatUI(chatUI);
-        }
     }
 
     void closeChatUI(final ChatUI chatUI) {
@@ -324,6 +284,25 @@ public class MultiChatPresenter implements MultiChat {
         chats.remove(chat);
         chatUI.destroy();
         checkNoChats();
+    }
+
+    void doAfterLogout() {
+        view.setLoadingVisible(false);
+        view.setAddRosterItemButtonVisible(false);
+        view.setJoinRoomEnabled(false);
+        view.setRosterVisible(false);
+        view.setOfflineInfo();
+        view.setInputEditable(false);
+        rosterUI.clearRoster();
+        view.setOwnPresence(OFFLINE_OWN_PRESENCE);
+    }
+
+    void doConnecting() {
+        view.setLoadingVisible(true);
+    }
+
+    UserChatOptions getUserChatOptions() {
+        return userChatOptions;
     }
 
     void messageReceived(final Chat chat, final Message message) {
@@ -408,6 +387,21 @@ public class MultiChatPresenter implements MultiChat {
 
     }
 
+    private void doAfterLogin() {
+        view.setLoadingVisible(false);
+        view.setAddRosterItemButtonVisible(true);
+        view.setJoinRoomEnabled(true);
+        view.setOnlineInfo();
+        view.setRosterVisible(true);
+        if (chats.size() > 0) {
+            view.setInputEditable(true);
+        } else {
+            view.setInputEditable(false);
+        }
+        final Presence currentPresence = presenceManager.getCurrentPresence();
+        view.setOwnPresence(currentPresence != null ? new OwnPresence(currentPresence) : ONLINE_OWN_PRESENCE);
+    }
+
     private void finishChatCreation(final Chat chat, final ChatUI chatUI, final String chatTitle) {
         chatUI.setChatTitle(chatTitle);
         view.addChat(chatUI);
@@ -449,6 +443,7 @@ public class MultiChatPresenter implements MultiChat {
         view.setSubjectEditable(false);
         setInputEnabled(false);
         view.setInfoPanelVisible(true);
+        view.setRoomUserListVisible(false);
     }
 
     private void setInputEnabled(final boolean enabled) {
