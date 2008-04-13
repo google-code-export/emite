@@ -77,13 +77,13 @@ public class MultiChatPresenterTest {
         multiChat.init(multiChatPanel);
 
         // Basic chat creation
-        multiChat.createPairChat(chat);
+        multiChat.createChat(chat);
     }
 
     @Test
     public void closeAllChatsWithoutConfirmation() {
         multiChat.closeAllChats(true);
-        multiChat.doAfterChatClosed(chat);
+        multiChat.doAfterCloseConfirmed(chat, chatUI);
         Mockito.verify(multiChatPanel).setCloseAllOptionEnabled(true);
         // TODO check order
         Mockito.verify(multiChatPanel).setInfoPanelVisible(false);
@@ -100,7 +100,7 @@ public class MultiChatPresenterTest {
     public void removeAndCreateChat() {
         multiChat.onCurrentUserSend(messageBody);
         multiChat.closeAllChats(false);
-        multiChat.createPairChat(chat);
+        multiChat.createChat(chat);
         multiChat.onCurrentUserSend(messageBody);
         Mockito.verify(chatListener, Mockito.times(2)).onCurrentUserSend(messageBody);
     }
@@ -109,7 +109,7 @@ public class MultiChatPresenterTest {
     public void removeAndCreateChat2() {
         multiChat.onCurrentUserSend(messageBody);
         // FIXME multiChat.closePairChat(chatUI);
-        multiChat.createPairChat(chat);
+        multiChat.createChat(chat);
         multiChat.onCurrentUserSend(messageBody);
         Mockito.verify(chatListener, Mockito.times(2)).onCurrentUserSend(messageBody);
     }

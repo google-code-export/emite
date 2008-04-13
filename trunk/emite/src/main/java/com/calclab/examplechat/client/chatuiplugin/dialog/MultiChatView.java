@@ -83,4 +83,6 @@ public interface MultiChatView {
 
     void show();
 
+    void setRoomUserListVisible(boolean visible);
+
 }

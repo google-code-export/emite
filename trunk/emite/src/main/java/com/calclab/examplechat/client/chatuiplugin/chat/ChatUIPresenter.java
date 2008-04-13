@@ -40,7 +40,7 @@ public class ChatUIPresenter implements ChatUI {
         saveInput(null);
     }
 
-    public void close() {
+    public void destroy() {
         view.destroy();
     }
 
@@ -73,8 +73,8 @@ public class ChatUIPresenter implements ChatUI {
         listener.onActivate(this);
     }
 
-    public void onCloseClick() {
-        listener.onCloseClick(this);
+    public void onCloseCloseConfirmed() {
+        listener.onCloseConfirmed(this);
     }
 
     public void onCurrentUserSend(final String message) {

@@ -10,6 +10,6 @@ public interface ChatUIListener {
 
     void onDeactivate(ChatUI chatUI);
 
-    void onCloseClick(ChatUI chatUI);
+    void onCloseConfirmed(ChatUI chatUI);
 
 }
