@@ -91,7 +91,9 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 
     private void addWidget(final Widget widget) {
         childPanel.add(widget);
-        childPanel.doLayout();
+        if (childPanel.isRendered()) {
+            childPanel.doLayout();
+        }
         widget.addStyleName("emite-ChatPanel-Message");
         scrollDown();
     }
