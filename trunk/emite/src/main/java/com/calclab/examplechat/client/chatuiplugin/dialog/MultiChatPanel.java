@@ -40,6 +40,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.RegionPosition;
+import com.gwtext.client.widgets.BoxComponent;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Container;
@@ -50,6 +51,7 @@ import com.gwtext.client.widgets.Toolbar;
 import com.gwtext.client.widgets.ToolbarButton;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
+import com.gwtext.client.widgets.event.ContainerListenerAdapter;
 import com.gwtext.client.widgets.event.KeyListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.form.FormPanel;
@@ -444,15 +446,22 @@ public class MultiChatPanel implements MultiChatView {
         rosterPanel.setLayout(new FitLayout());
         rosterPanel.setAutoScroll(true);
         rosterPanel.setIconCls("userf-icon");
-        rosterPanel.setAutoHeight(true);
+        // rosterPanel.setAutoHeight(true);
         rosterPanel.setBorder(false);
         roomUsersPanel = new Panel(i18n.t("Now in this room"));
         roomUsersPanel.setLayout(new FitLayout());
         roomUsersPanel.setAutoScroll(true);
         roomUsersPanel.setIconCls("group-icon");
-        roomUsersPanel.setAutoHeight(true);
+        // roomUsersPanel.setAutoHeight(true);
         usersPanel.add(rosterPanel);
         usersPanel.add(roomUsersPanel);
+
+        usersPanel.addListener(new ContainerListenerAdapter() {
+            public void onResize(final BoxComponent component, final int adjWidth, final int adjHeight,
+                    final int rawWidth, final int rawHeight) {
+                resizeUserPanelElements(rawWidth, rawHeight);
+            }
+        });
         return usersPanel;
     }
 
@@ -465,6 +474,13 @@ public class MultiChatPanel implements MultiChatView {
     private void reset() {
         subject.reset();
         setInviteToGroupChatButtonVisible(false);
+    }
+
+    private void resizeUserPanelElements(final int width, final int height) {
+        int heightWithouTitles = height - 44;
+        rosterPanel.setSize(width, heightWithouTitles);
+        roomUsersPanel.setSize(width, heightWithouTitles);
+        Log.debug("user width: " + width + " height: " + height);
     }
 
     private void showEmoticonPalette(final int x, final int y) {

@@ -199,7 +199,7 @@ public class UserGridPanel extends Panel {
         grid.setView(view);
         grid.setHideColumnHeader(true);
         grid.setBorder(false);
-        grid.setAutoHeight(false);
+        grid.setAutoHeight(true);
         grid.setAutoScroll(true);
         // countriesGrid.setEnableDragDrop(true);
         // countriesGrid.setDdGroup("myDDGroup");
