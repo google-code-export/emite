@@ -37,9 +37,9 @@
 <!--add loading indicator while the app is being loaded-->
 <div id="loading">
     <div class="loading-indicator">
-        <img src="js/ext/resources/images/default/shared/large-loading.gif" width="32" height="32"
-             style="margin-right:8px;float:left;vertical-align:top;"/>((e)) emite<br/>
-        <span id="loading-msg">Loading styles and images...</span></div>
+        <img src="images/emite-anim.gif" width="90" height="45"
+             style="margin-right:8px;float:left;vertical-align:top;"/>emite<br/>
+        <span id="loading-msg">Starting...</span></div>
 </div>
 
 <!--include the Ext CSS, and use the gray theme-->
@@ -49,10 +49,10 @@
 <script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading ...';</script>
 
 <!--include the Ext Core API-->
-<!-- <script type="text/javascript" src="js/ext/adapter/ext/ext-base.js"></script> -->
+<!-- <script type="text/javascript" src="js/ext/adapter/ext/ext-base.js"></script>-->
 
 <!--include Ext -->
-<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Components...';</script>
+<!-- <script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Components...';</script> -->
 <!-- <script type="text/javascript" src="js/ext/ext-all.js"></script> -->
 
 <!--include the application JS-->
@@ -64,6 +64,6 @@
 </p>
 
 <!--hide loading message-->
-<script type="text/javascript">Ext.get('loading').fadeOut({remove: true, duration:.75});</script>
+<script type="text/javascript">Ext.get('loading').fadeOut({remove: true, duration:3});</script>
 </body>
 </html>
