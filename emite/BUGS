@@ -6,17 +6,15 @@ For reports please use:
 
 - Bosh is less buggy now
 
-- close all rooms, fails
-
-- set user color works now only in some circuntances 
+- messages not escaped (try send: "zxc<xzxc")
 
 - When adding a new roster item (with no real jid like someone@example.com) , we receive addItem notificiations off all the roster (already added), instead of update.
+
+- Room chat send, echo the same with the room URI (from/to issue)
 
 - Join a unexisting room, don't fails
 
 - Join when a user with the same alias exists in the room, don't throw any error
-
-- Room chat send, echo the same with the room URI (from/to issue)
 
 - when deploy
 06-abr-2008 6:21:54 org.apache.catalina.startup.Catalina start
@@ -26,12 +24,6 @@ ERROR: gwt-log failed to initialize valid server-side logging implementation
 - We can start more than one chat with the same user uri...
 
 - Join room enabled when not logged
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-- When adding as a friend from a ext client:
-[INFO] Updating roster item: vjrj@localhost name: null subsc: to show: null77FCB59F762BC9659... (line 136)
-[ERROR] Code bug, status: subscribe77FCB59F762BC9659... (line 130)
-[ERROR] Programatic error, status: subscribe
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 - Other:
