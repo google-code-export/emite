@@ -21,9 +21,8 @@
  */
 package com.calclab.examplechat.client.chatuiplugin;
 
-
 public interface AbstractPresenter {
 
-    public void doAction(final String action, final Object value);
+    public void doAction(final String eventName, final Object param);
 
 }

@@ -49,21 +49,21 @@ public interface MultiChatView {
 
     void highlightChat(ChatUI chatUI);
 
-    void onCloseAllConfirmed();
-
-    void onCloseAllNotConfirmed();
-
     void setAddRosterItemButtonVisible(boolean visible);
 
     void setCloseAllOptionEnabled(boolean enabled);
 
     void setEmoticonButtonEnabled(boolean enabled);
 
+    void setInfoPanelVisible(boolean visible);
+
     void setInputEditable(boolean editable);
 
     void setInputText(String savedInput);
 
     void setInviteToGroupChatButtonVisible(boolean visible);
+
+    void setJoinRoomEnabled(boolean b);
 
     void setLoadingVisible(boolean visible);
 

@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.ourproject.kune.platf.client.View;
+import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 
 import com.calclab.emite.client.extra.muc.RoomUser;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.examplechat.client.chatuiplugin.AbstractPresenter;
 import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
 import com.calclab.examplechat.client.chatuiplugin.chat.ChatUIListener;
 import com.calclab.examplechat.client.chatuiplugin.chat.ChatUIPresenter;
@@ -16,17 +18,20 @@ import com.calclab.examplechat.client.chatuiplugin.users.UserGridMenuItemList;
 import com.calclab.examplechat.client.chatuiplugin.users.RoomUserUI.RoomUserType;
 import com.calclab.examplechat.client.chatuiplugin.utils.XmppJID;
 
-public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
+public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, AbstractPresenter {
 
     private RoomUIView view;
 
     private String subject;
 
-    private final RoomUserListUI roomUserListUI;
+    private RoomUserListUIPanel roomUserListUI;
 
-    public RoomUIPresenter(final ChatUIListener listener, final RoomUserListUI roomUserListUI) {
+    public RoomUIPresenter(final ChatUIListener listener) {
         super(listener);
-        this.roomUserListUI = roomUserListUI;
+    }
+
+    public void doAction(final String eventName, final Object param) {
+        DefaultDispatcher.getInstance().fire(eventName, param);
     }
 
     public String getSubject() {
@@ -41,9 +46,10 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
         return view;
     }
 
-    public void init(final RoomUIView view) {
+    public void init(final RoomUIView view, final RoomUserListUIPanel roomUserListUI) {
         super.init(view);
         this.view = view;
+        this.roomUserListUI = roomUserListUI;
     }
 
     public void setSubject(final String newSubject) {
@@ -60,7 +66,6 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
                     RoomUserType.participant);
             roomUserListUI.addUser(roomUserUI, createUserMenu(roomUserUI));
         }
-
     }
 
     private UserGridMenuItem<Object> createNoActionsMenuItem() {
@@ -75,16 +80,4 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
         }
         return itemList;
     }
-    // private UserGridMenuItemList createMenuItemList(final RosterItem item) {
-    // Type statusType;
-    // final UserGridMenuItemList itemList = new UserGridMenuItemList();
-    // final Presence presence = item.getPresence();
-    // final Subscription subscription = item.getSubscription();
-    // if (presence == null) {
-    // statusType = Presence.Type.unavailable;
-    // } else {
-    // statusType = presence.getType();
-    // }
-    // switch (subscription) {
-
 }

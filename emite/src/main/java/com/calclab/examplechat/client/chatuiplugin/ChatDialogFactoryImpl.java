@@ -36,9 +36,7 @@ import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam
 import com.calclab.examplechat.client.chatuiplugin.room.RoomUI;
 import com.calclab.examplechat.client.chatuiplugin.room.RoomUIPanel;
 import com.calclab.examplechat.client.chatuiplugin.room.RoomUIPresenter;
-import com.calclab.examplechat.client.chatuiplugin.room.RoomUserListUI;
 import com.calclab.examplechat.client.chatuiplugin.room.RoomUserListUIPanel;
-import com.calclab.examplechat.client.chatuiplugin.room.RoomUserListUIPresenter;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUI;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUIPanel;
 import com.calclab.examplechat.client.chatuiplugin.roster.RosterUIPresenter;
@@ -71,22 +69,16 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
     }
 
     public RoomUI createRoomUI(final I18nTranslationService i18n, final ChatUIListener listener) {
-        RoomUIPresenter presenter = new RoomUIPresenter(listener, createRoomUserListUI(i18n));
+        RoomUIPresenter presenter = new RoomUIPresenter(listener);
+        RoomUserListUIPanel roomUserListUIPanel = new RoomUserListUIPanel(i18n, presenter);
         RoomUIPanel panel = new RoomUIPanel(presenter);
-        presenter.init(panel);
+        presenter.init(panel, roomUserListUIPanel);
         return presenter;
     }
 
     public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n) {
         RosterUIPresenter presenter = new RosterUIPresenter(xmpp, i18n);
         RosterUIPanel panel = new RosterUIPanel(i18n, presenter);
-        presenter.init(panel);
-        return presenter;
-    }
-
-    private RoomUserListUI createRoomUserListUI(final I18nTranslationService i18n) {
-        RoomUserListUIPresenter presenter = new RoomUserListUIPresenter();
-        RoomUserListUIPanel panel = new RoomUserListUIPanel(i18n, presenter);
         presenter.init(panel);
         return presenter;
     }

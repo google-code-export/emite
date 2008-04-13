@@ -59,14 +59,14 @@ public interface ChatIcons extends ImageBundle {
     AbstractImagePrototype groupChat();
 
     /**
-     * @gwt.resource info-lamp.png
-     */
-    AbstractImagePrototype infoLamp();
-
-    /**
      * @gwt.resource info.png
      */
     AbstractImagePrototype info();
+
+    /**
+     * @gwt.resource info-lamp.png
+     */
+    AbstractImagePrototype infoLamp();
 
     /**
      * @gwt.resource invisible.png
