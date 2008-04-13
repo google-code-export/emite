@@ -28,7 +28,9 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
+import com.calclab.examplechat.client.chatuiplugin.users.UserGridPanel;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
 import com.calclab.examplechat.client.chatuiplugin.utils.emoticons.EmoticonPaletteListener;
 import com.calclab.examplechat.client.chatuiplugin.utils.emoticons.EmoticonPalettePanel;
@@ -76,8 +78,7 @@ public class MultiChatPanel implements MultiChatView {
     private ToolbarButton emoticonButton;
     private MultiChatPanelTopBar topToolbar;
     private MultiChatPanelInfoTab infoPanel;
-    private boolean closeConfirmed;
-    private boolean closeAllConfirmed;
+    private Panel roomUsersPanel;
 
     public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
@@ -99,18 +100,16 @@ public class MultiChatPanel implements MultiChatView {
         String panelId = chatPanel.getId();
         panelIdToChat.put(panelId, chat);
         activateChat(chat);
-        // TODO put in presenter
-        if (centerPanel.hasItem(infoPanel.getId())) {
-            centerPanel.remove(infoPanel.getId());
-        }
         input.focus();
+        input.getEl().frame();
     }
 
     public void attachRoomUserList(final View userListView) {
-        Panel panel = (Panel) userListView;
-        usersPanel.add(panel);
-        usersPanel.setActiveItemID(panel.getId());
-        panel.expand();
+        Log.info("Attach room user list");
+        UserGridPanel panel = (UserGridPanel) userListView;
+        roomUsersPanel.add(panel);
+        panel.doLayout();
+        roomUsersPanel.expand();
     }
 
     public void attachRoster(final View view) {
@@ -125,14 +124,6 @@ public class MultiChatPanel implements MultiChatView {
         subject.reset();
     }
 
-    public void closeAllChats() {
-        // TODO put in presenter
-        Component[] items = centerPanel.getItems();
-        for (int i = 0; i < items.length; i++) {
-            centerPanel.remove(items[i].getId());
-        }
-    }
-
     public void confirmCloseAll() {
         topToolbar.confirmCloseAll();
     }
@@ -142,7 +133,9 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void dettachRoomUserList(final View userListView) {
-        usersPanel.remove((Panel) userListView);
+        Log.info("Dettach room user list");
+        roomUsersPanel.remove((Panel) userListView);
+        roomUsersPanel.doLayout();
     }
 
     public String getInputText() {
@@ -152,16 +145,12 @@ public class MultiChatPanel implements MultiChatView {
     public void highlightChat(final ChatUI chat) {
         // TODO (testing)
         ((Panel) chat.getView()).setIconCls("chat-icon");
+
+        // ((Panel) chat.getView()).setTitle("*", "chat-icon");
+        // ((Panel) chat.getView()).getEl().highlight();
+        // ((Panel) chat.getView()).getEl().frame();
         ((Panel) chat.getView()).doLayout();
         // before: tab.getTextEl().highlight()
-    }
-
-    public void onCloseAllConfirmed() {
-        closeAllConfirmed = true;
-    }
-
-    public void onCloseAllNotConfirmed() {
-        closeAllConfirmed = false;
     }
 
     public void setAddRosterItemButtonVisible(final boolean visible) {
@@ -176,6 +165,16 @@ public class MultiChatPanel implements MultiChatView {
         emoticonButton.setDisabled(!enabled);
     }
 
+    public void setInfoPanelVisible(final boolean visible) {
+        if (visible) {
+            centerPanel.add(infoPanel);
+            infoPanel.show();
+            centerPanel.activate(infoPanel.getId());
+        } else {
+            centerPanel.remove(infoPanel);
+        }
+    }
+
     public void setInputEditable(final boolean editable) {
         input.setDisabled(!editable);
     }
@@ -186,6 +185,10 @@ public class MultiChatPanel implements MultiChatView {
 
     public void setInviteToGroupChatButtonVisible(final boolean visible) {
         topToolbar.setInviteToGroupChatButtonVisible(visible);
+    }
+
+    public void setJoinRoomEnabled(final boolean enabled) {
+        topToolbar.setJoinRoomEnabled(enabled);
     }
 
     public void setLoadingVisible(final boolean visible) {
@@ -244,14 +247,6 @@ public class MultiChatPanel implements MultiChatView {
             });
             presenter.attachIconToBottomBar(bottomIcon);
         }
-    }
-
-    private void addInfoPanel() {
-        reset();
-        centerPanel.add(infoPanel);
-        infoPanel.show();
-        centerPanel.activate(infoPanel.getId());
-        setSubjectEditable(false);
     }
 
     private FormPanel createGenericInputForm() {
@@ -370,31 +365,21 @@ public class MultiChatPanel implements MultiChatView {
 
             public boolean doBeforeRemove(final Container self, final Component component) {
                 final String panelId = component.getId();
+                final ChatUI chatUI = panelIdToChat.get(panelId);
                 if (component.getId().equals(infoPanel.getId())) {
                     // Closing empty chats info
                     return true;
                 }
-                // FIXME: Move to presenter...
-                final ChatUI chatUI = panelIdToChat.get(panelId);
-                if (closeAllConfirmed || closeConfirmed) {
-                    closeConfirmed = false;
+                if (chatUI.getCloseConfirmed()) {
                     panelIdToChat.remove(panelId);
-                    chatUI.onCloseClick();
-                    // removeGroupChatUsersPanel(((GroupChatPresenter)
-                    // chatPresenter).getUsersListView());
-                    if (centerPanel.getComponents() == null || centerPanel.getComponents().length == 1) {
-                        addInfoPanel();
-                    }
                     return true;
                 } else {
                     MessageBox.confirm(i18n.t("Confirm"), i18n.t("Are you sure you want to exit from this chat?"),
                             new MessageBox.ConfirmCallback() {
                                 public void execute(final String btnID) {
                                     if (btnID.equals("yes")) {
-                                        closeConfirmed = true;
+                                        presenter.closeChatUI(chatUI);
                                         self.remove(panelId);
-                                    } else {
-                                        closeConfirmed = false;
                                     }
                                 }
                             });
@@ -445,9 +430,15 @@ public class MultiChatPanel implements MultiChatView {
         rosterPanel.setLayout(new FitLayout());
         rosterPanel.setAutoScroll(true);
         rosterPanel.setIconCls("userf-icon");
+        rosterPanel.setAutoHeight(true);
         rosterPanel.setBorder(false);
+        roomUsersPanel = new Panel(i18n.t("Now in this room"));
+        roomUsersPanel.setLayout(new FitLayout());
+        roomUsersPanel.setAutoScroll(true);
+        roomUsersPanel.setIconCls("group-icon");
+        roomUsersPanel.setAutoHeight(true);
         usersPanel.add(rosterPanel);
-
+        usersPanel.add(roomUsersPanel);
         return usersPanel;
     }
 
@@ -458,8 +449,6 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private void reset() {
-        closeAllConfirmed = false;
-        closeConfirmed = false;
         subject.reset();
         setInviteToGroupChatButtonVisible(false);
     }

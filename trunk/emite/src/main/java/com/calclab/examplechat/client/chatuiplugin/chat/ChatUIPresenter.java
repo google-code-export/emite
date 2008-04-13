@@ -16,6 +16,7 @@ public class ChatUIPresenter implements ChatUI {
     private int oldColor;
 
     private final HashMap<String, String> userColors;
+    private boolean closeConfirmed;
 
     public ChatUIPresenter(final ChatUIListener listener) {
         this.listener = listener;
@@ -41,6 +42,10 @@ public class ChatUIPresenter implements ChatUI {
 
     public void close() {
         view.destroy();
+    }
+
+    public boolean getCloseConfirmed() {
+        return closeConfirmed;
     }
 
     public String getColor(final String userAlias) {
@@ -86,6 +91,10 @@ public class ChatUIPresenter implements ChatUI {
 
     public void setChatTitle(final String chatTitle) {
         view.setChatTitle(chatTitle);
+    }
+
+    public void setCloseConfirmed(final boolean confirmed) {
+        this.closeConfirmed = confirmed;
     }
 
     public void setUserColor(final String userAlias, final String color) {

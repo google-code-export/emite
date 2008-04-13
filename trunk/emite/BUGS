@@ -6,6 +6,12 @@ For reports please use:
 
 - Bosh is less buggy now
 
+- close all rooms, fails
+
+- Join a unexisting room, don't fails
+
+- Room chat send, echo the same with the room URI (from/to issue)
+
 - when deploy
 06-abr-2008 6:21:54 org.apache.catalina.startup.Catalina start
 INFO: Server startup in 2489 ms

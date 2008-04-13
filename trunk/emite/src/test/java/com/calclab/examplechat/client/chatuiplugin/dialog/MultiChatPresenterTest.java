@@ -81,6 +81,22 @@ public class MultiChatPresenterTest {
     }
 
     @Test
+    public void closeAllChatsWithoutConfirmation() {
+        multiChat.closeAllChats(true);
+        multiChat.doAfterChatClosed(chat);
+        Mockito.verify(multiChatPanel).setCloseAllOptionEnabled(true);
+        // TODO check order
+        Mockito.verify(multiChatPanel).setInfoPanelVisible(false);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setCloseAllOptionEnabled(false);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setInfoPanelVisible(true);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setSubjectEditable(false);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setSendEnabled(false);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setInputEditable(false);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setEmoticonButtonEnabled(false);
+        Mockito.verify(chatUIView).destroy();
+    }
+
+    @Test
     public void removeAndCreateChat() {
         multiChat.onCurrentUserSend(messageBody);
         multiChat.closeAllChats(false);

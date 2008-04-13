@@ -14,6 +14,8 @@ public interface ChatUI {
 
     void close();
 
+    boolean getCloseConfirmed();
+
     String getColor(String userAlias);
 
     String getSavedInput();
@@ -27,6 +29,8 @@ public interface ChatUI {
     void saveInput(String inputText);
 
     void setChatTitle(String chatTitle);
+
+    void setCloseConfirmed(boolean confirmed);
 
     void setUserColor(String userAlias, String color);
 

@@ -173,8 +173,6 @@ public class MultiChatPanelTopBar extends Toolbar {
                     public void execute(final String btnID) {
                         if (btnID.equals("yes")) {
                             presenter.onCloseAllConfirmed();
-                        } else {
-                            presenter.onCloseAllNotConfirmed();
                         }
                     }
                 });
@@ -190,6 +188,10 @@ public class MultiChatPanelTopBar extends Toolbar {
 
     public void setInviteToGroupChatButtonVisible(final boolean enable) {
         inviteUserToGroupChat.setVisible(enable);
+    }
+
+    public void setJoinRoomEnabled(final boolean enabled) {
+        joinOption.setDisabled(!enabled);
     }
 
     public void setLoadingVisible(final boolean visible) {

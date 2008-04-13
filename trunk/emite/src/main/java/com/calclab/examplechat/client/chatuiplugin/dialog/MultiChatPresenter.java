@@ -119,11 +119,6 @@ public class MultiChatPresenter implements MultiChat {
         }
     }
 
-    public void closeChat(final ChatUI chatUI) {
-        chatUI.close();
-        checkNoChats();
-    }
-
     public RoomUI createGroupChat(final Chat chat, final String userAlias, final RoomUserType roomUserType) {
         final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(i18n, new ChatUIListener() {
             public void onActivate(ChatUI chatUI) {
@@ -154,7 +149,6 @@ public class MultiChatPresenter implements MultiChat {
                 view.highlightChat(chatUI);
             }
         }) : chats.get(chat));
-        // view.addGroupChatUsersPanel(groupChat.getUsersListView());
         // view.setSubject("");
         finishChatCreation(chat, roomUI, chat.getOtherURI().getNode());
         return roomUI;
@@ -201,10 +195,13 @@ public class MultiChatPresenter implements MultiChat {
     public void doAfterLogin() {
         view.setLoadingVisible(false);
         view.setAddRosterItemButtonVisible(true);
+        view.setJoinRoomEnabled(true);
         view.setOnlineInfo();
         view.setRosterVisible(true);
         if (chats.size() > 0) {
             view.setInputEditable(true);
+        } else {
+            view.setInputEditable(false);
         }
         final Presence currentPresence = presenceManager.getCurrentPresence();
         view.setOwnPresence(currentPresence != null ? new OwnPresence(currentPresence) : ONLINE_OWN_PRESENCE);
@@ -213,6 +210,7 @@ public class MultiChatPresenter implements MultiChat {
     public void doAfterLogout() {
         view.setLoadingVisible(false);
         view.setAddRosterItemButtonVisible(false);
+        view.setJoinRoomEnabled(false);
         view.setRosterVisible(false);
         view.setOfflineInfo();
         view.setInputEditable(false);
@@ -246,7 +244,7 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     public void joinRoom(final String roomName, final String serverName) {
-        xmpp.getRoomManager().openChat(XmppURI.parse(roomName + "@" + serverName));
+        xmpp.getRoomManager().openChat(XmppURI.parse(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
     }
 
     public void onCurrentUserSend(final String message) {
@@ -308,16 +306,22 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     protected void onCloseAllConfirmed() {
-        view.onCloseAllConfirmed();
         for (Iterator<ChatUI> iterator = chats.values().iterator(); iterator.hasNext();) {
             ChatUI chatUI = iterator.next();
-            chatUI.onCloseClick();
+            closeChatUI(chatUI);
         }
-        reset();
     }
 
-    protected void onCloseAllNotConfirmed() {
-        view.onCloseAllNotConfirmed();
+    void closeChatUI(final ChatUI chatUI) {
+        chatUI.setCloseConfirmed(true);
+        chatUI.onCloseClick();
+    }
+
+    void doAfterChatClosed(final Chat chat) {
+        ChatUI chatUI = getChat(chat);
+        chats.remove(chat);
+        chatUI.close();
+        checkNoChats();
     }
 
     void messageReceived(final Chat chat, final Message message) {
@@ -327,15 +331,15 @@ public class MultiChatPresenter implements MultiChat {
 
     private void checkNoChats() {
         if (chats.size() == 0) {
-            view.setCloseAllOptionEnabled(false);
-            setInputEnabled(false);
+            reset();
         }
     }
 
     private void checkThereAreChats() {
-        if (chats.size() == 1) {
+        if (chats.size() >= 1) {
             view.setCloseAllOptionEnabled(true);
             setInputEnabled(true);
+            view.setInfoPanelVisible(false);
         }
     }
 
@@ -382,7 +386,7 @@ public class MultiChatPresenter implements MultiChat {
         final RoomManager roomManager = xmpp.getRoomManager();
         roomManager.addListener(new RoomManagerListener() {
             public void onChatClosed(final Chat chat) {
-                closeChat(getChat(chat));
+                doAfterChatClosed(chat);
             }
 
             public void onChatCreated(final Chat room) {
@@ -445,6 +449,7 @@ public class MultiChatPresenter implements MultiChat {
         view.setCloseAllOptionEnabled(false);
         view.setSubjectEditable(false);
         setInputEnabled(false);
+        view.setInfoPanelVisible(true);
     }
 
     private void setInputEnabled(final boolean enabled) {
@@ -452,4 +457,5 @@ public class MultiChatPresenter implements MultiChat {
         view.setInputEditable(enabled);
         view.setEmoticonButtonEnabled(enabled);
     }
+
 }
