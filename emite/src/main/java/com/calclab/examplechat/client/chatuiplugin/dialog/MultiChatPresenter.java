@@ -120,7 +120,8 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     public ChatUI createChat(final Chat chat) {
-        final ChatUI chatUI = chats.get(chat) == null ? factory.createChatUI(new ChatUIListener() {
+        final ChatUI chatUI = chats.get(chat) == null ? factory.createChatUI(currentUserJid.getNode(), userChatOptions
+                .getColor(), new ChatUIListener() {
             public void onActivate(ChatUI chatUI) {
                 view.setInputText(chatUI.getSavedInput());
                 view.setInviteToGroupChatButtonVisible(false);
@@ -151,36 +152,37 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     public RoomUI createRoom(final Chat chat, final String userAlias, final RoomUserType roomUserType) {
-        final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(i18n, new ChatUIListener() {
-            public void onActivate(ChatUI chatUI) {
-                RoomUI roomUI = (RoomUI) chatUI;
-                view.setInputText(roomUI.getSavedInput());
-                view.setInviteToGroupChatButtonVisible(true);
-                view.setSubject(roomUI.getSubject());
-                view.setSubjectEditable(false);
-                currentChat = chatUI;
-                view.setSubjectEditable(roomUserType.equals(RoomUserType.moderator));
-                view.setRoomUserListVisible(true);
-                view.attachRoomUserList(((RoomUI) chatUI).getUserListView());
-            }
+        final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(currentUserJid.getNode(),
+                userChatOptions.getColor(), i18n, new ChatUIListener() {
+                    public void onActivate(ChatUI chatUI) {
+                        RoomUI roomUI = (RoomUI) chatUI;
+                        view.setInputText(roomUI.getSavedInput());
+                        view.setInviteToGroupChatButtonVisible(true);
+                        view.setSubject(roomUI.getSubject());
+                        view.setSubjectEditable(false);
+                        currentChat = chatUI;
+                        view.setSubjectEditable(roomUserType.equals(RoomUserType.moderator));
+                        view.setRoomUserListVisible(true);
+                        view.attachRoomUserList(((RoomUI) chatUI).getUserListView());
+                    }
 
-            public void onCloseConfirmed(ChatUI chatUI) {
-                doAfterCloseConfirmed(chat, chatUI);
-            }
+                    public void onCloseConfirmed(ChatUI chatUI) {
+                        doAfterCloseConfirmed(chat, chatUI);
+                    }
 
-            public void onCurrentUserSend(String message) {
-                chat.send(message);
-            }
+                    public void onCurrentUserSend(String message) {
+                        chat.send(message);
+                    }
 
-            public void onDeactivate(ChatUI chatUI) {
-                chatUI.saveInput(view.getInputText());
-                view.dettachRoomUserList(((RoomUI) chatUI).getUserListView());
-            }
+                    public void onDeactivate(ChatUI chatUI) {
+                        chatUI.saveInput(view.getInputText());
+                        view.dettachRoomUserList(((RoomUI) chatUI).getUserListView());
+                    }
 
-            public void onMessageAdded(ChatUI chatUI) {
-                view.highlightChat(chatUI);
-            }
-        }) : chats.get(chat));
+                    public void onMessageAdded(ChatUI chatUI) {
+                        view.highlightChat(chatUI);
+                    }
+                }) : chats.get(chat));
         // view.setSubject("");
         finishChatCreation(chat, roomUI, chat.getOtherURI().getNode());
         return roomUI;
@@ -226,8 +228,8 @@ public class MultiChatPresenter implements MultiChat {
     protected void onCloseAllConfirmed() {
         for (Iterator<ChatUI> iterator = chats.values().iterator(); iterator.hasNext();) {
             ChatUI chatUI = iterator.next();
-            view.removeChat(chatUI);
             closeChatUI(chatUI);
+            view.removeChat(chatUI);
         }
     }
 

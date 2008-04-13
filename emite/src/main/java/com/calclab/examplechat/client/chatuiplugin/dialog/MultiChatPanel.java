@@ -108,7 +108,8 @@ public class MultiChatPanel implements MultiChatView {
         Log.info("Attach room user list");
         UserGridPanel panel = (UserGridPanel) userListView;
         roomUsersPanel.add(panel);
-        panel.doLayout();
+        // panel.doLayout();
+        roomUsersPanel.doLayout();
         roomUsersPanel.expand();
     }
 
@@ -154,7 +155,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void removeChat(final ChatUI chatUI) {
-        centerPanel.remove(((Panel) chatUI).getId());
+        centerPanel.remove(((Panel) chatUI.getView()).getId());
     }
 
     public void setAddRosterItemButtonVisible(final boolean visible) {

@@ -26,8 +26,8 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
 
     private RoomUserListUIPanel roomUserListUI;
 
-    public RoomUIPresenter(final ChatUIListener listener) {
-        super(listener);
+    public RoomUIPresenter(final String currentUserAlias, final String currentUserColor, final ChatUIListener listener) {
+        super(currentUserAlias, currentUserColor, listener);
     }
 
     public void doAction(final String eventName, final Object param) {
