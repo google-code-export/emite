@@ -153,6 +153,10 @@ public class MultiChatPanel implements MultiChatView {
         // before: tab.getTextEl().highlight()
     }
 
+    public void removeChat(final ChatUI chatUI) {
+        centerPanel.remove(((Panel) chatUI).getId());
+    }
+
     public void setAddRosterItemButtonVisible(final boolean visible) {
         topToolbar.setAddRosterItemButtonVisible(visible);
     }
@@ -388,7 +392,7 @@ public class MultiChatPanel implements MultiChatView {
                                 public void execute(final String btnID) {
                                     if (btnID.equals("yes")) {
                                         presenter.closeChatUI(chatUI);
-                                        // self.remove(panelId);
+                                        self.remove(panelId);
                                     }
                                 }
                             });
@@ -439,13 +443,13 @@ public class MultiChatPanel implements MultiChatView {
         rosterPanel.setLayout(new FitLayout());
         rosterPanel.setAutoScroll(true);
         rosterPanel.setIconCls("userf-icon");
-        // rosterPanel.setAutoHeight(true);
+        rosterPanel.setAutoHeight(true);
         rosterPanel.setBorder(false);
         roomUsersPanel = new Panel(i18n.t("Now in this room"));
         roomUsersPanel.setLayout(new FitLayout());
         roomUsersPanel.setAutoScroll(true);
         roomUsersPanel.setIconCls("group-icon");
-        // roomUsersPanel.setAutoHeight(true);
+        roomUsersPanel.setAutoHeight(true);
         usersPanel.add(rosterPanel);
         usersPanel.add(roomUsersPanel);
         return usersPanel;

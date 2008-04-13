@@ -45,6 +45,7 @@ import com.gwtext.client.widgets.grid.GridPanel;
 import com.gwtext.client.widgets.grid.GridView;
 import com.gwtext.client.widgets.grid.Renderer;
 import com.gwtext.client.widgets.grid.event.GridRowListener;
+import com.gwtext.client.widgets.layout.FitLayout;
 
 public class UserGridPanel extends Panel {
 
@@ -63,6 +64,7 @@ public class UserGridPanel extends Panel {
 
     public UserGridPanel() {
         setBorder(false);
+        setLayout(new FitLayout());
         createGrid();
         menuMap = new HashMap<XmppJID, UserGridMenu>();
         recordMap = new HashMap<XmppJID, Record>();
@@ -197,8 +199,8 @@ public class UserGridPanel extends Panel {
         grid.setView(view);
         grid.setHideColumnHeader(true);
         grid.setBorder(false);
-        grid.setAutoHeight(true);
-        grid.setAutoScroll(false);
+        grid.setAutoHeight(false);
+        grid.setAutoScroll(true);
         // countriesGrid.setEnableDragDrop(true);
         // countriesGrid.setDdGroup("myDDGroup");
         super.add(grid);

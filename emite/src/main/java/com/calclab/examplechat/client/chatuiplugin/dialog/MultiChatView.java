@@ -49,6 +49,8 @@ public interface MultiChatView {
 
     void highlightChat(ChatUI chatUI);
 
+    void removeChat(ChatUI chatUI);
+
     void setAddRosterItemButtonVisible(boolean visible);
 
     void setCloseAllOptionEnabled(boolean enabled);
@@ -73,6 +75,8 @@ public interface MultiChatView {
 
     void setOwnPresence(OwnPresence ownPresence);
 
+    void setRoomUserListVisible(boolean visible);
+
     void setRosterVisible(boolean visible);
 
     void setSendEnabled(boolean enabled);
@@ -82,7 +86,5 @@ public interface MultiChatView {
     void setSubjectEditable(boolean editable);
 
     void show();
-
-    void setRoomUserListVisible(boolean visible);
 
 }
