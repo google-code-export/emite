@@ -29,7 +29,8 @@ For reports please use:
 
 - Room chat send, echo the same with the room URI (from/to issue)
 
-- Join a unexisting room, don't fails
+- Join a non existing room don't finish creation (see note [1] the PSI console output of a room creation to look how to do it):
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message type="groupchat" from="test3@rooms.localhost" to="admin@localhost/emite-ui1208163339899"><body>This room is locked from entry until configuration is confirmed.</body></message></body>
 
 - Join when a user with the same alias exists in the room, don't throw any error
 
@@ -63,4 +64,60 @@ POST http://localhost:8888/gwt/com.calclab.examplechat.Example/http-bind (115741
 [DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="1224279" sid="6d3fba11" />C3FC21767C386C6D0... (line 139)
 POST http://localhost:8888/gwt/com.calclab.examplechat.Example/http-bind404 (6759ms)C3FC21767C386C6D0... (line 10420)
 [DEBUG] GWT CONNECTOR RECEIVED: <html> [DEBUG] <head> [DEBUG] <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/> [DEBUG] <title>Error 404 </title> [DEBUG] </head> [DEBUG] <body><h2>HTTP ERROR: 404</h2><pre>Invalid SID.</pre>
+
+
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+[1]
+
+<presence to="newroomtest1@rooms.localhost/vjrj" >
+<priority>5</priority>
+<c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html" />
+<x xmlns="http://jabber.org/protocol/muc"/>
+</presence>
+
+
+<presence from="newroomtest1@rooms.localhost/vjrj" to="vjrj@localhost/Psi" >
+<priority>5</priority>
+<c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html" />
+
+<x xmlns="http://jabber.org/protocol/muc#user">
+<item affiliation="owner" role="moderator" jid="vjrj@localhost/Psi" />
+<status code="201" />
+</x>
+</presence>
+
+
+<iq type="set" to="newroomtest1@rooms.localhost" id="ab22a" >
+<query xmlns="http://jabber.org/protocol/muc#owner">
+<x xmlns="jabber:x:data" type="submit" />
+</query>
+</iq>
+
+
+<message from="newroomtest1@rooms.localhost" type="groupchat" to="vjrj@localhost/Psi" >
+<body>This room is locked from entry until configuration is confirmed.</body>
+</message>
+
+
+<message from="newroomtest1@rooms.localhost" type="groupchat" to="vjrj@localhost/Psi" >
+<body>This room is now unlocked.</body>
+</message>
+
+
+<iq from="newroomtest1@rooms.localhost" type="result" id="ab22a" to="vjrj@localhost/Psi" />
+
+
+<presence type="unavailable" to="newroomtest1@rooms.localhost/vjrj" />
+
+
+<presence from="newroomtest1@rooms.localhost/vjrj" type="unavailable" to="vjrj@localhost/Psi" >
+<priority>5</priority>
+<c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html" />
+
+<x xmlns="http://jabber.org/protocol/muc#user">
+<item affiliation="owner" role="none" jid="vjrj@localhost/Psi" />
+</x>
+</presence>
 

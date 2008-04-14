@@ -5,16 +5,10 @@ TODO-list for kune
 
 SHORT-TERM (URGENT):
 --------------------------------------------------------------------------------
-<vjrj> AbstractXmpp -> Xmpp, Xmpp -> XmppDefault
-<vjrj> http bind port in properties
+<vjrj> Log.warn xmpp error messages
+<vjrj> Prefetch some UI images (not in buddles)
 --> vjrj
 <vjrj> Room nicks support
-<dani> Remove Bosh connection bugs (bosh), mainly reconections, and error handling
---> dani
-<dani> Add support to MUC (xmpp)
---> dani
-<dani> Better presence support (xmpp)
---> dani
 
 --------------------------------------------------------------------------------
 
