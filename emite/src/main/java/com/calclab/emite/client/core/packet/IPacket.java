@@ -82,8 +82,6 @@ public interface IPacket {
 
     void setAttribute(String name, String value);
 
-    void setText(String text);
-
     IPacket With(String name, long value);
 
     /**

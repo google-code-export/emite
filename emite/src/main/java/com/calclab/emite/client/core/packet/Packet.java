@@ -56,9 +56,8 @@ public class Packet extends DSLPacket {
 	children.add(child);
     }
 
-    // TODO: de momento funciona como add
     public void addText(final String value) {
-	children.add(new TextPacket(value));
+	children.add(new TextPacket(TextUtils.escape(value)));
     }
 
     public String getAttribute(final String name) {
@@ -113,7 +112,7 @@ public class Packet extends DSLPacket {
     public String getText() {
 	for (final IPacket child : children) {
 	    if (child.getName() == null) {
-		return child.toString();
+		return TextUtils.unescape(child.toString());
 	    }
 	}
 	return null;

@@ -87,10 +87,6 @@ public class DelegatedPacket extends DSLPacket {
 	delegate.setAttribute(name, value);
     }
 
-    public void setText(final String text) {
-	delegate.setText(text);
-    }
-
     @Override
     public String toString() {
 	return delegate.toString();
