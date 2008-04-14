@@ -23,10 +23,12 @@ package com.calclab.emite.client.core.bosh;
 
 import java.util.List;
 
+import com.calclab.emite.client.components.Startable;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
+import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
+import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 
@@ -36,23 +38,27 @@ import com.calclab.emite.client.core.packet.IPacket;
  * @author dani
  * 
  */
-public class EmiteBosh extends DispatcherComponent implements Emite {
+public class EmiteBosh implements Emite, Startable {
     public static class Events {
 	public static final Event send = new Event("connection:do:send");
     }
 
+    private final Dispatcher dispatcher;
     private final IDManager manager;
     private final Stream stream;
 
     public EmiteBosh(final Dispatcher dispatcher, final Stream stream) {
-	super(dispatcher);
+	this.dispatcher = dispatcher;
 	this.stream = stream;
 	this.manager = new IDManager();
     }
 
-    @Override
+    public void addListener(final DispatcherStateListener listener) {
+	dispatcher.addListener(listener);
+    }
+
     public void attach() {
-	when(EmiteBosh.Events.send, new PacketListener() {
+	dispatcher.subscribe(new PacketMatcher(EmiteBosh.Events.send), new PacketListener() {
 	    public void handle(final IPacket received) {
 		final List<? extends IPacket> children = received.getChildren();
 		for (final IPacket child : children) {
@@ -60,19 +66,23 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 		}
 	    }
 	});
-	when(Matcher.ANYTHING, new PacketListener() {
+	dispatcher.subscribe(Matcher.ANYTHING, new PacketListener() {
 	    public void handle(final IPacket received) {
 		manager.handle(received);
 	    }
 	});
     }
 
-    public Dispatcher getDispatcher() {
-	return dispatcher;
+    public void onStartComponent() {
+	attach();
     }
 
-    public void publish(final Event event) {
-	dispatcher.publish(event);
+    public void onStopComponent() {
+
+    }
+
+    public void publish(final IPacket packet) {
+	dispatcher.publish(packet);
     }
 
     public void send(final IPacket packet) {
@@ -83,6 +93,10 @@ public class EmiteBosh extends DispatcherComponent implements Emite {
 	final String id = manager.register(category, packetListener);
 	packet.setAttribute("id", id);
 	send(packet);
+    }
+
+    public void subscribe(final Matcher matcher, final PacketListener packetListener) {
+	dispatcher.subscribe(matcher, packetListener);
     }
 
 }

@@ -94,13 +94,13 @@ public class SessionManager extends EmiteComponent {
     }
 
     public void doLogin(final XmppURI uri, final String password) {
-	dispatcher.publish(SessionManager.Events.logIn.Params("uri", uri.toString()).With("password", password));
-	dispatcher.publish(BoshManager.Events.start.Params("domain", uri.getHost()));
+	emite.publish(SessionManager.Events.logIn.Params("uri", uri.toString()).With("password", password));
+	emite.publish(BoshManager.Events.start.Params("domain", uri.getHost()));
     }
 
     public void doLogout() {
-	dispatcher.publish(BoshManager.Events.stop);
-	dispatcher.publish(SessionManager.Events.loggedOut);
+	emite.publish(BoshManager.Events.stop);
+	emite.publish(SessionManager.Events.loggedOut);
     }
 
     public void setSession(final Session session) {

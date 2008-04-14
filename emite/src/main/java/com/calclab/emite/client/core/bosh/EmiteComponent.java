@@ -21,14 +21,38 @@
  */
 package com.calclab.emite.client.core.bosh;
 
-import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
+import com.calclab.emite.client.components.Startable;
+import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
+import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
+import com.calclab.emite.client.core.packet.IPacket;
 
-public abstract class EmiteComponent extends DispatcherComponent {
-	protected final Emite emite;
+public abstract class EmiteComponent implements Startable {
+    protected final Emite emite;
 
-	public EmiteComponent(final Emite emite) {
-		super(emite.getDispatcher());
-		this.emite = emite;
-	}
+    public EmiteComponent(final Emite emite) {
+	this.emite = emite;
+    }
+
+    public abstract void attach();
+
+    public void onStartComponent() {
+	attach();
+    }
+
+    public void onStopComponent() {
+    }
+
+    public void when(final IPacket packet, final PacketListener packetListener) {
+	when(new PacketMatcher(packet), packetListener);
+    }
+
+    public void when(final Matcher matcher, final PacketListener packetListener) {
+	emite.subscribe(matcher, packetListener);
+    }
+
+    public void when(final String packetName, final PacketListener packetListener) {
+	when(new PacketMatcher(packetName), packetListener);
+    }
 
 }
