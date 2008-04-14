@@ -162,7 +162,7 @@ public class Presence extends BasicStanza {
 	if (priority == null) {
 	    priority = add("priority", null);
 	}
-	priority.setText(Integer.toString(value >= 0 ? value : 0));
+	priority.addText(Integer.toString(value >= 0 ? value : 0));
     }
 
     public void setShow(final Show value) {
@@ -170,7 +170,7 @@ public class Presence extends BasicStanza {
 	if (show == null) {
 	    show = add("show", null);
 	}
-	show.setText(value.toString());
+	show.addText(value.toString());
     }
 
     public void setStatus(final String statusMessage) {
@@ -178,7 +178,7 @@ public class Presence extends BasicStanza {
 	if (status == null) {
 	    status = add("status", null);
 	}
-	status.setText(statusMessage);
+	status.addText(statusMessage);
     }
 
     public Presence With(final Show value) {

@@ -9,6 +9,7 @@ import tigase.xml.Element;
 import com.calclab.emite.client.core.packet.DSLPacket;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.NoPacket;
+import com.calclab.emite.client.core.packet.TextUtils;
 
 public class TigasePacket extends DSLPacket {
     private final Element delegate;
@@ -69,7 +70,7 @@ public class TigasePacket extends DSLPacket {
     }
 
     public String getText() {
-	return delegate.getCData();
+	return TextUtils.unescape(delegate.getCData());
     }
 
     public void render(final StringBuffer buffer) {

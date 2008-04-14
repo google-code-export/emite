@@ -21,8 +21,8 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
-import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.Packet;
 
 public class Message extends BasicStanza {
     public static enum Type {
@@ -81,6 +81,6 @@ public class Message extends BasicStanza {
 	    node = new Packet("thread");
 	    this.addChild(node);
 	}
-	node.setText(thread);
+	node.addText(thread);
     }
 }

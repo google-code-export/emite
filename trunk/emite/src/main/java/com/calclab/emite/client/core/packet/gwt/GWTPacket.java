@@ -28,6 +28,7 @@ import java.util.Map;
 
 import com.calclab.emite.client.core.packet.DSLPacket;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.TextUtils;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -53,7 +54,8 @@ public class GWTPacket extends DSLPacket {
     }
 
     public void addText(final String text) {
-	element.appendChild(element.getOwnerDocument().createTextNode(text));
+	final String escaped = TextUtils.escape(text);
+	element.appendChild(element.getOwnerDocument().createTextNode(escaped));
     }
 
     public String getAttribute(final String name) {
@@ -106,24 +108,19 @@ public class GWTPacket extends DSLPacket {
 	for (int index = 0; index < childs.getLength(); index++) {
 	    item = childs.item(index);
 	    if (item.getNodeType() == Node.TEXT_NODE) {
-		return item.getNodeValue();
+		return TextUtils.unescape(item.getNodeValue());
 	    }
 	}
 	return null;
     }
 
-    // FIXME
+    // FIXME: probably doesn't work in IE
     public void render(final StringBuffer buffer) {
 	buffer.append(element.toString());
     }
 
     public void setAttribute(final String name, final String value) {
 	element.setAttribute(name, value);
-    }
-
-    // FIXME
-    public void setText(final String text) {
-	addText(text);
     }
 
     private List<IPacket> wrap(final NodeList nodes) {
