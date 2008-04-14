@@ -4,7 +4,6 @@ Known bugs in Emite
 For reports please use:
   http://code.google.com/p/emite/issues/list
 
-- Bosh is less buggy now
 
 - messages not escaped (try send: "zxc<xzxc")
 
@@ -29,8 +28,10 @@ For reports please use:
 
 - Room chat send, echo the same with the room URI (from/to issue)
 
-- Join a non existing room don't finish creation (see note [1] the PSI console output of a room creation to look how to do it):
-[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message type="groupchat" from="test3@rooms.localhost" to="admin@localhost/emite-ui1208163339899"><body>This room is locked from entry until configuration is confirmed.</body></message></body>
+** SOLVED***
+	- Join a non existing room don't finish creation (see note [1] the PSI console output of a room creation to look how to do it):
+	[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message type="groupchat" from="test3@rooms.localhost" to="admin@localhost/emite-ui1208163339899"><body>This room is locked from entry until configuration is confirmed.</body></message></body>
+
 
 - Join when a user with the same alias exists in the room, don't throw any error
 
@@ -80,8 +81,6 @@ POST http://localhost:8888/gwt/com.calclab.examplechat.Example/http-bind404 (675
 
 <presence from="newroomtest1@rooms.localhost/vjrj" to="vjrj@localhost/Psi" >
 <priority>5</priority>
-<c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html" />
-
 <x xmlns="http://jabber.org/protocol/muc#user">
 <item affiliation="owner" role="moderator" jid="vjrj@localhost/Psi" />
 <status code="201" />

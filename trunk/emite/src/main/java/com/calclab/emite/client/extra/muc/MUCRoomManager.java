@@ -35,6 +35,7 @@ import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 
 public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     private final HashMap<XmppURI, Room> rooms;
@@ -53,7 +54,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	});
 	when("presence", new PacketListener() {
 	    public void handle(final IPacket received) {
-		onPresenceReceived(new Presence(received));
+		eventPresence(new Presence(received));
 	    }
 	});
     }
@@ -121,7 +122,10 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	});
     }
 
-    void onPresenceReceived(final Presence presence) {
+    /**
+     * @see http://www.xmpp.org/extensions/xep-0045.html#createroom
+     */
+    void eventPresence(final Presence presence) {
 	final Room room = rooms.get(presence.getFromURI().getJID());
 	if (room != null) {
 	    final IPacket xtension = presence.getFirstChild("x");
@@ -129,8 +133,27 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 		final IPacket item = xtension.getFirstChild("item");
 		room.addUser(new RoomUser(presence.getFromURI(), item.getAttribute("affiliation"), item
 			.getAttribute("role")));
+		if (isNewRoom(xtension)) {
+		    createInstantRoom(room);
+		}
 	    }
 	}
+    }
+
+    private void createInstantRoom(final Room room) {
+	final IQ iq = new IQ(Type.set).From(userURI).To(room.getOtherURI()).WithQuery(
+		"http://jabber.org/protocol/muc#owner", new Packet("x", "jabber:x:data").With("type", "submit"));
+	emite.send("rooms", iq, new PacketListener() {
+	    public void handle(final IPacket received) {
+		if (!received.hasAttribute("type", "result")) {
+		    // TODO: error!
+		}
+	    }
+	});
+    }
+
+    private boolean isNewRoom(final IPacket xtension) {
+	return "201".equals(xtension.getFirstChild("status").getAttribute("code"));
     }
 
     // FIXME: (dani de dani) no entiendo bien...
