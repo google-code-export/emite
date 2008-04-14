@@ -1,6 +1,7 @@
 package com.calclab.emite.client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
 
 import java.util.HashMap;
@@ -57,9 +58,6 @@ public class TestMatchers {
 
 	    final List<? extends IPacket> expChildren = expected.getChildren();
 	    final List<? extends IPacket> actChildren = actual.getChildren();
-	    if (expChildren.size() != actChildren.size()) {
-		return false;
-	    }
 	    final int total = expChildren.size();
 	    for (int index = 0; index < total; index++) {
 		if (!areEquals(expChildren.get(index), actChildren.get(index))) {

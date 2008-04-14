@@ -68,6 +68,11 @@ public class IQ extends BasicStanza {
 	return this;
     }
 
+    public IQ To(final XmppURI toURI) {
+	setTo(toURI.toString());
+	return this;
+    }
+
     public IQ WithQuery(final String queryNamespace, final IPacket child) {
 	final IPacket query = add("query", queryNamespace);
 	if (child != null) {
