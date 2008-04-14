@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class RoomOccupantTests {
+public class RoomOccupantTest {
 
     @Test
     public void should() {

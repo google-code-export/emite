@@ -9,7 +9,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
-public class PresenceManagerTests {
+public class PresenceManagerTest {
 
     private PresenceManager manager;
     private PresenceListener presenceListener;

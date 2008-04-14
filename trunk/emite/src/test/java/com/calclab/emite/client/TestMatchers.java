@@ -45,6 +45,9 @@ public class TestMatchers {
 	}
 
 	private boolean areEquals(final IPacket expected, final IPacket actual) {
+	    if (actual == null) {
+		return false;
+	    }
 	    if (expected.getName().equals(actual.getName())) {
 		final HashMap<String, String> atts = expected.getAttributes();
 		for (final String name : atts.keySet()) {
@@ -59,8 +62,12 @@ public class TestMatchers {
 	    final List<? extends IPacket> expChildren = expected.getChildren();
 	    final List<? extends IPacket> actChildren = actual.getChildren();
 	    final int total = expChildren.size();
+	    final int max = actChildren.size();
+
 	    for (int index = 0; index < total; index++) {
-		if (!areEquals(expChildren.get(index), actChildren.get(index))) {
+		if (index == max) {
+		    return false;
+		} else if (!areEquals(expChildren.get(index), actChildren.get(index))) {
 		    return false;
 		}
 	    }

@@ -16,7 +16,7 @@ import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 
-public class RosterManagerTests {
+public class RosterManagerTest {
     private Emite emite;
     private RosterManager manager;
     private Roster roster;

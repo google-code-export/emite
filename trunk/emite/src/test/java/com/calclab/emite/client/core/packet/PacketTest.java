@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class PacketTests {
+public class PacketTest {
 
     @Test
     public void getChildrenNeverReturnsNull() {
