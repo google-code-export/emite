@@ -20,10 +20,7 @@ public class DispatcherTest {
 
     @Before
     public void aaCreate() {
-	dispatcher = new DispatcherDefault(new DispatcherMonitor() {
-	    public void publishing(final IPacket packet) {
-	    }
-	});
+	dispatcher = new DispatcherDefault();
     }
 
     @Test

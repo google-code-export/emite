@@ -21,9 +21,9 @@
  */
 package com.calclab.emite.client.core.bosh;
 
+import java.util.List;
+
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.core.dispatcher.DispatcherComponent;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
@@ -33,14 +33,12 @@ import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
 
-import java.util.List;
-
 /**
  * 
  * @author dani
  * 
  */
-public class BoshManager extends DispatcherComponent implements ConnectorCallback, DispatcherStateListener {
+public class BoshManager extends EmiteComponent implements ConnectorCallback, DispatcherStateListener {
 
     public static class Events {
 	public static final Event onError = new Event("connection:on:error");
@@ -52,19 +50,18 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	protected final static Event pull = new Event("connection:do:pull");
     }
 
-    private BoshState state;
-    private boolean isRunning;
-    private final Stream stream;
     private final String httpBase;
+    private boolean isRunning;
     private final Services services;
+    private BoshState state;
+    private final Stream stream;
 
-    public BoshManager(final Services services, final Dispatcher dispatcher, final Stream stream,
-	    final BoshOptions options) {
-	super(dispatcher);
+    public BoshManager(final Services services, final Emite emite, final Stream stream, final BoshOptions options) {
+	super(emite);
 	this.services = services;
 	this.stream = stream;
 	this.httpBase = options.getHttpBase();
-	dispatcher.addListener(this);
+	emite.addListener(this);
     }
 
     public void afterDispatching() {
@@ -111,7 +108,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 
 	when("stream:error", new PacketListener() {
 	    public void handle(final IPacket received) {
-		dispatcher.publish(BoshManager.Events.onError.Params("cause", "stream error").With(received));
+		emite.publish(BoshManager.Events.onError.Params("cause", "stream error").With(received));
 	    }
 	});
 
@@ -135,7 +132,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
      */
     public void onError(final Throwable throwable) {
 	state.responseRecevied();
-	dispatcher.publish(BoshManager.Events.onError);
+	emite.publish(BoshManager.Events.onError);
     }
 
     /**
@@ -147,7 +144,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	state.responseRecevied();
 
 	if (statusCode >= 400) {
-	    dispatcher.publish(BoshManager.Events.onError);
+	    emite.publish(BoshManager.Events.onError);
 	} else {
 	    final IPacket response = services.toXML(content);
 	    if (!isRunning) {
@@ -155,9 +152,9 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	    } else if (state.isTerminateSent()) {
 		isRunning = false;
 	    } else if ("body".equals(response.getName())) {
-		dispatcher.publish(response);
+		emite.publish(response);
 	    } else {
-		dispatcher.publish(BoshManager.Events.onError);
+		emite.publish(BoshManager.Events.onError);
 	    }
 	}
     }
@@ -170,12 +167,11 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	    state.setPoll(response.getAttributeAsInt("polling") * 1000 + 500);
 	}
 	if (response.hasAttribute("terminal")) {
-	    dispatcher.publish(new Event(BoshManager.Events.onError).Params("terminal", response
-		    .getAttribute("condition")));
+	    emite.publish(new Event(BoshManager.Events.onError).Params("terminal", response.getAttribute("condition")));
 	} else {
 	    final List<? extends IPacket> children = response.getChildren();
 	    for (final IPacket stanza : children) {
-		dispatcher.publish(stanza);
+		emite.publish(stanza);
 	    }
 	}
     }
@@ -206,7 +202,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
     private void pull(final int delay) {
 	services.schedule(delay, new ScheduledAction() {
 	    public void run() {
-		dispatcher.publish(Events.pull);
+		emite.publish(Events.pull);
 	    }
 	});
     }
@@ -216,7 +212,7 @@ public class BoshManager extends DispatcherComponent implements ConnectorCallbac
 	    services.send(httpBase, services.toString(stream.clearBody()), this);
 	    state.requestSentAt(services.getCurrentTime());
 	} catch (final ConnectorException e) {
-	    dispatcher.publish(BoshManager.Events.onError);
+	    emite.publish(BoshManager.Events.onError);
 	}
     }
 }

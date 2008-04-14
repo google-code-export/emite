@@ -47,10 +47,10 @@ public class DispatcherDefault implements Dispatcher {
 
     private boolean isCurrentlyDispatching;
     private final DispatcherStateListenerCollection listeners;
-    private final ArrayList<IPacket> queue;
-
-    private final HashMap<String, List<Subscriptor>> subscriptors;
     private final DispatcherMonitor monitor;
+
+    private final ArrayList<IPacket> queue;
+    private final HashMap<String, List<Subscriptor>> subscriptors;
 
     public DispatcherDefault() {
 	this(MONITOR_NULL);
@@ -67,10 +67,6 @@ public class DispatcherDefault implements Dispatcher {
 
     public void addListener(final DispatcherStateListener listener) {
 	listeners.add(listener);
-    }
-
-    public void install(final Dispatcher dispatcher) {
-
     }
 
     public void publish(final IPacket iPacket) {

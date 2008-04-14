@@ -23,13 +23,9 @@ package com.calclab.emite.client.core.bosh;
 
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 
-public interface Emite {
-    Dispatcher getDispatcher();
-
-    void publish(Event event);
+public interface Emite extends Dispatcher {
 
     void send(IPacket iPacket);
 
