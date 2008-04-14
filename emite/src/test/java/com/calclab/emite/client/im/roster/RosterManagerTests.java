@@ -1,7 +1,12 @@
 package com.calclab.emite.client.im.roster;
 
-import static org.mockito.Mockito.*;
-import static com.calclab.emite.client.TestMatchers.*;
+import static com.calclab.emite.client.TestMatchers.isListOfSize;
+import static com.calclab.emite.client.TestMatchers.isPacket;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,9 +17,9 @@ import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 
 public class RosterManagerTests {
+    private Emite emite;
     private RosterManager manager;
     private Roster roster;
-    private Emite emite;
 
     @Before
     public void aaCreate() {

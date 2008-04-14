@@ -19,10 +19,10 @@ import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.extra.muc.MUCPlugin;
+import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.extra.muc.RoomListener;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.extra.muc.RoomManagerListener;
-import com.calclab.emite.client.extra.muc.RoomUser;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
@@ -207,7 +207,10 @@ public class SwingClient {
 			roomPanel.showOutMessage(message.getBody());
 		    }
 
-		    public void onUserChanged(final Collection<RoomUser> users) {
+		    public void onOccupantModified(final Occupant occupant) {
+		    }
+
+		    public void onOccupantsChanged(final Collection<Occupant> users) {
 			roomPanel.setUsers(users);
 		    }
 		});

@@ -27,7 +27,7 @@ import java.util.Iterator;
 import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 
-import com.calclab.emite.client.extra.muc.RoomUser;
+import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.AbstractPresenter;
 import com.calclab.examplechat.client.chatuiplugin.EmiteUiPlugin;
@@ -77,11 +77,11 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
         subject = newSubject;
     }
 
-    public void setUsers(final Collection<RoomUser> users) {
+    public void setUsers(final Collection<Occupant> users) {
         roomUserListUI.removeAllUsers();
-        for (Iterator<RoomUser> iterator = users.iterator(); iterator.hasNext();) {
-            RoomUser roomUser = iterator.next();
-            XmppURI userUri = roomUser.getUri();
+        for (Iterator<Occupant> iterator = users.iterator(); iterator.hasNext();) {
+            Occupant occupant = iterator.next();
+            XmppURI userUri = occupant.getUri();
             // FIXME real user alias
             String userAlias = userUri.getNode();
             RoomUserUI roomUserUI = new RoomUserUI(new XmppJID(userUri), userAlias, super.getColor(userAlias),

@@ -1,5 +1,7 @@
 package com.calclab.emite.client.extra.muc;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -13,6 +15,9 @@ import com.calclab.emite.client.TestMatchers;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.extra.muc.Occupant.Affiliation;
+import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -64,5 +69,39 @@ public class MUCRoomManagerTests {
 	final Room room1 = manager.openChat(XmppURI.parse("room@domain/nick"));
 	final Room room2 = manager.openChat(XmppURI.parse("room@domain/nick"));
 	assertSame(room1, room2);
+    }
+
+    @Test
+    public void shouldUpdateRoomPresence() {
+	manager.setUserURI("user@domain/resource");
+	final Room room = manager.openChat(XmppURI.parse("room1@domain/nick"));
+
+	final IPacket presence = new Presence(null, "room1@domain/otherUser", "user@domain/resource").With(new Packet(
+		"x", "http://jabber.org/protocol/muc#user").With(new Packet("item").With("affiliation", "owner").With(
+		"role", "moderator")));
+	manager.eventPresence(new Presence(presence));
+	assertEquals(1, room.getOccupantsCount());
+	Occupant user = room.findOccupant(XmppURI.parse("room1@domain/otherUser"));
+	assertNotNull(user);
+	assertEquals(Affiliation.owner, user.getAffiliation());
+	assertEquals(Role.moderator, user.getRole());
+
+	final IPacket presence2 = new Presence(null, "room1@domain/otherUser", "user@domain/resource").With(new Packet(
+		"x", "http://jabber.org/protocol/muc#user").With(new Packet("item").With("affiliation", "member").With(
+		"role", "participant")));
+	manager.eventPresence(new Presence(presence2));
+	assertEquals(1, room.getOccupantsCount());
+	user = room.findOccupant(XmppURI.parse("room1@domain/otherUser"));
+	assertNotNull(user);
+	assertEquals(Affiliation.member, user.getAffiliation());
+	assertEquals(Role.participant, user.getRole());
+
+	final IPacket presence3 = new Presence(null, "room1@domain/otherUser", "user@domain/resource").With("type",
+		"unavailable").With(new Packet("status").WithText("custom message")).With(
+		new Packet("x", "http://jabber.org/protocol/muc#user").With(new Packet("item").With("affiliation",
+			"member").With("role", "none")));
+	manager.eventPresence(new Presence(presence3));
+	assertEquals(0, room.getOccupantsCount());
+
     }
 }

@@ -6,7 +6,7 @@ import java.util.Collection;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
-import com.calclab.emite.client.extra.muc.RoomUser;
+import com.calclab.emite.client.extra.muc.Occupant;
 
 @SuppressWarnings("serial")
 public class RoomPanel extends ChatPanel {
@@ -21,9 +21,9 @@ public class RoomPanel extends ChatPanel {
 	add(usersList, BorderLayout.EAST);
     }
 
-    public void setUsers(final Collection<RoomUser> users) {
+    public void setUsers(final Collection<Occupant> users) {
 	this.users.clear();
-	for (final RoomUser user : users) {
+	for (final Occupant user : users) {
 	    this.users.addElement(user);
 	}
     }

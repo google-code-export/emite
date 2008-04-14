@@ -22,6 +22,7 @@
 package com.calclab.emite.client.extra.muc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.Chat;
@@ -32,11 +33,11 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class Room implements Chat {
-    private final XmppURI roomURI;
-    private final String name;
-    private final ArrayList<RoomUser> users;
-    private final ArrayList<ChatListener> listeners;
     private final Emite emite;
+    private final ArrayList<ChatListener> listeners;
+    private final String name;
+    private final HashMap<XmppURI, Occupant> occupants;
+    private final XmppURI roomURI;
     private final XmppURI userURI;
 
     public Room(final XmppURI userURI, final XmppURI roomURI, final String name, final Emite emite) {
@@ -44,7 +45,7 @@ public class Room implements Chat {
 	this.roomURI = roomURI;
 	this.name = name;
 	this.emite = emite;
-	this.users = new ArrayList<RoomUser>();
+	this.occupants = new HashMap<XmppURI, Occupant>();
 	this.listeners = new ArrayList<ChatListener>();
     }
 
@@ -66,6 +67,10 @@ public class Room implements Chat {
 	emite.send(new Presence(Type.unavailable, userURI, roomURI));
     }
 
+    public Occupant findOccupant(final XmppURI uri) {
+	return occupants.get(uri);
+    }
+
     public String getID() {
 	return roomURI.toString();
     }
@@ -74,12 +79,23 @@ public class Room implements Chat {
 	return name;
     }
 
+    public Object getOccupantsCount() {
+	return occupants.size();
+    }
+
     public XmppURI getOtherURI() {
 	return roomURI;
     }
 
     public String getThread() {
 	return roomURI.getNode();
+    }
+
+    public void removeOccupant(final XmppURI uri) {
+	final Occupant occupant = occupants.remove(uri);
+	if (occupant != null) {
+	    fireOccupantsChanged();
+	}
     }
 
     public void send(final String text) {
@@ -91,14 +107,23 @@ public class Room implements Chat {
 	}
     }
 
+    public Occupant setOccupantPresence(final XmppURI uri, final String affiliation, final String role) {
+	Occupant occupant = findOccupant(uri);
+	if (occupant == null) {
+	    occupant = new Occupant(uri, affiliation, role);
+	    occupants.put(occupant.getUri(), occupant);
+	    fireOccupantsChanged();
+	} else {
+	    occupant.setAffiliation(affiliation);
+	    occupant.setRole(role);
+	    fireOccupantModified(occupant);
+	}
+	return occupant;
+    }
+
     @Override
     public String toString() {
 	return "ROOM: " + roomURI;
-    }
-
-    void addUser(final RoomUser roomUser) {
-	users.add(roomUser);
-	fireUserChanged();
     }
 
     void dispatch(final Message message) {
@@ -107,10 +132,19 @@ public class Room implements Chat {
 	}
     }
 
-    private void fireUserChanged() {
+    private void fireOccupantModified(final Occupant occupant) {
 	for (final ChatListener listener : listeners) {
 	    try {
-		((RoomListener) listener).onUserChanged(users);
+		((RoomListener) listener).onOccupantModified(occupant);
+	    } catch (final ClassCastException e) {
+	    }
+	}
+    }
+
+    private void fireOccupantsChanged() {
+	for (final ChatListener listener : listeners) {
+	    try {
+		((RoomListener) listener).onOccupantsChanged(occupants.values());
 	    } catch (final ClassCastException e) {
 	    }
 	}

@@ -98,7 +98,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     }
 
     protected void sendMUCSupportQuery() {
-	final IQ iq = new IQ(IQ.Type.get).From(userURI).To(userURI.getHost());
+	final IQ iq = new IQ(IQ.Type.get, userURI, userURI.getHost());
 	iq.setQuery("http://jabber.org/protocol/disco#info");
 	emite.send("disco", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
@@ -112,8 +112,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
      * @see http://www.xmpp.org/extensions/xep-0045.html#disco-rooms
      */
     protected void sendRoomsQuery() {
-	// FIXME: constructor típico
-	final IQ iq = new IQ(IQ.Type.get).From(userURI).To(userURI.getHost());
+	final IQ iq = new IQ(IQ.Type.get, userURI, userURI.getHost());
 	iq.setQuery("http://jabber.org/protocol/disco#items");
 	emite.send("rooms", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
@@ -126,22 +125,32 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
      * @see http://www.xmpp.org/extensions/xep-0045.html#createroom
      */
     void eventPresence(final Presence presence) {
-	final Room room = rooms.get(presence.getFromURI().getJID());
+	final XmppURI occupantURI = presence.getFromURI();
+	final Room room = rooms.get(occupantURI.getJID());
 	if (room != null) {
-	    final IPacket xtension = presence.getFirstChild("x");
-	    if (xtension != null && xtension.hasAttribute("xmlns", "http://jabber.org/protocol/muc#user")) {
-		final IPacket item = xtension.getFirstChild("item");
-		room.addUser(new RoomUser(presence.getFromURI(), item.getAttribute("affiliation"), item
-			.getAttribute("role")));
-		if (isNewRoom(xtension)) {
-		    createInstantRoom(room);
+
+	    if (presence.hasAttribute("type", "unavailable")) {
+		room.removeOccupant(occupantURI);
+	    } else {
+		final IPacket xtension = presence.getFirstChild("x");
+		if (xtension != null && xtension.hasAttribute("xmlns", "http://jabber.org/protocol/muc#user")) {
+
+		    final IPacket item = xtension.getFirstChild("item");
+		    final String affiliation = item.getAttribute("affiliation");
+		    final String role = item.getAttribute("role");
+
+		    room.setOccupantPresence(occupantURI, affiliation, role);
+
+		    if (isNewRoom(xtension)) {
+			createInstantRoom(room);
+		    }
 		}
 	    }
 	}
     }
 
     private void createInstantRoom(final Room room) {
-	final IQ iq = new IQ(Type.set).From(userURI).To(room.getOtherURI()).WithQuery(
+	final IQ iq = new IQ(Type.set, userURI, room.getOtherURI().toString()).WithQuery(
 		"http://jabber.org/protocol/muc#owner", new Packet("x", "jabber:x:data").With("type", "submit"));
 	emite.send("rooms", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
