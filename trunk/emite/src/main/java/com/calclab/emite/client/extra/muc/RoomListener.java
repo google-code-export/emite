@@ -26,5 +26,7 @@ import java.util.Collection;
 import com.calclab.emite.client.im.chat.ChatListener;
 
 public interface RoomListener extends ChatListener {
-    void onUserChanged(Collection<RoomUser> users);
+    void onOccupantModified(Occupant occupant);
+
+    void onOccupantsChanged(Collection<Occupant> occupants);
 }

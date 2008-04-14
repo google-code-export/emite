@@ -25,7 +25,7 @@ import java.util.Collection;
 
 import org.ourproject.kune.platf.client.View;
 
-import com.calclab.emite.client.extra.muc.RoomUser;
+import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
 
 public interface RoomUI extends ChatUI {
@@ -36,6 +36,6 @@ public interface RoomUI extends ChatUI {
 
     void setSubject(String newSubject);
 
-    void setUsers(Collection<RoomUser> users);
+    void setUsers(Collection<Occupant> users);
 
 }

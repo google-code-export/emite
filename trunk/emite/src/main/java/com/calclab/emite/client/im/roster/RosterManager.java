@@ -43,13 +43,11 @@ public class RosterManager extends EmiteComponent {
 	public static final Event ready = new Event("roster:on:ready");
     }
 
-    private int id;
     private final Roster roster;
 
     public RosterManager(final Emite emite, final Roster roster) {
 	super(emite);
 	this.roster = roster;
-	id = 1;
     }
 
     /**
@@ -88,7 +86,7 @@ public class RosterManager extends EmiteComponent {
 	    item.addChild(new Packet("group").WithText(group));
 	}
 
-	final IPacket iq = new IQ(nextID(), IQ.Type.set, null).WithQuery("jabber:iq:roster", item);
+	final IPacket iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", item);
 	emite.send("roster", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		final Presence presenceRequest = new Presence(Type.subscribe, null, XmppURI.parse(JID));
@@ -99,8 +97,8 @@ public class RosterManager extends EmiteComponent {
     }
 
     public void requestRemoveItem(final String JID) {
-	final IQ iq = new IQ(nextID(), IQ.Type.set, null).WithQuery("jabber:iq:roster", new Packet("item").With("jid",
-		JID).With("subscription", "remove"));
+	final IQ iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", new Packet("item").With("jid", JID).With(
+		"subscription", "remove"));
 	emite.send(iq);
     }
 
@@ -136,10 +134,6 @@ public class RosterManager extends EmiteComponent {
     private List<? extends IPacket> getItems(final IPacket iPacket) {
 	final List<? extends IPacket> items = iPacket.getFirstChild("query").getChildren();
 	return items;
-    }
-
-    private String nextID() {
-	return "roster_" + id++;
     }
 
     private void setRosterItems(final Roster roster, final IPacket received) {

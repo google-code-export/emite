@@ -34,23 +34,17 @@ public class IQ extends BasicStanza {
 	super(stanza);
     }
 
-    public IQ(final String id, final Type type, final String xmlns) {
-	super(NAME, xmlns);
-	if (id != null) {
-	    setId(id);
-	}
+    public IQ(final Type type) {
+	super(NAME, "jabber:client");
 	if (type != null) {
 	    setType(type.toString());
 	}
     }
 
-    public IQ(final Type type) {
-	this(null, type, "jabber:client");
-    }
-
-    public IQ From(final XmppURI from) {
+    public IQ(final Type type, final XmppURI from, final String to) {
+	this(type);
 	setFrom(from.toString());
-	return this;
+	setTo(to);
     }
 
     public IPacket Include(final String name, final String xmlns) {
@@ -60,12 +54,6 @@ public class IQ extends BasicStanza {
 
     public IPacket setQuery(final String namespace) {
 	return add("query", namespace);
-    }
-
-    @Override
-    public IQ To(final String to) {
-	setTo(to);
-	return this;
     }
 
     public IQ To(final XmppURI toURI) {

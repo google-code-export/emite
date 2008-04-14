@@ -32,13 +32,13 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class SessionManager extends EmiteComponent {
     public static class Events {
-	/** ATTIBUTES: uri, password */
-	public static final Event logIn = new Event("session:do:login");
+	public static final Event authorized = new Event("sasl:authorized");
+	public static final Event binded = new Event("resource:binded");
 	/** ATTRIBUTES: uri */
 	public static final Event loggedIn = new Event("session:on:login");
 	public static final Event loggedOut = new Event("session:on:logout");
-	public static final Event authorized = new Event("sasl:authorized");
-	public static final Event binded = new Event("resource:binded");
+	/** ATTIBUTES: uri, password */
+	public static final Event logIn = new Event("session:do:login");
     }
 
     private Session session;
@@ -78,14 +78,14 @@ public class SessionManager extends EmiteComponent {
 
 	when(Events.binded, new PacketListener() {
 	    public void handle(final IPacket received) {
-		final XmppURI ownURI = XmppURI.parse(received.getAttribute("uri"));
-		final IQ iq = new IQ(IQ.Type.set).From(ownURI).To(ownURI.getHost());
+		final XmppURI userURI = XmppURI.parse(received.getAttribute("uri"));
+		final IQ iq = new IQ(IQ.Type.set, userURI, userURI.getHost());
 		iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
 
 		emite.send("session", iq, new PacketListener() {
 		    public void handle(final IPacket received) {
 			session.setState(Session.State.connected);
-			emite.publish(SessionManager.Events.loggedIn.Params("uri", ownURI.toString()));
+			emite.publish(SessionManager.Events.loggedIn.Params("uri", userURI.toString()));
 		    }
 		});
 	    }

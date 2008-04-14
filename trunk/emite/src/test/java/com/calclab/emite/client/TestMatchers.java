@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,7 +12,6 @@ import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
@@ -19,20 +19,20 @@ import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 @SuppressWarnings("unchecked")
 public class TestMatchers {
 
-    public static class IsListOfTwoElements<T> extends ArgumentMatcher<List<T>> {
+    private static class IsCollectionOfSize<T> extends ArgumentMatcher<T> {
 	private final int size;
 
-	public IsListOfTwoElements(final int size) {
+	public IsCollectionOfSize(final int size) {
 	    this.size = size;
 	}
 
 	@Override
 	public boolean matches(final Object list) {
-	    return ((List) list).size() == size;
+	    return ((Collection) list).size() == size;
 	}
     }
 
-    public static class IsPacketLike extends ArgumentMatcher<IPacket> {
+    private static class IsPacketLike extends ArgumentMatcher<IPacket> {
 	private final IPacket original;
 
 	public IsPacketLike(final IPacket expected) {
@@ -69,8 +69,12 @@ public class TestMatchers {
 
     }
 
-    public static List<RosterItem> isListOfSize(final int size) {
-	return argThat(new IsListOfTwoElements<RosterItem>(size));
+    public static Collection isCollectionOfSize(final int size) {
+	return argThat(new IsCollectionOfSize<Collection>(size));
+    }
+
+    public static List isListOfSize(final int size) {
+	return argThat(new IsCollectionOfSize<List>(size));
     }
 
     public static IPacket isPacket(final IPacket packet) {
