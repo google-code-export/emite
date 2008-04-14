@@ -5,7 +5,7 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
-public class XmppUriTests {
+public class XmppUriTest {
 
     @Test
     public void checkEqualsContract() {

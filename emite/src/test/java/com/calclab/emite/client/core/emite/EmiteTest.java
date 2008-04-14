@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import com.calclab.emite.client.core.bosh.BoshStream;
 import com.calclab.emite.client.core.packet.Packet;
 
-public class EmiteTests {
+public class EmiteTest {
     private BoshStream stream;
 
     @Before

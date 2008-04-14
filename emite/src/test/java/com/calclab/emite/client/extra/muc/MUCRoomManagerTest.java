@@ -24,7 +24,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 
-public class MUCRoomManagerTests {
+public class MUCRoomManagerTest {
 
     private Emite emite;
     private RoomManagerListener listener;

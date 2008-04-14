@@ -12,7 +12,7 @@ import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ServicesPlugin;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class BoshManagerTests {
+public class BoshManagerTest {
 
     private MockedServer server;
     private Xmpp xmpp;

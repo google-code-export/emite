@@ -17,7 +17,7 @@ import com.calclab.emite.client.TestMatchers;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class RoomTests {
+public class RoomTest {
 
     private RoomListener listener;
     private Room room;

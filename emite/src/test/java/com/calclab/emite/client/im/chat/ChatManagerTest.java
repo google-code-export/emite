@@ -10,7 +10,7 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class ChatManagerTests {
+public class ChatManagerTest {
 
     private static final String MYSELF = "self@domain";
     private ChatManagerDefault chatManagerDefault;

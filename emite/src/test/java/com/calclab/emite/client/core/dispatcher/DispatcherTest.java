@@ -11,10 +11,10 @@ import org.mockito.Mockito;
 
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
-import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.Packet;
 
-public class DispatcherTests {
+public class DispatcherTest {
 
     private Dispatcher dispatcher;
 
