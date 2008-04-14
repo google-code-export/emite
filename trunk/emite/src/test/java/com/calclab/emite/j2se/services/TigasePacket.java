@@ -8,6 +8,7 @@ import tigase.xml.Element;
 
 import com.calclab.emite.client.core.packet.DSLPacket;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.NoPacket;
 
 public class TigasePacket extends DSLPacket {
     private final Element delegate;
@@ -55,7 +56,7 @@ public class TigasePacket extends DSLPacket {
 
     public IPacket getFirstChild(final String childName) {
 	final Element child = delegate.getChild(childName);
-	return child != null ? new TigasePacket(child) : null;
+	return child != null ? new TigasePacket(child) : NoPacket.INSTANCE;
     }
 
     public String getName() {

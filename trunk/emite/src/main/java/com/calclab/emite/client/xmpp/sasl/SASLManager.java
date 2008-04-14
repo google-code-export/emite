@@ -24,17 +24,13 @@ package com.calclab.emite.client.xmpp.sasl;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.session.SessionManager;
+import com.calclab.emite.client.xmpp.session.SessionManager.Events;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class SASLManager extends EmiteComponent {
-    public static class Events {
-	public static final Event authorized = new Event("sasl:authorized");
-    }
-
     private static final String SEP = new String(new char[] { 0 });
 
     private static final String XMLNS = "urn:ietf:params:xml:ns:xmpp-sasl";
