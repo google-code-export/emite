@@ -31,6 +31,7 @@ import java.util.List;
  * 
  */
 public interface IPacket {
+
     /**
      * 
      * 
@@ -67,7 +68,7 @@ public interface IPacket {
      * 
      * @param name
      */
-    List<IPacket> getChildren(String name);
+    List<? extends IPacket> getChildren(String name);
 
     IPacket getFirstChild(String childName);
 

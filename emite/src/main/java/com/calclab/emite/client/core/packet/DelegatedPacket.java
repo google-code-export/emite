@@ -25,75 +25,75 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DelegatedPacket extends DSLPacket {
-	private final IPacket delegate;
+    private final IPacket delegate;
 
-	public DelegatedPacket(final IPacket delegate) {
-		this.delegate = delegate;
-	}
+    public DelegatedPacket(final IPacket delegate) {
+	this.delegate = delegate;
+    }
 
-	public final IPacket add(final String nodeName, final String xmlns) {
-		return delegate.add(nodeName, xmlns);
-	}
+    public final IPacket add(final String nodeName, final String xmlns) {
+	return delegate.add(nodeName, xmlns);
+    }
 
-	public void addChild(final IPacket child) {
-		delegate.addChild(child);
-	}
+    public void addChild(final IPacket child) {
+	delegate.addChild(child);
+    }
 
-	public final void addText(final String text) {
-		delegate.addText(text);
-	}
+    public final void addText(final String text) {
+	delegate.addText(text);
+    }
 
-	public final String getAttribute(final String name) {
-		return delegate.getAttribute(name);
-	}
+    public final String getAttribute(final String name) {
+	return delegate.getAttribute(name);
+    }
 
-	public HashMap<String, String> getAttributes() {
-		return delegate.getAttributes();
-	}
+    public HashMap<String, String> getAttributes() {
+	return delegate.getAttributes();
+    }
 
-	public List<? extends IPacket> getChildren() {
-		return delegate.getChildren();
-	}
+    public List<? extends IPacket> getChildren() {
+	return delegate.getChildren();
+    }
 
-	public List<IPacket> getChildren(final String name) {
-		return delegate.getChildren(name);
-	}
+    public List<? extends IPacket> getChildren(final String name) {
+	return delegate.getChildren(name);
+    }
 
-	public int getChildrenCount() {
-		return delegate.getChildrenCount();
-	}
+    public int getChildrenCount() {
+	return delegate.getChildrenCount();
+    }
 
-	public final IPacket getFirstChild(final String childName) {
-		return delegate.getFirstChild(childName);
-	}
+    public final IPacket getFirstChild(final String childName) {
+	return delegate.getFirstChild(childName);
+    }
 
-	public final String getName() {
-		return delegate.getName();
-	}
+    public final String getName() {
+	return delegate.getName();
+    }
 
-	public IPacket getParent() {
-		return delegate.getParent();
-	}
+    public IPacket getParent() {
+	return delegate.getParent();
+    }
 
-	public final String getText() {
-		return delegate.getText();
-	}
+    public final String getText() {
+	return delegate.getText();
+    }
 
-	public void render(final StringBuffer buffer) {
-		delegate.render(buffer);
-	}
+    public void render(final StringBuffer buffer) {
+	delegate.render(buffer);
+    }
 
-	public final void setAttribute(final String name, final String value) {
-		delegate.setAttribute(name, value);
-	}
+    public final void setAttribute(final String name, final String value) {
+	delegate.setAttribute(name, value);
+    }
 
-	public void setText(final String text) {
-		delegate.setText(text);
-	}
+    public void setText(final String text) {
+	delegate.setText(text);
+    }
 
-	@Override
-	public String toString() {
-		return delegate.toString();
-	}
+    @Override
+    public String toString() {
+	return delegate.toString();
+    }
 
 }

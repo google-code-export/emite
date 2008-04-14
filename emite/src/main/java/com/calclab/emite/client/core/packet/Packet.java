@@ -26,134 +26,134 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Packet extends DSLPacket {
-	private final HashMap<String, String> attributes;
-	private final ArrayList<IPacket> children;
-	private final String name;
-	private Packet parent;
+    private final HashMap<String, String> attributes;
+    private final ArrayList<IPacket> children;
+    private final String name;
+    private Packet parent;
 
-	public Packet(final String name) {
-		this(name, null);
+    public Packet(final String name) {
+	this(name, null);
+    }
+
+    public Packet(final String name, final String xmlns) {
+	this.name = name;
+	this.attributes = new HashMap<String, String>();
+	this.children = new ArrayList<IPacket>();
+	if (xmlns != null) {
+	    setAttribute("xmlns", xmlns);
 	}
+	parent = null;
+    }
 
-	public Packet(final String name, final String xmlns) {
-		this.name = name;
-		this.attributes = new HashMap<String, String>();
-		this.children = new ArrayList<IPacket>();
-		if (xmlns != null) {
-			setAttribute("xmlns", xmlns);
-		}
-		parent = null;
+    public IPacket add(final String name, final String xmlns) {
+	final Packet child = new Packet(name, xmlns);
+	child.parent = this;
+	add(child);
+	return child;
+    }
+
+    public void addChild(final IPacket child) {
+	children.add(child);
+    }
+
+    // TODO: de momento funciona como add
+    public void addText(final String value) {
+	children.add(new TextPacket(value));
+    }
+
+    public String getAttribute(final String name) {
+	return attributes.get(name);
+    }
+
+    /**
+     * WARNING: broken encapsulation
+     */
+    public HashMap<String, String> getAttributes() {
+	return attributes;
+    }
+
+    public List<? extends IPacket> getChildren() {
+	return children;
+    }
+
+    public List<IPacket> getChildren(final String name) {
+	final List<IPacket> selected = new ArrayList<IPacket>();
+	for (final IPacket child : children) {
+	    if (name.equals(child.getName())) {
+		selected.add(child);
+	    }
 	}
+	return selected;
+    }
 
-	public IPacket add(final String name, final String xmlns) {
-		final Packet child = new Packet(name, xmlns);
-		child.parent = this;
-		add(child);
+    public int getChildrenCount() {
+	return children.size();
+    }
+
+    public IPacket getFirstChild(final String childName) {
+	for (final IPacket child : children) {
+	    if (childName.equals(child.getName())) {
 		return child;
+	    }
 	}
+	return NoPacket.INSTANCE;
+    }
 
-	public void addChild(final IPacket child) {
-		children.add(child);
+    public String getName() {
+	return name;
+    }
+
+    public IPacket getParent() {
+	return parent;
+    }
+
+    /**
+     * si tiene un hijo de texto, lo devuelve
+     */
+    public String getText() {
+	for (final IPacket child : children) {
+	    if (child.getName() == null) {
+		return child.toString();
+	    }
 	}
+	return null;
+    }
 
-	// TODO: de momento funciona como add
-	public void addText(final String value) {
-		children.add(new TextPacket(value));
+    public void render(final StringBuffer buffer) {
+	buffer.append("<").append(name);
+
+	for (final String key : attributes.keySet()) {
+	    buffer.append(" ").append(key).append("=\"");
+	    buffer.append(attributes.get(key)).append("\"");
 	}
-
-	public String getAttribute(final String name) {
-		return attributes.get(name);
+	if (children.size() > 0) {
+	    buffer.append(">");
+	    for (final IPacket child : children) {
+		child.render(buffer);
+	    }
+	    buffer.append("</").append(name).append(">");
+	} else {
+	    buffer.append(" />");
 	}
+    }
 
-	/**
-	 * WARNING: broken encapsulation
-	 */
-	public HashMap<String, String> getAttributes() {
-		return attributes;
-	}
+    public void setAttribute(final String name, final String value) {
+	attributes.put(name, value);
+    }
 
-	public List<? extends IPacket> getChildren() {
-		return children;
-	}
+    // FIXME
+    public void setText(final String text) {
+	addText(text);
+    }
 
-	public List<IPacket> getChildren(final String name) {
-		final List<IPacket> selected = new ArrayList<IPacket>();
-		for (final IPacket child : children) {
-			if (name.equals(child.getName())) {
-				selected.add(child);
-			}
-		}
-		return selected;
-	}
+    @Override
+    public String toString() {
+	final StringBuffer buffer = new StringBuffer();
+	render(buffer);
+	return buffer.toString();
+    }
 
-	public int getChildrenCount() {
-		return children.size();
-	}
-
-	public IPacket getFirstChild(final String childName) {
-		for (final IPacket child : children) {
-			if (childName.equals(child.getName())) {
-				return child;
-			}
-		}
-		return null;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public IPacket getParent() {
-		return parent;
-	}
-
-	/**
-	 * si tiene un hijo de texto, lo devuelve
-	 */
-	public String getText() {
-		for (final IPacket child : children) {
-			if (child.getName() == null) {
-				return child.toString();
-			}
-		}
-		return null;
-	}
-
-	public void render(final StringBuffer buffer) {
-		buffer.append("<").append(name);
-
-		for (final String key : attributes.keySet()) {
-			buffer.append(" ").append(key).append("=\"");
-			buffer.append(attributes.get(key)).append("\"");
-		}
-		if (children.size() > 0) {
-			buffer.append(">");
-			for (final IPacket child : children) {
-				child.render(buffer);
-			}
-			buffer.append("</").append(name).append(">");
-		} else {
-			buffer.append(" />");
-		}
-	}
-
-	public void setAttribute(final String name, final String value) {
-		attributes.put(name, value);
-	}
-
-	// FIXME
-	public void setText(final String text) {
-		addText(text);
-	}
-
-	@Override
-	public String toString() {
-		final StringBuffer buffer = new StringBuffer();
-		render(buffer);
-		return buffer.toString();
-	}
-
-	protected void add(final Packet node) {
-		children.add(node);
-	}
+    protected void add(final Packet node) {
+	children.add(node);
+    }
 }

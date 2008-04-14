@@ -27,8 +27,6 @@ import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
-import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
@@ -39,6 +37,8 @@ public class SessionManager extends EmiteComponent {
 	/** ATTRIBUTES: uri */
 	public static final Event loggedIn = new Event("session:on:login");
 	public static final Event loggedOut = new Event("session:on:logout");
+	public static final Event authorized = new Event("sasl:authorized");
+	public static final Event binded = new Event("resource:binded");
     }
 
     private Session session;
@@ -50,13 +50,13 @@ public class SessionManager extends EmiteComponent {
     @Override
     public void attach() {
 
-	when(SASLManager.Events.authorized, new PacketListener() {
+	when(Events.authorized, new PacketListener() {
 	    public void handle(final IPacket received) {
 		emite.publish(BoshManager.Events.restart);
 	    }
 	});
 
-	when(SASLManager.Events.authorized, new PacketListener() {
+	when(Events.authorized, new PacketListener() {
 	    public void handle(final IPacket received) {
 		session.setState(Session.State.authorized);
 	    }
@@ -76,7 +76,7 @@ public class SessionManager extends EmiteComponent {
 	    }
 	});
 
-	when(ResourceBindingManager.Events.binded, new PacketListener() {
+	when(Events.binded, new PacketListener() {
 	    public void handle(final IPacket received) {
 		final XmppURI ownURI = XmppURI.parse(received.getAttribute("uri"));
 		final IQ iq = new IQ(IQ.Type.set).From(ownURI).To(ownURI.getHost());

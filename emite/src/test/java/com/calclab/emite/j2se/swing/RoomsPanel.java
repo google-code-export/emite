@@ -8,9 +8,9 @@ import java.util.Collection;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.calclab.emite.client.extra.muc.Room;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -34,6 +34,8 @@ public class RoomsPanel extends JPanel {
 	}
     }
 
+    private final JTextField fieldRoom;
+
     private final JList list;
 
     private final DefaultListModel listModel;
@@ -44,7 +46,7 @@ public class RoomsPanel extends JPanel {
 	final JButton btnEnter = new JButton("enter room");
 	btnEnter.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		listener.onRoomEnterd("testroom1");
+		listener.onRoomEnterd(fieldRoom.getText());
 	    }
 	});
 	listModel = new DefaultListModel();
@@ -52,7 +54,9 @@ public class RoomsPanel extends JPanel {
 	add(list, BorderLayout.CENTER);
 
 	final JPanel buttons = new JPanel(new GridLayout(2, 1));
-	buttons.add(new JLabel());
+	fieldRoom = new JTextField();
+	fieldRoom.setText("testroom1@conference.localhost/nick");
+	buttons.add(fieldRoom);
 	buttons.add(btnEnter);
 	add(buttons, BorderLayout.SOUTH);
     }
