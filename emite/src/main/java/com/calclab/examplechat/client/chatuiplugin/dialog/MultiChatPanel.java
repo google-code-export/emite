@@ -40,6 +40,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.RegionPosition;
+import com.gwtext.client.widgets.BoxComponent;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Container;
@@ -50,6 +51,7 @@ import com.gwtext.client.widgets.Toolbar;
 import com.gwtext.client.widgets.ToolbarButton;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
+import com.gwtext.client.widgets.event.ContainerListenerAdapter;
 import com.gwtext.client.widgets.event.KeyListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.form.FormPanel;
@@ -79,6 +81,9 @@ public class MultiChatPanel implements MultiChatView {
     private MultiChatPanelTopBar topToolbar;
     private MultiChatPanelInfoTab infoPanel;
     private Panel roomUsersPanel;
+    private Panel southPanel;
+    private FormPanel inputForm;
+    private FormPanel subjectForm;
 
     public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
@@ -92,6 +97,7 @@ public class MultiChatPanel implements MultiChatView {
         Panel chatPanel = (Panel) chat.getView();
         centerPanel.activate(chatPanel.getId());
         centerPanel.scrollToTab(chatPanel, true);
+        focusInput();
     }
 
     public void addChat(final ChatUI chat) {
@@ -100,8 +106,6 @@ public class MultiChatPanel implements MultiChatView {
         String panelId = chatPanel.getId();
         panelIdToChat.put(panelId, chat);
         activateChat(chat);
-        input.focus();
-        input.getEl().frame();
     }
 
     public void attachRoomUserList(final View userListView) {
@@ -293,7 +297,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private Panel createInputPanel() {
-        final FormPanel inputForm = createGenericInputForm();
+        inputForm = createGenericInputForm();
         input = new TextArea();
         // As height 100% doesn't works
         input.setHeight(47);
@@ -347,7 +351,7 @@ public class MultiChatPanel implements MultiChatView {
         BorderLayoutData northData = new BorderLayoutData(RegionPosition.NORTH);
         dialog.add(northPanel, northData);
 
-        Panel southPanel = new Panel();
+        southPanel = new Panel();
         southPanel.setHeight(75);
         southPanel.add(createInputPanel());
         southPanel.setBorder(false);
@@ -386,9 +390,26 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private void createListeners() {
+        dialog.addListener(new ContainerListenerAdapter() {
+            public void onResize(final BoxComponent component, final int adjWidth, final int adjHeight,
+                    final int rawWidth, final int rawHeight) {
+                int newWidth = adjWidth - 14;
+                input.setWidth(newWidth);
+                subject.setWidth(newWidth);
+                inputForm.setWidth(newWidth);
+                subjectForm.setWidth(newWidth);
+            }
+        });
+
+        southPanel.addListener(new ContainerListenerAdapter() {
+            public void onResize(final BoxComponent component, final int adjWidth, final int adjHeight,
+                    final int rawWidth, final int rawHeight) {
+                input.setHeight(adjHeight - 28);
+                inputForm.setHeight(adjHeight);
+            }
+        });
 
         centerPanel.addListener(new PanelListenerAdapter() {
-
             public boolean doBeforeRemove(final Container self, final Component component) {
                 final String panelId = component.getId();
                 final ChatUI chatUI = panelIdToChat.get(panelId);
@@ -423,7 +444,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private Panel createSubjectPanel() {
-        FormPanel subjectForm = createGenericInputForm();
+        subjectForm = createGenericInputForm();
 
         subject = new TextArea();
         subject.setTitle(i18n.t("Subject of the room"));
@@ -480,6 +501,11 @@ public class MultiChatPanel implements MultiChatView {
         presenter.onCurrentUserSend(getInputText());
         e.stopEvent();
         input.focus();
+    }
+
+    private void focusInput() {
+        input.focus();
+        input.getEl().frame();
     }
 
     private void reset() {
