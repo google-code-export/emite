@@ -35,6 +35,23 @@ public class StatusUtil {
 
     private static final ChatIcons icons = ChatIcons.App.getInstance();
 
+    public static AbstractImagePrototype getStatusIcon(final OwnStatus ownStatus) {
+        ChatIcons icons = ChatIcons.App.getInstance();
+        switch (ownStatus) {
+        case online:
+        case onlinecustom:
+            return icons.online();
+        case busy:
+        case busycustom:
+            return icons.busy();
+        case offline:
+            return icons.offline();
+        default:
+            Log.error("Code error in OwnPresence getStatusIcon");
+            return icons.offline();
+        }
+    }
+
     public static AbstractImagePrototype getStatusIcon(final Subscription subscription, final Presence presence) {
         Type statusType;
         if (presence == null) {
@@ -95,30 +112,17 @@ public class StatusUtil {
                 return icons.online();
             }
         case from:
-            return icons.notAuthorized();
+            return icons.question();
         case none:
-            return icons.notAuthorized();
+            return icons.question();
         default:
             Log.error("Programatic error, subscription: " + subscription);
             return icons.question();
         }
     }
 
-    public static AbstractImagePrototype getStatusIcon(final OwnStatus ownStatus) {
-        ChatIcons icons = ChatIcons.App.getInstance();
-        switch (ownStatus) {
-        case online:
-        case onlinecustom:
-            return icons.online();
-        case busy:
-        case busycustom:
-            return icons.busy();
-        case offline:
-            return icons.offline();
-        default:
-            Log.error("Code error in OwnPresence getStatusIcon");
-            return icons.offline();
-        }
+    public static String getStatusIconAndText(final I18nTranslationService i18n, final OwnStatus ownStatus) {
+        return getStatusIcon(ownStatus).getHTML() + "&nbsp;" + getStatusText(i18n, ownStatus);
     }
 
     public static String getStatusText(final I18nTranslationService i18n, final OwnStatus ownStatus) {
@@ -145,10 +149,6 @@ public class StatusUtil {
             return null;
         }
         return textLabel;
-    }
-
-    public static String getStatusIconAndText(final I18nTranslationService i18n, final OwnStatus ownStatus) {
-        return getStatusIcon(ownStatus).getHTML() + "&nbsp;" + getStatusText(i18n, ownStatus);
     }
 
 }

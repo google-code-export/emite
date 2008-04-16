@@ -22,10 +22,6 @@ For reports please use:
 
 - [ui] Start a already opened chat dont' bring focus to the chat tab
 
-- [ui] Chat/Room activation, don't give the focus to input
-
-- [ui] input and room subject don't resize correctly
-
 - Room chat send, echo the same with the room URI (from/to issue)
 
 ** SOLVED***

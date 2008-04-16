@@ -163,7 +163,7 @@ public class UserGridPanel extends Panel {
         };
         final ColumnConfig[] columnsConfigs = new ColumnConfig[] {
                 new ColumnConfig("Image", IMG, 24, false, iconRender, IMG),
-                new ColumnConfig("Alias", ALIAS, 120, true, userAliasRender, ALIAS) };
+                new ColumnConfig("Alias", ALIAS, 105, true, userAliasRender, ALIAS) };
         final ColumnModel columnModel = new ColumnModel(columnsConfigs);
         grid.setColumnModel(columnModel);
 
@@ -199,7 +199,7 @@ public class UserGridPanel extends Panel {
         grid.setView(view);
         grid.setHideColumnHeader(true);
         grid.setBorder(false);
-        grid.setAutoHeight(true);
+        // grid.setAutoHeight(true);
         grid.setAutoScroll(true);
         // countriesGrid.setEnableDragDrop(true);
         // countriesGrid.setDdGroup("myDDGroup");
