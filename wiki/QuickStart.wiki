@@ -54,7 +54,7 @@ to run the proxy
 == Run the example ==
 
 Point the browser to:
-http://localhost:8888/gwt/com.calclab.examplechat.Example/ChatExample.html
+http://localhost:8888/gwt/com.calclab.emiteui.EmiteUI/EmiteUI.html
 
 = Appendix =
 
