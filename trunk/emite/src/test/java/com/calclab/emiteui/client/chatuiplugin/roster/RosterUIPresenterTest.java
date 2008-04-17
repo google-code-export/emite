@@ -12,11 +12,11 @@ import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteui.client.MockitoXmpp;
-import com.calclab.emiteui.client.chatuiplugin.ChatDialogFactory;
-import com.calclab.emiteui.client.chatuiplugin.roster.RosterUI;
-import com.calclab.emiteui.client.chatuiplugin.roster.RosterUIView;
-import com.calclab.emiteui.client.chatuiplugin.users.ChatUserUI;
-import com.calclab.emiteui.client.chatuiplugin.utils.XmppJID;
+import com.calclab.emiteui.client.emiteuiplugin.ChatDialogFactory;
+import com.calclab.emiteui.client.emiteuiplugin.roster.RosterUI;
+import com.calclab.emiteui.client.emiteuiplugin.roster.RosterUIView;
+import com.calclab.emiteui.client.emiteuiplugin.users.ChatUserUI;
+import com.calclab.emiteui.client.emiteuiplugin.utils.XmppJID;
 
 public class RosterUIPresenterTest {
 
