@@ -32,8 +32,8 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class SessionManager extends EmiteComponent {
     public static class Events {
-	public static final Event authorized = new Event("sasl:authorized");
-	public static final Event binded = new Event("resource:binded");
+	public static final Event authorized = new Event("session:on:authorized");
+	public static final Event binded = new Event("session:on:binded");
 	/** ATTRIBUTES: uri */
 	public static final Event loggedIn = new Event("session:on:login");
 	public static final Event loggedOut = new Event("session:on:logout");

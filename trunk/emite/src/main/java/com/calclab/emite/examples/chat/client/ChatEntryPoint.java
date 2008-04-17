@@ -18,6 +18,8 @@ import com.calclab.emite.examples.chat.client.ChatPanel.ChatPanelListener;
 import com.calclab.emite.examples.chat.client.ConversationsPanel.ConversationsListener;
 import com.calclab.emite.examples.chat.client.LoginPanel.LoginPanelListener;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -30,6 +32,19 @@ public class ChatEntryPoint implements EntryPoint {
     private Xmpp xmpp;
 
     public void onModuleLoad() {
+
+	Window.addWindowCloseListener(new WindowCloseListener() {
+	    public void onWindowClosed() {
+		if (xmpp != null) {
+		    xmpp.stop();
+		}
+	    }
+
+	    public String onWindowClosing() {
+		return null;
+	    }
+	});
+
 	chats = new HashMap<XmppURI, ChatPanel>();
 
 	conversationsPanel = new ConversationsPanel(new ConversationsListener() {
@@ -102,7 +117,7 @@ public class ChatEntryPoint implements EntryPoint {
 
 	    public void onChatClosed(final Chat chat) {
 		final ChatPanel panel = chats.remove(chat.getOtherURI());
-		conversationsPanel.removeChat(panel);
+		conversationsPanel.removeChat(chat.getOtherURI().toString(), panel);
 	    }
 
 	    public void onChatCreated(final Chat chat) {

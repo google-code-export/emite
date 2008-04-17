@@ -1,8 +1,10 @@
 package com.calclab.emite.examples.chat.client;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import com.calclab.emite.client.im.roster.RosterItem;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -26,10 +28,12 @@ public class ConversationsPanel extends DockPanel {
 
     private Button btnChat;
     private final TabPanel conversations;
+    private final ArrayList<String> jids;
     private ListBox roster;
     private final Label status;
 
     public ConversationsPanel(final ConversationsListener listener) {
+	jids = new ArrayList<String>();
 	addStyleName("chatexample-conversations");
 	conversations = new TabPanel();
 	add(conversations, DockPanel.CENTER);
@@ -50,6 +54,7 @@ public class ConversationsPanel extends DockPanel {
     }
 
     public void addChat(final String jid, final ChatPanel chatPanel) {
+	jids.add(jid);
 	conversations.add(chatPanel, jid);
     }
 
@@ -57,7 +62,8 @@ public class ConversationsPanel extends DockPanel {
 	roster.clear();
     }
 
-    public void removeChat(final ChatPanel panel) {
+    public void removeChat(final String jid, final ChatPanel panel) {
+	jids.remove(jid);
 	conversations.remove(panel);
     }
 
@@ -73,7 +79,9 @@ public class ConversationsPanel extends DockPanel {
     }
 
     public void show(final String jid, final ChatPanel chatPanel) {
-
+	final int index = jids.indexOf(jid);
+	GWT.log("Select tab: " + index, null);
+	conversations.selectTab(index);
     }
 
     private void createRoster(final ConversationsListener listener) {
