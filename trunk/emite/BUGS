@@ -37,6 +37,13 @@ ERROR: gwt-log failed to initialize valid server-side logging implementation
 
 - Join room enabled when not logged
 
+- Unable to parse null:
+
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns="http://jabber.org/protocol/httpbind" condition="remote-connection-failed" type="terminate"/> [DEBUG] 3B0DB0517C2E0DA06... (line 144)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@13B0DB0517C2E0DA06... (line 144)
+[FATAL] Uncaught Exception: java.lang.NumberFormatException: Unable to parse null
+
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 - Other:
 [DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message from="localhost" to="admin@localhost"><body>A server or plugin update was found: Openfire 3.5.0</body></message></body>

@@ -27,7 +27,7 @@ to run the proxy
 
 Point the browser to:
 
-  http://localhost:8888/gwt/com.calclab.emiteui.EmiteUI/EmiteUI.html
+  http://localhost:4444/gwt/com.calclab.emiteui.EmiteUI/EmiteUI.html
 
 Appendix A: Configuration of maven
 --------------------------------------------------------------------------------
