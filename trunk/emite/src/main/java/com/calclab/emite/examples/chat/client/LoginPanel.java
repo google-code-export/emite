@@ -22,7 +22,7 @@ public class LoginPanel extends VerticalPanel {
 
     public LoginPanel(final LoginPanelListener listener) {
 	addStyleName("chatexample-login");
-	labelStatus = (Label) addRow("emite example chat: ", new Label("welcome!"));
+	labelStatus = (Label) addRow("", new Label("welcome to the example chat!"));
 	fieldBind = (TextBox) addRow("bind: ", new TextBox());
 	fieldDomain = (TextBox) addRow("domain: ", new TextBox());
 	fieldName = (TextBox) addRow("user jid: ", new TextBox());

@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,7 +24,8 @@ public class ChatPanel extends DockPanel {
     public ChatPanel(final ChatPanelListener listener) {
 	addStyleName("chatexample-chat");
 	messages = new VerticalPanel();
-	add(messages, DockPanel.CENTER);
+	final ScrollPanel scroll = new ScrollPanel(messages);
+	add(scroll, DockPanel.CENTER);
 	final DockPanel send = new DockPanel();
 	send.add(new Label("message: "), DockPanel.WEST);
 	input = new TextBox();
