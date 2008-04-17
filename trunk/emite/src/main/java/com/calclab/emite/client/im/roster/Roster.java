@@ -63,14 +63,6 @@ public class Roster implements Component {
 	}
     }
 
-    public RosterItem getItem(final int index) {
-	return items.get(index);
-    }
-
-    public int getSize() {
-	return items.size();
-    }
-
     public SubscriptionMode getSubscriptionMode() {
 	return subscriptionMode;
     }
@@ -80,14 +72,14 @@ public class Roster implements Component {
     }
 
     void add(final RosterItem item) {
-	items.put(item.getJID().getJID(), item);
+	items.put(item.getJID(), item);
 	fireRosterChanged();
     }
 
     void setItems(final List<RosterItem> itemCollection) {
 	items.clear();
 	for (final RosterItem item : itemCollection) {
-	    items.put(item.getJID().getJID(), item);
+	    items.put(item.getJID(), item);
 	}
 	fireRosterChanged();
     }

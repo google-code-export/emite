@@ -1,7 +1,7 @@
 package com.calclab.emite.client.im.roster;
 
 import static com.calclab.emite.client.TestMatchers.isListOfSize;
-import static com.calclab.emite.client.TestMatchers.isPacket;
+import static com.calclab.emite.client.TestMatchers.packetLike;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -40,7 +40,7 @@ public class RosterManagerTest {
     @Test
     public void shouldRequestRosterOnLogin() {
 	manager.eventLoggedIn();
-	verify(emite).send(anyString(), isPacket(new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null)),
+	verify(emite).send(anyString(), packetLike(new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null)),
 		(PacketListener) anyObject());
     }
 }

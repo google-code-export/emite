@@ -1,5 +1,6 @@
 package com.calclab.emite.client.xmpp.resource;
 
+import static com.calclab.emite.client.TestMatchers.packetLike;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -8,7 +9,9 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.TestMatchers;
+import com.calclab.emite.client.TestInstallation;
+import com.calclab.emite.client.TestInstallation.InstallTest;
+import com.calclab.emite.client.TestInstallation.InstallVerifier;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
@@ -29,12 +32,23 @@ public class ResourceBindingManagerTest {
     }
 
     @Test
+    public void shouldAttachEvents() {
+	new TestInstallation(new InstallTest() {
+	    public void prepare(final Emite emite, final InstallVerifier verifier) {
+		new ResourceBindingManager(emite).attach();
+		verifier.shouldAttachTo(SessionManager.Events.logIn);
+		verifier.shouldAttachTo(SessionManager.Events.authorized);
+	    }
+	});
+    }
+
+    @Test
     public void shouldInforSessionWhenBinded() {
 	final String received = "<iq type=\"result\" id=\"bind_2\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\">"
 		+ "<jid>somenode@example.com/someresource</jid></bind></iq>";
 	manager.eventBinded(xmler.toXML(received));
 	verify(emite).publish(
-		TestMatchers.isPacket(SessionManager.Events.binded.Params("uri", "somenode@example.com/someresource")));
+		packetLike(SessionManager.Events.binded.Params("uri", "somenode@example.com/someresource")));
     }
 
     @Test

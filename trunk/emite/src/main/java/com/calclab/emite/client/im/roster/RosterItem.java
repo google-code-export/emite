@@ -76,7 +76,7 @@ public class RosterItem {
     }
 
     public XmppURI getJID() {
-	return jid;
+	return jid.getJID();
     }
 
     public String getName() {
