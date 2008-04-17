@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ -d src/main/webapp/gwt/com.calclab.examplechat.Example ]
+if [ -d src/main/webapp/gwt/com.calclab.emiteui.EmiteUI ]
 then
-  rm -rf src/main/webapp/gwt/com.calclab.examplechat.Example/*
+  rm -rf src/main/webapp/gwt/com.calclab.emiteui.EmiteUI/*
 fi
 
 if [ ! -d src/main/webapp/gwt ]
@@ -11,5 +11,5 @@ then
 fi
 
 
-cp -a target/emite-0.0.1/com.calclab.examplechat.Example/ src/main/webapp/gwt/
+cp -a target/emite-0.0.1/com.calclab.emiteui.EmiteUI/ src/main/webapp/gwt/
 mvn jetty:run

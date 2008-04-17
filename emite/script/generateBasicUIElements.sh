@@ -9,7 +9,7 @@ DIR=$1
   if [ $PARAMS -ne 2 ]
   then
   	echo "Use: $0 <packageDirDest> <ClassName>"
-    echo "$0 src/main/java/com/calclab/examplechat/client/chatuiplugin/chat ChatUI"
+    echo "$0 src/main/java/com/calclab/emiteui/client/chatuiplugin/chat ChatUI"
     exit
   fi
 
