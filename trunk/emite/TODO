@@ -6,7 +6,7 @@ TODO-list for kune
 SHORT-TERM (URGENT):
 --------------------------------------------------------------------------------
 <vjrj> Log.warn xmpp error messages
-<vjrj> Prefetch some UI images (not in buddles)
+<vjrj> Prefetch some UI images (not in buddles), css/img
 --> vjrj
 <vjrj> Room nicks support
 
