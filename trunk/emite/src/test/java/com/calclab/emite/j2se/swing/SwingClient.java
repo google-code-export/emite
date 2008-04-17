@@ -78,11 +78,11 @@ public class SwingClient {
 	    }
 
 	    public void onRemoveItem(final RosterItem item) {
-		xmpp.getRosterManager().requestRemoveItem(item.getXmppURI().toString());
+		xmpp.getRosterManager().requestRemoveItem(item.getJID().toString());
 	    }
 
 	    public void onStartChat(final RosterItem item) {
-		xmpp.getChatManager().openChat(item.getXmppURI());
+		xmpp.getChatManager().openChat(item.getJID());
 	    }
 	});
 

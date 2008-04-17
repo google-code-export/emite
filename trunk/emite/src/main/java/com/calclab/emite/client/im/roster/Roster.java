@@ -80,14 +80,14 @@ public class Roster implements Component {
     }
 
     void add(final RosterItem item) {
-	items.put(item.getXmppURI().getJID(), item);
+	items.put(item.getJID().getJID(), item);
 	fireRosterChanged();
     }
 
     void setItems(final List<RosterItem> itemCollection) {
 	items.clear();
 	for (final RosterItem item : itemCollection) {
-	    items.put(item.getXmppURI().getJID(), item);
+	    items.put(item.getJID().getJID(), item);
 	}
 	fireRosterChanged();
     }

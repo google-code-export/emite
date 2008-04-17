@@ -31,7 +31,7 @@ public class ChatUserUI extends AbstractChatUser {
     private final RosterItem rosterItem;
 
     public ChatUserUI(final String iconUrl, final RosterItem rosterItem, final String color) {
-        super(iconUrl, new XmppJID(rosterItem.getXmppURI()), rosterItem.getName(), color);
+        super(iconUrl, new XmppJID(rosterItem.getJID()), rosterItem.getName(), color);
         this.rosterItem = rosterItem;
     }
 
