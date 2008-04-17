@@ -1,7 +1,6 @@
 #summary How to get the example running
 #labels Featured
 
-#summary How to get the example running
 
 
 = Introduction =
