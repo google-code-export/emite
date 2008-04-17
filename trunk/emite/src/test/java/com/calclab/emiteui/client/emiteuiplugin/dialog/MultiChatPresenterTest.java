@@ -18,9 +18,6 @@ import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUI;
 import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUIListener;
 import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUIPresenter;
 import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUIView;
-import com.calclab.emiteui.client.emiteuiplugin.dialog.MultiChatListener;
-import com.calclab.emiteui.client.emiteuiplugin.dialog.MultiChatPresenter;
-import com.calclab.emiteui.client.emiteuiplugin.dialog.MultiChatView;
 import com.calclab.emiteui.client.emiteuiplugin.params.MultiChatCreationParam;
 import com.calclab.emiteui.client.emiteuiplugin.roster.RosterUI;
 import com.calclab.emiteui.client.emiteuiplugin.roster.RosterUIView;
@@ -49,6 +46,7 @@ public class MultiChatPresenterTest {
         final XmppURI otherUri = XmppURI.parse("matt@example.com");
         final RosterItem rosterItem = new RosterItem(otherUri, Subscription.both, "matt");
 
+        // User and message
         sessionUserJid = "lutherb@example.com";
         otherUser = new ChatUserUI("", rosterItem, "blue");
         messageBody = "hello world :)";
