@@ -48,7 +48,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     }
 
     @Override
-    public void attach() {
+    public void install() {
 	emite.subscribe(when(SessionManager.Events.loggedIn), new PacketListener() {
 	    public void handle(final IPacket received) {
 	    }

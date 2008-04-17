@@ -71,35 +71,29 @@ public class PresenceManager extends EmiteComponent {
      * SHOULD request the roster before sending initial presence
      */
     @Override
-    public void attach() {
-	PacketListener packetListener = new PacketListener() {
+    public void install() {
+	emite.subscribe(when(RosterManager.Events.ready), new PacketListener() {
 	    public void handle(final IPacket received) {
-		currentPresence = createInitialPresence();
-		emite.send(currentPresence);
+		eventRosterReady();
 	    }
-	};
-	emite.subscribe(when(RosterManager.Events.ready), packetListener);
+	});
 
 	emite.subscribe(when("presence"), new PacketListener() {
 	    public void handle(final IPacket received) {
-		onPresenceReceived(new Presence(received));
+		eventPresence(new Presence(received));
 	    }
 	});
-	PacketListener packetListener1 = new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.loggedOut), new PacketListener() {
 	    public void handle(final IPacket received) {
-		onLogoutSession();
-		userURI = null;
+		eventLoggedOut();
 	    }
-	};
-
-	emite.subscribe(when(SessionManager.Events.loggedOut), packetListener1);
-	PacketListener packetListener2 = new PacketListener() {
+	});
+	emite.subscribe(when(SessionManager.Events.loggedIn), new PacketListener() {
 	    public void handle(final IPacket received) {
-		userURI = XmppURI.parse(received.getAttribute("uri"));
+		eventLoggedIn(received);
 	    }
 
-	};
-	emite.subscribe(when(SessionManager.Events.loggedIn), packetListener2);
+	});
 
     }
 
@@ -112,10 +106,6 @@ public class PresenceManager extends EmiteComponent {
 	emite.send(unsubscription);
     }
 
-    public Presence createInitialPresence() {
-	return new Presence(userURI).With(Presence.Show.chat);
-    }
-
     /**
      * unsubscribed -- The subscription request has been denied or a
      * previously-granted subscription has been cancelled.
@@ -124,32 +114,12 @@ public class PresenceManager extends EmiteComponent {
 	replySubscription(presence, Presence.Type.unsubscribed);
     }
 
-    // FIXME: Dani (Presence) I need this... I think
     public Presence getCurrentPresence() {
 	return currentPresence;
     }
 
-    public Presence getOwnPresence() {
-	return currentPresence;
-    }
-
-    /**
-     * 5.1.5. Unavailable Presence (rfc 3921)
-     * 
-     * Before ending its session with a server, a client SHOULD gracefully
-     * become unavailable by sending a final presence stanza that possesses no
-     * 'to' attribute and that possesses a 'type' attribute whose value is
-     * "unavailable" (optionally, the final presence stanza MAY contain one or
-     * more <status/> elements specifying the reason why the user is no longer
-     * available).
-     */
-    public void onLogoutSession() {
-	if (isLoggedIn()) {
-	    final Presence presence = new Presence(Type.unavailable, userURI.toString(), userURI.getHost());
-	    emite.send(presence);
-	    delayedPresence = null;
-	    currentPresence = null;
-	}
+    public XmppURI getUserURI() {
+	return userURI;
     }
 
     /**
@@ -193,7 +163,31 @@ public class PresenceManager extends EmiteComponent {
 	}
     }
 
-    void onPresenceReceived(final Presence presence) {
+    void eventLoggedIn(final IPacket received) {
+	userURI = XmppURI.parse(received.getAttribute("uri"));
+    }
+
+    /**
+     * 5.1.5. Unavailable Presence (rfc 3921)
+     * 
+     * Before ending its session with a server, a client SHOULD gracefully
+     * become unavailable by sending a final presence stanza that possesses no
+     * 'to' attribute and that possesses a 'type' attribute whose value is
+     * "unavailable" (optionally, the final presence stanza MAY contain one or
+     * more <status/> elements specifying the reason why the user is no longer
+     * available).
+     */
+    void eventLoggedOut() {
+	if (isLoggedIn()) {
+	    final Presence presence = new Presence(Type.unavailable, userURI.toString(), userURI.getHost());
+	    emite.send(presence);
+	    delayedPresence = null;
+	    currentPresence = null;
+	}
+	userURI = null;
+    }
+
+    void eventPresence(final Presence presence) {
 	if (delayedPresence != null) {
 	    sendDelayedPresence();
 	}
@@ -213,13 +207,22 @@ public class PresenceManager extends EmiteComponent {
 	    emite.send(currentPresence);
 	    break;
 	case error:
-	    // FIXME: pensar qué hacer aquí
+	    // FIXME: what should we do?
 	    Log.warn("Error presence!!!");
 	    break;
 	default:
 	    firePresenceReceived(presence);
 	    break;
 	}
+    }
+
+    void eventRosterReady() {
+	currentPresence = createInitialPresence();
+	emite.send(currentPresence);
+    }
+
+    private Presence createInitialPresence() {
+	return new Presence(userURI).With(Presence.Show.chat);
     }
 
     private void firePresenceReceived(final Presence presence) {

@@ -1,7 +1,7 @@
 package com.calclab.emite.client.im.roster;
 
-import static com.calclab.emite.client.TestMatchers.isListOfSize;
-import static com.calclab.emite.client.TestMatchers.packetLike;
+import static com.calclab.emite.testing.TestMatchers.isListOfSize;
+import static com.calclab.emite.testing.TestMatchers.packetLike;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -31,7 +31,8 @@ public class RosterManagerTest {
     @Test
     public void shouldAddItemsToRoster() {
 	final BasicStanza query = new BasicStanza("query", "jabber:iq:roster");
-	query.add("item", null).With("jid", "name1@domain").With("name", "complete name1").With("subscription", "both");
+	query.add("item", null).With("jid", "name1@	domain").With("name", "complete name1")
+		.With("subscription", "both");
 	query.add("item", null).With("jid", "name2@domain").With("name", "complete name2").With("subscription", "both");
 	manager.eventRoster(new IQ(Type.result).With(query));
 	verify(roster).setItems(isListOfSize(2));

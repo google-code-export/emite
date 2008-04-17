@@ -57,12 +57,6 @@ public class Roster implements Component {
 	return items.get(uri.getJID());
     }
 
-    public void fireItemPresenceChanged(final RosterItem item) {
-	for (final RosterListener listener : listeners) {
-	    listener.onItemPresenceChanged(item);
-	}
-    }
-
     public SubscriptionMode getSubscriptionMode() {
 	return subscriptionMode;
     }
@@ -74,6 +68,12 @@ public class Roster implements Component {
     void add(final RosterItem item) {
 	items.put(item.getJID(), item);
 	fireRosterChanged();
+    }
+
+    void fireItemPresenceChanged(final RosterItem item) {
+	for (final RosterListener listener : listeners) {
+	    listener.onItemPresenceChanged(item);
+	}
     }
 
     void setItems(final List<RosterItem> itemCollection) {

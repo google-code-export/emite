@@ -84,7 +84,7 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
     }
 
     @Override
-    public void attach() {
+    public void install() {
 	emite.subscribe(when(BoshManager.Events.restart), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventRestart(received.getAttribute("domain"));

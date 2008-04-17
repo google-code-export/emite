@@ -1,4 +1,4 @@
-package com.calclab.emite.client;
+package com.calclab.emite.testing;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.packet.IPacket;
 
-public class TestInstallation implements Emite {
+public class InstallationTester implements Emite {
 
     public static interface InstallTest {
 	void prepare(Emite emite, InstallVerifier verifier);
@@ -22,7 +22,7 @@ public class TestInstallation implements Emite {
 
     private final ArrayList<Matcher> matchers;
 
-    public TestInstallation(final InstallTest verifier) {
+    public InstallationTester(final InstallTest verifier) {
 	this.matchers = new ArrayList<Matcher>();
 	verifier.prepare(this, new InstallVerifier() {
 	    public void shouldAttachTo(final IPacket packet) {

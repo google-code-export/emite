@@ -13,9 +13,9 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.TestMatchers;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.testing.TestMatchers;
 
 public class RoomTest {
 
