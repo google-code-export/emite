@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.client.xmpp.session;
 
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
@@ -50,30 +52,30 @@ public class SessionManager extends EmiteComponent {
     @Override
     public void attach() {
 
-	when(Events.authorized, new PacketListener() {
+	emite.subscribe(when(Events.authorized), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventAuthorized();
 	    }
 	});
 
-	when(SessionManager.Events.loggedOut, new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.loggedOut), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLoggedOut();
 	    }
 	});
 
-	when(BoshManager.Events.onError, new PacketListener() {
+	emite.subscribe(when(BoshManager.Events.onError), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventOnError();
 	    }
-
+	
 	});
 
-	when(Events.binded, new PacketListener() {
+	emite.subscribe(when(Events.binded), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventBinded(received.getAttribute("uri"));
 	    }
-
+	
 	});
     }
 

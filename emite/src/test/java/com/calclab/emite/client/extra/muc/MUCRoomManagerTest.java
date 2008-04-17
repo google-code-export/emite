@@ -44,7 +44,7 @@ public class MUCRoomManagerTest {
     public void shouldCloseAllActiveRoomsWhenLoggedOut() {
 	final Room room1 = manager.openChat(XmppURI.parse("room1@domain/nick"));
 	final Room room2 = manager.openChat(XmppURI.parse("room2@domain/nick"));
-	manager.onLoggedOut();
+	manager.eventLoggedOut();
 	verify(listener).onChatClosed(room2);
 	verify(listener).onChatClosed(room1);
     }

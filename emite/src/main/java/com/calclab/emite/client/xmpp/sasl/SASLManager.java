@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.client.xmpp.sasl;
 
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
@@ -46,27 +48,28 @@ public class SASLManager extends EmiteComponent {
 
     @Override
     public void attach() {
-	when(SessionManager.Events.logIn, new PacketListener() {
+	PacketListener packetListener = new PacketListener() {
 	    public void handle(final IPacket received) {
 		uri = XmppURI.parse(received.getAttribute("uri"));
 		password = received.getAttribute("password");
 	    }
-	});
+	};
+	emite.subscribe(when(SessionManager.Events.logIn), packetListener);
 
-	when(new Packet("stream:features"), new PacketListener() {
+	emite.subscribe(when(new Packet("stream:features")), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventStreamFeatures(received);
 	    }
-
+	
 	});
 
-	when(new Packet("failure", XMLNS), new PacketListener() {
+	emite.subscribe(when(new Packet("failure", XMLNS)), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventFailure(received);
 	    }
 	});
 
-	when(new Packet("success", XMLNS), new PacketListener() {
+	emite.subscribe(when(new Packet("success", XMLNS)), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventSuccess(received);
 	    }

@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.client.core.bosh;
 
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+
 import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -83,36 +85,36 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
 
     @Override
     public void attach() {
-	when(BoshManager.Events.restart, new PacketListener() {
+	emite.subscribe(when(BoshManager.Events.restart), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventRestart(received.getAttribute("domain"));
 	    }
 	});
-	when(BoshManager.Events.start, new PacketListener() {
+	emite.subscribe(when(BoshManager.Events.start), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventStart(received.getAttribute("domain"));
 	    }
-
+	
 	});
-	when(BoshManager.Events.onError, new PacketListener() {
+	emite.subscribe(when(BoshManager.Events.onError), new PacketListener() {
 	    public void handle(final IPacket stanza) {
 		eventError();
 	    }
 	});
 
-	when("body", new PacketListener() {
+	emite.subscribe(when("body"), new PacketListener() {
 	    public void handle(final IPacket iPacket) {
 		eventBody(iPacket);
 	    }
 	});
 
-	when("stream:error", new PacketListener() {
+	emite.subscribe(when("stream:error"), new PacketListener() {
 	    public void handle(final IPacket received) {
 		emite.publish(BoshManager.Events.onError.Params("cause", "stream error").With(received));
 	    }
 	});
 
-	when(BoshManager.Events.stop, new PacketListener() {
+	emite.subscribe(when(BoshManager.Events.stop), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventStop();
 	    }

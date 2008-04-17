@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.client.extra.muc;
 
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,12 +49,11 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 
     @Override
     public void attach() {
-	super.attach();
-	when(SessionManager.Events.loggedIn, new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.loggedIn), new PacketListener() {
 	    public void handle(final IPacket received) {
 	    }
 	});
-	when("presence", new PacketListener() {
+	emite.subscribe(when("presence"), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventPresence(new Presence(received));
 	    }
@@ -69,7 +70,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     }
 
     @Override
-    public void onLoggedOut() {
+    public void eventLoggedOut() {
 	closeAll(rooms.values());
     }
 

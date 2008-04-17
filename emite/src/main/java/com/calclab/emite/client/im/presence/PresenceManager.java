@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.client.im.presence;
 
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+
 import java.util.ArrayList;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -70,31 +72,34 @@ public class PresenceManager extends EmiteComponent {
      */
     @Override
     public void attach() {
-	when(RosterManager.Events.ready, new PacketListener() {
+	PacketListener packetListener = new PacketListener() {
 	    public void handle(final IPacket received) {
 		currentPresence = createInitialPresence();
 		emite.send(currentPresence);
 	    }
-	});
+	};
+	emite.subscribe(when(RosterManager.Events.ready), packetListener);
 
-	when("presence", new PacketListener() {
+	emite.subscribe(when("presence"), new PacketListener() {
 	    public void handle(final IPacket received) {
 		onPresenceReceived(new Presence(received));
 	    }
 	});
-
-	when(SessionManager.Events.loggedOut, new PacketListener() {
+	PacketListener packetListener1 = new PacketListener() {
 	    public void handle(final IPacket received) {
 		onLogoutSession();
 		userURI = null;
 	    }
-	});
-	when(SessionManager.Events.loggedIn, new PacketListener() {
+	};
+
+	emite.subscribe(when(SessionManager.Events.loggedOut), packetListener1);
+	PacketListener packetListener2 = new PacketListener() {
 	    public void handle(final IPacket received) {
 		userURI = XmppURI.parse(received.getAttribute("uri"));
 	    }
 
-	});
+	};
+	emite.subscribe(when(SessionManager.Events.loggedIn), packetListener2);
 
     }
 

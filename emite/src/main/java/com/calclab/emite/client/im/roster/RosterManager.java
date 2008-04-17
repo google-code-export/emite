@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.client.im.roster;
 
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,13 +58,13 @@ public class RosterManager extends EmiteComponent {
      */
     @Override
     public void attach() {
-	when(SessionManager.Events.loggedIn, new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.loggedIn), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLoggedIn();
 	    }
 	});
 
-	when("presence", new PacketListener() {
+	emite.subscribe(when("presence"), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventPresence(new Presence(received));
 	    }
