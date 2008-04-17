@@ -52,42 +52,26 @@ public class SessionManager extends EmiteComponent {
 
 	when(Events.authorized, new PacketListener() {
 	    public void handle(final IPacket received) {
-		emite.publish(BoshManager.Events.restart);
-	    }
-	});
-
-	when(Events.authorized, new PacketListener() {
-	    public void handle(final IPacket received) {
-		session.setState(Session.State.authorized);
+		eventAuthorized();
 	    }
 	});
 
 	when(SessionManager.Events.loggedOut, new PacketListener() {
 	    public void handle(final IPacket received) {
-		emite.publish(BoshManager.Events.stop);
-		session.setState(Session.State.disconnected);
+		eventLoggedOut();
 	    }
 	});
 
 	when(BoshManager.Events.onError, new PacketListener() {
 	    public void handle(final IPacket received) {
-		session.setState(Session.State.error);
-		session.setState(Session.State.disconnected);
+		eventOnError();
 	    }
+
 	});
 
 	when(Events.binded, new PacketListener() {
 	    public void handle(final IPacket received) {
-		final XmppURI userURI = XmppURI.parse(received.getAttribute("uri"));
-		final IQ iq = new IQ(IQ.Type.set, userURI, userURI.getHost());
-		iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
-
-		emite.send("session", iq, new PacketListener() {
-		    public void handle(final IPacket received) {
-			session.setState(Session.State.connected);
-			emite.publish(SessionManager.Events.loggedIn.Params("uri", userURI.toString()));
-		    }
-		});
+		eventBinded(received.getAttribute("uri"));
 	    }
 
 	});
@@ -105,5 +89,37 @@ public class SessionManager extends EmiteComponent {
 
     public void setSession(final Session session) {
 	this.session = session;
+    }
+
+    void eventAuthorized() {
+	session.setState(Session.State.authorized);
+	emite.publish(BoshManager.Events.restart);
+    }
+
+    void eventBinded(final String uri) {
+	final XmppURI userURI = XmppURI.parse(uri);
+	final IQ iq = new IQ(IQ.Type.set, userURI, userURI.getHost());
+	iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
+
+	emite.send("session", iq, new PacketListener() {
+	    public void handle(final IPacket received) {
+		eventSession(userURI);
+	    }
+	});
+    }
+
+    void eventLoggedOut() {
+	emite.publish(BoshManager.Events.stop);
+	session.setState(Session.State.disconnected);
+    }
+
+    void eventOnError() {
+	session.setState(Session.State.error);
+	session.setState(Session.State.disconnected);
+    }
+
+    void eventSession(final XmppURI userURI) {
+	session.setState(Session.State.connected);
+	emite.publish(SessionManager.Events.loggedIn.Params("uri", userURI.toString()));
     }
 }

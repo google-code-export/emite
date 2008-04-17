@@ -6,8 +6,7 @@
   <entry-point
     class="com.calclab.emite.examples.chat.client.ChatEntryPoint" />
 
-  <servlet path="/com.calclab.emite.examples.chat.Chat/proxy" class="de.spieleck.servlets.ProxyServlet"/>
-  <servlet path="/proxy-root" class="de.spieleck.servlets.ProxyServlet"/>
+  <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
 
   <extend-property name="log_level" values="DEBUG" />
   <set-property name="log_level" value="DEBUG" />

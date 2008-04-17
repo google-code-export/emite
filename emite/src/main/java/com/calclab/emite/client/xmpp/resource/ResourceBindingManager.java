@@ -34,7 +34,7 @@ public class ResourceBindingManager extends EmiteComponent {
 
     public ResourceBindingManager(final Emite emite) {
 	super(emite);
-
+	resource = null;
     }
 
     @Override
@@ -46,16 +46,25 @@ public class ResourceBindingManager extends EmiteComponent {
 	});
 	when(SessionManager.Events.authorized, new PacketListener() {
 	    public void handle(final IPacket received) {
-		final IQ iq = new IQ(IQ.Type.set);
-		iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).addText(resource);
+		eventAuthorized();
+	    }
 
-		emite.send("bind", iq, new PacketListener() {
-		    public void handle(final IPacket received) {
-			final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
-			emite.publish(SessionManager.Events.binded.Params("uri", jid));
-		    }
-		});
+	});
+    }
+
+    void eventAuthorized() {
+	final IQ iq = new IQ(IQ.Type.set);
+	iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).addText(resource);
+
+	emite.send("bind", iq, new PacketListener() {
+	    public void handle(final IPacket received) {
+		eventBinded(received);
 	    }
 	});
+    }
+
+    void eventBinded(final IPacket received) {
+	final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
+	emite.publish(SessionManager.Events.binded.Params("uri", jid));
     }
 }

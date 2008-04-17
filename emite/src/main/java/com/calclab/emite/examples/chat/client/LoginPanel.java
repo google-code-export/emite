@@ -2,7 +2,7 @@ package com.calclab.emite.examples.chat.client;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -34,7 +34,7 @@ public class LoginPanel extends VerticalPanel {
 	    }
 	}));
 
-	fieldBind.setText("proxy");
+	fieldBind.setText("/proxy");
 	fieldDomain.setText("localhost");
     }
 
@@ -44,7 +44,7 @@ public class LoginPanel extends VerticalPanel {
     }
 
     private Widget addRow(final String label, final Widget widget) {
-	final FlowPanel panel = new FlowPanel();
+	final HorizontalPanel panel = new HorizontalPanel();
 	panel.add(new Label(label));
 	panel.add(widget);
 	add(panel);
