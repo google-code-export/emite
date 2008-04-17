@@ -1,8 +1,8 @@
 #labels Featured
-
 If you're planning to use emite, this guide is for you.
 
-
+*This doc is a little out of date. Please take a look to the chat example:* {{{com.calclab.emite.examples.chat.client.ChatEntryPoint}}}. There is all the logic
+to implement a simple chat with roster and conversations.
 
 == Create the xmpp object ==
 
@@ -85,11 +85,7 @@ chat.addListener(new ChatListener() {
 });
 }}}
 
-Every Chat object has a unique id (based on the user JID and thread, but completely meaningless) 
-that allows us to difference one chat from other: 
-{{{
-String uniqueID = chat.getID();
-}}}
+
 If we start a new chat, the !ChatManager always assigns a thread property to that chat. 
 
 
@@ -126,14 +122,7 @@ xmpp.getRoster();
 
 === Retrieve the initial roster ===
 
-By default, the xmpp object retrieves the roster *after* connected state. We can retrieve the roster by:
-{{{
-Roster roster = xmpp.getRoster();
-roster.getSize();
-RosterItem rosterItem = roster.getItem(0);
-}}}
-
-To know when the roster is ready we can attach a listener to the roster:
+By default, the xmpp object retrieves the roster *after* connected state. We can retrieve the roster by using (as always in asynchronous programs) a listener:
 {{{
 xmpp.getRoster().addListener(new RosterListener() {
 	public void onRosterInitialized(final List<RosterItem> rosterItems) {
@@ -146,26 +135,9 @@ xmpp.getRoster().addListener(new RosterListener() {
 
 == Presence ==
 
-*This is a proposal. Please Vicente read it and give me some feedback*
-
 We use the !PresenceManager to receive and send presence information.
-The roster *don't* handle automatically the presence of its items, but
-it has a method that make it trivally:
-
-{{{
-xmpp.getPresenceManager().addListener(new PresenceListener() {
-	public void onPresenceReceived(final Presence presence) {
-		xmpp.getRoster().handle(presence);
-	}
-	
-	public void onSubscriptionRequest(final Presence presence) {
-	}
-});
-xmpp.getPresenceManager().setMyOwnPresence(Presence.Show.away, "i'm out!");
-}}}
-
-
-
+The roster handle automatically the presence. Take a look to PresenceManager javadoc
+to see what this object is capable to do.
 
 
 
