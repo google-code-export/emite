@@ -35,6 +35,9 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChat;
 import com.calclab.examplechat.client.chatuiplugin.dialog.MultiChatListener;
 import com.calclab.examplechat.client.chatuiplugin.params.MultiChatCreationParam;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.ui.Image;
 
 public class EmiteUiPlugin extends Plugin {
 
@@ -68,6 +71,7 @@ public class EmiteUiPlugin extends Plugin {
             public void execute(final MultiChatCreationParam param) {
                 if (multiChatDialog == null) {
                     createChatDialog(param);
+                    preFetchImages();
                 }
                 multiChatDialog.show();
             }
@@ -115,6 +119,7 @@ public class EmiteUiPlugin extends Plugin {
                 });
 
             }
+
         });
     }
 
@@ -123,4 +128,24 @@ public class EmiteUiPlugin extends Plugin {
         multiChatDialog.destroy();
     }
 
+    private void preFetchImages() {
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                String[] imgs = { "ext-load.gif group_add.gif group-chat.gif moderatoruser.gif normaluser.gif "
+                        + "person-def.gif smile.gif user_add.gif" };
+                String[] cssImgs = { "add.gif cancel.gif chat.gif colors.gif "
+                        + "del.gif exit.gif extload.gif forbidden.gif group-chat.gif group.gif new-chat.gif "
+                        + "new-message.gif useradd.gif userf.gif user.gif" };
+                doTheJob(imgs, "images");
+                doTheJob(cssImgs, "css/img");
+            }
+
+            private void doTheJob(final String[] imgs, final String prefix) {
+                for (int i = 0; i < imgs.length; i++) {
+                    String img = imgs[i];
+                    Image.prefetch(prefix + "/" + img);
+                }
+            }
+        });
+    }
 }

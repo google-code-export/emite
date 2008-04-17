@@ -28,7 +28,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.examplechat.client.chatuiplugin.chat.ChatUI;
 import com.calclab.examplechat.client.chatuiplugin.users.UserGridPanel;
 import com.calclab.examplechat.client.chatuiplugin.utils.ChatIcons;
@@ -109,11 +108,13 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void attachRoomUserList(final View userListView) {
-        Log.info("Attach room user list");
         UserGridPanel panel = (UserGridPanel) userListView;
         roomUsersPanel.add(panel);
-        if (roomUsersPanel.isRendered()) {
-            roomUsersPanel.doLayout();
+        // if (roomUsersPanel.isRendered()) {
+        // roomUsersPanel.doLayout();
+        // }
+        if (usersPanel.isRendered()) {
+            usersPanel.doLayout();
         }
         roomUsersPanel.expand();
     }
@@ -142,11 +143,19 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void dettachRoomUserList(final View userListView) {
-        Log.info("Dettach room user list");
         roomUsersPanel.remove((Panel) userListView);
         if (usersPanel.isRendered()) {
             usersPanel.doLayout();
         }
+    }
+
+    public void expandRoster() {
+        rosterPanel.expand();
+    }
+
+    public void focusInput() {
+        input.focus();
+        input.getEl().frame();
     }
 
     public String getInputText() {
@@ -313,7 +322,7 @@ public class MultiChatPanel implements MultiChatView {
         /* Input toolbar */
         final Toolbar inputToolbar = new Toolbar();
         emoticonButton = new ToolbarButton();
-        emoticonButton.setIcon("images/smile.png");
+        emoticonButton.setIcon("images/smile.gif");
         emoticonButton.setCls("x-btn-icon x-btn-focus");
         emoticonButton.setTooltip(i18n.t("Insert a emoticon"));
 
@@ -404,7 +413,7 @@ public class MultiChatPanel implements MultiChatView {
         southPanel.addListener(new ContainerListenerAdapter() {
             public void onResize(final BoxComponent component, final int adjWidth, final int adjHeight,
                     final int rawWidth, final int rawHeight) {
-                input.setHeight(adjHeight - 28);
+                input.setHeight(adjHeight - 27);
                 inputForm.setHeight(adjHeight);
             }
         });
@@ -501,11 +510,6 @@ public class MultiChatPanel implements MultiChatView {
         presenter.onCurrentUserSend(getInputText());
         e.stopEvent();
         input.focus();
-    }
-
-    private void focusInput() {
-        input.focus();
-        input.getEl().frame();
     }
 
     private void reset() {

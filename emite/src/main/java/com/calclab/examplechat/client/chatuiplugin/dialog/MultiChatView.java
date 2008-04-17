@@ -45,6 +45,10 @@ public interface MultiChatView {
 
     void dettachRoomUserList(View userListView);
 
+    void expandRoster();
+
+    void focusInput();
+
     String getInputText();
 
     void highlightChat(ChatUI chatUI);

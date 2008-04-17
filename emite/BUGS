@@ -4,9 +4,6 @@ Known bugs in Emite
 For reports please use:
   http://code.google.com/p/emite/issues/list
 
-
-- messages not escaped (try send: "zxc<xzxc")
-
 - When adding a new roster item (with no real jid like someone@example.com) , we receive addItem notificiations off all the roster (already added), instead of update.
 
 - Remove roster item not fire any listener. The packet:
