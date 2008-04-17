@@ -29,7 +29,6 @@ import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteui.client.emiteuiplugin.dialog.MultiChat;
@@ -42,13 +41,14 @@ import com.google.gwt.user.client.ui.Image;
 public class EmiteUiPlugin extends Plugin {
 
     // Input events
-    public static final String OPEN_MULTI_CHAT_DIALOG = "emiteuiplugin.openchatdialog";
-    public static final String ACTIVATE_CHAT = "emiteuiplugin.activatechat";
-    public static final String CLOSE_CHAT_DIALOG = "emiteuiplugin.closechatdialog";
+    public static final String OPEN_CHAT_DIALOG = "emiteuiplugin.openchatdialog";
+    public static final String CLOSE_ALLCHATS = "emiteuiplugin.closeallchats";
+    public static final String CHATOPEN = "emiteuiplugin.chatopen";
+    public static final String ROOMOPEN = "emiteuiplugin.roomopen";
+    public static final String REFLESH_USER_OPTIONS = "emiteuiplugin.refreshuseroptions";
 
     // Output messages
     public static final String ON_USER_COLOR_SELECTED = "emiteuiplugin.usercoloselected";
-    public static final String ON_PAIR_CHAT_START = "emiteuiplugin.onpairchatstart";
     public static final String ON_STATE_CONNECTED = "emiteuiplugin.onstateconnected";
     public static final String ON_STATE_DISCONNECTED = "emiteuiplugin.onstatedisconnected";
     public static final String ON_USER_SUBSCRIPTION_CHANGED = "emiteuiplugin.usersubschanged";
@@ -67,7 +67,7 @@ public class EmiteUiPlugin extends Plugin {
     protected void start() {
 
         final Dispatcher dispatcher = getDispatcher();
-        dispatcher.subscribe(OPEN_MULTI_CHAT_DIALOG, new Action<MultiChatCreationParam>() {
+        dispatcher.subscribe(OPEN_CHAT_DIALOG, new Action<MultiChatCreationParam>() {
             public void execute(final MultiChatCreationParam param) {
                 if (multiChatDialog == null) {
                     createChatDialog(param);
@@ -100,21 +100,27 @@ public class EmiteUiPlugin extends Plugin {
 
                         });
 
-                dispatcher.subscribe(EmiteUiPlugin.ON_PAIR_CHAT_START, new Action<XmppURI>() {
+                dispatcher.subscribe(EmiteUiPlugin.CHATOPEN, new Action<XmppURI>() {
                     public void execute(final XmppURI param) {
                         xmpp.getChatManager().openChat(param);
                     }
                 });
 
-                dispatcher.subscribe(CLOSE_CHAT_DIALOG, new Action<Object>() {
+                dispatcher.subscribe(EmiteUiPlugin.ROOMOPEN, new Action<XmppURI>() {
+                    public void execute(final XmppURI param) {
+                        xmpp.getRoomManager().openChat(param);
+                    }
+                });
+
+                dispatcher.subscribe(CLOSE_ALLCHATS, new Action<Object>() {
                     public void execute(final Object param) {
                         multiChatDialog.closeAllChats(true);
                     }
                 });
 
-                dispatcher.subscribe(ACTIVATE_CHAT, new Action<Chat>() {
-                    public void execute(final Chat chat) {
-                        multiChatDialog.activateChat(chat);
+                dispatcher.subscribe(REFLESH_USER_OPTIONS, new Action<UserChatOptions>() {
+                    public void execute(final UserChatOptions param) {
+                        multiChatDialog.setUserChatOptions(param);
                     }
                 });
 

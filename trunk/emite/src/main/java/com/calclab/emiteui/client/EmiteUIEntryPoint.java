@@ -37,9 +37,11 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.Label;
 import com.gwtext.client.widgets.form.TextField;
+import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 
 public class EmiteUIEntryPoint implements EntryPoint {
     private DefaultDispatcher dispatcher;
@@ -82,8 +84,8 @@ public class EmiteUIEntryPoint implements EntryPoint {
                 new I18nTranslationServiceMocked());
         kunePluginManager.install(new EmiteUiPlugin());
 
-        dispatcher.fire(EmiteUiPlugin.OPEN_MULTI_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions("http-bind"),
-                jid.getRawValue(), passwd.getRawValue(), new UserChatOptions("blue", Roster.DEF_SUBSCRIPTION_MODE)));
+        dispatcher.fire(EmiteUiPlugin.OPEN_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions("http-bind"),
+                generateUserChatOptions()));
     }
 
     private void createFormPanel() {
@@ -101,7 +103,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
         final Label label = new Label();
         label.setHtml("<p>Currently we are only supporting PLAIN authentication, "
-                + "them for your security, only use jabber test accounts..</p>");
+                + "them for your security, only use jabber test accounts.</p><br/><br/>");
         label.setCls("simple-form-label");
         label.setWidth(350);
         label.setHeight(20);
@@ -117,11 +119,27 @@ public class EmiteUIEntryPoint implements EntryPoint {
         passwd.setPassword(true);
         formPanel.add(passwd);
 
+        jid.addListener(new FieldListenerAdapter() {
+            public void onChange(final Field field, final Object newVal, final Object oldVal) {
+
+            }
+        });
+
+        passwd.addListener(new FieldListenerAdapter() {
+            public void onChange(final Field field, final Object newVal, final Object oldVal) {
+                dispatcher.fire(EmiteUiPlugin.REFLESH_USER_OPTIONS, generateUserChatOptions());
+            }
+        });
+
         panel.add(label);
 
         panel.add(formPanel);
 
         RootPanel.get().add(panel);
+    }
+
+    private UserChatOptions generateUserChatOptions() {
+        return new UserChatOptions(jid.getRawValue(), passwd.getRawValue(), "blue", Roster.DEF_SUBSCRIPTION_MODE);
     }
 
 }

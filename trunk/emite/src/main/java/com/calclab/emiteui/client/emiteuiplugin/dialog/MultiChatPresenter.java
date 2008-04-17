@@ -64,14 +64,14 @@ public class MultiChatPresenter implements MultiChat {
     private static final OwnPresence ONLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.online);
     private final HashMap<Chat, ChatUI> chats;
     private ChatUI currentChat;
-    private final XmppJID currentUserJid;
-    private final String currentUserPasswd;
+    private XmppJID currentUserJid;
+    private String currentUserPasswd;
     private final ChatDialogFactory factory;
     private final I18nTranslationService i18n;
     private final MultiChatListener listener;
     private final PresenceManager presenceManager;
     private final RosterUI rosterUI;
-    private final UserChatOptions userChatOptions;
+    private UserChatOptions userChatOptions;
     private MultiChatView view;
     private final Xmpp xmpp;
 
@@ -81,9 +81,7 @@ public class MultiChatPresenter implements MultiChat {
         this.i18n = i18n;
         presenceManager = xmpp.getPresenceManager();
         this.factory = factory;
-        this.currentUserJid = new XmppJID(param.getUserJid());
-        this.currentUserPasswd = param.getUserPassword();
-        this.userChatOptions = param.getUserChatOptions();
+        setUserChatOptions(param.getUserChatOptions());
         this.listener = listener;
         chats = new HashMap<Chat, ChatUI>();
         rosterUI = factory.createrRosterUI(xmpp, i18n);
@@ -221,6 +219,13 @@ public class MultiChatPresenter implements MultiChat {
         roomUI.setSubject(text);
         // FIXME callback? erase this:
         view.setSubject(text);
+    }
+
+    public void setUserChatOptions(final UserChatOptions userChatOptions) {
+        this.userChatOptions = userChatOptions;
+        this.currentUserJid = new XmppJID(userChatOptions.getUserJid());
+        this.currentUserPasswd = userChatOptions.getUserPassword();
+
     }
 
     public void show() {

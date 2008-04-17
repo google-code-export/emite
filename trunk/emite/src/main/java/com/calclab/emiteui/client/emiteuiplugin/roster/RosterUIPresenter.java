@@ -192,7 +192,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
     private UserGridMenuItem<XmppURI> createStartChatMenuItem(final RosterItem item) {
         return new UserGridMenuItem<XmppURI>("newchat-icon", i18n.t("Start a chat with this buddy"),
-                EmiteUiPlugin.ON_PAIR_CHAT_START, item.getJID());
+                EmiteUiPlugin.CHATOPEN, item.getJID());
     }
 
     private UserGridMenuItem<XmppURI> createSubscribeBuddyMenuItem(final RosterItem item) {
