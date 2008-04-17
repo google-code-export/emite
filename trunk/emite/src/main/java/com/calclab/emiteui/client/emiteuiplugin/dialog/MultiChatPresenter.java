@@ -435,8 +435,8 @@ public class MultiChatPresenter implements MultiChat {
         switch (xmpp.getSession().getState()) {
         case disconnected:
             final String resource = "emite-ui" + new Date().getTime();
-            xmpp.login(new XmppURI(currentUserJid.toString(), "localhost", resource), currentUserPasswd, status,
-                    statusText);
+            xmpp.login(new XmppURI(currentUserJid.toString(), currentUserJid.getHost(), resource), currentUserPasswd,
+                    status, statusText);
             break;
         case authorized:
         case connecting:
