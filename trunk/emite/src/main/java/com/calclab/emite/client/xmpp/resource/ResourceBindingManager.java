@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.client.xmpp.resource;
 
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
@@ -39,16 +41,17 @@ public class ResourceBindingManager extends EmiteComponent {
 
     @Override
     public void attach() {
-	when(SessionManager.Events.logIn, new PacketListener() {
+	PacketListener packetListener = new PacketListener() {
 	    public void handle(final IPacket received) {
 		resource = XmppURI.parse(received.getAttribute("uri")).getResource();
 	    }
-	});
-	when(SessionManager.Events.authorized, new PacketListener() {
+	};
+	emite.subscribe(when(SessionManager.Events.logIn), packetListener);
+	emite.subscribe(when(SessionManager.Events.authorized), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventAuthorized();
 	    }
-
+	
 	});
     }
 

@@ -25,14 +25,22 @@ import com.calclab.emite.client.core.packet.IPacket;
 
 public class Matchers {
 
-	public static final Matcher ANYTHING = new Matcher() {
-		public String getElementName() {
-			return null;
-		}
+    public static final Matcher ANYTHING = new Matcher() {
+	public String getElementName() {
+	    return null;
+	}
 
-		public boolean matches(IPacket stanza) {
-			return true;
-		}
-	};
+	public boolean matches(IPacket stanza) {
+	    return true;
+	}
+    };
+
+    public static Matcher when(final IPacket packet) {
+	return new PacketMatcher(packet);
+    }
+
+    public static Matcher when(final String name) {
+	return new PacketMatcher(name);
+    }
 
 }
