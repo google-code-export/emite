@@ -1,0 +1,43 @@
+body {
+	background-color: #efefef;
+}
+
+.gwt-DialogBox {
+	border: 1px solid black;
+	background-color: white;
+}
+
+.gwt-DialogBox .Caption {
+	background-color: #FF4AD8;
+	border-bottom: 1px solid black;
+	padding: 0.1em 1em;
+}
+
+.gwt-TabBar {
+	
+}
+
+.gwt-TabBar .gwt-TabBarFirst {
+	width: 5px; /* first tab distance from the left */
+}
+
+.gwt-TabBar .gwt-TabBarItem {
+	border-collapse: collapse;
+	margin-left: 6px;
+}
+
+.gwt-TabBar .gwt-TabBarItem .topLeftInner,.gwt-TabBar .gwt-TabBarItem .topRightInner
+	{
+	width: 6px;
+	height: 6px;
+}
+
+.chatexample-login {
+	margin: 0.5em;
+}
+
+.chatexample-conversations {
+	background-color: white;
+	width: 90%;
+	margin: 0 auto;
+}

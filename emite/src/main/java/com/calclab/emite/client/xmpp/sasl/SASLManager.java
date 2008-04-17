@@ -21,6 +21,7 @@
  */
 package com.calclab.emite.client.xmpp.sasl;
 
+import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
@@ -54,16 +55,20 @@ public class SASLManager extends EmiteComponent {
 
 	when(new Packet("stream:features"), new PacketListener() {
 	    public void handle(final IPacket received) {
-		startAuthorizationRequest();
+		eventStreamFeatures(received);
 	    }
 
 	});
 
+	when(new Packet("failure", XMLNS), new PacketListener() {
+	    public void handle(final IPacket received) {
+		eventFailure(received);
+	    }
+	});
+
 	when(new Packet("success", XMLNS), new PacketListener() {
 	    public void handle(final IPacket received) {
-		uri = null;
-		password = null;
-		emite.publish(Events.authorized);
+		eventSuccess(received);
 	    }
 	});
 
@@ -72,6 +77,21 @@ public class SASLManager extends EmiteComponent {
     protected String encode(final String domain, final String userName, final String password) {
 	final String auth = userName + "@" + domain + SEP + userName + SEP + password;
 	return Base64Coder.encodeString(auth);
+    }
+
+    void eventFailure(final IPacket received) {
+	emite.publish(BoshManager.Events.onError.Because(received.getChildren().get(0)));
+    }
+
+    void eventStreamFeatures(final IPacket received) {
+	// FIXME: ISSUE - should check if its any unkown method available
+	startAuthorizationRequest();
+    }
+
+    void eventSuccess(final IPacket received) {
+	uri = null;
+	password = null;
+	emite.publish(Events.authorized);
     }
 
     private IPacket createAnonymousAuthorization() {
