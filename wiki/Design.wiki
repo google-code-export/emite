@@ -3,30 +3,59 @@ _work in progress_
 
 ==how it works==
 
-This is a document to describe the internals of emite and to get used quickier with the source code. It's not about how to use the library. All this complexity is hidden under the Xmpp facade class.
+This is a document to describe the internals of emite and to get used quickier with 
+the source code. It's not about how to use the library: for this see UserManual
 
-===the dispatcher===
+*All this complexity is hidden under the Xmpp facade class.*
 
-The dispatcher is the central part of the system. Its a publisher/subscribe system where the messages are always valid xml. Some of this messages comes from the server (because the Bosh object publish any incoming xmpp message into the dispatcher) and some other with the <event> element as root (events) come from the internal components.
+===the dispatcher component===
 
-When a component subscribes to some message, it can react in three different ways:
+The dispatcher is the central part of the system. Its a publisher/subscribe system 
+where the messages are always valid xml. Some of this messages comes from
+ the server (because the Bosh object publish any incoming xmpp message into
+  the dispatcher) and some other with the <event> element as root (events) are
+ published by the internal components.
 
 
-  * (*do*) perform some action, usually to change the state of the system
-  * *send* a xmpp back to the server  or 
-  * *publish* other xmpp message (any kind, but moslty <event> ones) into the dispatcher.
+For example, when a incoming xmmp message informing that the authentication was 
+succesful, the ResourcePlugin (subscribed to that message) send back to the server 
+the xmpp resource binding request, and the SessionPlugin (also subscribed to that 
+message) change its state to authorized and publish the 
+{{{<event type="session:authorized">}}}.
+ If you (as user) want to know if the athentication was succesfully you
+  could subscribe to that event in the dispatcher (but there  is a nicer way to do it).
 
-For example, when a incoming xmmp message informing that the authentication was succesful, the ResourcePlugin (subscribed to that message) send back to the server the xmpp resource binding request, and the SessionPlugin (also subscribed to that message) change its state to authorized and publish the <event type="session:authorized">. If you (as user) want to know if the athentication was succesfully you could subscribe to that event in the dispatcher (but there  is a nicer way to do it)
+The dispatcher doesnt send anything outside. If you want tu send stanzas
+you should use the emite component
 
-You can publish any event freely into the dispatcher when you want, but you only can send a message to the server as a response to a dispachtcher message (this is a little constriction to keep the design simple and to give the oportunity to any plugin to interact with the outcoming messagess). 
-So, when the user want to send a message to the server, it uses the Chat object that sends an event (with the user message) into the dispatcher and then a subscriptor catches this event and uses the Bosh object to send the message.
-If you try to use the Bosh object outside a subscriptor, you will have an exception.
+===the emite compontent===
 
-===the container and the plugin manager===
+The emite component is the most used component in the system. It implements all
+the methods of the dispatcher and also provides a couple of method to send
+stanzas to the xmpp server.
 
-the container ({{{Container}}}) its a place to register components, managed by a plugin manager and where all begins: you create a container, and use its plugin manager to install and remove the plugins.
-All the objects registered by a plugin into the container are called components. Some plugin can access some components of another plugin using the container (but its more polite to use the event system ;)
+The straightforward method is:
+{{{
+emite.send(new Message(...));
+}}}
+
+The emite object has other method useful to send IQs. The iqs are special types
+because contains ids and sometimes we want to send an IQ with an id and 
+provide a listener to receive the response of that iq. See the javadoc of the other
+send method of emite for more info.
+
+===the container===
+
+the container ({{{Container}}}) its a place to register components. Its the poor's version
+of a IoC (Inversion of Control) container. You can register components with a name
+and retrieve after. Its used by the Plugins to connect one components to others.
+
+The use is very straightforward: see any Plugin code and you will understand
+quickly.
+
 
 ===the xmpp facade===
 
-the xmpp facade creates a container, register all core and im plugins and provie some nice methods to interact with the components and perform the most common operations
+the xmpp facade creates a container, register all core and im plugins and 
+provide some nice methods to interact with the components and perform
+ the most common operations
