@@ -27,8 +27,13 @@ public class UserChatOptions {
 
     String color;
     SubscriptionMode subscriptionMode;
+    private final String userJid;
+    private final String userPassword;
 
-    public UserChatOptions(final String color, final SubscriptionMode subscriptionMode) {
+    public UserChatOptions(final String userJid, final String userPassword, final String color,
+            final SubscriptionMode subscriptionMode) {
+        this.userJid = userJid;
+        this.userPassword = userPassword;
         this.color = color;
         this.subscriptionMode = subscriptionMode;
     }
@@ -37,12 +42,20 @@ public class UserChatOptions {
         return color;
     }
 
-    public void setColor(final String color) {
-        this.color = color;
-    }
-
     public SubscriptionMode getSubscriptionMode() {
         return subscriptionMode;
+    }
+
+    public String getUserJid() {
+        return userJid;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setColor(final String color) {
+        this.color = color;
     }
 
     public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {

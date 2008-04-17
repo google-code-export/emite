@@ -22,6 +22,7 @@
 package com.calclab.emiteui.client.emiteuiplugin.dialog;
 
 import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emiteui.client.emiteuiplugin.UserChatOptions;
 import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUI;
 import com.calclab.emiteui.client.emiteuiplugin.room.RoomUI;
 import com.calclab.emiteui.client.emiteuiplugin.users.RoomUserUI.RoomUserType;
@@ -32,14 +33,16 @@ public interface MultiChat {
 
     public void closeAllChats(final boolean withConfirmation);
 
-    public RoomUI createRoom(Chat chat, String userAlias, RoomUserType roomUserType);
-
     public ChatUI createChat(Chat chat);
+
+    public RoomUI createRoom(Chat chat, String userAlias, RoomUserType roomUserType);
 
     public void destroy();
 
     public void groupChatSubjectChanged(final Chat groupChat, String newSubject);
 
     public void show();
+
+    public void setUserChatOptions(UserChatOptions param);
 
 }
