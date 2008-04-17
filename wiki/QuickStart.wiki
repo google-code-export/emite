@@ -14,19 +14,18 @@ Emite its a pure xmpp library. That means that there is no need of server proces
 
 So we need to install a proxy that redirect all the local HttpRequest coming from the client to the real Xmpp Server.
 
-One java implementation of this proxy is included for testing purposes in the emite library, but in production envirorments we usually delegate this task in the real server (i.e. Apache2)
+Two java implementation of this proxy are included for testing purposes in the emite library, but in production envirorments we usually delegate this task in the real server (i.e. Apache2)
+
+The first implementation is a real proxy and installed in the /proxy url and the second implementation is a bosh servlet (to connecto to a non bosh-jabber-servers) and its instaled at /http-bosh (see web.xml for more details)
 
 == Pre-requsites ==
 
-You need a running xmpp server with bosh manager. By default we use: localhost:8383/http-bind (but you can change it easily in the web.xml configuration file). 
+You need a running xmpp server with bosh manager (or you can use the bosh servlet with the jabber server you want). By default we use: localhost:8383/http-bind (but you can change it easily in the web.xml configuration file). 
 OpenFire is the easiest way to get this, but any other xmpp server with bosh support can handle (i.e. Tigase server)
 
   # install maven2 ( http://maven.apache.org/ )
   # Install GWT *version 1.5*. It doesn't work with earlier versions (we are currently using 1.5 Milestone 1)
   # Create or configure .m2/settings.xml file to use the 1.5 distribution of gwt (see Appendix 1)
-
-
-
 
 == Compile the gwt:sources ==
 
@@ -51,10 +50,14 @@ mvn jetty:run
 }}}
 to run the proxy
 
-== Run the example ==
+== Run the examples ==
 
 Point the browser to:
-http://localhost:8888/gwt/com.calclab.emiteui.EmiteUI/EmiteUI.html
+http://localhost:4444/gwt/com.calclab.emiteui.EmiteUI/EmiteUI.html
+to see the full featured emite-ui
+or point to browser to:
+http://localhost:4444/gwt/com.calclab.emite.examples.chat.Chat/Chat.html
+to see the chat example
 
 = Appendix =
 
