@@ -19,11 +19,9 @@ import com.google.gwt.user.client.ui.Widget;
 public class ConversationsPanel extends DockPanel {
 
     public static interface ConversationsListener {
-
 	void onBeginChat(String jid);
 
 	void onLogout();
-
     }
 
     private Button btnChat;
@@ -60,6 +58,7 @@ public class ConversationsPanel extends DockPanel {
 
     public void clearRoster() {
 	roster.clear();
+	btnChat.setEnabled(false);
     }
 
     public void removeChat(final String jid, final ChatPanel panel) {
