@@ -39,9 +39,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.66666667"
-     inkscape:cx="219.90542"
-     inkscape:cy="937.34884"
+     inkscape:zoom="1"
+     inkscape:cx="-368.15999"
+     inkscape:cy="1160.3992"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -685,7 +685,7 @@
          sodipodi:role="line"
          x="71.914619"
          y="-111.33508"
-         id="tspan2512">sample ui application</tspan></text>
+         id="tspan2512">ui application</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:89.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;opacity:0.4;fill:#666666;fill-opacity:1;fill-rule:nonzero;marker:none;marker-start:none;marker-mid:none;marker-end:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Kedage;-inkscape-font-specification:Kedage"
@@ -698,5 +698,87 @@
          id="tspan2516"
          x="-201.15735"
          y="-661.19531">beta</tspan></text>
+    <g
+       id="g2560"
+       inkscape:export-filename="/home/vjrj/proyectos/ourproject.org/kune/dev/emite/emite/img/emite-ui.png"
+       inkscape:export-xdpi="32.137314"
+       inkscape:export-ydpi="32.137314">
+      <text
+         sodipodi:linespacing="125%"
+         id="text2516"
+         y="-159.93375"
+         x="-749.90271"
+         style="font-size:155.82290649px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Emblem;-inkscape-font-specification:Emblem Bold"
+         xml:space="preserve"><tspan
+           dy="0 0 -3.7638102"
+           y="-159.93375"
+           x="-749.90271"
+           id="tspan2518"
+           sodipodi:role="line"><tspan
+   id="tspan2520"
+   style="fill:#ff6600">((</tspan>e<tspan
+   dy="3.7638102"
+   id="tspan2522"
+   style="fill:#ff6600">))</tspan></tspan></text>
+      <g
+         transform="translate(0,-0.9321323)"
+         id="g2551">
+        <g
+           id="g2524"
+           transform="matrix(1.7831728,0,0,1.7831728,-79.227654,-1724.5839)">
+          <text
+             transform="scale(0.9684286,1.0326006)"
+             sodipodi:linespacing="89.999998%"
+             id="text2526"
+             y="817.05505"
+             x="-219.35106"
+             style="font-size:49.60492325px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:89.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;opacity:1;fill:#784421;fill-opacity:1;fill-rule:nonzero;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Emblem;-inkscape-font-specification:Emblem Bold"
+             xml:space="preserve"><tspan
+               id="tspan2528"
+               y="817.05505"
+               x="-219.35106"
+               sodipodi:role="line">emite</tspan></text>
+          <text
+             transform="scale(0.9684286,1.0326006)"
+             sodipodi:linespacing="89.999998%"
+             id="text2530"
+             y="839.24841"
+             x="-217.47432"
+             style="font-size:23.32044411px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:89.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;opacity:1;fill:#784421;fill-opacity:1;fill-rule:nonzero;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Emblem;-inkscape-font-specification:Emblem Bold"
+             xml:space="preserve"><tspan
+               id="tspan2532"
+               y="839.24841"
+               x="-217.47432"
+               sodipodi:role="line">xmpp &amp; gwt</tspan></text>
+        </g>
+        <text
+           xml:space="preserve"
+           style="font-size:34.96242523px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:89.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;opacity:1;fill:#666666;fill-opacity:1;fill-rule:nonzero;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Emblem;-inkscape-font-specification:Emblem Bold"
+           x="-471.8595"
+           y="-133.38048"
+           id="text2534"
+           sodipodi:linespacing="89.999998%"
+           transform="scale(0.9684286,1.0326006)"
+           inkscape:export-filename="/home/vjrj/proyectos/ourproject.org/kune/dev/emite/emite/img/emite-ui.png"
+           inkscape:export-xdpi="32.508678"
+           inkscape:export-ydpi="32.508678"><tspan
+             sodipodi:role="line"
+             x="-471.8595"
+             y="-133.38048"
+             id="tspan2536">ui application</tspan></text>
+      </g>
+      <text
+         transform="matrix(0,1,-1,0,0,0)"
+         sodipodi:linespacing="89.999998%"
+         id="text2538"
+         y="215.98232"
+         x="-225.10837"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:89.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;opacity:0.4;fill:#666666;fill-opacity:1;fill-rule:nonzero;marker:none;marker-start:none;marker-mid:none;marker-end:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Kedage;-inkscape-font-specification:Kedage"
+         xml:space="preserve"><tspan
+           y="215.98232"
+           x="-225.10837"
+           id="tspan2540"
+           sodipodi:role="line">beta</tspan></text>
+    </g>
   </g>
 </svg>

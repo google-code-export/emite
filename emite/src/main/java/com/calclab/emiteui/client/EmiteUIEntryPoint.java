@@ -103,7 +103,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
         final Label label = new Label();
         label.setHtml("<p>Currently we are only supporting PLAIN authentication, "
-                + "them for your security, only use jabber test accounts.</p><br/><br/>");
+                + "them for your security, only use jabber test accounts.</p><br/>");
         label.setCls("simple-form-label");
         label.setWidth(350);
         label.setHeight(20);
