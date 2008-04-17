@@ -69,4 +69,9 @@ or without tests:
 
   mvn package -Dmaven.test.skip=true
 
+Appendix C: war generation
+--------------------------------------------------------------------------------
+
+  mvn compile war:war
+
 
