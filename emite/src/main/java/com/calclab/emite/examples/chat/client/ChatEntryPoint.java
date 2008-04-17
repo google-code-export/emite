@@ -50,6 +50,11 @@ public class ChatEntryPoint implements EntryPoint {
 	conversationsPanel = new ConversationsPanel(new ConversationsListener() {
 	    public void onBeginChat(final String jid) {
 		final Chat chat = xmpp.getChatManager().openChat(XmppURI.parse(jid));
+		// we allways will have a chatPanel in chats because if its a
+		// new conversations
+		// the onChatcreated method in ChatManagerListener will be
+		// called before
+		// openChat returns
 		final ChatPanel chatPanel = chats.get(chat.getOtherURI());
 		conversationsPanel.show(jid, chatPanel);
 	    }

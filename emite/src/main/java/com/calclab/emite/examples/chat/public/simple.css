@@ -13,27 +13,32 @@ body {
 	padding: 0.1em 1em;
 }
 
-.gwt-TabBar {
-	
+.gwt-ScrollPanel {
+	height: 20em;
 }
 
-.gwt-TabBar .gwt-TabBarFirst {
-	width: 5px; /* first tab distance from the left */
+.gwt-TabBarItem {
+	border-top: 1px solid gray;
+	border-left: 1px solid gray;
+	border-right: 1px solid gray;
+	padding: 0.5em 1em;
 }
 
-.gwt-TabBar .gwt-TabBarItem {
-	border-collapse: collapse;
-	margin-left: 6px;
-}
-
-.gwt-TabBar .gwt-TabBarItem .topLeftInner,.gwt-TabBar .gwt-TabBarItem .topRightInner
-	{
-	width: 6px;
-	height: 6px;
+.gwt-TabBarItem-selected {
+	background-color: #FF4AD8;
 }
 
 .chatexample-login {
 	margin: 0.5em;
+}
+
+.chatexample-login .gwt-Label {
+	width: 8em;
+	text-align: right;
+}
+
+select {
+	width: 8em;
 }
 
 .chatexample-conversations {

@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -42,11 +43,13 @@ public class ConversationsPanel extends DockPanel {
 		listener.onLogout();
 	    }
 	});
-	final FlowPanel flow = new FlowPanel();
-	flow.add(btnLogout);
-	flow.add(new Label("status: "));
-	flow.add(status);
-	add(flow, DockPanel.SOUTH);
+	final FlowPanel logoutPanel = new FlowPanel();
+	logoutPanel.add(btnLogout);
+	add(logoutPanel, DockPanel.NORTH);
+	final HorizontalPanel statusPanel = new HorizontalPanel();
+	statusPanel.add(new Label("status: "));
+	statusPanel.add(status);
+	add(statusPanel, DockPanel.SOUTH);
 
 	createRoster(listener);
     }
