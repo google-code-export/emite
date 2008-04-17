@@ -187,30 +187,30 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
     private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final RosterItem item) {
         return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove this buddy"),
-                EmiteUiPlugin.ON_REQUEST_REMOVE_ROSTERITEM, item.getXmppURI());
+                EmiteUiPlugin.ON_REQUEST_REMOVE_ROSTERITEM, item.getJID());
     }
 
     private UserGridMenuItem<XmppURI> createStartChatMenuItem(final RosterItem item) {
         return new UserGridMenuItem<XmppURI>("newchat-icon", i18n.t("Start a chat with this buddy"),
-                EmiteUiPlugin.ON_PAIR_CHAT_START, item.getXmppURI());
+                EmiteUiPlugin.ON_PAIR_CHAT_START, item.getJID());
     }
 
     private UserGridMenuItem<XmppURI> createSubscribeBuddyMenuItem(final RosterItem item) {
         return new UserGridMenuItem<XmppURI>("add-icon", i18n.t("Request to see when this buddy is connected or not"),
-                EmiteUiPlugin.ON_REQUEST_SUBSCRIBE, item.getXmppURI());
+                EmiteUiPlugin.ON_REQUEST_SUBSCRIBE, item.getJID());
     }
 
     private UserGridMenuItem<XmppURI> createUnsubscribeBuddyMenuItem(final RosterItem item) {
         return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Stop to see when this buddy is connected or not"),
-                EmiteUiPlugin.ON_CANCEL_SUBSCRITOR, item.getXmppURI());
+                EmiteUiPlugin.ON_CANCEL_SUBSCRITOR, item.getJID());
     }
 
     private void createXmppListeners() {
         roster.addListener(new RosterListener() {
             public void onItemPresenceChanged(final RosterItem item) {
-                final ChatUserUI user = rosterMap.get(new XmppJID(item.getXmppURI()));
+                final ChatUserUI user = rosterMap.get(new XmppJID(item.getJID()));
                 if (user == null) {
-                    Log.error("Trying to update a user is not in roster: " + item.getXmppURI() + " ----> Roster: "
+                    Log.error("Trying to update a user is not in roster: " + item.getJID() + " ----> Roster: "
                             + rosterMap);
                 } else {
                     logRosterItem("Updating", item);
@@ -230,7 +230,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
             private void logRosterItem(final String operation, final RosterItem item) {
                 final String name = item.getName();
                 final Presence presence = item.getPresence();
-                Log.info(operation + " roster item: " + item.getXmppURI() + " name: " + name + " subsc: "
+                Log.info(operation + " roster item: " + item.getJID() + " name: " + name + " subsc: "
                         + item.getSubscription());
                 if (presence != null) {
                     logPresence(presence);

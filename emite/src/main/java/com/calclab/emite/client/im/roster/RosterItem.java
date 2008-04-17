@@ -58,13 +58,13 @@ public class RosterItem {
     }
 
     private final ArrayList<String> groups;
+    private final XmppURI jid;
     private final String name;
-    private final Subscription subscription;
-    private final XmppURI uri;
     private Presence presence;
+    private final Subscription subscription;
 
     public RosterItem(final XmppURI uri, final Subscription subscription, final String name) {
-	this.uri = uri;
+	this.jid = uri;
 	this.subscription = subscription;
 	this.name = name;
 	this.groups = new ArrayList<String>();
@@ -73,6 +73,10 @@ public class RosterItem {
 
     public List<String> getGroups() {
 	return groups;
+    }
+
+    public XmppURI getJID() {
+	return jid;
     }
 
     public String getName() {
@@ -85,10 +89,6 @@ public class RosterItem {
 
     public Subscription getSubscription() {
 	return subscription;
-    }
-
-    public XmppURI getXmppURI() {
-	return uri;
     }
 
     public void setPresence(final Presence presence) {
