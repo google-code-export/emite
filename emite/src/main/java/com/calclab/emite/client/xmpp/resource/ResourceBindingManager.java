@@ -41,12 +41,11 @@ public class ResourceBindingManager extends EmiteComponent {
 
     @Override
     public void attach() {
-	PacketListener packetListener = new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.logIn), new PacketListener() {
 	    public void handle(final IPacket received) {
-		resource = XmppURI.parse(received.getAttribute("uri")).getResource();
+		eventLogin(received);
 	    }
-	};
-	emite.subscribe(when(SessionManager.Events.logIn), packetListener);
+	});
 	emite.subscribe(when(SessionManager.Events.authorized), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventAuthorized();
@@ -69,5 +68,9 @@ public class ResourceBindingManager extends EmiteComponent {
     void eventBinded(final IPacket received) {
 	final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
 	emite.publish(SessionManager.Events.binded.Params("uri", jid));
+    }
+
+    void eventLogin(final IPacket received) {
+	resource = XmppURI.parse(received.getAttribute("uri")).getResource();
     }
 }

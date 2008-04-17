@@ -60,7 +60,7 @@ public class MUCRoomManagerTest {
 			+ "<status code=\"201\" />" + "</x>" + "</presence>");
 	manager.eventPresence(new Presence(packet));
 	final IQ expected = new IQ(Type.set);
-	verify(emite).send(anyString(), TestMatchers.isPacket(expected), (PacketListener) anyObject());
+	verify(emite).send(anyString(), TestMatchers.packetLike(expected), (PacketListener) anyObject());
     }
 
     // FIXME: revisar si esto tiene lógica

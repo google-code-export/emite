@@ -35,7 +35,7 @@ public class SessionManagerTest {
 	final XmppURI uri = XmppURI.parse("name@domain/resource");
 	manager.eventSession(uri);
 	verify(session).setState(State.connected);
-	verify(emite).publish(TestMatchers.isPacket(SessionManager.Events.loggedIn.With("uri", uri.toString())));
+	verify(emite).publish(TestMatchers.packetLike(SessionManager.Events.loggedIn.With("uri", uri.toString())));
 
     }
 

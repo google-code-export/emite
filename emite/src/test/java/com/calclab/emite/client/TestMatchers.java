@@ -12,12 +12,39 @@ import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 
 @SuppressWarnings("unchecked")
 public class TestMatchers {
+
+    private static class IsCollectionLike<T extends Collection<?>> extends ArgumentMatcher<T> {
+	private final T expected;
+
+	public IsCollectionLike(final T list) {
+	    this.expected = list;
+	}
+
+	@Override
+	public boolean matches(final Object argument) {
+	    final T actual = (T) argument;
+	    final Object[] actualArray = actual.toArray();
+	    final Object[] expectedArray = expected.toArray();
+	    if (actualArray.length != expectedArray.length) {
+		return false;
+	    }
+
+	    for (int index = 0; index < expectedArray.length; index++) {
+		if (!expectedArray[index].equals(actualArray[index])) {
+		    return false;
+		}
+	    }
+	    return true;
+	}
+
+    }
 
     private static class IsCollectionOfSize<T> extends ArgumentMatcher<T> {
 	private final int size;
@@ -76,6 +103,10 @@ public class TestMatchers {
 
     }
 
+    public static Collection<RosterItem> hasSame(final List<?> list) {
+	return argThat(new IsCollectionLike<List>(list));
+    }
+
     public static Collection isCollectionOfSize(final int size) {
 	return argThat(new IsCollectionOfSize<Collection>(size));
     }
@@ -84,7 +115,7 @@ public class TestMatchers {
 	return argThat(new IsCollectionOfSize<List>(size));
     }
 
-    public static IPacket isPacket(final IPacket packet) {
+    public static IPacket packetLike(final IPacket packet) {
 	return argThat(new IsPacketLike(packet));
     }
 

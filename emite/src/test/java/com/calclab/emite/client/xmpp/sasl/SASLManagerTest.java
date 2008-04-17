@@ -32,7 +32,7 @@ public class SASLManagerTest {
 	final String received = "<failure xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><not-authorized/></failure>";
 	manager.eventFailure(xmler.toXML(received));
 	verify(emite).publish(
-		TestMatchers.isPacket(BoshManager.Events.onError.Because(new Packet("not-authorized", null))));
+		TestMatchers.packetLike(BoshManager.Events.onError.Because(new Packet("not-authorized", null))));
     }
 
     @Test
