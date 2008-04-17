@@ -27,7 +27,7 @@ to run the proxy
 
 Point the browser to:
 
-  http://localhost:8888/gwt/com.calclab.examplechat.Example/ChatExample.html
+  http://localhost:8888/gwt/com.calclab.emiteui.EmiteUI/EmiteUI.html
 
 Appendix A: Configuration of maven
 --------------------------------------------------------------------------------
@@ -64,5 +64,9 @@ Appendix B: jar generation
 --------------------------------------------------------------------------------
 
   mvn package
+
+or without tests:
+
+  mvn package -Dmaven.test.skip=true
 
 
