@@ -57,7 +57,7 @@ public class RosterManager extends EmiteComponent {
      * SHOULD request the roster BEFORE! sending initial presence
      */
     @Override
-    public void attach() {
+    public void install() {
 	emite.subscribe(when(SessionManager.Events.loggedIn), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLoggedIn();

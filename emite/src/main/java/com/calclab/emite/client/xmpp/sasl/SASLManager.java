@@ -47,7 +47,7 @@ public class SASLManager extends EmiteComponent {
     }
 
     @Override
-    public void attach() {
+    public void install() {
 	PacketListener packetListener = new PacketListener() {
 	    public void handle(final IPacket received) {
 		uri = XmppURI.parse(received.getAttribute("uri"));

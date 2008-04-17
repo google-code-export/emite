@@ -1,4 +1,4 @@
-package com.calclab.emite.client;
+package com.calclab.emite.testing;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
@@ -20,7 +19,7 @@ import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 @SuppressWarnings("unchecked")
 public class TestMatchers {
 
-    private static class IsCollectionLike<T extends Collection<?>> extends ArgumentMatcher<T> {
+    private static class IsCollectionLike<T extends Collection> extends ArgumentMatcher<T> {
 	private final T expected;
 
 	public IsCollectionLike(final T list) {
@@ -103,7 +102,7 @@ public class TestMatchers {
 
     }
 
-    public static Collection<RosterItem> hasSame(final List<?> list) {
+    public static List hasSame(final List list) {
 	return argThat(new IsCollectionLike<List>(list));
     }
 

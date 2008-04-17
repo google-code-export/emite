@@ -1,7 +1,7 @@
 package com.calclab.emite.client.im.roster;
 
-import static com.calclab.emite.client.TestMatchers.hasSame;
-import static com.calclab.emite.client.TestMatchers.isCollectionOfSize;
+import static com.calclab.emite.testing.TestMatchers.hasSame;
+import static com.calclab.emite.testing.TestMatchers.isCollectionOfSize;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
@@ -13,6 +13,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class RosterTest {
@@ -36,6 +37,7 @@ public class RosterTest {
     @Test
     public void shouldInformWhenRosterChanged() {
 	final List<RosterItem> itemCollection = new ArrayList<RosterItem>();
+	itemCollection.add(new RosterItem(XmppURI.parse("name@domain"), Subscription.none, "name"));
 	roster.setItems(itemCollection);
 	verify(listener).onRosterChanged(hasSame(itemCollection));
     }

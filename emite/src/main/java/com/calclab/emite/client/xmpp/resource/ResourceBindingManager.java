@@ -40,7 +40,7 @@ public class ResourceBindingManager extends EmiteComponent {
     }
 
     @Override
-    public void attach() {
+    public void install() {
 	emite.subscribe(when(SessionManager.Events.logIn), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLogin(received);

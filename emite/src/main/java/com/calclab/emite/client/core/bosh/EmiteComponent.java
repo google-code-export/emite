@@ -30,10 +30,10 @@ public abstract class EmiteComponent implements Startable {
 	this.emite = emite;
     }
 
-    public abstract void attach();
+    public abstract void install();
 
     public void onStartComponent() {
-	attach();
+	install();
     }
 
     public void onStopComponent() {

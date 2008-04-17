@@ -55,7 +55,7 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
     }
 
     @Override
-    public void attach() {
+    public void install() {
 	emite.subscribe(when(SessionManager.Events.loggedOut), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLoggedOut();

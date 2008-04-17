@@ -50,7 +50,7 @@ public class SessionManager extends EmiteComponent {
     }
 
     @Override
-    public void attach() {
+    public void install() {
 
 	emite.subscribe(when(Events.authorized), new PacketListener() {
 	    public void handle(final IPacket received) {
