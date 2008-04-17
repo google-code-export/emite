@@ -66,6 +66,9 @@
 							com.calclab.emite.Emite
 						</compileTarget>
 						<compileTarget>
+							com.calclab.emite.examples.chat.Chat
+						</compileTarget>
+						<compileTarget>
 							com.calclab.examplechat.Example
 						</compileTarget>
 					</compileTargets>
