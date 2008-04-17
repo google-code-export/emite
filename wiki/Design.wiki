@@ -11,51 +11,31 @@ the source code. It's not about how to use the library: for this see UserManual
 ===the dispatcher component===
 
 The dispatcher is the central part of the system. Its a publisher/subscribe system 
-where the messages are always valid xml. Some of this messages comes from
- the server (because the Bosh object publish any incoming xmpp message into
-  the dispatcher) and some other with the <event> element as root (events) are
- published by the internal components.
+where the messages are always valid xml. Some of this messages comes from the server (because the Bosh object publish any incoming xmpp message into the dispatcher) and some other with the <event> element as root (events) are published by the internal components.
 
 
-For example, when a incoming xmmp message informing that the authentication was 
-succesful, the ResourcePlugin (subscribed to that message) send back to the server 
-the xmpp resource binding request, and the SessionPlugin (also subscribed to that 
-message) change its state to authorized and publish the 
-{{{<event type="session:authorized">}}}.
- If you (as user) want to know if the athentication was succesfully you
-  could subscribe to that event in the dispatcher (but there  is a nicer way to do it).
+For example, when a incoming xmmp message informing that the authentication was succesful, the ResourcePlugin (subscribed to that message) send back to the server the xmpp resource binding request, and the SessionPlugin (also subscribed to that message) change its state to authorized and publish the {{{<event type="session:authorized">}}}.  If you (as user) want to know if the athentication was succesfully you could subscribe to that event in the dispatcher (but there  is a nicer way to do it).
 
-The dispatcher doesnt send anything outside. If you want tu send stanzas
-you should use the emite component
+The dispatcher doesnt send anything outside. If you want tu send stanzas you should use the emite component
 
 ===the emite compontent===
 
-The emite component is the most used component in the system. It implements all
-the methods of the dispatcher and also provides a couple of method to send
-stanzas to the xmpp server.
+The emite component is the most used component in the system. It implements all the methods of the dispatcher and also provides a couple of method to send stanzas to the xmpp server.
 
 The straightforward method is:
 {{{
 emite.send(new Message(...));
 }}}
 
-The emite object has other method useful to send IQs. The iqs are special types
-because contains ids and sometimes we want to send an IQ with an id and 
-provide a listener to receive the response of that iq. See the javadoc of the other
-send method of emite for more info.
+The emite object has other method useful to send IQs. The iqs are special types because contains ids and sometimes we want to send an IQ with an id and provide a listener to receive the response of that iq. See the javadoc of the other send method of emite for more info.
 
 ===the container===
 
-the container ({{{Container}}}) its a place to register components. Its the poor's version
-of a IoC (Inversion of Control) container. You can register components with a name
-and retrieve after. Its used by the Plugins to connect one components to others.
+the container ({{{Container}}}) its a place to register components. Its the poor's version of a IoC (Inversion of Control) container. You can register components with a name and retrieve after. Its used by the Plugins to connect one components to others.
 
-The use is very straightforward: see any Plugin code and you will understand
-quickly.
+The use is very straightforward: see any Plugin code and you will understand quickly.
 
 
 ===the xmpp facade===
 
-the xmpp facade creates a container, register all core and im plugins and 
-provide some nice methods to interact with the components and perform
- the most common operations
+the xmpp facade creates a container, register all core and im plugins and provide some nice methods to interact with the components and perform the most common operations 
