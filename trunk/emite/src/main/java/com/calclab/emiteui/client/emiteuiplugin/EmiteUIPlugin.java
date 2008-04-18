@@ -33,15 +33,19 @@ import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteui.client.emiteuiplugin.dialog.MultiChat;
 import com.calclab.emiteui.client.emiteuiplugin.dialog.MultiChatListener;
+import com.calclab.emiteui.client.emiteuiplugin.dialog.OwnPresence;
 import com.calclab.emiteui.client.emiteuiplugin.params.MultiChatCreationParam;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Image;
 
-public class EmiteUiPlugin extends Plugin {
+public class EmiteUIPlugin extends Plugin {
 
     // Input events
-    public static final String OPEN_CHAT_DIALOG = "emiteuiplugin.openchatdialog";
+    public static final String CREATE_CHAT_DIALOG = "emiteuiplugin.openchatdialog";
+    public static final String SHOW_CHAT_DIALOG = "emiteuiplugin.showchatdialog";
+    public static final String HIDE_CHAT_DIALOG = "emiteuiplugin.hidechatdialog";
+    public static final String SET_OWN_PRESENCE = "emiteuiplugin.setownpresence";
     public static final String CLOSE_ALLCHATS = "emiteuiplugin.closeallchats";
     public static final String CHATOPEN = "emiteuiplugin.chatopen";
     public static final String ROOMOPEN = "emiteuiplugin.roomopen";
@@ -59,7 +63,7 @@ public class EmiteUiPlugin extends Plugin {
 
     private MultiChat multiChatDialog;
 
-    public EmiteUiPlugin() {
+    public EmiteUIPlugin() {
         super("emiteuiplugin");
     }
 
@@ -67,13 +71,12 @@ public class EmiteUiPlugin extends Plugin {
     protected void start() {
 
         final Dispatcher dispatcher = getDispatcher();
-        dispatcher.subscribe(OPEN_CHAT_DIALOG, new Action<MultiChatCreationParam>() {
+        dispatcher.subscribe(CREATE_CHAT_DIALOG, new Action<MultiChatCreationParam>() {
             public void execute(final MultiChatCreationParam param) {
                 if (multiChatDialog == null) {
                     createChatDialog(param);
                     preFetchImages();
                 }
-                multiChatDialog.show();
             }
 
             private void createChatDialog(final MultiChatCreationParam param) {
@@ -91,22 +94,22 @@ public class EmiteUiPlugin extends Plugin {
                             }
 
                             public void onUserColorChanged(final String color) {
-                                dispatcher.fire(EmiteUiPlugin.ON_USER_COLOR_SELECTED, color);
+                                dispatcher.fire(EmiteUIPlugin.ON_USER_COLOR_SELECTED, color);
                             }
 
                             public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
-                                dispatcher.fire(EmiteUiPlugin.ON_USER_SUBSCRIPTION_CHANGED, subscriptionMode);
+                                dispatcher.fire(EmiteUIPlugin.ON_USER_SUBSCRIPTION_CHANGED, subscriptionMode);
                             }
 
                         });
 
-                dispatcher.subscribe(EmiteUiPlugin.CHATOPEN, new Action<XmppURI>() {
+                dispatcher.subscribe(EmiteUIPlugin.CHATOPEN, new Action<XmppURI>() {
                     public void execute(final XmppURI param) {
                         xmpp.getChatManager().openChat(param);
                     }
                 });
 
-                dispatcher.subscribe(EmiteUiPlugin.ROOMOPEN, new Action<XmppURI>() {
+                dispatcher.subscribe(EmiteUIPlugin.ROOMOPEN, new Action<XmppURI>() {
                     public void execute(final XmppURI param) {
                         xmpp.getRoomManager().openChat(param);
                     }
@@ -121,6 +124,24 @@ public class EmiteUiPlugin extends Plugin {
                 dispatcher.subscribe(REFLESH_USER_OPTIONS, new Action<UserChatOptions>() {
                     public void execute(final UserChatOptions param) {
                         multiChatDialog.setUserChatOptions(param);
+                    }
+                });
+
+                dispatcher.subscribe(SHOW_CHAT_DIALOG, new Action<Object>() {
+                    public void execute(final Object param) {
+                        multiChatDialog.show();
+                    }
+                });
+
+                dispatcher.subscribe(HIDE_CHAT_DIALOG, new Action<Object>() {
+                    public void execute(final Object param) {
+                        multiChatDialog.hide();
+                    }
+                });
+
+                dispatcher.subscribe(SET_OWN_PRESENCE, new Action<OwnPresence>() {
+                    public void execute(final OwnPresence ownPresence) {
+                        multiChatDialog.setOwnPresence(ownPresence);
                     }
                 });
 

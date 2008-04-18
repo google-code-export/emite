@@ -30,7 +30,7 @@ import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteui.client.emiteuiplugin.AbstractPresenter;
-import com.calclab.emiteui.client.emiteuiplugin.EmiteUiPlugin;
+import com.calclab.emiteui.client.emiteuiplugin.EmiteUIPlugin;
 import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUIListener;
 import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUIPresenter;
 import com.calclab.emiteui.client.emiteuiplugin.users.RoomUserUI;
@@ -91,7 +91,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
     }
 
     private UserGridMenuItem<Object> createNoActionsMenuItem() {
-        return new UserGridMenuItem<Object>("", "", EmiteUiPlugin.NO_ACTION, null);
+        return new UserGridMenuItem<Object>("", "", EmiteUIPlugin.NO_ACTION, null);
     }
 
     private UserGridMenuItemList createUserMenu(final RoomUserUI roomUserUI) {
