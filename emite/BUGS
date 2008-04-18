@@ -4,6 +4,14 @@ Known bugs in Emite
 For reports please use:
   http://code.google.com/p/emite/issues/list
 
+- Room send() fails
+
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException
+	at com.calclab.emite.client.xmpp.stanzas.Message.<init>(Message.java:47)
+	at com.calclab.emite.client.extra.muc.Room.send(Room.java:102)
+	at com.calclab.emite.j2se.swing.SwingClient$8$1.onSend(SwingClient.java:196)
+	at com.calclab.emite.j2se.swing.ChatPanel$1.actionPerformed(ChatPanel.java:31)
+
 - When adding a new roster item (with no real jid like someone@example.com) , we receive addItem notificiations off all the roster (already added), instead of update.
 
 - Remove roster item not fire any listener. The packet:
