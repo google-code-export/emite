@@ -383,6 +383,7 @@ public class MultiChatPresenter implements MultiChat {
                     }
 
                     public void onOccupantModified(final Occupant occupant) {
+                        // FIXME update room user list
                     }
 
                     public void onOccupantsChanged(final Collection<Occupant> users) {
