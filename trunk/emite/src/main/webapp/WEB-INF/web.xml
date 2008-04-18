@@ -19,9 +19,9 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>BoshGateway</servlet-name>
-		<url-pattern>/gwt/com.calclab.emiteui.EmiteUI/http-bind</url-pattern>
+		<url-pattern>/http-bosh</url-pattern>
 	</servlet-mapping>
-<!--
+
 	<servlet>
 		<servlet-name>Proxy</servlet-name>
 		<servlet-class>de.spieleck.servlets.ProxyServlet</servlet-class>
@@ -67,5 +67,4 @@
 			/gwt/com.calclab.emiteui.Example/http-bind
 		</url-pattern>
 	</servlet-mapping>
--->
 </web-app>
