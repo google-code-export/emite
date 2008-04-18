@@ -29,6 +29,7 @@ import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUI;
+import com.calclab.emiteui.client.emiteuiplugin.roster.RosterUI;
 import com.calclab.emiteui.client.emiteuiplugin.users.UserGridPanel;
 import com.calclab.emiteui.client.emiteuiplugin.utils.ChatIcons;
 import com.calclab.emiteui.client.emiteuiplugin.utils.emoticons.EmoticonPaletteListener;
@@ -83,13 +84,16 @@ public class MultiChatPanel implements MultiChatView {
     private Panel southPanel;
     private FormPanel inputForm;
     private FormPanel subjectForm;
+    private final RosterUI rosterUI;
 
-    public MultiChatPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
+    public MultiChatPanel(final RosterUI rosterUI, final I18nTranslationService i18n, final MultiChatPresenter presenter) {
+        this.rosterUI = rosterUI;
         this.i18n = i18n;
         this.presenter = presenter;
         panelIdToChat = new HashMap<String, ChatUI>();
         createLayout();
         reset();
+        attachRoster();
     }
 
     public void activateChat(final ChatUI chat) {
@@ -119,15 +123,12 @@ public class MultiChatPanel implements MultiChatView {
         roomUsersPanel.expand();
     }
 
-    public void attachRoster(final View view) {
-        rosterPanel.add((Panel) view);
-        if (usersPanel.isRendered()) {
-            usersPanel.doLayout();
-        }
-    }
-
     public void clearInputText() {
         input.reset();
+    }
+
+    public void clearRoster() {
+        rosterUI.clearRoster();
     }
 
     public void clearSubject() {
@@ -162,6 +163,10 @@ public class MultiChatPanel implements MultiChatView {
         return input.getValueAsString();
     }
 
+    public void hide() {
+        dialog.hide();
+    }
+
     public void highlightChat(final ChatUI chat) {
         // TODO (testing)
         Panel view = (Panel) chat.getView();
@@ -178,6 +183,18 @@ public class MultiChatPanel implements MultiChatView {
 
     public void removeChat(final ChatUI chatUI) {
         centerPanel.remove(((Panel) chatUI.getView()).getId());
+    }
+
+    public void reset() {
+        subject.reset();
+        setCloseAllOptionEnabled(false);
+        setSubjectEditable(false);
+        setInfoPanelVisible(true);
+        setRoomUserListVisible(false);
+        setInviteToGroupChatButtonVisible(false);
+        setSendEnabled(false);
+        setInputEditable(false);
+        setEmoticonButtonEnabled(false);
     }
 
     public void setAddRosterItemButtonVisible(final boolean visible) {
@@ -240,7 +257,6 @@ public class MultiChatPanel implements MultiChatView {
             usersPanel.setActiveItemID(roomUsersPanel.getId());
             roomUsersPanel.expand();
         }
-
     }
 
     public void setRosterVisible(final boolean visible) {
@@ -285,6 +301,13 @@ public class MultiChatPanel implements MultiChatView {
                 }
             });
             presenter.attachIconToBottomBar(bottomIcon);
+        }
+    }
+
+    private void attachRoster() {
+        rosterPanel.add((Panel) rosterUI.getView());
+        if (usersPanel.isRendered()) {
+            usersPanel.doLayout();
         }
     }
 
@@ -510,11 +533,6 @@ public class MultiChatPanel implements MultiChatView {
         presenter.onCurrentUserSend(getInputText());
         e.stopEvent();
         input.focus();
-    }
-
-    private void reset() {
-        subject.reset();
-        setInviteToGroupChatButtonVisible(false);
     }
 
     private void showEmoticonPalette(final int x, final int y) {

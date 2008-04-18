@@ -280,7 +280,7 @@ public class MultiChatPanelTopBar extends Toolbar {
         case busy:
             checkItem.addListener(new BaseItemListenerAdapter() {
                 public void onClick(final BaseItem item, final EventObject e) {
-                    presenter.onStatusSelected(new OwnPresence(ownStatus));
+                    presenter.setOwnPresence(new OwnPresence(ownStatus));
                 }
             });
             break;
@@ -292,7 +292,7 @@ public class MultiChatPanelTopBar extends Toolbar {
                             .t("Set your status text (something like 'Out for dinner' or 'Working')"),
                             new PromptCallback() {
                                 public void execute(final String btnID, final String text) {
-                                    presenter.onStatusSelected(new OwnPresence(ownStatus, text));
+                                    presenter.setOwnPresence(new OwnPresence(ownStatus, text));
                                 }
                             });
                 }

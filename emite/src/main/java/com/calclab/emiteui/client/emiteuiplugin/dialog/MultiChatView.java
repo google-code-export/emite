@@ -33,9 +33,9 @@ public interface MultiChatView {
 
     void attachRoomUserList(View userListView);
 
-    void attachRoster(View view);
-
     void clearInputText();
+
+    void clearRoster();
 
     void clearSubject();
 
@@ -51,9 +51,13 @@ public interface MultiChatView {
 
     String getInputText();
 
+    void hide();
+
     void highlightChat(ChatUI chatUI);
 
     void removeChat(ChatUI chatUI);
+
+    void reset();
 
     void setAddRosterItemButtonVisible(boolean visible);
 

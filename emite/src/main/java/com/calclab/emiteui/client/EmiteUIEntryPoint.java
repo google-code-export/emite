@@ -29,7 +29,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.im.roster.Roster;
-import com.calclab.emiteui.client.emiteuiplugin.EmiteUiPlugin;
+import com.calclab.emiteui.client.emiteuiplugin.EmiteUIPlugin;
 import com.calclab.emiteui.client.emiteuiplugin.UserChatOptions;
 import com.calclab.emiteui.client.emiteuiplugin.params.MultiChatCreationParam;
 import com.google.gwt.core.client.EntryPoint;
@@ -39,7 +39,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
-import com.gwtext.client.widgets.form.Label;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 
@@ -82,10 +81,11 @@ public class EmiteUIEntryPoint implements EntryPoint {
         dispatcher = DefaultDispatcher.getInstance();
         final PluginManager kunePluginManager = new PluginManager(dispatcher, new UIExtensionPointManager(),
                 new I18nTranslationServiceMocked());
-        kunePluginManager.install(new EmiteUiPlugin());
+        kunePluginManager.install(new EmiteUIPlugin());
 
-        dispatcher.fire(EmiteUiPlugin.OPEN_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions("http-bind"),
+        dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions("/proxy"),
                 generateUserChatOptions()));
+        dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
     }
 
     private void createFormPanel() {
@@ -100,13 +100,6 @@ public class EmiteUIEntryPoint implements EntryPoint {
         formPanel.setWidth(300);
         formPanel.setLabelWidth(75);
         formPanel.setUrl("save-form.php");
-
-        final Label label = new Label();
-        label.setHtml("<p>Currently we are only supporting PLAIN authentication, "
-                + "them for your security, only use jabber test accounts.</p><br/>");
-        label.setCls("simple-form-label");
-        label.setWidth(350);
-        label.setHeight(20);
 
         jid = new TextField("Jabber id", "jid", 180);
         jid.setAllowBlank(false);
@@ -127,11 +120,9 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
         passwd.addListener(new FieldListenerAdapter() {
             public void onChange(final Field field, final Object newVal, final Object oldVal) {
-                dispatcher.fire(EmiteUiPlugin.REFLESH_USER_OPTIONS, generateUserChatOptions());
+                dispatcher.fire(EmiteUIPlugin.REFLESH_USER_OPTIONS, generateUserChatOptions());
             }
         });
-
-        panel.add(label);
 
         panel.add(formPanel);
 
