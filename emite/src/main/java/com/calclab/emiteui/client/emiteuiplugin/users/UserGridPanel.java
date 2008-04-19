@@ -24,10 +24,10 @@ package com.calclab.emiteui.client.emiteuiplugin.users;
 import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteui.client.emiteuiplugin.dialog.StatusUtil;
-import com.calclab.emiteui.client.emiteuiplugin.users.RoomUserUI.RoomUserType;
-import com.calclab.emiteui.client.emiteuiplugin.utils.XmppJID;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.ArrayReader;
 import com.gwtext.client.data.FieldDef;
@@ -56,8 +56,8 @@ public class UserGridPanel extends Panel {
     private static final String STATUSIMG = "status";
     private static final String STATUSTEXT = "statustext";
     private FieldDef[] fieldDefs;
-    private final HashMap<XmppJID, UserGridMenu> menuMap;
-    private final HashMap<XmppJID, Record> recordMap;
+    private final HashMap<XmppURI, UserGridMenu> menuMap;
+    private final HashMap<XmppURI, Record> recordMap;
     private RecordDef recordDef;
     private Store store;
     private GridPanel grid;
@@ -66,8 +66,8 @@ public class UserGridPanel extends Panel {
         setBorder(false);
         setLayout(new FitLayout());
         createGrid();
-        menuMap = new HashMap<XmppJID, UserGridMenu>();
-        recordMap = new HashMap<XmppJID, Record>();
+        menuMap = new HashMap<XmppURI, UserGridMenu>();
+        recordMap = new HashMap<XmppURI, Record>();
     }
 
     public void addUser(final ChatUserUI user, final UserGridMenu menu) {
@@ -76,7 +76,7 @@ public class UserGridPanel extends Panel {
     }
 
     public void addUser(final RoomUserUI user, final UserGridMenu menu, final String userType) {
-        final String img = user.getUserType().equals(RoomUserType.moderator) ? "images/moderatoruser.gif"
+        final String img = user.getRole().equals(Role.moderator) ? "images/moderatoruser.gif"
                 : "images/normaluser.gif";
         addUser(user, "<img src=\"" + img + "\">", userType, menu);
     }
@@ -88,7 +88,7 @@ public class UserGridPanel extends Panel {
     }
 
     public void removeUser(final AbstractChatUser user) {
-        XmppJID userJid = user.getJid();
+        XmppURI userJid = user.getURI();
         Record storeToRemove = recordMap.get(userJid);
         if (storeToRemove == null) {
             Log.error("Trying to remove a non existing roster item: " + userJid);
@@ -100,17 +100,22 @@ public class UserGridPanel extends Panel {
         doLayoutIfNeeded();
     }
 
+    public void resizeGrid(final int newWidthAvailable) {
+        // TODO
+        // grid.setWidth(newWidthAvailable - SOMETHING);
+    }
+
     public void updateRosterItem(final ChatUserUI user, final UserGridMenu menu) {
         // removeUser(user);
         // addUser(user, menu);
-        Record recordToUpdate = recordMap.get(user.getJid());
+        Record recordToUpdate = recordMap.get(user.getURI());
         recordToUpdate.set(IMG, user.getIconUrl());
         recordToUpdate.set(ALIAS, formatAlias(user));
         recordToUpdate.set(JID, formatJid(user));
         recordToUpdate.set(COLOR, user.getColor());
         recordToUpdate.set(STATUSTEXT, formatPresenceStatus(user.getPresence()));
         recordToUpdate.set(STATUSIMG, formatStatusIcon(user));
-        menuMap.put(user.getJid(), menu);
+        menuMap.put(user.getURI(), menu);
         doLayoutIfNeeded();
     }
 
@@ -118,9 +123,9 @@ public class UserGridPanel extends Panel {
             final UserGridMenu menu) {
         final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), formatJid(user),
                 formatAlias(user), user.getColor(), statusIcon, statusTextOrig });
-        recordMap.put(user.getJid(), newUserRecord);
+        recordMap.put(user.getURI(), newUserRecord);
         store.add(newUserRecord);
-        menuMap.put(user.getJid(), menu);
+        menuMap.put(user.getURI(), menu);
         doLayoutIfNeeded();
     }
 
@@ -184,7 +189,7 @@ public class UserGridPanel extends Panel {
             private void showMenu(final int rowIndex, final EventObject e) {
                 final Record record = store.getRecordAt(rowIndex);
                 final String jid = record.getAsString(JID);
-                final UserGridMenu menu = menuMap.get(new XmppJID(jid));
+                final UserGridMenu menu = menuMap.get(XmppURI.parse(jid));
                 menu.showMenu(e);
             }
 
@@ -219,11 +224,11 @@ public class UserGridPanel extends Panel {
     }
 
     private String formatAlias(final AbstractChatUser user) {
-        return user.getAlias() != null ? user.getAlias() : user.getJid().getNode();
+        return user.getAlias() != null ? user.getAlias() : user.getURI().getNode();
     }
 
     private String formatJid(final AbstractChatUser user) {
-        return user.getJid().toString();
+        return user.getURI().toString();
     }
 
     private String formatPresenceStatus(final Presence presence) {

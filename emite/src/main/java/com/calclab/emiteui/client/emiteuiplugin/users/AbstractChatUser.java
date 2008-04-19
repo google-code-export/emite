@@ -21,17 +21,17 @@
  */
 package com.calclab.emiteui.client.emiteuiplugin.users;
 
-import com.calclab.emiteui.client.emiteuiplugin.utils.XmppJID;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class AbstractChatUser {
     private String alias;
     private String color;
     private final String iconUrl;
-    private final XmppJID jid;
+    private final XmppURI uri;
 
-    public AbstractChatUser(final String iconUrl, final XmppJID jid, final String alias, final String color) {
+    public AbstractChatUser(final String iconUrl, final XmppURI uri, final String alias, final String color) {
         this.iconUrl = iconUrl;
-        this.jid = jid;
+        this.uri = uri;
         this.alias = alias;
         this.color = color;
     }
@@ -48,8 +48,8 @@ public class AbstractChatUser {
         return iconUrl;
     }
 
-    public XmppJID getJid() {
-        return jid;
+    public XmppURI getURI() {
+        return uri;
     }
 
     public void setAlias(final String alias) {

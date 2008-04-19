@@ -23,15 +23,15 @@ package com.calclab.emiteui.client.emiteuiplugin.roster;
 
 import org.ourproject.kune.platf.client.View;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteui.client.emiteuiplugin.users.ChatUserUI;
-import com.calclab.emiteui.client.emiteuiplugin.utils.XmppJID;
 
 public interface RosterUI {
 
-    ChatUserUI getUserByJid(XmppJID jid);
+    void clearRoster();
+
+    ChatUserUI getUserByJid(XmppURI jid);
 
     View getView();
-
-    void clearRoster();
 
 }

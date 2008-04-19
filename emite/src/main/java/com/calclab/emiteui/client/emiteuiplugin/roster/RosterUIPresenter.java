@@ -44,13 +44,12 @@ import com.calclab.emiteui.client.emiteuiplugin.EmiteUIPlugin;
 import com.calclab.emiteui.client.emiteuiplugin.users.ChatUserUI;
 import com.calclab.emiteui.client.emiteuiplugin.users.UserGridMenuItem;
 import com.calclab.emiteui.client.emiteuiplugin.users.UserGridMenuItemList;
-import com.calclab.emiteui.client.emiteuiplugin.utils.XmppJID;
 
 public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
     private RosterUIView view;
     private final Xmpp xmpp;
-    private final HashMap<XmppJID, ChatUserUI> rosterMap;
+    private final HashMap<XmppURI, ChatUserUI> rosterMap;
     private final I18nTranslationService i18n;
     private final PresenceManager presenceManager;
     private final Roster roster;
@@ -58,7 +57,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     public RosterUIPresenter(final Xmpp xmpp, final I18nTranslationService i18n) {
         this.xmpp = xmpp;
         this.i18n = i18n;
-        rosterMap = new HashMap<XmppJID, ChatUserUI>();
+        rosterMap = new HashMap<XmppURI, ChatUserUI>();
         presenceManager = xmpp.getPresenceManager();
         roster = xmpp.getRoster();
     }
@@ -77,11 +76,14 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
         } else if (eventName.equals(EmiteUIPlugin.ON_REQUEST_REMOVE_ROSTERITEM)) {
             final XmppURI userURI = (XmppURI) param;
             xmpp.getRosterManager().requestRemoveItem(userURI.toString());
+        } else if (eventName.equals(EmiteUIPlugin.ON_REQUEST_SUBSCRIBE)) {
+            final XmppURI userURI = (XmppURI) param;
+            xmpp.getPresenceManager().requestSubscribe(userURI);
         }
         DefaultDispatcher.getInstance().fire(eventName, param);
     }
 
-    public ChatUserUI getUserByJid(final XmppJID jid) {
+    public ChatUserUI getUserByJid(final XmppURI jid) {
         return rosterMap.get(jid);
     }
 
@@ -105,10 +107,13 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     }
 
     private UserGridMenuItemList createMenuItemList(final RosterItem item) {
+        return createMenuItemList(item.getJID(), item.getPresence(), item.getSubscription());
+    }
+
+    private UserGridMenuItemList createMenuItemList(final XmppURI userURI, final Presence presence,
+            final Subscription subscription) {
         Type statusType;
         final UserGridMenuItemList itemList = new UserGridMenuItemList();
-        final Presence presence = item.getPresence();
-        final Subscription subscription = item.getSubscription();
         if (presence == null) {
             statusType = Presence.Type.unavailable;
         } else {
@@ -119,7 +124,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
         case to:
             switch (statusType) {
             case available:
-                itemList.addItem(createStartChatMenuItem(item));
+                itemList.addItem(createStartChatMenuItem(userURI));
                 if (presence.getShow() != null) {
                     switch (presence.getShow()) {
                     case available:
@@ -127,12 +132,8 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                     case dnd:
                     case xa:
                     case away:
-                        itemList.addItem(createUnsubscribeBuddyMenuItem(item));
+                        itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
                         break;
-                    default:
-                        // FIXME: vicente, nunca llegará uno que no esté
-                        // definido en el enum Show ;) para eso son los enums
-                        Log.debug("Status unknown, show: " + presence.getShow());
                     }
 
                 } else {
@@ -143,19 +144,19 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                      * to be online and available.
                      * 
                      */
-                    itemList.addItem(createUnsubscribeBuddyMenuItem(item));
+                    itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
                 }
                 break;
             case unavailable:
-                itemList.addItem(createUnsubscribeBuddyMenuItem(item));
+                itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
                 break;
             case subscribed:
-                itemList.addItem(createStartChatMenuItem(item));
-                itemList.addItem(createUnsubscribeBuddyMenuItem(item));
+                itemList.addItem(createStartChatMenuItem(userURI));
+                itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
                 break;
             case unsubscribed:
-                itemList.addItem(createStartChatMenuItem(item));
-                itemList.addItem(createSubscribeBuddyMenuItem(item));
+                itemList.addItem(createStartChatMenuItem(userURI));
+                itemList.addItem(createSubscribeBuddyMenuItem(userURI));
                 break;
             default:
                 /**
@@ -170,45 +171,45 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                  * for another entity's current presence, or an error related to
                  * a previously-sent presence stanza.
                  */
-                itemList.addItem(createStartChatMenuItem(item));
+                itemList.addItem(createStartChatMenuItem(userURI));
             }
             break;
         case from:
-            itemList.addItem(createStartChatMenuItem(item));
+            itemList.addItem(createStartChatMenuItem(userURI));
         case none:
-            itemList.addItem(createSubscribeBuddyMenuItem(item));
+            itemList.addItem(createSubscribeBuddyMenuItem(userURI));
             break;
         default:
             Log.error("Code bug, subscription: " + subscription);
         }
-        itemList.addItem(createRemoveBuddyMenuItem(item));
+        itemList.addItem(createRemoveBuddyMenuItem(userURI));
         return itemList;
     }
 
-    private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final RosterItem item) {
+    private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final XmppURI userURI) {
         return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove this buddy"),
-                EmiteUIPlugin.ON_REQUEST_REMOVE_ROSTERITEM, item.getJID());
+                EmiteUIPlugin.ON_REQUEST_REMOVE_ROSTERITEM, userURI);
     }
 
-    private UserGridMenuItem<XmppURI> createStartChatMenuItem(final RosterItem item) {
+    private UserGridMenuItem<XmppURI> createStartChatMenuItem(final XmppURI userURI) {
         return new UserGridMenuItem<XmppURI>("newchat-icon", i18n.t("Start a chat with this buddy"),
-                EmiteUIPlugin.CHATOPEN, item.getJID());
+                EmiteUIPlugin.CHATOPEN, userURI);
     }
 
-    private UserGridMenuItem<XmppURI> createSubscribeBuddyMenuItem(final RosterItem item) {
+    private UserGridMenuItem<XmppURI> createSubscribeBuddyMenuItem(final XmppURI userURI) {
         return new UserGridMenuItem<XmppURI>("add-icon", i18n.t("Request to see when this buddy is connected or not"),
-                EmiteUIPlugin.ON_REQUEST_SUBSCRIBE, item.getJID());
+                EmiteUIPlugin.ON_REQUEST_SUBSCRIBE, userURI);
     }
 
-    private UserGridMenuItem<XmppURI> createUnsubscribeBuddyMenuItem(final RosterItem item) {
+    private UserGridMenuItem<XmppURI> createUnsubscribeBuddyMenuItem(final XmppURI userURI) {
         return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Stop to see when this buddy is connected or not"),
-                EmiteUIPlugin.ON_CANCEL_SUBSCRITOR, item.getJID());
+                EmiteUIPlugin.ON_CANCEL_SUBSCRITOR, userURI);
     }
 
     private void createXmppListeners() {
         roster.addListener(new RosterListener() {
             public void onItemPresenceChanged(final RosterItem item) {
-                final ChatUserUI user = rosterMap.get(new XmppJID(item.getJID()));
+                final ChatUserUI user = rosterMap.get(item.getJID());
                 if (user == null) {
                     Log.error("Trying to update a user is not in roster: " + item.getJID() + " ----> Roster: "
                             + rosterMap);
@@ -222,7 +223,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                 for (final RosterItem item : roster) {
                     logRosterItem("Adding", item);
                     final ChatUserUI user = new ChatUserUI("images/person-def.gif", item, "black");
-                    rosterMap.put(user.getJid(), user);
+                    rosterMap.put(user.getURI(), user);
                     view.addRosterItem(user, createMenuItemList(item));
                 }
             }
@@ -248,7 +249,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
             public void onSubscribedReceived(final Presence presence) {
                 Log.info("SUBS RECEIVED");
-                // FIXME: Try to update roster
+                // RosterItem changed event fired?
             }
 
             public void onSubscriptionRequest(final Presence presence) {
@@ -270,9 +271,8 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
             public void onUnsubscribedReceived(final Presence presence) {
                 Log.info("UNSUBS RECEIVED");
-                // FIXME: Try to update roster
-                // Wrong: view.removeRosterItem(rosterMap.get(new
-                // XmppJID(presence.getFromURI())));
+                // Inform about unsubscription?
+                // RosterItem changed event fired?
             }
         });
     }

@@ -88,13 +88,14 @@ public class RosterItemDialog {
         formPanel.setPaddings(10);
 
         Label label = new Label();
-        label.setHtml("<p>" + i18n.t("Please fill this form with the info of your new buddy:") + "</p>");
+        label.setHtml("<p>" + i18n.t("Please fill this form with the info of your new buddy:") + "</p><br/>");
         label.setWidth(270);
         label.setHeight(40);
         formPanel.add(label);
 
         name = new TextField(i18n.t("Buddy Nickname"), "name", 150);
         name.setAllowBlank(false);
+        name.setValidationDelay(2000);
         formPanel.add(name);
 
         jid = new TextField(i18n.t("Buddy Jabber Id"), "jid", 150);

@@ -85,6 +85,7 @@ public class MultiChatPanel implements MultiChatView {
     private FormPanel inputForm;
     private FormPanel subjectForm;
     private final RosterUI rosterUI;
+    private Panel eastPanel;
 
     public MultiChatPanel(final RosterUI rosterUI, final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.rosterUI = rosterUI;
@@ -374,7 +375,7 @@ public class MultiChatPanel implements MultiChatView {
         southData.setSplit(true);
         dialog.add(southPanel, southData);
 
-        Panel eastPanel = new Panel(i18n.t("Users"));
+        eastPanel = new Panel(i18n.t("Users"));
         eastPanel.setWidth(150);
         eastPanel.setCollapsible(true);
         eastPanel.setBorder(false);
@@ -421,6 +422,13 @@ public class MultiChatPanel implements MultiChatView {
                     final int rawWidth, final int rawHeight) {
                 input.setHeight(adjHeight - 27);
                 inputForm.setHeight(adjHeight);
+            }
+        });
+
+        eastPanel.addListener(new ContainerListenerAdapter() {
+            public void onResize(final BoxComponent component, final int adjWidth, final int adjHeight,
+                    final int rawWidth, final int rawHeight) {
+                // FIXME
             }
         });
 

@@ -56,15 +56,13 @@ import com.calclab.emiteui.client.emiteuiplugin.dialog.OwnPresence.OwnStatus;
 import com.calclab.emiteui.client.emiteuiplugin.params.MultiChatCreationParam;
 import com.calclab.emiteui.client.emiteuiplugin.room.RoomUI;
 import com.calclab.emiteui.client.emiteuiplugin.room.RoomUIListener;
-import com.calclab.emiteui.client.emiteuiplugin.users.RoomUserUI.RoomUserType;
-import com.calclab.emiteui.client.emiteuiplugin.utils.XmppJID;
 
 public class MultiChatPresenter implements MultiChat {
     private static final OwnPresence OFFLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.offline);
     private static final OwnPresence ONLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.online);
     private final HashMap<Chat, ChatUI> chats;
     private ChatUI currentChat;
-    private XmppJID currentUserJid;
+    private XmppURI currentUserJid;
     private String currentUserPasswd;
     private final ChatDialogFactory factory;
     private final I18nTranslationService i18n;
@@ -148,7 +146,7 @@ public class MultiChatPresenter implements MultiChat {
         return chatUI;
     }
 
-    public RoomUI createRoom(final Chat chat, final String userAlias, final RoomUserType roomUserType) {
+    public RoomUI createRoom(final Chat chat, final String userAlias) {
         final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(currentUserJid.getNode(),
                 userChatOptions.getColor(), i18n, new RoomUIListener() {
                     public void onActivate(ChatUI chatUI) {
@@ -157,7 +155,6 @@ public class MultiChatPresenter implements MultiChat {
                         view.setInviteToGroupChatButtonVisible(true);
                         view.setSubject(roomUI.getSubject());
                         view.setSubjectEditable(false);
-                        view.setSubjectEditable(roomUserType.equals(RoomUserType.moderator));
                         view.setRoomUserListVisible(true);
                         ((RoomUI) chatUI).setUserListVisible(true);
                         view.focusInput();
@@ -184,8 +181,13 @@ public class MultiChatPresenter implements MultiChat {
                     public void onMessageAdded(ChatUI chatUI) {
                         view.highlightChat(chatUI);
                     }
+
+                    public void setSubjectEditable(boolean editable) {
+                        view.setSubjectEditable(editable);
+
+                    }
                 }) : chats.get(chat));
-        // view.setSubject("");
+
         finishChatCreation(chat, roomUI, chat.getOtherURI().getNode());
 
         return roomUI;
@@ -248,7 +250,7 @@ public class MultiChatPresenter implements MultiChat {
 
     public void setUserChatOptions(final UserChatOptions userChatOptions) {
         this.userChatOptions = userChatOptions;
-        this.currentUserJid = new XmppJID(userChatOptions.getUserJid());
+        this.currentUserJid = XmppURI.parse(userChatOptions.getUserJid());
         this.currentUserPasswd = userChatOptions.getUserPassword();
     }
 
@@ -318,6 +320,11 @@ public class MultiChatPresenter implements MultiChat {
         chatUI.addMesage(message.getFromURI().getNode(), message.getBody());
     }
 
+    void messageReceivedInRoom(final Chat chat, final Message message) {
+        final ChatUI chatUI = getChat(chat);
+        chatUI.addMesage(message.getFromURI().getResource(), message.getBody());
+    }
+
     private void checkNoChats() {
         if (chats.size() == 0) {
             reset();
@@ -376,7 +383,7 @@ public class MultiChatPresenter implements MultiChat {
             }
 
             public void onChatCreated(final Chat room) {
-                final RoomUI roomUI = createRoom(room, currentUserJid.getNode(), RoomUserType.participant);
+                final RoomUI roomUI = createRoom(room, currentUserJid.getNode());
                 room.addListener(new RoomListener() {
                     public void onMessageReceived(final Chat chat, final Message message) {
                         messageReceived(chat, message);

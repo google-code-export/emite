@@ -24,12 +24,12 @@ package com.calclab.emiteui.client.emiteuiplugin.room;
 import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
+import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emiteui.client.emiteuiplugin.AbstractPresenter;
 import com.calclab.emiteui.client.emiteuiplugin.users.RoomUserUI;
 import com.calclab.emiteui.client.emiteuiplugin.users.UserGridMenu;
 import com.calclab.emiteui.client.emiteuiplugin.users.UserGridMenuItemList;
 import com.calclab.emiteui.client.emiteuiplugin.users.UserGridPanel;
-import com.calclab.emiteui.client.emiteuiplugin.users.RoomUserUI.RoomUserType;
 
 public class RoomUserListUIPanel extends UserGridPanel implements View {
 
@@ -48,7 +48,7 @@ public class RoomUserListUIPanel extends UserGridPanel implements View {
     public void addUser(final RoomUserUI roomUser, final UserGridMenuItemList menuItemList) {
         UserGridMenu menu = new UserGridMenu(presenter);
         menu.setMenuItemList(menuItemList);
-        super.addUser(roomUser, menu, formatUserType(roomUser.getUserType()));
+        super.addUser(roomUser, menu, formatUserType(roomUser.getRole()));
     }
 
     public View getView() {
@@ -70,8 +70,8 @@ public class RoomUserListUIPanel extends UserGridPanel implements View {
         super.removeUser(roomUser);
     }
 
-    private String formatUserType(final RoomUserType type) {
-        switch (type) {
+    private String formatUserType(final Role role) {
+        switch (role) {
         case moderator:
             return moderatorLabel;
         case participant:

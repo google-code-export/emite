@@ -24,14 +24,13 @@ package com.calclab.emiteui.client.emiteuiplugin.users;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.emiteui.client.emiteuiplugin.utils.XmppJID;
 
 public class ChatUserUI extends AbstractChatUser {
 
     private final RosterItem rosterItem;
 
     public ChatUserUI(final String iconUrl, final RosterItem rosterItem, final String color) {
-        super(iconUrl, new XmppJID(rosterItem.getJID()), rosterItem.getName(), color);
+        super(iconUrl, rosterItem.getJID(), rosterItem.getName(), color);
         this.rosterItem = rosterItem;
     }
 
@@ -42,4 +41,5 @@ public class ChatUserUI extends AbstractChatUser {
     public Subscription getSubscription() {
         return rosterItem.getSubscription();
     }
+
 }
