@@ -158,11 +158,11 @@ public class EmiteUIPlugin extends Plugin {
     private void preFetchImages() {
         DeferredCommand.addCommand(new Command() {
             public void execute() {
-                String[] imgs = { "ext-load.gif group_add.gif group-chat.gif moderatoruser.gif normaluser.gif "
-                        + "person-def.gif smile.gif user_add.gif" };
-                String[] cssImgs = { "add.gif cancel.gif chat.gif colors.gif "
-                        + "del.gif exit.gif extload.gif forbidden.gif group-chat.gif group.gif new-chat.gif "
-                        + "new-message.gif useradd.gif userf.gif user.gif" };
+                String[] imgs = { "ext-load.gif", "group_add.gif", "group-chat.gif", "moderatoruser.gif",
+                        "normaluser.gif", "person-def.gif", "smile.gif", "user_add.gif" };
+                String[] cssImgs = { "add.gif", "cancel.gif", "chat.gif", "colors.gif ", "del.gif", "exit.gif",
+                        "extload.gif", "forbidden.gif", "group-chat.gif", "group.gif", "new-chat.gif",
+                        "new-message.gif", "useradd.gif", "userf.gif", "user.gif" };
                 doTheJob(imgs, "images");
                 doTheJob(cssImgs, "css/img");
             }

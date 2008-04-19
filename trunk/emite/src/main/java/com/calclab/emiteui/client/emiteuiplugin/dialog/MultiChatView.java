@@ -43,8 +43,6 @@ public interface MultiChatView {
 
     void destroy();
 
-    void dettachRoomUserList(View userListView);
-
     void expandRoster();
 
     void focusInput();
@@ -56,8 +54,6 @@ public interface MultiChatView {
     void highlightChat(ChatUI chatUI);
 
     void removeChat(ChatUI chatUI);
-
-    void reset();
 
     void setAddRosterItemButtonVisible(boolean visible);
 

@@ -55,6 +55,7 @@ import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUIListener;
 import com.calclab.emiteui.client.emiteuiplugin.dialog.OwnPresence.OwnStatus;
 import com.calclab.emiteui.client.emiteuiplugin.params.MultiChatCreationParam;
 import com.calclab.emiteui.client.emiteuiplugin.room.RoomUI;
+import com.calclab.emiteui.client.emiteuiplugin.room.RoomUIListener;
 import com.calclab.emiteui.client.emiteuiplugin.users.RoomUserUI.RoomUserType;
 import com.calclab.emiteui.client.emiteuiplugin.utils.XmppJID;
 
@@ -149,7 +150,7 @@ public class MultiChatPresenter implements MultiChat {
 
     public RoomUI createRoom(final Chat chat, final String userAlias, final RoomUserType roomUserType) {
         final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(currentUserJid.getNode(),
-                userChatOptions.getColor(), i18n, new ChatUIListener() {
+                userChatOptions.getColor(), i18n, new RoomUIListener() {
                     public void onActivate(ChatUI chatUI) {
                         RoomUI roomUI = (RoomUI) chatUI;
                         view.setInputText(roomUI.getSavedInput());
@@ -158,7 +159,7 @@ public class MultiChatPresenter implements MultiChat {
                         view.setSubjectEditable(false);
                         view.setSubjectEditable(roomUserType.equals(RoomUserType.moderator));
                         view.setRoomUserListVisible(true);
-                        view.attachRoomUserList(((RoomUI) chatUI).getUserListView());
+                        ((RoomUI) chatUI).setUserListVisible(true);
                         view.focusInput();
                         currentChat = chatUI;
                     }
@@ -167,13 +168,17 @@ public class MultiChatPresenter implements MultiChat {
                         doAfterCloseConfirmed(chat, chatUI);
                     }
 
+                    public void onCreated(ChatUI chatUI) {
+                        view.attachRoomUserList(((RoomUI) chatUI).getUserListView());
+                    }
+
                     public void onCurrentUserSend(String message) {
                         chat.send(message);
                     }
 
                     public void onDeactivate(ChatUI chatUI) {
                         chatUI.saveInput(view.getInputText());
-                        view.dettachRoomUserList(((RoomUI) chatUI).getUserListView());
+                        ((RoomUI) chatUI).setUserListVisible(false);
                     }
 
                     public void onMessageAdded(ChatUI chatUI) {
@@ -182,6 +187,7 @@ public class MultiChatPresenter implements MultiChat {
                 }) : chats.get(chat));
         // view.setSubject("");
         finishChatCreation(chat, roomUI, chat.getOtherURI().getNode());
+
         return roomUI;
     }
 
@@ -206,7 +212,6 @@ public class MultiChatPresenter implements MultiChat {
     public void init(final MultiChatView view) {
         this.view = view;
         reset();
-        // view.setOwnPresence(OFFLINE_OWN_PRESENCE);
         createXmppListeners();
     }
 
@@ -316,7 +321,6 @@ public class MultiChatPresenter implements MultiChat {
     private void checkNoChats() {
         if (chats.size() == 0) {
             reset();
-            view.reset();
         }
     }
 
@@ -447,6 +451,15 @@ public class MultiChatPresenter implements MultiChat {
 
     private void reset() {
         currentChat = null;
+        view.setCloseAllOptionEnabled(false);
+        view.setSubjectEditable(false);
+        view.setInfoPanelVisible(true);
+        view.setRoomUserListVisible(false);
+        view.setInviteToGroupChatButtonVisible(false);
+        view.setSendEnabled(false);
+        view.setInputEditable(false);
+        view.setEmoticonButtonEnabled(false);
+        view.clearSubject();
     }
 
     private void setInputEnabled(final boolean enabled) {

@@ -36,6 +36,8 @@ public interface RoomUI extends ChatUI {
 
     void setSubject(String newSubject);
 
+    void setUserListVisible(boolean b);
+
     void setUsers(Collection<Occupant> users);
 
 }

@@ -31,7 +31,6 @@ import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteui.client.emiteuiplugin.AbstractPresenter;
 import com.calclab.emiteui.client.emiteuiplugin.EmiteUIPlugin;
-import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUIListener;
 import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUIPresenter;
 import com.calclab.emiteui.client.emiteuiplugin.users.RoomUserUI;
 import com.calclab.emiteui.client.emiteuiplugin.users.UserGridMenuItem;
@@ -47,8 +46,11 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
 
     private RoomUserListUIPanel roomUserListUI;
 
-    public RoomUIPresenter(final String currentUserAlias, final String currentUserColor, final ChatUIListener listener) {
+    private final RoomUIListener listener;
+
+    public RoomUIPresenter(final String currentUserAlias, final String currentUserColor, final RoomUIListener listener) {
         super(currentUserAlias, currentUserColor, listener);
+        this.listener = listener;
     }
 
     public void doAction(final String eventName, final Object param) {
@@ -71,10 +73,15 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
         super.init(view);
         this.view = view;
         this.roomUserListUI = roomUserListUI;
+        listener.onCreated(this);
     }
 
     public void setSubject(final String newSubject) {
         subject = newSubject;
+    }
+
+    public void setUserListVisible(final boolean visible) {
+        roomUserListUI.setVisible(visible);
     }
 
     public void setUsers(final Collection<Occupant> users) {

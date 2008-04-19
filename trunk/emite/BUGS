@@ -5,6 +5,18 @@ For reports please use:
   http://code.google.com/p/emite/issues/list
 
 
+- Rooms join/creation problems:
+
+IN: <body xmlns='http://jabber.org/protocol/httpbind'><presence to="admin@localhost/emite-swing" from="testroom2@rooms.localhost/nick"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence></body>
+DISPATCH: <body xmlns="http://jabber.org/protocol/httpbind"><presence from="testroom2@rooms.localhost/nick" to="admin@localhost/emite-swing"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence></body>
+DISPATCH: <presence from="testroom2@rooms.localhost/nick" to="admin@localhost/emite-swing"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence>
+19-abr-2008 15:44:51 com.allen_sauer.gwt.log.server.ServerLogImplJDK14 info
+INFORMACIàN: PRESENCE!!: <presence from="testroom2@rooms.localhost/nick" to="admin@localhost/emite-swing"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence>
+Exception in thread "Thread-10" java.lang.NullPointerException
+	at com.calclab.emite.client.xmpp.stanzas.IQ.<init>(IQ.java:46)
+	at com.calclab.emite.client.extra.muc.MUCRoomManager.createInstantRoom(MUCRoomManager.java:154)
+	at com.calclab.emite.client.extra.muc.MUCRoomManager.eventPresence(MUCRoomManager.java:146)
+	at com.calclab.emite.client.extra.muc.MUCRoomManager$2.handle(MUCRoomManager.java:58)
 
 - When adding a new roster item (with no real jid like someone@example.com) , we receive addItem notificiations off all the roster (already added), instead of update.
 
