@@ -26,6 +26,7 @@ import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
@@ -42,14 +43,14 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 public class RosterManager extends EmiteComponent {
 
     public static class Events {
-	public static final Event ready = new Event("roster:on:ready");
+        public static final Event ready = new Event("roster:on:ready");
     }
 
     private final Roster roster;
 
     public RosterManager(final Emite emite, final Roster roster) {
-	super(emite);
-	this.roster = roster;
+        super(emite);
+        this.roster = roster;
     }
 
     /**
@@ -58,17 +59,17 @@ public class RosterManager extends EmiteComponent {
      */
     @Override
     public void install() {
-	emite.subscribe(when(SessionManager.Events.loggedIn), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventLoggedIn();
-	    }
-	});
+        emite.subscribe(when(SessionManager.Events.loggedIn), new PacketListener() {
+            public void handle(final IPacket received) {
+                eventLoggedIn();
+            }
+        });
 
-	emite.subscribe(when("presence"), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventPresence(new Presence(received));
-	    }
-	});
+        emite.subscribe(when("presence"), new PacketListener() {
+            public void handle(final IPacket received) {
+                eventPresence(new Presence(received));
+            }
+        });
 
     }
 
@@ -83,66 +84,68 @@ public class RosterManager extends EmiteComponent {
      * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
      */
     public void requestAddItem(final String JID, final String name, final String group) {
-	final IPacket item = new Packet("item").With("jid", JID).With("name", name);
-	if (group != null) {
-	    item.addChild(new Packet("group").WithText(group));
-	}
+        final IPacket item = new Packet("item").With("jid", JID).With("name", name);
+        if (group != null) {
+            item.addChild(new Packet("group").WithText(group));
+        }
 
-	final IPacket iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", item);
-	emite.send("roster", iq, new PacketListener() {
-	    public void handle(final IPacket received) {
-		final Presence presenceRequest = new Presence(Type.subscribe, null, XmppURI.parse(JID));
-		emite.send(presenceRequest);
-	    }
-	});
-	roster.add(new RosterItem(XmppURI.parse(JID), RosterItem.Subscription.from, name));
+        final IPacket iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", item);
+        emite.send("roster", iq, new PacketListener() {
+            public void handle(final IPacket received) {
+                final Presence presenceRequest = new Presence(Type.subscribe, null, XmppURI.parse(JID));
+                emite.send(presenceRequest);
+            }
+        });
+        roster.add(new RosterItem(XmppURI.parse(JID), RosterItem.Subscription.from, name));
     }
 
     public void requestRemoveItem(final String JID) {
-	final IQ iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", new Packet("item").With("jid", JID).With(
-		"subscription", "remove"));
-	emite.send(iq);
+        final IQ iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", new Packet("item").With("jid", JID).With(
+                "subscription", "remove"));
+        emite.send(iq);
     }
 
     void eventLoggedIn() {
-	emite.send("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventRoster(received);
-	    }
+        emite.send("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
+            public void handle(final IPacket received) {
+                eventRoster(received);
+            }
 
-	});
+        });
     }
 
     void eventPresence(final Presence presence) {
-	final RosterItem item = roster.findItemByURI(presence.getFromURI());
-	if (item != null) {
-	    item.setPresence(presence);
-	    roster.fireItemPresenceChanged(item);
-	}
+        final RosterItem item = roster.findItemByURI(presence.getFromURI());
+        // Only for test:
+        Log.info("Presence received in RosterManager for item: " + item);
+        if (item != null) {
+            item.setPresence(presence);
+            roster.fireItemPresenceChanged(item);
+        }
     }
 
     void eventRoster(final IPacket received) {
-	setRosterItems(roster, received);
-	emite.publish(RosterManager.Events.ready);
+        setRosterItems(roster, received);
+        emite.publish(RosterManager.Events.ready);
     }
 
     private RosterItem convert(final IPacket item) {
-	final String jid = item.getAttribute("jid");
-	final XmppURI uri = XmppURI.parse(jid);
-	final Subscription subscription = RosterItem.Subscription.valueOf(item.getAttribute("subscription"));
-	return new RosterItem(uri, subscription, item.getAttribute("name"));
+        final String jid = item.getAttribute("jid");
+        final XmppURI uri = XmppURI.parse(jid);
+        final Subscription subscription = RosterItem.Subscription.valueOf(item.getAttribute("subscription"));
+        return new RosterItem(uri, subscription, item.getAttribute("name"));
     }
 
     private List<? extends IPacket> getItems(final IPacket iPacket) {
-	final List<? extends IPacket> items = iPacket.getFirstChild("query").getChildren();
-	return items;
+        final List<? extends IPacket> items = iPacket.getFirstChild("query").getChildren();
+        return items;
     }
 
     private void setRosterItems(final Roster roster, final IPacket received) {
-	final ArrayList<RosterItem> items = new ArrayList<RosterItem>();
-	for (final IPacket item : getItems(received)) {
-	    items.add(convert(item));
-	}
-	roster.setItems(items);
+        final ArrayList<RosterItem> items = new ArrayList<RosterItem>();
+        for (final IPacket item : getItems(received)) {
+            items.add(convert(item));
+        }
+        roster.setItems(items);
     }
 }

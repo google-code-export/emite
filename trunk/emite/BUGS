@@ -4,6 +4,11 @@ Known bugs in Emite
 For reports please use:
   http://code.google.com/p/emite/issues/list
 
+- [ui] Room setSubjectEditable only works when setOcupants not activating/deactivating
+
+- [ui] MRoomPanel subject edit, enter not fire
+
+- [ui] Menu empty in Room Ocupants
 
 - Rooms join/creation problems:
 
@@ -20,23 +25,32 @@ Exception in thread "Thread-10" java.lang.NullPointerException
 
 - When adding a new roster item (with no real jid like someone@example.com) , we receive addItem notificiations off all the roster (already added), instead of update.
 
+MORE INFO: Then we have all the roster elements duplicated. Also we get this error:
+
+[INFO] PRESENCE: type: available from: testroom1@rooms.localhost/nick show: null status: null text: null727A537862D64B378... (line 141)
+[FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: xtension.getFirstChild("status") has no properties
+
 - Remove roster item not fire any listener. The packet:
 
 [DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><iq type="set" id="392-73" to="admin@localhost/emite-ui1208127502333"><query xmlns="jabber:iq:roster"><item jid="asdfa@com.com" subscription="remove"/></query></iq></body>
 
+MORE INFO:  After requestRemoveItem(final String JID) in RosterManager we receive the confirmation of remove... but with are not subscribed to this, and then we don't update this RosterItem, same, with unsubscribe. If the delete/unsubscribe is made by other client, same issue.
+
 - Same with the unsubcribe:
 [DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><iq type="set" id="1-75" to="admin@localhost/emite-ui1208127502333"><query xmlns="jabber:iq:roster"><item jid="vjrj@localhost" name="testuser1" subscription="to"/></query></iq></body>
 
-- [ui] Invite to this room, is visible after close all chats
+- Room chat send, echo the same with the room URI (from/to issue)
+admin: This is writing by the client in testroom1
+testroom1: This is writing by the client in testroom1
 
-- [ui] Chat focus don't expand roster
+* SOLVED
+********************************************************************************
 
 - [ui] Start a already opened chat dont' bring focus to the chat tab
 
-- Room chat send, echo the same with the room URI (from/to issue)
+- [ui] Chat focus don't expand roster
 
-** SOLVED***
-
+- [ui] Invite to this room, is visible after close all chats
 
 - Room send() fails
 
@@ -46,7 +60,7 @@ Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException
 	at com.calclab.emite.j2se.swing.SwingClient$8$1.onSend(SwingClient.java:196)
 	at com.calclab.emite.j2se.swing.ChatPanel$1.actionPerformed(ChatPanel.java:31)
 
-	- Join a non existing room don't finish creation (see note [1] the PSI console output of a room creation to look how to do it):
+- Join a non existing room don't finish creation (see note [1] the PSI console output of a room creation to look how to do it):
 	[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message type="groupchat" from="test3@rooms.localhost" to="admin@localhost/emite-ui1208163339899"><body>This room is locked from entry until configuration is confirmed.</body></message></body>
 
 

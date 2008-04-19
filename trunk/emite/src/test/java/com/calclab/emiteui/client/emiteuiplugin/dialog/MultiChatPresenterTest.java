@@ -22,7 +22,6 @@ import com.calclab.emiteui.client.emiteuiplugin.params.MultiChatCreationParam;
 import com.calclab.emiteui.client.emiteuiplugin.roster.RosterUI;
 import com.calclab.emiteui.client.emiteuiplugin.roster.RosterUIView;
 import com.calclab.emiteui.client.emiteuiplugin.users.ChatUserUI;
-import com.calclab.emiteui.client.emiteuiplugin.utils.XmppJID;
 
 public class MultiChatPresenterTest {
 
@@ -68,7 +67,7 @@ public class MultiChatPresenterTest {
         // Stubs
         Mockito.stub(factory.createrRosterUI(xmpp, i18n)).toReturn(rosterUI);
         Mockito.stub(rosterUI.getView()).toReturn(rosterUIView);
-        Mockito.stub(rosterUI.getUserByJid(new XmppJID(otherUri))).toReturn(otherUser);
+        Mockito.stub(rosterUI.getUserByJid(otherUri)).toReturn(otherUser);
         Mockito.stub(chat.getOtherURI()).toReturn(otherUri);
         Mockito.stub(
                 factory.createChatUI((String) Mockito.anyObject(), (String) Mockito.anyObject(),
@@ -123,10 +122,10 @@ public class MultiChatPresenterTest {
     }
 
     private void sendMessageFromOther() {
-        final Message message = new Message(XmppURI.parse(otherUser.getJid().toString()),
+        final Message message = new Message(XmppURI.parse(otherUser.getURI().toString()),
                 XmppURI.parse(sessionUserJid), messageBody);
         multiChat.messageReceived(chat, message);
-        Mockito.verify(chatUIView).addMessage(otherUser.getJid().getNode(), "green", message.getBody());
+        Mockito.verify(chatUIView).addMessage(otherUser.getURI().getNode(), "green", message.getBody());
     }
 
 }

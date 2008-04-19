@@ -21,27 +21,19 @@
  */
 package com.calclab.emiteui.client.emiteuiplugin.users;
 
-import com.calclab.emiteui.client.emiteuiplugin.utils.XmppJID;
+import com.calclab.emite.client.extra.muc.Occupant;
+import com.calclab.emite.client.extra.muc.Occupant.Role;
 
 public class RoomUserUI extends AbstractChatUser {
 
-    public static enum RoomUserType {
-        moderator, none, participant, visitor
+    private final Occupant occupant;
+
+    public RoomUserUI(final Occupant occupant, final String color) {
+        super("images/person-def.gif", occupant.getUri(), occupant.getUri().getResource(), color);
+        this.occupant = occupant;
     }
 
-    private RoomUserType type;
-
-    public RoomUserUI(final XmppJID jid, final String alias, final String color,
-            final RoomUserType roomUserType) {
-        super("images/person-def.gif", jid, alias, color);
-        this.type = roomUserType;
-    }
-
-    public RoomUserType getUserType() {
-        return type;
-    }
-
-    public void setUserType(final RoomUserType roomUserType) {
-        this.type = roomUserType;
+    public Role getRole() {
+        return occupant.getRole();
     }
 }

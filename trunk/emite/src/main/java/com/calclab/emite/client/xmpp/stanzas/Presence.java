@@ -141,12 +141,14 @@ public class Presence extends BasicStanza {
     }
 
     public Show getShow() {
+        // FIXME: Dani: equals(NoPacket.INSTANCE)?
         final IPacket show = getFirstChild("show");
         final String value = show != null ? show.getText() : null;
         return value != null ? Show.valueOf(value) : null;
     }
 
     public String getStatus() {
+        // FIXME: Dani: equals(NoPacket.INSTANCE)?
         final IPacket status = getFirstChild("status");
         return status != null ? status.getText() : null;
     }
@@ -160,6 +162,7 @@ public class Presence extends BasicStanza {
 
     public void setPriority(final int value) {
         IPacket priority = getFirstChild("priority");
+        // FIXME: Dani: equals(NoPacket.INSTANCE)?
         if (priority == null) {
             priority = add("priority", null);
         }
@@ -169,7 +172,7 @@ public class Presence extends BasicStanza {
     public void setShow(final Show value) {
         IPacket show = getFirstChild("show");
         // FIXME Dani: check this (NoPacket part)
-        if (show == null || show.equals(NoPacket.INSTANCE)) {
+        if (show.equals(NoPacket.INSTANCE)) {
             show = add("show", null);
         }
         show.addText(value.toString());
@@ -178,7 +181,7 @@ public class Presence extends BasicStanza {
     public void setStatus(final String statusMessage) {
         IPacket status = getFirstChild("status");
         // FIXME Dani: check this (NoPacket part)
-        if (status == null || status.equals(NoPacket.INSTANCE)) {
+        if (status.equals(NoPacket.INSTANCE)) {
             status = add("status", null);
         }
         status.addText(statusMessage);

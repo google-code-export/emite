@@ -28,15 +28,13 @@ import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 
 import com.calclab.emite.client.extra.muc.Occupant;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emiteui.client.emiteuiplugin.AbstractPresenter;
 import com.calclab.emiteui.client.emiteuiplugin.EmiteUIPlugin;
 import com.calclab.emiteui.client.emiteuiplugin.chat.ChatUIPresenter;
 import com.calclab.emiteui.client.emiteuiplugin.users.RoomUserUI;
 import com.calclab.emiteui.client.emiteuiplugin.users.UserGridMenuItem;
 import com.calclab.emiteui.client.emiteuiplugin.users.UserGridMenuItemList;
-import com.calclab.emiteui.client.emiteuiplugin.users.RoomUserUI.RoomUserType;
-import com.calclab.emiteui.client.emiteuiplugin.utils.XmppJID;
 
 public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, AbstractPresenter {
 
@@ -48,8 +46,11 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
 
     private final RoomUIListener listener;
 
+    private final String currentUserAlias;
+
     public RoomUIPresenter(final String currentUserAlias, final String currentUserColor, final RoomUIListener listener) {
         super(currentUserAlias, currentUserColor, listener);
+        this.currentUserAlias = currentUserAlias;
         this.listener = listener;
     }
 
@@ -88,12 +89,16 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
         roomUserListUI.removeAllUsers();
         for (Iterator<Occupant> iterator = users.iterator(); iterator.hasNext();) {
             Occupant occupant = iterator.next();
-            XmppURI userUri = occupant.getUri();
-            // FIXME real user alias
-            String userAlias = userUri.getNode();
-            RoomUserUI roomUserUI = new RoomUserUI(new XmppJID(userUri), userAlias, super.getColor(userAlias),
-                    RoomUserType.participant);
+            String userAlias = occupant.getUri().getResource();
+            RoomUserUI roomUserUI = new RoomUserUI(occupant, super.getColor(userAlias));
             roomUserListUI.addUser(roomUserUI, createUserMenu(roomUserUI));
+            if (occupant.getUri().getResource().equals(currentUserAlias)) {
+                if (occupant.getRole().equals(Role.moderator)) {
+                    listener.setSubjectEditable(true);
+                } else {
+                    listener.setSubjectEditable(false);
+                }
+            }
         }
     }
 
@@ -103,7 +108,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
 
     private UserGridMenuItemList createUserMenu(final RoomUserUI roomUserUI) {
         final UserGridMenuItemList itemList = new UserGridMenuItemList();
-        switch (roomUserUI.getUserType()) {
+        switch (roomUserUI.getRole()) {
         default:
             itemList.addItem(createNoActionsMenuItem());
         }

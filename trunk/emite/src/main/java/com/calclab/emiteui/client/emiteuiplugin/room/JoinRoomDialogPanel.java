@@ -86,6 +86,7 @@ public class JoinRoomDialogPanel {
 
         roomName = new TextField(i18n.t("Room Name"), "name", 150);
         roomName.setAllowBlank(false);
+        roomName.setValidationDelay(2000);
         formPanel.add(roomName);
 
         serverName = new TextField(i18n.t("Room Server Name"), "jid", 150);
