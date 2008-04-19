@@ -92,7 +92,6 @@ public class MultiChatPanel implements MultiChatView {
         this.presenter = presenter;
         panelIdToChat = new HashMap<String, ChatUI>();
         createLayout();
-        reset();
         attachRoster();
     }
 
@@ -100,7 +99,6 @@ public class MultiChatPanel implements MultiChatView {
         Panel chatPanel = (Panel) chat.getView();
         centerPanel.activate(chatPanel.getId());
         centerPanel.scrollToTab(chatPanel, true);
-        focusInput();
     }
 
     public void addChat(final ChatUI chat) {
@@ -143,20 +141,17 @@ public class MultiChatPanel implements MultiChatView {
         dialog.destroy();
     }
 
-    public void dettachRoomUserList(final View userListView) {
-        roomUsersPanel.remove((Panel) userListView);
-        if (usersPanel.isRendered()) {
-            usersPanel.doLayout();
-        }
-    }
-
     public void expandRoster() {
         rosterPanel.expand();
     }
 
     public void focusInput() {
-        input.focus();
-        input.getEl().frame();
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                input.focus();
+                input.getEl().frame();
+            }
+        });
     }
 
     public String getInputText() {
@@ -183,18 +178,6 @@ public class MultiChatPanel implements MultiChatView {
 
     public void removeChat(final ChatUI chatUI) {
         centerPanel.remove(((Panel) chatUI.getView()).getId());
-    }
-
-    public void reset() {
-        subject.reset();
-        setCloseAllOptionEnabled(false);
-        setSubjectEditable(false);
-        setInfoPanelVisible(true);
-        setRoomUserListVisible(false);
-        setInviteToGroupChatButtonVisible(false);
-        setSendEnabled(false);
-        setInputEditable(false);
-        setEmoticonButtonEnabled(false);
     }
 
     public void setAddRosterItemButtonVisible(final boolean visible) {

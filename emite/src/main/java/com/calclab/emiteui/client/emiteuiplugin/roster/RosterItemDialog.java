@@ -47,19 +47,23 @@ public class RosterItemDialog {
         this.presenter = presente;
     }
 
+    public void reset() {
+        formPanel.getForm().reset();
+    }
+
     public void show() {
         if (dialog == null) {
             dialog = new BasicDialogExtended(i18n.t("Add a new buddy"), false, false, 330, 200, "useradd-icon", i18n
                     .tWithNT("Add", "used in button"), i18n.tWithNT("Cancel", "used in button"),
                     new BasicDialogListener() {
 
-                        public void onFirstButtonClick() {
-                            presenter.addRosterItem(name.getValueAsString(), jid.getValueAsString());
+                        public void onCancelButtonClick() {
                             dialog.hide();
                             reset();
                         }
 
-                        public void onCancelButtonClick() {
+                        public void onFirstButtonClick() {
+                            presenter.addRosterItem(name.getValueAsString(), jid.getValueAsString());
                             dialog.hide();
                             reset();
                         }
@@ -71,6 +75,7 @@ public class RosterItemDialog {
             // TODO define a UI Extension Point here
         }
         dialog.show();
+        name.focus();
     }
 
     private void createForm() {
@@ -101,10 +106,6 @@ public class RosterItemDialog {
         formPanel.add(jid);
 
         dialog.add(formPanel);
-    }
-
-    public void reset() {
-        formPanel.getForm().reset();
     }
 
 }

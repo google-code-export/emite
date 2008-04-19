@@ -72,6 +72,7 @@ public class JoinRoomDialogPanel {
             // TODO define a UI Extension Point here
         }
         dialog.show();
+        roomName.focus();
     }
 
     private void createForm() {

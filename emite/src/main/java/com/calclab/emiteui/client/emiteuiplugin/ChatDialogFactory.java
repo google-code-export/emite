@@ -30,6 +30,7 @@ import com.calclab.emiteui.client.emiteuiplugin.dialog.MultiChat;
 import com.calclab.emiteui.client.emiteuiplugin.dialog.MultiChatListener;
 import com.calclab.emiteui.client.emiteuiplugin.params.MultiChatCreationParam;
 import com.calclab.emiteui.client.emiteuiplugin.room.RoomUI;
+import com.calclab.emiteui.client.emiteuiplugin.room.RoomUIListener;
 import com.calclab.emiteui.client.emiteuiplugin.roster.RosterUI;
 
 public interface ChatDialogFactory {
@@ -40,7 +41,7 @@ public interface ChatDialogFactory {
             final MultiChatListener listener);
 
     public RoomUI createRoomUI(final String currentUserAlias, final String currentUserColor,
-            final I18nTranslationService i18n, ChatUIListener listener);
+            final I18nTranslationService i18n, RoomUIListener listener);
 
     public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n);
 

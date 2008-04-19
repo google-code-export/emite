@@ -34,6 +34,7 @@ import com.calclab.emiteui.client.emiteuiplugin.dialog.MultiChatPanel;
 import com.calclab.emiteui.client.emiteuiplugin.dialog.MultiChatPresenter;
 import com.calclab.emiteui.client.emiteuiplugin.params.MultiChatCreationParam;
 import com.calclab.emiteui.client.emiteuiplugin.room.RoomUI;
+import com.calclab.emiteui.client.emiteuiplugin.room.RoomUIListener;
 import com.calclab.emiteui.client.emiteuiplugin.room.RoomUIPanel;
 import com.calclab.emiteui.client.emiteuiplugin.room.RoomUIPresenter;
 import com.calclab.emiteui.client.emiteuiplugin.room.RoomUserListUIPanel;
@@ -71,7 +72,7 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
     }
 
     public RoomUI createRoomUI(final String currentUserAlias, final String currentUserColor,
-            final I18nTranslationService i18n, final ChatUIListener listener) {
+            final I18nTranslationService i18n, final RoomUIListener listener) {
         RoomUIPresenter presenter = new RoomUIPresenter(currentUserAlias, currentUserColor, listener);
         RoomUserListUIPanel roomUserListUIPanel = new RoomUserListUIPanel(i18n, presenter);
         RoomUIPanel panel = new RoomUIPanel(presenter);
