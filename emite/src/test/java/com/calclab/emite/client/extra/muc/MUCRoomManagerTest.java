@@ -17,12 +17,16 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.extra.muc.Occupant.Affiliation;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
+import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.j2se.services.TigaseXMLService;
+import com.calclab.emite.testing.InstallationTester;
 import com.calclab.emite.testing.TestMatchers;
+import com.calclab.emite.testing.InstallationTester.InstallTest;
+import com.calclab.emite.testing.InstallationTester.InstallVerifier;
 
 public class MUCRoomManagerTest {
 
@@ -103,5 +107,16 @@ public class MUCRoomManagerTest {
 	manager.eventPresence(new Presence(presence3));
 	assertEquals(0, room.getOccupantsCount());
 
+    }
+
+    @Test
+    public void testInstallation() {
+	new InstallationTester(new InstallTest() {
+	    public void prepare(final Emite emite, final InstallVerifier verifier) {
+		new MUCRoomManager(emite).install();
+		verifier.shouldAttachTo(SessionManager.Events.loggedIn);
+		verifier.shouldAttachTo(new Presence());
+	    }
+	});
     }
 }
