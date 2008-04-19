@@ -32,7 +32,6 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
-import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -45,19 +44,6 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     public MUCRoomManager(final Emite emite) {
 	super(emite);
 	this.rooms = new HashMap<XmppURI, Room>();
-    }
-
-    @Override
-    public void install() {
-	emite.subscribe(when(SessionManager.Events.loggedIn), new PacketListener() {
-	    public void handle(final IPacket received) {
-	    }
-	});
-	emite.subscribe(when("presence"), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventPresence(new Presence(received));
-	    }
-	});
     }
 
     @Override
@@ -75,6 +61,16 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     }
 
     @Override
+    public void install() {
+	super.install();
+	emite.subscribe(when("presence"), new PacketListener() {
+	    public void handle(final IPacket received) {
+		eventPresence(new Presence(received));
+	    }
+	});
+    }
+
+    @Override
     public Room openChat(final XmppURI roomURI) {
 	Room room = rooms.get(roomURI.getJID());
 	if (room == null) {
@@ -89,7 +85,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     }
 
     @Override
-    protected void onMessageReceived(final Message message) {
+    protected void eventMessage(final Message message) {
 	if (message.getType() == Message.Type.groupchat) {
 	    final Room room = rooms.get(message.getFromURI().getJID());
 	    if (room != null) {

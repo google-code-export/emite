@@ -51,7 +51,7 @@ public class InstallationTester implements Emite {
     private void assertCatched(final IPacket packet) {
 	boolean isCatched = false;
 	for (final Matcher m : matchers) {
-	    if (m.matches(packet)) {
+	    if (packet.getName().equals(m.getElementName()) && m.matches(packet)) {
 		isCatched = true;
 	    }
 	}

@@ -54,6 +54,20 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
 
     }
 
+    public void close(final Chat chat) {
+	chats.remove(chat);
+	fireChatClosed(chat);
+    }
+
+    public void eventLoggedOut() {
+	final HashSet<ChatDefault> remove = chats;
+	closeAll(remove);
+    }
+
+    public Collection<ChatDefault> getChats() {
+	return chats;
+    }
+
     @Override
     public void install() {
 	emite.subscribe(when(SessionManager.Events.loggedOut), new PacketListener() {
@@ -68,23 +82,9 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
 	});
 	emite.subscribe(when(new Packet("message", null)), new PacketListener() {
 	    public void handle(final IPacket received) {
-		onMessageReceived(new Message(received));
+		eventMessage(new Message(received));
 	    }
 	});
-    }
-
-    public void close(final Chat chat) {
-	chats.remove(chat);
-	fireChatClosed(chat);
-    }
-
-    public void eventLoggedOut() {
-	final HashSet<ChatDefault> remove = chats;
-	closeAll(remove);
-    }
-
-    public Collection<ChatDefault> getChats() {
-	return chats;
     }
 
     public Chat openChat(final XmppURI to) {
@@ -115,19 +115,7 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
 	}
     }
 
-    protected void fireChatClosed(final Chat chat) {
-	for (final ChatManagerListener listener : listeners) {
-	    listener.onChatClosed(chat);
-	}
-    }
-
-    protected void fireChatCreated(final Chat chat) {
-	for (final ChatManagerListener listener : listeners) {
-	    listener.onChatCreated(chat);
-	}
-    }
-
-    protected void onMessageReceived(final Message message) {
+    protected void eventMessage(final Message message) {
 	final Type type = message.getType();
 	switch (type) {
 	case chat:
@@ -137,6 +125,18 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
 	    break;
 	case error:
 	    Log.warn("Error message received: " + message.toString());
+	}
+    }
+
+    protected void fireChatClosed(final Chat chat) {
+	for (final ChatManagerListener listener : listeners) {
+	    listener.onChatClosed(chat);
+	}
+    }
+
+    protected void fireChatCreated(final Chat chat) {
+	for (final ChatManagerListener listener : listeners) {
+	    listener.onChatCreated(chat);
 	}
     }
 
