@@ -234,11 +234,10 @@ public class UserGridPanel extends Panel {
         } else {
             statusText = presence.getStatus();
         }
-        String statusToReturn = statusText != null ? statusText : "";
-        if (statusToReturn == "null") {
-            Log.error("null string in status from Presence from: " + presence.getFrom());
+        if (statusText == null || statusText.equals("null")) {
+            statusText = "";
         }
-        return statusToReturn;
+        return statusText;
     }
 
     private String formatStatusIcon(final ChatUserUI user) {
