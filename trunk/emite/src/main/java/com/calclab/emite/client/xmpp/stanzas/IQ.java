@@ -30,6 +30,10 @@ public class IQ extends BasicStanza {
 
     private static final String NAME = "iq";
 
+    public static boolean isSuccess(final IPacket received) {
+	return received.hasAttribute(TYPE, "result");
+    }
+
     public IQ(final IPacket stanza) {
 	super(stanza);
     }

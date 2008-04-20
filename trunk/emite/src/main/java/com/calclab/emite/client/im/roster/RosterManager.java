@@ -82,8 +82,8 @@ public class RosterManager extends EmiteComponent {
      * @param group
      * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
      */
-    public void requestAddItem(final String JID, final String name, final String group) {
-	final IPacket item = new Packet("item").With("jid", JID).With("name", name);
+    public void requestAddItem(final XmppURI jid, final String name, final String group) {
+	final IPacket item = new Packet("item").With("jid", jid.toString()).With("name", name);
 	if (group != null) {
 	    item.addChild(new Packet("group").WithText(group));
 	}
@@ -91,20 +91,22 @@ public class RosterManager extends EmiteComponent {
 	final IPacket iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", item);
 	emite.send("roster", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
-		final Presence presenceRequest = new Presence(Type.subscribe, null, XmppURI.parse(JID));
-		emite.send(presenceRequest);
+		if (IQ.isSuccess(received)) {
+		    roster.add(new RosterItem(jid, RosterItem.Subscription.from, name));
+		    final Presence presenceRequest = new Presence(Type.subscribe, null, jid);
+		    emite.send(presenceRequest);
+		}
 	    }
 	});
-	roster.add(new RosterItem(XmppURI.parse(JID), RosterItem.Subscription.from, name));
     }
 
-    public void requestRemoveItem(final String JID) {
-	final IQ iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", new Packet("item").With("jid", JID).With(
-		"subscription", "remove"));
+    public void requestRemoveItem(final XmppURI jid) {
+	final IQ iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", new Packet("item").With("jid", jid.toString())
+		.With("subscription", "remove"));
 	emite.send("roster", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (received.hasAttribute("type", "result")) {
-		    roster.removeItem(XmppURI.parse(JID));
+		    roster.removeItem(jid);
 		} else {
 		    // COULDN'T do it!
 		}
