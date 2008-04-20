@@ -70,6 +70,9 @@
 							com.calclab.emite.examples.chat.Chat
 						</compileTarget>
 						<compileTarget>
+							com.calclab.emiteuiplugin.EmiteUIPlugin
+						</compileTarget>
+						<compileTarget>
 							com.calclab.emiteui.EmiteUI
 						</compileTarget>
 					</compileTargets>
@@ -143,7 +146,7 @@
 						<configuration>
 							<classifier>emiteuiplugin</classifier>
 							<includes>
-								<include>**/emiteui/**</include>
+								<include>**/emiteuiplugin/**</include>
 							</includes>
 						</configuration>
 					</execution>
