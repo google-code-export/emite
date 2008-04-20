@@ -84,7 +84,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
         kunePluginManager.install(new EmiteUIPlugin());
 
         dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions("/proxy"),
-                generateUserChatOptions()));
+                new I18nTranslationServiceMocked(), generateUserChatOptions()));
         dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
     }
 

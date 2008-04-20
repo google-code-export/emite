@@ -37,8 +37,7 @@ public interface ChatDialogFactory {
 
     public ChatUI createChatUI(final String currentUserAlias, final String currentUserColor, ChatUIListener listener);
 
-    public MultiChat createMultiChat(final Xmpp xmpp, MultiChatCreationParam param, final I18nTranslationService i18n,
-            final MultiChatListener listener);
+    public MultiChat createMultiChat(final Xmpp xmpp, MultiChatCreationParam param, final MultiChatListener listener);
 
     public RoomUI createRoomUI(final String currentUserAlias, final String currentUserColor,
             final I18nTranslationService i18n, RoomUIListener listener);
