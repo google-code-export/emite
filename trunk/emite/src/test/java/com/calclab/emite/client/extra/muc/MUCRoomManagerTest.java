@@ -19,6 +19,7 @@ import com.calclab.emite.client.extra.muc.Occupant.Affiliation;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
+import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
@@ -73,6 +74,17 @@ public class MUCRoomManagerTest {
 	final Room room1 = manager.openChat(XmppURI.parse("room@domain/nick"));
 	final Room room2 = manager.openChat(XmppURI.parse("room@domain/nick"));
 	assertSame(room1, room2);
+    }
+
+    @Test
+    public void shouldHandleRoomInvitations() {
+	final String message = "<message from='user@domain/resource' to='room@conference.domain'>"
+		+ "<x xmlns='http://jabber.org/protocol/muc#user'>\n"
+		+ "    <invite to='hecate@shakespeare.lit'><reason>"
+		+ "The reason here</reason></invite></x></message>";
+	manager.eventMessage(new Message(xmler.toXML(message)));
+	// verify(listener).onInvitationReceived(XmppURI.parse("user@domain/resource"),
+	// XmppURI.parse("room@conference.domain", "The reason here!");
     }
 
     @Test
