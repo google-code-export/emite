@@ -276,19 +276,6 @@ public class MultiChatPanel implements MultiChatView {
     public void show() {
         dialog.show();
         dialog.expand();
-        if (bottomIcon == null) {
-            bottomIcon = new BottomTrayIcon(i18n.t("Show/hide chat dialog"));
-            bottomIcon.addMainButton(icons.chat(), new Command() {
-                public void execute() {
-                    if (dialog.isVisible()) {
-                        dialog.hide();
-                    } else {
-                        dialog.show();
-                    }
-                }
-            });
-            presenter.attachIconToBottomBar(bottomIcon);
-        }
     }
 
     private void attachRoster() {
@@ -349,6 +336,20 @@ public class MultiChatPanel implements MultiChatView {
         return southPanel;
     }
 
+    private void createKuneIconBottomBar() {
+        bottomIcon = new BottomTrayIcon(i18n.t("Show/hide chat dialog"));
+        bottomIcon.addMainButton(icons.chat(), new Command() {
+            public void execute() {
+                if (dialog.isVisible()) {
+                    dialog.hide();
+                } else {
+                    dialog.show();
+                }
+            }
+        });
+        presenter.attachIconToBottomBar(bottomIcon);
+    }
+
     private void createLayout() {
         dialog = new BasicDialog(i18n.t("Emite chat"), false, false, 600, 415, 300, 300);
         dialog.setBorder(false);
@@ -405,6 +406,8 @@ public class MultiChatPanel implements MultiChatView {
         dialog.add(centerPanel, centerData);
 
         createListeners();
+
+        createKuneIconBottomBar();
 
     }
 

@@ -18,9 +18,6 @@ import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPresenter;
 import com.calclab.emiteuiplugin.client.chat.ChatUIView;
-import com.calclab.emiteuiplugin.client.dialog.MultiChatListener;
-import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
-import com.calclab.emiteuiplugin.client.dialog.MultiChatView;
 import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
 import com.calclab.emiteuiplugin.client.roster.RosterUI;
 import com.calclab.emiteuiplugin.client.roster.RosterUIView;
@@ -75,7 +72,7 @@ public class MultiChatPresenterTest {
         Mockito.stub(
                 factory.createChatUI((String) Mockito.anyObject(), (String) Mockito.anyObject(),
                         (ChatUIListener) Mockito.anyObject())).toReturn(chatUI);
-        final MultiChatCreationParam param = new MultiChatCreationParam(null, new UserChatOptions(sessionUserJid,
+        final MultiChatCreationParam param = new MultiChatCreationParam(null, i18n, new UserChatOptions(sessionUserJid,
                 "passwdofuser", "blue", Roster.DEF_SUBSCRIPTION_MODE));
 
         multiChat = new MultiChatPresenter(xmpp, i18n, factory, param, multiChatlistener);

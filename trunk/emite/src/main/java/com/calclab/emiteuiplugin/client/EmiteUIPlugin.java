@@ -26,7 +26,6 @@ import org.ourproject.kune.platf.client.dispatch.Action;
 import org.ourproject.kune.platf.client.dispatch.Dispatcher;
 import org.ourproject.kune.platf.client.extend.Plugin;
 import org.ourproject.kune.platf.client.extend.UIExtensionElement;
-import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
@@ -83,7 +82,7 @@ public class EmiteUIPlugin extends Plugin {
                 final Xmpp xmpp = Xmpp.create(param.getBoshOptions());
 
                 multiChatDialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(xmpp, param,
-                        new I18nTranslationServiceMocked(), new MultiChatListener() {
+                        new MultiChatListener() {
 
                             public void attachToExtPoint(final UIExtensionElement extensionElement) {
                                 dispatcher.fire(PlatformEvents.ATTACH_TO_EXT_POINT, extensionElement);
