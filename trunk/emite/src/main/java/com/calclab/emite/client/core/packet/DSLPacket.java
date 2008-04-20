@@ -36,6 +36,10 @@ public abstract class DSLPacket implements IPacket {
 	return value.equals(getAttribute(name));
     }
 
+    public boolean hasChild(final String name) {
+	return getFirstChild(name) != NoPacket.INSTANCE;
+    }
+
     public IPacket With(final IPacket child) {
 	addChild(child);
 	return this;

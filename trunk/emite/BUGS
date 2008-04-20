@@ -6,7 +6,13 @@ For reports please use:
 
 - Roster is receiving presence from rooms, with imprevisible result (to probe join a room from emite and later from a external client):
 
-[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><presence to="admin@localhost/emite-ui1208635557049" from="testroom3@rooms.localhost/dfga"> [DEBUG] <show>dnd</show> [DEBUG] <status>sadasdf</status> [DEBUG] <priority>5</priority> [DEBUG] <c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html"/> [DEBUG] [DEBUG] <x xmlns="http://jabber.org/protocol/muc#user"><item jid="vjrj@localhost/Psi" affiliation="none" role="participant"/></x></presence></body>B576CCF8407E44F11... (line 144)
+[DEBUG] GWT CONNECTOR RECEIVED:
+<body xmlns='http://jabber.org/protocol/httpbind'>
+	<presence to="admin@localhost/emite-ui1208635557049" from="testroom3@rooms.localhost/dfga">
+	<show>dnd</show> [DEBUG] <status>sadasdf</status> [DEBUG] <priority>5</priority> [DEBUG]
+	<c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html"/> [DEBUG] [DEBUG]
+	<x xmlns="http://jabber.org/protocol/muc#user"><item jid="vjrj@localhost/Psi" affiliation="none" role="participant"/></x>
+</presence></body>B576CCF8407E44F11... (line 144)
 [DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@43B576CCF8407E44F11... (line 144)
 [DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@44B576CCF8407E44F11... (line 144)
 [INFO] Presence received in RosterManager for item: nullB576CCF8407E44F11... (line 141)
@@ -17,7 +23,12 @@ For reports please use:
 
 - Rooms join/creation problems:
 
-IN: <body xmlns='http://jabber.org/protocol/httpbind'><presence to="admin@localhost/emite-swing" from="testroom2@rooms.localhost/nick"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence></body>
+IN: <body xmlns='http://jabber.org/protocol/httpbind'>
+	<presence to="admin@localhost/emite-swing" from="testroom2@rooms.localhost/nick">
+	<x xmlns="http://jabber.org/protocol/muc#user">
+	<item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/>
+	<status code="201"/></x>
+	</presence></body>
 DISPATCH: <body xmlns="http://jabber.org/protocol/httpbind"><presence from="testroom2@rooms.localhost/nick" to="admin@localhost/emite-swing"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence></body>
 DISPATCH: <presence from="testroom2@rooms.localhost/nick" to="admin@localhost/emite-swing"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence>
 19-abr-2008 15:44:51 com.allen_sauer.gwt.log.server.ServerLogImplJDK14 info
