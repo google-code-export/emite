@@ -36,6 +36,8 @@ public interface RoomUI extends ChatUI {
 
     boolean isSubjectEditable();
 
+    void onInviteUserRequested(String userJid, String reasonText);
+
     void onModifySubjectRequested(String newSubject);
 
     void setSubject(String newSubject);

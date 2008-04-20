@@ -74,4 +74,11 @@ Appendix C: war generation
 
   mvn compile war:war
 
+Appendix D: inclusion in your gwt application
+--------------------------------------------------------------------------------
 
+Add to your pom.xml (or include the jars)
+
+In your .gwt.xml include:
+  <inherits name="com.calclab.emite.Emite" />
+  <inherits name="com.calclab.emiteui.EmiteUI" />
