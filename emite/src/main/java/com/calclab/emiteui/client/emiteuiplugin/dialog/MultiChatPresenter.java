@@ -179,6 +179,10 @@ public class MultiChatPresenter implements MultiChat {
                         ((RoomUI) chatUI).setUserListVisible(false);
                     }
 
+                    public void onInviteUserRequested(String userJid, String reasonText) {
+                        ((Room) chat).inviteUser(userJid, reasonText);
+                    }
+
                     public void onMessageAdded(ChatUI chatUI) {
                         view.highlightChat(chatUI);
                     }
@@ -216,7 +220,8 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     public void inviteUserToRoom(final String userJid, final String reasonText) {
-        ((Room) currentChat).inviteUser(userJid, reasonText);
+        final RoomUI roomUI = (RoomUI) currentChat;
+        roomUI.onInviteUserRequested(userJid, reasonText);
     }
 
     public void joinRoom(final String roomName, final String serverName) {
@@ -451,7 +456,7 @@ public class MultiChatPresenter implements MultiChat {
     private void loginIfnecessary(final Show status, final String statusText) {
         switch (xmpp.getSession().getState()) {
         case disconnected:
-            final String resource = "emite-ui" + new Date().getTime();
+            final String resource = "emiteui-" + new Date().getTime();
             xmpp.login(new XmppURI(currentUserJid.toString(), currentUserJid.getHost(), resource), currentUserPasswd,
                     status, statusText);
             break;

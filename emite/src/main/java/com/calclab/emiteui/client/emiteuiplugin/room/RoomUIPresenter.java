@@ -88,6 +88,10 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
         return isSubjectEditable;
     }
 
+    public void onInviteUserRequested(final String userJid, final String reasonText) {
+        listener.onInviteUserRequested(userJid, reasonText);
+    }
+
     public void onModifySubjectRequested(final String newSubject) {
         listener.onModifySubjectRequested(newSubject);
     }

@@ -129,6 +129,8 @@
 							<classifier>core</classifier>
 							<includes>
 								<include>**/emite/**</include>
+								<include>**/JabberHTTPBind/**</include>
+								<include>**/spieleck/**</include>
 							</includes>
 						</configuration>
 					</execution>
@@ -141,7 +143,7 @@
 						<configuration>
 							<classifier>emiteuiplugin</classifier>
 							<includes>
-								<include>**/emiteuiplugin/**</include>
+								<include>**/emiteui/**</include>
 							</includes>
 						</configuration>
 					</execution>
