@@ -1,44 +1,80 @@
 package com.calclab.emite.client.core.bosh;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.components.DefaultContainer;
-import com.calclab.emite.client.core.services.ConnectorException;
-import com.calclab.emite.client.core.services.ServicesPlugin;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.services.Services;
+import com.calclab.emite.j2se.services.TigaseXMLService;
+import com.calclab.emite.testing.InstallationTester;
+import com.calclab.emite.testing.TestMatchers;
+import com.calclab.emite.testing.InstallationTester.InstallTest;
+import com.calclab.emite.testing.InstallationTester.InstallVerifier;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import static com.calclab.emite.testing.TestMatchers.*;
 
 public class BoshManagerTest {
-
-    private MockedServer server;
-    private Xmpp xmpp;
+    private Services services;
+    private Emite emite;
+    private BoshStream stream;
+    private BoshOptions options;
+    private BoshManager manager;
+    private TigaseXMLService xmler;
 
     @Before
     public void aaCreate() {
-	final Container container = new DefaultContainer();
-	final BoshOptions options = new BoshOptions("httpbind");
-	server = new MockedServer();
-	ServicesPlugin.install(container, server);
-	xmpp = new Xmpp(container, options, server.getDispatcherMonitor());
+	xmler = new TigaseXMLService();
+	services = mock(Services.class);
+	emite = mock(Emite.class);
+	stream = mock(BoshStream.class);
+	options = new BoshOptions("http-bind");
+	manager = new BoshManager(services, emite, stream, options);
     }
 
     @Test
-    public void testStart() throws ConnectorException {
-	xmpp.login(XmppURI.parse("user@domain/resource"), "password", null, null);
-	assertEquals(1, server.getRequestCount());
-	server
-		.answer("<body xmlns=\"http://jabber.org/protocol/httpbind\" xmlns:stream=\"http://etherx.jabber.org/streams\" authid=\"505ea252\" "
-			+ "sid=\"505ea252\" secure=\"true\" requests=\"2\" inactivity=\"30\" polling=\"5\" wait=\"60\" "
-			+ "ver=\"1.6\"><stream:features><mechanisms xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
-			+ "<mechanism>PLAIN</mechanism><mechanism>CRAM-MD5</mechanism><mechanism>ANONYMOUS</mechanism>"
-			+ "<mechanism>DIGEST-MD5</mechanism></mechanisms><compression xmlns=\"http://jabber.org/features/compress\">"
-			+ "<method>zlib</method></compression><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"/>"
-			+ "<session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/></stream:features></body>");
-
-	assertEquals(2, server.getRequestCount());
+    public void shouldPublishAnyBodyChild() {
+	startManager();
+	final String body = "<body polling=\"5\"><one/><two/></body>";
+	manager.eventBody(xmler.toXML(body));
+	verify(emite, atLeastOnce()).publish(packetLike(new Packet("one")));
+	verify(emite, atLeastOnce()).publish(packetLike(new Packet("two")));
     }
+
+    @Test
+    public void shouldSetSIDWhenFirstBody() {
+	startManager();
+	final String body = "<body xmlns=\"http://jabber.org/protocol/httpbind\" xmlns:stream=\"http://etherx.jabber.org/streams\" authid=\"505ea252\" "
+		+ "sid=\"theSid\" secure=\"true\" requests=\"2\" inactivity=\"30\" polling=\"5\" wait=\"60\" ver=\"1.6\"></body>";
+	manager.eventBody(xmler.toXML(body));
+	assertEquals("theSid", manager.getState().getSID());
+	assertEquals(5500, manager.getState().getPoll());
+    }
+
+    @Test
+    public void shouldStopWhenBodyTerminate() {
+	startManager();
+	final String body = "<body xmlns=\"http://jabber.org/protocol/httpbind\" type=\"terminal\" condition=\"policy-violation\"></body>";
+	manager.eventBody(xmler.toXML(body));
+	assertFalse(manager.isRunning());
+	verify(emite).publish(TestMatchers.packetLike(BoshManager.Events.error("terminal", "policy-violation")));
+
+    }
+
+    @Test
+    public void testInstallation() {
+	new InstallationTester(new InstallTest() {
+	    public void prepare(final Emite emite, final InstallVerifier verifier) {
+		new BoshManager(services, emite, stream, options).install();
+		verifier.shouldAttachTo(new Packet("body"));
+	    }
+	});
+    }
+
+    private void startManager() {
+	manager.dispatchingBegins();
+	manager.eventStart("domain");
+    }
+
 }

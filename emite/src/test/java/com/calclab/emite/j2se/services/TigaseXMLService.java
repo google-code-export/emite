@@ -24,6 +24,7 @@ public class TigaseXMLService {
 	final Queue<Element> parsedElements = handler.getParsedElements();
 
 	final Element body = parsedElements.poll();
+	// TODO: body es null si no ha parseado bien ¿qué hacemos?
 	return new TigasePacket(body);
     }
 }

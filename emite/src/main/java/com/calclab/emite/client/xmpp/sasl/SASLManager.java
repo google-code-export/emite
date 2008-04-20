@@ -48,7 +48,7 @@ public class SASLManager extends EmiteComponent {
 
     @Override
     public void install() {
-	PacketListener packetListener = new PacketListener() {
+	final PacketListener packetListener = new PacketListener() {
 	    public void handle(final IPacket received) {
 		uri = XmppURI.parse(received.getAttribute("uri"));
 		password = received.getAttribute("password");
@@ -60,7 +60,7 @@ public class SASLManager extends EmiteComponent {
 	    public void handle(final IPacket received) {
 		eventStreamFeatures(received);
 	    }
-	
+
 	});
 
 	emite.subscribe(when(new Packet("failure", XMLNS)), new PacketListener() {
@@ -83,7 +83,7 @@ public class SASLManager extends EmiteComponent {
     }
 
     void eventFailure(final IPacket received) {
-	emite.publish(BoshManager.Events.onError.Because(received.getChildren().get(0)));
+	emite.publish(BoshManager.Events.error("sasl-failure", received.getChildren().get(0).getName()));
     }
 
     void eventStreamFeatures(final IPacket received) {

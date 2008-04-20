@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 import com.calclab.emite.testing.TestMatchers;
@@ -31,8 +30,7 @@ public class SASLManagerTest {
     public void shouldHandleFailure() {
 	final String received = "<failure xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><not-authorized/></failure>";
 	manager.eventFailure(xmler.toXML(received));
-	verify(emite).publish(
-		TestMatchers.packetLike(BoshManager.Events.onError.Because(new Packet("not-authorized", null))));
+	verify(emite).publish(TestMatchers.packetLike(BoshManager.Events.error("sasl-error", "not-authorized")));
     }
 
     @Test

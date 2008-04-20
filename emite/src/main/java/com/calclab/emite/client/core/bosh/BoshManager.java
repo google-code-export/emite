@@ -43,13 +43,18 @@ import com.calclab.emite.client.core.services.Services;
 public class BoshManager extends EmiteComponent implements ConnectorCallback, DispatcherStateListener {
 
     public static class Events {
-	public static final Event onError = new Event("connection:on:error");
 	/** ATTRIBUTE: domain */
 	public static final Event restart = new Event("connection:do:restart");
+
 	/** ATTRIBUTE: domain */
 	public static final Event start = new Event("connection:do:start");
 	public static final Event stop = new Event("connection:do:stop");
+	public static final Event onError = new Event("connection:on:error");
 	protected final static Event pull = new Event("connection:do:pull");
+
+	public static Event error(final String cause, final String info) {
+	    return (Event) onError.Params("cause", cause).With("info", info);
+	}
     }
 
     private final String httpBase;
@@ -66,11 +71,19 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
 	emite.addListener(this);
     }
 
-    public void afterDispatching() {
+    public void dispatchingBegins() {
+	if (isRunning) {
+	    Log.debug("DISPATCH BEGINS >>>>>>>>>>>");
+	    stream.newRequest(state.getSID());
+	}
+    }
+
+    public void dispatchingEnds() {
+	Log.debug("<<<<<<<<<<<< DISPATCH ENDS");
 	if (isRunning) {
 	    state.setResponseEmpty(stream.isEmpty());
 	    final int delay = state.getState(services.getCurrentTime());
-	    Log.debug(">>>> " + delay);
+	    Log.debug("DELAY: " + delay);
 	    if (delay == BoshState.TIME_NOW) {
 		sendResponse();
 	    } else if (delay == BoshState.TIME_NEVER) {
@@ -94,23 +107,23 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
 	    public void handle(final IPacket received) {
 		eventStart(received.getAttribute("domain"));
 	    }
-	
-	});
-	emite.subscribe(when(BoshManager.Events.onError), new PacketListener() {
-	    public void handle(final IPacket stanza) {
-		eventError();
-	    }
-	});
 
+	});
 	emite.subscribe(when("body"), new PacketListener() {
 	    public void handle(final IPacket iPacket) {
 		eventBody(iPacket);
 	    }
 	});
 
+	emite.subscribe(when(BoshManager.Events.onError), new PacketListener() {
+	    public void handle(final IPacket received) {
+		eventError(received);
+	    }
+	});
+
 	emite.subscribe(when("stream:error"), new PacketListener() {
 	    public void handle(final IPacket received) {
-		emite.publish(BoshManager.Events.onError.Params("cause", "stream error").With(received));
+		error("stream:error", "");
 	    }
 	});
 
@@ -121,10 +134,8 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
 	});
     }
 
-    public void beforeDispatching() {
-	if (isRunning) {
-	    stream.newRequest(state.getSID());
-	}
+    public boolean isRunning() {
+	return isRunning;
     }
 
     /**
@@ -134,7 +145,7 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
      */
     public void onError(final Throwable throwable) {
 	state.responseRecevied();
-	emite.publish(BoshManager.Events.onError);
+	error("connector-error", throwable.getMessage());
     }
 
     /**
@@ -146,7 +157,7 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
 	state.responseRecevied();
 
 	if (statusCode >= 400) {
-	    emite.publish(BoshManager.Events.onError);
+	    error("response-status", "" + statusCode);
 	} else {
 	    final IPacket response = services.toXML(content);
 	    if (!isRunning) {
@@ -156,29 +167,29 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
 	    } else if ("body".equals(response.getName())) {
 		emite.publish(response);
 	    } else {
-		emite.publish(BoshManager.Events.onError);
+		error("bad-stanza", response.getName());
 	    }
 	}
     }
 
-    void eventBody(final IPacket response) {
-	if (state.isFirstResponse()) {
-	    final String sid = response.getAttribute("sid");
-	    state.setSID(sid);
-	    stream.setSID(sid);
-	    state.setPoll(response.getAttributeAsInt("polling") * 1000 + 500);
-	}
-	if (response.hasAttribute("terminal")) {
-	    emite.publish(new Event(BoshManager.Events.onError).Params("terminal", response.getAttribute("condition")));
+    void eventBody(final IPacket body) {
+	if (isTerminal(body)) {
+	    error("terminal", body.getAttribute("condition"));
 	} else {
-	    final List<? extends IPacket> children = response.getChildren();
+	    if (state.isFirstResponse()) {
+		final String sid = body.getAttribute("sid");
+		state.setSID(sid);
+		stream.setSID(sid);
+		state.setPoll(body.getAttributeAsInt("polling") * 1000 + 500);
+	    }
+	    final List<? extends IPacket> children = body.getChildren();
 	    for (final IPacket stanza : children) {
 		emite.publish(stanza);
 	    }
 	}
     }
 
-    void eventError() {
+    void eventError(final IPacket received) {
 	isRunning = false;
     }
 
@@ -201,6 +212,16 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
 	return state;
     }
 
+    private void error(final String cause, final String info) {
+	isRunning = false;
+	emite.publish(BoshManager.Events.error(cause, info));
+    }
+
+    private boolean isTerminal(final IPacket body) {
+	final String type = body.getAttribute("type");
+	return "terminate".equals(type) || "terminal".equals(type);
+    }
+
     private void pull(final int delay) {
 	services.schedule(delay, new ScheduledAction() {
 	    public void run() {
@@ -214,7 +235,7 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
 	    services.send(httpBase, services.toString(stream.clearBody()), this);
 	    state.requestSentAt(services.getCurrentTime());
 	} catch (final ConnectorException e) {
-	    emite.publish(BoshManager.Events.onError);
+	    error("connector:send-exception", e.getMessage());
 	}
     }
 }
