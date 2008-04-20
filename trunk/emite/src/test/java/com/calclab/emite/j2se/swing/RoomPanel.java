@@ -17,9 +17,9 @@ import com.calclab.emite.client.extra.muc.Occupant;
 public class RoomPanel extends ChatPanel {
 
     public static interface RoomPanelListener extends ChatPanelListener {
-        void onInviteUser(String user, String reason);
+	void onInviteUser(String user, String reason);
 
-        void onModifySubject(String newSubject);
+	void onModifySubject(String newSubject);
     }
 
     private final DefaultListModel users;
@@ -28,41 +28,51 @@ public class RoomPanel extends ChatPanel {
     private final JTextField fieldInvitedUser;
 
     public RoomPanel(final RoomPanelListener listener) {
-        super(listener);
-        users = new DefaultListModel();
-        usersList = new JList(users);
-        add(usersList, BorderLayout.EAST);
+	super(listener);
+	users = new DefaultListModel();
+	usersList = new JList(users);
+	add(usersList, BorderLayout.EAST);
 
-        final JButton btnModSubject = new JButton("modify subject");
-        btnModSubject.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                listener.onModifySubject(fieldSubjRoom.getText());
-            }
-        });
-        final JButton btnInvite = new JButton("invite user");
-        btnInvite.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                listener.onInviteUser(fieldInvitedUser.getText(), "This is the reason");
-            }
-        });
-        fieldSubjRoom = new JTextField();
-        fieldSubjRoom.setText("Write here the room subject");
-        fieldInvitedUser = new JTextField();
-        fieldInvitedUser.setText("testuser1@locahost");
+	final JButton btnModSubject = new JButton("modify subject");
+	btnModSubject.addActionListener(new ActionListener() {
+	    public void actionPerformed(final ActionEvent e) {
+		listener.onModifySubject(fieldSubjRoom.getText());
+	    }
+	});
+	final JButton btnInvite = new JButton("invite user");
+	btnInvite.addActionListener(new ActionListener() {
+	    public void actionPerformed(final ActionEvent e) {
+		listener.onInviteUser(fieldInvitedUser.getText(), "This is the reason");
+	    }
+	});
+	fieldSubjRoom = new JTextField();
+	fieldSubjRoom.setText("Write here the room subject");
+	fieldInvitedUser = new JTextField();
+	fieldInvitedUser.setText("testuser1@locahost");
 
-        final JPanel northPanel = new JPanel();
-        northPanel.add(fieldSubjRoom);
-        northPanel.add(btnModSubject);
-        northPanel.add(fieldInvitedUser);
-        northPanel.add(btnInvite);
-        add(northPanel, BorderLayout.NORTH);
+	final JPanel northPanel = new JPanel();
+	northPanel.add(fieldSubjRoom);
+	northPanel.add(btnModSubject);
+	northPanel.add(fieldInvitedUser);
+	northPanel.add(btnInvite);
+	add(northPanel, BorderLayout.NORTH);
     }
 
     public void setUsers(final Collection<Occupant> users) {
-        this.users.clear();
-        for (final Occupant user : users) {
-            this.users.addElement(user);
-        }
+	this.users.clear();
+	for (final Occupant user : users) {
+	    this.users.addElement(user);
+	}
+    }
+
+    @Override
+    public void showIcomingMessage(final String from, final String body) {
+	final String name = from.substring(from.indexOf('/') + 1);
+	super.showIcomingMessage(name, body);
+    }
+
+    @Override
+    public void showOutMessage(final String body) {
     }
 
 }

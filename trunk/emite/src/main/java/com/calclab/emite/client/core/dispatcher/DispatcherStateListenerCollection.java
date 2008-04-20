@@ -29,13 +29,13 @@ class DispatcherStateListenerCollection extends
 
 	public void fireAfterDispatch() {
 		for (final DispatcherStateListener listener : this) {
-			listener.afterDispatching();
+			listener.dispatchingEnds();
 		}
 	}
 
 	public void fireBeforeDispatch() {
 		for (final DispatcherStateListener listener : this) {
-			listener.beforeDispatching();
+			listener.dispatchingBegins();
 		}
 	}
 

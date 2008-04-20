@@ -44,6 +44,10 @@ public class BoshState {
 	return currentConnections;
     }
 
+    public int getPoll() {
+	return poll;
+    }
+
     public String getSID() {
 	return sid;
     }

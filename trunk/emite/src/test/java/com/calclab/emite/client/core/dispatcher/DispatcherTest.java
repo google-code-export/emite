@@ -39,8 +39,8 @@ public class DispatcherTest {
 	final DispatcherStateListener listener = Mockito.mock(DispatcherStateListener.class);
 	dispatcher.addListener(listener);
 	dispatcher.publish(new Packet("name"));
-	verify(listener, times(1)).beforeDispatching();
-	verify(listener, times(1)).afterDispatching();
+	verify(listener, times(1)).dispatchingBegins();
+	verify(listener, times(1)).dispatchingEnds();
     }
 
     @Test

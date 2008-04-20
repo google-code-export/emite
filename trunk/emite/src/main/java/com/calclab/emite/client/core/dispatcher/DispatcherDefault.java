@@ -72,9 +72,7 @@ public class DispatcherDefault implements Dispatcher {
     public void publish(final IPacket iPacket) {
 	monitor.publishing(iPacket);
 	queue.add(iPacket);
-	if (!isCurrentlyDispatching) {
-	    start();
-	}
+	startIfNeeded();
     }
 
     public void subscribe(final Matcher matcher, final PacketListener packetListener) {
@@ -99,12 +97,10 @@ public class DispatcherDefault implements Dispatcher {
 	return list;
     }
 
-    /**
-     * TODO: possible race condition under J2SE
-     */
-    private void start() {
-	listeners.fireBeforeDispatch();
+    // FIXME: investigar este sync
+    private synchronized void start() {
 	isCurrentlyDispatching = true;
+	listeners.fireBeforeDispatch();
 	while (queue.size() > 0) {
 	    final IPacket next = queue.remove(0);
 	    fireActions(next, subscriptors.get(null));
@@ -112,6 +108,12 @@ public class DispatcherDefault implements Dispatcher {
 	}
 	isCurrentlyDispatching = false;
 	listeners.fireAfterDispatch();
+    }
+
+    private void startIfNeeded() {
+	if (!isCurrentlyDispatching) {
+	    start();
+	}
     }
 
 }
