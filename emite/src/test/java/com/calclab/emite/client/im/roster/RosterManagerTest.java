@@ -12,9 +12,12 @@ import org.junit.Test;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
+import com.calclab.emite.testing.PacketListenerTrap;
 
 public class RosterManagerTest {
     private Emite emite;
@@ -36,6 +39,16 @@ public class RosterManagerTest {
 	query.add("item", null).With("jid", "name2@domain").With("name", "complete name2").With("subscription", "both");
 	manager.eventRoster(new IQ(Type.result).With(query));
 	verify(roster).setItems(isListOfSize(2));
+    }
+
+    @Test
+    public void shouldRemoveItemsToRoster() {
+	final XmppURI uri = XmppURI.parse("name@domain/res");
+	manager.requestRemoveItem(uri);
+	final PacketListenerTrap trap = new PacketListenerTrap();
+	verify(emite).send(anyString(), (IPacket) anyObject(), trap.verify());
+	trap.getListener().handle(new IQ(Type.result));
+	verify(roster).removeItem(uri);
     }
 
     @Test
