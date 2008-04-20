@@ -3,7 +3,7 @@ package com.calclab.emite.client.extra.muc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -14,9 +14,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.TestMatchers;
 
+@SuppressWarnings("unchecked")
 public class RoomTest {
 
     private RoomListener listener;
@@ -39,6 +42,13 @@ public class RoomTest {
 	verify(listener).onOccupantsChanged(TestMatchers.isCollectionOfSize(1));
 	final Occupant result = room.findOccupant(uri);
 	assertEquals(occupant, result);
+    }
+
+    @Test
+    public void shouldFireListenersWhenMessage() {
+	final Message message = new Message("someone@domain/res", "room@domain", "message");
+	room.dispatch(message);
+	verify(listener).onMessageReceived((Chat) anyObject(), eq(message));
     }
 
     @Test

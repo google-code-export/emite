@@ -15,7 +15,7 @@ public class TigaseXMLService {
     }
 
     public String toString(final IPacket iPacket) {
-	return iPacket.toString();
+	return iPacket != null ? iPacket.toString() : "null";
     }
 
     public IPacket toXML(final String xml) {

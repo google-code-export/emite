@@ -125,13 +125,11 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	final XmppURI occupantURI = presence.getFromURI();
 	final Room room = rooms.get(occupantURI.getJID());
 	if (room != null) {
-
 	    if (presence.hasAttribute("type", "unavailable")) {
 		room.removeOccupant(occupantURI);
 	    } else {
 		final IPacket xtension = presence.getFirstChild("x");
-		if (xtension != null && xtension.hasAttribute("xmlns", "http://jabber.org/protocol/muc#user")) {
-
+		if (xtension.hasAttribute("xmlns", "http://jabber.org/protocol/muc#user")) {
 		    final IPacket item = xtension.getFirstChild("item");
 		    final String affiliation = item.getAttribute("affiliation");
 		    final String role = item.getAttribute("role");
@@ -152,14 +150,15 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	emite.send("rooms", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (!received.hasAttribute("type", "result")) {
-		    // TODO: error!
+		    // TODO: ISSUE error!
 		}
 	    }
 	});
     }
 
     private boolean isNewRoom(final IPacket xtension) {
-	return "201".equals(xtension.getFirstChild("status").getAttribute("code"));
+	final String code = xtension.getFirstChild("status").getAttribute("code");
+	return (code != null && code.equals("201"));
     }
 
     // FIXME: (dani de dani) no entiendo bien...

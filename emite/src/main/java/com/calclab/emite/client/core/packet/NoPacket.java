@@ -92,6 +92,10 @@ public class NoPacket implements IPacket {
 	return false;
     }
 
+    public boolean hasChild(final String name) {
+	return false;
+    }
+
     public void render(final StringBuffer buffer) {
     }
 

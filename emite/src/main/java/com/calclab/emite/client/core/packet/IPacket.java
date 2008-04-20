@@ -70,6 +70,12 @@ public interface IPacket {
      */
     List<? extends IPacket> getChildren(String name);
 
+    /**
+     * Return the first direct child with this name. NEVER returns null
+     * 
+     * @param childName
+     * @return the Packet or NoPacket instance
+     */
     IPacket getFirstChild(String childName);
 
     String getName();
@@ -77,6 +83,8 @@ public interface IPacket {
     IPacket getParent();
 
     String getText();
+
+    boolean hasChild(String name);
 
     void render(StringBuffer buffer);
 

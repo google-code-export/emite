@@ -43,19 +43,19 @@ public class Room implements Chat {
     private final XmppURI userURI;
 
     public Room(final XmppURI userURI, final XmppURI roomURI, final String name, final Emite emite) {
-        this.userURI = userURI;
-        this.roomURI = roomURI;
-        this.name = name;
-        this.emite = emite;
-        this.occupants = new HashMap<XmppURI, Occupant>();
-        this.listeners = new ArrayList<ChatListener>();
+	this.userURI = userURI;
+	this.roomURI = roomURI;
+	this.name = name;
+	this.emite = emite;
+	this.occupants = new HashMap<XmppURI, Occupant>();
+	this.listeners = new ArrayList<ChatListener>();
     }
 
     /**
      * RoomListener are welcomed!
      */
     public void addListener(final ChatListener listener) {
-        listeners.add(listener);
+	listeners.add(listener);
     }
 
     /**
@@ -66,31 +66,31 @@ public class Room implements Chat {
      * @see http://www.xmpp.org/extensions/xep-0045.html#exit
      */
     public void close() {
-        emite.send(new Presence(Type.unavailable, userURI, roomURI));
+	emite.send(new Presence(Type.unavailable, userURI, roomURI));
     }
 
     public Occupant findOccupant(final XmppURI uri) {
-        return occupants.get(uri);
+	return occupants.get(uri);
     }
 
     public String getID() {
-        return roomURI.toString();
+	return roomURI.toString();
     }
 
     public String getName() {
-        return name;
+	return name;
     }
 
     public Object getOccupantsCount() {
-        return occupants.size();
+	return occupants.size();
     }
 
     public XmppURI getOtherURI() {
-        return roomURI;
+	return roomURI;
     }
 
     public String getThread() {
-        return roomURI.getNode();
+	return roomURI.getNode();
     }
 
     /**
@@ -104,45 +104,45 @@ public class Room implements Chat {
      */
     // FIXME: Dani, check if this is correct (the way to construct the message)
     public void inviteUser(final String userJid, final String reasonText) {
-        BasicStanza message = new BasicStanza("message", null);
-        message.setFrom(userURI.toString());
-        message.setTo(roomURI.toString());
-        IPacket x = message.add("x", "http://jabber.org/protocol/muc#user");
-        IPacket invite = x.add("invite", null);
-        invite.setAttribute("to", userJid);
-        IPacket reason = invite.add("reason", null);
-        reason.WithText(reasonText);
-        emite.send(message);
+	final BasicStanza message = new BasicStanza("message", null);
+	message.setFrom(userURI.toString());
+	message.setTo(roomURI.toString());
+	final IPacket x = message.add("x", "http://jabber.org/protocol/muc#user");
+	final IPacket invite = x.add("invite", null);
+	invite.setAttribute("to", userJid);
+	final IPacket reason = invite.add("reason", null);
+	reason.WithText(reasonText);
+	emite.send(message);
     }
 
     public void removeOccupant(final XmppURI uri) {
-        final Occupant occupant = occupants.remove(uri);
-        if (occupant != null) {
-            fireOccupantsChanged();
-        }
+	final Occupant occupant = occupants.remove(uri);
+	if (occupant != null) {
+	    fireOccupantsChanged();
+	}
     }
 
     public void send(final String text) {
-        final Message message = new Message(userURI, roomURI, text);
-        message.setType(Message.Type.groupchat);
-        emite.send(message);
-        for (final ChatListener listener : listeners) {
-            listener.onMessageSent(this, message);
-        }
+	final Message message = new Message(userURI, roomURI, text);
+	message.setType(Message.Type.groupchat);
+	emite.send(message);
+	for (final ChatListener listener : listeners) {
+	    listener.onMessageSent(this, message);
+	}
     }
 
     public Occupant setOccupantPresence(final XmppURI uri, final String affiliation, final String role) {
-        Occupant occupant = findOccupant(uri);
-        if (occupant == null) {
-            occupant = new Occupant(uri, affiliation, role);
-            occupants.put(occupant.getUri(), occupant);
-            fireOccupantsChanged();
-        } else {
-            occupant.setAffiliation(affiliation);
-            occupant.setRole(role);
-            fireOccupantModified(occupant);
-        }
-        return occupant;
+	Occupant occupant = findOccupant(uri);
+	if (occupant == null) {
+	    occupant = new Occupant(uri, affiliation, role);
+	    occupants.put(occupant.getUri(), occupant);
+	    fireOccupantsChanged();
+	} else {
+	    occupant.setAffiliation(affiliation);
+	    occupant.setRole(role);
+	    fireOccupantModified(occupant);
+	}
+	return occupant;
     }
 
     /**
@@ -153,49 +153,49 @@ public class Room implements Chat {
     // FIXME: Dani, check this message
     // What about have a Message constructor, without body and neither xmlns?
     public void setSubject(final String subjectText) {
-        BasicStanza message = new BasicStanza("message", null);
-        message.setFrom(userURI.toString());
-        message.setTo(roomURI.toString());
-        message.setType(Message.Type.groupchat.toString());
-        final IPacket subject = message.add("subject", null);
-        subject.addText(subjectText);
-        emite.send(message);
+	final BasicStanza message = new BasicStanza("message", null);
+	message.setFrom(userURI.toString());
+	message.setTo(roomURI.toString());
+	message.setType(Message.Type.groupchat.toString());
+	final IPacket subject = message.add("subject", null);
+	subject.addText(subjectText);
+	emite.send(message);
     }
 
     @Override
     public String toString() {
-        return "ROOM: " + roomURI;
+	return "ROOM: " + roomURI;
     }
 
     void dispatch(final Message message) {
-        IPacket subject = message.getFirstChild("Subject");
-        if (subject != null) {
-            for (final ChatListener listener : listeners) {
-                ((RoomListener) listener).onSubjectSet(message.getFromURI().getResource(), subject.getText());
-            }
-        } else {
-            for (final ChatListener listener : listeners) {
-                listener.onMessageReceived(this, message);
-            }
-        }
+	final String subject = message.getFirstChild("Subject").getText();
+	if (subject != null) {
+	    for (final ChatListener listener : listeners) {
+		((RoomListener) listener).onSubjectSet(message.getFromURI().getResource(), subject);
+	    }
+	} else {
+	    for (final ChatListener listener : listeners) {
+		listener.onMessageReceived(this, message);
+	    }
+	}
     }
 
     private void fireOccupantModified(final Occupant occupant) {
-        for (final ChatListener listener : listeners) {
-            try {
-                ((RoomListener) listener).onOccupantModified(occupant);
-            } catch (final ClassCastException e) {
-            }
-        }
+	for (final ChatListener listener : listeners) {
+	    try {
+		((RoomListener) listener).onOccupantModified(occupant);
+	    } catch (final ClassCastException e) {
+	    }
+	}
     }
 
     private void fireOccupantsChanged() {
-        for (final ChatListener listener : listeners) {
-            try {
-                ((RoomListener) listener).onOccupantsChanged(occupants.values());
-            } catch (final ClassCastException e) {
-            }
-        }
+	for (final ChatListener listener : listeners) {
+	    try {
+		((RoomListener) listener).onOccupantsChanged(occupants.values());
+	    } catch (final ClassCastException e) {
+	    }
+	}
     }
 
 }
