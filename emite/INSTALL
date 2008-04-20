@@ -79,6 +79,10 @@ Appendix D: inclusion in your gwt application
 
 Add to your pom.xml (or include the jars)
 
+FIXME
+
 In your .gwt.xml include:
+
   <inherits name="com.calclab.emite.Emite" />
   <inherits name="com.calclab.emiteui.EmiteUI" />
+
