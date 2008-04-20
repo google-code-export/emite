@@ -61,6 +61,13 @@ public class Roster implements Component {
 	return subscriptionMode;
     }
 
+    public void removeItem(final XmppURI uri) {
+	final RosterItem removed = items.remove(uri);
+	if (removed != null) {
+	    fireRosterChanged();
+	}
+    }
+
     public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
 	this.subscriptionMode = subscriptionMode;
     }
