@@ -154,7 +154,8 @@ public class MultiChatPanelTopBar extends Toolbar {
 
         inviteUserToGroupChat.addListener(new ButtonListenerAdapter() {
             public void onClick(final Button button, final EventObject e) {
-                MessageBox.alert("In development");
+                // FIXME Vicente show dialog
+                presenter.inviteUserToRoom("vjrj@localhost", "Por que sí");
                 // DefaultDispatcher.getInstance().fire(PlatformEvents.ADD_USERLIVESEARCH,
                 // inviteUserToRoomListener, null);
             }

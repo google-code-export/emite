@@ -34,6 +34,10 @@ public interface RoomUI extends ChatUI {
 
     View getUserListView();
 
+    boolean isSubjectEditable();
+
+    void onModifySubjectRequested(String newSubject);
+
     void setSubject(String newSubject);
 
     void setUserListVisible(boolean b);

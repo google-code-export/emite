@@ -26,6 +26,7 @@ import java.util.Iterator;
 
 import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
+import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
@@ -42,14 +43,20 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
 
     private String subject;
 
+    private boolean isSubjectEditable;
+
     private RoomUserListUIPanel roomUserListUI;
 
     private final RoomUIListener listener;
 
     private final String currentUserAlias;
 
-    public RoomUIPresenter(final String currentUserAlias, final String currentUserColor, final RoomUIListener listener) {
+    private final I18nTranslationService i18n;
+
+    public RoomUIPresenter(final I18nTranslationService i18n, final String currentUserAlias,
+            final String currentUserColor, final RoomUIListener listener) {
         super(currentUserAlias, currentUserColor, listener);
+        this.i18n = i18n;
         this.currentUserAlias = currentUserAlias;
         this.listener = listener;
     }
@@ -77,6 +84,14 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
         listener.onCreated(this);
     }
 
+    public boolean isSubjectEditable() {
+        return isSubjectEditable;
+    }
+
+    public void onModifySubjectRequested(final String newSubject) {
+        listener.onModifySubjectRequested(newSubject);
+    }
+
     public void setSubject(final String newSubject) {
         subject = newSubject;
     }
@@ -95,15 +110,17 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
             if (occupant.getUri().getResource().equals(currentUserAlias)) {
                 if (occupant.getRole().equals(Role.moderator)) {
                     listener.setSubjectEditable(true);
+                    isSubjectEditable = true;
                 } else {
                     listener.setSubjectEditable(false);
+                    isSubjectEditable = false;
                 }
             }
         }
     }
 
     private UserGridMenuItem<Object> createNoActionsMenuItem() {
-        return new UserGridMenuItem<Object>("", "", EmiteUIPlugin.NO_ACTION, null);
+        return new UserGridMenuItem<Object>("", i18n.t("No options"), EmiteUIPlugin.NO_ACTION, null);
     }
 
     private UserGridMenuItemList createUserMenu(final RoomUserUI roomUserUI) {

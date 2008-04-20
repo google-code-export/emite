@@ -76,8 +76,7 @@ public class UserGridPanel extends Panel {
     }
 
     public void addUser(final RoomUserUI user, final UserGridMenu menu, final String userType) {
-        final String img = user.getRole().equals(Role.moderator) ? "images/moderatoruser.gif"
-                : "images/normaluser.gif";
+        final String img = user.getRole().equals(Role.moderator) ? "images/moderatoruser.gif" : "images/normaluser.gif";
         addUser(user, "<img src=\"" + img + "\">", userType, menu);
     }
 
@@ -235,12 +234,12 @@ public class UserGridPanel extends Panel {
         // FIXME: maybe use default status messages
         String statusText;
         if (presence == null) {
-            statusText = "";
+            statusText = " ";
         } else {
             statusText = presence.getStatus();
         }
         if (statusText == null || statusText.equals("null")) {
-            statusText = "";
+            statusText = " ";
         }
         return statusText;
     }

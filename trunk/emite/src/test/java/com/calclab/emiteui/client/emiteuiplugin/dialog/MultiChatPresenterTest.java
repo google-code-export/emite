@@ -82,7 +82,7 @@ public class MultiChatPresenterTest {
         multiChat.createChat(chat);
     }
 
-    // @Test
+    @Test
     public void closeAllChatsWithoutConfirmation() {
         multiChat.closeAllChats(true);
         multiChat.doAfterCloseConfirmed(chat, chatUI);

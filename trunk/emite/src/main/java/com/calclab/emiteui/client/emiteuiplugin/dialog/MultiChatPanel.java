@@ -37,6 +37,7 @@ import com.calclab.emiteui.client.emiteuiplugin.utils.emoticons.EmoticonPaletteP
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.RegionPosition;
@@ -54,8 +55,10 @@ import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.ContainerListenerAdapter;
 import com.gwtext.client.widgets.event.KeyListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
+import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
+import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 import com.gwtext.client.widgets.layout.AccordionLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.BorderLayout;
@@ -470,13 +473,19 @@ public class MultiChatPanel implements MultiChatView {
         subjectForm = createGenericInputForm();
 
         subject = new TextArea();
+        subject.setEnterIsSpecial(true);
         subject.setTitle(i18n.t("Subject of the room"));
         // As height 100% doesn't works
         subject.setHeight(27);
-        subject.addKeyListener(13, new KeyListener() {
+        subject.addKeyListener(KeyboardListener.KEY_ENTER, new KeyListener() {
             public void onKey(final int key, final EventObject e) {
-                presenter.onSubjectChangedByCurrentUser(subject.getText());
+                presenter.onModifySubjectRequested(getSubject());
                 e.stopEvent();
+            }
+        });
+        subject.addListener(new FieldListenerAdapter() {
+            public void onChange(final Field field, final Object newVal, final Object oldVal) {
+                presenter.onModifySubjectRequested(getSubject());
             }
         });
 
@@ -524,6 +533,10 @@ public class MultiChatPanel implements MultiChatView {
         presenter.onCurrentUserSend(getInputText());
         e.stopEvent();
         input.focus();
+    }
+
+    private String getSubject() {
+        return subject.getValueAsString();
     }
 
     private void showEmoticonPalette(final int x, final int y) {
