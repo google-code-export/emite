@@ -4,11 +4,16 @@ Known bugs in Emite
 For reports please use:
   http://code.google.com/p/emite/issues/list
 
-- [ui] Room setSubjectEditable only works when setOcupants not activating/deactivating
+- Roster is receiving presence from rooms, with imprevisible result (to probe join a room from emite and later from a external client):
+
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><presence to="admin@localhost/emite-ui1208635557049" from="testroom3@rooms.localhost/dfga"> [DEBUG] <show>dnd</show> [DEBUG] <status>sadasdf</status> [DEBUG] <priority>5</priority> [DEBUG] <c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html"/> [DEBUG] [DEBUG] <x xmlns="http://jabber.org/protocol/muc#user"><item jid="vjrj@localhost/Psi" affiliation="none" role="participant"/></x></presence></body>B576CCF8407E44F11... (line 144)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@43B576CCF8407E44F11... (line 144)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@44B576CCF8407E44F11... (line 144)
+[INFO] Presence received in RosterManager for item: nullB576CCF8407E44F11... (line 141)
+[INFO] PRESENCE: type: available from: testroom3@rooms.localhost/dfga show: dnd status: sadasdf text: [INFO] B576CCF8407E44F11... (line 141)
+[FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: xtension.getFirstChild("status") has no properties
 
 - [ui] MRoomPanel subject edit, enter not fire
-
-- [ui] Menu empty in Room Ocupants
 
 - Rooms join/creation problems:
 
@@ -36,8 +41,20 @@ MORE INFO: Then we have all the roster elements duplicated. Also we get this err
 
 MORE INFO:  After requestRemoveItem(final String JID) in RosterManager we receive the confirmation of remove... but with are not subscribed to this, and then we don't update this RosterItem, same, with unsubscribe. If the delete/unsubscribe is made by other client, same issue.
 
+In 7.5 and 7.6 of RFC 3921:
+
+"As with adding a roster item, when updating a roster item the server MUST update the roster information in persistent storage, and also initiate a roster push to all of the user's available resources that have requested the roster."
+
+and
+
+"As with adding a roster item, when deleting a roster item the server MUST update the roster information in persistent storage, initiate a roster push to all of the user's available resources that have requested the roster (with the 'subscription' attribute set to a value of "remove"), and send an IQ result to the initiating resource."
+
+
 - Same with the unsubcribe:
 [DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><iq type="set" id="1-75" to="admin@localhost/emite-ui1208127502333"><query xmlns="jabber:iq:roster"><item jid="vjrj@localhost" name="testuser1" subscription="to"/></query></iq></body>
+
+Other similar packet not procesed:
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><iq type="set" id="533-133" to="admin@localhost/emite-ui1208647861921"><query xmlns="jabber:iq:roster"><item jid="vjrj@localhost" name="vjrj" subscription="both"/></query></iq></body>
 
 - Room chat send, echo the same with the room URI (from/to issue)
 admin: This is writing by the client in testroom1
@@ -45,6 +62,10 @@ testroom1: This is writing by the client in testroom1
 
 * SOLVED
 ********************************************************************************
+
+- [ui] Menu empty in Room Ocupants
+
+- [ui] Room setSubjectEditable only works when setOcupants not activating/deactivating
 
 - [ui] Start a already opened chat dont' bring focus to the chat tab
 

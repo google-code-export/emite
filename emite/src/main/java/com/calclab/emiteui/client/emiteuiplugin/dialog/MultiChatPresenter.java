@@ -33,6 +33,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.extra.muc.Occupant;
+import com.calclab.emite.client.extra.muc.Room;
 import com.calclab.emite.client.extra.muc.RoomListener;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.extra.muc.RoomManagerListener;
@@ -154,9 +155,9 @@ public class MultiChatPresenter implements MultiChat {
                         view.setInputText(roomUI.getSavedInput());
                         view.setInviteToGroupChatButtonVisible(true);
                         view.setSubject(roomUI.getSubject());
-                        view.setSubjectEditable(false);
+                        view.setSubjectEditable(roomUI.isSubjectEditable());
                         view.setRoomUserListVisible(true);
-                        ((RoomUI) chatUI).setUserListVisible(true);
+                        roomUI.setUserListVisible(true);
                         view.focusInput();
                         currentChat = chatUI;
                     }
@@ -182,9 +183,12 @@ public class MultiChatPresenter implements MultiChat {
                         view.highlightChat(chatUI);
                     }
 
+                    public void onModifySubjectRequested(String newSubject) {
+                        ((Room) chat).setSubject(newSubject);
+                    }
+
                     public void setSubjectEditable(boolean editable) {
                         view.setSubjectEditable(editable);
-
                     }
                 }) : chats.get(chat));
 
@@ -201,12 +205,6 @@ public class MultiChatPresenter implements MultiChat {
         listener.doAction(eventId, param);
     }
 
-    public void groupChatSubjectChanged(final Chat groupChat, final String newSubject) {
-        final ChatUI chatUI = getChat(groupChat);
-        ((RoomUI) chatUI).setSubject(newSubject);
-        view.setSubject(newSubject);
-    }
-
     public void hide() {
         view.hide();
     }
@@ -217,15 +215,18 @@ public class MultiChatPresenter implements MultiChat {
         createXmppListeners();
     }
 
+    public void inviteUserToRoom(final String userJid, final String reasonText) {
+        ((Room) currentChat).inviteUser(userJid, reasonText);
+    }
+
     public void joinRoom(final String roomName, final String serverName) {
         xmpp.getRoomManager().openChat(XmppURI.parse(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
     }
 
-    public void onSubjectChangedByCurrentUser(final String text) {
+    public void onModifySubjectRequested(final String newSubject) {
         final RoomUI roomUI = (RoomUI) currentChat;
-        roomUI.setSubject(text);
-        // FIXME callback? erase this:
-        view.setSubject(text);
+        roomUI.onModifySubjectRequested(newSubject);
+        view.clearSubject();
     }
 
     public void setOwnPresence(final OwnPresence ownPresence) {
@@ -399,6 +400,14 @@ public class MultiChatPresenter implements MultiChat {
 
                     public void onOccupantsChanged(final Collection<Occupant> users) {
                         roomUI.setUsers(users);
+                    }
+
+                    public void onSubjectSet(final String nick, final String newSubject) {
+                        roomUI.setSubject(newSubject);
+                        roomUI.addInfoMessage(i18n.t("[%s] as changed the subject to: ", nick) + newSubject);
+                        if (currentChat.equals(roomUI)) {
+                            view.setSubject(newSubject);
+                        }
                     }
                 });
             }

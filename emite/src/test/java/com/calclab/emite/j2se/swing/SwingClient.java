@@ -20,6 +20,7 @@ import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.extra.muc.MUCPlugin;
 import com.calclab.emite.client.extra.muc.Occupant;
+import com.calclab.emite.client.extra.muc.Room;
 import com.calclab.emite.client.extra.muc.RoomListener;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.extra.muc.RoomManagerListener;
@@ -38,6 +39,7 @@ import com.calclab.emite.j2se.services.HttpConnectorListener;
 import com.calclab.emite.j2se.services.J2SEPlugin;
 import com.calclab.emite.j2se.swing.ChatPanel.ChatPanelListener;
 import com.calclab.emite.j2se.swing.LoginPanel.LoginPanelListener;
+import com.calclab.emite.j2se.swing.RoomPanel.RoomPanelListener;
 import com.calclab.emite.j2se.swing.RosterPanel.RosterPanelListener;
 
 public class SwingClient {
@@ -187,9 +189,17 @@ public class SwingClient {
 
             public void onChatCreated(final Chat room) {
                 final RoomPanel roomPanel = conversationsPanel.createRoom(room.getOtherURI(), room.getID(),
-                        new ChatPanelListener() {
+                        new RoomPanelListener() {
                             public void onClose(final ChatPanel source) {
                                 MUCPlugin.getRoomManager(xmpp.getComponents()).close(room);
+                            }
+
+                            public void onInviteUser(String userJid, String reasonText) {
+                                ((Room) room).inviteUser(userJid, reasonText);
+                            }
+
+                            public void onModifySubject(String newSubject) {
+                                ((Room) room).setSubject(newSubject);
                             }
 
                             public void onSend(final ChatPanel source, final String text) {
@@ -211,6 +221,9 @@ public class SwingClient {
 
                     public void onOccupantsChanged(final Collection<Occupant> users) {
                         roomPanel.setUsers(users);
+                    }
+
+                    public void onSubjectSet(final String nick, final String newSubject) {
                     }
                 });
             }

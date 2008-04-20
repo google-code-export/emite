@@ -73,7 +73,7 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
 
     public RoomUI createRoomUI(final String currentUserAlias, final String currentUserColor,
             final I18nTranslationService i18n, final RoomUIListener listener) {
-        RoomUIPresenter presenter = new RoomUIPresenter(currentUserAlias, currentUserColor, listener);
+        RoomUIPresenter presenter = new RoomUIPresenter(i18n, currentUserAlias, currentUserColor, listener);
         RoomUserListUIPanel roomUserListUIPanel = new RoomUserListUIPanel(i18n, presenter);
         RoomUIPanel panel = new RoomUIPanel(presenter);
         presenter.init(panel, roomUserListUIPanel);

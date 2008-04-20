@@ -115,9 +115,9 @@ public class EmiteUIPlugin extends Plugin {
                     }
                 });
 
-                dispatcher.subscribe(CLOSE_ALLCHATS, new Action<Object>() {
-                    public void execute(final Object param) {
-                        multiChatDialog.closeAllChats(true);
+                dispatcher.subscribe(CLOSE_ALLCHATS, new Action<Boolean>() {
+                    public void execute(final Boolean param) {
+                        multiChatDialog.closeAllChats(param);
                     }
                 });
 

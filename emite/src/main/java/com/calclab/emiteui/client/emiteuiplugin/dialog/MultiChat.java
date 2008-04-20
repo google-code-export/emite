@@ -32,8 +32,6 @@ public interface MultiChat {
 
     public void destroy();
 
-    public void groupChatSubjectChanged(final Chat groupChat, String newSubject);
-
     public void hide();
 
     public void setOwnPresence(OwnPresence ownPresence);

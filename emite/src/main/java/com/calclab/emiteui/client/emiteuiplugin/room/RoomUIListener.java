@@ -7,6 +7,8 @@ public interface RoomUIListener extends ChatUIListener {
 
     public void onCreated(ChatUI chatUI);
 
+    public void onModifySubjectRequested(String newSubject);
+
     public void setSubjectEditable(boolean editable);
 
 }
