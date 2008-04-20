@@ -35,6 +35,14 @@ public class RosterTest {
     }
 
     @Test
+    public void shouldFireListenerWhenItemRemoved() {
+	roster.add(new RosterItem(XmppURI.parse("one@domain"), Subscription.none, "one"));
+	verify(listener, atLeastOnce()).onRosterChanged(isCollectionOfSize(1));
+	roster.removeItem(XmppURI.parse("one@domain"));
+	verify(listener, atLeastOnce()).onRosterChanged(isCollectionOfSize(0));
+    }
+
+    @Test
     public void shouldInformWhenRosterChanged() {
 	final List<RosterItem> itemCollection = new ArrayList<RosterItem>();
 	itemCollection.add(new RosterItem(XmppURI.parse("name@domain"), Subscription.none, "name"));

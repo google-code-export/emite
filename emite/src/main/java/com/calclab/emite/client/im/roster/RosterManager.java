@@ -101,7 +101,15 @@ public class RosterManager extends EmiteComponent {
     public void requestRemoveItem(final String JID) {
 	final IQ iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", new Packet("item").With("jid", JID).With(
 		"subscription", "remove"));
-	emite.send(iq);
+	emite.send("roster", iq, new PacketListener() {
+	    public void handle(final IPacket received) {
+		if (received.hasAttribute("type", "result")) {
+		    roster.removeItem(XmppURI.parse(JID));
+		} else {
+		    // COULDN'T do it!
+		}
+	    }
+	});
     }
 
     void eventLoggedIn() {
