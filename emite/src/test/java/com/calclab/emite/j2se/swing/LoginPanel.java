@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -21,11 +22,11 @@ public class LoginPanel extends JPanel {
     private JButton btnLogin;
     private JButton btnLogout;
     private JTextField fieldDomain;
-    private JTextField fieldHttpBase;
     private JTextField fieldName;
     private JPasswordField fieldPassword;
     private JLabel labelState;
     private final LoginPanelListener listener;
+    private JComboBox selectHttpBase;
 
     public LoginPanel(final LoginPanelListener listener) {
 	super(new FlowLayout(FlowLayout.LEFT));
@@ -40,11 +41,15 @@ public class LoginPanel extends JPanel {
     }
 
     private void init() {
-	fieldHttpBase = new JTextField("http://localhost:8383/http-bind/");
+	selectHttpBase = new JComboBox();
+	selectHttpBase.addItem("http://localhost:8383/http-bind/");
+	selectHttpBase.addItem("http://localhost:4444/http-bosh/");
+	selectHttpBase.addItem("http://localhost:4444/http-bind/");
+	selectHttpBase.setSelectedIndex(0);
 	fieldDomain = new JTextField("localhost");
 	fieldName = new JTextField("admin");
 	fieldPassword = new JPasswordField("easyeasy");
-	add(fieldHttpBase);
+	add(selectHttpBase);
 	add(fieldDomain);
 	add(fieldName);
 	add(fieldPassword);
@@ -52,8 +57,8 @@ public class LoginPanel extends JPanel {
 	btnLogin = new JButton("login");
 	btnLogin.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		listener.onLogin(fieldHttpBase.getText(), fieldDomain.getText(), fieldName.getText(), new String(
-			fieldPassword.getPassword()));
+		listener.onLogin(selectHttpBase.getSelectedItem().toString(), fieldDomain.getText(), fieldName
+			.getText(), new String(fieldPassword.getPassword()));
 	    }
 	});
 	btnLogout = new JButton("logout");
@@ -68,5 +73,4 @@ public class LoginPanel extends JPanel {
 	labelState = new JLabel("current state: none (connected: false)");
 	add(labelState);
     }
-
 }

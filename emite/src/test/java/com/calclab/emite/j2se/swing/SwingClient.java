@@ -66,11 +66,13 @@ public class SwingClient {
 	loginPanel = new LoginPanel(new LoginPanelListener() {
 	    public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
 		final String resource = "emite-swing";
+		createXMPP(httpBase);
 		xmpp.login(new XmppURI(userName, domain, resource), password, null, "hola!");
 	    }
 
 	    public void onLogout() {
 		xmpp.logout();
+		xmpp = null;
 	    }
 
 	});
@@ -108,10 +110,9 @@ public class SwingClient {
 
 	root.add(tabs, BorderLayout.EAST);
 
-	initXMPP();
     }
 
-    private void initXMPP() {
+    private void createXMPP(final String httpbase) {
 	final Container container = J2SEPlugin.install(new DefaultContainer(), new HttpConnectorListener() {
 	    public void onError(final String id, final String cause) {
 		System.out.println("CONN # " + id + "-ERROR: " + cause);
@@ -132,7 +133,7 @@ public class SwingClient {
 	    }
 
 	});
-	this.xmpp = new Xmpp(container, new BoshOptions("http://localhost:8383/http-bind/"), new DispatcherMonitor() {
+	this.xmpp = new Xmpp(container, new BoshOptions(httpbase), new DispatcherMonitor() {
 	    public void publishing(final IPacket packet) {
 		System.out.println("DISPATCH: " + packet);
 	    }
