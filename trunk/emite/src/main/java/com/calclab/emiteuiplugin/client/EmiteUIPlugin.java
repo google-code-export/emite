@@ -44,6 +44,8 @@ public class EmiteUIPlugin extends Plugin {
     public static final String CREATE_CHAT_DIALOG = "emiteuiplugin.openchatdialog";
     public static final String SHOW_CHAT_DIALOG = "emiteuiplugin.showchatdialog";
     public static final String HIDE_CHAT_DIALOG = "emiteuiplugin.hidechatdialog";
+    public static final String DESTROY_CHAT_DIALOG = "emiteuiplugin.destroychatdialog";
+    public static final String CENTER_CHAT_DIALOG = "emiteuiplugin.centerchatdialog";
     public static final String SET_OWN_PRESENCE = "emiteuiplugin.setownpresence";
     public static final String CLOSE_ALLCHATS = "emiteuiplugin.closeallchats";
     public static final String CHATOPEN = "emiteuiplugin.chatopen";
@@ -141,6 +143,17 @@ public class EmiteUIPlugin extends Plugin {
                     }
                 });
 
+                dispatcher.subscribe(CENTER_CHAT_DIALOG, new Action<Object>() {
+                    public void execute(final Object param) {
+                        multiChatDialog.center();
+                    }
+                });
+
+                dispatcher.subscribe(DESTROY_CHAT_DIALOG, new Action<Object>() {
+                    public void execute(final Object param) {
+                        multiChatDialog.destroy();
+                    }
+                });
                 dispatcher.subscribe(SET_OWN_PRESENCE, new Action<OwnPresence>() {
                     public void execute(final OwnPresence ownPresence) {
                         multiChatDialog.setOwnPresence(ownPresence);

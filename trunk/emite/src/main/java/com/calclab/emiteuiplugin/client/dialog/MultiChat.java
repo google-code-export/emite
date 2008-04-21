@@ -28,6 +28,8 @@ public interface MultiChat {
 
     public void activateChat(Chat chat);
 
+    public void center();
+
     public void closeAllChats(final boolean withConfirmation);
 
     public void destroy();

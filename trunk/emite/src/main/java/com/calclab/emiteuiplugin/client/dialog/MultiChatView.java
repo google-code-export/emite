@@ -33,6 +33,8 @@ public interface MultiChatView {
 
     void attachRoomUserList(View userListView);
 
+    void center();
+
     void clearInputText();
 
     void clearRoster();

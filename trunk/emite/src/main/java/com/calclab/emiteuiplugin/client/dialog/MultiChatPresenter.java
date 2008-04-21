@@ -105,6 +105,10 @@ public class MultiChatPresenter implements MultiChat {
         listener.attachToExtPoint(new UIExtensionElement(UIExtensionPoint.CONTENT_BOTTOM_ICONBAR, view));
     }
 
+    public void center() {
+        view.center();
+    }
+
     public void closeAllChats(final boolean withConfirmation) {
         if (withConfirmation) {
             view.confirmCloseAll();
