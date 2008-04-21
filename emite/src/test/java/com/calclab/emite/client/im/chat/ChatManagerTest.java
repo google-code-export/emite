@@ -35,22 +35,22 @@ public class ChatManagerTest {
 
     @Test
     public void managerShouldCreateOneChatForSameResource() {
-	emite.simulate(new Message("source@domain/resource1", MYSELF, "message 1"));
-	emite.simulate(new Message("source@domain/resource1", MYSELF, "message 2"));
+	emite.receives(new Message("source@domain/resource1", MYSELF, "message 1"));
+	emite.receives(new Message("source@domain/resource1", MYSELF, "message 2"));
 	Mockito.verify(listener, Mockito.times(1)).onChatCreated((Chat) Mockito.anyObject());
     }
 
     @Test
     public void managerShouldCreateOneChatIfResourceIsNotAvailable() {
-	emite.simulate(new Message("source@domain", MYSELF, "message 1"));
-	emite.simulate(new Message("source@domain/resource1", MYSELF, "message 2"));
+	emite.receives(new Message("source@domain", MYSELF, "message 1"));
+	emite.receives(new Message("source@domain/resource1", MYSELF, "message 2"));
 	Mockito.verify(listener, Mockito.times(1)).onChatCreated((Chat) Mockito.anyObject());
     }
 
     @Test
     public void shouldUseSameRoomWhenAnswering() {
 	final Chat chat = manager.openChat(XmppURI.parse("someone@domain"));
-	emite.simulate(new Message("someone@domain/resource", MYSELF, "answer").Thread(chat.getThread()));
+	emite.receives(new Message("someone@domain/resource", MYSELF, "answer").Thread(chat.getThread()));
 	Mockito.verify(listener, Mockito.times(1)).onChatCreated(chat);
     }
 }

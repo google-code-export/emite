@@ -31,7 +31,7 @@ public interface ChatManager {
 
     public abstract void close(Chat chat);
 
-    public abstract Collection<ChatDefault> getChats();
+    public abstract Collection<? extends Chat> getChats();
 
     public abstract Chat openChat(final XmppURI xmppURI);
 

@@ -41,13 +41,13 @@ import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 public class ChatManagerDefault implements ChatManager, Installable {
     protected XmppURI userURI;
     protected final Emite emite;
-    private final HashSet<ChatDefault> chats;
+    protected final HashSet<Chat> chats;
     private final ArrayList<ChatManagerListener> listeners;
 
     public ChatManagerDefault(final Emite emite) {
 	this.emite = emite;
 	this.listeners = new ArrayList<ChatManagerListener>();
-	this.chats = new HashSet<ChatDefault>();
+	this.chats = new HashSet<Chat>();
     }
 
     public void addListener(final ChatManagerListener listener) {
@@ -61,11 +61,15 @@ public class ChatManagerDefault implements ChatManager, Installable {
     }
 
     public void eventLoggedOut() {
-	final HashSet<ChatDefault> remove = chats;
-	closeAll(remove);
+	userURI = null;
+	final ArrayList<Chat> toBeRemoved = new ArrayList<Chat>();
+	toBeRemoved.addAll(chats);
+	for (final Chat chat : toBeRemoved) {
+	    close(chat);
+	}
     }
 
-    public Collection<ChatDefault> getChats() {
+    public Collection<? extends Chat> getChats() {
 	return chats;
     }
 
@@ -88,7 +92,7 @@ public class ChatManagerDefault implements ChatManager, Installable {
     }
 
     public Chat openChat(final XmppURI to) {
-	ChatDefault chat = findChat(to, null);
+	Chat chat = findChat(to, null);
 	if (chat == null) {
 	    chat = createChat(to, null);
 	}
@@ -97,22 +101,6 @@ public class ChatManagerDefault implements ChatManager, Installable {
 
     public void setUserURI(final String uri) {
 	this.userURI = XmppURI.parse(uri);
-    }
-
-    /**
-     * TEMPLATE METHOD PATTERN no me gusta mucho, la verdad... existe demasiada
-     * conexión entre ChatManager y RoomManager :(
-     * 
-     * @param remove
-     */
-    @Deprecated
-    protected void closeAll(final Collection<? extends Chat> remove) {
-	userURI = null;
-	final ArrayList<Chat> toBeRemoved = new ArrayList<Chat>();
-	toBeRemoved.addAll(remove);
-	for (final Chat chat : toBeRemoved) {
-	    close(chat);
-	}
     }
 
     protected void eventMessage(final Message message) {
@@ -157,10 +145,10 @@ public class ChatManagerDefault implements ChatManager, Installable {
      * @param thread
      * @return
      */
-    private ChatDefault findChat(final XmppURI from, final String thread) {
-	ChatDefault selected = null;
+    private Chat findChat(final XmppURI from, final String thread) {
+	Chat selected = null;
 
-	for (final ChatDefault chat : chats) {
+	for (final Chat chat : chats) {
 	    if (thread != null) {
 		if (thread.equals(chat.getThread())) {
 		    return chat;
@@ -182,11 +170,11 @@ public class ChatManagerDefault implements ChatManager, Installable {
 	final XmppURI from = message.getFromURI();
 	final String thread = message.getThread();
 
-	ChatDefault chat = findChat(from, thread);
+	Chat chat = findChat(from, thread);
 	if (chat == null) {
 	    chat = createChat(from, thread);
 	}
-	chat.fireMessageReceived(message);
+	((ChatDefault) chat).fireMessageReceived(message);
     }
 
 }

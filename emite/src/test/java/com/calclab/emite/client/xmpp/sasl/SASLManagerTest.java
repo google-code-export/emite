@@ -22,15 +22,15 @@ public class SASLManagerTest {
 
     @Test
     public void shouldHandleFailure() {
-	emite.simulate("<failure xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><not-authorized/></failure>");
+	emite.receives("<failure xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><not-authorized/></failure>");
 	emite.verifyPublished(BoshManager.Events.error("sasl-failure", "not-authorized"));
     }
 
     @Test
     public void shouldHandleSuccessWhenAuthorizationSent() {
-	emite.simulate(SessionManager.Events.login(XmppURI.parse("name@domain/res"), "password"));
-	emite.simulate(SessionManager.Events.onDoAuthorization);
-	emite.simulate("<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"/>");
+	emite.receives(SessionManager.Events.login(XmppURI.parse("name@domain/res"), "password"));
+	emite.receives(SessionManager.Events.onDoAuthorization);
+	emite.receives("<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"/>");
 	emite.verifyPublished(SessionManager.Events.onAuthorized);
     }
 }

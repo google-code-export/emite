@@ -2,28 +2,31 @@ package com.calclab.emite.testing;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 
 public class EmiteStub implements Emite {
 
-    private IPacket lastPublished;
     private final DispatcherDefault dispatcher;
     private final TigaseXMLService xmler;
     private PacketListener lastCallback;
     private IPacket lastSentCallback;
+    private final ArrayList<IPacket> published;
 
     public EmiteStub() {
 	xmler = new TigaseXMLService();
 	dispatcher = new DispatcherDefault();
-	lastPublished = null;
+	published = new ArrayList<IPacket>();
     }
 
     public void addListener(final DispatcherStateListener listener) {
@@ -42,8 +45,20 @@ public class EmiteStub implements Emite {
 	lastCallback.handle(new IQ(Type.result));
     }
 
+    public void clearPublished() {
+	published.clear();
+    }
+
     public void publish(final IPacket packet) {
-	lastPublished = packet;
+	published.add(packet);
+    }
+
+    public void receives(final IPacket packet) {
+	dispatcher.publish(packet);
+    }
+
+    public void receives(final String xml) {
+	dispatcher.publish(xmler.toXML(xml));
     }
 
     public void send(final IPacket packet) {
@@ -55,28 +70,36 @@ public class EmiteStub implements Emite {
 	this.lastCallback = listener;
     }
 
-    public void simulate(final IPacket packet) {
-	dispatcher.publish(packet);
-    }
-
-    public void simulate(final String xml) {
-	dispatcher.publish(xmler.toXML(xml));
-    }
-
     public void subscribe(final Matcher matcher, final PacketListener packetListener) {
 	dispatcher.subscribe(matcher, packetListener);
     }
 
-    public void verifyPublished(final IPacket packet) {
-	final IsPacketLike matcher = new IsPacketLike(packet);
-	assertTrue(matcher.matches(lastPublished));
+    public void verifyNotPublished(final Packet expected) {
+	assertFalse(isPublished(expected));
     }
 
-    public PacketListener verifySendCallback(final IQ iq) {
+    public void verifyPublished(final IPacket expected) {
+	assertTrue(isPublished(expected));
+    }
+
+    public void verifyPublishedTimes(final int times) {
+	assertEquals(times, published.size());
+    }
+
+    public PacketListener verifySendCallback(final IPacket iq) {
 	assertNotNull(lastSentCallback);
 	final IsPacketLike matcher = new IsPacketLike(iq);
 	assertTrue(matcher.matches(lastSentCallback));
 	return lastCallback;
+    }
+
+    private boolean isPublished(final IPacket expected) {
+	boolean isPublished = false;
+	final IsPacketLike matcher = new IsPacketLike(expected);
+	for (final IPacket packet : published) {
+	    isPublished = isPublished ? isPublished : matcher.matches(packet);
+	}
+	return isPublished;
     }
 
 }

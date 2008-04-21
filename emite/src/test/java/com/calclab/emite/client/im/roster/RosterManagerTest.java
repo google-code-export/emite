@@ -37,7 +37,7 @@ public class RosterManagerTest {
 
     @Test
     public void shouldRequestRosterOnLogin() {
-	emite.simulate(SessionManager.Events.loggedIn("user@domain/res"));
+	emite.receives(SessionManager.Events.loggedIn("user@domain/res"));
 	emite.verifySendCallback(new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null));
 	emite.answer("<iq type='result' xmlns='jabber:client'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='name1@domain' subscription='both' name='complete name1' />"

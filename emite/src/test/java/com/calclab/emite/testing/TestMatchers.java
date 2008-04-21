@@ -14,6 +14,7 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
+import com.calclab.emite.j2se.services.TigaseXMLService;
 
 @SuppressWarnings("unchecked")
 public class TestMatchers {
@@ -57,6 +58,8 @@ public class TestMatchers {
 	}
     }
 
+    private static final TigaseXMLService xmler = new TigaseXMLService();
+
     public static List hasSame(final List list) {
 	return argThat(new IsCollectionLike<List>(list));
     }
@@ -71,6 +74,10 @@ public class TestMatchers {
 
     public static IPacket packetLike(final IPacket packet) {
 	return argThat(new IsPacketLike(packet));
+    }
+
+    public static IPacket packetLike(final String xml) {
+	return packetLike(xmler.toXML(xml));
     }
 
     @Test
