@@ -12,7 +12,7 @@ import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 
-public class TestingEmite implements Emite {
+public class EmiteStub implements Emite {
 
     private IPacket lastPublished;
     private final DispatcherDefault dispatcher;
@@ -20,7 +20,7 @@ public class TestingEmite implements Emite {
     private PacketListener lastCallback;
     private IPacket lastSentCallback;
 
-    public TestingEmite() {
+    public EmiteStub() {
 	xmler = new TigaseXMLService();
 	dispatcher = new DispatcherDefault();
 	lastPublished = null;

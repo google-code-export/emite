@@ -6,16 +6,16 @@ import org.junit.Test;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.TestingEmite;
+import com.calclab.emite.testing.EmiteStub;
 
 public class SASLManagerTest {
 
-    private TestingEmite emite;
+    private EmiteStub emite;
     private SASLManager manager;
 
     @Before
     public void aaCreate() {
-	emite = new TestingEmite();
+	emite = new EmiteStub();
 	manager = new SASLManager(emite);
 	manager.install();
     }

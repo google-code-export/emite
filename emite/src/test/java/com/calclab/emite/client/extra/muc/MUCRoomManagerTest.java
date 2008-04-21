@@ -19,11 +19,11 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.j2se.services.TigaseXMLService;
-import com.calclab.emite.testing.TestingEmite;
+import com.calclab.emite.testing.EmiteStub;
 
 public class MUCRoomManagerTest {
 
-    private TestingEmite emite;
+    private EmiteStub emite;
     private RoomManagerListener listener;
     private MUCRoomManager manager;
     private TigaseXMLService xmler;
@@ -31,7 +31,7 @@ public class MUCRoomManagerTest {
     @Before
     public void aaCreate() {
 	xmler = new TigaseXMLService();
-	emite = new TestingEmite();
+	emite = new EmiteStub();
 	manager = new MUCRoomManager(emite);
 	listener = mock(RoomManagerListener.class);
 	manager.addListener(listener);

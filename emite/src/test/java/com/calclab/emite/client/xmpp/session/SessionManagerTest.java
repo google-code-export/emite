@@ -10,17 +10,17 @@ import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.testing.TestingEmite;
+import com.calclab.emite.testing.EmiteStub;
 
 public class SessionManagerTest {
 
-    private TestingEmite emite;
+    private EmiteStub emite;
     private SessionManager manager;
     private Session session;
 
     @Before
     public void aaCreate() {
-	emite = new TestingEmite();
+	emite = new EmiteStub();
 	session = mock(Session.class);
 	manager = new SessionManager(emite);
 	manager.install();
@@ -39,7 +39,7 @@ public class SessionManagerTest {
 	emite.simulate(SessionManager.Events.binded("name@domain/resource"));
 	emite.verifySendCallback(new IQ(Type.set));
 	emite.answerSuccess();
-	emite.verifyPublished(SessionManager.Events.onLoggedIn.With("uri", "name@domain/resource"));
+	emite.verifyPublished(SessionManager.Events.loggedIn("name@domain/resource"));
 	verify(session).setState(State.connected);
 
     }

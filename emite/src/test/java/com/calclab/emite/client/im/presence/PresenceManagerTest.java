@@ -12,17 +12,17 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.testing.TestMatchers;
-import com.calclab.emite.testing.TestingEmite;
+import com.calclab.emite.testing.EmiteStub;
 
 public class PresenceManagerTest {
 
     private PresenceManager manager;
     private PresenceListener presenceListener;
-    private TestingEmite emite;
+    private EmiteStub emite;
 
     @Before
     public void aaaCreateManager() {
-	emite = new TestingEmite();
+	emite = new EmiteStub();
 	manager = new PresenceManager(emite);
 	manager.install();
 
