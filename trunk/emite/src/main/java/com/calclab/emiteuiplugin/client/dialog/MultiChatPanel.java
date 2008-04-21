@@ -28,6 +28,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.roster.RosterUI;
 import com.calclab.emiteuiplugin.client.users.UserGridPanel;
@@ -58,6 +59,7 @@ import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
+import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 import com.gwtext.client.widgets.layout.AccordionLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
@@ -70,7 +72,7 @@ public class MultiChatPanel implements MultiChatView {
     private Window dialog;
     private Button sendBtn;
     private final MultiChatPresenter presenter;
-    private TextArea subject;
+    private TextField subject;
     private TextArea input;
     private final HashMap<String, ChatUI> panelIdToChat;
     private EmoticonPalettePanel emoticonPalettePanel;
@@ -271,6 +273,10 @@ public class MultiChatPanel implements MultiChatView {
 
     public void setSubjectEditable(final boolean editable) {
         subject.setDisabled(!editable);
+    }
+
+    public void setSubjectVisible(final boolean visible) {
+        subject.setVisible(visible);
     }
 
     public void show() {
@@ -475,19 +481,20 @@ public class MultiChatPanel implements MultiChatView {
     private Panel createSubjectPanel() {
         subjectForm = createGenericInputForm();
 
-        subject = new TextArea();
-        subject.setEnterIsSpecial(true);
-        subject.setTitle(i18n.t("Subject of the room"));
+        subject = new TextField();
+        // subject.setTitle(i18n.t("Subject of this room"));
         // As height 100% doesn't works
         subject.setHeight(27);
         subject.addKeyListener(KeyboardListener.KEY_ENTER, new KeyListener() {
             public void onKey(final int key, final EventObject e) {
+                Log.info("Subject enter fired");
                 presenter.onModifySubjectRequested(getSubject());
                 e.stopEvent();
             }
         });
         subject.addListener(new FieldListenerAdapter() {
             public void onChange(final Field field, final Object newVal, final Object oldVal) {
+                Log.info("Subject changed fired");
                 presenter.onModifySubjectRequested(getSubject());
             }
         });

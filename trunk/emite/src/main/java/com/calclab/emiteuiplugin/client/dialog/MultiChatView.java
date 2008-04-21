@@ -89,6 +89,8 @@ public interface MultiChatView {
 
     void setSubjectEditable(boolean editable);
 
+    void setSubjectVisible(boolean visible);
+
     void show();
 
 }

@@ -28,6 +28,7 @@ import java.util.Map;
 
 import com.calclab.emite.client.core.packet.DSLPacket;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.NoPacket;
 import com.calclab.emite.client.core.packet.TextUtils;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
@@ -39,99 +40,99 @@ public class GWTPacket extends DSLPacket {
     private final Element element;
 
     public GWTPacket(final Element element) {
-	this.element = element;
+        this.element = element;
     }
 
     public IPacket add(final String nodeName, final String xmlns) {
-	final Element child = element.getOwnerDocument().createElement(nodeName);
-	element.appendChild(child);
-	return new GWTPacket(child);
+        final Element child = element.getOwnerDocument().createElement(nodeName);
+        element.appendChild(child);
+        return new GWTPacket(child);
     }
 
     public void addChild(final IPacket child) {
-	final GWTPacket p = (GWTPacket) child;
-	element.appendChild(p.element);
+        final GWTPacket p = (GWTPacket) child;
+        element.appendChild(p.element);
     }
 
     public void addText(final String text) {
-	final String escaped = TextUtils.escape(text);
-	element.appendChild(element.getOwnerDocument().createTextNode(escaped));
+        final String escaped = TextUtils.escape(text);
+        element.appendChild(element.getOwnerDocument().createTextNode(escaped));
     }
 
     public String getAttribute(final String name) {
-	return element.getAttribute(name);
+        return element.getAttribute(name);
     }
 
     public HashMap<String, String> getAttributes() {
-	throw new RuntimeException("GWTPacket.getAttributes: not implemented!");
+        throw new RuntimeException("GWTPacket.getAttributes: not implemented!");
     }
 
     public Map<String, String> getAttributtes() {
-	final HashMap<String, String> attributes = new HashMap<String, String>();
-	final NamedNodeMap original = element.getAttributes();
-	for (int index = 0; index < original.getLength(); index++) {
-	    final Node node = original.item(index);
-	    attributes.put(node.getNodeName(), node.getNodeValue());
-	}
-	return attributes;
+        final HashMap<String, String> attributes = new HashMap<String, String>();
+        final NamedNodeMap original = element.getAttributes();
+        for (int index = 0; index < original.getLength(); index++) {
+            final Node node = original.item(index);
+            attributes.put(node.getNodeName(), node.getNodeValue());
+        }
+        return attributes;
     }
 
     public List<? extends IPacket> getChildren() {
-	return wrap(element.getChildNodes());
+        return wrap(element.getChildNodes());
     }
 
     public List<IPacket> getChildren(final String name) {
-	final NodeList nodes = element.getElementsByTagName(name);
-	return wrap(nodes);
+        final NodeList nodes = element.getElementsByTagName(name);
+        return wrap(nodes);
     }
 
     public int getChildrenCount() {
-	return element.getChildNodes().getLength();
+        return element.getChildNodes().getLength();
     }
 
     public IPacket getFirstChild(final String childName) {
-	final NodeList nodes = element.getElementsByTagName(childName);
-	return nodes.getLength() > 0 ? new GWTPacket((Element) nodes.item(0)) : null;
+        final NodeList nodes = element.getElementsByTagName(childName);
+        return nodes.getLength() > 0 ? new GWTPacket((Element) nodes.item(0)) : NoPacket.INSTANCE;
     }
 
     public String getName() {
-	return element.getNodeName();
+        return element.getNodeName();
     }
 
     public IPacket getParent() {
-	return new GWTPacket((Element) element.getParentNode());
+        return new GWTPacket((Element) element.getParentNode());
     }
 
     public String getText() {
-	Node item;
-	final NodeList childs = element.getChildNodes();
-	for (int index = 0; index < childs.getLength(); index++) {
-	    item = childs.item(index);
-	    if (item.getNodeType() == Node.TEXT_NODE) {
-		return TextUtils.unescape(item.getNodeValue());
-	    }
-	}
-	return null;
+        Node item;
+        final NodeList childs = element.getChildNodes();
+        for (int index = 0; index < childs.getLength(); index++) {
+            item = childs.item(index);
+            if (item.getNodeType() == Node.TEXT_NODE) {
+                return TextUtils.unescape(item.getNodeValue());
+            }
+        }
+        return null;
     }
 
     // FIXME: probably doesn't work in IE
     public void render(final StringBuffer buffer) {
-	buffer.append(element.toString());
+        buffer.append(element.toString());
     }
 
     public void setAttribute(final String name, final String value) {
-	element.setAttribute(name, value);
+        element.setAttribute(name, value);
     }
 
     private List<IPacket> wrap(final NodeList nodes) {
-	int length;
-	if (nodes == null || (length = nodes.getLength()) == 0) {
-	    return EMPTY_LIST;
-	}
-	final ArrayList<IPacket> selected = new ArrayList<IPacket>();
-	for (int index = 0; index < length; index++) {
-	    selected.add(new GWTPacket((Element) nodes.item(index)));
-	}
-	return selected;
+        int length;
+        if (nodes == null || (length = nodes.getLength()) == 0) {
+            return EMPTY_LIST;
+        }
+        final ArrayList<IPacket> selected = new ArrayList<IPacket>();
+        for (int index = 0; index < length; index++) {
+            selected.add(new GWTPacket((Element) nodes.item(index)));
+        }
+        return selected;
     }
 }

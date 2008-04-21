@@ -30,16 +30,16 @@ import com.gwtext.client.widgets.ToolTip;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextField;
 
-public class JoinRoomDialogPanel {
+public class InviteToRoomPanel {
 
     private final I18nTranslationService i18n;
     private final MultiChatPresenter presenter;
     private BasicDialogExtended dialog;
     private FormPanel formPanel;
-    private TextField roomName;
-    private TextField serverName;
+    private TextField jid;
+    private TextField reason;
 
-    public JoinRoomDialogPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
+    public InviteToRoomPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
         this.presenter = presenter;
     }
@@ -50,8 +50,8 @@ public class JoinRoomDialogPanel {
 
     public void show() {
         if (dialog == null) {
-            dialog = new BasicDialogExtended(i18n.t("Join a chat room"), false, false, 330, 160, "chat-icon", i18n
-                    .tWithNT("Join", "used in button"), i18n.tWithNT("Cancel", "used in button"),
+            dialog = new BasicDialogExtended(i18n.t("Invite someone to this room"), false, false, 330, 160,
+                    "chat-icon", i18n.tWithNT("Invite", "used in button"), i18n.tWithNT("Cancel", "used in button"),
                     new BasicDialogListener() {
 
                         public void onCancelButtonClick() {
@@ -60,9 +60,13 @@ public class JoinRoomDialogPanel {
                         }
 
                         public void onFirstButtonClick() {
-                            presenter.joinRoom(roomName.getValueAsString(), serverName.getValueAsString());
-                            dialog.hide();
-                            reset();
+                            jid.validate();
+                            reason.validate();
+                            if (formPanel.getForm().isValid()) {
+                                presenter.inviteUserToRoom(jid.getValueAsString(), reason.getValueAsString());
+                                dialog.hide();
+                                reset();
+                            }
                         }
 
                     });
@@ -72,7 +76,7 @@ public class JoinRoomDialogPanel {
             // TODO define a UI Extension Point here
         }
         dialog.show();
-        roomName.focus();
+        jid.focus();
     }
 
     private void createForm() {
@@ -84,18 +88,21 @@ public class JoinRoomDialogPanel {
         formPanel.setLabelWidth(100);
         formPanel.setPaddings(10);
 
-        roomName = new TextField(i18n.t("Room Name"), "name", 150);
-        roomName.setAllowBlank(false);
-        roomName.setValidateOnBlur(false);
-        formPanel.add(roomName);
+        jid = new TextField(i18n.t("Invite to (some Jabber Id)"), "jid", 150);
+        jid.setAllowBlank(false);
+        // jid.setVtype(VType.EMAIL);
+        jid.setValidationEvent(false);
+        ToolTip fieldToolTip = new ToolTip(i18n.t("Note that the 'Jabber Id' sometimes is the same as the email "
+                + "(in gmail accounts for instance)."));
+        fieldToolTip.applyTo(jid);
+        jid.setValidateOnBlur(false);
+        formPanel.add(jid);
 
-        serverName = new TextField(i18n.t("Room Server Name"), "jid", 150);
-        serverName.setAllowBlank(false);
-        // FIXME (get from options)
-        serverName.setValue("rooms.localhost");
-        ToolTip fieldToolTip = new ToolTip(i18n.t("Something like 'conference.jabber.org'."));
-        fieldToolTip.applyTo(serverName);
-        formPanel.add(serverName);
+        reason = new TextField(i18n.t("Invitation reason"), "jid", 150);
+        reason.setAllowBlank(false);
+        reason.setValidationEvent(false);
+        reason.setValue(i18n.t("Join to our conversation"));
+        formPanel.add(reason);
 
         dialog.add(formPanel);
     }
