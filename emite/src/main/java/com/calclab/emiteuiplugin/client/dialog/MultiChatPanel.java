@@ -127,6 +127,10 @@ public class MultiChatPanel implements MultiChatView {
         roomUsersPanel.expand();
     }
 
+    public void center() {
+        dialog.center();
+    }
+
     public void clearInputText() {
         input.reset();
     }
