@@ -23,42 +23,73 @@ package com.calclab.emite.client.xmpp.session;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 
+import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class SessionManager extends EmiteComponent {
+public class SessionManager implements Installable {
     public static class Events {
-	public static final Event authorized = new Event("session:on:authorized");
-	public static final Event binded = new Event("session:on:binded");
-	/** ATTRIBUTES: uri */
-	public static final Event loggedIn = new Event("session:on:login");
-	public static final Event loggedOut = new Event("session:on:logout");
-	/** ATTIBUTES: uri, password */
-	public static final Event logIn = new Event("session:do:login");
+	public static final Event onAuthorized = new Event("session:on:authorized");
+	public static final Event onBinded = new Event("session:on:binded");
+	public static final Event onLoggedIn = new Event("session:on:login");
+	public static final Event onLoggedOut = new Event("session:on:logout");
+	public static final Event onDoLogin = new Event("session:do:login");
+	public static IPacket onDoAuthorization = new Event("session:do:authization");
+
+	public static Event binded(final String jid) {
+	    return SessionManager.Events.onBinded.Params("uri", jid);
+	}
+
+	public static Event loggedIn(final String uri) {
+	    return SessionManager.Events.onLoggedIn.Params("uri", uri);
+	}
+
+	public static Event login(final XmppURI uri, final String password) {
+	    return (Event) SessionManager.Events.onDoLogin.Params("uri", uri.toString()).With("password", password);
+	}
     }
 
     private Session session;
+    private final Emite emite;
 
     public SessionManager(final Emite emite) {
-	super(emite);
+	this.emite = emite;
     }
 
-    @Override
+    public void doLogin(final XmppURI uri, final String password) {
+	emite.publish(Events.login(uri, password));
+	// FIXME: method
+	emite.publish(BoshManager.Events.onDoStart.Params("domain", uri.getHost()));
+    }
+
+    public void doLogout() {
+	emite.publish(BoshManager.Events.stop);
+	emite.publish(SessionManager.Events.onLoggedOut);
+    }
+
     public void install() {
 
-	emite.subscribe(when(Events.authorized), new PacketListener() {
+	emite.subscribe(when(new Packet("stream:features")), new PacketListener() {
+	    public void handle(final IPacket received) {
+		if (received.hasChild("mechanisms")) {
+		    emite.publish(Events.onDoAuthorization);
+		}
+	    }
+	});
+
+	emite.subscribe(when(Events.onAuthorized), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventAuthorized();
 	    }
 	});
 
-	emite.subscribe(when(SessionManager.Events.loggedOut), new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.onLoggedOut), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLoggedOut();
 	    }
@@ -68,25 +99,27 @@ public class SessionManager extends EmiteComponent {
 	    public void handle(final IPacket received) {
 		eventOnError();
 	    }
-	
+
 	});
 
-	emite.subscribe(when(Events.binded), new PacketListener() {
+	emite.subscribe(when(Events.onBinded), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventBinded(received.getAttribute("uri"));
+		final String uri = received.getAttribute("uri");
+		final XmppURI userURI = XmppURI.parse(uri);
+		final IQ iq = new IQ(IQ.Type.set, userURI, userURI.getHost());
+		iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
+
+		emite.send("session", iq, new PacketListener() {
+		    public void handle(final IPacket received) {
+			if (IQ.isSuccess(received)) {
+			    session.setState(Session.State.connected);
+			    emite.publish(Events.loggedIn(uri));
+			}
+		    }
+		});
 	    }
-	
+
 	});
-    }
-
-    public void doLogin(final XmppURI uri, final String password) {
-	emite.publish(SessionManager.Events.logIn.Params("uri", uri.toString()).With("password", password));
-	emite.publish(BoshManager.Events.start.Params("domain", uri.getHost()));
-    }
-
-    public void doLogout() {
-	emite.publish(BoshManager.Events.stop);
-	emite.publish(SessionManager.Events.loggedOut);
     }
 
     public void setSession(final Session session) {
@@ -96,18 +129,6 @@ public class SessionManager extends EmiteComponent {
     void eventAuthorized() {
 	session.setState(Session.State.authorized);
 	emite.publish(BoshManager.Events.restart);
-    }
-
-    void eventBinded(final String uri) {
-	final XmppURI userURI = XmppURI.parse(uri);
-	final IQ iq = new IQ(IQ.Type.set, userURI, userURI.getHost());
-	iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
-
-	emite.send("session", iq, new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventSession(userURI);
-	    }
-	});
     }
 
     void eventLoggedOut() {
@@ -120,8 +141,4 @@ public class SessionManager extends EmiteComponent {
 	session.setState(Session.State.disconnected);
     }
 
-    void eventSession(final XmppURI userURI) {
-	session.setState(Session.State.connected);
-	emite.publish(SessionManager.Events.loggedIn.Params("uri", userURI.toString()));
-    }
 }

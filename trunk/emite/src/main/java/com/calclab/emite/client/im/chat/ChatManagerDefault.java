@@ -28,8 +28,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
@@ -38,13 +38,14 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 
-public class ChatManagerDefault extends EmiteComponent implements ChatManager {
+public class ChatManagerDefault implements ChatManager, Installable {
     protected XmppURI userURI;
+    protected final Emite emite;
     private final HashSet<ChatDefault> chats;
     private final ArrayList<ChatManagerListener> listeners;
 
     public ChatManagerDefault(final Emite emite) {
-	super(emite);
+	this.emite = emite;
 	this.listeners = new ArrayList<ChatManagerListener>();
 	this.chats = new HashSet<ChatDefault>();
     }
@@ -68,14 +69,13 @@ public class ChatManagerDefault extends EmiteComponent implements ChatManager {
 	return chats;
     }
 
-    @Override
     public void install() {
-	emite.subscribe(when(SessionManager.Events.loggedOut), new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.onLoggedOut), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLoggedOut();
 	    }
 	});
-	emite.subscribe(when(SessionManager.Events.loggedIn), new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.onLoggedIn), new PacketListener() {
 	    public void handle(final IPacket received) {
 		setUserURI(received.getAttribute("uri"));
 	    }

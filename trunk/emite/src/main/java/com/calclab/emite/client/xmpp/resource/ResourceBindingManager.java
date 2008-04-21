@@ -23,34 +23,34 @@ package com.calclab.emite.client.xmpp.resource;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 
+import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class ResourceBindingManager extends EmiteComponent {
+public class ResourceBindingManager implements Installable {
     private String resource;
+    private final Emite emite;
 
     public ResourceBindingManager(final Emite emite) {
-	super(emite);
+	this.emite = emite;
 	resource = null;
     }
 
-    @Override
     public void install() {
-	emite.subscribe(when(SessionManager.Events.logIn), new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.onDoLogin), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLogin(received);
 	    }
 	});
-	emite.subscribe(when(SessionManager.Events.authorized), new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.onAuthorized), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventAuthorized();
 	    }
-	
+
 	});
     }
 
@@ -60,14 +60,15 @@ public class ResourceBindingManager extends EmiteComponent {
 
 	emite.send("bind", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventBinded(received);
+		final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
+		emite.publish(SessionManager.Events.binded(jid));
 	    }
 	});
     }
 
     void eventBinded(final IPacket received) {
 	final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
-	emite.publish(SessionManager.Events.binded.Params("uri", jid));
+	emite.publish(SessionManager.Events.binded(jid));
     }
 
     void eventLogin(final IPacket received) {

@@ -26,6 +26,7 @@ import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
@@ -40,14 +41,14 @@ import com.calclab.emite.client.core.services.Services;
  * @author dani
  * 
  */
-public class BoshManager extends EmiteComponent implements ConnectorCallback, DispatcherStateListener {
+public class BoshManager implements ConnectorCallback, DispatcherStateListener, Installable {
 
     public static class Events {
 	/** ATTRIBUTE: domain */
 	public static final Event restart = new Event("connection:do:restart");
 
 	/** ATTRIBUTE: domain */
-	public static final Event start = new Event("connection:do:start");
+	public static final Event onDoStart = new Event("connection:do:start");
 	public static final Event stop = new Event("connection:do:stop");
 	public static final Event onError = new Event("connection:on:error");
 	protected final static Event pull = new Event("connection:do:pull");
@@ -62,10 +63,11 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
     private final Services services;
     private BoshState state;
     private final Stream stream;
+    private final Emite emite;
 
     public BoshManager(final Services services, final Emite emite, final Stream stream, final BoshOptions options) {
-	super(emite);
 	this.services = services;
+	this.emite = emite;
 	this.stream = stream;
 	this.httpBase = options.getHttpBase();
 	emite.addListener(this);
@@ -96,14 +98,13 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
 	}
     }
 
-    @Override
     public void install() {
 	emite.subscribe(when(BoshManager.Events.restart), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventRestart(received.getAttribute("domain"));
 	    }
 	});
-	emite.subscribe(when(BoshManager.Events.start), new PacketListener() {
+	emite.subscribe(when(BoshManager.Events.onDoStart), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventStart(received.getAttribute("domain"));
 	    }
@@ -170,6 +171,11 @@ public class BoshManager extends EmiteComponent implements ConnectorCallback, Di
 		error("bad-stanza", response.getName());
 	    }
 	}
+    }
+
+    public void uninstall() {
+	// TODO Auto-generated method stub
+
     }
 
     void eventBody(final IPacket body) {

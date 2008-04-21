@@ -23,7 +23,7 @@ package com.calclab.emite.client.core.bosh;
 
 import java.util.List;
 
-import com.calclab.emite.client.components.Startable;
+import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
@@ -38,7 +38,7 @@ import com.calclab.emite.client.core.packet.IPacket;
  * @author dani
  * 
  */
-public class EmiteBosh implements Emite, Startable {
+public class EmiteBosh implements Emite, Installable {
     public static class Events {
 	public static final Event send = new Event("connection:do:send");
     }
@@ -73,11 +73,11 @@ public class EmiteBosh implements Emite, Startable {
 	});
     }
 
-    public void onStartComponent() {
+    public void install() {
 	attach();
     }
 
-    public void onStopComponent() {
+    public void uninstall() {
 
     }
 

@@ -3,35 +3,27 @@ package com.calclab.emite.client.extra.muc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.extra.muc.Occupant.Affiliation;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
-import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.j2se.services.TigaseXMLService;
-import com.calclab.emite.testing.InstallationTester;
-import com.calclab.emite.testing.TestMatchers;
-import com.calclab.emite.testing.InstallationTester.InstallTest;
-import com.calclab.emite.testing.InstallationTester.InstallVerifier;
+import com.calclab.emite.testing.TestingEmite;
 
 public class MUCRoomManagerTest {
 
-    private Emite emite;
+    private TestingEmite emite;
     private RoomManagerListener listener;
     private MUCRoomManager manager;
     private TigaseXMLService xmler;
@@ -39,10 +31,11 @@ public class MUCRoomManagerTest {
     @Before
     public void aaCreate() {
 	xmler = new TigaseXMLService();
-	emite = mock(Emite.class);
+	emite = new TestingEmite();
 	manager = new MUCRoomManager(emite);
 	listener = mock(RoomManagerListener.class);
 	manager.addListener(listener);
+	manager.install();
     }
 
     @Test
@@ -58,14 +51,11 @@ public class MUCRoomManagerTest {
     public void shouldCreateInstantRoomIfNeeded() {
 	manager.setUserURI("user@localhost/resource");
 	manager.openChat(XmppURI.parse("newroomtest1@rooms.localhost/nick"));
-	final IPacket packet = xmler
-		.toXML("<presence from=\"newroomtest1@rooms.localhost/nick\" to=\"user@localhost/resource\" >"
-			+ "<priority>5</priority>" + "<x xmlns=\"http://jabber.org/protocol/muc#user\">"
-			+ "<item affiliation=\"owner\" role=\"moderator\" jid=\"vjrj@localhost/Psi\" />"
-			+ "<status code=\"201\" />" + "</x>" + "</presence>");
-	manager.eventPresence(new Presence(packet));
-	final IQ expected = new IQ(Type.set);
-	verify(emite).send(anyString(), TestMatchers.packetLike(expected), (PacketListener) anyObject());
+	emite.simulate("<presence from=\"newroomtest1@rooms.localhost/nick\" to=\"user@localhost/resource\" >"
+		+ "<priority>5</priority>" + "<x xmlns=\"http://jabber.org/protocol/muc#user\">"
+		+ "<item affiliation=\"owner\" role=\"moderator\" jid=\"vjrj@localhost/Psi\" />"
+		+ "<status code=\"201\" />" + "</x>" + "</presence>");
+	emite.verifySendCallback(new IQ(Type.set));
     }
 
     // FIXME: revisar si esto tiene lógica
@@ -121,14 +111,4 @@ public class MUCRoomManagerTest {
 
     }
 
-    @Test
-    public void testInstallation() {
-	new InstallationTester(new InstallTest() {
-	    public void prepare(final Emite emite, final InstallVerifier verifier) {
-		new MUCRoomManager(emite).install();
-		verifier.shouldAttachTo(SessionManager.Events.loggedIn);
-		verifier.shouldAttachTo(new Presence());
-	    }
-	});
-    }
 }

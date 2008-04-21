@@ -47,13 +47,13 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 public class Xmpp {
 
     public static Xmpp create(final BoshOptions options) {
-        final DefaultContainer c = new DefaultContainer();
-        GWTServicesPlugin.install(c);
-        return new Xmpp(c, options, new DispatcherMonitor() {
-            public void publishing(final IPacket packet) {
-                Log.debug("dispatching: " + packet.toString());
-            }
-        });
+	final DefaultContainer c = new DefaultContainer();
+	GWTServicesPlugin.install(c);
+	return new Xmpp(c, options, new DispatcherMonitor() {
+	    public void publishing(final IPacket packet) {
+		Log.debug("dispatching: " + packet.toString());
+	    }
+	});
     }
 
     private final Container container;
@@ -61,68 +61,67 @@ public class Xmpp {
     private boolean isStarted;
 
     public Xmpp(final Container container, final BoshOptions options, final DispatcherMonitor monitor) {
-        this.isStarted = false;
-        this.container = container;
-        Plugins.installDefaultPlugins(container, options, monitor);
-        this.session = SessionPlugin.getSession(container);
+	this.isStarted = false;
+	this.container = container;
+	Plugins.installDefaultPlugins(container, options, monitor);
+	this.session = SessionPlugin.getSession(container);
     }
 
     public ChatManager getChatManager() {
-        return ChatPlugin.getChat(container);
+	return ChatPlugin.getChat(container);
     }
 
     public Container getComponents() {
-        return container;
+	return container;
     }
 
     public Dispatcher getDispatcher() {
-        return CorePlugin.getDispatcher(container);
+	return CorePlugin.getDispatcher(container);
     }
 
     public PresenceManager getPresenceManager() {
-        return PresencePlugin.getManager(container);
+	return PresencePlugin.getManager(container);
     }
 
     // FIXME: Dani, revisar (añadi esto para poder mockear igual que con el
     // resto...)
     public RoomManager getRoomManager() {
-        return MUCPlugin.getRoomManager(container);
+	return MUCPlugin.getRoomManager(container);
     }
 
     public Roster getRoster() {
-        return RosterPlugin.getRoster(container);
+	return RosterPlugin.getRoster(container);
     }
 
     public RosterManager getRosterManager() {
-        return RosterPlugin.getRosterManager(container);
+	return RosterPlugin.getRosterManager(container);
     }
 
     public Session getSession() {
-        return session;
+	return session;
     }
 
     public void login(final XmppURI uri, final String password, final Presence.Show show, final String status) {
-        start();
-        session.login(uri, password);
-        getPresenceManager().setOwnPresence(status, show);
+	start();
+	session.login(uri, password);
+	getPresenceManager().setOwnPresence(status, show);
     }
 
     public void logout() {
-        session.logout();
+	session.logout();
     }
 
     public void start() {
-        if (!isStarted) {
-            isStarted = true;
-            container.onStartComponent();
-        }
+	if (!isStarted) {
+	    isStarted = true;
+	    container.install();
+	}
     }
 
     public void stop() {
-        if (isStarted) {
-            logout();
-            container.onStopComponent();
-        }
+	if (isStarted) {
+	    logout();
+	}
     }
 
 }

@@ -26,8 +26,8 @@ import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
@@ -39,34 +39,43 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
-public class RosterManager extends EmiteComponent {
+public class RosterManager implements Installable {
 
     public static class Events {
 	public static final Event ready = new Event("roster:on:ready");
     }
 
     private final Roster roster;
+    private final Emite emite;
 
     public RosterManager(final Emite emite, final Roster roster) {
-	super(emite);
+	this.emite = emite;
 	this.roster = roster;
     }
 
-    /**
-     * Upon connecting to the server and becoming an active resource, a client
-     * SHOULD request the roster BEFORE! sending initial presence
-     */
-    @Override
     public void install() {
-	emite.subscribe(when(SessionManager.Events.loggedIn), new PacketListener() {
+	// Upon connecting to the server and becoming an active resource, a
+	// client SHOULD request the roster BEFORE! sending initial presence
+	emite.subscribe(when(SessionManager.Events.onLoggedIn), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventLoggedIn();
+		emite.send("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
+		    public void handle(final IPacket received) {
+			setRosterItems(roster, received);
+			emite.publish(RosterManager.Events.ready);
+		    }
+
+		});
 	    }
 	});
 
 	emite.subscribe(when("presence"), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventPresence(new Presence(received));
+		final Presence presence = new Presence(received);
+		final RosterItem item = roster.findItemByURI(presence.getFromURI());
+		if (item != null) {
+		    item.setPresence(presence);
+		    roster.fireItemPresenceChanged(item);
+		}
 	    }
 	});
 
@@ -105,41 +114,11 @@ public class RosterManager extends EmiteComponent {
 		.With("subscription", "remove"));
 	emite.send("roster", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
-		if (received.hasAttribute("type", "result")) {
+		if (IQ.isSuccess(received)) {
 		    roster.removeItem(jid);
-		} else {
-		    // COULDN'T do it!
 		}
 	    }
 	});
-    }
-
-    void eventLoggedIn() {
-	emite.send("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventRoster(received);
-	    }
-
-	});
-    }
-
-    /**
-     * Internal (testable) method: called when Presence arrives Ignored if the
-     * JID is not any of the roster JID's
-     * 
-     * @param presence
-     */
-    void eventPresence(final Presence presence) {
-	final RosterItem item = roster.findItemByURI(presence.getFromURI());
-	if (item != null) {
-	    item.setPresence(presence);
-	    roster.fireItemPresenceChanged(item);
-	}
-    }
-
-    void eventRoster(final IPacket received) {
-	setRosterItems(roster, received);
-	emite.publish(RosterManager.Events.ready);
     }
 
     private RosterItem convert(final IPacket item) {

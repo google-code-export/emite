@@ -26,8 +26,8 @@ import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 import java.util.ArrayList;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.im.roster.RosterManager;
@@ -37,14 +37,15 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
-public class PresenceManager extends EmiteComponent {
+public class PresenceManager implements Installable {
     private Presence delayedPresence;
     private Presence currentPresence;
     private final ArrayList<PresenceListener> listeners;
     private XmppURI userURI;
+    private final Emite emite;
 
     public PresenceManager(final Emite emite) {
-	super(emite);
+	this.emite = emite;
 	this.listeners = new ArrayList<PresenceListener>();
 	this.currentPresence = null;
 	this.userURI = null;
@@ -95,7 +96,6 @@ public class PresenceManager extends EmiteComponent {
      * Upon connecting to the server and becoming an active resource, a client
      * SHOULD request the roster before sending initial presence
      */
-    @Override
     public void install() {
 	emite.subscribe(when(RosterManager.Events.ready), new PacketListener() {
 	    public void handle(final IPacket received) {
@@ -108,12 +108,12 @@ public class PresenceManager extends EmiteComponent {
 		eventPresence(new Presence(received));
 	    }
 	});
-	emite.subscribe(when(SessionManager.Events.loggedOut), new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.onLoggedOut), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLoggedOut();
 	    }
 	});
-	emite.subscribe(when(SessionManager.Events.loggedIn), new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.onLoggedIn), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLoggedIn(received);
 	    }

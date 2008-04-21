@@ -14,9 +14,6 @@ import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.j2se.services.TigaseXMLService;
-import com.calclab.emite.testing.InstallationTester;
-import com.calclab.emite.testing.InstallationTester.InstallTest;
-import com.calclab.emite.testing.InstallationTester.InstallVerifier;
 
 public class ResourceBindingManagerTest {
 
@@ -32,23 +29,12 @@ public class ResourceBindingManagerTest {
     }
 
     @Test
-    public void shouldAttachEvents() {
-	new InstallationTester(new InstallTest() {
-	    public void prepare(final Emite emite, final InstallVerifier verifier) {
-		new ResourceBindingManager(emite).install();
-		verifier.shouldAttachTo(SessionManager.Events.logIn);
-		verifier.shouldAttachTo(SessionManager.Events.authorized);
-	    }
-	});
-    }
-
-    @Test
     public void shouldInforSessionWhenBinded() {
 	final String received = "<iq type=\"result\" id=\"bind_2\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\">"
 		+ "<jid>somenode@example.com/someresource</jid></bind></iq>";
 	manager.eventBinded(xmler.toXML(received));
 	verify(emite).publish(
-		packetLike(SessionManager.Events.binded.Params("uri", "somenode@example.com/someresource")));
+		packetLike(SessionManager.Events.onBinded.Params("uri", "somenode@example.com/someresource")));
     }
 
     @Test
