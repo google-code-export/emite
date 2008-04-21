@@ -43,8 +43,8 @@ public class LoginPanel extends JPanel {
     private void init() {
 	selectHttpBase = new JComboBox();
 	selectHttpBase.addItem("http://localhost:8383/http-bind/");
-	selectHttpBase.addItem("http://localhost:4444/http-bosh/");
-	selectHttpBase.addItem("http://localhost:4444/http-bind/");
+	selectHttpBase.addItem("http://localhost:4444/http-bosh");
+	selectHttpBase.addItem("http://localhost:4444/http-bind");
 	selectHttpBase.setSelectedIndex(0);
 	fieldDomain = new JTextField("localhost");
 	fieldName = new JTextField("admin");
