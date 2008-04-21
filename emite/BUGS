@@ -4,47 +4,13 @@ Known bugs in Emite
 For reports please use:
   http://code.google.com/p/emite/issues/list
 
-- Entering in a room from emiteui:
+- Bug in Rooms.java: Entering in a room from emiteui:
 [DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@5532BBA6AA718589900... (line 144)
 [FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: message.delegate.getFirstChild("Subject") has no properties
 
 - [ui] MRoomPanel subject edit, enter not fire
 
-********* [CLOSED, NOT SOLVED]
-- Roster is receiving presence from rooms, with imprevisible result (to probe join a room from emite and later from a external client):
-
-[DEBUG] GWT CONNECTOR RECEIVED:
-<body xmlns='http://jabber.org/protocol/httpbind'>
-	<presence to="admin@localhost/emite-ui1208635557049" from="testroom3@rooms.localhost/dfga">
-	<show>dnd</show> [DEBUG] <status>sadasdf</status> [DEBUG] <priority>5</priority> [DEBUG]
-	<c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html"/> [DEBUG] [DEBUG]
-	<x xmlns="http://jabber.org/protocol/muc#user"><item jid="vjrj@localhost/Psi" affiliation="none" role="participant"/></x>
-</presence></body>B576CCF8407E44F11... (line 144)
-[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@43B576CCF8407E44F11... (line 144)
-[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@44B576CCF8407E44F11... (line 144)
-[INFO] Presence received in RosterManager for item: nullB576CCF8407E44F11... (line 141)
-[INFO] PRESENCE: type: available from: testroom3@rooms.localhost/dfga show: dnd status: sadasdf text: [INFO] B576CCF8407E44F11... (line 141)
-[FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: xtension.getFirstChild("status") has no properties
-
-
-- Rooms join/creation problems:
-
-IN: <body xmlns='http://jabber.org/protocol/httpbind'>
-	<presence to="admin@localhost/emite-swing" from="testroom2@rooms.localhost/nick">
-	<x xmlns="http://jabber.org/protocol/muc#user">
-	<item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/>
-	<status code="201"/></x>
-	</presence></body>
-DISPATCH: <body xmlns="http://jabber.org/protocol/httpbind"><presence from="testroom2@rooms.localhost/nick" to="admin@localhost/emite-swing"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence></body>
-DISPATCH: <presence from="testroom2@rooms.localhost/nick" to="admin@localhost/emite-swing"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence>
-19-abr-2008 15:44:51 com.allen_sauer.gwt.log.server.ServerLogImplJDK14 info
-INFORMACIàN: PRESENCE!!: <presence from="testroom2@rooms.localhost/nick" to="admin@localhost/emite-swing"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence>
-Exception in thread "Thread-10" java.lang.NullPointerException
-	at com.calclab.emite.client.xmpp.stanzas.IQ.<init>(IQ.java:46)
-	at com.calclab.emite.client.extra.muc.MUCRoomManager.createInstantRoom(MUCRoomManager.java:154)
-	at com.calclab.emite.client.extra.muc.MUCRoomManager.eventPresence(MUCRoomManager.java:146)
-	at com.calclab.emite.client.extra.muc.MUCRoomManager$2.handle(MUCRoomManager.java:58)
-
+- [ui] focus in JoinRoom and AddBuddie show error
 
 - Same with the unsubcribe:
 [DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><iq type="set" id="1-75" to="admin@localhost/emite-ui1208127502333"><query xmlns="jabber:iq:roster"><item jid="vjrj@localhost" name="testuser1" subscription="to"/></query></iq></body>
@@ -100,7 +66,6 @@ ERROR: gwt-log failed to initialize valid server-side logging implementation
 [DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@13B0DB0517C2E0DA06... (line 144)
 [FATAL] Uncaught Exception: java.lang.NumberFormatException: Unable to parse null
 
-
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 - Other:
 [DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message from="localhost" to="admin@localhost"><body>A server or plugin update was found: Openfire 3.5.0</body></message></body>
@@ -124,56 +89,43 @@ POST http://localhost:8888/gwt/com.calclab.examplechat.Example/http-bind404 (675
 [DEBUG] GWT CONNECTOR RECEIVED: <html> [DEBUG] <head> [DEBUG] <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/> [DEBUG] <title>Error 404 </title> [DEBUG] </head> [DEBUG] <body><h2>HTTP ERROR: 404</h2><pre>Invalid SID.</pre>
 
 
+* [CLOSED, NOT SOLVED]
+********************************************************************************
+- Roster is receiving presence from rooms, with imprevisible result (to probe join a room from emite and later from a external client):
+
+[DEBUG] GWT CONNECTOR RECEIVED:
+<body xmlns='http://jabber.org/protocol/httpbind'>
+	<presence to="admin@localhost/emite-ui1208635557049" from="testroom3@rooms.localhost/dfga">
+	<show>dnd</show> [DEBUG] <status>sadasdf</status> [DEBUG] <priority>5</priority> [DEBUG]
+	<c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html"/> [DEBUG] [DEBUG]
+	<x xmlns="http://jabber.org/protocol/muc#user"><item jid="vjrj@localhost/Psi" affiliation="none" role="participant"/></x>
+</presence></body>B576CCF8407E44F11... (line 144)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@43B576CCF8407E44F11... (line 144)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@44B576CCF8407E44F11... (line 144)
+[INFO] Presence received in RosterManager for item: nullB576CCF8407E44F11... (line 141)
+[INFO] PRESENCE: type: available from: testroom3@rooms.localhost/dfga show: dnd status: sadasdf text: [INFO] B576CCF8407E44F11... (line 141)
+[FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: xtension.getFirstChild("status") has no properties
 
 
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+- Rooms join/creation problems:
+
+IN: <body xmlns='http://jabber.org/protocol/httpbind'>
+	<presence to="admin@localhost/emite-swing" from="testroom2@rooms.localhost/nick">
+	<x xmlns="http://jabber.org/protocol/muc#user">
+	<item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/>
+	<status code="201"/></x>
+	</presence></body>
+DISPATCH: <body xmlns="http://jabber.org/protocol/httpbind"><presence from="testroom2@rooms.localhost/nick" to="admin@localhost/emite-swing"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence></body>
+DISPATCH: <presence from="testroom2@rooms.localhost/nick" to="admin@localhost/emite-swing"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence>
+19-abr-2008 15:44:51 com.allen_sauer.gwt.log.server.ServerLogImplJDK14 info
+INFORMACIàN: PRESENCE!!: <presence from="testroom2@rooms.localhost/nick" to="admin@localhost/emite-swing"><x xmlns="http://jabber.org/protocol/muc#user"><item jid="admin@localhost/emite-swing" affiliation="owner" role="moderator"/><status code="201"/></x></presence>
+Exception in thread "Thread-10" java.lang.NullPointerException
+	at com.calclab.emite.client.xmpp.stanzas.IQ.<init>(IQ.java:46)
+	at com.calclab.emite.client.extra.muc.MUCRoomManager.createInstantRoom(MUCRoomManager.java:154)
+	at com.calclab.emite.client.extra.muc.MUCRoomManager.eventPresence(MUCRoomManager.java:146)
+	at com.calclab.emite.client.extra.muc.MUCRoomManager$2.handle(MUCRoomManager.java:58)
+
+* FOOTNOTES
+********************************************************************************
 [1]
-
-<presence to="newroomtest1@rooms.localhost/vjrj" >
-<priority>5</priority>
-<c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html" />
-<x xmlns="http://jabber.org/protocol/muc"/>
-</presence>
-
-
-<presence from="newroomtest1@rooms.localhost/vjrj" to="vjrj@localhost/Psi" >
-<priority>5</priority>
-<x xmlns="http://jabber.org/protocol/muc#user">
-<item affiliation="owner" role="moderator" jid="vjrj@localhost/Psi" />
-<status code="201" />
-</x>
-</presence>
-
-
-<iq type="set" to="newroomtest1@rooms.localhost" id="ab22a" >
-<query xmlns="http://jabber.org/protocol/muc#owner">
-<x xmlns="jabber:x:data" type="submit" />
-</query>
-</iq>
-
-
-<message from="newroomtest1@rooms.localhost" type="groupchat" to="vjrj@localhost/Psi" >
-<body>This room is locked from entry until configuration is confirmed.</body>
-</message>
-
-
-<message from="newroomtest1@rooms.localhost" type="groupchat" to="vjrj@localhost/Psi" >
-<body>This room is now unlocked.</body>
-</message>
-
-
-<iq from="newroomtest1@rooms.localhost" type="result" id="ab22a" to="vjrj@localhost/Psi" />
-
-
-<presence type="unavailable" to="newroomtest1@rooms.localhost/vjrj" />
-
-
-<presence from="newroomtest1@rooms.localhost/vjrj" type="unavailable" to="vjrj@localhost/Psi" >
-<priority>5</priority>
-<c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html" />
-
-<x xmlns="http://jabber.org/protocol/muc#user">
-<item affiliation="owner" role="none" jid="vjrj@localhost/Psi" />
-</x>
-</presence>
 

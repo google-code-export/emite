@@ -95,7 +95,7 @@ public class RosterItemDialog {
 
         name = new TextField(i18n.t("Buddy Nickname"), "name", 150);
         name.setAllowBlank(false);
-        name.setValidationDelay(2000);
+        name.setValidateOnBlur(false);
         formPanel.add(name);
 
         jid = new TextField(i18n.t("Buddy Jabber Id"), "jid", 150);
