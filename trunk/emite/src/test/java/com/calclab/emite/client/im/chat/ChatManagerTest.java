@@ -8,18 +8,18 @@ import org.mockito.Mockito;
 
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.TestingEmite;
+import com.calclab.emite.testing.EmiteStub;
 
 public class ChatManagerTest {
 
     private static final String MYSELF = "self@domain";
     private ChatManagerDefault manager;
     private ChatManagerListener listener;
-    private TestingEmite emite;
+    private EmiteStub emite;
 
     @Before
     public void a() {
-	emite = new TestingEmite();
+	emite = new EmiteStub();
 	manager = new ChatManagerDefault(emite);
 	listener = Mockito.mock(ChatManagerListener.class);
 	manager.addListener(listener);
