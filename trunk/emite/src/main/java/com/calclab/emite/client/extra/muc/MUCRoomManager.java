@@ -24,8 +24,6 @@ package com.calclab.emite.client.extra.muc;
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 
 import java.util.HashMap;
-import java.util.List;
-
 import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
@@ -57,11 +55,6 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager, I
     }
 
     @Override
-    public void eventLoggedOut() {
-	closeAll(rooms.values());
-    }
-
-    @Override
     public void install() {
 	super.install();
 	emite.subscribe(when("presence"), new PacketListener() {
@@ -77,6 +70,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager, I
 	if (room == null) {
 	    room = new Room(userURI, roomURI.getJID(), "the name of the room", emite);
 	    rooms.put(roomURI.getJID(), room);
+	    chats.add(room);
 	    final Presence presence = new Presence(null, userURI, roomURI);
 	    presence.addChild(new Packet("x", "http://jabber.org/protocol/muc"));
 	    emite.send(presence);
@@ -95,26 +89,14 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager, I
 	}
     }
 
-    protected void sendMUCSupportQuery() {
-	final IQ iq = new IQ(IQ.Type.get, userURI, userURI.getHost());
-	iq.setQuery("http://jabber.org/protocol/disco#info");
-	emite.send("disco", iq, new PacketListener() {
-	    public void handle(final IPacket received) {
-		System.out.println("MUC!!: " + received);
-		// sendRoomsQuery();
-	    }
-	});
-    }
-
-    /**
-     * @see http://www.xmpp.org/extensions/xep-0045.html#disco-rooms
-     */
-    protected void sendRoomsQuery() {
-	final IQ iq = new IQ(IQ.Type.get, userURI, userURI.getHost());
-	iq.setQuery("http://jabber.org/protocol/disco#items");
+    private void createInstantRoom(final Room room) {
+	final IQ iq = new IQ(Type.set, userURI, room.getOtherURI().toString()).WithQuery(
+		"http://jabber.org/protocol/muc#owner", new Packet("x", "jabber:x:data").With("type", "submit"));
 	emite.send("rooms", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
-		onRoomsQuery(received);
+		if (IQ.isSuccess(received)) {
+
+		}
 	    }
 	});
     }
@@ -122,7 +104,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager, I
     /**
      * @see http://www.xmpp.org/extensions/xep-0045.html#createroom
      */
-    void eventPresence(final Presence presence) {
+    private void eventPresence(final Presence presence) {
 	final XmppURI occupantURI = presence.getFromURI();
 	final Room room = rooms.get(occupantURI.getJID());
 	if (room != null) {
@@ -145,30 +127,9 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager, I
 	}
     }
 
-    private void createInstantRoom(final Room room) {
-	final IQ iq = new IQ(Type.set, userURI, room.getOtherURI().toString()).WithQuery(
-		"http://jabber.org/protocol/muc#owner", new Packet("x", "jabber:x:data").With("type", "submit"));
-	emite.send("rooms", iq, new PacketListener() {
-	    public void handle(final IPacket received) {
-		if (IQ.isSuccess(received)) {
-
-		}
-	    }
-	});
-    }
-
     private boolean isNewRoom(final IPacket xtension) {
 	final String code = xtension.getFirstChild("status").getAttribute("code");
 	return (code != null && code.equals("201"));
     }
 
-    // FIXME: (dani de dani) no entiendo bien...
-    private void onRoomsQuery(final IPacket received) {
-	final List<? extends IPacket> items = received.getFirstChild("query").getChildren();
-	rooms.clear();
-	for (final IPacket packet : items) {
-	    final XmppURI uri = XmppURI.parse(packet.getAttribute("jid"));
-	    rooms.put(uri, new Room(userURI, uri, packet.getAttribute("name"), emite));
-	}
-    }
 }

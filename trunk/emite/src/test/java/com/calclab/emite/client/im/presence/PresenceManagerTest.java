@@ -33,35 +33,35 @@ public class PresenceManagerTest {
     @Test
     public void managerShouldFireAvailablePresence() {
 	final Presence presence = createPresence(Type.available);
-	emite.simulate(presence);
+	emite.receives(presence);
 	Mockito.verify(presenceListener).onPresenceReceived((Presence) TestMatchers.packetLike(presence));
     }
 
     @Test
     public void managerShouldFireSubscriptionRequests() {
 	final Presence presence = createPresence(Type.subscribe);
-	emite.simulate(presence);
+	emite.receives(presence);
 	Mockito.verify(presenceListener).onSubscriptionRequest((Presence) TestMatchers.packetLike(presence));
     }
 
     @Test
     public void managerShouldFireUnavailablePresence() {
 	final Presence presence = createPresence(Type.unavailable);
-	emite.simulate(presence);
+	emite.receives(presence);
 	Mockito.verify(presenceListener).onPresenceReceived((Presence) TestMatchers.packetLike(presence));
     }
 
     @Test
     public void managerShouldFireUnsubscribeEvents() {
 	final Presence presence = createPresence(Type.unsubscribed);
-	emite.simulate(presence);
+	emite.receives(presence);
 	Mockito.verify(presenceListener).onUnsubscribedReceived((Presence) TestMatchers.packetLike(presence));
     }
 
     @Test
     public void shouldHandleLoggedIn() {
 	final String uri = "name@domain/resource";
-	emite.simulate(SessionManager.Events.loggedIn(uri));
+	emite.receives(SessionManager.Events.loggedIn(uri));
 	final XmppURI userURI = manager.getUserURI();
 	assertNotNull(userURI);
 	assertEquals(uri, userURI.toString());

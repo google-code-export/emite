@@ -20,38 +20,40 @@ package org.jabber.JabberHTTPBind;
 import java.util.Enumeration;
 
 /**
- * @author Stefan Strigler <steve@zeank.in-berlin.de> 
+ * @author Stefan Strigler <steve@zeank.in-berlin.de>
  */
 public class Janitor implements Runnable {
-	public static final int SLEEPMILLIS = 1000;
+    public static final int SLEEPMILLIS = 1000;
 
-	private boolean keep_running = true;
+    private boolean keep_running = true;
 
-	/*
-	 * @see java.lang.Runnable#run()
-	 */
-	public void run() {
-		while (this.keep_running) {
-			for (Enumeration e = Session.getSessions(); e.hasMoreElements();) {
-				Session sess = (Session) e.nextElement();
+    /*
+     * @see java.lang.Runnable#run()
+     */
+    @SuppressWarnings("unchecked")
+    public void run() {
+	while (this.keep_running) {
+	    for (final Enumeration e = Session.getSessions(); e.hasMoreElements();) {
+		final Session sess = (Session) e.nextElement();
 
-				// stop inactive sessions
-				if (System.currentTimeMillis() - sess.getLastActive() > Session.MAX_INACTIVITY * 1000) {
-					if (JHBServlet.DEBUG)
-						System.err.println("Session timed out: " + sess.getSID());
-					sess.terminate();
-				}
-			}
-			try {
-				Thread.sleep(SLEEPMILLIS);
-			} catch (InterruptedException ie) {
-				ie.printStackTrace();
-			}
+		// stop inactive sessions
+		if (System.currentTimeMillis() - sess.getLastActive() > Session.MAX_INACTIVITY * 1000) {
+		    if (JHBServlet.DEBUG) {
+			System.err.println("Session timed out: " + sess.getSID());
+		    }
+		    sess.terminate();
 		}
+	    }
+	    try {
+		Thread.sleep(SLEEPMILLIS);
+	    } catch (final InterruptedException ie) {
+		ie.printStackTrace();
+	    }
 	}
+    }
 
-	public void stop() {
-		this.keep_running = false;
-	}
+    public void stop() {
+	this.keep_running = false;
+    }
 
 }

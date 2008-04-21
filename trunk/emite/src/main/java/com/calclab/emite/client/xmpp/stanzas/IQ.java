@@ -51,7 +51,7 @@ public class IQ extends BasicStanza {
 	setTo(to);
     }
 
-    public IPacket Include(final String name, final String xmlns) {
+    public IPacket Includes(final String name, final String xmlns) {
 	add(name, xmlns);
 	return this;
     }

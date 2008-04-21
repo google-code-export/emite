@@ -36,7 +36,7 @@ public class SessionManagerTest {
 
     @Test
     public void shouldRequestSessionWhenBinded() {
-	emite.simulate(SessionManager.Events.binded("name@domain/resource"));
+	emite.receives(SessionManager.Events.binded("name@domain/resource"));
 	emite.verifySendCallback(new IQ(Type.set));
 	emite.answerSuccess();
 	emite.verifyPublished(SessionManager.Events.loggedIn("name@domain/resource"));

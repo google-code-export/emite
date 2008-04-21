@@ -3,6 +3,7 @@ package com.calclab.emite.j2se.services;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import tigase.xml.Element;
 
@@ -36,9 +37,13 @@ public class TigasePacket extends DSLPacket {
 	return delegate.getAttribute(name);
     }
 
-    // TODO
     public HashMap<String, String> getAttributes() {
-	throw new RuntimeException("not implemented");
+	final HashMap<String, String> atts = new HashMap<String, String>();
+	final Map<String, String> src = delegate.getAttributes();
+	if (src != null) {
+	    atts.putAll(src);
+	}
+	return atts;
     }
 
     public List<? extends IPacket> getChildren() {

@@ -43,7 +43,7 @@ public class ResourceBindingManager implements Installable {
     public void install() {
 	emite.subscribe(when(SessionManager.Events.onDoLogin), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventLogin(received);
+		resource = XmppURI.parse(received.getAttribute("uri")).getResource();
 	    }
 	});
 	emite.subscribe(when(SessionManager.Events.onAuthorized), new PacketListener() {
@@ -66,12 +66,4 @@ public class ResourceBindingManager implements Installable {
 	});
     }
 
-    void eventBinded(final IPacket received) {
-	final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
-	emite.publish(SessionManager.Events.binded(jid));
-    }
-
-    void eventLogin(final IPacket received) {
-	resource = XmppURI.parse(received.getAttribute("uri")).getResource();
-    }
 }

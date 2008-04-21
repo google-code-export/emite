@@ -107,7 +107,7 @@ public class SessionManager implements Installable {
 		final String uri = received.getAttribute("uri");
 		final XmppURI userURI = XmppURI.parse(uri);
 		final IQ iq = new IQ(IQ.Type.set, userURI, userURI.getHost());
-		iq.Include("session", "urn:ietf:params:xml:ns:xmpp-session");
+		iq.Includes("session", "urn:ietf:params:xml:ns:xmpp-session");
 
 		emite.send("session", iq, new PacketListener() {
 		    public void handle(final IPacket received) {
