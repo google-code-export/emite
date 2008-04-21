@@ -6,7 +6,7 @@
   <inherits name="com.allen_sauer.gwt.log.gwt-log" />
   <inherits name="org.ourproject.kune.platf.Kune-Platform" />
 
-  <entry-point class="com.calclab.emiteuiplugin.client.EmiteUIPluginEntryPoint" />
+  <public path="public"/>
 
   <servlet path="/com.calclab.emiteui.Example/http-bind"
     class="de.spieleck.servlets.ProxyServlet" />

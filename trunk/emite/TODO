@@ -8,8 +8,16 @@ SHORT-TERM (URGENT):
 
 <vjrj> Room nicks conflict support XEP-0045, 7.1.10
 
+<vjrj> Make EmiteUIPlugin internal events non public
+
 <vjrj> Compile without OBF for demo
 --> vjrj
+
+<vjrj> ExmiteUIProxy is necessary in web.xml?
+
+<vjrj> Remove unnecesary EntryPoints:
+http://code.google.com/p/google-web-toolkit-incubator/wiki/PathsHandlingFAQ
+«First create another module, with its own .gwt.xml file. Then, take out the <entry-point> tag (a utiliy module won't have an entry point).»
 
 --------------------------------------------------------------------------------
 

@@ -395,17 +395,17 @@ public class MultiChatPresenter implements MultiChat {
 			messageReceived(chat, message);
 		    }
 
-		    public void onMessageSent(final Chat chat, final Message message) {
-			messageReceived(chat, message);
-		    }
+                    public void onMessageSent(final Chat chat, final Message message) {
+                        // messageReceived(chat, message);
+                    }
 
-		    public void onOccupantModified(final Occupant occupant) {
-			// FIXME update room user list
-		    }
+                    public void onOccupantModified(final Occupant occupant) {
+                        roomUI.onOccupantModified(occupant);
+                    }
 
-		    public void onOccupantsChanged(final Collection<Occupant> users) {
-			roomUI.setUsers(users);
-		    }
+                    public void onOccupantsChanged(final Collection<Occupant> occupants) {
+                        roomUI.onOccupantsChanged(occupants);
+                    }
 
 		    public void onSubjectSet(final String nick, final String newSubject) {
 			roomUI.setSubject(newSubject);
