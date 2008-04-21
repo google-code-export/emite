@@ -19,32 +19,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emiteuiplugin.client.roster;
+package com.calclab.emiteuiplugin.client.room;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
-import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogExtended;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogListener;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
 import com.gwtext.client.widgets.ToolTip;
 import com.gwtext.client.widgets.form.FormPanel;
-import com.gwtext.client.widgets.form.Label;
 import com.gwtext.client.widgets.form.TextField;
-import com.gwtext.client.widgets.form.VType;
 
-public class RosterItemDialog {
+public class JoinRoomPanel {
 
-    private BasicDialog dialog;
-    private FormPanel formPanel;
     private final I18nTranslationService i18n;
     private final MultiChatPresenter presenter;
-    private TextField name;
-    private TextField jid;
+    private BasicDialogExtended dialog;
+    private FormPanel formPanel;
+    private TextField roomName;
+    private TextField serverName;
 
-    public RosterItemDialog(final I18nTranslationService i18n, final MultiChatPresenter presente) {
+    public JoinRoomPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
-        this.presenter = presente;
+        this.presenter = presenter;
     }
 
     public void reset() {
@@ -53,8 +50,8 @@ public class RosterItemDialog {
 
     public void show() {
         if (dialog == null) {
-            dialog = new BasicDialogExtended(i18n.t("Add a new buddy"), false, false, 330, 200, "useradd-icon", i18n
-                    .tWithNT("Add", "used in button"), i18n.tWithNT("Cancel", "used in button"),
+            dialog = new BasicDialogExtended(i18n.t("Join a chat room"), false, false, 330, 160, "chat-icon", i18n
+                    .tWithNT("Join", "used in button"), i18n.tWithNT("Cancel", "used in button"),
                     new BasicDialogListener() {
 
                         public void onCancelButtonClick() {
@@ -63,9 +60,13 @@ public class RosterItemDialog {
                         }
 
                         public void onFirstButtonClick() {
-                            presenter.addRosterItem(name.getValueAsString(), jid.getValueAsString());
-                            dialog.hide();
-                            reset();
+                            roomName.validate();
+                            serverName.validate();
+                            if (formPanel.getForm().isValid()) {
+                                presenter.joinRoom(roomName.getValueAsString(), serverName.getValueAsString());
+                                dialog.hide();
+                                reset();
+                            }
                         }
 
                     });
@@ -75,7 +76,7 @@ public class RosterItemDialog {
             // TODO define a UI Extension Point here
         }
         dialog.show();
-        name.focus();
+        roomName.focus();
     }
 
     private void createForm() {
@@ -87,26 +88,20 @@ public class RosterItemDialog {
         formPanel.setLabelWidth(100);
         formPanel.setPaddings(10);
 
-        Label label = new Label();
-        label.setHtml("<p>" + i18n.t("Please fill this form with the info of your new buddy:") + "</p><br/>");
-        label.setWidth(270);
-        label.setHeight(40);
-        formPanel.add(label);
+        roomName = new TextField(i18n.t("Room Name"), "name", 150);
+        roomName.setAllowBlank(false);
+        roomName.setValidationEvent(false);
+        formPanel.add(roomName);
 
-        name = new TextField(i18n.t("Buddy Nickname"), "name", 150);
-        name.setAllowBlank(false);
-        name.setValidateOnBlur(false);
-        formPanel.add(name);
-
-        jid = new TextField(i18n.t("Buddy Jabber Id"), "jid", 150);
-        jid.setAllowBlank(false);
-        jid.setVtype(VType.EMAIL);
-        ToolTip fieldToolTip = new ToolTip(i18n.t("Note that the 'Jabber Id' sometimes is the same as the email "
-                + "(in gmail accounts for instance)."));
-        fieldToolTip.applyTo(jid);
-        formPanel.add(jid);
+        serverName = new TextField(i18n.t("Room Server Name"), "jid", 150);
+        serverName.setAllowBlank(false);
+        serverName.setValidationEvent(false);
+        // FIXME (get from options)
+        serverName.setValue("rooms.localhost");
+        ToolTip fieldToolTip = new ToolTip(i18n.t("Something like 'conference.jabber.org'."));
+        fieldToolTip.applyTo(serverName);
+        formPanel.add(serverName);
 
         dialog.add(formPanel);
     }
-
 }

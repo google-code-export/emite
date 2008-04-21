@@ -34,6 +34,7 @@ import com.calclab.emiteuiplugin.client.UserChatOptions;
 import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.gwtext.client.widgets.Panel;
@@ -43,6 +44,9 @@ import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 
 public class EmiteUIEntryPoint implements EntryPoint {
+    private static final String GWT_PROPERTY_JID = "gwt_property_jid";
+    private static final String GWT_PROPERTY_PASSWD = "gwt_property_passwd";
+    private static final String GWT_PROPERTY_HTTPBASE = "gwt_property_httpbase";
     private DefaultDispatcher dispatcher;
     private TextField passwd;
     private TextField jid;
@@ -83,8 +87,9 @@ public class EmiteUIEntryPoint implements EntryPoint {
                 new I18nTranslationServiceMocked());
         kunePluginManager.install(new EmiteUIPlugin());
 
-        dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions("/proxy"),
-                new I18nTranslationServiceMocked(), generateUserChatOptions()));
+        dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions(
+                getGwtMetaProperty(GWT_PROPERTY_HTTPBASE)), new I18nTranslationServiceMocked(),
+                generateUserChatOptions()));
         dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
     }
 
@@ -103,12 +108,12 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
         jid = new TextField("Jabber id", "jid", 180);
         jid.setAllowBlank(false);
-        jid.setValue("admin@localhost");
+        jid.setValue(getGwtMetaProperty(GWT_PROPERTY_JID));
         formPanel.add(jid);
 
         passwd = new TextField("Password", "last", 180);
         passwd.setAllowBlank(false);
-        passwd.setValue("easyeasy");
+        passwd.setValue(getGwtMetaProperty(GWT_PROPERTY_PASSWD));
         passwd.setPassword(true);
         formPanel.add(passwd);
 
@@ -131,6 +136,10 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
     private UserChatOptions generateUserChatOptions() {
         return new UserChatOptions(jid.getRawValue(), passwd.getRawValue(), "blue", Roster.DEF_SUBSCRIPTION_MODE);
+    }
+
+    private String getGwtMetaProperty(final String property) {
+        return DOM.getElementProperty(DOM.getElementById(property), "content");
     }
 
 }

@@ -4,13 +4,15 @@ Known bugs in Emite
 For reports please use:
   http://code.google.com/p/emite/issues/list
 
-- Bug in Rooms.java: Entering in a room from emiteui:
+- (I think is fixed) Bug in Rooms.java: Entering in a room from emiteui:
 [DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@5532BBA6AA718589900... (line 144)
 [FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: message.delegate.getFirstChild("Subject") has no properties
 
 - [ui] MRoomPanel subject edit, enter not fire
 
-- [ui] focus in JoinRoom and AddBuddie show error
+- [ui] Status title ugly
+
+- [ui] room nicks problem on messages
 
 - Same with the unsubcribe:
 [DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><iq type="set" id="1-75" to="admin@localhost/emite-ui1208127502333"><query xmlns="jabber:iq:roster"><item jid="vjrj@localhost" name="testuser1" subscription="to"/></query></iq></body>
@@ -20,12 +22,17 @@ DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'
 Other similar packet not procesed:
 [DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><iq type="set" id="533-133" to="admin@localhost/emite-ui1208647861921"><query xmlns="jabber:iq:roster"><item jid="vjrj@localhost" name="vjrj" subscription="both"/></query></iq></body>
 
-- Room chat send, echo the same with the room URI (from/to issue)
-admin: This is writing by the client in testroom1
-testroom1: This is writing by the client in testroom1
+- Other (NoPacket/null issue?):
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message from="localhost" to="admin@localhost"><body>A server or plugin update was found: Openfire 3.5.0</body></message></body>
+causing:
+[FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: type has no properties
 
 * SOLVED
 ********************************************************************************
+
+- Room chat send, echo the same with the room URI (from/to issue)
+admin: This is writing by the client in testroom1
+testroom1: This is writing by the client in testroom1
 
 - [ui] Menu empty in Room Ocupants
 
@@ -66,11 +73,6 @@ ERROR: gwt-log failed to initialize valid server-side logging implementation
 [DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@13B0DB0517C2E0DA06... (line 144)
 [FATAL] Uncaught Exception: java.lang.NumberFormatException: Unable to parse null
 
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-- Other:
-[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message from="localhost" to="admin@localhost"><body>A server or plugin update was found: Openfire 3.5.0</body></message></body>
-causing:
-[FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: type has no properties
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 - Invalid SIDs (sometimes) in revision r218. After that the Invalid SID happens all times you try to login...

@@ -7,6 +7,7 @@
   <inherits name="org.ourproject.kune.platf.Kune-Platform" />
 
   <public path="public"/>
+  <entry-point class="com.calclab.emiteuiplugin.client.EmiteUIPluginEntryPoint" />
 
   <servlet path="/com.calclab.emiteui.Example/http-bind"
     class="de.spieleck.servlets.ProxyServlet" />

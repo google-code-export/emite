@@ -74,326 +74,327 @@ public class MultiChatPresenter implements MultiChat {
     private final Xmpp xmpp;
 
     public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final ChatDialogFactory factory,
-	    final MultiChatCreationParam param, final MultiChatListener listener) {
-	this.xmpp = xmpp;
-	this.i18n = i18n;
-	this.factory = factory;
-	this.listener = listener;
-	setUserChatOptions(param.getUserChatOptions());
-	presenceManager = xmpp.getPresenceManager();
-	chats = new HashMap<Chat, ChatUI>();
+            final MultiChatCreationParam param, final MultiChatListener listener) {
+        this.xmpp = xmpp;
+        this.i18n = i18n;
+        this.factory = factory;
+        this.listener = listener;
+        setUserChatOptions(param.getUserChatOptions());
+        presenceManager = xmpp.getPresenceManager();
+        chats = new HashMap<Chat, ChatUI>();
     }
 
     public void activateChat(final Chat chat) {
-	final ChatUI abstractChat = getChat(chat);
-	activateChat(abstractChat);
+        final ChatUI abstractChat = getChat(chat);
+        activateChat(abstractChat);
     }
 
     public void activateChat(final ChatUI chatUI) {
-	view.activateChat(chatUI);
+        view.activateChat(chatUI);
     }
 
     public void addBuddy(final String shortName, final String longName) {
     }
 
     public void addRosterItem(final String name, final String jid) {
-	Log.info("Adding " + name + "(" + jid + ") to your roster.");
-	xmpp.getRosterManager().requestAddItem(XmppURI.parse(jid), name, null);
+        Log.info("Adding " + name + "(" + jid + ") to your roster.");
+        xmpp.getRosterManager().requestAddItem(XmppURI.parse(jid), name, null);
     }
 
     public void attachIconToBottomBar(final View view) {
-	listener.attachToExtPoint(new UIExtensionElement(UIExtensionPoint.CONTENT_BOTTOM_ICONBAR, view));
+        listener.attachToExtPoint(new UIExtensionElement(UIExtensionPoint.CONTENT_BOTTOM_ICONBAR, view));
     }
 
     public void closeAllChats(final boolean withConfirmation) {
-	if (withConfirmation) {
-	    view.confirmCloseAll();
-	} else {
-	    onCloseAllConfirmed();
-	}
+        if (withConfirmation) {
+            view.confirmCloseAll();
+        } else {
+            onCloseAllConfirmed();
+        }
     }
 
     public ChatUI createChat(final Chat chat) {
-	final ChatUI chatUI = chats.get(chat) == null ? factory.createChatUI(currentUserJid.getNode(), userChatOptions
-		.getColor(), new ChatUIListener() {
-	    public void onActivate(final ChatUI chatUI) {
-		view.setInputText(chatUI.getSavedInput());
-		view.setInviteToGroupChatButtonVisible(false);
-		view.setRoomUserListVisible(false);
-		view.clearSubject();
-		view.setSubjectEditable(false);
-		view.expandRoster();
-		view.focusInput();
-		currentChat = chatUI;
-	    }
+        final ChatUI chatUI = chats.get(chat) == null ? factory.createChatUI(currentUserJid.getNode(), userChatOptions
+                .getColor(), new ChatUIListener() {
+            public void onActivate(final ChatUI chatUI) {
+                view.setInputText(chatUI.getSavedInput());
+                view.setInviteToGroupChatButtonVisible(false);
+                view.setRoomUserListVisible(false);
+                view.clearSubject();
+                view.setSubjectVisible(false);
+                view.expandRoster();
+                view.focusInput();
+                currentChat = chatUI;
+            }
 
-	    public void onCloseConfirmed(final ChatUI chatUI) {
-		doAfterCloseConfirmed(chat, chatUI);
-	    }
+            public void onCloseConfirmed(final ChatUI chatUI) {
+                doAfterCloseConfirmed(chat, chatUI);
+            }
 
-	    public void onCurrentUserSend(final String message) {
-		chat.send(message);
-	    }
+            public void onCurrentUserSend(final String message) {
+                chat.send(message);
+            }
 
-	    public void onDeactivate(final ChatUI chatUI) {
-		chatUI.saveInput(view.getInputText());
-	    }
+            public void onDeactivate(final ChatUI chatUI) {
+                chatUI.saveInput(view.getInputText());
+            }
 
-	    public void onMessageAdded(final ChatUI chatUI) {
-		view.highlightChat(chatUI);
-	    }
-	}) : chats.get(chat);
-	finishChatCreation(chat, chatUI, chat.getOtherURI().getNode());
-	return chatUI;
+            public void onMessageAdded(final ChatUI chatUI) {
+                view.highlightChat(chatUI);
+            }
+        }) : chats.get(chat);
+        finishChatCreation(chat, chatUI, chat.getOtherURI().getNode());
+        return chatUI;
     }
 
     public RoomUI createRoom(final Chat chat, final String userAlias) {
-	final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(currentUserJid.getNode(),
-		userChatOptions.getColor(), i18n, new RoomUIListener() {
-		    public void onActivate(final ChatUI chatUI) {
-			final RoomUI roomUI = (RoomUI) chatUI;
-			view.setInputText(roomUI.getSavedInput());
-			view.setInviteToGroupChatButtonVisible(true);
-			view.setSubject(roomUI.getSubject());
-			view.setSubjectEditable(roomUI.isSubjectEditable());
-			view.setRoomUserListVisible(true);
-			roomUI.setUserListVisible(true);
-			view.focusInput();
-			currentChat = chatUI;
-		    }
+        final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(currentUserJid.getNode(),
+                userChatOptions.getColor(), i18n, new RoomUIListener() {
+                    public void onActivate(final ChatUI chatUI) {
+                        final RoomUI roomUI = (RoomUI) chatUI;
+                        view.setInputText(roomUI.getSavedInput());
+                        view.setInviteToGroupChatButtonVisible(true);
+                        view.setSubject(roomUI.getSubject());
+                        view.setSubjectVisible(true);
+                        view.setSubjectEditable(roomUI.isSubjectEditable());
+                        view.setRoomUserListVisible(true);
+                        roomUI.setUserListVisible(true);
+                        view.focusInput();
+                        currentChat = chatUI;
+                    }
 
-		    public void onCloseConfirmed(final ChatUI chatUI) {
-			doAfterCloseConfirmed(chat, chatUI);
-		    }
+                    public void onCloseConfirmed(final ChatUI chatUI) {
+                        doAfterCloseConfirmed(chat, chatUI);
+                    }
 
-		    public void onCreated(final ChatUI chatUI) {
-			view.attachRoomUserList(((RoomUI) chatUI).getUserListView());
-		    }
+                    public void onCreated(final ChatUI chatUI) {
+                        view.attachRoomUserList(((RoomUI) chatUI).getUserListView());
+                    }
 
-		    public void onCurrentUserSend(final String message) {
-			chat.send(message);
-		    }
+                    public void onCurrentUserSend(final String message) {
+                        chat.send(message);
+                    }
 
-		    public void onDeactivate(final ChatUI chatUI) {
-			chatUI.saveInput(view.getInputText());
-			((RoomUI) chatUI).setUserListVisible(false);
-		    }
+                    public void onDeactivate(final ChatUI chatUI) {
+                        chatUI.saveInput(view.getInputText());
+                        ((RoomUI) chatUI).setUserListVisible(false);
+                    }
 
-		    public void onInviteUserRequested(final String userJid, final String reasonText) {
-			((Room) chat).inviteUser(userJid, reasonText);
-		    }
+                    public void onInviteUserRequested(final String userJid, final String reasonText) {
+                        ((Room) chat).inviteUser(userJid, reasonText);
+                    }
 
-		    public void onMessageAdded(final ChatUI chatUI) {
-			view.highlightChat(chatUI);
-		    }
+                    public void onMessageAdded(final ChatUI chatUI) {
+                        view.highlightChat(chatUI);
+                    }
 
-		    public void onModifySubjectRequested(final String newSubject) {
-			((Room) chat).setSubject(newSubject);
-		    }
+                    public void onModifySubjectRequested(final String newSubject) {
+                        ((Room) chat).setSubject(newSubject);
+                    }
 
-		    public void setSubjectEditable(final boolean editable) {
-			view.setSubjectEditable(editable);
-		    }
-		}) : chats.get(chat));
+                    public void setSubjectEditable(final boolean editable) {
+                        view.setSubjectEditable(editable);
+                    }
+                }) : chats.get(chat));
 
-	finishChatCreation(chat, roomUI, chat.getOtherURI().getNode());
+        finishChatCreation(chat, roomUI, chat.getOtherURI().getNode());
 
-	return roomUI;
+        return roomUI;
     }
 
     public void destroy() {
-	view.destroy();
+        view.destroy();
     }
 
     public void doAction(final String eventId, final Object param) {
-	listener.doAction(eventId, param);
+        listener.doAction(eventId, param);
     }
 
     public void hide() {
-	view.hide();
+        view.hide();
     }
 
     public void init(final MultiChatView view) {
-	this.view = view;
-	reset();
-	createXmppListeners();
+        this.view = view;
+        reset();
+        createXmppListeners();
     }
 
     public void inviteUserToRoom(final String userJid, final String reasonText) {
-	final RoomUI roomUI = (RoomUI) currentChat;
-	roomUI.onInviteUserRequested(userJid, reasonText);
+        final RoomUI roomUI = (RoomUI) currentChat;
+        roomUI.onInviteUserRequested(userJid, reasonText);
     }
 
     public void joinRoom(final String roomName, final String serverName) {
-	xmpp.getRoomManager().openChat(XmppURI.parse(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
+        xmpp.getRoomManager().openChat(XmppURI.parse(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
     }
 
     public void onModifySubjectRequested(final String newSubject) {
-	final RoomUI roomUI = (RoomUI) currentChat;
-	roomUI.onModifySubjectRequested(newSubject);
-	view.clearSubject();
+        final RoomUI roomUI = (RoomUI) currentChat;
+        roomUI.onModifySubjectRequested(newSubject);
+        view.clearSubject();
     }
 
     public void setOwnPresence(final OwnPresence ownPresence) {
-	Show status;
-	switch (ownPresence.getStatus()) {
-	case online:
-	case onlinecustom:
-	    status = Show.available;
-	    loginIfnecessary(status, ownPresence.getStatusText());
-	    break;
-	case busy:
-	case busycustom:
-	    status = Show.dnd;
-	    loginIfnecessary(status, ownPresence.getStatusText());
-	    break;
-	case offline:
-	    xmpp.logout();
-	    break;
-	}
-	view.setOwnPresence(ownPresence);
+        Show status;
+        switch (ownPresence.getStatus()) {
+        case online:
+        case onlinecustom:
+            status = Show.available;
+            loginIfnecessary(status, ownPresence.getStatusText());
+            break;
+        case busy:
+        case busycustom:
+            status = Show.dnd;
+            loginIfnecessary(status, ownPresence.getStatusText());
+            break;
+        case offline:
+            xmpp.logout();
+            break;
+        }
+        view.setOwnPresence(ownPresence);
     }
 
     public void setUserChatOptions(final UserChatOptions userChatOptions) {
-	this.userChatOptions = userChatOptions;
-	this.currentUserJid = XmppURI.parse(userChatOptions.getUserJid());
-	this.currentUserPasswd = userChatOptions.getUserPassword();
+        this.userChatOptions = userChatOptions;
+        this.currentUserJid = XmppURI.parse(userChatOptions.getUserJid());
+        this.currentUserPasswd = userChatOptions.getUserPassword();
     }
 
     public void show() {
-	view.show();
+        view.show();
     }
 
     protected void onCloseAllConfirmed() {
-	for (final ChatUI chatUI : chats.values()) {
-	    closeChatUI(chatUI);
-	    view.removeChat(chatUI);
-	}
+        for (final ChatUI chatUI : chats.values()) {
+            closeChatUI(chatUI);
+            view.removeChat(chatUI);
+        }
     }
 
     protected void onCurrentUserSend(final String message) {
-	currentChat.onCurrentUserSend(message);
-	view.clearInputText();
+        currentChat.onCurrentUserSend(message);
+        view.clearInputText();
     }
 
     protected void onUserColorChanged(final String color) {
-	for (final ChatUI chat : chats.values()) {
-	    chat.setUserColor(currentUserJid.getNode(), color);
-	}
-	userChatOptions.setColor(color);
-	listener.onUserColorChanged(color);
+        for (final ChatUI chat : chats.values()) {
+            chat.setUserColor(currentUserJid.getNode(), color);
+        }
+        userChatOptions.setColor(color);
+        listener.onUserColorChanged(color);
     }
 
     protected void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
-	xmpp.getRoster().setSubscriptionMode(subscriptionMode);
-	userChatOptions.setSubscriptionMode(subscriptionMode);
-	listener.onUserSubscriptionModeChanged(subscriptionMode);
+        xmpp.getRoster().setSubscriptionMode(subscriptionMode);
+        userChatOptions.setSubscriptionMode(subscriptionMode);
+        listener.onUserSubscriptionModeChanged(subscriptionMode);
     }
 
     void closeChatUI(final ChatUI chatUI) {
-	chatUI.setCloseConfirmed(true);
-	chatUI.onCloseCloseConfirmed();
+        chatUI.setCloseConfirmed(true);
+        chatUI.onCloseCloseConfirmed();
     }
 
     void doAfterCloseConfirmed(final Chat chat, final ChatUI chatUI) {
-	xmpp.getChatManager().close(chat);
-	chats.remove(chat);
-	chatUI.destroy();
-	checkNoChats();
+        xmpp.getChatManager().close(chat);
+        chats.remove(chat);
+        chatUI.destroy();
+        checkNoChats();
     }
 
     void doAfterLogout() {
-	view.setLoadingVisible(false);
-	view.setAddRosterItemButtonVisible(false);
-	view.setJoinRoomEnabled(false);
-	view.setRosterVisible(false);
-	view.setOfflineInfo();
-	view.setInputEditable(false);
-	view.clearRoster();
-	view.setOwnPresence(OFFLINE_OWN_PRESENCE);
+        view.setLoadingVisible(false);
+        view.setAddRosterItemButtonVisible(false);
+        view.setJoinRoomEnabled(false);
+        view.setRosterVisible(false);
+        view.setOfflineInfo();
+        view.setInputEditable(false);
+        view.clearRoster();
+        view.setOwnPresence(OFFLINE_OWN_PRESENCE);
     }
 
     void doConnecting() {
-	view.setLoadingVisible(true);
+        view.setLoadingVisible(true);
     }
 
     UserChatOptions getUserChatOptions() {
-	return userChatOptions;
+        return userChatOptions;
     }
 
     void messageReceived(final Chat chat, final Message message) {
-	final ChatUI chatUI = getChat(chat);
-	chatUI.addMesage(message.getFromURI().getNode(), message.getBody());
+        final ChatUI chatUI = getChat(chat);
+        chatUI.addMesage(message.getFromURI().getNode(), message.getBody());
     }
 
     void messageReceivedInRoom(final Chat chat, final Message message) {
-	final ChatUI chatUI = getChat(chat);
-	chatUI.addMesage(message.getFromURI().getResource(), message.getBody());
+        final ChatUI chatUI = getChat(chat);
+        chatUI.addMesage(message.getFromURI().getResource(), message.getBody());
     }
 
     private void checkNoChats() {
-	if (chats.size() == 0) {
-	    reset();
-	}
+        if (chats.size() == 0) {
+            reset();
+        }
     }
 
     private void checkThereAreChats() {
-	if (chats.size() >= 1) {
-	    view.setCloseAllOptionEnabled(true);
-	    setInputEnabled(true);
-	    view.setInfoPanelVisible(false);
-	}
+        if (chats.size() >= 1) {
+            view.setCloseAllOptionEnabled(true);
+            setInputEnabled(true);
+            view.setInfoPanelVisible(false);
+        }
     }
 
     private void createXmppListeners() {
-	xmpp.getSession().addListener(new SessionListener() {
-	    public void onStateChanged(final State old, final State current) {
-		Log.info("STATE CHANGED: " + current + " - old: " + old);
-		switch (current) {
-		case connected:
-		    doAfterLogin();
-		    listener.doAction(EmiteUIPlugin.ON_STATE_CONNECTED, null);
-		    break;
-		case connecting:
-		    doConnecting();
-		    break;
-		case disconnected:
-		    doAfterLogout();
-		    listener.doAction(EmiteUIPlugin.ON_STATE_DISCONNECTED, null);
-		    break;
-		}
-	    }
-	});
+        xmpp.getSession().addListener(new SessionListener() {
+            public void onStateChanged(final State old, final State current) {
+                Log.info("STATE CHANGED: " + current + " - old: " + old);
+                switch (current) {
+                case connected:
+                    doAfterLogin();
+                    listener.doAction(EmiteUIPlugin.ON_STATE_CONNECTED, null);
+                    break;
+                case connecting:
+                    doConnecting();
+                    break;
+                case disconnected:
+                    doAfterLogout();
+                    listener.doAction(EmiteUIPlugin.ON_STATE_DISCONNECTED, null);
+                    break;
+                }
+            }
+        });
 
-	xmpp.getChatManager().addListener(new ChatManagerListener() {
-	    public void onChatClosed(final Chat chat) {
-	    }
+        xmpp.getChatManager().addListener(new ChatManagerListener() {
+            public void onChatClosed(final Chat chat) {
+            }
 
-	    public void onChatCreated(final Chat chat) {
-		createChat(chat);
-		chat.addListener(new ChatListener() {
-		    public void onMessageReceived(final Chat chat, final Message message) {
-			messageReceived(chat, message);
-		    }
+            public void onChatCreated(final Chat chat) {
+                createChat(chat);
+                chat.addListener(new ChatListener() {
+                    public void onMessageReceived(final Chat chat, final Message message) {
+                        messageReceived(chat, message);
+                    }
 
-		    public void onMessageSent(final Chat chat, final Message message) {
-			messageReceived(chat, message);
-		    }
-		});
-	    }
-	});
+                    public void onMessageSent(final Chat chat, final Message message) {
+                        messageReceived(chat, message);
+                    }
+                });
+            }
+        });
 
-	final RoomManager roomManager = xmpp.getRoomManager();
-	roomManager.addListener(new RoomManagerListener() {
-	    public void onChatClosed(final Chat chat) {
-	    }
+        final RoomManager roomManager = xmpp.getRoomManager();
+        roomManager.addListener(new RoomManagerListener() {
+            public void onChatClosed(final Chat chat) {
+            }
 
-	    public void onChatCreated(final Chat room) {
-		final RoomUI roomUI = createRoom(room, currentUserJid.getNode());
-		room.addListener(new RoomListener() {
-		    public void onMessageReceived(final Chat chat, final Message message) {
-			messageReceived(chat, message);
-		    }
+            public void onChatCreated(final Chat room) {
+                final RoomUI roomUI = createRoom(room, currentUserJid.getNode());
+                room.addListener(new RoomListener() {
+                    public void onMessageReceived(final Chat chat, final Message message) {
+                        messageReceivedInRoom(chat, message);
+                    }
 
                     public void onMessageSent(final Chat chat, final Message message) {
                         // messageReceived(chat, message);
@@ -407,86 +408,86 @@ public class MultiChatPresenter implements MultiChat {
                         roomUI.onOccupantsChanged(occupants);
                     }
 
-		    public void onSubjectSet(final String nick, final String newSubject) {
-			roomUI.setSubject(newSubject);
-			roomUI.addInfoMessage(i18n.t("[%s] as changed the subject to: ", nick) + newSubject);
-			if (currentChat.equals(roomUI)) {
-			    view.setSubject(newSubject);
-			}
-		    }
-		});
-	    }
-	});
+                    public void onSubjectSet(final String nick, final String newSubject) {
+                        roomUI.setSubject(newSubject);
+                        roomUI.addInfoMessage(i18n.t("[%s] as changed the subject to: ", nick) + newSubject);
+                        if (currentChat.equals(roomUI)) {
+                            view.setSubject(newSubject);
+                        }
+                    }
+                });
+            }
+        });
 
     }
 
     private void doAfterLogin() {
-	view.setLoadingVisible(false);
-	view.setAddRosterItemButtonVisible(true);
-	view.setJoinRoomEnabled(true);
-	view.setOnlineInfo();
-	view.setRosterVisible(true);
-	if (chats.size() > 0) {
-	    view.setInputEditable(true);
-	} else {
-	    view.setInputEditable(false);
-	}
-	final Presence currentPresence = presenceManager.getCurrentPresence();
-	view.setOwnPresence(currentPresence != null ? new OwnPresence(currentPresence) : ONLINE_OWN_PRESENCE);
+        view.setLoadingVisible(false);
+        view.setAddRosterItemButtonVisible(true);
+        view.setJoinRoomEnabled(true);
+        view.setOnlineInfo();
+        view.setRosterVisible(true);
+        if (chats.size() > 0) {
+            view.setInputEditable(true);
+        } else {
+            view.setInputEditable(false);
+        }
+        final Presence currentPresence = presenceManager.getCurrentPresence();
+        view.setOwnPresence(currentPresence != null ? new OwnPresence(currentPresence) : ONLINE_OWN_PRESENCE);
     }
 
     private void finishChatCreation(final Chat chat, final ChatUI chatUI, final String chatTitle) {
-	chatUI.setChatTitle(chatTitle);
-	view.addChat(chatUI);
-	currentChat = chatUI;
-	chats.put(chat, chatUI);
-	checkThereAreChats();
+        chatUI.setChatTitle(chatTitle);
+        view.addChat(chatUI);
+        currentChat = chatUI;
+        chats.put(chat, chatUI);
+        checkThereAreChats();
     }
 
     private ChatUI getChat(final Chat chat) {
-	final ChatUI chatUI = chats.get(chat);
-	if (chatUI == null) {
-	    final String error = "Unexpected chatId '" + chat.getID().toString() + "'";
-	    Log.error(error);
-	    throw new RuntimeException(error);
-	}
-	return chatUI;
+        final ChatUI chatUI = chats.get(chat);
+        if (chatUI == null) {
+            final String error = "Unexpected chatId '" + chat.getID().toString() + "'";
+            Log.error(error);
+            throw new RuntimeException(error);
+        }
+        return chatUI;
     }
 
     private void loginIfnecessary(final Show status, final String statusText) {
-	switch (xmpp.getSession().getState()) {
-	case disconnected:
-	    final String resource = "emiteui-" + new Date().getTime();
-	    xmpp.login(new XmppURI(currentUserJid.getNode(), currentUserJid.getHost(), resource), currentUserPasswd,
-		    status, statusText);
-	    break;
-	case authorized:
-	case connecting:
-	case connected:
-	    presenceManager.setOwnPresence(statusText, status);
-	    break;
-	case error:
-	    Log.error("Trying to set status and whe have a internal error");
-	}
+        switch (xmpp.getSession().getState()) {
+        case disconnected:
+            final String resource = "emiteui-" + new Date().getTime();
+            xmpp.login(new XmppURI(currentUserJid.getNode(), currentUserJid.getHost(), resource), currentUserPasswd,
+                    status, statusText);
+            break;
+        case authorized:
+        case connecting:
+        case connected:
+            presenceManager.setOwnPresence(statusText, status);
+            break;
+        case error:
+            Log.error("Trying to set status and whe have a internal error");
+        }
     }
 
     private void reset() {
-	currentChat = null;
-	view.setCloseAllOptionEnabled(false);
-	view.setSubjectEditable(false);
-	view.setInfoPanelVisible(true);
-	view.setRoomUserListVisible(false);
-	view.setInviteToGroupChatButtonVisible(false);
-	view.setSendEnabled(false);
-	view.setInputEditable(false);
-	view.setEmoticonButtonEnabled(false);
-	view.clearSubject();
+        currentChat = null;
+        view.setCloseAllOptionEnabled(false);
+        view.setSubjectEditable(false);
+        view.setInfoPanelVisible(true);
+        view.setRoomUserListVisible(false);
+        view.setInviteToGroupChatButtonVisible(false);
+        view.setSendEnabled(false);
+        view.setInputEditable(false);
+        view.setEmoticonButtonEnabled(false);
+        view.clearSubject();
     }
 
     private void setInputEnabled(final boolean enabled) {
-	view.setSendEnabled(enabled);
-	view.setInputEditable(enabled);
-	view.setEmoticonButtonEnabled(enabled);
+        view.setSendEnabled(enabled);
+        view.setInputEditable(enabled);
+        view.setEmoticonButtonEnabled(enabled);
     }
 
 }

@@ -25,8 +25,9 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
 import com.calclab.emiteuiplugin.client.dialog.OwnPresence.OwnStatus;
-import com.calclab.emiteuiplugin.client.room.JoinRoomDialogPanel;
-import com.calclab.emiteuiplugin.client.roster.RosterItemDialog;
+import com.calclab.emiteuiplugin.client.room.InviteToRoomPanel;
+import com.calclab.emiteuiplugin.client.room.JoinRoomPanel;
+import com.calclab.emiteuiplugin.client.roster.RosterItemPanel;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.ColorPalette;
@@ -76,13 +77,13 @@ public class MultiChatPanelTopBar extends Toolbar {
         joinOption.setText(i18n.t("Join a chat room"));
         joinOption.setIcon("images/group-chat.gif");
         joinOption.addListener(new BaseItemListenerAdapter() {
-            private JoinRoomDialogPanel joinRoomDialogPanel;
+            private JoinRoomPanel joinRoomPanel;
 
             public void onClick(final BaseItem item, final EventObject e) {
-                if (joinRoomDialogPanel == null) {
-                    joinRoomDialogPanel = new JoinRoomDialogPanel(i18n, presenter);
+                if (joinRoomPanel == null) {
+                    joinRoomPanel = new JoinRoomPanel(i18n, presenter);
                 }
-                joinRoomDialogPanel.show();
+                joinRoomPanel.show();
             }
         });
         closeAllOption = createCloseAllMenuItem(i18n);
@@ -140,24 +141,26 @@ public class MultiChatPanelTopBar extends Toolbar {
         // };
 
         addRosterItem.addListener(new ButtonListenerAdapter() {
-            private RosterItemDialog rosterItemDialog;
+            private RosterItemPanel rosterItemPanel;
 
             public void onClick(final Button button, final EventObject e) {
-                if (rosterItemDialog == null) {
-                    rosterItemDialog = new RosterItemDialog(i18n, presenter);
+                if (rosterItemPanel == null) {
+                    rosterItemPanel = new RosterItemPanel(i18n, presenter);
                 }
-                rosterItemDialog.show();
+                rosterItemPanel.show();
                 // DefaultDispatcher.getInstance().fire(PlatformEvents.ADD_USERLIVESEARCH,
                 // addBuddyListener, null);
             }
         });
 
         inviteUserToGroupChat.addListener(new ButtonListenerAdapter() {
+            private InviteToRoomPanel inviteToRoomDialog;
+
             public void onClick(final Button button, final EventObject e) {
-                // FIXME Vicente show dialog
-                presenter.inviteUserToRoom("vjrj@localhost", "Por que sí");
-                // DefaultDispatcher.getInstance().fire(PlatformEvents.ADD_USERLIVESEARCH,
-                // inviteUserToRoomListener, null);
+                if (inviteToRoomDialog == null) {
+                    inviteToRoomDialog = new InviteToRoomPanel(i18n, presenter);
+                }
+                inviteToRoomDialog.show();
             }
         });
 
