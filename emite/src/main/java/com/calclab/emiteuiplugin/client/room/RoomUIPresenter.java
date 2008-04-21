@@ -96,20 +96,16 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
         listener.onModifySubjectRequested(newSubject);
     }
 
-    public void setSubject(final String newSubject) {
-        subject = newSubject;
+    public void onOccupantModified(final Occupant occupant) {
+        RoomUserUI roomUserUI = genRoomUser(occupant);
+        roomUserListUI.updateUser(roomUserUI, createUserMenu(roomUserUI));
     }
 
-    public void setUserListVisible(final boolean visible) {
-        roomUserListUI.setVisible(visible);
-    }
-
-    public void setUsers(final Collection<Occupant> users) {
+    public void onOccupantsChanged(final Collection<Occupant> users) {
         roomUserListUI.removeAllUsers();
         for (Iterator<Occupant> iterator = users.iterator(); iterator.hasNext();) {
             Occupant occupant = iterator.next();
-            String userAlias = occupant.getUri().getResource();
-            RoomUserUI roomUserUI = new RoomUserUI(occupant, super.getColor(userAlias));
+            RoomUserUI roomUserUI = genRoomUser(occupant);
             roomUserListUI.addUser(roomUserUI, createUserMenu(roomUserUI));
             if (occupant.getUri().getResource().equals(currentUserAlias)) {
                 if (occupant.getRole().equals(Role.moderator)) {
@@ -123,6 +119,14 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
         }
     }
 
+    public void setSubject(final String newSubject) {
+        subject = newSubject;
+    }
+
+    public void setUserListVisible(final boolean visible) {
+        roomUserListUI.setVisible(visible);
+    }
+
     private UserGridMenuItem<Object> createNoActionsMenuItem() {
         return new UserGridMenuItem<Object>("", i18n.t("No options"), EmiteUIPlugin.NO_ACTION, null);
     }
@@ -134,5 +138,10 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
             itemList.addItem(createNoActionsMenuItem());
         }
         return itemList;
+    }
+
+    private RoomUserUI genRoomUser(final Occupant occupant) {
+        RoomUserUI roomUserUI = new RoomUserUI(occupant, super.getColor(occupant.getUri().getResource()));
+        return roomUserUI;
     }
 }
