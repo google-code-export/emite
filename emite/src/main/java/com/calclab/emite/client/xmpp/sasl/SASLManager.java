@@ -23,9 +23,9 @@ package com.calclab.emite.client.xmpp.sasl;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 
+import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteComponent;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
@@ -33,7 +33,7 @@ import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.session.SessionManager.Events;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class SASLManager extends EmiteComponent {
+public class SASLManager implements Installable {
     private static final String SEP = new String(new char[] { 0 });
 
     private static final String XMLNS = "urn:ietf:params:xml:ns:xmpp-sasl";
@@ -43,32 +43,31 @@ public class SASLManager extends EmiteComponent {
 
     private boolean waitingForAuthorization;
 
+    private final Emite emite;
+
     public SASLManager(final Emite emite) {
-	super(emite);
+	this.emite = emite;
 	eventLogout();
     }
 
-    @Override
     public void install() {
-	emite.subscribe(when(SessionManager.Events.logIn), new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.onDoLogin), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLogin(received);
 	    }
 	});
 
-	emite.subscribe(when(SessionManager.Events.loggedOut), new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.onLoggedOut), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventLogout();
 	    }
 	});
 
-	emite.subscribe(when(new Packet("stream:features")), new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.onDoAuthorization), new PacketListener() {
 	    public void handle(final IPacket received) {
-		if (received.hasChild("mechanisms")) {
-		    eventStreamFeatures(received);
-		}
+		startAuthorizationRequest();
+		waitingForAuthorization = true;
 	    }
-
 	});
 
 	emite.subscribe(when(new Packet("failure", XMLNS)), new PacketListener() {
@@ -105,18 +104,12 @@ public class SASLManager extends EmiteComponent {
 	waitingForAuthorization = false;
     }
 
-    // FIXME: ISSUE - should check if its any unkown method available
-    void eventStreamFeatures(final IPacket received) {
-	startAuthorizationRequest();
-	this.waitingForAuthorization = true;
-    }
-
     void eventSuccess(final IPacket received) {
 	if (waitingForAuthorization == true) {
 	    uri = null;
 	    password = null;
 	    waitingForAuthorization = false;
-	    emite.publish(Events.authorized);
+	    emite.publish(Events.onAuthorized);
 	}
     }
 

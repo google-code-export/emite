@@ -1,49 +1,36 @@
 package com.calclab.emite.client.xmpp.sasl;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.core.bosh.BoshManager;
-import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.session.SessionManager;
-import com.calclab.emite.j2se.services.TigaseXMLService;
-import com.calclab.emite.testing.TestMatchers;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.testing.TestingEmite;
 
 public class SASLManagerTest {
 
-    private Emite emite;
+    private TestingEmite emite;
     private SASLManager manager;
-    private TigaseXMLService xmler;
 
     @Before
     public void aaCreate() {
-	xmler = new TigaseXMLService();
-	emite = mock(Emite.class);
+	emite = new TestingEmite();
 	manager = new SASLManager(emite);
+	manager.install();
     }
 
     @Test
     public void shouldHandleFailure() {
-	final String received = "<failure xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><not-authorized/></failure>";
-	manager.eventFailure(xmler.toXML(received));
-	verify(emite).publish(TestMatchers.packetLike(BoshManager.Events.error("sasl-error", "not-authorized")));
+	emite.simulate("<failure xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><not-authorized/></failure>");
+	emite.verifyPublished(BoshManager.Events.error("sasl-failure", "not-authorized"));
     }
 
     @Test
-    public void shouldHandleFeatures() {
-	// TODO
-	assertTrue(true);
+    public void shouldHandleSuccessWhenAuthorizationSent() {
+	emite.simulate(SessionManager.Events.login(XmppURI.parse("name@domain/res"), "password"));
+	emite.simulate(SessionManager.Events.onDoAuthorization);
+	emite.simulate("<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"/>");
+	emite.verifyPublished(SessionManager.Events.onAuthorized);
     }
-
-    @Test
-    public void shouldHandleSuccess() {
-	final String received = "<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"/>";
-	manager.eventSuccess(xmler.toXML(received));
-	verify(emite).publish(SessionManager.Events.authorized);
-    }
-
 }

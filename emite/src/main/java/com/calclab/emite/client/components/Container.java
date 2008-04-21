@@ -21,11 +21,11 @@
  */
 package com.calclab.emite.client.components;
 
-public interface Container extends Startable {
+public interface Container extends Installable {
 
     Component get(String componentName);
 
-    void install(String componentName, Startable startable);
+    void install(String componentName, Installable startable);
 
     void register(String componentName, Component component);
 

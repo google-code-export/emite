@@ -6,11 +6,7 @@ import org.junit.Test;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.j2se.services.TigaseXMLService;
-import com.calclab.emite.testing.InstallationTester;
 import com.calclab.emite.testing.TestMatchers;
-import com.calclab.emite.testing.InstallationTester.InstallTest;
-import com.calclab.emite.testing.InstallationTester.InstallVerifier;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static com.calclab.emite.testing.TestMatchers.*;
@@ -60,16 +56,6 @@ public class BoshManagerTest {
 	assertFalse(manager.isRunning());
 	verify(emite).publish(TestMatchers.packetLike(BoshManager.Events.error("terminal", "policy-violation")));
 
-    }
-
-    @Test
-    public void testInstallation() {
-	new InstallationTester(new InstallTest() {
-	    public void prepare(final Emite emite, final InstallVerifier verifier) {
-		new BoshManager(services, emite, stream, options).install();
-		verifier.shouldAttachTo(new Packet("body"));
-	    }
-	});
     }
 
     private void startManager() {

@@ -26,6 +26,7 @@ import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 import java.util.HashMap;
 import java.util.List;
 
+import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
@@ -38,7 +39,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 
-public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
+public class MUCRoomManager extends ChatManagerDefault implements RoomManager, Installable {
     private final HashMap<XmppURI, Room> rooms;
 
     public MUCRoomManager(final Emite emite) {
@@ -149,8 +150,8 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 		"http://jabber.org/protocol/muc#owner", new Packet("x", "jabber:x:data").With("type", "submit"));
 	emite.send("rooms", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
-		if (!received.hasAttribute("type", "result")) {
-		    // TODO: ISSUE error!
+		if (IQ.isSuccess(received)) {
+
 		}
 	    }
 	});

@@ -26,34 +26,28 @@ import java.util.HashMap;
 
 @SuppressWarnings("serial")
 public class DefaultContainer extends HashMap<String, Component> implements Container {
-    private final ArrayList<Startable> startables;
+    private final ArrayList<Installable> startables;
 
     public DefaultContainer() {
-	this.startables = new ArrayList<Startable>();
+	this.startables = new ArrayList<Installable>();
     }
 
     public Component get(final String componentName) {
 	return super.get(componentName);
     }
 
-    public void install(final String name, final Startable startable) {
+    public void install() {
+	for (final Installable c : startables) {
+	    c.install();
+	}
+    }
+
+    public void install(final String name, final Installable startable) {
 	register(name, startable);
 	startables.add(startable);
     }
 
     public void onInstallComponent() {
-    }
-
-    public void onStartComponent() {
-	for (final Startable c : startables) {
-	    c.onStartComponent();
-	}
-    }
-
-    public void onStopComponent() {
-	for (final Startable c : startables) {
-	    c.onStopComponent();
-	}
     }
 
     public void register(final String name, final Component component) {

@@ -1,7 +1,5 @@
 package com.calclab.emite.client.xmpp.session;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -9,47 +7,41 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.core.bosh.BoshManager;
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.Session.State;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.TestMatchers;
+import com.calclab.emite.client.xmpp.stanzas.IQ;
+import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
+import com.calclab.emite.testing.TestingEmite;
 
 public class SessionManagerTest {
 
-    private Emite emite;
+    private TestingEmite emite;
     private SessionManager manager;
     private Session session;
 
     @Before
     public void aaCreate() {
-	emite = mock(Emite.class);
+	emite = new TestingEmite();
 	session = mock(Session.class);
 	manager = new SessionManager(emite);
+	manager.install();
 	manager.setSession(session);
-    }
-
-    @Test
-    public void s() {
-	final XmppURI uri = XmppURI.parse("name@domain/resource");
-	manager.eventSession(uri);
-	verify(session).setState(State.connected);
-	verify(emite).publish(TestMatchers.packetLike(SessionManager.Events.loggedIn.With("uri", uri.toString())));
-
     }
 
     @Test
     public void shouldHandleAuthorization() {
 	manager.eventAuthorized();
 	verify(session).setState(State.authorized);
-	verify(emite).publish(BoshManager.Events.restart);
+	emite.verifyPublished(BoshManager.Events.restart);
     }
 
     @Test
     public void shouldRequestSessionWhenBinded() {
-	manager.eventBinded("name@domain/resource");
-	verify(emite).send(eq("session"), (IPacket) anyObject(), (PacketListener) anyObject());
+	emite.simulate(SessionManager.Events.binded("name@domain/resource"));
+	emite.verifySendCallback(new IQ(Type.set));
+	emite.answerSuccess();
+	emite.verifyPublished(SessionManager.Events.onLoggedIn.With("uri", "name@domain/resource"));
+	verify(session).setState(State.connected);
+
     }
 
     @Test
@@ -63,6 +55,6 @@ public class SessionManagerTest {
     public void shouldStopAndDisconnectWhenLoggedOut() {
 	manager.eventLoggedOut();
 	verify(session).setState(State.disconnected);
-	verify(emite).publish(BoshManager.Events.stop);
+	emite.verifyPublished(BoshManager.Events.stop);
     }
 }
