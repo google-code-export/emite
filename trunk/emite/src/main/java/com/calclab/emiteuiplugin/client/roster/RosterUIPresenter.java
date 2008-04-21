@@ -220,6 +220,8 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
             }
 
             public void onRosterChanged(final Collection<RosterItem> roster) {
+                rosterMap.clear();
+                view.clearRoster();
                 for (final RosterItem item : roster) {
                     logRosterItem("Adding", item);
                     final ChatUserUI user = new ChatUserUI("images/person-def.gif", item, "black");
