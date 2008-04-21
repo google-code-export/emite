@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -58,14 +60,14 @@ public class ProxyServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     public static void appendCleaned(final StringBuffer sb, final String str) {
-        for (int i = 0; i < str.length(); i++) {
-            final char ch = str.charAt(i);
-            if (ch == ' ') {
-                sb.append("%20");
-            } else {
-                sb.append(ch);
-            }
-        }
+	for (int i = 0; i < str.length(); i++) {
+	    final char ch = str.charAt(i);
+	    if (ch == ' ') {
+		sb.append("%20");
+	    } else {
+		sb.append(ch);
+	    }
+	}
     }
 
     /**
@@ -87,9 +89,11 @@ public class ProxyServlet extends HttpServlet {
      * remote server
      */
     protected String remoteServer;
+    private final Logger logger;
 
     public ProxyServlet() {
-        debugFlag = true;
+	debugFlag = true;
+	logger = Logger.getLogger("proxy");
     }
 
     /**
@@ -97,11 +101,11 @@ public class ProxyServlet extends HttpServlet {
      * filtering of some sort.
      */
     public void copyStream(final InputStream in, final OutputStream out) throws IOException {
-        final BufferedInputStream bin = new BufferedInputStream(in);
-        int b;
-        while ((b = bin.read()) != -1) {
-            out.write(b);
-        }
+	final BufferedInputStream bin = new BufferedInputStream(in);
+	int b;
+	while ((b = bin.read()) != -1) {
+	    out.write(b);
+	}
     }
 
     // / Returns a string containing information about the author, version,
@@ -109,7 +113,7 @@ public class ProxyServlet extends HttpServlet {
     // copyright of the servlet.
     @Override
     public String getServletInfo() {
-        return "Online redirecting content.";
+	return "Online redirecting content.";
     }
 
     /**
@@ -117,39 +121,39 @@ public class ProxyServlet extends HttpServlet {
      */
     @Override
     public void init(final ServletConfig config) throws ServletException {
-        super.init(config);
+	super.init(config);
 
-        debugFlag = !"false".equals(getInitParameter("debug"));
-        debugFlag = true;
-        log("initializing...");
+	debugFlag = !"false".equals(getInitParameter("debug"));
+	debugFlag = true;
+	log("initializing...");
 
-        remotePath = getInitParameter(PARAM_REMOTE_PATH);
-        remoteServer = getInitParameter(PARAM_REMOTE_SERVER);
-        final String remotePortStr = getInitParameter(PARAM_REMOTE_PORT);
-        if (remotePath == null) {
-            remotePath = DEFAULT_PATH;
-        }
-        if (remoteServer == null) {
-            remoteServer = DEFAULT_SERVER;
-        }
+	remotePath = getInitParameter(PARAM_REMOTE_PATH);
+	remoteServer = getInitParameter(PARAM_REMOTE_SERVER);
+	final String remotePortStr = getInitParameter(PARAM_REMOTE_PORT);
+	if (remotePath == null) {
+	    remotePath = DEFAULT_PATH;
+	}
+	if (remoteServer == null) {
+	    remoteServer = DEFAULT_SERVER;
+	}
 
-        if (remotePortStr != null) {
-            try {
-                remotePort = Integer.parseInt(remotePortStr);
-            } catch (final Exception e) {
-                throw new ServletException("Port must be a number!");
-            }
-        } else {
-            remotePort = DEFAULT_PORT;
-        }
+	if (remotePortStr != null) {
+	    try {
+		remotePort = Integer.parseInt(remotePortStr);
+	    } catch (final Exception e) {
+		throw new ServletException("Port must be a number!");
+	    }
+	} else {
+	    remotePort = DEFAULT_PORT;
+	}
 
-        if ("".equals(remotePath)) {
-            remotePath = ""; // XXX ??? "/"
-        } else if (remotePath.charAt(0) != '/') {
-            remotePath = "/" + remotePath;
-        }
+	if ("".equals(remotePath)) {
+	    remotePath = ""; // XXX ??? "/"
+	} else if (remotePath.charAt(0) != '/') {
+	    remotePath = "/" + remotePath;
+	}
 
-        log("remote=" + remoteServer + ":" + remotePort + "" + remotePath);
+	log("remote=" + remoteServer + ":" + remotePort + "" + remotePath);
     }
 
     /**
@@ -157,34 +161,35 @@ public class ProxyServlet extends HttpServlet {
      */
     @Override
     public void log(final String msg) {
-        if (debugFlag) {
-            // Log.debug("PROXY SERVLET - ## " + msg);
-        }
+	logger.log(Level.INFO, msg);
+	if (debugFlag) {
+	    // Log.debug("PROXY SERVLET - ## " + msg);
+	}
     }
 
     /**
      * Read a RFC2616 line from an InputStream:
      */
     public int readLine(final InputStream in, final byte[] b) throws IOException {
-        int off2 = 0;
-        while (off2 < b.length) {
-            final int r = in.read();
-            if (r == -1) {
-                if (off2 == 0) {
-                    return -1;
-                }
-                break;
-            }
-            if (r == 13) {
-                continue;
-            }
-            if (r == 10) {
-                break;
-            }
-            b[off2] = (byte) r;
-            ++off2;
-        }
-        return off2;
+	int off2 = 0;
+	while (off2 < b.length) {
+	    final int r = in.read();
+	    if (r == -1) {
+		if (off2 == 0) {
+		    return -1;
+		}
+		break;
+	    }
+	    if (r == 13) {
+		continue;
+	    }
+	    if (r == 10) {
+		break;
+	    }
+	    b[off2] = (byte) r;
+	    ++off2;
+	}
+	return off2;
     }
 
     // / Services a single request from the client.
@@ -194,219 +199,219 @@ public class ProxyServlet extends HttpServlet {
     @SuppressWarnings("unchecked")
     @Override
     public void service(final HttpServletRequest req, final HttpServletResponse res) throws ServletException,
-            IOException {
-        //
-        // Connect to "remote" server:
-        Socket sock;
-        OutputStream out;
-        InputStream in;
-        //
-        try {
-            sock = new Socket(remoteServer, remotePort); // !!!!!!!!
-            out = new BufferedOutputStream(sock.getOutputStream());
-            in = new BufferedInputStream(sock.getInputStream());
-        } catch (final IOException e) {
-            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Socket opening: " + remoteServer + ":"
-                    + remotePort + " >> " + e.toString());
-            return;
-        }
-        try {
-            //
-            // Build up a HTTP request from pure strings:
-            final StringBuffer sb = new StringBuffer(200);
-            sb.append(req.getMethod());
-            sb.append(' ');
-            final String pi = req.getPathInfo();
-            sb.append(remotePath);
-            if (pi != null) {
-                appendCleaned(sb, pi);
-            } else {
-                sb.append("/");
-            }
-            if (req.getQueryString() != null) {
-                sb.append('?');
-                appendCleaned(sb, req.getQueryString());
-            }
-            sb.append(' ');
-            sb.append("HTTP/1.0");
-            sb.append(CRLF);
-            log(sb.toString());
-            out.write(sb.toString().getBytes());
-            final java.util.Enumeration en = req.getHeaderNames();
-            while (en.hasMoreElements()) {
-                final String k = (String) en.nextElement();
-                // Filter incoming headers:
-                if ("Host".equalsIgnoreCase(k)) {
-                    sb.setLength(0);
-                    sb.append(k);
-                    sb.append(": ");
-                    sb.append(remoteServer);
-                    sb.append(":");
-                    sb.append(remotePort);
-                    sb.append(CRLF);
-                    log("c[" + k + "]: " + sb + " " + req.getHeader(k));
-                    out.write(sb.toString().getBytes());
-                }
-                //
-                // Throw away persistant connections between
-                // servers
-                // Throw away request potentially causing a 304
-                // response.
-                else if (!"Connection".equalsIgnoreCase(k) && !"If-Modified-Since".equalsIgnoreCase(k)
-                        && !"If-None-Match".equalsIgnoreCase(k)) {
-                    sb.setLength(0);
-                    sb.append(k);
-                    sb.append(": ");
-                    sb.append(req.getHeader(k));
-                    sb.append(CRLF);
-                    log("=[" + k + "]: " + req.getHeader(k));
-                    out.write(sb.toString().getBytes());
-                } else {
-                    log("*[" + k + "]: " + req.getHeader(k));
-                }
-            }
-            // Finish request header by an empty line
-            out.write(CRLF.getBytes());
-            // Copy post data
-            final InputStream inr = req.getInputStream();
-            copyStream(inr, out);
-            out.flush();
-            log("Remote request finished. Reading answer.");
+	    IOException {
+	//
+	// Connect to "remote" server:
+	Socket sock;
+	OutputStream out;
+	InputStream in;
+	//
+	try {
+	    sock = new Socket(remoteServer, remotePort); // !!!!!!!!
+	    out = new BufferedOutputStream(sock.getOutputStream());
+	    in = new BufferedInputStream(sock.getInputStream());
+	} catch (final IOException e) {
+	    res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Socket opening: " + remoteServer + ":"
+		    + remotePort + " >> " + e.toString());
+	    return;
+	}
+	try {
+	    //
+	    // Build up a HTTP request from pure strings:
+	    final StringBuffer sb = new StringBuffer(200);
+	    sb.append(req.getMethod());
+	    sb.append(' ');
+	    final String pi = req.getPathInfo();
+	    sb.append(remotePath);
+	    if (pi != null) {
+		appendCleaned(sb, pi);
+	    } else {
+		sb.append("/");
+	    }
+	    if (req.getQueryString() != null) {
+		sb.append('?');
+		appendCleaned(sb, req.getQueryString());
+	    }
+	    sb.append(' ');
+	    sb.append("HTTP/1.0");
+	    sb.append(CRLF);
+	    log(sb.toString());
+	    out.write(sb.toString().getBytes());
+	    final java.util.Enumeration en = req.getHeaderNames();
+	    while (en.hasMoreElements()) {
+		final String k = (String) en.nextElement();
+		// Filter incoming headers:
+		if ("Host".equalsIgnoreCase(k)) {
+		    sb.setLength(0);
+		    sb.append(k);
+		    sb.append(": ");
+		    sb.append(remoteServer);
+		    sb.append(":");
+		    sb.append(remotePort);
+		    sb.append(CRLF);
+		    log("c[" + k + "]: " + sb + " " + req.getHeader(k));
+		    out.write(sb.toString().getBytes());
+		}
+		//
+		// Throw away persistant connections between
+		// servers
+		// Throw away request potentially causing a 304
+		// response.
+		else if (!"Connection".equalsIgnoreCase(k) && !"If-Modified-Since".equalsIgnoreCase(k)
+			&& !"If-None-Match".equalsIgnoreCase(k)) {
+		    sb.setLength(0);
+		    sb.append(k);
+		    sb.append(": ");
+		    sb.append(req.getHeader(k));
+		    sb.append(CRLF);
+		    log("=[" + k + "]: " + req.getHeader(k));
+		    out.write(sb.toString().getBytes());
+		} else {
+		    log("*[" + k + "]: " + req.getHeader(k));
+		}
+	    }
+	    // Finish request header by an empty line
+	    out.write(CRLF.getBytes());
+	    // Copy post data
+	    final InputStream inr = req.getInputStream();
+	    copyStream(inr, out);
+	    out.flush();
+	    log("Remote request finished. Reading answer.");
 
-            // Now we have finished the outgoing request.
-            // We'll now see, what is coming back from remote:
+	    // Now we have finished the outgoing request.
+	    // We'll now see, what is coming back from remote:
 
-            // Get the answer, treat its header and copy the stream
-            // data:
-            if (treatHeader(in, req, res)) {
-                log("+ copyStream");
-                // if ( debugFlag )
-                // res.setContentType("text/plain");
-                out = res.getOutputStream();
-                copyStream(in, out);
-            } else {
-                log("- copyStream");
-            }
-        } catch (final IOException e) {
-            log("out-in.open!");
-            // res.sendError(
-            // HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-            // "out-in open!");
-            return;
-        }
-        try {
-            // out.close();
-            in.close();
-            sock.close();
-        } catch (final IOException ignore) {
-            log("Exception " + ignore);
-        }
+	    // Get the answer, treat its header and copy the stream
+	    // data:
+	    if (treatHeader(in, req, res)) {
+		log("+ copyStream");
+		// if ( debugFlag )
+		// res.setContentType("text/plain");
+		out = res.getOutputStream();
+		copyStream(in, out);
+	    } else {
+		log("- copyStream");
+	    }
+	} catch (final IOException e) {
+	    log("out-in.open!");
+	    // res.sendError(
+	    // HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+	    // "out-in open!");
+	    return;
+	}
+	try {
+	    // out.close();
+	    in.close();
+	    sock.close();
+	} catch (final IOException ignore) {
+	    log("Exception " + ignore);
+	}
     }
 
     /**
      * Split a blank separated string into
      */
     public String[] wordStr(final String inp) {
-        final StringTokenizer tok = new StringTokenizer(inp, " ");
-        int i;
-        final int n = tok.countTokens();
-        final String[] res = new String[n];
-        for (i = 0; i < n; i++) {
-            res[i] = tok.nextToken();
-        }
-        return res;
+	final StringTokenizer tok = new StringTokenizer(inp, " ");
+	int i;
+	final int n = tok.countTokens();
+	final String[] res = new String[n];
+	for (i = 0; i < n; i++) {
+	    res[i] = tok.nextToken();
+	}
+	return res;
     }
 
     /**
      * XXX Should identify RFC2616 LWS
      */
     protected boolean isLWS(final char c) {
-        return c == ' ';
+	return c == ' ';
     }
 
     /**
      * Forward and filter header from backend Request.
      */
     private boolean treatHeader(final InputStream in, final HttpServletRequest req, final HttpServletResponse res)
-            throws ServletException {
-        boolean retval = true;
-        final byte[] lineBytes = new byte[4096];
-        int len;
-        String line;
+	    throws ServletException {
+	boolean retval = true;
+	final byte[] lineBytes = new byte[4096];
+	int len;
+	String line;
 
-        try {
-            // Read the first line of the request.
-            len = readLine(in, lineBytes);
-            if (len == -1 || len == 0) {
-                throw new ServletException("No Request found in Data.");
-            }
-            {
-                final String line2 = new String(lineBytes, 0, len);
-                log("head: " + line2 + " " + len);
-            }
+	try {
+	    // Read the first line of the request.
+	    len = readLine(in, lineBytes);
+	    if (len == -1 || len == 0) {
+		throw new ServletException("No Request found in Data.");
+	    }
+	    {
+		final String line2 = new String(lineBytes, 0, len);
+		log("head: " + line2 + " " + len);
+	    }
 
-            // We mainly skip the header by the foreign server
-            // assuming, that we can handle protocoll mismatch or
-            // so!
-            res.setHeader("viaJTTP", "JTTP");
+	    // We mainly skip the header by the foreign server
+	    // assuming, that we can handle protocoll mismatch or
+	    // so!
+	    res.setHeader("viaJTTP", "JTTP");
 
-            // Some more headers require special care ....
-            boolean firstline = true;
-            // Shortcut evaluation skips the read on first time!
-            while (firstline || (len = readLine(in, lineBytes)) > 0) {
-                line = new String(lineBytes, 0, len);
-                final int colonPos = line.indexOf(":");
-                if (firstline && colonPos == -1) {
-                    // Special first line considerations ...
-                    final String headl[] = wordStr(line);
-                    log("head: " + line + " " + headl.length);
-                    try {
-                        res.setStatus(Integer.parseInt(headl[1]));
-                    } catch (final NumberFormatException ignore) {
-                        log("ID exception: " + headl);
-                    } catch (final Exception panik) {
-                        log("First line invalid!");
-                        return true;
-                    }
-                } else if (colonPos != -1) {
-                    final String head = line.substring(0, colonPos);
-                    // XXX Skip LWS (what is LWS)
-                    int i = colonPos + 1;
-                    while (isLWS(line.charAt(i))) {
-                        i++;
-                    }
-                    final String value = line.substring(i);
-                    log("<" + head + ">=<" + value + ">");
-                    if (head.equalsIgnoreCase("Location")) {
-                        // res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-                        // res.setHeader(head, value );
-                        log("Location cutted: " + value);
-                    } else if (head.equalsIgnoreCase("Content-type")) {
-                        res.setContentType(value);
-                    } else if (head.equalsIgnoreCase("Content-length")) {
-                        try {
-                            final int cLen = Integer.parseInt(value);
-                            retval = cLen > 0;
-                            res.setContentLength(cLen);
-                        } catch (final NumberFormatException ignore) {
-                        }
-                    }
-                    // Generically treat unknown headers
-                    else {
-                        log("^- generic.");
-                        res.setHeader(head, value);
-                    }
-                }
-                // XXX We do not treat multiline continuation
-                // Headers here
-                // which have not occured anywhere yet.
-                firstline = false;
-            }
-        } catch (final IOException e) {
-            log("Header skip problem:");
-            throw new ServletException("Header skip problem: " + e.getMessage());
-        }
-        log("--------------");
-        return retval;
+	    // Some more headers require special care ....
+	    boolean firstline = true;
+	    // Shortcut evaluation skips the read on first time!
+	    while (firstline || (len = readLine(in, lineBytes)) > 0) {
+		line = new String(lineBytes, 0, len);
+		final int colonPos = line.indexOf(":");
+		if (firstline && colonPos == -1) {
+		    // Special first line considerations ...
+		    final String headl[] = wordStr(line);
+		    log("head: " + line + " " + headl.length);
+		    try {
+			res.setStatus(Integer.parseInt(headl[1]));
+		    } catch (final NumberFormatException ignore) {
+			log("ID exception: " + headl);
+		    } catch (final Exception panik) {
+			log("First line invalid!");
+			return true;
+		    }
+		} else if (colonPos != -1) {
+		    final String head = line.substring(0, colonPos);
+		    // XXX Skip LWS (what is LWS)
+		    int i = colonPos + 1;
+		    while (isLWS(line.charAt(i))) {
+			i++;
+		    }
+		    final String value = line.substring(i);
+		    log("<" + head + ">=<" + value + ">");
+		    if (head.equalsIgnoreCase("Location")) {
+			// res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
+			// res.setHeader(head, value );
+			log("Location cutted: " + value);
+		    } else if (head.equalsIgnoreCase("Content-type")) {
+			res.setContentType(value);
+		    } else if (head.equalsIgnoreCase("Content-length")) {
+			try {
+			    final int cLen = Integer.parseInt(value);
+			    retval = cLen > 0;
+			    res.setContentLength(cLen);
+			} catch (final NumberFormatException ignore) {
+			}
+		    }
+		    // Generically treat unknown headers
+		    else {
+			log("^- generic.");
+			res.setHeader(head, value);
+		    }
+		}
+		// XXX We do not treat multiline continuation
+		// Headers here
+		// which have not occured anywhere yet.
+		firstline = false;
+	    }
+	} catch (final IOException e) {
+	    log("Header skip problem:");
+	    throw new ServletException("Header skip problem: " + e.getMessage());
+	}
+	log("--------------");
+	return retval;
     }
 }
