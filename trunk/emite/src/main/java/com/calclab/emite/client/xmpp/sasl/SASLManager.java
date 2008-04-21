@@ -41,24 +41,32 @@ public class SASLManager extends EmiteComponent {
     protected String password;
     protected XmppURI uri;
 
+    private boolean waitingForAuthorization;
+
     public SASLManager(final Emite emite) {
 	super(emite);
-
+	eventLogout();
     }
 
     @Override
     public void install() {
-	final PacketListener packetListener = new PacketListener() {
+	emite.subscribe(when(SessionManager.Events.logIn), new PacketListener() {
 	    public void handle(final IPacket received) {
-		uri = XmppURI.parse(received.getAttribute("uri"));
-		password = received.getAttribute("password");
+		eventLogin(received);
 	    }
-	};
-	emite.subscribe(when(SessionManager.Events.logIn), packetListener);
+	});
+
+	emite.subscribe(when(SessionManager.Events.loggedOut), new PacketListener() {
+	    public void handle(final IPacket received) {
+		eventLogout();
+	    }
+	});
 
 	emite.subscribe(when(new Packet("stream:features")), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventStreamFeatures(received);
+		if (received.hasChild("mechanisms")) {
+		    eventStreamFeatures(received);
+		}
 	    }
 
 	});
@@ -69,7 +77,7 @@ public class SASLManager extends EmiteComponent {
 	    }
 	});
 
-	emite.subscribe(when(new Packet("success", XMLNS)), new PacketListener() {
+	emite.subscribe(when(new Packet("success")), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventSuccess(received);
 	    }
@@ -86,15 +94,30 @@ public class SASLManager extends EmiteComponent {
 	emite.publish(BoshManager.Events.error("sasl-failure", received.getChildren().get(0).getName()));
     }
 
+    void eventLogin(final IPacket received) {
+	uri = XmppURI.parse(received.getAttribute("uri"));
+	password = received.getAttribute("password");
+    }
+
+    void eventLogout() {
+	uri = null;
+	password = null;
+	waitingForAuthorization = false;
+    }
+
+    // FIXME: ISSUE - should check if its any unkown method available
     void eventStreamFeatures(final IPacket received) {
-	// FIXME: ISSUE - should check if its any unkown method available
 	startAuthorizationRequest();
+	this.waitingForAuthorization = true;
     }
 
     void eventSuccess(final IPacket received) {
-	uri = null;
-	password = null;
-	emite.publish(Events.authorized);
+	if (waitingForAuthorization == true) {
+	    uri = null;
+	    password = null;
+	    waitingForAuthorization = false;
+	    emite.publish(Events.authorized);
+	}
     }
 
     private IPacket createAnonymousAuthorization() {
