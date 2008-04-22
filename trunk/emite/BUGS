@@ -12,7 +12,7 @@ For reports please use:
 
 - [ui] Status title ugly
 
-- [ui] room nicks problem on messages
+- [ui] Join Room form bigger
 
 - Same with the unsubcribe:
 [DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><iq type="set" id="1-75" to="admin@localhost/emite-ui1208127502333"><query xmlns="jabber:iq:roster"><item jid="vjrj@localhost" name="testuser1" subscription="to"/></query></iq></body>

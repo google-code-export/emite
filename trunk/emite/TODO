@@ -5,19 +5,28 @@ TODO-list for kune
 
 SHORT-TERM (URGENT):
 --------------------------------------------------------------------------------
-
-<vjrj> room.domain param in creation
+<vjrj> accounts explanation in demo html
 --> vjrj
+<vjrj> preserve meta html changes in demo
+<vjrj> Use apache cache configuration in demo
+-->vjrj
 <vjrj> name in window dialog title
 --> vjrj
 <vjrj> Make EmiteUIPlugin internal events non public
 --> vjrj
 <vjrj> ExmiteUIProxy is necessary in web.xml? --> cleanup
-<vjrj> remove logs for demo
+<vjrj> remove logs for demo (double compilation with gwt-log)
+--> vjrj
 <vjrj> make demo infraestructure starts automatically
+--> vjrj
 
 MID-TERM
 --------------------------------------------------------------------------------
+<vjrj> experiment with gwt-snd and other sound libraries
+<vjrj> Get rid of room locks
+<vjrj> Translate: 
+This room is locked from entry until configuration is confirmed.
+This room is now unlocked.
 <vjrj> activity notifications (images/text in panel/tabs titles to hightlight 
 chat activity)
 <vjrj> Room nicks conflict support XEP-0045, 7.1.10
