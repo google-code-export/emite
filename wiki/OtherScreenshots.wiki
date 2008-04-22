@@ -1,5 +1,7 @@
 Some other screenshots:
 
+ * Our first real chat:
+
 http://emite.googlecode.com/svn/wiki/emite-1s-real-chat.png
 
-(...)
+More ara comming...
