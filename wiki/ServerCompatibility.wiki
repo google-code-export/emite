@@ -1,0 +1,9 @@
+Emite Xmpp servers compatibily matrix:
+
+|| Xmpp Server || version || compatibility || Notes ||
+|| openfire || 3.3.2 || yes || ||
+|| openfire || 3.4.x || no || BOSH bug in server ||
+|| openfire || 3.5.0 || no || BOSH bug in server ||
+|| jabberd  || 1.4.3 || no || Protocol compatibility issue ||
+|| tigase   || ? || ? || Not tested ||
+|| ejabberd || ? || ? || Not tested ||
