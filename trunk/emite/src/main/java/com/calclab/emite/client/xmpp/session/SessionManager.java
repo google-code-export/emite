@@ -30,12 +30,14 @@ import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class SessionManager implements Installable {
     public static class Events {
 	public static final Event onAuthorized = new Event("session:on:authorized");
+	public static final Event onAuthorizationFailed = new Event("session:on:authization-failed");
 	public static final Event onBinded = new Event("session:on:binded");
 	public static final Event onLoggedOut = new Event("session:on:logout");
 	public static final Event onDoLogin = new Event("session:do:login");
@@ -65,7 +67,7 @@ public class SessionManager implements Installable {
     public void doLogin(final XmppURI uri, final String password) {
 	emite.publish(Events.login(uri, password));
 	// FIXME: method
-	emite.publish(BoshManager.Events.onDoStart.Params("domain", uri.getHost()));
+	emite.publish(BoshManager.Events.start(uri.getHost()));
     }
 
     public void doLogout() {
@@ -74,6 +76,13 @@ public class SessionManager implements Installable {
     }
 
     public void install() {
+
+	emite.subscribe(when(Events.onAuthorizationFailed), new PacketListener() {
+	    public void handle(final IPacket received) {
+		session.setState(State.notAuthorized);
+		emite.publish(BoshManager.Events.error("not-authorized", ""));
+	    }
+	});
 
 	emite.subscribe(when(new Packet("stream:features")), new PacketListener() {
 	    public void handle(final IPacket received) {
@@ -128,7 +137,7 @@ public class SessionManager implements Installable {
 
     void eventAuthorized() {
 	session.setState(Session.State.authorized);
-	emite.publish(BoshManager.Events.restart);
+	emite.publish(BoshManager.Events.onDoRestart);
     }
 
     void eventLoggedOut() {

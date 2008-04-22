@@ -22,22 +22,20 @@
 package com.calclab.emite.client;
 
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.core.CorePlugin;
+import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
-import com.calclab.emite.client.extra.muc.MUCPlugin;
+import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.im.InstantMessagingModule;
 import com.calclab.emite.client.xmpp.XMPPModule;
 
 public class Plugins {
 
-    public static void installDefaultPlugins(final Container container, final BoshOptions options,
-	    final DispatcherMonitor monitor) {
+    public static void installDefaultPlugins(final Container container, final BoshOptions options) {
 
-	CorePlugin.install(container, options, monitor);
+	CoreModule.install(container, options);
 	XMPPModule.install(container);
 	InstantMessagingModule.install(container);
-	MUCPlugin.install(container);
+	MUCModule.install(container);
     }
 
 }

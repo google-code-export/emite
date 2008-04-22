@@ -24,7 +24,6 @@ package com.calclab.emite.client.xmpp.sasl;
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 
 import com.calclab.emite.client.components.Installable;
-import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
@@ -47,19 +46,21 @@ public class SASLManager implements Installable {
 
     public SASLManager(final Emite emite) {
 	this.emite = emite;
-	eventLogout();
+	clearState();
+
     }
 
     public void install() {
 	emite.subscribe(when(SessionManager.Events.onDoLogin), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventLogin(received);
+		uri = XmppURI.parse(received.getAttribute("uri"));
+		password = received.getAttribute("password");
 	    }
 	});
 
 	emite.subscribe(when(SessionManager.Events.onLoggedOut), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventLogout();
+		clearState();
 	    }
 	});
 
@@ -72,13 +73,16 @@ public class SASLManager implements Installable {
 
 	emite.subscribe(when(new Packet("failure", XMLNS)), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventFailure(received);
+		emite.publish(SessionManager.Events.onAuthorizationFailed);
 	    }
 	});
 
 	emite.subscribe(when(new Packet("success")), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventSuccess(received);
+		if (waitingForAuthorization == true) {
+		    clearState();
+		    emite.publish(Events.onAuthorized);
+		}
 	    }
 	});
 
@@ -89,28 +93,10 @@ public class SASLManager implements Installable {
 	return Base64Coder.encodeString(auth);
     }
 
-    void eventFailure(final IPacket received) {
-	emite.publish(BoshManager.Events.error("sasl-failure", received.getChildren().get(0).getName()));
-    }
-
-    void eventLogin(final IPacket received) {
-	uri = XmppURI.parse(received.getAttribute("uri"));
-	password = received.getAttribute("password");
-    }
-
-    void eventLogout() {
+    private void clearState() {
 	uri = null;
 	password = null;
 	waitingForAuthorization = false;
-    }
-
-    void eventSuccess(final IPacket received) {
-	if (waitingForAuthorization == true) {
-	    uri = null;
-	    password = null;
-	    waitingForAuthorization = false;
-	    emite.publish(Events.onAuthorized);
-	}
     }
 
     private IPacket createAnonymousAuthorization() {

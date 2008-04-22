@@ -42,6 +42,8 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class ChatEntryPoint implements EntryPoint {
@@ -104,6 +106,13 @@ public class ChatEntryPoint implements EntryPoint {
 	dialogBox.show();
     }
 
+    protected void showMessageDialog(final String message) {
+	final PopupPanel popupPanel = new PopupPanel(true, true);
+	popupPanel.add(new Label(message));
+	popupPanel.center();
+	popupPanel.show();
+    }
+
     private ChatPanel createChatPanel(final XmppURI uri, final Chat chat) {
 	final ChatPanel chatPanel = new ChatPanel(new ChatPanelListener() {
 	    public void onSend(final String text) {
@@ -134,6 +143,9 @@ public class ChatEntryPoint implements EntryPoint {
 		switch (current) {
 		case connected:
 		    dialogBox.hide();
+		    break;
+		case notAuthorized:
+		    showMessageDialog("not authorized!");
 		    break;
 		}
 	    }

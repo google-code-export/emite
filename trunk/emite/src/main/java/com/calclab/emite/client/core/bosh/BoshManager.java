@@ -44,10 +44,8 @@ import com.calclab.emite.client.core.services.Services;
 public class BoshManager implements ConnectorCallback, DispatcherStateListener, Installable {
 
     public static class Events {
-	/** ATTRIBUTE: domain */
-	public static final Event restart = new Event("connection:do:restart");
+	public static final Event onDoRestart = new Event("connection:do:restart");
 
-	/** ATTRIBUTE: domain */
 	public static final Event onDoStart = new Event("connection:do:start");
 	public static final Event stop = new Event("connection:do:stop");
 	public static final Event onError = new Event("connection:on:error");
@@ -55,6 +53,10 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
 	public static Event error(final String cause, final String info) {
 	    return (Event) onError.Params("cause", cause).With("info", info);
+	}
+
+	public static IPacket start(final String host) {
+	    return BoshManager.Events.onDoStart.Params("domain", host);
 	}
     }
 
@@ -99,7 +101,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
     }
 
     public void install() {
-	emite.subscribe(when(BoshManager.Events.restart), new PacketListener() {
+	emite.subscribe(when(BoshManager.Events.onDoRestart), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventRestart(received.getAttribute("domain"));
 	    }

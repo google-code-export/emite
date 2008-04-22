@@ -21,16 +21,13 @@
  */
 package com.calclab.emite.client;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.components.DefaultContainer;
-import com.calclab.emite.client.core.CorePlugin;
+import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
-import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.services.gwt.GWTServicesPlugin;
-import com.calclab.emite.client.extra.muc.MUCPlugin;
+import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.im.InstantMessagingModule;
 import com.calclab.emite.client.im.chat.ChatManager;
@@ -47,21 +44,17 @@ public class Xmpp {
     public static Xmpp create(final BoshOptions options) {
 	final DefaultContainer c = new DefaultContainer();
 	GWTServicesPlugin.install(c);
-	return new Xmpp(c, options, new DispatcherMonitor() {
-	    public void publishing(final IPacket packet) {
-		Log.debug("dispatching: " + packet.toString());
-	    }
-	});
+	return new Xmpp(c, options);
     }
 
     private final Container container;
     private final Session session;
     private boolean isStarted;
 
-    public Xmpp(final Container container, final BoshOptions options, final DispatcherMonitor monitor) {
+    public Xmpp(final Container container, final BoshOptions options) {
 	this.isStarted = false;
 	this.container = container;
-	Plugins.installDefaultPlugins(container, options, monitor);
+	Plugins.installDefaultPlugins(container, options);
 	this.session = XMPPModule.getSession(container);
     }
 
@@ -74,7 +67,7 @@ public class Xmpp {
     }
 
     public Dispatcher getDispatcher() {
-	return CorePlugin.getDispatcher(container);
+	return CoreModule.getDispatcher(container);
     }
 
     public PresenceManager getPresenceManager() {
@@ -84,7 +77,7 @@ public class Xmpp {
     // FIXME: Dani, revisar (añadi esto para poder mockear igual que con el
     // resto...)
     public RoomManager getRoomManager() {
-	return MUCPlugin.getRoomManager(container);
+	return MUCModule.getRoomManager(container);
     }
 
     public Roster getRoster() {

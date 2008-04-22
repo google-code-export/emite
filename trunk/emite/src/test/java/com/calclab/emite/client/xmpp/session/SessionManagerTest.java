@@ -31,7 +31,14 @@ public class SessionManagerTest {
     public void shouldHandleAuthorization() {
 	manager.eventAuthorized();
 	verify(session).setState(State.authorized);
-	emite.verifyPublished(BoshManager.Events.restart);
+	emite.verifyPublished(BoshManager.Events.onDoRestart);
+    }
+
+    @Test
+    public void shouldInformAboutBadAuthentication() {
+	emite.receives(SessionManager.Events.onAuthorizationFailed);
+	verify(session).setState(State.notAuthorized);
+	emite.verifyPublished(BoshManager.Events.error("not-authorized", ""));
     }
 
     @Test

@@ -2,10 +2,11 @@ package com.calclab.emite.j2se.services;
 
 import java.util.Queue;
 
-import com.calclab.emite.client.core.packet.IPacket;
 import tigase.xml.DomBuilderHandler;
 import tigase.xml.Element;
 import tigase.xml.SimpleParser;
+
+import com.calclab.emite.client.core.packet.IPacket;
 
 public class TigaseXMLService {
     private final SimpleParser parser;

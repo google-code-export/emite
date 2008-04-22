@@ -1,9 +1,13 @@
 package com.calclab.emite.client.extra.muc;
 
+import static com.calclab.emite.testing.TestMatchers.packetLike;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +19,6 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteStub;
-import static com.calclab.emite.testing.TestMatchers.*;
 
 public class MUCRoomManagerTest {
 

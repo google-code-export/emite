@@ -11,8 +11,8 @@ import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
-import com.calclab.emite.testing.TestMatchers;
 import com.calclab.emite.testing.EmiteStub;
+import com.calclab.emite.testing.TestMatchers;
 
 public class PresenceManagerTest {
 

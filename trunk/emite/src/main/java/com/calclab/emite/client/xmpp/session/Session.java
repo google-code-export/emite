@@ -29,7 +29,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 public class Session implements Component {
 
     public static enum State {
-	authorized, connected, connecting, disconnected, error
+	authorized, connected, connecting, disconnected, error, notAuthorized
     }
 
     private final ArrayList<SessionListener> listeners;

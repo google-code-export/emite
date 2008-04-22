@@ -22,7 +22,7 @@
 package com.calclab.emite.client.im;
 
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.core.CorePlugin;
+import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.im.presence.PresenceManager;
@@ -55,7 +55,7 @@ public class InstantMessagingModule {
     }
 
     public static void install(final Container container) {
-	final Emite emite = CorePlugin.getEmite(container);
+	final Emite emite = CoreModule.getEmite(container);
 	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(emite);
 	container.install(COMPONENT_CHAT, chatManagerDefault);
 
