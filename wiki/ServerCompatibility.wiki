@@ -1,6 +1,6 @@
 Emite Xmpp servers compatibily matrix:
 
-|| *Xmpp Server* || *Version* || *Compatible?* || *Notes* || *Issues* ||
+|| *Xmpp Server* || *Version* || *Compatible?* || *Know Issues* || *Notes* ||
 || openfire || 3.3.2 || yes || || ||
 || openfire || 3.4.x || no || BOSH bug in server || ||
 || openfire || 3.5.0 || no || BOSH bug in server || ||
