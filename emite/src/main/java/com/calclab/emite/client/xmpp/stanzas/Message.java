@@ -26,7 +26,7 @@ import com.calclab.emite.client.core.packet.Packet;
 
 public class Message extends BasicStanza {
     public static enum Type {
-	chat, error, groupchat, headlines, normal
+	chat, error, groupchat, headlines, normal, notSpecified, unknown
     }
 
     private static final String TYPE_CHAT = "chat";
@@ -58,7 +58,11 @@ public class Message extends BasicStanza {
 
     public Type getType() {
 	final String type = getAttribute(TYPE);
-	return type != null ? Type.valueOf(type) : null;
+	try {
+	    return type != null ? Type.valueOf(type) : Type.notSpecified;
+	} catch (final IllegalArgumentException e) {
+	    return Type.unknown;
+	}
     }
 
     public void setType(final Type type) {
@@ -72,7 +76,7 @@ public class Message extends BasicStanza {
 
     private void setMessage(final String msg) {
 	final IPacket body = add("body", null);
-	body.addText(msg);
+	body.setText(msg);
     }
 
     private void setThread(final String thread) {
@@ -81,6 +85,6 @@ public class Message extends BasicStanza {
 	    node = new Packet("thread");
 	    this.addChild(node);
 	}
-	node.addText(thread);
+	node.setText(thread);
     }
 }

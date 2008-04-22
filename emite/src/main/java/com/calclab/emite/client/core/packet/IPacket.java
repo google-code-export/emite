@@ -57,7 +57,7 @@ public interface IPacket {
 
     void addChild(IPacket child);
 
-    void addText(String text);
+    void setText(String text);
 
     String getAttribute(String name);
 

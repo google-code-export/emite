@@ -26,12 +26,8 @@ import com.calclab.emite.client.core.CorePlugin;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
 import com.calclab.emite.client.extra.muc.MUCPlugin;
-import com.calclab.emite.client.im.chat.ChatPlugin;
-import com.calclab.emite.client.im.presence.PresencePlugin;
-import com.calclab.emite.client.im.roster.RosterPlugin;
-import com.calclab.emite.client.xmpp.resource.ResourceBindingPlugin;
-import com.calclab.emite.client.xmpp.sasl.SASLPlugin;
-import com.calclab.emite.client.xmpp.session.SessionPlugin;
+import com.calclab.emite.client.im.InstantMessagingModule;
+import com.calclab.emite.client.xmpp.XMPPModule;
 
 public class Plugins {
 
@@ -39,26 +35,9 @@ public class Plugins {
 	    final DispatcherMonitor monitor) {
 
 	CorePlugin.install(container, options, monitor);
-	installXMPPPlugins(container);
-	installIMPlugins(container);
-	installExtraPlugins(container);
-    }
-
-    private static void installExtraPlugins(final Container container) {
+	XMPPModule.install(container);
+	InstantMessagingModule.install(container);
 	MUCPlugin.install(container);
-    }
-
-    private static void installIMPlugins(final Container container) {
-	// Instant Messaging
-	ChatPlugin.install(container);
-	SessionPlugin.install(container);
-	RosterPlugin.install(container);
-	PresencePlugin.install(container);
-    }
-
-    private static void installXMPPPlugins(final Container container) {
-	SASLPlugin.install(container);
-	ResourceBindingPlugin.install(container);
     }
 
 }

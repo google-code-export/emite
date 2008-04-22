@@ -39,8 +39,8 @@ public class DelegatedPacket extends DSLPacket {
 	delegate.addChild(child);
     }
 
-    public final void addText(final String text) {
-	delegate.addText(text);
+    public final void setText(final String text) {
+	delegate.setText(text);
     }
 
     public final String getAttribute(final String name) {

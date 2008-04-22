@@ -55,7 +55,7 @@ public abstract class DSLPacket implements IPacket {
     }
 
     public IPacket WithText(final String text) {
-	addText(text);
+	setText(text);
 	return this;
     }
 

@@ -19,22 +19,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.im.presence;
+package com.calclab.emite.client.xmpp;
 
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.core.CorePlugin;
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
+import com.calclab.emite.client.xmpp.sasl.SASLManager;
+import com.calclab.emite.client.xmpp.session.Session;
+import com.calclab.emite.client.xmpp.session.SessionManager;
 
-public class PresencePlugin {
-    private static final String COMPONENT_MANAGER = "presence:manager";
+public class XMPPModule {
 
-    public static PresenceManager getManager(final Container container) {
-	return (PresenceManager) container.get(COMPONENT_MANAGER);
+    public static final String COMPONENT_SESSION_MANAGER = "sessionManager";
+    private static final String COMPONENT_SASL = "sasl";
+    private static final String COMPONENT_SESSION = "session";
+
+    public static Session getSession(final Container container) {
+	return (Session) container.get(XMPPModule.COMPONENT_SESSION);
     }
 
     public static void install(final Container container) {
 	final Emite emite = CorePlugin.getEmite(container);
-	final PresenceManager manager = new PresenceManager(emite);
-	container.install(COMPONENT_MANAGER, manager);
+	container.install("resourceManager", new ResourceBindingManager(emite));
+
+	container.install(COMPONENT_SASL, new SASLManager(emite));
+
+	final SessionManager manager = new SessionManager(emite);
+	final Session session = new Session(manager);
+	manager.setSession(session);
+	container.register(XMPPModule.COMPONENT_SESSION, session);
+	container.install(XMPPModule.COMPONENT_SESSION_MANAGER, manager);
     }
+
 }
