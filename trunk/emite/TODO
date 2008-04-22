@@ -6,24 +6,28 @@ TODO-list for kune
 SHORT-TERM (URGENT):
 --------------------------------------------------------------------------------
 
-<vjrj> Room nicks conflict support XEP-0045, 7.1.10
-
-<vjrj> Make EmiteUIPlugin internal events non public
-
-<vjrj> Compile without OBF for demo
+<vjrj> room.domain param in creation
 --> vjrj
-
-<vjrj> ExmiteUIProxy is necessary in web.xml?
-
---------------------------------------------------------------------------------
+<vjrj> name in window dialog title
+--> vjrj
+<vjrj> Make EmiteUIPlugin internal events non public
+--> vjrj
+<vjrj> ExmiteUIProxy is necessary in web.xml? --> cleanup
+<vjrj> remove logs for demo
+<vjrj> make demo infraestructure starts automatically
 
 MID-TERM
+--------------------------------------------------------------------------------
+<vjrj> activity notifications (images/text in panel/tabs titles to hightlight 
+chat activity)
+<vjrj> Room nicks conflict support XEP-0045, 7.1.10
 <dani> Support XEP-0030
 <vjrj> group support in roster
 
---------------------------------------------------------------------------------
 
 LONG-TERM:
+--------------------------------------------------------------------------------
+
 <dani> Remove Bosh connection bugs
 <dani> Hot remove of plugins
 <dani> Add MD5 SASL mechanism
