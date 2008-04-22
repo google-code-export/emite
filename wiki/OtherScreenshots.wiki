@@ -4,4 +4,8 @@ Some other screenshots:
 
 http://emite.googlecode.com/svn/wiki/emite-1s-real-chat.png
 
+ * Multi-chat room in action:
+
+http://emite.googlecode.com/svn/wiki/emite-muc1.png
+
 More are comming...
