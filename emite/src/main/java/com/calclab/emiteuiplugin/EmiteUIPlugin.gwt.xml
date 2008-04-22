@@ -16,7 +16,8 @@
     The default log level is `OFF`. In development you'll usually want
     to switch to `DEBUG` level logging.
   -->
-  <extend-property name="log_level" values="DEBUG" />
+
+  <extend-property name="log_level" values="DEBUG,OFF" />
   <set-property name="log_level" value="DEBUG" />
 
   <set-property name="log_DivLogger" value="DISABLED" />

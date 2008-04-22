@@ -56,6 +56,7 @@ import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.ContainerListenerAdapter;
 import com.gwtext.client.widgets.event.KeyListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
+import com.gwtext.client.widgets.event.WindowListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
@@ -156,12 +157,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void focusInput() {
-        DeferredCommand.addCommand(new Command() {
-            public void execute() {
-                input.focus();
-                input.getEl().frame();
-            }
-        });
+        input.focus();
     }
 
     public String getInputText() {
@@ -170,20 +166,6 @@ public class MultiChatPanel implements MultiChatView {
 
     public void hide() {
         dialog.hide();
-    }
-
-    public void highlightChat(final ChatUI chat) {
-        // TODO (testing)
-        Panel view = (Panel) chat.getView();
-        view.setIconCls("chat-icon");
-
-        // ((Panel) chat.getView()).setTitle("*", "chat-icon");
-        // ((Panel) chat.getView()).getEl().highlight();
-        // ((Panel) chat.getView()).getEl().frame();
-        if (view.isRendered()) {
-            view.doLayout();
-            // before: tab.getTextEl().highlight()
-        }
     }
 
     public void removeChat(final ChatUI chatUI) {
@@ -288,6 +270,10 @@ public class MultiChatPanel implements MultiChatView {
         dialog.expand();
     }
 
+    public void showAlert(final String message) {
+        MessageBox.alert(message);
+    }
+
     private void attachRoster() {
         rosterPanel.add((Panel) rosterUI.getView());
         if (usersPanel.isRendered()) {
@@ -317,10 +303,13 @@ public class MultiChatPanel implements MultiChatView {
         input = new TextArea();
         // As height 100% doesn't works
         input.setHeight(47);
-        input.addKeyListener(13, new KeyListener() {
-            public void onKey(final int key, final EventObject e) {
-                doSend(e);
-                e.stopEvent();
+        input.setEnterIsSpecial(true);
+        input.addListener(new FieldListenerAdapter() {
+            public void onSpecialKey(final Field field, final EventObject e) {
+                if (e.getKey() == 13) {
+                    doSend(e);
+                    e.stopEvent();
+                }
             }
         });
 
@@ -418,10 +407,15 @@ public class MultiChatPanel implements MultiChatView {
         createListeners();
 
         createKuneIconBottomBar();
-
     }
 
     private void createListeners() {
+        dialog.addListener(new WindowListenerAdapter() {
+            public void onShow(final Component component) {
+                focusInput();
+            }
+        });
+
         dialog.addListener(new ContainerListenerAdapter() {
             public void onResize(final BoxComponent component, final int adjWidth, final int adjHeight,
                     final int rawWidth, final int rawHeight) {
@@ -502,6 +496,15 @@ public class MultiChatPanel implements MultiChatView {
                 presenter.onModifySubjectRequested(getSubject());
             }
         });
+        subject.addKeyListener(13, new KeyListener() {
+            public void onKey(final int key, final EventObject e) {
+                if (e.getKey() == 13) {
+                    Log.info("Subject field listener fired");
+                    presenter.onModifySubjectRequested(getSubject());
+                    e.stopEvent();
+                }
+            }
+        });
 
         topToolbar = new MultiChatPanelTopBar(i18n, presenter);
 
@@ -569,7 +572,5 @@ public class MultiChatPanel implements MultiChatView {
         emoticonPopup.setPopupPosition(x + 2, y - 160);
         emoticonPopup.setWidget(emoticonPalettePanel);
         emoticonPopup.setVisible(true);
-        // Trying to solve bug in Firefox/MacOSX:
-        DOM.setStyleAttribute(emoticonPopup.getElement(), "zIndex", "10000");
     }
 }

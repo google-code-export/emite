@@ -31,13 +31,13 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emiteuiplugin.client.AbstractPresenter;
-import com.calclab.emiteuiplugin.client.EmiteUIPlugin;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPresenter;
 import com.calclab.emiteuiplugin.client.users.RoomUserUI;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItem;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
 
 public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, AbstractPresenter {
+    private static final String NO_ACTION = "emiteuiplugin.noaction";
 
     private RoomUIView view;
 
@@ -53,9 +53,9 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
 
     private final I18nTranslationService i18n;
 
-    public RoomUIPresenter(final I18nTranslationService i18n, final String currentUserAlias,
+    public RoomUIPresenter(final I18nTranslationService i18n, final String currentUserAlias, final String chatTitle,
             final String currentUserColor, final RoomUIListener listener) {
-        super(currentUserAlias, currentUserColor, listener);
+        super(chatTitle, currentUserAlias, currentUserColor, listener);
         this.i18n = i18n;
         this.currentUserAlias = currentUserAlias;
         this.listener = listener;
@@ -128,7 +128,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
     }
 
     private UserGridMenuItem<Object> createNoActionsMenuItem() {
-        return new UserGridMenuItem<Object>("", i18n.t("No options"), EmiteUIPlugin.NO_ACTION, null);
+        return new UserGridMenuItem<Object>("", i18n.t("No options"), NO_ACTION, null);
     }
 
     private UserGridMenuItemList createUserMenu(final RoomUserUI roomUserUI) {

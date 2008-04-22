@@ -36,9 +36,12 @@ public class ChatUIPresenter implements ChatUI {
     private int oldColor;
     private final HashMap<String, String> userColors;
     private boolean closeConfirmed;
+    private final String chatTitle;
 
-    public ChatUIPresenter(final String currentUserAlias, final String currentUserColor, final ChatUIListener listener) {
+    public ChatUIPresenter(final String chatTitle, final String currentUserAlias, final String currentUserColor,
+            final ChatUIListener listener) {
         this.listener = listener;
+        this.chatTitle = chatTitle;
         userColors = new HashMap<String, String>();
         userColors.put(currentUserAlias, currentUserColor);
     }
@@ -85,8 +88,13 @@ public class ChatUIPresenter implements ChatUI {
         return view;
     }
 
+    public void highLightChatTitle() {
+        view.setChatTitle("<b>*</b> " + chatTitle);
+    }
+
     public void init(final ChatUIView view) {
         this.view = view;
+        view.setChatTitle(chatTitle);
     }
 
     public void onActivated() {
@@ -109,16 +117,16 @@ public class ChatUIPresenter implements ChatUI {
         savedInput = inputText;
     }
 
-    public void setChatTitle(final String chatTitle) {
-        view.setChatTitle(chatTitle);
-    }
-
     public void setCloseConfirmed(final boolean confirmed) {
         this.closeConfirmed = confirmed;
     }
 
     public void setUserColor(final String userAlias, final String color) {
         userColors.put(userAlias, color);
+    }
+
+    public void unHighLightChatTitle() {
+        view.setChatTitle(chatTitle);
     }
 
     private String getNextColor() {

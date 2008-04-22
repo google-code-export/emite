@@ -11,7 +11,6 @@ import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteui.client.MockitoXmpp;
-import com.calclab.emiteuiplugin.client.EmiteUIPlugin;
 import com.calclab.emiteuiplugin.client.roster.RosterUIPresenter;
 import com.calclab.emiteuiplugin.client.roster.RosterUIView;
 
@@ -52,13 +51,13 @@ public class RosterUIPresenterTest {
 
     @Test
     public void subscribeAction() {
-        rosterUI.doAction(EmiteUIPlugin.ON_REQUEST_SUBSCRIBE, rosterItem.getJID());
+        rosterUI.doAction(RosterUIPresenter.ON_REQUEST_SUBSCRIBE, rosterItem.getJID());
         Mockito.verify(presenceManager).requestSubscribe(otherUri);
     }
 
     @Test
     public void unSubscribeAction() {
-        rosterUI.doAction(EmiteUIPlugin.ON_CANCEL_SUBSCRITOR, rosterItem.getJID());
+        rosterUI.doAction(RosterUIPresenter.ON_CANCEL_SUBSCRITOR, rosterItem.getJID());
         Mockito.verify(presenceManager).cancelSubscriptor(otherUri);
 
     }

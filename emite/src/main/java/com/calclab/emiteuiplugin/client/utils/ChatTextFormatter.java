@@ -66,9 +66,6 @@ public class ChatTextFormatter {
     private static final String BANDIT = "KuneProtIniBANDITKuneProtEnd";
     private static final String HEART = "KuneProtIniHEARTKuneProtectRepEnd";
 
-    public ChatTextFormatter() {
-    }
-
     public static HTML format(final String messageOrig) {
         String message = messageOrig;
         message = KuneStringUtils.escapeHtmlLight(message);
@@ -111,7 +108,7 @@ public class ChatTextFormatter {
         message = replace(message, new String[] { ":-O", ":O", ":-o", ":o", ":-0", "=-O", "=-o", "=o", "=O" },
                 SURPRISED);
         message = replace(message, new String[] { ":P", "=P", "=p", ":-P", ":p", ":-p", ":b" }, TONGUE);
-        message = replace(message, new String[] { ":-\\\\", ":-/", ":/", ":\\\\" }, UNCERTAIN);
+        message = replace(message, new String[] { ":-\\\\", ":-/", ":\\\\" }, UNCERTAIN);
         message = replace(message, new String[] { ":s", ":-S", ":-s", ":S" }, UNSURE);
         message = replace(message, new String[] { "\\(woot\\)", "\\(w00t\\)", "\\(wOOt\\)" }, W00T);
         message = replace(message, new String[] { ":-&quot;" }, WHISTLING);
@@ -171,6 +168,9 @@ public class ChatTextFormatter {
             message = message.replaceAll(from[j], to);
         }
         return message;
+    }
+
+    public ChatTextFormatter() {
     }
 
 }
