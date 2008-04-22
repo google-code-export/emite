@@ -1,5 +1,5 @@
 Some other screenshots:
 
-[http://emite.googlecode.com/wiki/emite-1s-real-chat.png http://emite.googlecode.com/wiki/emite-1s-real-chat.png]
+http://emite.googlecode.com/svn/wiki/emite-1s-real-chat.png
 
 (...)
