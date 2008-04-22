@@ -22,7 +22,7 @@
 package com.calclab.emite.client.xmpp;
 
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.core.CorePlugin;
+import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
@@ -40,7 +40,7 @@ public class XMPPModule {
     }
 
     public static void install(final Container container) {
-	final Emite emite = CorePlugin.getEmite(container);
+	final Emite emite = CoreModule.getEmite(container);
 	container.install("resourceManager", new ResourceBindingManager(emite));
 
 	container.install(COMPONENT_SASL, new SASLManager(emite));

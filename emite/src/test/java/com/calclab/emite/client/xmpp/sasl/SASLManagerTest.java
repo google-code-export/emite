@@ -3,7 +3,6 @@ package com.calclab.emite.client.xmpp.sasl;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteStub;
@@ -23,7 +22,7 @@ public class SASLManagerTest {
     @Test
     public void shouldHandleFailure() {
 	emite.receives("<failure xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><not-authorized/></failure>");
-	emite.verifyPublished(BoshManager.Events.error("sasl-failure", "not-authorized"));
+	emite.verifyPublished(SessionManager.Events.onAuthorizationFailed);
     }
 
     @Test

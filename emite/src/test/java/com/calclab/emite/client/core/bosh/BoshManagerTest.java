@@ -1,13 +1,15 @@
 package com.calclab.emite.client.core.bosh;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.mock;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.testing.EmiteStub;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class BoshManagerTest {
     private Services services;

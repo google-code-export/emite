@@ -19,10 +19,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.core.dispatcher;
+package com.calclab.emite.client.extra.muc;
 
-import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.core.CoreModule;
+import com.calclab.emite.client.core.bosh.Emite;
 
-public interface DispatcherMonitor {
-    void publishing(IPacket packet);
+public class MUCModule {
+
+    private static final String COMPONENTS_MANAGER = "muc:manager";
+
+    public static RoomManager getRoomManager(final Container components) {
+	return (RoomManager) components.get(COMPONENTS_MANAGER);
+    }
+
+    public static void install(final Container container) {
+	final Emite emite = CoreModule.getEmite(container);
+	final MUCRoomManager rooms = new MUCRoomManager(emite);
+	container.install(COMPONENTS_MANAGER, rooms);
+    }
 }

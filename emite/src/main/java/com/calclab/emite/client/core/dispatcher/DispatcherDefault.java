@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.packet.IPacket;
 
@@ -40,24 +41,13 @@ public class DispatcherDefault implements Dispatcher {
 
     }
 
-    private static final DispatcherMonitor MONITOR_NULL = new DispatcherMonitor() {
-	public void publishing(final IPacket packet) {
-	}
-    };
-
     private boolean isCurrentlyDispatching;
     private final DispatcherStateListenerCollection listeners;
-    private final DispatcherMonitor monitor;
 
     private final ArrayList<IPacket> queue;
     private final HashMap<String, List<Subscriptor>> subscriptors;
 
     public DispatcherDefault() {
-	this(MONITOR_NULL);
-    }
-
-    public DispatcherDefault(final DispatcherMonitor monitor) {
-	this.monitor = monitor;
 	this.subscriptors = new HashMap<String, List<Subscriptor>>();
 	subscriptors.put(null, new ArrayList<Subscriptor>());
 	this.listeners = new DispatcherStateListenerCollection();
@@ -70,7 +60,7 @@ public class DispatcherDefault implements Dispatcher {
     }
 
     public void publish(final IPacket iPacket) {
-	monitor.publishing(iPacket);
+	Log.debug("Dispatching: " + iPacket);
 	queue.add(iPacket);
 	startIfNeeded();
     }

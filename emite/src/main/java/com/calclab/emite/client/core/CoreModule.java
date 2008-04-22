@@ -30,11 +30,10 @@ import com.calclab.emite.client.core.bosh.EmiteBosh;
 import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
-import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesPlugin;
 
-public class CorePlugin {
+public class CoreModule {
     private static final String COMPONENT_BOSH = "bosh:manager";
     private static final String COMPONENT_DISPATCHER = "dispatcher";
     private static final String COMPONENT_EMITE = "emite";
@@ -47,12 +46,12 @@ public class CorePlugin {
 	return (Emite) container.get(COMPONENT_EMITE);
     }
 
-    public static void install(final Container container, final BoshOptions options, final DispatcherMonitor monitor) {
+    public static void install(final Container container, final BoshOptions options) {
 	// dependencies
 	final Services services = ServicesPlugin.getServices(container);
 
 	// injections
-	final DispatcherDefault dispatcher = new DispatcherDefault(monitor);
+	final DispatcherDefault dispatcher = new DispatcherDefault();
 	container.register(COMPONENT_DISPATCHER, dispatcher);
 
 	final Stream stream = new BoshStream();

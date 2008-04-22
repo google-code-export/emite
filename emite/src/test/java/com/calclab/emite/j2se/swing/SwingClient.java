@@ -16,9 +16,7 @@ import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.components.DefaultContainer;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.core.dispatcher.DispatcherMonitor;
-import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.extra.muc.MUCPlugin;
+import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.extra.muc.Room;
 import com.calclab.emite.client.extra.muc.RoomListener;
@@ -92,7 +90,7 @@ public class SwingClient {
 
 	roomsPanel = new RoomsPanel(new RoomsPanelListener() {
 	    public void onRoomEnterd(final String roomName) {
-		final RoomManager roomManager = MUCPlugin.getRoomManager(xmpp.getComponents());
+		final RoomManager roomManager = MUCModule.getRoomManager(xmpp.getComponents());
 		roomManager.openChat(XmppURI.parse(roomName));
 	    }
 	});
@@ -133,11 +131,7 @@ public class SwingClient {
 	    }
 
 	});
-	this.xmpp = new Xmpp(container, new BoshOptions(httpbase), new DispatcherMonitor() {
-	    public void publishing(final IPacket packet) {
-		System.out.println("DISPATCH: " + packet);
-	    }
-	});
+	this.xmpp = new Xmpp(container, new BoshOptions(httpbase));
 
 	xmpp.getSession().addListener(new SessionListener() {
 	    public void onStateChanged(final State old, final State current) {
@@ -147,6 +141,8 @@ public class SwingClient {
 		tabs.setEnabled(isConnected);
 		if (current == State.disconnected) {
 		    rosterPanel.clear();
+		} else if (current == State.notAuthorized) {
+		    JOptionPane.showMessageDialog(frame, "lo siento, tienes mal la contraseña -o el usuario ;)-");
 		}
 	    }
 	});
@@ -182,7 +178,7 @@ public class SwingClient {
 	    }
 	});
 
-	final RoomManager roomManager = MUCPlugin.getRoomManager(xmpp.getComponents());
+	final RoomManager roomManager = MUCModule.getRoomManager(xmpp.getComponents());
 	roomManager.addListener(new RoomManagerListener() {
 	    public void onChatClosed(final Chat chat) {
 		conversationsPanel.close(chat.getID());
@@ -192,7 +188,7 @@ public class SwingClient {
 		final RoomPanel roomPanel = conversationsPanel.createRoom(room.getOtherURI(), room.getID(),
 			new RoomPanelListener() {
 			    public void onClose(final ChatPanel source) {
-				MUCPlugin.getRoomManager(xmpp.getComponents()).close(room);
+				MUCModule.getRoomManager(xmpp.getComponents()).close(room);
 			    }
 
 			    public void onInviteUser(final String userJid, final String reasonText) {
