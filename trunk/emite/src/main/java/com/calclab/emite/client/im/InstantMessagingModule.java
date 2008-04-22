@@ -19,23 +19,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.im.chat;
+package com.calclab.emite.client.im;
 
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.core.CorePlugin;
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.im.presence.PresenceManager;
+import com.calclab.emite.client.im.roster.Roster;
+import com.calclab.emite.client.im.roster.RosterManager;
 
-public class ChatPlugin {
+public class InstantMessagingModule {
     private static final String COMPONENT_CHAT = "chat";
+
+    private static final String COMPONENT_ROSTER = "roster";
+
+    private static final String COMPONENT_ROSTER_MANAGER = "roster:manager";
+
+    private static final String COMPONENT_MANAGER = "presence:manager";
 
     public static ChatManagerDefault getChat(final Container container) {
 	return (ChatManagerDefault) container.get(COMPONENT_CHAT);
+    }
+
+    public static PresenceManager getManager(final Container container) {
+	return (PresenceManager) container.get(COMPONENT_MANAGER);
+    }
+
+    public static Roster getRoster(final Container container) {
+	return (Roster) container.get(COMPONENT_ROSTER);
+    }
+
+    public static RosterManager getRosterManager(final Container container) {
+	return (RosterManager) container.get(COMPONENT_ROSTER_MANAGER);
     }
 
     public static void install(final Container container) {
 	final Emite emite = CorePlugin.getEmite(container);
 	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(emite);
 	container.install(COMPONENT_CHAT, chatManagerDefault);
+
+	final Roster roster = new Roster();
+	final RosterManager rosterManager = new RosterManager(emite, roster);
+	container.register(COMPONENT_ROSTER, roster);
+	container.install(COMPONENT_ROSTER_MANAGER, rosterManager);
+
+	final PresenceManager manager = new PresenceManager(emite);
+	container.install(COMPONENT_MANAGER, manager);
     }
 
 }

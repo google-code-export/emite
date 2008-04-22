@@ -28,11 +28,6 @@ public class TigasePacket extends DSLPacket {
 	throw new RuntimeException("not implemented");
     }
 
-    // TODO
-    public void addText(final String text) {
-	throw new RuntimeException("not implemented");
-    }
-
     public String getAttribute(final String name) {
 	return delegate.getAttribute(name);
     }
@@ -87,8 +82,9 @@ public class TigasePacket extends DSLPacket {
 	throw new RuntimeException("not implemented");
     }
 
+    // TODO
     public void setText(final String text) {
-	throw new RuntimeException("not implemented");
+	delegate.setCData(text);
     }
 
     @Override

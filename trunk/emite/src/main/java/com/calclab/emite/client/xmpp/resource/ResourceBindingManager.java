@@ -56,7 +56,7 @@ public class ResourceBindingManager implements Installable {
 
     void eventAuthorized() {
 	final IQ iq = new IQ(IQ.Type.set);
-	iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).addText(resource);
+	iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).setText(resource);
 
 	emite.send("bind", iq, new PacketListener() {
 	    public void handle(final IPacket received) {

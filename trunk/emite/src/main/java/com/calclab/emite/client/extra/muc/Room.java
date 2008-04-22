@@ -156,7 +156,7 @@ public class Room implements Chat {
         message.setTo(roomURI.toString());
         message.setType(Message.Type.groupchat.toString());
         final IPacket subject = message.add("subject", null);
-        subject.addText(subjectText);
+        subject.setText(subjectText);
         emite.send(message);
     }
 

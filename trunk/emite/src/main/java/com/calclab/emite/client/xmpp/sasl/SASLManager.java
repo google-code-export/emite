@@ -121,7 +121,7 @@ public class SASLManager implements Installable {
     private IPacket createPlainAuthorization() {
 	final IPacket auth = new Packet("auth", XMLNS).With("mechanism", "PLAIN");
 	final String encoded = encode(uri.getHost(), uri.getNode(), password);
-	auth.addText(encoded);
+	auth.setText(encoded);
 	return auth;
     }
 

@@ -41,9 +41,6 @@ public class NoPacket implements IPacket {
     public void addChild(final IPacket child) {
     }
 
-    public void addText(final String text) {
-    }
-
     public String getAttribute(final String name) {
 	return null;
     }

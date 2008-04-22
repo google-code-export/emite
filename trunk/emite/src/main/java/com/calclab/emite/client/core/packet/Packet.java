@@ -56,10 +56,6 @@ public class Packet extends DSLPacket {
 	children.add(child);
     }
 
-    public void addText(final String value) {
-	children.add(new TextPacket(TextUtils.escape(value)));
-    }
-
     public String getAttribute(final String name) {
 	return attributes.get(name);
     }
@@ -140,9 +136,9 @@ public class Packet extends DSLPacket {
 	attributes.put(name, value);
     }
 
-    // FIXME
-    public void setText(final String text) {
-	addText(text);
+    public void setText(final String value) {
+	children.clear();
+	children.add(new TextPacket(TextUtils.escape(value)));
     }
 
     @Override

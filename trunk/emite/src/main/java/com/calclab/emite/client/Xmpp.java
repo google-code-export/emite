@@ -32,15 +32,13 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.services.gwt.GWTServicesPlugin;
 import com.calclab.emite.client.extra.muc.MUCPlugin;
 import com.calclab.emite.client.extra.muc.RoomManager;
+import com.calclab.emite.client.im.InstantMessagingModule;
 import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.emite.client.im.chat.ChatPlugin;
 import com.calclab.emite.client.im.presence.PresenceManager;
-import com.calclab.emite.client.im.presence.PresencePlugin;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.im.roster.RosterPlugin;
+import com.calclab.emite.client.xmpp.XMPPModule;
 import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.session.SessionPlugin;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
@@ -64,11 +62,11 @@ public class Xmpp {
 	this.isStarted = false;
 	this.container = container;
 	Plugins.installDefaultPlugins(container, options, monitor);
-	this.session = SessionPlugin.getSession(container);
+	this.session = XMPPModule.getSession(container);
     }
 
     public ChatManager getChatManager() {
-	return ChatPlugin.getChat(container);
+	return InstantMessagingModule.getChat(container);
     }
 
     public Container getComponents() {
@@ -80,7 +78,7 @@ public class Xmpp {
     }
 
     public PresenceManager getPresenceManager() {
-	return PresencePlugin.getManager(container);
+	return InstantMessagingModule.getManager(container);
     }
 
     // FIXME: Dani, revisar (añadi esto para poder mockear igual que con el
@@ -90,11 +88,11 @@ public class Xmpp {
     }
 
     public Roster getRoster() {
-	return RosterPlugin.getRoster(container);
+	return InstantMessagingModule.getRoster(container);
     }
 
     public RosterManager getRosterManager() {
-	return RosterPlugin.getRosterManager(container);
+	return InstantMessagingModule.getRosterManager(container);
     }
 
     public Session getSession() {

@@ -41,155 +41,171 @@ public class Presence extends BasicStanza {
      * </p>
      */
     public static enum Show {
-        available, away, chat, dnd, xa
+	available, away, chat, dnd, xa, notSpecified, unknown
     }
 
     public enum Type {
-        /**
-         * 2.2.1. Types of Presence
-         * 
-         * <p>
-         * The 'type' attribute of a presence stanza is OPTIONAL. A presence
-         * stanza that does not possess a 'type' attribute is used to signal to
-         * the server that the sender is online and available for communication.
-         * If included, the 'type' attribute specifies a lack of availability, a
-         * request to manage a subscription to another entity's presence, a
-         * request for another entity's current presence, or an error related to
-         * a previously-sent presence stanza. If included, the 'type' attribute
-         * MUST have one of the following values:
-         * </p>
-         */
-        available,
-        /**
-         * error -- An error has occurred regarding processing or delivery of a
-         * previously-sent presence stanza.
-         */
-        error,
-        /**
-         * probe -- A request for an entity's current presence; SHOULD be
-         * generated only by a server on behalf of a user.
-         */
-        probe,
-        /**
-         * subscribe -- The sender wishes to subscribe to the recipient's
-         * presence.
-         */
+	/**
+	 * 2.2.1. Types of Presence
+	 * 
+	 * <p>
+	 * The 'type' attribute of a presence stanza is OPTIONAL. A presence
+	 * stanza that does not possess a 'type' attribute is used to signal to
+	 * the server that the sender is online and available for communication.
+	 * If included, the 'type' attribute specifies a lack of availability, a
+	 * request to manage a subscription to another entity's presence, a
+	 * request for another entity's current presence, or an error related to
+	 * a previously-sent presence stanza. If included, the 'type' attribute
+	 * MUST have one of the following values:
+	 * </p>
+	 */
+	available,
+	/**
+	 * error -- An error has occurred regarding processing or delivery of a
+	 * previously-sent presence stanza.
+	 */
+	error,
+	/**
+	 * probe -- A request for an entity's current presence; SHOULD be
+	 * generated only by a server on behalf of a user.
+	 */
+	probe,
+	/**
+	 * subscribe -- The sender wishes to subscribe to the recipient's
+	 * presence.
+	 */
 
-        subscribe,
-        /**
-         * subscribed -- The sender has allowed the recipient to receive their
-         * presence.
-         */
-        subscribed,
-        /**
-         * unavailable -- Signals that the entity is no longer available for
-         * communication.
-         */
-        unavailable,
-        /**
-         * unsubscribe -- The sender is unsubscribing from another entity's
-         * presence.
-         */
-        unsubscribe,
-        /**
-         * unsubscribed -- The subscription request has been denied or a
-         * previously-granted subscription has been cancelled.
-         */
-        unsubscribed
+	subscribe,
+	/**
+	 * subscribed -- The sender has allowed the recipient to receive their
+	 * presence.
+	 */
+	subscribed,
+	/**
+	 * unavailable -- Signals that the entity is no longer available for
+	 * communication.
+	 */
+	unavailable,
+	/**
+	 * unsubscribe -- The sender is unsubscribing from another entity's
+	 * presence.
+	 */
+	unsubscribe,
+	/**
+	 * unsubscribed -- The subscription request has been denied or a
+	 * previously-granted subscription has been cancelled.
+	 */
+	unsubscribed
     }
 
     public Presence() {
-        this(null, (String) null, (String) null);
+	this(null, (String) null, (String) null);
     }
 
     public Presence(final IPacket stanza) {
-        super(stanza);
+	super(stanza);
     }
 
     public Presence(final Type type, final String from, final String to) {
-        super("presence", "jabber:client");
-        if (type != null) {
-            setType(type.toString());
-        }
-        if (from != null) {
-            setFrom(from.toString());
-        }
-        if (to != null) {
-            setTo(to.toString());
-        }
+	super("presence", "jabber:client");
+	if (type != null) {
+	    setType(type.toString());
+	}
+	if (from != null) {
+	    setFrom(from.toString());
+	}
+	if (to != null) {
+	    setTo(to.toString());
+	}
     }
 
     public Presence(final Type type, final XmppURI from, final XmppURI to) {
-        this(type, from != null ? from.toString() : null, to != null ? to.toString() : null);
+	this(type, from != null ? from.toString() : null, to != null ? to.toString() : null);
     }
 
     public Presence(final XmppURI from) {
-        this(null, from.toString(), null);
+	this(null, from.toString(), null);
     }
 
+    /**
+     * Get the priority of the presence
+     * 
+     * @return The priority (1-10), 0 if not specified
+     */
     public int getPriority() {
-        int value = 0;
-        final IPacket priority = getFirstChild("priority");
-        if (priority != null) {
-            try {
-                value = Integer.parseInt(priority.getText());
-            } catch (final NumberFormatException e) {
-                value = 0;
-            }
-        }
-        return value;
+	int value = 0;
+	final IPacket priority = getFirstChild("priority");
+	if (priority != null) {
+	    try {
+		value = Integer.parseInt(priority.getText());
+	    } catch (final NumberFormatException e) {
+		value = 0;
+	    }
+	}
+	return value;
     }
 
+    /**
+     * Return the show of the presence
+     * 
+     * @return The show, never null
+     */
     public Show getShow() {
-        // FIXME: Dani: equals(NoPacket.INSTANCE)?
-        final IPacket show = getFirstChild("show");
-        final String value = show != null ? show.getText() : null;
-        return value != null ? Show.valueOf(value) : null;
+	final String value = getFirstChild("show").getText();
+	try {
+	    return value != null ? Show.valueOf(value) : Show.notSpecified;
+	} catch (final IllegalArgumentException e) {
+	    return Show.unknown;
+	}
     }
 
+    /**
+     * Return the status of the presence.
+     * 
+     * @return The status, null if not specified
+     */
     public String getStatus() {
-        // FIXME: Dani: equals(NoPacket.INSTANCE)?
-        final IPacket status = getFirstChild("status");
-        return status != null ? status.getText() : null;
+	return getFirstChild("status").getText();
     }
 
-    // TODO: revisar esto (type == null -> available)
-    // http://www.xmpp.org/rfcs/rfc3921.html#presence
+    /**
+     * Get the presence's type
+     * 
+     * @return The type, never null
+     * @see http://www.xmpp.org/rfcs/rfc3921.html#presence
+     */
     public Type getType() {
-        final String type = getAttribute(BasicStanza.TYPE);
-        return type != null ? Type.valueOf(type) : Type.available;
+	final String type = getAttribute(BasicStanza.TYPE);
+	return type != null ? Type.valueOf(type) : Type.available;
     }
 
     public void setPriority(final int value) {
-        IPacket priority = getFirstChild("priority");
-        // FIXME: Dani: equals(NoPacket.INSTANCE)?
-        if (priority == null) {
-            priority = add("priority", null);
-        }
-        priority.addText(Integer.toString(value >= 0 ? value : 0));
+	IPacket priority = getFirstChild("priority");
+	if (priority == NoPacket.INSTANCE) {
+	    priority = add("priority", null);
+	}
+	priority.setText(Integer.toString(value >= 0 ? value : 0));
     }
 
     public void setShow(final Show value) {
-        IPacket show = getFirstChild("show");
-        // FIXME Dani: check this (NoPacket part)
-        if (show.equals(NoPacket.INSTANCE)) {
-            show = add("show", null);
-        }
-        show.addText(value.toString());
+	IPacket show = getFirstChild("show");
+	if (show == NoPacket.INSTANCE) {
+	    show = add("show", null);
+	}
+	show.setText(value.toString());
     }
 
     public void setStatus(final String statusMessage) {
-        IPacket status = getFirstChild("status");
-        // FIXME Dani: check this (NoPacket part)
-        if (status.equals(NoPacket.INSTANCE)) {
-            status = add("status", null);
-        }
-        status.addText(statusMessage);
+	IPacket status = getFirstChild("status");
+	if (status == NoPacket.INSTANCE) {
+	    status = add("status", null);
+	}
+	status.setText(statusMessage);
     }
 
     public Presence With(final Show value) {
-        setShow(value);
-        return this;
+	setShow(value);
+	return this;
     }
 
 }

@@ -109,7 +109,6 @@ public class ChatManagerDefault implements ChatManager, Installable {
 	case chat:
 	case normal:
 	    onChatMessageReceived(message);
-	    // FIXME: (Dani) check this
 	    break;
 	case error:
 	    Log.warn("Error message received: " + message.toString());
