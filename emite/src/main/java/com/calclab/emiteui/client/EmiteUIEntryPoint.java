@@ -47,6 +47,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
     private static final String GWT_PROPERTY_JID = "gwt_property_jid";
     private static final String GWT_PROPERTY_PASSWD = "gwt_property_passwd";
     private static final String GWT_PROPERTY_HTTPBASE = "gwt_property_httpbase";
+    private static final String GWT_PROPERTY_ROOMHOST = "gwt_property_roomhost";
     private DefaultDispatcher dispatcher;
     private TextField passwd;
     private TextField jid;
@@ -88,8 +89,8 @@ public class EmiteUIEntryPoint implements EntryPoint {
         kunePluginManager.install(new EmiteUIPlugin());
 
         dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions(
-                getGwtMetaProperty(GWT_PROPERTY_HTTPBASE)), new I18nTranslationServiceMocked(),
-                generateUserChatOptions()));
+                getGwtMetaProperty(GWT_PROPERTY_HTTPBASE)), getGwtMetaProperty(GWT_PROPERTY_ROOMHOST),
+                new I18nTranslationServiceMocked(), generateUserChatOptions()));
         dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
     }
 
@@ -119,7 +120,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
         jid.addListener(new FieldListenerAdapter() {
             public void onChange(final Field field, final Object newVal, final Object oldVal) {
-
+                dispatcher.fire(EmiteUIPlugin.REFLESH_USER_OPTIONS, generateUserChatOptions());
             }
         });
 
@@ -128,7 +129,6 @@ public class EmiteUIEntryPoint implements EntryPoint {
                 dispatcher.fire(EmiteUIPlugin.REFLESH_USER_OPTIONS, generateUserChatOptions());
             }
         });
-
         panel.add(formPanel);
 
         RootPanel.get().add(panel);

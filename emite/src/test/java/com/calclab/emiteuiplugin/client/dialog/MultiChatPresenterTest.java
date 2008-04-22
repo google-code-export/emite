@@ -72,8 +72,8 @@ public class MultiChatPresenterTest {
         Mockito.stub(
                 factory.createChatUI((String) Mockito.anyObject(), (String) Mockito.anyObject(),
                         (ChatUIListener) Mockito.anyObject())).toReturn(chatUI);
-        final MultiChatCreationParam param = new MultiChatCreationParam(null, i18n, new UserChatOptions(sessionUserJid,
-                "passwdofuser", "blue", Roster.DEF_SUBSCRIPTION_MODE));
+        final MultiChatCreationParam param = new MultiChatCreationParam(null, "rooms.localhost", i18n,
+                new UserChatOptions(sessionUserJid, "passwdofuser", "blue", Roster.DEF_SUBSCRIPTION_MODE));
 
         multiChat = new MultiChatPresenter(xmpp, i18n, factory, param, multiChatlistener);
         multiChat.init(multiChatPanel);

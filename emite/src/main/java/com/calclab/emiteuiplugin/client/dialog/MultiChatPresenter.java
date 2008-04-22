@@ -72,6 +72,7 @@ public class MultiChatPresenter implements MultiChat {
     private UserChatOptions userChatOptions;
     private MultiChatView view;
     private final Xmpp xmpp;
+    private final String roomHost;
 
     public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final ChatDialogFactory factory,
             final MultiChatCreationParam param, final MultiChatListener listener) {
@@ -80,6 +81,7 @@ public class MultiChatPresenter implements MultiChat {
         this.factory = factory;
         this.listener = listener;
         setUserChatOptions(param.getUserChatOptions());
+        roomHost = param.getRoomHost();
         presenceManager = xmpp.getPresenceManager();
         chats = new HashMap<Chat, ChatUI>();
     }
@@ -214,6 +216,10 @@ public class MultiChatPresenter implements MultiChat {
         listener.doAction(eventId, param);
     }
 
+    public String getRoomHost() {
+        return roomHost;
+    }
+
     public void hide() {
         view.hide();
     }
@@ -332,8 +338,14 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     void messageReceivedInRoom(final Chat chat, final Message message) {
-        final ChatUI chatUI = getChat(chat);
-        chatUI.addMesage(message.getFromURI().getResource(), message.getBody());
+        final RoomUI roomUI = (RoomUI) getChat(chat);
+        XmppURI fromURI = message.getFromURI();
+        if (fromURI.getResource() == null && fromURI.getNode().equals(chat.getOtherURI().getNode())) {
+            // Info messsage from room
+            roomUI.addInfoMessage(message.getBody());
+        } else {
+            roomUI.addMesage(fromURI.getResource(), message.getBody());
+        }
     }
 
     private void checkNoChats() {

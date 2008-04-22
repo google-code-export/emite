@@ -37,7 +37,7 @@ public class JoinRoomPanel {
     private BasicDialogExtended dialog;
     private FormPanel formPanel;
     private TextField roomName;
-    private TextField serverName;
+    private TextField roomHostName;
 
     public JoinRoomPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.i18n = i18n;
@@ -61,9 +61,9 @@ public class JoinRoomPanel {
 
                         public void onFirstButtonClick() {
                             roomName.validate();
-                            serverName.validate();
+                            roomHostName.validate();
                             if (formPanel.getForm().isValid()) {
-                                presenter.joinRoom(roomName.getValueAsString(), serverName.getValueAsString());
+                                presenter.joinRoom(roomName.getValueAsString(), roomHostName.getValueAsString());
                                 dialog.hide();
                                 reset();
                             }
@@ -93,14 +93,14 @@ public class JoinRoomPanel {
         roomName.setValidationEvent(false);
         formPanel.add(roomName);
 
-        serverName = new TextField(i18n.t("Room Server Name"), "jid", 150);
-        serverName.setAllowBlank(false);
-        serverName.setValidationEvent(false);
+        roomHostName = new TextField(i18n.t("Room Server Name"), "jid", 150);
+        roomHostName.setAllowBlank(false);
+        roomHostName.setValidationEvent(false);
         // FIXME (get from options)
-        serverName.setValue("rooms.localhost");
+        roomHostName.setValue(presenter.getRoomHost());
         ToolTip fieldToolTip = new ToolTip(i18n.t("Something like 'conference.jabber.org'."));
-        fieldToolTip.applyTo(serverName);
-        formPanel.add(serverName);
+        fieldToolTip.applyTo(roomHostName);
+        formPanel.add(roomHostName);
 
         dialog.add(formPanel);
     }
