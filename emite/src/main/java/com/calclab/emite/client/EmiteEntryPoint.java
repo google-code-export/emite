@@ -19,19 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emiteuiplugin.client.room;
+package com.calclab.emite.client;
 
-import com.calclab.emiteuiplugin.client.chat.ChatUI;
-import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
+import com.google.gwt.core.client.EntryPoint;
 
-public interface RoomUIListener extends ChatUIListener {
-
-    public void onCreated(ChatUI chatUI);
-
-    public void onInviteUserRequested(String userJid, String reasonText);
-
-    public void onModifySubjectRequested(String newSubject);
-
-    public void setSubjectEditable(boolean editable);
-
+public class EmiteEntryPoint implements EntryPoint {
+	public void onModuleLoad() {
+	}
 }
