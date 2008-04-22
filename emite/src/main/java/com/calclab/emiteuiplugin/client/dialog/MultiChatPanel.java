@@ -569,5 +569,7 @@ public class MultiChatPanel implements MultiChatView {
         emoticonPopup.setPopupPosition(x + 2, y - 160);
         emoticonPopup.setWidget(emoticonPalettePanel);
         emoticonPopup.setVisible(true);
+        // Trying to solve bug in Firefox/MacOSX:
+        DOM.setStyleAttribute(emoticonPopup.getElement(), "zIndex", "10000");
     }
 }
