@@ -8,12 +8,6 @@ SHORT-TERM (URGENT):
 <vjrj> accounts explanation in demo html
 --> vjrj
 <vjrj> preserve meta html changes in demo
-<vjrj> Use apache cache configuration in demo
--->vjrj
-<vjrj> name in window dialog title
---> vjrj
-<vjrj> Make EmiteUIPlugin internal events non public
---> vjrj
 <vjrj> ExmiteUIProxy is necessary in web.xml? --> cleanup
 <vjrj> remove logs for demo (double compilation with gwt-log)
 --> vjrj
@@ -22,6 +16,8 @@ SHORT-TERM (URGENT):
 
 MID-TERM
 --------------------------------------------------------------------------------
+<vjrj> sort buddies by presence, and secondly by name
+<vjrj> parse your jid/nick and *bold*
 <vjrj> experiment with gwt-snd and other sound libraries
 <vjrj> Get rid of room locks
 <vjrj> Translate: 

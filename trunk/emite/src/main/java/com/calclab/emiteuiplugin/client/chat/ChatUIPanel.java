@@ -87,6 +87,10 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 
     public void setChatTitle(final String name) {
         super.setTitle(name);
+        if (super.isRendered()) {
+            super.doLayout();
+            // before: tab.getTextEl().highlight()
+        }
     }
 
     private void addWidget(final Widget widget) {

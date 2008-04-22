@@ -59,12 +59,6 @@ public class EmiteUIPlugin extends Plugin {
     public static final String ON_USER_SUBSCRIPTION_CHANGED = "emiteuiplugin.usersubschanged";
     public static final String ON_ROSTER_CHANGED = "emiteuiplugin.onrosterchanged";
 
-    // Internal events
-    public static final String ON_CANCEL_SUBSCRITOR = "emiteuiplugin.oncancelsubscriptor";
-    public static final String ON_REQUEST_REMOVE_ROSTERITEM = "emiteuiplugin.onrequestremoveitem";
-    public static final String ON_REQUEST_SUBSCRIBE = "emiteuiplugin.onrequestsubscribeitem";
-    public static final String NO_ACTION = "emiteuiplugin.noaction";
-
     private MultiChat multiChatDialog;
 
     public EmiteUIPlugin() {

@@ -47,6 +47,10 @@ import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
 
 public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
+    public static final String ON_CANCEL_SUBSCRITOR = "emiteuiplugin.oncancelsubscriptor";
+    public static final String ON_REQUEST_REMOVE_ROSTERITEM = "emiteuiplugin.onrequestremoveitem";
+    public static final String ON_REQUEST_SUBSCRIBE = "emiteuiplugin.onrequestsubscribeitem";
+
     private RosterUIView view;
     private final Xmpp xmpp;
     private final HashMap<XmppURI, ChatUserUI> rosterMap;
@@ -68,15 +72,15 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     }
 
     public void doAction(final String eventName, final Object param) {
-        if (eventName.equals(EmiteUIPlugin.ON_CANCEL_SUBSCRITOR)) {
+        if (eventName.equals(ON_CANCEL_SUBSCRITOR)) {
             final XmppURI userURI = (XmppURI) param;
             presenceManager.cancelSubscriptor(userURI);
             // view.removeRosterItem(getUserByJid(userURI.getJid()));
             // rosterMap.remove(userURI.getJid());
-        } else if (eventName.equals(EmiteUIPlugin.ON_REQUEST_REMOVE_ROSTERITEM)) {
+        } else if (eventName.equals(ON_REQUEST_REMOVE_ROSTERITEM)) {
             final XmppURI userURI = (XmppURI) param;
             xmpp.getRosterManager().requestRemoveItem(userURI);
-        } else if (eventName.equals(EmiteUIPlugin.ON_REQUEST_SUBSCRIBE)) {
+        } else if (eventName.equals(ON_REQUEST_SUBSCRIBE)) {
             final XmppURI userURI = (XmppURI) param;
             xmpp.getPresenceManager().requestSubscribe(userURI);
         }
@@ -187,8 +191,8 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     }
 
     private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final XmppURI userURI) {
-        return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove this buddy"),
-                EmiteUIPlugin.ON_REQUEST_REMOVE_ROSTERITEM, userURI);
+        return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove this buddy"), ON_REQUEST_REMOVE_ROSTERITEM,
+                userURI);
     }
 
     private UserGridMenuItem<XmppURI> createStartChatMenuItem(final XmppURI userURI) {
@@ -198,12 +202,12 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
     private UserGridMenuItem<XmppURI> createSubscribeBuddyMenuItem(final XmppURI userURI) {
         return new UserGridMenuItem<XmppURI>("add-icon", i18n.t("Request to see when this buddy is connected or not"),
-                EmiteUIPlugin.ON_REQUEST_SUBSCRIBE, userURI);
+                ON_REQUEST_SUBSCRIBE, userURI);
     }
 
     private UserGridMenuItem<XmppURI> createUnsubscribeBuddyMenuItem(final XmppURI userURI) {
         return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Stop to see when this buddy is connected or not"),
-                EmiteUIPlugin.ON_CANCEL_SUBSCRITOR, userURI);
+                ON_CANCEL_SUBSCRITOR, userURI);
     }
 
     private void createXmppListeners() {

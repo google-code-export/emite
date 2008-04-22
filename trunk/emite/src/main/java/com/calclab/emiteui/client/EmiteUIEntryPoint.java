@@ -60,8 +60,8 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
         Log.setUncaughtExceptionHandler();
 
-        // At the moment, in runtime:
-        Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
+        // At the moment, not in runtime (in html):
+        // Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
 
         // Log.getDivLogger().moveTo(10, 60);
         // Log.getDivLogger().setSize("1200", "400");

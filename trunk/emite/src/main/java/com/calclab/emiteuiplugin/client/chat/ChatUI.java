@@ -43,16 +43,18 @@ public interface ChatUI {
 
     View getView();
 
+    void highLightChatTitle();
+
     void onCloseCloseConfirmed();
 
     void onCurrentUserSend(String message);
 
     void saveInput(String inputText);
 
-    void setChatTitle(String chatTitle);
-
     void setCloseConfirmed(boolean confirmed);
 
     void setUserColor(String userAlias, String color);
+
+    void unHighLightChatTitle();
 
 }
