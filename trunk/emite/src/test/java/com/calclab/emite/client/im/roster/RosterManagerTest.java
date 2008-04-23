@@ -1,9 +1,7 @@
 package com.calclab.emite.client.im.roster;
 
-import static com.calclab.emite.testing.TestMatchers.isListOfSize;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
+import static com.calclab.emite.testing.TestMatchers.*;
+import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,6 +22,25 @@ public class RosterManagerTest {
 	roster = mock(Roster.class);
 	manager = new RosterManager(emite, roster);
 	manager.install();
+    }
+
+    @Test
+    public void shouldAddRosterItem() {
+	emite.receives(SessionManager.Events.loggedIn("user@domain/res"));
+	manager.requestAddItem(XmppURI.parse("name@domain/res"), "the name", "the group");
+	verify(roster).add((RosterItem) anyObject());
+	emite.verifySendCallback("<iq from='user@domain/res' type='set'><query xmlns='jabber:iq:roster'>"
+		+ "<item jid='name@domain/res' name='the name'><group>the group</group></item></query></iq>");
+	emite.answerSuccess();
+
+    }
+
+    @Test
+    public void shouldHandleIQSets() {
+	emite.receives("<iq id='theId' type='set'><query xmlns='jabber:iq:roster'><item jid='contact@example.org' "
+		+ "subscription='none' name='MyContact'><group>MyBuddies</group></item></query></iq>");
+	emite.verifySent("<iq xmlns='jabber:client' type='result' id='theId' />");
+	verify(roster).changeSubscription(XmppURI.parse("contact@example.org"), "none");
     }
 
     @Test

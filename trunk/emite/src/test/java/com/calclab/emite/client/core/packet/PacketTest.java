@@ -1,6 +1,6 @@
 package com.calclab.emite.client.core.packet;
 
-public class PacketTest extends PacketAbstractTest {
+public class PacketTest extends IPacketAbstractTest {
 
     /**
      * Template method

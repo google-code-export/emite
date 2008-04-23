@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class RosterTest {
@@ -32,6 +33,14 @@ public class RosterTest {
 	final RosterItem item = new RosterItem(XmppURI.parse("someone@domain/resource"), null, null);
 	roster.add(item);
 	assertSame(item, roster.findItemByURI(XmppURI.parse("someone@domain/different_resource")));
+    }
+
+    @Test
+    public void shouldFireListenersWhenPresenceChanged() {
+	final RosterItem item = new RosterItem(XmppURI.parse("one@domain"), Subscription.none, "one");
+	roster.add(item);
+	roster.changePresence(item.getJID(), new Presence());
+	verify(listener).onItemChanged(item);
     }
 
     @Test

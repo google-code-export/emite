@@ -53,10 +53,7 @@ public class PacketMatcher implements Matcher {
 	for (final String name : attributes.keySet()) {
 	    final String value = stanza.getAttribute(name);
 	    final String expected = attributes.get(name);
-	    // Log.debug("MATCHER " + name + " - expecting: " +
-	    // expected + " |
-	    // value: " + value);
-	    if (!expected.equals(value)) {
+	    if (expected != null && !expected.equals(value)) {
 		return false;
 	    }
 	}

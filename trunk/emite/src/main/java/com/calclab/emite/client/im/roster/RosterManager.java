@@ -47,10 +47,12 @@ public class RosterManager implements Installable {
 
     private final Roster roster;
     private final Emite emite;
+    private XmppURI currentUser;
 
     public RosterManager(final Emite emite, final Roster roster) {
 	this.emite = emite;
 	this.roster = roster;
+	this.currentUser = null;
     }
 
     public void install() {
@@ -58,24 +60,25 @@ public class RosterManager implements Installable {
 	// client SHOULD request the roster BEFORE! sending initial presence
 	emite.subscribe(when(SessionManager.Events.onLoggedIn), new PacketListener() {
 	    public void handle(final IPacket received) {
-		emite.send("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
-		    public void handle(final IPacket received) {
-			setRosterItems(roster, received);
-			emite.publish(RosterManager.Events.ready);
-		    }
-
-		});
+		currentUser = XmppURI.parse(received.getAttribute("uri"));
+		requestRoster();
 	    }
 	});
+
+	emite.subscribe(when(new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", null).With("xmlns", null)),
+		new PacketListener() {
+		    public void handle(final IPacket received) {
+			emite.send(new IQ(IQ.Type.result).With("id", received.getAttribute("id")));
+			final IPacket item = received.getFirstChild("query").getFirstChild("item");
+			final String jid = item.getAttribute("jid");
+			roster.changeSubscription(XmppURI.parse(jid), item.getAttribute("subscription"));
+		    }
+		});
 
 	emite.subscribe(when("presence"), new PacketListener() {
 	    public void handle(final IPacket received) {
 		final Presence presence = new Presence(received);
-		final RosterItem item = roster.findItemByURI(presence.getFromURI());
-		if (item != null) {
-		    item.setPresence(presence);
-		    roster.fireItemPresenceChanged(item);
-		}
+		roster.changePresence(presence.getFromURI(), presence);
 	    }
 	});
 
@@ -97,13 +100,15 @@ public class RosterManager implements Installable {
 	    item.addChild(new Packet("group").WithText(group));
 	}
 
-	final IPacket iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", item);
+	roster.add(new RosterItem(jid, Subscription.none, name));
+	final IPacket iq = new IQ(IQ.Type.set, currentUser, null).WithQuery("jabber:iq:roster", item);
 	emite.send("roster", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (IQ.isSuccess(received)) {
-		    roster.add(new RosterItem(jid, RosterItem.Subscription.from, name));
 		    final Presence presenceRequest = new Presence(Type.subscribe, null, jid);
 		    emite.send(presenceRequest);
+		} else {
+		    roster.removeItem(jid);
 		}
 	    }
 	});
@@ -131,6 +136,16 @@ public class RosterManager implements Installable {
     private List<? extends IPacket> getItems(final IPacket iPacket) {
 	final List<? extends IPacket> items = iPacket.getFirstChild("query").getChildren();
 	return items;
+    }
+
+    private void requestRoster() {
+	emite.send("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
+	    public void handle(final IPacket received) {
+		setRosterItems(roster, received);
+		emite.publish(RosterManager.Events.ready);
+	    }
+
+	});
     }
 
     private void setRosterItems(final Roster roster, final IPacket received) {

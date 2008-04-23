@@ -34,8 +34,8 @@ public class RosterPanel extends JPanel {
 	@Override
 	public String toString() {
 	    final Presence presence = item.getPresence();
-	    final String status = presence.getType() + ":" + presence.getStatus() + ":" + presence.getShow();
-	    return name + "(" + item.getJID() + ") - " + status;
+	    final String status = " - " + presence.getType() + ":" + presence.getShow();
+	    return name + "(" + item.getJID() + ") - " + presence.getStatus() + status;
 	}
     }
 

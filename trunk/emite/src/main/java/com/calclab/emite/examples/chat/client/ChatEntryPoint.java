@@ -165,7 +165,7 @@ public class ChatEntryPoint implements EntryPoint {
 	});
 
 	xmpp.getRoster().addListener(new RosterListener() {
-	    public void onItemPresenceChanged(final RosterItem item) {
+	    public void onItemChanged(final RosterItem item) {
 	    }
 
 	    public void onRosterChanged(final Collection<RosterItem> items) {

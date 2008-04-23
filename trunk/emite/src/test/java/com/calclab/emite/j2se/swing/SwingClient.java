@@ -227,7 +227,7 @@ public class SwingClient {
 	});
 
 	xmpp.getRoster().addListener(new RosterListener() {
-	    public void onItemPresenceChanged(final RosterItem item) {
+	    public void onItemChanged(final RosterItem item) {
 		print("ROSTER ITEM PRESENCE CHANGED");
 		rosterPanel.refresh();
 	    }
@@ -275,7 +275,9 @@ public class SwingClient {
 	frame.addWindowListener(new WindowAdapter() {
 	    @Override
 	    public void windowClosing(final WindowEvent e) {
-		xmpp.stop();
+		if (xmpp != null) {
+		    xmpp.stop();
+		}
 		System.exit(0);
 	    }
 	});

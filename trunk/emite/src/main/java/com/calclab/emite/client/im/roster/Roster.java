@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.calclab.emite.client.components.Component;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class Roster implements Component {
@@ -53,6 +54,22 @@ public class Roster implements Component {
 	listeners.add(listener);
     }
 
+    public void changePresence(final XmppURI uri, final Presence presence) {
+	final RosterItem item = findItemByURI(uri);
+	if (item != null) {
+	    item.setPresence(presence);
+	    fireItemChanged(item);
+	}
+    }
+
+    public void changeSubscription(final XmppURI jid, final String subscription) {
+	final RosterItem item = findItemByURI(jid);
+	if (item != null) {
+	    item.setSubscription(subscription);
+	    fireItemChanged(item);
+	}
+    }
+
     public RosterItem findItemByURI(final XmppURI uri) {
 	return items.get(uri.getJID());
     }
@@ -61,8 +78,8 @@ public class Roster implements Component {
 	return subscriptionMode;
     }
 
-    public void removeItem(final XmppURI uri) {
-	final RosterItem removed = items.remove(uri);
+    public void removeItem(final XmppURI jid) {
+	final RosterItem removed = items.remove(jid);
 	if (removed != null) {
 	    fireRosterChanged();
 	}
@@ -77,18 +94,18 @@ public class Roster implements Component {
 	fireRosterChanged();
     }
 
-    void fireItemPresenceChanged(final RosterItem item) {
-	for (final RosterListener listener : listeners) {
-	    listener.onItemPresenceChanged(item);
-	}
-    }
-
     void setItems(final List<RosterItem> itemCollection) {
 	items.clear();
 	for (final RosterItem item : itemCollection) {
 	    items.put(item.getJID(), item);
 	}
 	fireRosterChanged();
+    }
+
+    private void fireItemChanged(final RosterItem item) {
+	for (final RosterListener listener : listeners) {
+	    listener.onItemChanged(item);
+	}
     }
 
     private void fireRosterChanged() {

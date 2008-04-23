@@ -212,7 +212,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
     private void createXmppListeners() {
         roster.addListener(new RosterListener() {
-            public void onItemPresenceChanged(final RosterItem item) {
+            public void onItemChanged(final RosterItem item) {
                 final ChatUserUI user = rosterMap.get(item.getJID());
                 if (user == null) {
                     Log.error("Trying to update a user is not in roster: " + item.getJID() + " ----> Roster: "

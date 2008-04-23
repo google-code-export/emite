@@ -61,7 +61,7 @@ public class RosterItem {
     private final XmppURI jid;
     private final String name;
     private Presence presence;
-    private final Subscription subscription;
+    private Subscription subscription;
 
     public RosterItem(final XmppURI uri, final Subscription subscription, final String name) {
 	this.jid = uri;
@@ -96,6 +96,14 @@ public class RosterItem {
 	    this.presence = new Presence(Type.unavailable, (String) null, null).With(Show.away);
 	} else {
 	    this.presence = presence;
+	}
+    }
+
+    public void setSubscription(final String value) {
+	try {
+	    this.subscription = Subscription.valueOf(value);
+	} catch (final Exception e) {
+
 	}
     }
 

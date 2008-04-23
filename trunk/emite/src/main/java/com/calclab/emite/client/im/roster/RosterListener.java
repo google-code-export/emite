@@ -26,5 +26,5 @@ import java.util.Collection;
 public interface RosterListener {
     void onRosterChanged(Collection<RosterItem> items);
 
-    void onItemPresenceChanged(RosterItem item);
+    void onItemChanged(RosterItem item);
 }
