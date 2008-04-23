@@ -39,6 +39,8 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+
 public class RosterManager implements Installable {
 
     public static class Events {
@@ -60,7 +62,7 @@ public class RosterManager implements Installable {
 	// client SHOULD request the roster BEFORE! sending initial presence
 	emite.subscribe(when(SessionManager.Events.onLoggedIn), new PacketListener() {
 	    public void handle(final IPacket received) {
-		currentUser = XmppURI.parse(received.getAttribute("uri"));
+		currentUser = uri(received.getAttribute("uri"));
 		requestRoster();
 	    }
 	});
@@ -71,7 +73,7 @@ public class RosterManager implements Installable {
 			emite.send(new IQ(IQ.Type.result).With("id", received.getAttribute("id")));
 			final IPacket item = received.getFirstChild("query").getFirstChild("item");
 			final String jid = item.getAttribute("jid");
-			roster.changeSubscription(XmppURI.parse(jid), item.getAttribute("subscription"));
+			roster.changeSubscription(uri(jid), item.getAttribute("subscription"));
 		    }
 		});
 
@@ -128,7 +130,7 @@ public class RosterManager implements Installable {
 
     private RosterItem convert(final IPacket item) {
 	final String jid = item.getAttribute("jid");
-	final XmppURI uri = XmppURI.parse(jid);
+	final XmppURI uri = uri(jid);
 	final Subscription subscription = RosterItem.Subscription.valueOf(item.getAttribute("subscription"));
 	return new RosterItem(uri, subscription, item.getAttribute("name"));
     }

@@ -26,6 +26,8 @@ import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.packet.DelegatedPacket;
 import com.calclab.emite.client.core.packet.IPacket;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+
 public class BasicStanza extends DelegatedPacket implements Stanza {
     protected static final String TYPE = "type";
     private static final String FROM = "from";
@@ -45,7 +47,7 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
     }
 
     public XmppURI getFromURI() {
-	return XmppURI.parse(getFrom());
+	return uri(getFrom());
     }
 
     public String getId() {
@@ -57,7 +59,7 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
     }
 
     public XmppURI getToURI() {
-	return XmppURI.parse(getTo());
+	return uri(getTo());
     }
 
     public void setFrom(final String from) {

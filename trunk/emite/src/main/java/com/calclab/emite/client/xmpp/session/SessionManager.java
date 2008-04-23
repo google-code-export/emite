@@ -34,6 +34,8 @@ import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+
 public class SessionManager implements Installable {
     public static class Events {
 	public static final Event onAuthorized = new Event("session:on:authorized");
@@ -114,7 +116,7 @@ public class SessionManager implements Installable {
 	emite.subscribe(when(Events.onBinded), new PacketListener() {
 	    public void handle(final IPacket received) {
 		final String uri = received.getAttribute("uri");
-		final XmppURI userURI = XmppURI.parse(uri);
+		final XmppURI userURI = uri(uri);
 		final IQ iq = new IQ(IQ.Type.set, userURI, userURI.getHost());
 		iq.Includes("session", "urn:ietf:params:xml:ns:xmpp-session");
 

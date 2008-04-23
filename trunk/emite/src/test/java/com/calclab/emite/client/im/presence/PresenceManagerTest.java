@@ -14,6 +14,8 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.testing.EmiteStub;
 import com.calclab.emite.testing.TestMatchers;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+
 public class PresenceManagerTest {
 
     private PresenceManager manager;
@@ -68,7 +70,7 @@ public class PresenceManagerTest {
     }
 
     private Presence createPresence(final Type type) {
-	final Presence presence = new Presence(type, XmppURI.parse("from@domain"), XmppURI.parse("to@domain"));
+	final Presence presence = new Presence(type, uri("from@domain"), uri("to@domain"));
 	return presence;
     }
 }

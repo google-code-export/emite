@@ -40,6 +40,8 @@ import com.calclab.emite.j2se.swing.LoginPanel.LoginPanelListener;
 import com.calclab.emite.j2se.swing.RoomPanel.RoomPanelListener;
 import com.calclab.emite.j2se.swing.RosterPanel.RosterPanelListener;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+
 public class SwingClient {
 
     public static void main(final String args[]) {
@@ -76,7 +78,7 @@ public class SwingClient {
 	});
 	rosterPanel = new RosterPanel(frame, new RosterPanelListener() {
 	    public void onAddRosterItem(final String uri, final String name) {
-		xmpp.getRosterManager().requestAddItem(XmppURI.parse(uri), name, null);
+		xmpp.getRosterManager().requestAddItem(uri(uri), name, null);
 	    }
 
 	    public void onRemoveItem(final RosterItem item) {
@@ -91,7 +93,7 @@ public class SwingClient {
 	roomsPanel = new RoomsPanel(new RoomsPanelListener() {
 	    public void onRoomEnterd(final String roomName) {
 		final RoomManager roomManager = MUCModule.getRoomManager(xmpp.getComponents());
-		roomManager.openChat(XmppURI.parse(roomName));
+		roomManager.openChat(uri(roomName));
 	    }
 	});
 

@@ -5,8 +5,9 @@ import org.junit.Test;
 
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteStub;
+
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class ResourceBindingManagerTest {
 
@@ -21,7 +22,7 @@ public class ResourceBindingManagerTest {
 
     @Test
     public void shouldPerfomrBinding() {
-	emite.receives(SessionManager.Events.login(XmppURI.parse("name@domain/someresource"), "password"));
+	emite.receives(SessionManager.Events.login(uri("name@domain/someresource"), "password"));
 	emite.receives(SessionManager.Events.onAuthorized);
 	emite.verifySentWithCallback(new IQ(IQ.Type.set).Includes("bind", "urn:ietf:params:xml:ns:xmpp-bind"));
 	emite.answer("<iq type=\"result\" id=\"bind_2\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\">"

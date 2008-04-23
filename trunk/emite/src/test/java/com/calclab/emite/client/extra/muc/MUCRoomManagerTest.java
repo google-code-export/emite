@@ -16,9 +16,9 @@ import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteStub;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class MUCRoomManagerTest {
 
@@ -37,8 +37,8 @@ public class MUCRoomManagerTest {
 
     @Test
     public void shouldCloseAllActiveRoomsWhenLoggedOut() {
-	final Room room1 = manager.openChat(XmppURI.parse("room1@domain/nick"));
-	final Room room2 = manager.openChat(XmppURI.parse("room2@domain/nick"));
+	final Room room1 = manager.openChat(uri("room1@domain/nick"));
+	final Room room2 = manager.openChat(uri("room2@domain/nick"));
 	emite.receives(SessionManager.Events.onLoggedOut);
 	verify(listener).onChatClosed(room2);
 	verify(listener).onChatClosed(room1);
@@ -47,7 +47,7 @@ public class MUCRoomManagerTest {
     @Test
     public void shouldCreateInstantRoomIfNeeded() {
 	manager.setUserURI("user@localhost/resource");
-	manager.openChat(XmppURI.parse("newroomtest1@rooms.localhost/nick"));
+	manager.openChat(uri("newroomtest1@rooms.localhost/nick"));
 	emite.receives("<presence from='newroomtest1@rooms.localhost/nick' to='user@localhost/resource' >"
 		+ "<priority>5</priority>" + "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item affiliation='owner' role='moderator' jid='vjrj@localhost/Psi' />" + "<status code='201' />"
@@ -58,7 +58,7 @@ public class MUCRoomManagerTest {
     @Test
     public void shouldFireChatMessages() {
 	manager.setUserURI("user@domain/resource");
-	final Room chat = manager.openChat(XmppURI.parse("room@rooms.domain/user"));
+	final Room chat = manager.openChat(uri("room@rooms.domain/user"));
 	final RoomListener roomListener = mock(RoomListener.class);
 	chat.addListener(roomListener);
 	final String message = "<message from='room@rooms.domain/other' to='user@domain/resource' "
@@ -70,8 +70,8 @@ public class MUCRoomManagerTest {
     // FIXME: revisar si esto tiene lógica
     @Test
     public void shouldGiveSameRoomsWithSameURIS() {
-	final Room room1 = manager.openChat(XmppURI.parse("room@domain/nick"));
-	final Room room2 = manager.openChat(XmppURI.parse("room@domain/nick"));
+	final Room room1 = manager.openChat(uri("room@domain/nick"));
+	final Room room2 = manager.openChat(uri("room@domain/nick"));
 	assertSame(room1, room2);
     }
 
@@ -82,20 +82,20 @@ public class MUCRoomManagerTest {
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'><invite from='otherUser@domain/resource'>"
 		+ "<reason>The reason here</reason></invite></x></message>";
 	emite.receives(message);
-	verify(listener).onInvitationReceived(XmppURI.parse("otherUser@domain/resource"),
-		XmppURI.parse("room@conference.domain"), "The reason here");
+	verify(listener).onInvitationReceived(uri("otherUser@domain/resource"), uri("room@conference.domain"),
+		"The reason here");
     }
 
     @Test
     public void shouldUpdateRoomPresence() {
 	manager.setUserURI("user@domain/resource");
-	final Room room = manager.openChat(XmppURI.parse("room1@domain/nick"));
+	final Room room = manager.openChat(uri("room1@domain/nick"));
 
 	emite.receives("<presence to='user@domain/resource' xmlns='jabber:client' from='room1@domain/otherUser'>"
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item role='moderator' affiliation='owner' /></x></presence>");
 	assertEquals(1, room.getOccupantsCount());
-	Occupant user = room.findOccupant(XmppURI.parse("room1@domain/otherUser"));
+	Occupant user = room.findOccupant(uri("room1@domain/otherUser"));
 	assertNotNull(user);
 	assertEquals(Affiliation.owner, user.getAffiliation());
 	assertEquals(Role.moderator, user.getRole());
@@ -104,7 +104,7 @@ public class MUCRoomManagerTest {
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item role='participant' affiliation='member' /></x></presence>");
 	assertEquals(1, room.getOccupantsCount());
-	user = room.findOccupant(XmppURI.parse("room1@domain/otherUser"));
+	user = room.findOccupant(uri("room1@domain/otherUser"));
 	assertNotNull(user);
 	assertEquals(Affiliation.member, user.getAffiliation());
 	assertEquals(Role.participant, user.getRole());

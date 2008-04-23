@@ -32,6 +32,8 @@ import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.session.SessionManager.Events;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+
 public class SASLManager implements Installable {
     private static final String SEP = new String(new char[] { 0 });
 
@@ -53,7 +55,7 @@ public class SASLManager implements Installable {
     public void install() {
 	emite.subscribe(when(SessionManager.Events.onDoLogin), new PacketListener() {
 	    public void handle(final IPacket received) {
-		uri = XmppURI.parse(received.getAttribute("uri"));
+		uri = uri(received.getAttribute("uri"));
 		password = received.getAttribute("password");
 	    }
 	});

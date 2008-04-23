@@ -29,7 +29,7 @@ import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class ResourceBindingManager implements Installable {
     private String resource;
@@ -43,7 +43,7 @@ public class ResourceBindingManager implements Installable {
     public void install() {
 	emite.subscribe(when(SessionManager.Events.onDoLogin), new PacketListener() {
 	    public void handle(final IPacket received) {
-		resource = XmppURI.parse(received.getAttribute("uri")).getResource();
+		resource = uri(received.getAttribute("uri")).getResource();
 	    }
 	});
 	emite.subscribe(when(SessionManager.Events.onAuthorized), new PacketListener() {

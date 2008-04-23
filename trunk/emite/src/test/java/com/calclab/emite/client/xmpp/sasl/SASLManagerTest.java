@@ -4,8 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.xmpp.session.SessionManager;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteStub;
+
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class SASLManagerTest {
 
@@ -27,7 +28,7 @@ public class SASLManagerTest {
 
     @Test
     public void shouldHandleSuccessWhenAuthorizationSent() {
-	emite.receives(SessionManager.Events.login(XmppURI.parse("name@domain/res"), "password"));
+	emite.receives(SessionManager.Events.login(uri("name@domain/res"), "password"));
 	emite.receives(SessionManager.Events.onDoAuthorization);
 	emite.receives("<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"/>");
 	emite.verifyPublished(SessionManager.Events.onAuthorized);

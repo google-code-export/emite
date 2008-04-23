@@ -11,6 +11,8 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteStub;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+
 public class RosterManagerTest {
     private EmiteStub emite;
     private RosterManager manager;
@@ -27,7 +29,7 @@ public class RosterManagerTest {
     @Test
     public void shouldAddRosterItem() {
 	emite.receives(SessionManager.Events.loggedIn("user@domain/res"));
-	manager.requestAddItem(XmppURI.parse("name@domain/res"), "the name", "the group");
+	manager.requestAddItem(uri("name@domain/res"), "the name", "the group");
 	verify(roster).add((RosterItem) anyObject());
 	emite.verifySentWithCallback("<iq from='user@domain/res' type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='name@domain/res' name='the name'><group>the group</group></item></query></iq>");
@@ -40,12 +42,12 @@ public class RosterManagerTest {
 	emite.receives("<iq id='theId' type='set'><query xmlns='jabber:iq:roster'><item jid='contact@example.org' "
 		+ "subscription='none' name='MyContact'><group>MyBuddies</group></item></query></iq>");
 	emite.verifySent("<iq xmlns='jabber:client' type='result' id='theId' />");
-	verify(roster).changeSubscription(XmppURI.parse("contact@example.org"), "none");
+	verify(roster).changeSubscription(uri("contact@example.org"), "none");
     }
 
     @Test
     public void shouldRemoveItemsToRoster() {
-	final XmppURI uri = XmppURI.parse("name@domain/res");
+	final XmppURI uri = uri("name@domain/res");
 	manager.requestRemoveItem(uri);
 	emite.verifySentWithCallback(new IQ(Type.set));
 	emite.answerSuccess();
