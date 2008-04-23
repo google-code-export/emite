@@ -12,13 +12,13 @@ public class MessageTest {
     @Test
     public void shouldReturnUnkownType() {
 	final Message message = new Message(new Packet("message").With("type", "invalid-here"));
-	assertSame(Type.unknown, message.getType());
+	assertSame(Type.normal, message.getType());
     }
 
     @Test
     public void shouldTypeNotSpecifiedType() {
 	final Message message = new Message(new Packet("message"));
 	final Type type = message.getType();
-	assertSame(Type.notSpecified, type);
+	assertSame(Type.normal, type);
     }
 }
