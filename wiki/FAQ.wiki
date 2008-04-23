@@ -1,3 +1,4 @@
+
 = Emite FAQ =
 
 == I'm new with Java and/or GWT, how can I ... ==
@@ -12,11 +13,11 @@ Well you can play with a proxy to rewrite the bosh petitions, because you have t
 
 Maybe, see our issue/enhancement list. Emite is very modular and easy to extend, patches are welcome.
 
-== how can I help? ==
+== How can I help? ==
 
 See our issue list, and maybe subscribe to our devel list. Patches are welcome.
 
-== but, emite scales? ==
+== But, emite scales? ==
 
 If you BOSH connector scales, and your xmpp server scales, ((e)) scales.
 
