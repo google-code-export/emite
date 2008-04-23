@@ -22,6 +22,7 @@ public class EmiteStub implements Emite {
     private final ArrayList<IPacket> published;
     private IPacket sentByCallback;
     private final ArrayList<IPacket> sent;
+    private StringBuffer contentsString;
 
     public EmiteStub() {
 	xmler = new TigaseXMLService();
@@ -77,35 +78,52 @@ public class EmiteStub implements Emite {
     }
 
     public void verifyNotPublished(final Packet packet) {
-	assertFalse(contains(packet, published));
+	assertNotContains(packet, published);
     }
 
     public void verifyPublished(final IPacket expected) {
-	assertTrue(contains(expected, published));
+	assertContains(expected, published);
+    }
+
+    public void verifyPublished(final String xml) {
+	verifyPublished(xmler.toXML(xml));
     }
 
     public void verifyPublishedTimes(final int times) {
 	assertEquals(times, published.size());
     }
 
-    public PacketListener verifySendCallback(final IPacket iq) {
+    public PacketListener verifySentWithCallback(final IPacket iq) {
 	assertNotNull(sentByCallback);
 	assertTrue(new IsPacketLike(iq).matches(sentByCallback));
 	return lastCallback;
     }
 
-    public void verifySendCallback(final String xml) {
-	verifySendCallback(xmler.toXML(xml));
+    public void verifySentWithCallback(final String xml) {
+	verifySentWithCallback(xmler.toXML(xml));
     }
 
     public void verifySent(final String expected) {
-	assertTrue(contains(xmler.toXML(expected), sent));
+	assertContains(xmler.toXML(expected), sent);
     }
 
-    private boolean contains(final IPacket expected, final ArrayList<IPacket> list) {
+    private void assertContains(final IPacket expected, final ArrayList<IPacket> list) {
+	final StringBuffer buffer = new StringBuffer();
+	final boolean isContained = contains(expected, list, buffer);
+	assertTrue("Expected " + expected + " contained in " + buffer, isContained);
+    }
+
+    private void assertNotContains(final Packet expected, final ArrayList<IPacket> list) {
+	final StringBuffer buffer = new StringBuffer();
+	final boolean isContained = contains(expected, list, buffer);
+	assertFalse("Expected " + expected + " contained in\n" + buffer, isContained);
+    }
+
+    private boolean contains(final IPacket expected, final ArrayList<IPacket> list, final StringBuffer buffer) {
 	boolean isContained = false;
 	final IsPacketLike matcher = new IsPacketLike(expected);
 	for (final IPacket packet : list) {
+	    buffer.append("[").append(packet.toString()).append("]");
 	    isContained = isContained ? isContained : matcher.matches(packet);
 	}
 	return isContained;

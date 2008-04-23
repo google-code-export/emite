@@ -22,6 +22,8 @@
 package com.calclab.emite.client.extra.muc;
 
 import com.calclab.emite.client.im.chat.ChatManagerListener;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public interface RoomManagerListener extends ChatManagerListener {
+    void onInvitationReceived(XmppURI invitor, XmppURI roomURI, String reason);
 }

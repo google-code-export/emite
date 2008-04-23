@@ -28,12 +28,16 @@ import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.NoPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.im.chat.ChatManagerListener;
+import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.client.xmpp.stanzas.Stanza;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 
@@ -65,6 +69,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager, I
     }
 
     @Override
+    // FIXME: quizá añadir una propiedad de "locked" al Room?
     public Room openChat(final XmppURI roomURI) {
 	Room room = rooms.get(roomURI.getJID());
 	if (room == null) {
@@ -81,12 +86,16 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager, I
 
     @Override
     protected void eventMessage(final Message message) {
+	IPacket child;
 	if (message.getType() == Message.Type.groupchat) {
 	    final Room room = rooms.get(message.getFromURI().getJID());
 	    if (room != null) {
 		room.dispatch(message);
 	    }
+	} else if ((child = message.getFirstChild("x").getFirstChild("invite")) != NoPacket.INSTANCE) {
+	    handleRoomInvitation(message.getFromURI(), new BasicStanza(child));
 	}
+
     }
 
     private void createInstantRoom(final Room room) {
@@ -116,15 +125,26 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager, I
 		    final IPacket item = xtension.getFirstChild("item");
 		    final String affiliation = item.getAttribute("affiliation");
 		    final String role = item.getAttribute("role");
-
 		    room.setOccupantPresence(occupantURI, affiliation, role);
-
 		    if (isNewRoom(xtension)) {
 			createInstantRoom(room);
 		    }
 		}
 	    }
 	}
+    }
+
+    private void fireInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
+	for (final ChatManagerListener listener : listeners) {
+	    try {
+		((RoomManagerListener) listener).onInvitationReceived(invitor, roomURI, reason);
+	    } catch (final ClassCastException e) {
+	    }
+	}
+    }
+
+    private void handleRoomInvitation(final XmppURI roomURI, final Stanza invitation) {
+	fireInvitationReceived(invitation.getFromURI(), roomURI, invitation.getFirstChild("reason").getText());
     }
 
     private boolean isNewRoom(final IPacket xtension) {

@@ -29,7 +29,7 @@ public class RosterManagerTest {
 	emite.receives(SessionManager.Events.loggedIn("user@domain/res"));
 	manager.requestAddItem(XmppURI.parse("name@domain/res"), "the name", "the group");
 	verify(roster).add((RosterItem) anyObject());
-	emite.verifySendCallback("<iq from='user@domain/res' type='set'><query xmlns='jabber:iq:roster'>"
+	emite.verifySentWithCallback("<iq from='user@domain/res' type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='name@domain/res' name='the name'><group>the group</group></item></query></iq>");
 	emite.answerSuccess();
 
@@ -47,7 +47,7 @@ public class RosterManagerTest {
     public void shouldRemoveItemsToRoster() {
 	final XmppURI uri = XmppURI.parse("name@domain/res");
 	manager.requestRemoveItem(uri);
-	emite.verifySendCallback(new IQ(Type.set));
+	emite.verifySentWithCallback(new IQ(Type.set));
 	emite.answerSuccess();
 	verify(roster).removeItem(uri);
     }
@@ -55,7 +55,7 @@ public class RosterManagerTest {
     @Test
     public void shouldRequestRosterOnLogin() {
 	emite.receives(SessionManager.Events.loggedIn("user@domain/res"));
-	emite.verifySendCallback(new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null));
+	emite.verifySentWithCallback(new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null));
 	emite.answer("<iq type='result' xmlns='jabber:client'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='name1@domain' subscription='both' name='complete name1' />"
 		+ "<item jid='name2@domain' subscription='both' name='complete name2' />" + "</query></iq>");

@@ -23,7 +23,7 @@ public class ResourceBindingManagerTest {
     public void shouldPerfomrBinding() {
 	emite.receives(SessionManager.Events.login(XmppURI.parse("name@domain/someresource"), "password"));
 	emite.receives(SessionManager.Events.onAuthorized);
-	emite.verifySendCallback(new IQ(IQ.Type.set).Includes("bind", "urn:ietf:params:xml:ns:xmpp-bind"));
+	emite.verifySentWithCallback(new IQ(IQ.Type.set).Includes("bind", "urn:ietf:params:xml:ns:xmpp-bind"));
 	emite.answer("<iq type=\"result\" id=\"bind_2\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\">"
 		+ "<jid>somenode@example.com/someresource</jid></bind></iq>");
 	emite.verifyPublished(SessionManager.Events.onBinded.Params("uri", "somenode@example.com/someresource"));

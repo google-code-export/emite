@@ -14,10 +14,10 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.testing.EmiteStub;
 import com.calclab.emite.testing.TestMatchers;
 
 @SuppressWarnings("unchecked")
@@ -25,12 +25,15 @@ public class RoomTest {
 
     private RoomListener listener;
     private Room room;
+    private EmiteStub emite;
+    private XmppURI userURI;
+    private XmppURI roomURI;
 
     @Before
     public void aaCreate() {
-	final XmppURI userURI = XmppURI.parse("user@domain/res");
-	final XmppURI roomURI = XmppURI.parse("room@domain/nick");
-	final Emite emite = mock(Emite.class);
+	userURI = XmppURI.parse("user@domain/res");
+	roomURI = XmppURI.parse("room@domain/nick");
+	emite = new EmiteStub();
 	room = new Room(userURI, roomURI, "roomName", emite);
 	listener = mock(RoomListener.class);
 	room.addListener(listener);
@@ -62,6 +65,14 @@ public class RoomTest {
 	verify(listener, times(2)).onOccupantsChanged((Collection<Occupant>) anyObject());
 	assertNull(room.findOccupant(uri));
 
+    }
+
+    @Test
+    public void shouldSendRoomInvitation() {
+	room.sendInvitationTo("otherUser@domain/resource", "this is the reason");
+	emite.verifySent("<message from='" + userURI + "' to='" + roomURI
+		+ "'><x xmlns='http://jabber.org/protocol/muc#user'>"
+		+ "<invite to='otherUser@domain/resource'><reason>this is the reason</reason></invite></x></message>");
     }
 
     @Test

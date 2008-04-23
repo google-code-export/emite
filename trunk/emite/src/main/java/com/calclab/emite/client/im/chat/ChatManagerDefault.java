@@ -42,7 +42,7 @@ public class ChatManagerDefault implements ChatManager, Installable {
     protected XmppURI userURI;
     protected final Emite emite;
     protected final HashSet<Chat> chats;
-    private final ArrayList<ChatManagerListener> listeners;
+    protected final ArrayList<ChatManagerListener> listeners;
 
     public ChatManagerDefault(final Emite emite) {
 	this.emite = emite;
