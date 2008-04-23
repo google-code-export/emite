@@ -1,9 +1,11 @@
+#summary The Emite FAQ
+#labels Featured
 
 = Emite FAQ =
 
 == I'm new with Java and/or GWT, how can I ... ? ==
 
-You can first read and play a little bit with GWT for instance with the [http://code.google.com/webtoolkit/gettingstarted.html Getting Started with GWT], and try to run the GWT Samples. After that try to build, install a run our emite samples. A recommended read also, [http://catb.org/~esr/faqs/smart-questions.html How To Ask Questions The Smart Way].
+We recommend you to read and play a little bit with GWT for instance with [http://code.google.com/webtoolkit/gettingstarted.html Getting Started with GWT], also try to run the GWT Samples. After that try to build, install a run our samples.
 
 == I need to install a xmpp server? ==
 
@@ -19,7 +21,7 @@ Maybe, see our [http://code.google.com/p/emite/issues/list issue/enhancement lis
 
 == In emiteui there is a bug, what can I do? ==
 
-Please add <code>?log_level=DEBUG</code> to the url (if you are using the ui) and try to fill us an [http://code.google.com/p/emite/issues/list issue] with some debug info.
+Please add <code>?log_level=DEBUG</code> to the url and try to fill us an [http://code.google.com/p/emite/issues/list issue] with some debug info.
 
 == How can I help? ==
 
@@ -28,4 +30,8 @@ See our [http://code.google.com/p/emite/issues/list issue list], and maybe subsc
 == But, emite scales? ==
 
 If you BOSH connector scales, and your xmpp server scales, ((e)) scales.
+
+== I have an error? It doesn't works for me! (with no more info) == 
+
+Yes? A recommended reading: [http://catb.org/~esr/faqs/smart-questions.html How To Ask Questions The Smart Way].
 
