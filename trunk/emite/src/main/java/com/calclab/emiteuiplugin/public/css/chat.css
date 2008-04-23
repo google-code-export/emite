@@ -93,6 +93,10 @@
   background-image: url(img/cancel.gif) !important;
 }
 
+.info-icon {
+  background-image: url(img/info.gif) !important;
+}
+
 .forbidden-icon {
   background-image: url(img/forbidden.gif) !important;
 }
