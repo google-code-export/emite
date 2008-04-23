@@ -32,9 +32,11 @@ public class MultiChatCreationParam {
     private final UserChatOptions userChatOptions;
     private final I18nTranslationService i18nService;
     private final String roomHost;
+    private final String chatDialogTitle;
 
-    public MultiChatCreationParam(final BoshOptions boshOptions, final String roomHost,
+    public MultiChatCreationParam(final String chatDialogTitle, final BoshOptions boshOptions, final String roomHost,
             final I18nTranslationService i18nService, final UserChatOptions userChatOptions) {
+        this.chatDialogTitle = chatDialogTitle;
         this.boshOptions = boshOptions;
         this.roomHost = roomHost;
         this.i18nService = i18nService;
@@ -43,6 +45,10 @@ public class MultiChatCreationParam {
 
     public BoshOptions getBoshOptions() {
         return boshOptions;
+    }
+
+    public String getChatDialogTitle() {
+        return chatDialogTitle;
     }
 
     public I18nTranslationService getI18nService() {

@@ -221,7 +221,7 @@ public class MultiChatPanelTopBar extends Toolbar {
             break;
         }
 
-        String icon = StatusUtil.getStatusIcon(ownPresence.getStatus()).getHTML();
+        String icon = StatusUtil.getOwnStatusIcon(ownPresence.getStatus()).getHTML();
         statusButton.setText(icon);
     }
 
@@ -276,7 +276,7 @@ public class MultiChatPanelTopBar extends Toolbar {
     private CheckItem createStatusCheckItem(final OwnStatus ownStatus) {
 
         CheckItem checkItem = new CheckItem();
-        checkItem.setText(StatusUtil.getStatusIconAndText(i18n, ownStatus));
+        checkItem.setText(StatusUtil.getOwnStatusIconAndText(i18n, ownStatus));
         checkItem.setGroup("chatstatus");
         switch (ownStatus) {
         case offline:

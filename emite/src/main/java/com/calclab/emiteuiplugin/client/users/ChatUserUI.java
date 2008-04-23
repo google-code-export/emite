@@ -22,24 +22,32 @@
 package com.calclab.emiteuiplugin.client.users;
 
 import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emite.client.im.roster.RosterItem.Subscription;
-import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emiteuiplugin.client.roster.UserStatusIcon;
 
 public class ChatUserUI extends AbstractChatUser {
 
-    private final RosterItem rosterItem;
+    private UserStatusIcon statusIcon;
+
+    private String statusText;
 
     public ChatUserUI(final String iconUrl, final RosterItem rosterItem, final String color) {
         super(iconUrl, rosterItem.getJID(), rosterItem.getName(), color);
-        this.rosterItem = rosterItem;
     }
 
-    public Presence getPresence() {
-        return rosterItem.getPresence();
+    public UserStatusIcon getStatusIcon() {
+        return statusIcon;
     }
 
-    public Subscription getSubscription() {
-        return rosterItem.getSubscription();
+    public String getStatusText() {
+        return statusText;
+    }
+
+    public void setStatusIcon(final UserStatusIcon statusIcon) {
+        this.statusIcon = statusIcon;
+    }
+
+    public void setStatusText(final String statusText) {
+        this.statusText = statusText;
     }
 
 }

@@ -92,8 +92,11 @@ public class MultiChatPanel implements MultiChatView {
     private FormPanel subjectForm;
     private final RosterUI rosterUI;
     private Panel eastPanel;
+    private final String chatDialogTitle;
 
-    public MultiChatPanel(final RosterUI rosterUI, final I18nTranslationService i18n, final MultiChatPresenter presenter) {
+    public MultiChatPanel(final String chatDialogTitle, final RosterUI rosterUI, final I18nTranslationService i18n,
+            final MultiChatPresenter presenter) {
+        this.chatDialogTitle = chatDialogTitle;
         this.rosterUI = rosterUI;
         this.i18n = i18n;
         this.presenter = presenter;
@@ -350,7 +353,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private void createLayout() {
-        dialog = new BasicDialog(i18n.t("Emite chat"), false, false, 600, 415, 300, 300);
+        dialog = new BasicDialog(chatDialogTitle, false, false, 600, 415, 300, 300);
         dialog.setBorder(false);
         dialog.setCollapsible(true);
         dialog.setIconCls("chat-icon");

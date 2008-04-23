@@ -20,7 +20,7 @@
     to switch to `DEBUG` level logging.
   -->
 
-  <extend-property name="log_level" values="DEBUG,OFF" />
+  <extend-property name="log_level" values="DEBUG,INFO,OFF" />
   <!-- <set-property name="log_level" value="DEBUG" /> -->
 
   <set-property name="log_DivLogger" value="DISABLED" />
