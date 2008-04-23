@@ -23,6 +23,8 @@ package com.calclab.emiteuiplugin.client.chat;
 
 import org.ourproject.kune.platf.client.ui.HorizontalLine;
 
+import com.allen_sauer.gwt.voices.client.Sound;
+import com.allen_sauer.gwt.voices.client.SoundController;
 import com.calclab.emiteuiplugin.client.utils.ChatIcons;
 import com.calclab.emiteuiplugin.client.utils.ChatTextFormatter;
 import com.google.gwt.user.client.DOM;
@@ -40,6 +42,16 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 
     public static enum ChatTitleIcon {
         chat, chatnewmessage, groupchat, groupchatnewmessage
+    }
+
+    private static Sound sound;
+
+    public static void click() {
+        if (sound == null) {
+            SoundController soundController = new SoundController();
+            sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
+        }
+        sound.play();
     }
 
     public static String genQuickTipLabel(final String labelText, final String tipTitle, final String tipText,
@@ -81,6 +93,7 @@ public class ChatUIPanel extends Panel implements ChatUIView {
                 presenter.onDeactivated();
             }
         });
+
     }
 
     public void addDelimiter(final String datetime) {

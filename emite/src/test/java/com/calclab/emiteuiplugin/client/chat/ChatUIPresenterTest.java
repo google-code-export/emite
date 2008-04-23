@@ -31,6 +31,17 @@ public class ChatUIPresenterTest {
     }
 
     @Test
+    public void onDeactivateSomeMessagesActivateOnlyOneHightlight() {
+        chatUI.onDeactivated();
+        sendSomeMessage();
+        sendSomeMessage();
+        sendSomeMessage();
+        chatUI.onActivated();
+        verifyUnHightLightTimes(2);
+        verifyHightLightTimes(1);
+    }
+
+    @Test
     public void onSomeMessageInfoHightlight() {
         chatUI.onDeactivated();
         chatUI.addInfoMessage("some info");

@@ -32,7 +32,7 @@ public class MultiChatPanelInfoTab extends Panel {
 
     public MultiChatPanelInfoTab(final I18nTranslationService i18n) {
         this.i18n = i18n;
-        setTitle(i18n.t("Info"));
+        setTitle(i18n.t("Info"), "info-icon");
         setClosable(false);
         infoLabel = new Label();
         add(infoLabel);

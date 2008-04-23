@@ -134,6 +134,9 @@ public class ChatUIPresenter implements ChatUI {
     }
 
     protected void onActivated() {
+        if (alreadyHightlighted) {
+            unHighLightChatTitle();
+        }
         isActive = true;
         listener.onActivate(this);
     }
