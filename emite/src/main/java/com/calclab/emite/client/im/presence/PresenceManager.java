@@ -37,6 +37,8 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+
 public class PresenceManager implements Installable {
     private Presence delayedPresence;
     private Presence currentPresence;
@@ -164,7 +166,7 @@ public class PresenceManager implements Installable {
     }
 
     void eventLoggedIn(final IPacket received) {
-	userURI = XmppURI.parse(received.getAttribute("uri"));
+	userURI = uri(received.getAttribute("uri"));
     }
 
     /**

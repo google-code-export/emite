@@ -74,6 +74,10 @@ public class Message extends BasicStanza {
 	}
     }
 
+    public void setThread(final String thread) {
+	super.setTextToChild("thread", thread);
+    }
+
     public void setType(final Type type) {
 	setType(type.toString());
     }
@@ -86,10 +90,5 @@ public class Message extends BasicStanza {
     private void setMessage(final String msg) {
 	final IPacket body = add("body", null);
 	body.setText(msg);
-    }
-
-    private void setThread(final String thread) {
-	super.setTextToChild("thread", thread);
-
     }
 }

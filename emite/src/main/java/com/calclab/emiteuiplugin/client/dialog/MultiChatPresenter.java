@@ -58,6 +58,8 @@ import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
 import com.calclab.emiteuiplugin.client.room.RoomUI;
 import com.calclab.emiteuiplugin.client.room.RoomUIListener;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+
 public class MultiChatPresenter implements MultiChat {
     private static final OwnPresence OFFLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.offline);
     private static final OwnPresence ONLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.online);
@@ -100,7 +102,7 @@ public class MultiChatPresenter implements MultiChat {
 
     public void addRosterItem(final String name, final String jid) {
 	Log.info("Adding " + name + "(" + jid + ") to your roster.");
-	xmpp.getRosterManager().requestAddItem(XmppURI.parse(jid), name, null);
+	xmpp.getRosterManager().requestAddItem(uri(jid), name, null);
     }
 
     public void attachIconToBottomBar(final View view) {
@@ -237,7 +239,7 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     public void joinRoom(final String roomName, final String serverName) {
-	xmpp.getRoomManager().openChat(XmppURI.parse(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
+	xmpp.getRoomManager().openChat(uri(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
     }
 
     public void onModifySubjectRequested(final String newSubject) {
@@ -268,7 +270,7 @@ public class MultiChatPresenter implements MultiChat {
 
     public void setUserChatOptions(final UserChatOptions userChatOptions) {
 	this.userChatOptions = userChatOptions;
-	this.currentUserJid = XmppURI.parse(userChatOptions.getUserJid());
+	this.currentUserJid = jid(userChatOptions.getUserJid());
 	this.currentUserPasswd = userChatOptions.getUserPassword();
     }
 

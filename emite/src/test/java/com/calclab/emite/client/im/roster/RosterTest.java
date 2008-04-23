@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class RosterTest {
     private RosterListener listener;
@@ -30,14 +30,14 @@ public class RosterTest {
 
     @Test
     public void shouldFindByJID() {
-	final RosterItem item = new RosterItem(XmppURI.parse("someone@domain/resource"), null, null);
+	final RosterItem item = new RosterItem(uri("someone@domain/resource"), null, null);
 	roster.add(item);
-	assertSame(item, roster.findItemByURI(XmppURI.parse("someone@domain/different_resource")));
+	assertSame(item, roster.findItemByURI(uri("someone@domain/different_resource")));
     }
 
     @Test
     public void shouldFireListenersWhenPresenceChanged() {
-	final RosterItem item = new RosterItem(XmppURI.parse("one@domain"), Subscription.none, "one");
+	final RosterItem item = new RosterItem(uri("one@domain"), Subscription.none, "one");
 	roster.add(item);
 	roster.changePresence(item.getJID(), new Presence());
 	verify(listener).onItemChanged(item);
@@ -45,16 +45,16 @@ public class RosterTest {
 
     @Test
     public void shouldFireListenerWhenItemRemoved() {
-	roster.add(new RosterItem(XmppURI.parse("one@domain"), Subscription.none, "one"));
+	roster.add(new RosterItem(uri("one@domain"), Subscription.none, "one"));
 	verify(listener, atLeastOnce()).onRosterChanged(isCollectionOfSize(1));
-	roster.removeItem(XmppURI.parse("one@domain"));
+	roster.removeItem(uri("one@domain"));
 	verify(listener, atLeastOnce()).onRosterChanged(isCollectionOfSize(0));
     }
 
     @Test
     public void shouldInformWhenRosterChanged() {
 	final List<RosterItem> itemCollection = new ArrayList<RosterItem>();
-	itemCollection.add(new RosterItem(XmppURI.parse("name@domain"), Subscription.none, "name"));
+	itemCollection.add(new RosterItem(uri("name@domain"), Subscription.none, "name"));
 	roster.setItems(itemCollection);
 	verify(listener).onRosterChanged(hasSame(itemCollection));
     }
@@ -63,7 +63,7 @@ public class RosterTest {
     public void shouldInformWhenRosterItemChanged() {
 	roster.setItems(new ArrayList<RosterItem>());
 	verify(listener, atLeastOnce()).onRosterChanged(isCollectionOfSize(0));
-	roster.add(new RosterItem(XmppURI.parse("name@domain/res"), null, null));
+	roster.add(new RosterItem(uri("name@domain/res"), null, null));
 	verify(listener, atLeastOnce()).onRosterChanged(isCollectionOfSize(1));
     }
 }

@@ -92,6 +92,7 @@ class ChatDefault implements Chat {
 
     public void send(final String body) {
 	final Message message = new Message(from, to, body);
+	message.setThread(thread);
 	emite.send(message);
 	for (final ChatListener listener : listeners) {
 	    listener.onMessageSent(this, message);

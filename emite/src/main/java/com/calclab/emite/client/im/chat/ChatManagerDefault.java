@@ -38,6 +38,8 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+
 public class ChatManagerDefault implements ChatManager, Installable {
     protected XmppURI userURI;
     protected final Emite emite;
@@ -94,13 +96,14 @@ public class ChatManagerDefault implements ChatManager, Installable {
     public Chat openChat(final XmppURI to) {
 	Chat chat = findChat(to, null);
 	if (chat == null) {
-	    chat = createChat(to, null);
+	    final String theThread = String.valueOf(Math.random() * 1000000);
+	    chat = createChat(to, theThread);
 	}
 	return chat;
     }
 
     public void setUserURI(final String uri) {
-	this.userURI = XmppURI.parse(uri);
+	this.userURI = uri(uri);
     }
 
     protected void eventMessage(final Message message) {
@@ -128,8 +131,7 @@ public class ChatManagerDefault implements ChatManager, Installable {
     }
 
     private ChatDefault createChat(final XmppURI from, final String thread) {
-	final String theThread = thread != null ? thread : String.valueOf(Math.random() * 1000000);
-	final ChatDefault chat = new ChatDefault(from, userURI, theThread, emite);
+	final ChatDefault chat = new ChatDefault(from, userURI, thread, emite);
 	chats.add(chat);
 	fireChatCreated(chat);
 	return chat;

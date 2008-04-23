@@ -46,6 +46,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+
 public class ChatEntryPoint implements EntryPoint {
 
     private HashMap<XmppURI, ChatPanel> chats;
@@ -72,7 +74,7 @@ public class ChatEntryPoint implements EntryPoint {
 
 	conversationsPanel = new ConversationsPanel(new ConversationsListener() {
 	    public void onBeginChat(final String jid) {
-		final Chat chat = xmpp.getChatManager().openChat(XmppURI.parse(jid));
+		final Chat chat = xmpp.getChatManager().openChat(uri(jid));
 		// we allways will have a chatPanel in chats because if its a
 		// new conversations
 		// the onChatcreated method in ChatManagerListener will be
