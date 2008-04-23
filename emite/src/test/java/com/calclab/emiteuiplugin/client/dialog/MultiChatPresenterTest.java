@@ -59,7 +59,7 @@ public class MultiChatPresenterTest {
         chatListener = Mockito.mock(ChatUIListener.class);
         chat = Mockito.mock(Chat.class);
 
-        ChatUIPresenter presenter = new ChatUIPresenter("lutherb", "lutherb", "black", chatListener);
+        ChatUIPresenter presenter = new ChatUIPresenter(otherUri, "lutherb", "black", chatListener);
         chatUIView = Mockito.mock(ChatUIView.class);
         presenter.init(chatUIView);
         chatUI = presenter;
@@ -70,7 +70,7 @@ public class MultiChatPresenterTest {
         Mockito.stub(rosterUI.getUserByJid(otherUri)).toReturn(otherUser);
         Mockito.stub(chat.getOtherURI()).toReturn(otherUri);
         Mockito.stub(
-                factory.createChatUI((String) Mockito.anyObject(), (String) Mockito.anyObject(), (String) Mockito
+                factory.createChatUI((XmppURI) Mockito.anyObject(), (String) Mockito.anyObject(), (String) Mockito
                         .anyObject(), (ChatUIListener) Mockito.anyObject())).toReturn(chatUI);
         final MultiChatCreationParam param = new MultiChatCreationParam(null, "rooms.localhost", i18n,
                 new UserChatOptions(sessionUserJid, "passwdofuser", "blue", Roster.DEF_SUBSCRIPTION_MODE));

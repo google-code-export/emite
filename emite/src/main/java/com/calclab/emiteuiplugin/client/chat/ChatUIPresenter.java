@@ -25,6 +25,9 @@ import java.util.HashMap;
 
 import org.ourproject.kune.platf.client.View;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emiteuiplugin.client.chat.ChatUIPanel.ChatTitleIcon;
+
 public class ChatUIPresenter implements ChatUI {
 
     private static final String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
@@ -37,11 +40,15 @@ public class ChatUIPresenter implements ChatUI {
     private final HashMap<String, String> userColors;
     private boolean closeConfirmed;
     private final String chatTitle;
+    private final XmppURI otherURI;
+    private boolean isActive;
+    private boolean alreadyHightlighted;
 
-    public ChatUIPresenter(final String chatTitle, final String currentUserAlias, final String currentUserColor,
+    public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
             final ChatUIListener listener) {
+        this.otherURI = otherURI;
         this.listener = listener;
-        this.chatTitle = chatTitle;
+        this.chatTitle = otherURI.getNode();
         userColors = new HashMap<String, String>();
         userColors.put(currentUserAlias, currentUserColor);
     }
@@ -51,10 +58,12 @@ public class ChatUIPresenter implements ChatUI {
     }
 
     public void addInfoMessage(final String message) {
+        checkIfHighlightNeeded();
         view.addInfoMessage(message);
     }
 
-    public void addMesage(final String userAlias, final String message) {
+    public void addMessage(final String userAlias, final String message) {
+        checkIfHighlightNeeded();
         view.addMessage(userAlias, getColor(userAlias), message);
         listener.onMessageAdded(this);
     }
@@ -89,16 +98,14 @@ public class ChatUIPresenter implements ChatUI {
     }
 
     public void highLightChatTitle() {
-        view.setChatTitle("<b>*</b> " + chatTitle);
+        view.setChatTitle(chatTitle, otherURI.toString(), ChatTitleIcon.chatnewmessage);
+        alreadyHightlighted = true;
     }
 
     public void init(final ChatUIView view) {
         this.view = view;
-        view.setChatTitle(chatTitle);
-    }
-
-    public void onActivated() {
-        listener.onActivate(this);
+        isActive = true;
+        unHighLightChatTitle();
     }
 
     public void onCloseCloseConfirmed() {
@@ -107,10 +114,6 @@ public class ChatUIPresenter implements ChatUI {
 
     public void onCurrentUserSend(final String message) {
         listener.onCurrentUserSend(message);
-    }
-
-    public void onDeactivated() {
-        listener.onDeactivate(this);
     }
 
     public void saveInput(final String inputText) {
@@ -126,7 +129,24 @@ public class ChatUIPresenter implements ChatUI {
     }
 
     public void unHighLightChatTitle() {
-        view.setChatTitle(chatTitle);
+        view.setChatTitle(chatTitle, otherURI.toString(), ChatTitleIcon.chat);
+        alreadyHightlighted = false;
+    }
+
+    protected void onActivated() {
+        isActive = true;
+        listener.onActivate(this);
+    }
+
+    protected void onDeactivated() {
+        isActive = false;
+        listener.onDeactivate(this);
+    }
+
+    private void checkIfHighlightNeeded() {
+        if (!isActive && !alreadyHightlighted) {
+            highLightChatTitle();
+        }
     }
 
     private String getNextColor() {

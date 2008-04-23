@@ -24,6 +24,7 @@ package com.calclab.emiteuiplugin.client;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
 import com.calclab.emiteuiplugin.client.dialog.MultiChat;
@@ -35,12 +36,12 @@ import com.calclab.emiteuiplugin.client.roster.RosterUI;
 
 public interface ChatDialogFactory {
 
-    public ChatUI createChatUI(final String chatTitle, final String currentUserAlias, final String currentUserColor,
+    public ChatUI createChatUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
             ChatUIListener listener);
 
     public MultiChat createMultiChat(final Xmpp xmpp, MultiChatCreationParam param, final MultiChatListener listener);
 
-    public RoomUI createRoomUI(final String chatTitle, final String currentUserAlias, final String currentUserColor,
+    public RoomUI createRoomUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
             final I18nTranslationService i18n, RoomUIListener listener);
 
     public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n);

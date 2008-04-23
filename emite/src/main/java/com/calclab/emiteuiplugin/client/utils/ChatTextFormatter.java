@@ -75,9 +75,7 @@ public class ChatTextFormatter {
         return new HTML(message);
     }
 
-    private static String formatEmoticons(String message) {
-        Emoticons img = Emoticons.App.getInstance();
-
+    static String preFormatEmoticons(String message) {
         message = replace(message, new String[] { "&gt;:\\)" }, DEVIL);
         message = replace(message, new String[] { "O:\\)", "o:\\)", "o:-\\)", "O:-\\)", "0:\\)", "0:-\\)" }, ANGEL);
         message = replace(message, new String[] { "\\^_\\^", "\\^-\\^", "\\^\\^", ":\\)\\)", ":-\\)\\)" }, JOYFUL);
@@ -108,7 +106,7 @@ public class ChatTextFormatter {
         message = replace(message, new String[] { ":-O", ":O", ":-o", ":o", ":-0", "=-O", "=-o", "=o", "=O" },
                 SURPRISED);
         message = replace(message, new String[] { ":P", "=P", "=p", ":-P", ":p", ":-p", ":b" }, TONGUE);
-        message = replace(message, new String[] { ":-\\\\", ":-/", ":\\\\" }, UNCERTAIN);
+        message = replace(message, new String[] { ":-\\\\", ":-/", ":/", ":\\\\" }, UNCERTAIN);
         message = replace(message, new String[] { ":s", ":-S", ":-s", ":S" }, UNSURE);
         message = replace(message, new String[] { "\\(woot\\)", "\\(w00t\\)", "\\(wOOt\\)" }, W00T);
         message = replace(message, new String[] { ":-&quot;" }, WHISTLING);
@@ -116,7 +114,13 @@ public class ChatTextFormatter {
         message = replace(message, new String[] { "\\(wizard\\)" }, WIZARD);
         message = replace(message, new String[] { ":\\?" }, WONDERING);
         message = replace(message, new String[] { ":-\\)", ":\\)" }, SMILE);
+        return message;
+    }
 
+    private static String formatEmoticons(String message) {
+        Emoticons img = Emoticons.App.getInstance();
+
+        message = preFormatEmoticons(message);
         message = message.replaceAll(SMILE, getImgHtml(img.smile()));
         message = message.replaceAll(CRYING, getImgHtml(img.crying()));
         message = message.replaceAll(SURPRISED, getImgHtml(img.surprised()));
@@ -165,7 +169,7 @@ public class ChatTextFormatter {
 
     private static String replace(String message, final String[] from, final String to) {
         for (int j = 0; j < from.length; j++) {
-            message = message.replaceAll(from[j], to);
+            message = message.replaceAll("(^|[\\s])" + from[j] + "([\\s]|$)", "$1" + to + "$2");
         }
         return message;
     }

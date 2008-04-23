@@ -102,7 +102,6 @@ public class Room implements Chat {
      * @param reasonText
      *                reason for the invitation
      */
-    // FIXME: Dani, check if this is correct (the way to construct the message)
     public void inviteUser(final String userJid, final String reasonText) {
         final BasicStanza message = new BasicStanza("message", null);
         message.setFrom(userURI.toString());

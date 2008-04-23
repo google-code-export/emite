@@ -23,6 +23,8 @@ package com.calclab.emiteuiplugin.client.chat;
 
 import org.ourproject.kune.platf.client.View;
 
+import com.calclab.emiteuiplugin.client.chat.ChatUIPanel.ChatTitleIcon;
+
 public interface ChatUIView extends View {
 
     void addDelimiter(String datetime);
@@ -33,5 +35,6 @@ public interface ChatUIView extends View {
 
     void destroy();
 
-    void setChatTitle(String name);
+    void setChatTitle(String chatTitle, String tip, ChatTitleIcon iconId);
+
 }

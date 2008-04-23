@@ -120,43 +120,40 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     public ChatUI createChat(final Chat chat) {
-        final ChatUI chatUI = chats.get(chat) == null ? factory.createChatUI(chat.getOtherURI().getNode(),
-                currentUserJid.getNode(), userChatOptions.getColor(), new ChatUIListener() {
-                    public void onActivate(final ChatUI chatUI) {
-                        view.setInputText(chatUI.getSavedInput());
-                        view.setInviteToGroupChatButtonVisible(false);
-                        view.setRoomUserListVisible(false);
-                        view.clearSubject();
-                        view.setSubjectVisible(false);
-                        view.expandRoster();
-                        chatUI.unHighLightChatTitle();
-                        view.focusInput();
-                        currentChat = chatUI;
-                    }
+        final ChatUI chatUI = chats.get(chat) == null ? factory.createChatUI(chat.getOtherURI(), currentUserJid
+                .getNode(), userChatOptions.getColor(), new ChatUIListener() {
+            public void onActivate(final ChatUI chatUI) {
+                view.setInputText(chatUI.getSavedInput());
+                view.setInviteToGroupChatButtonVisible(false);
+                view.setRoomUserListVisible(false);
+                view.clearSubject();
+                view.setSubjectVisible(false);
+                view.expandRoster();
+                view.focusInput();
+                currentChat = chatUI;
+            }
 
-                    public void onCloseConfirmed(final ChatUI chatUI) {
-                        doAfterCloseConfirmed(chat, chatUI);
-                    }
+            public void onCloseConfirmed(final ChatUI chatUI) {
+                doAfterCloseConfirmed(chat, chatUI);
+            }
 
-                    public void onCurrentUserSend(final String message) {
-                        chat.send(message);
-                    }
+            public void onCurrentUserSend(final String message) {
+                chat.send(message);
+            }
 
-                    public void onDeactivate(final ChatUI chatUI) {
-                        chatUI.saveInput(view.getInputText());
-                        chatUI.unHighLightChatTitle();
-                    }
+            public void onDeactivate(final ChatUI chatUI) {
+                chatUI.saveInput(view.getInputText());
+            }
 
-                    public void onMessageAdded(final ChatUI chatUI) {
-                        chatUI.highLightChatTitle();
-                    }
-                }) : chats.get(chat);
+            public void onMessageAdded(final ChatUI chatUI) {
+            }
+        }) : chats.get(chat);
         finishChatCreation(chat, chatUI);
         return chatUI;
     }
 
     public RoomUI createRoom(final Chat chat, final String userAlias) {
-        final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(chat.getOtherURI().getNode(),
+        final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(chat.getOtherURI(),
                 currentUserJid.getNode(), userChatOptions.getColor(), i18n, new RoomUIListener() {
                     // FIXME: some code are duplicated with ChatUI Listener
                     // (make an
@@ -170,7 +167,6 @@ public class MultiChatPresenter implements MultiChat {
                         view.setSubjectEditable(roomUI.isSubjectEditable());
                         view.setRoomUserListVisible(true);
                         roomUI.setUserListVisible(true);
-                        chatUI.unHighLightChatTitle();
                         view.focusInput();
                         currentChat = chatUI;
                     }
@@ -190,7 +186,6 @@ public class MultiChatPresenter implements MultiChat {
                     public void onDeactivate(final ChatUI chatUI) {
                         chatUI.saveInput(view.getInputText());
                         ((RoomUI) chatUI).setUserListVisible(false);
-                        chatUI.unHighLightChatTitle();
                     }
 
                     public void onInviteUserRequested(final String userJid, final String reasonText) {
@@ -198,7 +193,6 @@ public class MultiChatPresenter implements MultiChat {
                     }
 
                     public void onMessageAdded(final ChatUI chatUI) {
-                        chatUI.highLightChatTitle();
                     }
 
                     public void onModifySubjectRequested(final String newSubject) {
@@ -341,7 +335,7 @@ public class MultiChatPresenter implements MultiChat {
 
     void messageReceived(final Chat chat, final Message message) {
         final ChatUI chatUI = getChat(chat);
-        chatUI.addMesage(message.getFromURI().getNode(), message.getBody());
+        chatUI.addMessage(message.getFromURI().getNode(), message.getBody());
     }
 
     void messageReceivedInRoom(final Chat chat, final Message message) {
@@ -351,7 +345,7 @@ public class MultiChatPresenter implements MultiChat {
             // Info messsage from room
             roomUI.addInfoMessage(message.getBody());
         } else {
-            roomUI.addMesage(fromURI.getResource(), message.getBody());
+            roomUI.addMessage(fromURI.getResource(), message.getBody());
         }
     }
 

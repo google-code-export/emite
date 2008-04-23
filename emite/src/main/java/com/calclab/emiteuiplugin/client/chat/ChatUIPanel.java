@@ -23,17 +23,42 @@ package com.calclab.emiteuiplugin.client.chat;
 
 import org.ourproject.kune.platf.client.ui.HorizontalLine;
 
+import com.calclab.emiteuiplugin.client.utils.ChatIcons;
 import com.calclab.emiteuiplugin.client.utils.ChatTextFormatter;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 
 public class ChatUIPanel extends Panel implements ChatUIView {
+
+    public static enum ChatTitleIcon {
+        chat, chatnewmessage, groupchat, groupchatnewmessage
+    }
+
+    public static String genQuickTipLabel(final String labelText, final String tipTitle, final String tipText,
+            final AbstractImagePrototype icon) {
+        String tipHtml = "<span style=\"vertical-align: middle;\" ext:qtip=\"" + tipText + "\"";
+        if (tipTitle != null && tipTitle.length() > 0) {
+            tipHtml += " ext:qtitle=\"" + tipTitle + "\"";
+        }
+        tipHtml += ">";
+        Image iconImg = new Image();
+        icon.applyTo(iconImg);
+        iconImg.setStyleName("vamiddle");
+        // setQuickTip(iconImg, tipText, tipTitle);
+        tipHtml += iconImg.toString();
+        tipHtml += "&nbsp;";
+        tipHtml += labelText;
+        tipHtml += "</span>";
+        return tipHtml;
+    }
 
     private final Panel childPanel;
 
@@ -85,12 +110,25 @@ public class ChatUIPanel extends Panel implements ChatUIView {
         addWidget(messageHtml);
     }
 
-    public void setChatTitle(final String name) {
-        super.setTitle(name);
-        if (super.isRendered()) {
-            super.doLayout();
-            // before: tab.getTextEl().highlight()
+    public void setChatTitle(final String chatTitle, final String tip, final ChatTitleIcon iconId) {
+        // FIXME Vicente: try to do this with css (with gwt-ext don't works)
+        AbstractImagePrototype icon = null;
+        switch (iconId) {
+        case chat:
+            icon = ChatIcons.App.getInstance().chat();
+            break;
+        case chatnewmessage:
+            icon = ChatIcons.App.getInstance().newMessage();
+            break;
+        case groupchat:
+            icon = ChatIcons.App.getInstance().groupChat();
+            break;
+        case groupchatnewmessage:
+            icon = ChatIcons.App.getInstance().groupChat();
+            break;
         }
+        super.setTitle(genQuickTipLabel(chatTitle, "", tip, icon));
+        postChatTitle();
     }
 
     private void addWidget(final Widget widget) {
@@ -104,6 +142,13 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 
     private Element getScrollableElement() {
         return DOM.getParent(childPanel.getElement());
+    }
+
+    private void postChatTitle() {
+        if (super.isRendered()) {
+            super.doLayout();
+            // before: tab.getTextEl().highlight()
+        }
     }
 
     private void scrollDown() {

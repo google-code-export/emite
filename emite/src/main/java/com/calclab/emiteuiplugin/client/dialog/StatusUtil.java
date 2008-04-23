@@ -34,6 +34,60 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 public class StatusUtil {
 
     private static final ChatIcons icons = ChatIcons.App.getInstance();
+    private static final AbstractImagePrototype noChangeIcon = ChatIcons.App.getInstance().aNoIcon();
+
+    public static AbstractImagePrototype getPresenceIcon(final Presence presence) {
+        switch (presence.getType()) {
+        case available:
+            if (presence.getShow() != null) {
+                switch (presence.getShow()) {
+                case available:
+                case chat:
+                    return icons.online();
+                case dnd:
+                    return icons.busy();
+                case xa:
+                    return icons.xa();
+                case away:
+                    return icons.away();
+                default:
+                    Log.info("Status unknown, show: " + presence.getShow());
+                    return icons.question();
+                }
+            } else {
+                /*
+                 * 2.2.2.1. Show
+                 * 
+                 * If no <show/> element is provided, the entity is assumed to
+                 * be online and available.
+                 * 
+                 */
+                return icons.online();
+            }
+        case unavailable:
+            return icons.offline();
+        case unsubscribed:
+        case subscribed:
+        case error:
+        case probe:
+        case subscribe:
+            return noChangeIcon;
+        default:
+            /**
+             * 2.2.1. Types of Presence
+             * 
+             * The 'type' attribute of a presence stanza is OPTIONAL. A presence
+             * stanza that does not possess a 'type' attribute is used to signal
+             * to the server that the sender is online and available for
+             * communication. If included, the 'type' attribute specifies a lack
+             * of availability, a request to manage a subscription to another
+             * entity's presence, a request for another entity's current
+             * presence, or an error related to a previously-sent presence
+             * stanza.
+             */
+            return icons.online();
+        }
+    }
 
     public static AbstractImagePrototype getStatusIcon(final OwnStatus ownStatus) {
         ChatIcons icons = ChatIcons.App.getInstance();
@@ -116,7 +170,7 @@ public class StatusUtil {
         case none:
             return icons.question();
         default:
-            Log.error("Programatic error, subscription: " + subscription);
+            Log.error("Code error, subscription: " + subscription);
             return icons.question();
         }
     }
@@ -145,7 +199,6 @@ public class StatusUtil {
             textLabel = i18n.t("online with custom message");
             break;
         default:
-            Log.error("Code error in OwnPresence getStatusText");
             return null;
         }
         return textLabel;
