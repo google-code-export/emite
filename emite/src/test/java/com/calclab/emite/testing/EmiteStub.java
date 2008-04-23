@@ -1,10 +1,6 @@
 package com.calclab.emite.testing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.Assert.*;
 import java.util.ArrayList;
 
 import com.calclab.emite.client.core.bosh.Emite;
@@ -23,13 +19,16 @@ public class EmiteStub implements Emite {
     private final DispatcherDefault dispatcher;
     private final TigaseXMLService xmler;
     private PacketListener lastCallback;
-    private IPacket lastSentCallback;
     private final ArrayList<IPacket> published;
+    private IPacket sentByCallback;
+    private final ArrayList<IPacket> sent;
 
     public EmiteStub() {
 	xmler = new TigaseXMLService();
 	dispatcher = new DispatcherDefault();
 	published = new ArrayList<IPacket>();
+	sentByCallback = null;
+	sent = new ArrayList<IPacket>();
     }
 
     public void addListener(final DispatcherStateListener listener) {
@@ -65,11 +64,11 @@ public class EmiteStub implements Emite {
     }
 
     public void send(final IPacket packet) {
-
+	sent.add(packet);
     }
 
     public void send(final String category, final IPacket packet, final PacketListener listener) {
-	this.lastSentCallback = packet;
+	sentByCallback = packet;
 	this.lastCallback = listener;
     }
 
@@ -77,12 +76,12 @@ public class EmiteStub implements Emite {
 	dispatcher.subscribe(matcher, packetListener);
     }
 
-    public void verifyNotPublished(final Packet expected) {
-	assertFalse(isPublished(expected));
+    public void verifyNotPublished(final Packet packet) {
+	assertFalse(contains(packet, published));
     }
 
     public void verifyPublished(final IPacket expected) {
-	assertTrue(isPublished(expected));
+	assertTrue(contains(expected, published));
     }
 
     public void verifyPublishedTimes(final int times) {
@@ -90,19 +89,26 @@ public class EmiteStub implements Emite {
     }
 
     public PacketListener verifySendCallback(final IPacket iq) {
-	assertNotNull(lastSentCallback);
-	final IsPacketLike matcher = new IsPacketLike(iq);
-	assertTrue(matcher.matches(lastSentCallback));
+	assertNotNull(sentByCallback);
+	assertTrue(new IsPacketLike(iq).matches(sentByCallback));
 	return lastCallback;
     }
 
-    private boolean isPublished(final IPacket expected) {
-	boolean isPublished = false;
+    public void verifySendCallback(final String xml) {
+	verifySendCallback(xmler.toXML(xml));
+    }
+
+    public void verifySent(final String expected) {
+	assertTrue(contains(xmler.toXML(expected), sent));
+    }
+
+    private boolean contains(final IPacket expected, final ArrayList<IPacket> list) {
+	boolean isContained = false;
 	final IsPacketLike matcher = new IsPacketLike(expected);
-	for (final IPacket packet : published) {
-	    isPublished = isPublished ? isPublished : matcher.matches(packet);
+	for (final IPacket packet : list) {
+	    isContained = isContained ? isContained : matcher.matches(packet);
 	}
-	return isPublished;
+	return isContained;
     }
 
 }

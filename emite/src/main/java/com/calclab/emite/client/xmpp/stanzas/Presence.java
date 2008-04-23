@@ -22,7 +22,6 @@
 package com.calclab.emite.client.xmpp.stanzas;
 
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.core.packet.NoPacket;
 
 public class Presence extends BasicStanza {
 
@@ -134,10 +133,10 @@ public class Presence extends BasicStanza {
      */
     public int getPriority() {
 	int value = 0;
-	final IPacket priority = getFirstChild("priority");
+	final String priority = getFirstChild("priority").getText();
 	if (priority != null) {
 	    try {
-		value = Integer.parseInt(priority.getText());
+		value = Integer.parseInt(priority);
 	    } catch (final NumberFormatException e) {
 		value = 0;
 	    }
@@ -176,31 +175,23 @@ public class Presence extends BasicStanza {
      */
     public Type getType() {
 	final String type = getAttribute(BasicStanza.TYPE);
-	return type != null ? Type.valueOf(type) : Type.available;
+	try {
+	    return type != null ? Type.valueOf(type) : Type.available;
+	} catch (final IllegalArgumentException e) {
+	    return Type.error;
+	}
     }
 
     public void setPriority(final int value) {
-	IPacket priority = getFirstChild("priority");
-	if (priority == NoPacket.INSTANCE) {
-	    priority = add("priority", null);
-	}
-	priority.setText(Integer.toString(value >= 0 ? value : 0));
+	setTextToChild("priority", Integer.toString(value >= 0 ? value : 0));
     }
 
     public void setShow(final Show value) {
-	IPacket show = getFirstChild("show");
-	if (show == NoPacket.INSTANCE) {
-	    show = add("show", null);
-	}
-	show.setText(value.toString());
+	setTextToChild("show", value.toString());
     }
 
     public void setStatus(final String statusMessage) {
-	IPacket status = getFirstChild("status");
-	if (status == NoPacket.INSTANCE) {
-	    status = add("status", null);
-	}
-	status.setText(statusMessage);
+	setTextToChild("status", statusMessage);
     }
 
     public Presence With(final Show value) {

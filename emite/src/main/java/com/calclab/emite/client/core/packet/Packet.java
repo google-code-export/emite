@@ -118,8 +118,11 @@ public class Packet extends DSLPacket {
 	buffer.append("<").append(name);
 
 	for (final String key : attributes.keySet()) {
-	    buffer.append(" ").append(key).append("=\"");
-	    buffer.append(attributes.get(key)).append("\"");
+	    final String value = attributes.get(key);
+	    if (value != null) {
+		buffer.append(" ").append(key).append("=\"");
+		buffer.append(value).append("\"");
+	    }
 	}
 	if (children.size() > 0) {
 	    buffer.append(">");

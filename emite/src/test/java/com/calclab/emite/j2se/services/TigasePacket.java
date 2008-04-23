@@ -79,7 +79,7 @@ public class TigasePacket extends DSLPacket {
 
     // TODO
     public void setAttribute(final String name, final String value) {
-	throw new RuntimeException("not implemented");
+	delegate.setAttribute(name, value);
     }
 
     // TODO

@@ -21,6 +21,7 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
+import com.calclab.emite.client.core.packet.NoPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.packet.DelegatedPacket;
 import com.calclab.emite.client.core.packet.IPacket;
@@ -78,5 +79,20 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
     public Stanza To(final String to) {
 	setTo(to);
 	return this;
+    }
+
+    /**
+     * Add a child with a specified text. Create the child if not exists
+     * 
+     * @param string
+     * @param thread
+     */
+    protected void setTextToChild(final String name, final String value) {
+	IPacket node = getFirstChild(name);
+	if (node == NoPacket.INSTANCE) {
+	    node = new Packet(name);
+	    this.addChild(node);
+	}
+	node.setText(value);
     }
 }
