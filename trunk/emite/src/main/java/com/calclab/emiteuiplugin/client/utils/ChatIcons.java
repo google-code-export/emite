@@ -39,14 +39,6 @@ public interface ChatIcons extends ImageBundle {
     }
 
     /**
-     * 
-     * (only for not to use null)
-     * 
-     * @gwt.resource away.png
-     */
-    AbstractImagePrototype aNoIcon();
-
-    /**
      * @gwt.resource away.png
      */
     AbstractImagePrototype away();

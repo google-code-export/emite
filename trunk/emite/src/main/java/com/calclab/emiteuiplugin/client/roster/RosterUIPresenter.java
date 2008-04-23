@@ -110,6 +110,52 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
         presenceManager.denySubscription(presence);
     }
 
+    String formatRosterItemStatusText(final Presence presence, final Subscription subscription) {
+        String statusText = "";
+        if (presence != null) {
+            statusText = presence.getStatus();
+        }
+        if (statusText == null || statusText.equals("null")) {
+            statusText = "";
+        }
+        if (subscription != null) {
+            switch (subscription) {
+            case both:
+            case from:
+            case none:
+            case to:
+                statusText += " (" + subscription.toString() + ")";
+            }
+        }
+        return statusText.equals("") ? " " : statusText;
+    }
+
+    UserStatusIcon getPresenceIcon(final Presence presence) {
+        switch (presence.getType()) {
+        case available:
+            switch (presence.getShow()) {
+            case chat:
+            case away:
+            case dnd:
+            case xa:
+            case available:
+                return UserStatusIcon.valueOf(presence.getShow().toString());
+            case notSpecified:
+                return UserStatusIcon.available;
+            }
+        case unavailable:
+            switch (presence.getShow()) {
+            case away:
+                return UserStatusIcon.away;
+            case notSpecified:
+                return UserStatusIcon.offline;
+            case unknown:
+                return UserStatusIcon.unknown;
+            }
+        }
+        return UserStatusIcon.unknown;
+    }
+
     private UserGridMenuItemList createMenuItemList(final RosterItem item) {
         return createMenuItemList(item.getJID(), item.getPresence(), item.getSubscription());
     }
@@ -219,6 +265,8 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                             + rosterMap);
                 } else {
                     logRosterItem("Updating", item);
+                    user.setStatusIcon(getPresenceIcon(item.getPresence()));
+                    user.setStatusText(formatRosterItemStatusText(item.getPresence(), item.getSubscription()));
                     view.updateRosterItem(user, createMenuItemList(item));
                 }
             }
@@ -229,6 +277,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                 for (final RosterItem item : roster) {
                     logRosterItem("Adding", item);
                     final ChatUserUI user = new ChatUserUI("images/person-def.gif", item, "black");
+                    user.setStatusIcon(getPresenceIcon(item.getPresence()));
                     rosterMap.put(user.getURI(), user);
                     view.addRosterItem(user, createMenuItemList(item));
                 }
@@ -246,7 +295,6 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                     Log.info("with null presence");
                 }
             }
-
         });
 
         presenceManager.addListener(new PresenceListener() {
@@ -286,6 +334,6 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
     private void logPresence(final Presence presence) {
         Log.info("PRESENCE: type: " + presence.getType() + " from: " + presence.getFrom() + " show: "
-                + presence.getShow() + " status: " + presence.getStatus() + " text: " + presence.getText());
+                + presence.getShow() + " status: " + presence.getStatus());
     }
 }

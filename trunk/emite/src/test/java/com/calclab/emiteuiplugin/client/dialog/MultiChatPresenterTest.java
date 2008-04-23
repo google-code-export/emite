@@ -40,92 +40,92 @@ public class MultiChatPresenterTest {
 
     @Before
     public void begin() {
-	factory = Mockito.mock(ChatDialogFactory.class);
+        factory = Mockito.mock(ChatDialogFactory.class);
 
-	final MultiChatListener multiChatlistener = Mockito.mock(MultiChatListener.class);
+        final MultiChatListener multiChatlistener = Mockito.mock(MultiChatListener.class);
 	final XmppURI otherUri = uri("matt@example.com");
-	final RosterItem rosterItem = new RosterItem(otherUri, Subscription.both, "matt");
+        final RosterItem rosterItem = new RosterItem(otherUri, Subscription.both, "matt");
 
-	// User and message
-	sessionUserJid = "lutherb@example.com";
-	otherUser = new ChatUserUI("", rosterItem, "blue");
-	messageBody = "hello world :)";
+        // User and message
+        sessionUserJid = "lutherb@example.com";
+        otherUser = new ChatUserUI("", rosterItem, "blue");
+        messageBody = "hello world :)";
 
-	// Mocks creation
-	xmpp = new MockitoXmpp();
-	final RosterUI rosterUI = Mockito.mock(RosterUI.class);
-	final RosterUIView rosterUIView = Mockito.mock(RosterUIView.class);
-	final I18nTranslationServiceMocked i18n = new I18nTranslationServiceMocked();
-	multiChatPanel = Mockito.mock(MultiChatView.class);
-	chatListener = Mockito.mock(ChatUIListener.class);
-	chat = Mockito.mock(Chat.class);
+        // Mocks creation
+        xmpp = new MockitoXmpp();
+        final RosterUI rosterUI = Mockito.mock(RosterUI.class);
+        final RosterUIView rosterUIView = Mockito.mock(RosterUIView.class);
+        final I18nTranslationServiceMocked i18n = new I18nTranslationServiceMocked();
+        multiChatPanel = Mockito.mock(MultiChatView.class);
+        chatListener = Mockito.mock(ChatUIListener.class);
+        chat = Mockito.mock(Chat.class);
 
 	final ChatUIPresenter presenter = new ChatUIPresenter(otherUri, "lutherb", "black", chatListener);
-	chatUIView = Mockito.mock(ChatUIView.class);
-	presenter.init(chatUIView);
-	chatUI = presenter;
+        chatUIView = Mockito.mock(ChatUIView.class);
+        presenter.init(chatUIView);
+        chatUI = presenter;
 
-	// Stubs
-	Mockito.stub(factory.createrRosterUI(xmpp, i18n)).toReturn(rosterUI);
-	Mockito.stub(rosterUI.getView()).toReturn(rosterUIView);
-	Mockito.stub(rosterUI.getUserByJid(otherUri)).toReturn(otherUser);
-	Mockito.stub(chat.getOtherURI()).toReturn(otherUri);
-	Mockito.stub(
-		factory.createChatUI((XmppURI) Mockito.anyObject(), (String) Mockito.anyObject(), (String) Mockito
-			.anyObject(), (ChatUIListener) Mockito.anyObject())).toReturn(chatUI);
-	final MultiChatCreationParam param = new MultiChatCreationParam(null, "rooms.localhost", i18n,
-		new UserChatOptions(sessionUserJid, "passwdofuser", "blue", Roster.DEF_SUBSCRIPTION_MODE));
+        // Stubs
+        Mockito.stub(factory.createrRosterUI(xmpp, i18n)).toReturn(rosterUI);
+        Mockito.stub(rosterUI.getView()).toReturn(rosterUIView);
+        Mockito.stub(rosterUI.getUserByJid(otherUri)).toReturn(otherUser);
+        Mockito.stub(chat.getOtherURI()).toReturn(otherUri);
+        Mockito.stub(
+                factory.createChatUI((XmppURI) Mockito.anyObject(), (String) Mockito.anyObject(), (String) Mockito
+                        .anyObject(), (ChatUIListener) Mockito.anyObject())).toReturn(chatUI);
+        final MultiChatCreationParam param = new MultiChatCreationParam("Chat title", null, "rooms.localhost", i18n,
+                new UserChatOptions(sessionUserJid, "passwdofuser", "blue", Roster.DEF_SUBSCRIPTION_MODE));
 
-	multiChat = new MultiChatPresenter(xmpp, i18n, factory, param, multiChatlistener);
-	multiChat.init(multiChatPanel);
+        multiChat = new MultiChatPresenter(xmpp, i18n, factory, param, multiChatlistener);
+        multiChat.init(multiChatPanel);
 
-	// Basic chat creation
-	multiChat.createChat(chat);
+        // Basic chat creation
+        multiChat.createChat(chat);
     }
 
     @Test
     public void closeAllChatsWithoutConfirmation() {
-	multiChat.closeAllChats(true);
-	multiChat.doAfterCloseConfirmed(chat, chatUI);
-	Mockito.verify(multiChatPanel).setCloseAllOptionEnabled(true);
-	// TODO check order
-	Mockito.verify(multiChatPanel).setInfoPanelVisible(false);
-	Mockito.verify(multiChatPanel, Mockito.times(2)).setCloseAllOptionEnabled(false);
-	Mockito.verify(multiChatPanel, Mockito.times(2)).setInfoPanelVisible(true);
-	Mockito.verify(multiChatPanel, Mockito.times(2)).setSubjectEditable(false);
-	Mockito.verify(multiChatPanel, Mockito.times(2)).setSendEnabled(false);
-	Mockito.verify(multiChatPanel, Mockito.times(2)).setInputEditable(false);
-	Mockito.verify(multiChatPanel, Mockito.times(2)).setEmoticonButtonEnabled(false);
-	Mockito.verify(chatUIView).destroy();
+        multiChat.closeAllChats(true);
+        multiChat.doAfterCloseConfirmed(chat, chatUI);
+        Mockito.verify(multiChatPanel).setCloseAllOptionEnabled(true);
+        // TODO check order
+        Mockito.verify(multiChatPanel).setInfoPanelVisible(false);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setCloseAllOptionEnabled(false);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setInfoPanelVisible(true);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setSubjectEditable(false);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setSendEnabled(false);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setInputEditable(false);
+        Mockito.verify(multiChatPanel, Mockito.times(2)).setEmoticonButtonEnabled(false);
+        Mockito.verify(chatUIView).destroy();
     }
 
     @Test
     public void removeAndCreateChat() {
-	multiChat.onCurrentUserSend(messageBody);
-	multiChat.closeAllChats(false);
-	multiChat.createChat(chat);
-	multiChat.onCurrentUserSend(messageBody);
-	Mockito.verify(chatListener, Mockito.times(2)).onCurrentUserSend(messageBody);
+        multiChat.onCurrentUserSend(messageBody);
+        multiChat.closeAllChats(false);
+        multiChat.createChat(chat);
+        multiChat.onCurrentUserSend(messageBody);
+        Mockito.verify(chatListener, Mockito.times(2)).onCurrentUserSend(messageBody);
     }
 
     @Test
     public void removeAndCreateChat2() {
-	multiChat.onCurrentUserSend(messageBody);
-	// FIXME multiChat.closePairChat(chatUI);
-	multiChat.createChat(chat);
-	multiChat.onCurrentUserSend(messageBody);
-	Mockito.verify(chatListener, Mockito.times(2)).onCurrentUserSend(messageBody);
+        multiChat.onCurrentUserSend(messageBody);
+        // FIXME multiChat.closePairChat(chatUI);
+        multiChat.createChat(chat);
+        multiChat.onCurrentUserSend(messageBody);
+        Mockito.verify(chatListener, Mockito.times(2)).onCurrentUserSend(messageBody);
     }
 
     @Test
     public void testReceiveMessage() {
-	sendMessageFromOther();
+        sendMessageFromOther();
     }
 
     private void sendMessageFromOther() {
 	final Message message = new Message(uri(otherUser.getURI().toString()), uri(sessionUserJid), messageBody);
-	multiChat.messageReceived(chat, message);
-	Mockito.verify(chatUIView).addMessage(otherUser.getURI().getNode(), "green", message.getBody());
+        multiChat.messageReceived(chat, message);
+        Mockito.verify(chatUIView).addMessage(otherUser.getURI().getNode(), "green", message.getBody());
     }
 
 }

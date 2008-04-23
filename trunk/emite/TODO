@@ -11,8 +11,6 @@ SHORT-TERM (URGENT):
 --> vjrj
 <vjrj> preserve meta html changes in demo
 <vjrj> ExmiteUIProxy is necessary in web.xml? --> cleanup
-<vjrj> remove logs for demo (double compilation with gwt-log)
---> vjrj
 <vjrj> make demo infraestructure starts automatically
 --> vjrj
 

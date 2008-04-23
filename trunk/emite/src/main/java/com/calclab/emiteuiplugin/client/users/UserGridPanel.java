@@ -21,11 +21,12 @@
  */
 package com.calclab.emiteuiplugin.client.users;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+
 import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
-import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.dialog.StatusUtil;
 import com.gwtext.client.core.EventObject;
@@ -47,8 +48,6 @@ import com.gwtext.client.widgets.grid.Renderer;
 import com.gwtext.client.widgets.grid.event.GridRowListener;
 import com.gwtext.client.widgets.layout.FitLayout;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
-
 public class UserGridPanel extends Panel {
 
     private static final String ALIAS = "alias";
@@ -65,189 +64,172 @@ public class UserGridPanel extends Panel {
     private GridPanel grid;
 
     public UserGridPanel() {
-	setBorder(false);
-	setLayout(new FitLayout());
-	createGrid();
-	menuMap = new HashMap<XmppURI, UserGridMenu>();
-	recordMap = new HashMap<XmppURI, Record>();
+        setBorder(false);
+        setLayout(new FitLayout());
+        createGrid();
+        menuMap = new HashMap<XmppURI, UserGridMenu>();
+        recordMap = new HashMap<XmppURI, Record>();
     }
 
     public void addUser(final ChatUserUI user, final UserGridMenu menu) {
-	final String statusIcon = formatStatusIcon(user);
-	addUser(user, statusIcon, formatPresenceStatus(user.getPresence()), menu);
+        final String statusIcon = formatStatusIcon(user);
+        addRecord(user, statusIcon, user.getStatusText(), menu);
     }
 
     public void addUser(final RoomUserUI user, final UserGridMenu menu, final String userType) {
-	final String img = user.getRole().equals(Role.moderator) ? "images/moderatoruser.gif" : "images/normaluser.gif";
-	addUser(user, "<img src=\"" + img + "\">", userType, menu);
+        final String img = user.getRole().equals(Role.moderator) ? "images/moderatoruser.gif" : "images/normaluser.gif";
+        addRecord(user, "<img src=\"" + img + "\">", userType, menu);
     }
 
     public void removeAllUsers() {
-	store.removeAll();
-	recordMap.clear();
-	menuMap.clear();
+        store.removeAll();
+        recordMap.clear();
+        menuMap.clear();
     }
 
     public void removeUser(final AbstractChatUser user) {
-	final XmppURI userJid = user.getURI();
-	final Record storeToRemove = recordMap.get(userJid);
-	if (storeToRemove == null) {
-	    Log.error("Trying to remove a non existing roster item: " + userJid);
-	} else {
-	    store.remove(storeToRemove);
-	    menuMap.remove(userJid);
-	    recordMap.remove(userJid);
-	}
-	doLayoutIfNeeded();
+        final XmppURI userJid = user.getURI();
+        final Record storeToRemove = recordMap.get(userJid);
+        if (storeToRemove == null) {
+            Log.error("Trying to remove a non existing roster item: " + userJid);
+        } else {
+            store.remove(storeToRemove);
+            menuMap.remove(userJid);
+            recordMap.remove(userJid);
+        }
+        doLayoutIfNeeded();
     }
 
     public void resizeGrid(final int newWidthAvailable) {
-	// TODO
-	// grid.setWidth(newWidthAvailable - SOMETHING);
+        // TODO
+        // grid.setWidth(newWidthAvailable - SOMETHING);
     }
 
     public void updateRosterItem(final ChatUserUI user, final UserGridMenu menu) {
-	// removeUser(user);
-	// addUser(user, menu);
-	final Record recordToUpdate = recordMap.get(user.getURI());
-	recordToUpdate.set(IMG, user.getIconUrl());
-	recordToUpdate.set(ALIAS, formatAlias(user));
-	recordToUpdate.set(JID, formatJid(user));
-	recordToUpdate.set(COLOR, user.getColor());
-	recordToUpdate.set(STATUSTEXT, formatPresenceStatus(user.getPresence()));
-	recordToUpdate.set(STATUSIMG, formatStatusIcon(user));
-	menuMap.put(user.getURI(), menu);
-	doLayoutIfNeeded();
+        final Record recordToUpdate = recordMap.get(user.getURI());
+        recordToUpdate.set(IMG, user.getIconUrl());
+        recordToUpdate.set(ALIAS, formatAlias(user));
+        recordToUpdate.set(JID, formatJid(user));
+        recordToUpdate.set(COLOR, user.getColor());
+        recordToUpdate.set(STATUSTEXT, user.getStatusText());
+        recordToUpdate.set(STATUSIMG, formatStatusIcon(user));
+        menuMap.put(user.getURI(), menu);
+        doLayoutIfNeeded();
     }
 
-    private void addUser(final AbstractChatUser user, final String statusIcon, final String statusTextOrig,
-	    final UserGridMenu menu) {
-	final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), formatJid(user),
-		formatAlias(user), user.getColor(), statusIcon, statusTextOrig });
-	recordMap.put(user.getURI(), newUserRecord);
-	store.add(newUserRecord);
-	menuMap.put(user.getURI(), menu);
-	doLayoutIfNeeded();
+    private void addRecord(final AbstractChatUser user, final String statusIcon, final String statusTextOrig,
+            final UserGridMenu menu) {
+        final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), formatJid(user),
+                formatAlias(user), user.getColor(), statusIcon, statusTextOrig });
+        recordMap.put(user.getURI(), newUserRecord);
+        store.add(newUserRecord);
+        menuMap.put(user.getURI(), menu);
+        doLayoutIfNeeded();
     }
 
     private void createGrid() {
-	grid = new GridPanel();
-	fieldDefs = new FieldDef[] { new StringFieldDef(IMG), new StringFieldDef(JID), new StringFieldDef(ALIAS),
-		new StringFieldDef(COLOR), new StringFieldDef(STATUSIMG), new StringFieldDef(STATUSTEXT) };
-	recordDef = new RecordDef(fieldDefs);
+        grid = new GridPanel();
+        fieldDefs = new FieldDef[] { new StringFieldDef(IMG), new StringFieldDef(JID), new StringFieldDef(ALIAS),
+                new StringFieldDef(COLOR), new StringFieldDef(STATUSIMG), new StringFieldDef(STATUSTEXT) };
+        recordDef = new RecordDef(fieldDefs);
 
-	final MemoryProxy proxy = new MemoryProxy(new Object[][] {});
+        final MemoryProxy proxy = new MemoryProxy(new Object[][] {});
 
-	final ArrayReader reader = new ArrayReader(1, recordDef);
-	store = new Store(proxy, reader);
-	store.load();
-	grid.setStore(store);
+        final ArrayReader reader = new ArrayReader(1, recordDef);
+        store = new Store(proxy, reader);
+        store.load();
+        grid.setStore(store);
 
-	// GroupingStore store = new GroupingStore();
-	// store.setReader(reader);
-	// store.setDataProxy(proxy);
-	// store.setSortInfo(new SortState("company", SortDir.ASC));
-	// store.setGroupField("industry");
-	// store.load();
+        // GroupingStore store = new GroupingStore();
+        // store.setReader(reader);
+        // store.setDataProxy(proxy);
+        // store.setSortInfo(new SortState("company", SortDir.ASC));
+        // store.setGroupField("industry");
+        // store.load();
 
-	final Renderer iconRender = new Renderer() {
-	    public String render(final Object value, final CellMetadata cellMetadata, final Record record,
-		    final int rowIndex, final int colNum, final Store store) {
-		return Format.format("<img src=\"{0}\">", new String[] { record.getAsString(IMG) });
-	    }
-	};
-	final Renderer userAliasRender = new Renderer() {
-	    public String render(final Object value, final CellMetadata cellMetadata, final Record record,
-		    final int rowIndex, final int colNum, final Store store) {
-		return Format
-			.format(
-				"<span ext:qtip=\"{3}\" ext:qtitle=\"{4}\"\" style=\"vertical-align: bottom; color: {0} ;\">{1}&nbsp;&nbsp;</span>{2}",
-				new String[] { record.getAsString(COLOR), record.getAsString(ALIAS),
-					record.getAsString(STATUSIMG), record.getAsString(STATUSTEXT),
-					record.getAsString(JID) });
-	    }
-	};
-	final ColumnConfig[] columnsConfigs = new ColumnConfig[] {
-		new ColumnConfig("Image", IMG, 24, false, iconRender, IMG),
-		new ColumnConfig("Alias", ALIAS, 105, true, userAliasRender, ALIAS) };
-	final ColumnModel columnModel = new ColumnModel(columnsConfigs);
-	grid.setColumnModel(columnModel);
+        final Renderer iconRender = new Renderer() {
+            public String render(final Object value, final CellMetadata cellMetadata, final Record record,
+                    final int rowIndex, final int colNum, final Store store) {
+                return Format.format("<img src=\"{0}\">", new String[] { record.getAsString(IMG) });
+            }
+        };
+        final Renderer userAliasRender = new Renderer() {
+            public String render(final Object value, final CellMetadata cellMetadata, final Record record,
+                    final int rowIndex, final int colNum, final Store store) {
+                return Format
+                        .format(
+                                "<span ext:qtip=\"{3}\" ext:qtitle=\"{4}\"\" style=\"vertical-align: bottom; color: {0} ;\">{1}&nbsp;&nbsp;</span>{2}",
+                                new String[] { record.getAsString(COLOR), record.getAsString(ALIAS),
+                                        record.getAsString(STATUSIMG), record.getAsString(STATUSTEXT),
+                                        record.getAsString(JID) });
+            }
+        };
+        final ColumnConfig[] columnsConfigs = new ColumnConfig[] {
+                new ColumnConfig("Image", IMG, 24, false, iconRender, IMG),
+                new ColumnConfig("Alias", ALIAS, 105, true, userAliasRender, ALIAS) };
+        final ColumnModel columnModel = new ColumnModel(columnsConfigs);
+        grid.setColumnModel(columnModel);
 
-	grid.addGridRowListener(new GridRowListener() {
+        grid.addGridRowListener(new GridRowListener() {
 
-	    public void onRowClick(final GridPanel grid, final int rowIndex, final EventObject e) {
-		showMenu(rowIndex, e);
-	    }
+            public void onRowClick(final GridPanel grid, final int rowIndex, final EventObject e) {
+                showMenu(rowIndex, e);
+            }
 
-	    public void onRowContextMenu(final GridPanel grid, final int rowIndex, final EventObject e) {
-		showMenu(rowIndex, e);
-	    }
+            public void onRowContextMenu(final GridPanel grid, final int rowIndex, final EventObject e) {
+                showMenu(rowIndex, e);
+            }
 
-	    public void onRowDblClick(final GridPanel grid, final int rowIndex, final EventObject e) {
-		showMenu(rowIndex, e);
-	    }
+            public void onRowDblClick(final GridPanel grid, final int rowIndex, final EventObject e) {
+                showMenu(rowIndex, e);
+            }
 
-	    private void showMenu(final int rowIndex, final EventObject e) {
-		final Record record = store.getRecordAt(rowIndex);
-		final String jid = record.getAsString(JID);
-		final UserGridMenu menu = menuMap.get(uri(jid));
-		menu.showMenu(e);
-	    }
+            private void showMenu(final int rowIndex, final EventObject e) {
+                final Record record = store.getRecordAt(rowIndex);
+                final String jid = record.getAsString(JID);
+                final UserGridMenu menu = menuMap.get(uri(jid));
+                menu.showMenu(e);
+            }
 
-	});
+        });
 
-	// grid.setAutoExpandColumn(ALIAS);
-	grid.stripeRows(true);
-	final GridView view = new GridView();
-	// i18n
-	view.setEmptyText("Nobody");
-	// view.setAutoFill(true);
-	grid.setView(view);
-	grid.setHideColumnHeader(true);
-	grid.setBorder(false);
-	// grid.setAutoHeight(true);
-	grid.setAutoScroll(true);
-	// countriesGrid.setEnableDragDrop(true);
-	// countriesGrid.setDdGroup("myDDGroup");
-	super.add(grid);
+        // grid.setAutoExpandColumn(ALIAS);
+        grid.stripeRows(true);
+        final GridView view = new GridView();
+        // i18n
+        view.setEmptyText("Nobody");
+        // view.setAutoFill(true);
+        grid.setView(view);
+        grid.setHideColumnHeader(true);
+        grid.setBorder(false);
+        // grid.setAutoHeight(true);
+        grid.setAutoScroll(true);
+        // countriesGrid.setEnableDragDrop(true);
+        // countriesGrid.setDdGroup("myDDGroup");
+        super.add(grid);
     }
 
     private void doLayoutIfNeeded() {
-	// http://groups.google.com/group/gwt-ext/browse_thread/thread/6def43c434147596/69e487525d4c68e9?hl=en&lnk=gst&q=dolayout#69e487525d4c68e9
-	// You should only explicitly call doLayout() if you add a child
-	// component to a parent Container after the container has been
-	// rendered.
+        // http://groups.google.com/group/gwt-ext/browse_thread/thread/6def43c434147596/69e487525d4c68e9?hl=en&lnk=gst&q=dolayout#69e487525d4c68e9
+        // You should only explicitly call doLayout() if you add a child
+        // component to a parent Container after the container has been
+        // rendered.
 
-	if (isRendered()) {
-	    this.doLayout();
-	    // this.syncSize();
-	}
+        if (isRendered()) {
+            this.doLayout();
+            // this.syncSize();
+        }
     }
 
     private String formatAlias(final AbstractChatUser user) {
-	return user.getAlias() != null ? user.getAlias() : user.getURI().getNode();
+        return user.getAlias() != null ? user.getAlias() : user.getURI().getNode();
     }
 
     private String formatJid(final AbstractChatUser user) {
-	return user.getURI().toString();
-    }
-
-    private String formatPresenceStatus(final Presence presence) {
-	// FIXME: maybe use default status messages
-	String statusText;
-	if (presence == null) {
-	    statusText = " ";
-	} else {
-	    statusText = presence.getStatus();
-	}
-	if (statusText == null || statusText.equals("null")) {
-	    statusText = " ";
-	}
-	return statusText;
+        return user.getURI().toString();
     }
 
     private String formatStatusIcon(final ChatUserUI user) {
-	return StatusUtil.getStatusIcon(user.getSubscription(), user.getPresence()).getHTML();
+        return StatusUtil.getUserStatusIcon(user.getStatusIcon()).getHTML();
     }
-
 }

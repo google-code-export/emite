@@ -88,7 +88,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
                 new I18nTranslationServiceMocked());
         kunePluginManager.install(new EmiteUIPlugin());
 
-        dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam(new BoshOptions(
+        dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam("Emite Chat", new BoshOptions(
                 getGwtMetaProperty(GWT_PROPERTY_HTTPBASE)), getGwtMetaProperty(GWT_PROPERTY_ROOMHOST),
                 new I18nTranslationServiceMocked(), generateUserChatOptions()));
         dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
