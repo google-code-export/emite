@@ -192,7 +192,7 @@ public class SwingClient {
 			    }
 
 			    public void onInviteUser(final String userJid, final String reasonText) {
-				((Room) room).inviteUser(userJid, reasonText);
+				((Room) room).sendInvitationTo(userJid, reasonText);
 			    }
 
 			    public void onModifySubject(final String newSubject) {
@@ -223,6 +223,10 @@ public class SwingClient {
 		    public void onSubjectSet(final String nick, final String newSubject) {
 		    }
 		});
+	    }
+
+	    public void onInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
+		roomManager.openChat(roomURI);
 	    }
 	});
 

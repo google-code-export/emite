@@ -32,12 +32,12 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
     private static final String ID = "id";
     private static final String TO = "to";
 
-    public BasicStanza(final String name, final String xmlns) {
-	super(new Packet(name, xmlns));
+    public BasicStanza(final IPacket stanza) {
+	super(stanza);
     }
 
-    protected BasicStanza(final IPacket stanza) {
-	super(stanza);
+    public BasicStanza(final String name, final String xmlns) {
+	super(new Packet(name, xmlns));
     }
 
     public String getFrom() {

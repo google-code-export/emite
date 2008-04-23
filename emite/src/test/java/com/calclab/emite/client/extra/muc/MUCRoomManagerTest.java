@@ -52,7 +52,7 @@ public class MUCRoomManagerTest {
 		+ "<priority>5</priority>" + "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item affiliation='owner' role='moderator' jid='vjrj@localhost/Psi' />" + "<status code='201' />"
 		+ "</x>" + "</presence>");
-	emite.verifySendCallback(new IQ(Type.set));
+	emite.verifySentWithCallback(new IQ(Type.set));
     }
 
     @Test
@@ -77,12 +77,13 @@ public class MUCRoomManagerTest {
 
     @Test
     public void shouldHandleRoomInvitations() {
-	final String message = "<message from='user@domain/resource' to='room@conference.domain'>"
-		+ "<x xmlns='http://jabber.org/protocol/muc#user'><invite to='hecate@shakespeare.lit'>"
+	manager.setUserURI("user@domain/resource");
+	final String message = "<message to='user@domain/resource' from='room@conference.domain'>"
+		+ "<x xmlns='http://jabber.org/protocol/muc#user'><invite from='otherUser@domain/resource'>"
 		+ "<reason>The reason here</reason></invite></x></message>";
 	emite.receives(message);
-	// verify(listener).onInvitationReceived(XmppURI.parse("user@domain/resource"),
-	// XmppURI.parse("room@conference.domain", "The reason here!");
+	verify(listener).onInvitationReceived(XmppURI.parse("otherUser@domain/resource"),
+		XmppURI.parse("room@conference.domain"), "The reason here");
     }
 
     @Test
