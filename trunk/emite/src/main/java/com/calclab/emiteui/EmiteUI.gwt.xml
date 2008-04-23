@@ -2,4 +2,6 @@
   <inherits name="com.calclab.emite.Emite" />
   <inherits name="com.calclab.emiteuiplugin.EmiteUIPlugin" />
   <entry-point class="com.calclab.emiteui.client.EmiteUIEntryPoint" />
+
+  <set-linker name="std" />
 </module>

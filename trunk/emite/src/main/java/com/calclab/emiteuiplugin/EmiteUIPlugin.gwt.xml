@@ -2,12 +2,15 @@
   <!-- other inherited modules, such as com.google.gwt.user.User -->
   <inherits name="com.google.gwt.user.User" />
 
+  <set-linker name="std" />
+
   <inherits name="com.calclab.emite.Emite" />
   <inherits name="com.allen_sauer.gwt.log.gwt-log" />
   <inherits name="org.ourproject.kune.platf.Kune-Platform" />
 
-  <public path="public"/>
-  <entry-point class="com.calclab.emiteuiplugin.client.EmiteUIPluginEntryPoint" />
+  <public path="public" />
+  <entry-point
+    class="com.calclab.emiteuiplugin.client.EmiteUIPluginEntryPoint" />
 
   <servlet path="/com.calclab.emiteui.Example/http-bind"
     class="de.spieleck.servlets.ProxyServlet" />
@@ -18,7 +21,7 @@
   -->
 
   <extend-property name="log_level" values="DEBUG,OFF" />
-  <set-property name="log_level" value="DEBUG" />
+  <!-- <set-property name="log_level" value="DEBUG" /> -->
 
   <set-property name="log_DivLogger" value="DISABLED" />
   <set-property name="log_FirebugLogger" value="ENABLED" />
@@ -39,6 +42,6 @@
   <script src="js/ext/adapter/ext/ext-base.js" />
   <script src="js/ext/ext-all.js" />
 
-  <stylesheet src="css/chat.css"/>
+  <stylesheet src="css/chat.css" />
 
 </module>

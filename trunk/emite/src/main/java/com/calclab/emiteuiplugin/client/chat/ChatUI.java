@@ -29,7 +29,7 @@ public interface ChatUI {
 
     void addInfoMessage(String message);
 
-    void addMesage(String userAlias, String message);
+    void addMessage(String userAlias, String message);
 
     void clearSavedInput();
 

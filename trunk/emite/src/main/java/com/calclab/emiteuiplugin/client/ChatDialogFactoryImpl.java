@@ -24,6 +24,7 @@ package com.calclab.emiteuiplugin.client;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPanel;
@@ -54,9 +55,9 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         }
     }
 
-    public ChatUI createChatUI(final String chatTitle, final String currentUserAlias, final String currentUserColor,
+    public ChatUI createChatUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
             final ChatUIListener listener) {
-        ChatUIPresenter presenter = new ChatUIPresenter(chatTitle, currentUserAlias, currentUserColor, listener);
+        ChatUIPresenter presenter = new ChatUIPresenter(otherURI, currentUserAlias, currentUserColor, listener);
         ChatUIPanel panel = new ChatUIPanel(presenter);
         presenter.init(panel);
         return presenter;
@@ -72,9 +73,9 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
         return presenter;
     }
 
-    public RoomUI createRoomUI(final String chatTitle, final String currentUserAlias, final String currentUserColor,
+    public RoomUI createRoomUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
             final I18nTranslationService i18n, final RoomUIListener listener) {
-        RoomUIPresenter presenter = new RoomUIPresenter(i18n, chatTitle, currentUserAlias, currentUserColor, listener);
+        RoomUIPresenter presenter = new RoomUIPresenter(i18n, otherURI, currentUserAlias, currentUserColor, listener);
         RoomUserListUIPanel roomUserListUIPanel = new RoomUserListUIPanel(i18n, presenter);
         RoomUIPanel panel = new RoomUIPanel(presenter);
         presenter.init(panel, roomUserListUIPanel);
