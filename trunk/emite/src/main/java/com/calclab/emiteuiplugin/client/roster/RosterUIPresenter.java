@@ -146,7 +146,6 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
         case unavailable:
             switch (presence.getShow()) {
             case away:
-                return UserStatusIcon.away;
             case notSpecified:
                 return UserStatusIcon.offline;
             case unknown:

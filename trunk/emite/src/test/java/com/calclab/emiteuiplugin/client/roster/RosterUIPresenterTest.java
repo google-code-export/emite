@@ -33,7 +33,7 @@ public class RosterUIPresenterTest {
     public void availableTypeMustShowApropiateIcon() {
         String statusText = "Some status text";
         assertEquals(UserStatusIcon.available, getPresenceIcon(Type.available, Show.notSpecified, null));
-        assertEquals(UserStatusIcon.away, getPresenceIcon(Type.unavailable, Show.away, null));
+        assertEquals(UserStatusIcon.offline, getPresenceIcon(Type.unavailable, Show.away, null));
         assertEquals(UserStatusIcon.chat, getPresenceIcon(Type.available, Show.chat, statusText));
         assertEquals(UserStatusIcon.xa, getPresenceIcon(Type.available, Show.xa, statusText));
         assertEquals(UserStatusIcon.away, getPresenceIcon(Type.available, Show.away, statusText));

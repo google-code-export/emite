@@ -57,11 +57,10 @@ public class StatusUtil {
     public static AbstractImagePrototype getUserStatusIcon(final UserStatusIcon statusIcon) {
         switch (statusIcon) {
         case available:
+        case chat:
             return icons.online();
         case away:
             return icons.away();
-        case chat:
-            return icons.chat();
         case dnd:
             return icons.busy();
         case newmessage:
