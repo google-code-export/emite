@@ -51,8 +51,7 @@ public class Message extends BasicStanza {
     }
 
     public String getThread() {
-	final IPacket thread = getFirstChild("thread");
-	return thread != null ? thread.getText() : null;
+	return getFirstChild("thread").getText();
     }
 
     public Type getType() {
