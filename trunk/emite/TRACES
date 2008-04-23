@@ -1,0 +1,62 @@
+*****************
+36FB029CA323B5303... (line 24)
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message from="room1@rooms.emitetest.ourproject.org"
+to="danigb@emitetest.ourproject.org"><x xmlns="http://jabber.org/protocol/muc#user">
+<invite from="vjrj@emitetest.ourproject.org"><reason>Join to our conversation</reason></invite></x>
+<x xmlns="jabber:x:conference" jid="room1@rooms.emitetest.ourproject.org"/></message></body>36FB029CA323B5303... (line 24)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@da36FB029CA323B5303... (line 24)
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>36FB029CA323B5303... (line 24)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@db36FB029CA323B5303... (line 24)
+[FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: b is null 36FB029CA323B5303... (line 24)
+[INFO] Adding admin(admin@emitetest.ourproject.org) to your roster.36FB029CA323B5303... (line 24)
+[DEBUG] dispatching: <event xmlns="emite:event" type="connection:do:send"><iq xmlns="jabber:client" type="set" id="roster_10">
+<query xmlns="jabber:iq:roster"><item jid="admin@emitetest.ourproject.org" name="admin" /></query></iq></event>
+****************
+[DEBUG] DELAY: 036FB029CA323B5303... (line 24)
+[DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="656774" sid="74dfa1ba" />36FB029CA323B5303... (line 24)
+POST http://emite.ourproject.org/proxy (971ms)36FB029CA323B5303... (line 1586)
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message type="chat" from="vjrj@emitetest.ourproject.org/emiteui-1208916118607"
+to="danigb@emitetest.ourproject.org"><body>para 0.3.0</body><x xmlns="jabber:x:delay" from="emitetest.ourproject.org" stamp="20080423T02:03:14"/>
+</message><message type="chat" from="vjrj@emitetest.ourproject.org/emiteui-1208916118607" to="danigb@emitetest.ourproject.org">
+<body>pruebas de integración reales...</body><x xmlns="jabber:x:delay" from="emitetest.ourproject.org" stamp="20080423T02:03:22"/></message>
+<message type="chat" from="vjrj@emitetest.ourproject.org/emiteui-1208916118607" to="danigb@emitetest.ourproject.org"><body>que esto es muy cansado :)</body>
+<x xmlns="jabber:x:delay" from="emitetest.ourproject.org" stamp="20080423T02:03:32"/></message><presence from="vjrj@ourproject.org/pb"
+to="danigb@emitetest.ourproject.org/emiteui-1208916227867">
+[DEBUG] <priority>2</priority>
+[DEBUG] <c xmlns="http://jabber.org/protocol/caps" node="http://kopete.kde.org/jabber/caps" ver="0.12.7"/>
+[DEBUG] <x xmlns="jabber:x:delay" from="vjrj@ourproject.org/pb" stamp="20080422T10:25:17"/><x xmlns="jabber:x:delay" from="vjrj@ourproject.org/pb"
+stamp="20080422T10:25:54"/></presence><presence from="danigb@gmail.com/gmail.5E512C46" to="danigb@emitetest.ourproject.org/emiteui-1208916227867">
+<priority>24</priority><caps:c xmlns:caps="http://jabber.org/protocol/caps" node="http://mail.google.com/xmpp/client/caps" ver="1.1" ext="pmuc-v1"></caps:c>
+<status/><show>dnd</show><x xmlns="vcard-temp:x:update"><photo/></x></presence></body>36FB029CA323B5303... (line 24)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@3836FB029CA323B5303... (line 24)
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>36FB029CA323B5303... (line 24)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@3936FB029CA323B5303... (line 24)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@3a36FB029CA323B5303... (line 24)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@3b36FB029CA323B5303... (line 24)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@3c36FB029CA323B5303... (line 24)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@3d36FB029CA323B5303... (line 24)
+[INFO] Updating roster item: vjrj@ourproject.org name: vicente subsc: to36FB029CA323B5303... (line 24)
+[INFO] PRESENCE: type: available from: vjrj@ourproject.org/pb show: null status: null text: [INFO] 36FB029CA323B5303... (line 24)
+[INFO] PRESENCE: type: available from: vjrj@ourproject.org/pb show: null status: null text: [INFO] 36FB029CA323B5303... (line 24)
+[INFO] Updating roster item: danigb@gmail.com name: yo subsc: both36FB029CA323B5303... (line 24)
+[INFO] PRESENCE: type: available from: danigb@gmail.com/gmail.5E512C46 show: dnd status: null text: null36FB029CA323B5303... (line 24)
+[INFO] PRESENCE: type: available from: danigb@gmail.com/gmail.5E512C46 show: dnd status: null text: null36FB029CA323B5303... (line 24)
+[DEBUG] <<<<<<<<<<<< DISPATCH ENDS36FB029CA323B5303... (line 24)
+[DEBUG] DELAY: 453036FB029CA323B5303... (line 24)
+[DEBUG] dispatching: <event xmlns="emite:event" type="connection:do:pull" />36FB029CA323B5303... (line 24)
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>36FB029CA323B5303... (line 24)
+[DEBUG] <<<<<<<<<<<< DISPATCH ENDS36FB029CA323B5303... (line 24)
+[DEBUG] DELAY: 036FB029CA323B5303... (line 24)
+[DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="656775" sid="74dfa1ba" />36FB029CA323B5303... (line 24)
+POST http://emite.ourproject.org/proxy (7339ms)36FB029CA323B5303... (line 1586)
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns="http://jabber.org/protocol/httpbind" type="terminal" condition="item-not-found"></body>36FB029CA323B5303... (line 24)
+[DEBUG] dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@3e36FB029CA323B5303... (line 24)
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>36FB029CA323B5303... (line 24)
+[DEBUG] dispatching: <event xmlns="emite:event" type="connection:on:error" cause="terminal" info="item-not-found" />36FB029CA323B5303... (line 24)
+[INFO] STATE CHANGED: error - old: connected36FB029CA323B5303... (line 24)
+[INFO] STATE CHANGED: disconnected - old: error36FB029CA323B5303... (line 24)
+[DEBUG] <<<<<<<<<<<< DISPATCH ENDS36FB029CA323B5303... (line 24)
+[DEBUG] BOSH IS STOP. NO NEED TO SEND ANYTHING36FB029CA323B5303... (line 24)
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message type="chat" from="vjrj@emitetest.ourproject.org/emiteui-1208916118607" to="danigb@emitetest.ourproject.org"><body>para 0.3.0 [DEBUG] pruebas de integración reales... [DEBUG] que esto es muy cansado </body></message></body>
+***************
+
