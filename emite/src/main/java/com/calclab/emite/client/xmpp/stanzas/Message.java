@@ -25,7 +25,7 @@ import com.calclab.emite.client.core.packet.IPacket;
 
 public class Message extends BasicStanza {
     public static enum Type {
-	chat, error, groupchat, headlines, normal, notSpecified, unknown
+	chat, error, groupchat, headlines, normal
     }
 
     private static final String TYPE_CHAT = "chat";
@@ -54,12 +54,23 @@ public class Message extends BasicStanza {
 	return getFirstChild("thread").getText();
     }
 
+    /**
+     * An IM application SHOULD support all of the foregoing message types; if
+     * an application receives a message with no 'type' attribute or the
+     * application does not understand the value of the 'type' attribute
+     * provided, it MUST consider the message to be of type "normal" (i.e.,
+     * "normal" is the default). The "error" type MUST be generated only in
+     * response to an error related to a message received from another entity.
+     * 
+     * @see http://www.xmpp.org/rfcs/rfc3921.html#stanzas-message-type
+     * @return
+     */
     public Type getType() {
 	final String type = getAttribute(TYPE);
 	try {
-	    return type != null ? Type.valueOf(type) : Type.notSpecified;
+	    return type != null ? Type.valueOf(type) : Type.normal;
 	} catch (final IllegalArgumentException e) {
-	    return Type.unknown;
+	    return Type.normal;
 	}
     }
 

@@ -48,6 +48,13 @@ public class ChatManagerTest {
     }
 
     @Test
+    public void shouldHandleIncommingMessages() {
+	emite.receives("<message to='" + MYSELF + "' from='otherUser@dom/res' id='theId0001'>"
+		+ "<body>This is the body</body></message>");
+	Mockito.verify(listener).onChatCreated((Chat) Mockito.anyObject());
+    }
+
+    @Test
     public void shouldUseSameRoomWhenAnswering() {
 	final Chat chat = manager.openChat(XmppURI.parse("someone@domain"));
 	emite.receives(new Message("someone@domain/resource", MYSELF, "answer").Thread(chat.getThread()));
