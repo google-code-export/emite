@@ -1,3 +1,28 @@
+
+**************** PROBLEMA AL ENTRAR A UNA SALA YA CREADA
+[DEBUG] DELAY: 07874C5D74DB0786EA... (line 24)
+[DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="247674" sid="7361c91b" />7874C5D74DB0786EA... (line 24)
+POST http://emite.ourproject.org/proxy (2433ms)7874C5D74DB0786EA... (line 1621)
+ParamsHeadersPostResponseCache
+Response Headers
+Request Headers
+
+<body xmlns="http://jabber.org/protocol/httpbind" rid="247674" sid="7361c91b" />
+
+<body xmlns='http://jabber.org/protocol/httpbind'><message type="chat" from="admin@emitetest.ourproject
+
+.org/emiteui-1209044128060" to="danigb@emitetest.ourproject.org"><body/><thread>232522.94976442133</thread
+
+></message></body>
+
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message type="chat" from="admin@emitetest.ourproject.org/emiteui-1209044128060" to="danigb@emitetest.ourproject.org"><body/><thread>232522.94976442133</thread></message></body>7874C5D74DB0786EA... (line 24)
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@657874C5D74DB0786EA... (line 24)
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>7874C5D74DB0786EA... (line 24)
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@667874C5D74DB0786EA... (line 24)
+[FATAL] Uncaught Exception: com.google.gwt.core.client.JavaScriptException: JavaScript TypeError exception: c is null 7874C5D74DB0786EA... (line 24)
+[DEBUG] Dispatching: <event xmlns="emite:event" type="connection:do:send"><message xmlns="jabber:client" type="chat" from="danigb@emitetest.ourproject.org/emiteui-1209044155874" to="admin@emitetest.ourproject.org/emiteui-1209044128060"><body>ssdfa</body><thread>232522.94976442133</thread></message></event>7874C5D74DB0786EA... (line 24)
+[DEBUG] Dispatching: <event xmlns="emite:event" type="connection:do:send"><message xmlns="jabber:client" type="chat" from="danigb@emitetest.ourproject.org/emiteui-1209044155874" to="admin@emitetest.ourproject.org/emiteui-1209044128060"><body>ok</body><thread>232522.94976442133</thread></message></event>
+
 *****************
 36FB029CA323B5303... (line 24)
 [DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><message from="room1@rooms.emitetest.ourproject.org"
