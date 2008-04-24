@@ -48,9 +48,8 @@
         <artifactId>maven-googlewebtoolkit2-plugin</artifactId>
         <version>2.0-beta14</version>
         <configuration>
-          <logLevel>INFO</logLevel>
-          <!-- <style>OBF</style> -->
-          <style>PRETTY</style>
+          <!-- <logLevel>INFO</logLevel> -->
+          <style>OBF</style>
           <runTarget>
             com.calclab.emiteui.EmiteUi/EmiteUi.html
           </runTarget>
