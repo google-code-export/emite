@@ -49,7 +49,8 @@
         <version>2.0-beta14</version>
         <configuration>
           <!-- <logLevel>INFO</logLevel> -->
-          <style>OBF</style>
+          <!--<style>OBF</style>-->
+          <style>PRETTY</style>
           <runTarget>
             com.calclab.emiteui.EmiteUi/EmiteUi.html
           </runTarget>

@@ -21,12 +21,9 @@
  */
 package com.calclab.emiteuiplugin.client.dialog;
 
-import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emiteuiplugin.client.UserChatOptions;
 
 public interface MultiChat {
-
-    public void activateChat(Chat chat);
 
     public void center();
 

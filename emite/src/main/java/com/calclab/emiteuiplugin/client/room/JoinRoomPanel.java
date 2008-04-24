@@ -29,6 +29,7 @@ import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
 import com.gwtext.client.widgets.ToolTip;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextField;
+import com.gwtext.client.widgets.form.VType;
 
 public class JoinRoomPanel {
 
@@ -91,6 +92,7 @@ public class JoinRoomPanel {
         roomName = new TextField(i18n.t("Room Name"), "name", 150);
         roomName.setAllowBlank(false);
         roomName.setValidationEvent(false);
+        roomName.setVtype(VType.ALPHANUM);
         formPanel.add(roomName);
 
         roomHostName = new TextField(i18n.t("Room Server Name"), "jid", 150);

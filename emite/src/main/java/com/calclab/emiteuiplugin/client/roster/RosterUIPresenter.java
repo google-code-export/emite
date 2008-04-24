@@ -303,7 +303,11 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
             public void onSubscribedReceived(final Presence presence) {
                 Log.info("SUBS RECEIVED");
-                // RosterItem changed event fired?
+                XmppURI fromURI = presence.getFromURI();
+                ChatUserUI user = rosterMap.get(fromURI);
+                if (user != null) {
+                    view.updateRosterItem(user, createMenuItemList(fromURI, presence, Subscription.to));
+                }
             }
 
             public void onSubscriptionRequest(final Presence presence) {
@@ -325,8 +329,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
             public void onUnsubscribedReceived(final Presence presence) {
                 Log.info("UNSUBS RECEIVED");
-                // Inform about unsubscription?
-                // RosterItem changed event fired?
+                // FIXME: Inform about unsubscription?
             }
         });
     }
