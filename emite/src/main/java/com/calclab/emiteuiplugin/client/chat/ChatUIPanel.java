@@ -41,6 +41,17 @@ import com.gwtext.client.widgets.event.PanelListenerAdapter;
 
 public class ChatUIPanel extends Panel implements ChatUIView {
 
+    private static Sound sound;
+
+    public static void click() {
+        if (sound == null) {
+            SoundController soundController = new SoundController();
+            soundController.setPrioritizeFlashSound(false);
+            sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
+        }
+        sound.play();
+    }
+
     public static String genQuickTipLabel(final String labelText, final String tipTitle, final String tipText,
             final AbstractImagePrototype icon) {
         String tipHtml = "<span style=\"vertical-align: middle;\" ext:qtip=\"" + tipText + "\"";
@@ -58,8 +69,6 @@ public class ChatUIPanel extends Panel implements ChatUIView {
         tipHtml += "</span>";
         return tipHtml;
     }
-
-    private Sound sound;
 
     private final Panel childPanel;
 
@@ -110,14 +119,6 @@ public class ChatUIPanel extends Panel implements ChatUIView {
         String userHtml = "<span style=\"color: " + color + ";\">" + userAlias + "</span>:&nbsp;";
         HTML messageHtml = new HTML(userHtml + ChatTextFormatter.format(message).getHTML());
         addWidget(messageHtml);
-    }
-
-    public void click() {
-        if (sound == null) {
-            SoundController soundController = new SoundController();
-            sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
-        }
-        sound.play();
     }
 
     public void setChatTitle(final String chatTitle, final String tip, final ChatIconDescriptor iconId) {
