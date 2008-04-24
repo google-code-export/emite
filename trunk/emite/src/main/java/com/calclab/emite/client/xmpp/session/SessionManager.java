@@ -68,7 +68,6 @@ public class SessionManager implements Installable {
 
     public void doLogin(final XmppURI uri, final String password) {
 	emite.publish(Events.login(uri, password));
-	// FIXME: method
 	emite.publish(BoshManager.Events.start(uri.getHost()));
     }
 

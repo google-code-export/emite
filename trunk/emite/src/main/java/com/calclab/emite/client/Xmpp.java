@@ -27,6 +27,7 @@ import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.services.gwt.GWTServicesPlugin;
+import com.calclab.emite.client.extra.avatar.AvatarModule;
 import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.im.InstantMessagingModule;
@@ -48,14 +49,14 @@ public class Xmpp {
     }
 
     private final Container container;
-    private final Session session;
+    private Session session;
     private boolean isStarted;
 
     public Xmpp(final Container container, final BoshOptions options) {
 	this.isStarted = false;
 	this.container = container;
-	Plugins.installDefaultPlugins(container, options);
-	this.session = XMPPModule.getSession(container);
+	this.session = null;
+	installDefaultPlugins(container, options);
     }
 
     public ChatManager getChatManager() {
@@ -89,6 +90,9 @@ public class Xmpp {
     }
 
     public Session getSession() {
+	if (session == null) {
+	    session = XMPPModule.getSession(container);
+	}
 	return session;
     }
 
@@ -113,6 +117,14 @@ public class Xmpp {
 	if (isStarted) {
 	    logout();
 	}
+    }
+
+    private void installDefaultPlugins(final Container container, final BoshOptions options) {
+	CoreModule.install(container, options);
+	XMPPModule.install(container);
+	InstantMessagingModule.install(container);
+	MUCModule.install(container);
+	AvatarModule.install(container);
     }
 
 }

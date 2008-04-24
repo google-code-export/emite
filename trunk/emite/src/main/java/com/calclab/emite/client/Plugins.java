@@ -32,12 +32,11 @@ import com.calclab.emite.client.xmpp.XMPPModule;
 public class Plugins {
 
     public static void installDefaultPlugins(final Container container, final BoshOptions options) {
-
-        CoreModule.install(container, options);
-        XMPPModule.install(container);
-        InstantMessagingModule.install(container);
-        MUCModule.install(container);
-        AvatarModule.install(container);
+	CoreModule.install(container, options);
+	XMPPModule.install(container);
+	InstantMessagingModule.install(container);
+	MUCModule.install(container);
+	AvatarModule.install(container);
     }
 
 }

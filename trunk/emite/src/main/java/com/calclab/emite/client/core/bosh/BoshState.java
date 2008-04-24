@@ -33,11 +33,12 @@ public class BoshState {
 
     private boolean isCurrentResponseEmpty;
 
-    public BoshState() {
+    public BoshState(final long currentTime) {
 	this.sid = null;
 	this.currentConnections = 0;
 	this.poll = 1;
 	this.isTerminating = false;
+	lastSendTime = currentTime;
     }
 
     public int getCurrentRequestsCount() {
@@ -82,7 +83,6 @@ public class BoshState {
     public void requestSentAt(final long lastSendTime) {
 	this.lastSendTime = lastSendTime;
 	currentConnections++;
-
     }
 
     public void responseRecevied() {

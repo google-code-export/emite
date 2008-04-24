@@ -207,7 +207,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     void eventStart(final String domain) {
 	isRunning = true;
-	this.state = new BoshState();
+	this.state = new BoshState(services.getCurrentTime());
 	this.stream.start(domain);
     }
 
