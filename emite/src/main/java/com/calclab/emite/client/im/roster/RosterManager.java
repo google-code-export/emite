@@ -22,6 +22,7 @@
 package com.calclab.emite.client.im.roster;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,40 +34,28 @@ import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
-import com.calclab.emite.client.xmpp.session.SessionManager;
+import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
-
-public class RosterManager implements Installable {
+public class RosterManager extends SessionComponent implements Installable {
 
     public static class Events {
 	public static final Event ready = new Event("roster:on:ready");
     }
 
     private final Roster roster;
-    private final Emite emite;
-    private XmppURI currentUser;
 
     public RosterManager(final Emite emite, final Roster roster) {
-	this.emite = emite;
+	super(emite);
 	this.roster = roster;
-	this.currentUser = null;
     }
 
     public void install() {
-	// Upon connecting to the server and becoming an active resource, a
-	// client SHOULD request the roster BEFORE! sending initial presence
-	emite.subscribe(when(SessionManager.Events.onLoggedIn), new PacketListener() {
-	    public void handle(final IPacket received) {
-		currentUser = uri(received.getAttribute("uri"));
-		requestRoster();
-	    }
-	});
-
+	super.install();
+	
 	emite.subscribe(when(new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", null).With("xmlns", null)),
 		new PacketListener() {
 		    public void handle(final IPacket received) {
@@ -83,7 +72,12 @@ public class RosterManager implements Installable {
 		roster.changePresence(presence.getFromURI(), presence);
 	    }
 	});
-
+    }
+    
+    @Override
+    public void loggedIn(XmppURI uri) {
+        super.loggedIn(uri);
+	requestRoster();
     }
 
     /**
@@ -91,7 +85,7 @@ public class RosterManager implements Installable {
      * 
      * At any time, a user MAY add an item to his or her roster.
      * 
-     * @param JID
+     * @param the JID of the user you want to add 
      * @param name
      * @param group
      * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
@@ -103,7 +97,7 @@ public class RosterManager implements Installable {
 	}
 
 	roster.add(new RosterItem(jid, Subscription.none, name));
-	final IPacket iq = new IQ(IQ.Type.set, currentUser, null).WithQuery("jabber:iq:roster", item);
+	final IPacket iq = new IQ(IQ.Type.set, userURI, null).WithQuery("jabber:iq:roster", item);
 	emite.sendIQ("roster", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (IQ.isSuccess(received)) {
@@ -116,6 +110,16 @@ public class RosterManager implements Installable {
 	});
     }
 
+    /**
+     * 7.4. Adding a Roster Item
+     * 
+     * At any time, a user MAY add an item to his or her roster.
+     * 
+     * @param JID
+     * @param name
+     * @param group
+     * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
+     */
     public void requestRemoveItem(final XmppURI jid) {
 	final IQ iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", new Packet("item").With("jid", jid.toString())
 		.With("subscription", "remove"));
