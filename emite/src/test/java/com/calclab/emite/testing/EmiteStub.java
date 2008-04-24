@@ -20,7 +20,7 @@ public class EmiteStub implements Emite {
     private final TigaseXMLService xmler;
     private PacketListener lastCallback;
     private final ArrayList<IPacket> published;
-    private IPacket sentByCallback;
+    private IPacket lastIQSent;
     private final ArrayList<IPacket> sent;
     private StringBuffer contentsString;
 
@@ -28,7 +28,7 @@ public class EmiteStub implements Emite {
 	xmler = new TigaseXMLService();
 	dispatcher = new DispatcherDefault();
 	published = new ArrayList<IPacket>();
-	sentByCallback = null;
+	lastIQSent = null;
 	sent = new ArrayList<IPacket>();
     }
 
@@ -68,13 +68,24 @@ public class EmiteStub implements Emite {
 	sent.add(packet);
     }
 
-    public void send(final String category, final IPacket packet, final PacketListener listener) {
-	sentByCallback = packet;
+    public void sendIQ(final String category, final IPacket packet, final PacketListener listener) {
+	lastIQSent = packet;
 	this.lastCallback = listener;
     }
 
     public void subscribe(final Matcher matcher, final PacketListener packetListener) {
 	dispatcher.subscribe(matcher, packetListener);
+    }
+
+    public PacketListener verifyIQSent(final IPacket iq) {
+	assertNotNull(lastIQSent);
+	final String message = "Expected: " + iq + "but was: " + lastIQSent;
+	assertTrue(message, new IsPacketLike(iq).matches(lastIQSent));
+	return lastCallback;
+    }
+
+    public void verifyIQSent(final String xml) {
+	verifyIQSent(xmler.toXML(xml));
     }
 
     public void verifyNotPublished(final Packet packet) {
@@ -91,16 +102,6 @@ public class EmiteStub implements Emite {
 
     public void verifyPublishedTimes(final int times) {
 	assertEquals(times, published.size());
-    }
-
-    public PacketListener verifySentWithCallback(final IPacket iq) {
-	assertNotNull(sentByCallback);
-	assertTrue(new IsPacketLike(iq).matches(sentByCallback));
-	return lastCallback;
-    }
-
-    public void verifySentWithCallback(final String xml) {
-	verifySentWithCallback(xmler.toXML(xml));
     }
 
     public void verifySent(final String expected) {

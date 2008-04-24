@@ -62,16 +62,26 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
 	return uri(getTo());
     }
 
+    @Deprecated
     public void setFrom(final String from) {
 	setAttribute(FROM, from);
+    }
+
+    public void setFrom(final XmppURI from) {
+	setFrom(from != null ? from.toString() : null);
     }
 
     public void setId(final String id) {
 	setAttribute(ID, id);
     }
 
+    @Deprecated
     public void setTo(final String to) {
 	setAttribute(TO, to);
+    }
+
+    public void setTo(final XmppURI to) {
+	setTo(to != null ? to.toString() : null);
     }
 
     public void setType(final String type) {

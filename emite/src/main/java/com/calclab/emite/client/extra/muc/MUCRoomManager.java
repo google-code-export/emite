@@ -99,9 +99,9 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager, I
     }
 
     private void createInstantRoom(final Room room) {
-	final IQ iq = new IQ(Type.set, userURI, room.getOtherURI().toString()).WithQuery(
-		"http://jabber.org/protocol/muc#owner", new Packet("x", "jabber:x:data").With("type", "submit"));
-	emite.send("rooms", iq, new PacketListener() {
+	final IQ iq = new IQ(Type.set, userURI, room.getOtherURI()).WithQuery("http://jabber.org/protocol/muc#owner",
+		new Packet("x", "jabber:x:data").With("type", "submit"));
+	emite.sendIQ("rooms", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (IQ.isSuccess(received)) {
 

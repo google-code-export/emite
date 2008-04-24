@@ -45,10 +45,10 @@ public class IQ extends BasicStanza {
 	}
     }
 
-    public IQ(final Type type, final XmppURI from, final String to) {
+    public IQ(final Type type, final XmppURI from, final XmppURI to) {
 	this(type);
-	setFrom(from.toString());
-	setTo(to);
+	super.setFrom(from);
+	super.setTo(to);
     }
 
     public IPacket Includes(final String name, final String xmlns) {

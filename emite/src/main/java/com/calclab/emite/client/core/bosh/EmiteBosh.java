@@ -89,7 +89,7 @@ public class EmiteBosh implements Emite, Installable {
 	dispatcher.publish(new Event(EmiteBosh.Events.send).With(packet));
     }
 
-    public void send(final String category, final IPacket packet, final PacketListener packetListener) {
+    public void sendIQ(final String category, final IPacket packet, final PacketListener packetListener) {
 	final String id = manager.register(category, packetListener);
 	packet.setAttribute("id", id);
 	send(packet);

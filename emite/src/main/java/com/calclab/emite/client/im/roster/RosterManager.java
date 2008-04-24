@@ -104,7 +104,7 @@ public class RosterManager implements Installable {
 
 	roster.add(new RosterItem(jid, Subscription.none, name));
 	final IPacket iq = new IQ(IQ.Type.set, currentUser, null).WithQuery("jabber:iq:roster", item);
-	emite.send("roster", iq, new PacketListener() {
+	emite.sendIQ("roster", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (IQ.isSuccess(received)) {
 		    final Presence presenceRequest = new Presence(Type.subscribe, null, jid);
@@ -119,7 +119,7 @@ public class RosterManager implements Installable {
     public void requestRemoveItem(final XmppURI jid) {
 	final IQ iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", new Packet("item").With("jid", jid.toString())
 		.With("subscription", "remove"));
-	emite.send("roster", iq, new PacketListener() {
+	emite.sendIQ("roster", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (IQ.isSuccess(received)) {
 		    roster.removeItem(jid);
@@ -141,7 +141,7 @@ public class RosterManager implements Installable {
     }
 
     private void requestRoster() {
-	emite.send("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
+	emite.sendIQ("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
 	    public void handle(final IPacket received) {
 		setRosterItems(roster, received);
 		emite.publish(RosterManager.Events.ready);

@@ -37,26 +37,35 @@ public class XmppURI {
     }
 
     public static XmppURI uri(final String xmppUri) {
-	final String xmppNoPrefix = xmppUri.startsWith(PREFIX) ? xmppUri.substring(PREFIX_LENGTH) : xmppUri;
+	String node = null;
+	String domain = null;
+	String resource = null;
 
-	final int atIndex = xmppNoPrefix.indexOf('@') + 1;
-	if (atIndex <= 0) {
-	    throw new RuntimeException("The @ is mandatory");
-	}
-	final String node = xmppNoPrefix.substring(0, atIndex - 1);
-	if (node.length() == 0) {
-	    throw new RuntimeException("The node is mandatory");
+	final String uri = xmppUri.startsWith(PREFIX) ? xmppUri.substring(PREFIX_LENGTH) : xmppUri;
+
+	final int atIndex = uri.indexOf('@') + 1;
+	if (atIndex > 0) {
+	    node = uri.substring(0, atIndex - 1);
+	    if (node.length() == 0) {
+		throw new RuntimeException("a uri with @ should have node");
+	    }
 	}
 
-	final int barIndex = xmppNoPrefix.indexOf('/', atIndex);
-	final String host = barIndex > 0 ? xmppNoPrefix.substring(atIndex, barIndex) : xmppNoPrefix.substring(atIndex);
-	if (host.length() == 0) {
+	final int barIndex = uri.indexOf('/', atIndex);
+	if (atIndex == barIndex) {
+	    throw new RuntimeException("bad syntax!");
+	}
+	if (barIndex > 0) {
+	    domain = uri.substring(atIndex, barIndex);
+	    resource = uri.substring(barIndex + 1);
+	} else {
+	    domain = uri.substring(atIndex);
+	}
+	if (domain.length() == 0) {
 	    throw new RuntimeException("The domain is required");
 	}
 
-	final String resource = barIndex > 0 ? xmppNoPrefix.substring(barIndex + 1) : null;
-
-	return new XmppURI(node, host, resource);
+	return new XmppURI(node, domain, resource);
     }
     private final String host;
     private final String node;
@@ -99,6 +108,10 @@ public class XmppURI {
 	return host;
     }
 
+    public XmppURI getHostURI() {
+	return new XmppURI(null, host, null);
+    }
+
     public XmppURI getJID() {
 	return new XmppURI(node, host, null);
     }
@@ -114,6 +127,10 @@ public class XmppURI {
     @Override
     public int hashCode() {
 	return representation.hashCode();
+    }
+
+    public boolean hasNode() {
+	return node != null;
     }
 
     public boolean hasResource() {

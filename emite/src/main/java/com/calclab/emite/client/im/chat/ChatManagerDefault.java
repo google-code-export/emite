@@ -33,28 +33,25 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.xmpp.session.SessionManager;
+import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
-public class ChatManagerDefault implements ChatManager, Installable {
-    protected XmppURI userURI;
-    protected final Emite emite;
+public class ChatManagerDefault extends SessionComponent implements ChatManager, Installable {
     protected final HashSet<Chat> chats;
     protected final ArrayList<ChatManagerListener> listeners;
 
     public ChatManagerDefault(final Emite emite) {
-	this.emite = emite;
+	super(emite);
 	this.listeners = new ArrayList<ChatManagerListener>();
 	this.chats = new HashSet<Chat>();
     }
 
     public void addListener(final ChatManagerListener listener) {
 	listeners.add(listener);
-
     }
 
     public void close(final Chat chat) {
@@ -62,35 +59,28 @@ public class ChatManagerDefault implements ChatManager, Installable {
 	fireChatClosed(chat);
     }
 
-    public void eventLoggedOut() {
-	userURI = null;
-	final ArrayList<Chat> toBeRemoved = new ArrayList<Chat>();
-	toBeRemoved.addAll(chats);
-	for (final Chat chat : toBeRemoved) {
-	    close(chat);
-	}
-    }
-
     public Collection<? extends Chat> getChats() {
 	return chats;
     }
 
+    @Override
     public void install() {
-	emite.subscribe(when(SessionManager.Events.onLoggedOut), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventLoggedOut();
-	    }
-	});
-	emite.subscribe(when(SessionManager.Events.onLoggedIn), new PacketListener() {
-	    public void handle(final IPacket received) {
-		setUserURI(received.getAttribute("uri"));
-	    }
-	});
+	super.install();
 	emite.subscribe(when(new Packet("message", null)), new PacketListener() {
 	    public void handle(final IPacket received) {
 		eventMessage(new Message(received));
 	    }
 	});
+    }
+
+    @Override
+    public void loggedOut() {
+	super.loggedOut();
+	final ArrayList<Chat> toBeRemoved = new ArrayList<Chat>();
+	toBeRemoved.addAll(chats);
+	for (final Chat chat : toBeRemoved) {
+	    close(chat);
+	}
     }
 
     public Chat openChat(final XmppURI to) {
