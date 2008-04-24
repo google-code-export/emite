@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteStub;
@@ -34,7 +35,12 @@ public class RosterManagerTest {
 	emite.verifyIQSent("<iq from='user@domain/res' type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='name@domain/res' name='the name'><group>the group</group></item></query></iq>");
 	emite.answerSuccess();
-
+    }
+    
+    @Test
+    public void shouldHandlePresence() {
+	emite.receives("<presence from='userInRoster@domain/res' to='user@domain/res'><priority>2</priority></presence>");
+	verify(roster).changePresence(eq(uri("userInRoster@domain/res")), (Presence) anyObject());
     }
 
     @Test
