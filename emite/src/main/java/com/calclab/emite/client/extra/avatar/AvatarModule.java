@@ -19,25 +19,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client;
+package com.calclab.emite.client.extra.avatar;
 
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.core.CoreModule;
-import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.extra.avatar.AvatarModule;
-import com.calclab.emite.client.extra.muc.MUCModule;
-import com.calclab.emite.client.im.InstantMessagingModule;
-import com.calclab.emite.client.xmpp.XMPPModule;
+import com.calclab.emite.client.core.bosh.Emite;
 
-public class Plugins {
+public class AvatarModule {
 
-    public static void installDefaultPlugins(final Container container, final BoshOptions options) {
+    private static final String COMPONENTS_MANAGER = "avatar:manager";
 
-        CoreModule.install(container, options);
-        XMPPModule.install(container);
-        InstantMessagingModule.install(container);
-        MUCModule.install(container);
-        AvatarModule.install(container);
+    public static AvatarManager getAvatarManager(final Container components) {
+        return (AvatarManager) components.get(COMPONENTS_MANAGER);
     }
 
+    public static void install(final Container container) {
+        final Emite emite = CoreModule.getEmite(container);
+        final AvatarManager avatar = new AvatarManager(emite);
+        container.install(COMPONENTS_MANAGER, avatar);
+    }
 }

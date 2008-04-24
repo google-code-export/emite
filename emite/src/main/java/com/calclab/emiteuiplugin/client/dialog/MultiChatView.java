@@ -53,6 +53,8 @@ public interface MultiChatView {
 
     void hide();
 
+    void highLight();
+
     void removeChat(ChatUI chatUI);
 
     void setAddRosterItemButtonVisible(boolean visible);
@@ -94,5 +96,7 @@ public interface MultiChatView {
     void show();
 
     void showAlert(String message);
+
+    void unHighLight();
 
 }

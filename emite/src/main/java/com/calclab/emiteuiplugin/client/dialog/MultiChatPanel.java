@@ -38,7 +38,6 @@ import com.calclab.emiteuiplugin.client.utils.emoticons.EmoticonPalettePanel;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.RegionPosition;
@@ -54,13 +53,11 @@ import com.gwtext.client.widgets.ToolbarButton;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.ContainerListenerAdapter;
-import com.gwtext.client.widgets.event.KeyListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.event.WindowListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
-import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 import com.gwtext.client.widgets.layout.AccordionLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
@@ -73,7 +70,7 @@ public class MultiChatPanel implements MultiChatView {
     private Window dialog;
     private Button sendBtn;
     private final MultiChatPresenter presenter;
-    private TextField subject;
+    private TextArea subjectTextArea;
     private TextArea input;
     private final HashMap<String, ChatUI> panelIdToChat;
     private EmoticonPalettePanel emoticonPalettePanel;
@@ -144,7 +141,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void clearSubject() {
-        subject.reset();
+        subjectTextArea.reset();
     }
 
     public void confirmCloseAll() {
@@ -169,6 +166,10 @@ public class MultiChatPanel implements MultiChatView {
 
     public void hide() {
         dialog.hide();
+    }
+
+    public void highLight() {
+        // TODO Auto-generated method stub
     }
 
     public void removeChat(final ChatUI chatUI) {
@@ -257,15 +258,16 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void setSubject(final String text) {
-        subject.setValue(text);
+        subjectTextArea.setRawValue(text);
     }
 
     public void setSubjectEditable(final boolean editable) {
-        subject.setDisabled(!editable);
+        subjectTextArea.setDisabled(!editable);
     }
 
     public void setSubjectVisible(final boolean visible) {
-        subject.setVisible(visible);
+        // FIXME: testing listener issue
+        // subject.setVisible(visible);
     }
 
     public void show() {
@@ -274,7 +276,11 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void showAlert(final String message) {
-        MessageBox.alert(message);
+        MessageBox.alert(i18n.t("Alert"), message);
+    }
+
+    public void unHighLight() {
+        // TODO Auto-generated method stub
     }
 
     private void attachRoster() {
@@ -304,7 +310,6 @@ public class MultiChatPanel implements MultiChatView {
     private Panel createInputPanel() {
         inputForm = createGenericInputForm();
         input = new TextArea();
-        // As height 100% doesn't works
         input.setHeight(47);
         input.setEnterIsSpecial(true);
         input.addListener(new FieldListenerAdapter() {
@@ -315,8 +320,7 @@ public class MultiChatPanel implements MultiChatView {
                 }
             }
         });
-
-        inputForm.add(input, new AnchorLayoutData("100% 100%"));
+        inputForm.add(input);
 
         /* Input toolbar */
         final Toolbar inputToolbar = new Toolbar();
@@ -324,7 +328,6 @@ public class MultiChatPanel implements MultiChatView {
         emoticonButton.setIcon("images/smile.gif");
         emoticonButton.setCls("x-btn-icon x-btn-focus");
         emoticonButton.setTooltip(i18n.t("Insert a emoticon"));
-
         emoticonButton.addListener(new ButtonListenerAdapter() {
             public void onClick(final Button button, final EventObject e) {
                 showEmoticonPalette(e.getXY()[0], e.getXY()[1]);
@@ -332,9 +335,7 @@ public class MultiChatPanel implements MultiChatView {
         });
         inputToolbar.addButton(emoticonButton);
         inputToolbar.addSeparator();
-
         Panel southPanel = createInputFormWithToolBar(inputForm, inputToolbar);
-
         return southPanel;
     }
 
@@ -424,7 +425,7 @@ public class MultiChatPanel implements MultiChatView {
                     final int rawWidth, final int rawHeight) {
                 int newWidth = adjWidth - 14;
                 input.setWidth(newWidth);
-                subject.setWidth(newWidth);
+                subjectTextArea.setWidth(newWidth);
                 inputForm.setWidth(newWidth);
                 subjectForm.setWidth(newWidth);
             }
@@ -482,41 +483,27 @@ public class MultiChatPanel implements MultiChatView {
     private Panel createSubjectPanel() {
         subjectForm = createGenericInputForm();
 
-        subject = new TextField();
+        // i18n
+        subjectTextArea = new TextArea();
         // subject.setTitle(i18n.t("Subject of this room"));
-        // As height 100% doesn't works
-        subject.setHeight(27);
-        subject.addKeyListener(KeyboardListener.KEY_ENTER, new KeyListener() {
-            public void onKey(final int key, final EventObject e) {
-                Log.info("Subject enter fired");
-                presenter.onModifySubjectRequested(getSubject());
-                e.stopEvent();
-            }
-        });
-        subject.addListener(new FieldListenerAdapter() {
-            public void onChange(final Field field, final Object newVal, final Object oldVal) {
-                Log.info("Subject changed fired");
-                presenter.onModifySubjectRequested(getSubject());
-            }
-        });
-        subject.addKeyListener(13, new KeyListener() {
-            public void onKey(final int key, final EventObject e) {
+        subjectTextArea.setHeight(27);
+        subjectTextArea.setEnterIsSpecial(true);
+        subjectTextArea.addListener(new FieldListenerAdapter() {
+            public void onSpecialKey(final Field field, final EventObject e) {
+                // FIXME dont works?
+                Log.info("Subject special key");
                 if (e.getKey() == 13) {
-                    Log.info("Subject field listener fired");
+                    Log.info("Subject enter fired");
                     presenter.onModifySubjectRequested(getSubject());
                     e.stopEvent();
                 }
             }
         });
 
+        subjectForm.add(subjectTextArea);
         topToolbar = new MultiChatPanelTopBar(i18n, presenter);
-
-        subjectForm.add(subject, new AnchorLayoutData("100% 100%"));
-
         Panel northPanel = createInputFormWithToolBar(subjectForm, topToolbar);
-        northPanel.addStyleName("emite-MultiChatPanel-Subject");
-        setSubjectEditable(false);
-
+        // setSubjectEditable(false);
         return northPanel;
     }
 
@@ -556,7 +543,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private String getSubject() {
-        return subject.getValueAsString();
+        return subjectTextArea.getValueAsString();
     }
 
     private void showEmoticonPalette(final int x, final int y) {
