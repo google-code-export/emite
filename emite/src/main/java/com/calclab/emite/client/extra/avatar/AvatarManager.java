@@ -26,9 +26,7 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
-import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 
 /**
@@ -38,44 +36,29 @@ import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 public class AvatarManager extends SessionComponent implements Installable {
 
     public AvatarManager(final Emite emite) {
-	super(emite);
+        super(emite);
     }
 
     @Override
     public void install() {
-	super.install();
+        super.install();
     }
 
     public void setVCardAvatard(final String photoBinary) {
-	final IQ iq = new IQ(Type.set, userURI, null);
-	final IPacket vcard = iq.add("vCard", "vcard-temp");
-	vcard.With("xdbns", "vcard-temp").With("prodid", "-//HandGen//NONSGML vGen v1.0//EN");
-	vcard.setAttribute("xdbns", "vcard-temp");
-	vcard.setAttribute("prodid", "-//HandGen//NONSGML vGen v1.0//EN");
-	vcard.setAttribute("version", "2.0");
-	vcard.add("PHOTO", null).add("BINVAL", null).setText(photoBinary);
-	emite.sendIQ("avatar", iq, new PacketListener() {
-	    public void handle(final IPacket received) {
-		if (IQ.isSuccess(received)) {
+        final IQ iq = new IQ(Type.set, userURI, null);
+        final IPacket vcard = iq.add("vCard", "vcard-temp");
+        vcard.With("xdbns", "vcard-temp").With("prodid", "-//HandGen//NONSGML vGen v1.0//EN");
+        vcard.setAttribute("xdbns", "vcard-temp");
+        vcard.setAttribute("prodid", "-//HandGen//NONSGML vGen v1.0//EN");
+        vcard.setAttribute("version", "2.0");
+        vcard.add("PHOTO", null).add("BINVAL", null).setText(photoBinary);
+        emite.sendIQ("avatar", iq, new PacketListener() {
+            public void handle(final IPacket received) {
+                if (IQ.isSuccess(received)) {
 
-		}
-	    }
-	});
-    }
-
-    public void setvCardAvatarOLD(final XmppURI to, final String photoBin) {
-	final BasicStanza message = new BasicStanza("iq", null);
-	message.setType(Type.set.toString());
-	message.setFrom(to.toString());
-	message.setAttribute("id", "vc1");
-	final IPacket vcard = message.add("vCard", "vcard-temp");
-	vcard.setAttribute("xdbns", "vcard-temp");
-	vcard.setAttribute("prodid", "-//HandGen//NONSGML vGen v1.0//EN");
-	vcard.setAttribute("version", "2.0");
-	final IPacket photo = vcard.add("PHOTO", null);
-	final IPacket binval = photo.add("BINVAL", null);
-	binval.setText(photoBin);
-	emite.send(message);
+                }
+            }
+        });
     }
 
 }

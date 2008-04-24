@@ -32,13 +32,13 @@ public class RosterUIPresenterTest {
     @Test
     public void availableTypeMustShowApropiateIcon() {
         String statusText = "Some status text";
-        assertEquals(UserStatusIcon.available, getPresenceIcon(Type.available, Show.notSpecified, null));
-        assertEquals(UserStatusIcon.offline, getPresenceIcon(Type.unavailable, Show.away, null));
-        assertEquals(UserStatusIcon.chat, getPresenceIcon(Type.available, Show.chat, statusText));
-        assertEquals(UserStatusIcon.xa, getPresenceIcon(Type.available, Show.xa, statusText));
-        assertEquals(UserStatusIcon.away, getPresenceIcon(Type.available, Show.away, statusText));
-        assertEquals(UserStatusIcon.offline, getPresenceIcon(Type.unavailable, Show.notSpecified, statusText));
-        assertEquals(UserStatusIcon.unknown, getPresenceIcon(Type.unavailable, Show.unknown, null));
+        assertEquals(ChatIconDescriptor.available, getPresenceIcon(Type.available, Show.notSpecified, null));
+        assertEquals(ChatIconDescriptor.offline, getPresenceIcon(Type.unavailable, Show.away, null));
+        assertEquals(ChatIconDescriptor.chat, getPresenceIcon(Type.available, Show.chat, statusText));
+        assertEquals(ChatIconDescriptor.xa, getPresenceIcon(Type.available, Show.xa, statusText));
+        assertEquals(ChatIconDescriptor.away, getPresenceIcon(Type.available, Show.away, statusText));
+        assertEquals(ChatIconDescriptor.offline, getPresenceIcon(Type.unavailable, Show.notSpecified, statusText));
+        assertEquals(ChatIconDescriptor.unknown, getPresenceIcon(Type.unavailable, Show.unknown, null));
     }
 
     @Before
@@ -96,7 +96,7 @@ public class RosterUIPresenterTest {
         return presence;
     }
 
-    private UserStatusIcon getPresenceIcon(final Type type, final Show show, final String status) {
+    private ChatIconDescriptor getPresenceIcon(final Type type, final Show show, final String status) {
         Presence presence = new Presence(type, otherUri, meUri);
         presence.setShow(show);
         presence.setStatus(status);

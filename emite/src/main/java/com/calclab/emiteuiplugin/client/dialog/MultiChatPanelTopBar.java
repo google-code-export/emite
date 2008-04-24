@@ -28,6 +28,7 @@ import com.calclab.emiteuiplugin.client.dialog.OwnPresence.OwnStatus;
 import com.calclab.emiteuiplugin.client.room.InviteToRoomPanel;
 import com.calclab.emiteuiplugin.client.room.JoinRoomPanel;
 import com.calclab.emiteuiplugin.client.roster.RosterItemPanel;
+import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.ColorPalette;
@@ -221,7 +222,7 @@ public class MultiChatPanelTopBar extends Toolbar {
             break;
         }
 
-        String icon = StatusUtil.getOwnStatusIcon(ownPresence.getStatus()).getHTML();
+        String icon = ChatUIUtils.getOwnStatusIcon(ownPresence.getStatus()).getHTML();
         statusButton.setText(icon);
     }
 
@@ -276,7 +277,7 @@ public class MultiChatPanelTopBar extends Toolbar {
     private CheckItem createStatusCheckItem(final OwnStatus ownStatus) {
 
         CheckItem checkItem = new CheckItem();
-        checkItem.setText(StatusUtil.getOwnStatusIconAndText(i18n, ownStatus));
+        checkItem.setText(ChatUIUtils.getOwnStatusIconAndText(i18n, ownStatus));
         checkItem.setGroup("chatstatus");
         switch (ownStatus) {
         case offline:

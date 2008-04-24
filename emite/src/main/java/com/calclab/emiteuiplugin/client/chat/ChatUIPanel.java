@@ -25,8 +25,9 @@ import org.ourproject.kune.platf.client.ui.HorizontalLine;
 
 import com.allen_sauer.gwt.voices.client.Sound;
 import com.allen_sauer.gwt.voices.client.SoundController;
-import com.calclab.emiteuiplugin.client.utils.ChatIcons;
+import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 import com.calclab.emiteuiplugin.client.utils.ChatTextFormatter;
+import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
@@ -39,10 +40,6 @@ import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 
 public class ChatUIPanel extends Panel implements ChatUIView {
-
-    public static enum ChatTitleIcon {
-        chat, chatnewmessage, groupchat, groupchatnewmessage
-    }
 
     private static Sound sound;
 
@@ -123,24 +120,9 @@ public class ChatUIPanel extends Panel implements ChatUIView {
         addWidget(messageHtml);
     }
 
-    public void setChatTitle(final String chatTitle, final String tip, final ChatTitleIcon iconId) {
+    public void setChatTitle(final String chatTitle, final String tip, final ChatIconDescriptor iconId) {
         // FIXME Vicente: try to do this with css (with gwt-ext don't works)
-        AbstractImagePrototype icon = null;
-        switch (iconId) {
-        case chat:
-            icon = ChatIcons.App.getInstance().chat();
-            break;
-        case chatnewmessage:
-            icon = ChatIcons.App.getInstance().newMessage();
-            break;
-        case groupchat:
-            icon = ChatIcons.App.getInstance().groupChat();
-            break;
-        case groupchatnewmessage:
-            icon = ChatIcons.App.getInstance().groupChat();
-            break;
-        }
-        super.setTitle(genQuickTipLabel(chatTitle, "", tip, icon));
+        super.setTitle(genQuickTipLabel(chatTitle, "", tip, ChatUIUtils.getIcon(iconId)));
         postChatTitle();
     }
 

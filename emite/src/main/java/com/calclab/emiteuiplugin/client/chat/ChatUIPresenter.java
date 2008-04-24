@@ -26,7 +26,7 @@ import java.util.HashMap;
 import org.ourproject.kune.platf.client.View;
 
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emiteuiplugin.client.chat.ChatUIPanel.ChatTitleIcon;
+import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 
 public class ChatUIPresenter implements ChatUI {
 
@@ -43,14 +43,25 @@ public class ChatUIPresenter implements ChatUI {
     private final XmppURI otherURI;
     private boolean isActive;
     private boolean alreadyHightlighted;
+    private final ChatIconDescriptor unhighIcon;
+    private final ChatIconDescriptor highIcon;
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-            final ChatUIListener listener) {
+            final ChatIconDescriptor unhighIcon, final ChatIconDescriptor highIcon, final ChatUIListener listener) {
         this.otherURI = otherURI;
+        this.unhighIcon = unhighIcon;
+        this.highIcon = highIcon;
         this.listener = listener;
         this.chatTitle = otherURI.getNode();
         userColors = new HashMap<String, String>();
         userColors.put(currentUserAlias, currentUserColor);
+    }
+
+    public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
+            final ChatUIListener listener) {
+        // Def Constructor for chats
+        this(otherURI, currentUserAlias, currentUserColor, ChatIconDescriptor.chatsmall,
+                ChatIconDescriptor.chatnewmessagesmall, listener);
     }
 
     public void addDelimiter(final String date) {
@@ -98,7 +109,7 @@ public class ChatUIPresenter implements ChatUI {
     }
 
     public void highLightChatTitle() {
-        view.setChatTitle(chatTitle, otherURI.toString(), ChatTitleIcon.chatnewmessage);
+        view.setChatTitle(chatTitle, otherURI.toString(), highIcon);
         alreadyHightlighted = true;
         listener.onHighLight(this);
     }
@@ -130,7 +141,7 @@ public class ChatUIPresenter implements ChatUI {
     }
 
     public void unHighLightChatTitle() {
-        view.setChatTitle(chatTitle, otherURI.toString(), ChatTitleIcon.chat);
+        view.setChatTitle(chatTitle, otherURI.toString(), unhighIcon);
         alreadyHightlighted = false;
         listener.onHighLight(this);
     }

@@ -19,19 +19,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emiteuiplugin.client.dialog;
+package com.calclab.emiteuiplugin.client.utils;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emiteuiplugin.client.dialog.OwnPresence.OwnStatus;
-import com.calclab.emiteuiplugin.client.roster.UserStatusIcon;
-import com.calclab.emiteuiplugin.client.utils.ChatIcons;
+import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
-public class StatusUtil {
+public class ChatUIUtils {
 
     private static final ChatIcons icons = ChatIcons.App.getInstance();
+
+    public static AbstractImagePrototype getIcon(final ChatIconDescriptor iconDescriptor) {
+        switch (iconDescriptor) {
+        case available:
+        case chat:
+            return icons.online();
+        case away:
+            return icons.away();
+        case dnd:
+            return icons.busy();
+        case newmessage:
+            return icons.newMessage();
+        case offline:
+            return icons.offline();
+        case unknown:
+            return icons.question();
+        case xa:
+            return icons.xa();
+        case chatsmall:
+            return icons.chatSmall();
+        case chatnewmessagesmall:
+            return icons.chatNewMessageSmall();
+        case roomsmall:
+            return icons.roomSmall();
+        case roomnewmessagesmall:
+            return icons.roomNewMessageSmall();
+        default:
+            return null;
+        }
+    }
 
     public static AbstractImagePrototype getOwnStatusIcon(final OwnStatus ownStatus) {
         ChatIcons icons = ChatIcons.App.getInstance();
@@ -52,28 +81,6 @@ public class StatusUtil {
 
     public static String getOwnStatusIconAndText(final I18nTranslationService i18n, final OwnStatus ownStatus) {
         return getOwnStatusIcon(ownStatus).getHTML() + "&nbsp;" + getOwnStatusText(i18n, ownStatus);
-    }
-
-    public static AbstractImagePrototype getUserStatusIcon(final UserStatusIcon statusIcon) {
-        switch (statusIcon) {
-        case available:
-        case chat:
-            return icons.online();
-        case away:
-            return icons.away();
-        case dnd:
-            return icons.busy();
-        case newmessage:
-            return icons.newMessage();
-        case offline:
-            return icons.offline();
-        case unknown:
-            return icons.question();
-        case xa:
-            return icons.xa();
-        default:
-            return null;
-        }
     }
 
     private static String getOwnStatusText(final I18nTranslationService i18n, final OwnStatus ownStatus) {

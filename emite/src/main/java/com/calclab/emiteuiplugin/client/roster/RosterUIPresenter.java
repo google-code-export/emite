@@ -130,7 +130,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
         return statusText.equals("") ? " " : statusText;
     }
 
-    UserStatusIcon getPresenceIcon(final Presence presence) {
+    ChatIconDescriptor getPresenceIcon(final Presence presence) {
         switch (presence.getType()) {
         case available:
             switch (presence.getShow()) {
@@ -139,20 +139,20 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
             case dnd:
             case xa:
             case available:
-                return UserStatusIcon.valueOf(presence.getShow().toString());
+                return ChatIconDescriptor.valueOf(presence.getShow().toString());
             case notSpecified:
-                return UserStatusIcon.available;
+                return ChatIconDescriptor.available;
             }
         case unavailable:
             switch (presence.getShow()) {
             case away:
             case notSpecified:
-                return UserStatusIcon.offline;
+                return ChatIconDescriptor.offline;
             case unknown:
-                return UserStatusIcon.unknown;
+                return ChatIconDescriptor.unknown;
             }
         }
-        return UserStatusIcon.unknown;
+        return ChatIconDescriptor.unknown;
     }
 
     private UserGridMenuItemList createMenuItemList(final RosterItem item) {
