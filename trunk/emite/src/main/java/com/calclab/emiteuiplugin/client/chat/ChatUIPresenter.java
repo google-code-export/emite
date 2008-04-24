@@ -100,6 +100,7 @@ public class ChatUIPresenter implements ChatUI {
     public void highLightChatTitle() {
         view.setChatTitle(chatTitle, otherURI.toString(), ChatTitleIcon.chatnewmessage);
         alreadyHightlighted = true;
+        listener.onHighLight(this);
     }
 
     public void init(final ChatUIView view) {
@@ -131,6 +132,7 @@ public class ChatUIPresenter implements ChatUI {
     public void unHighLightChatTitle() {
         view.setChatTitle(chatTitle, otherURI.toString(), ChatTitleIcon.chat);
         alreadyHightlighted = false;
+        listener.onHighLight(this);
     }
 
     protected void onActivated() {

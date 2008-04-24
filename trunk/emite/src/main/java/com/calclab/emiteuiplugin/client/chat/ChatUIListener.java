@@ -23,14 +23,18 @@ package com.calclab.emiteuiplugin.client.chat;
 
 public interface ChatUIListener {
 
-    void onMessageAdded(ChatUI chatUI);
+    void onActivate(ChatUI chatUI);
+
+    void onCloseConfirmed(ChatUI chatUI);
 
     void onCurrentUserSend(String message);
 
-    void onActivate(ChatUI chatUI);
-
     void onDeactivate(ChatUI chatUI);
 
-    void onCloseConfirmed(ChatUI chatUI);
+    void onHighLight(ChatUI chatUI);
+
+    void onMessageAdded(ChatUI chatUI);
+
+    void onUnHighLight(ChatUI chatUI);
 
 }
