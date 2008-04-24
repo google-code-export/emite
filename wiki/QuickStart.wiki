@@ -58,9 +58,9 @@ or point to browser to:
 http://localhost:4444/gwt/com.calclab.emite.examples.chat.Chat/Chat.html
 to see the chat example
 
-= Appendix =
+== Appendix A: Configuration of maven ==
 
-== 1. Example of maven .m2/settings.xml to work with gwt-maven plugin ==
+Example of maven .m2/settings.xml to work with gwt-maven plugin:
 
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
@@ -90,3 +90,28 @@ to see the chat example
    </activeProfiles>
 </settings>
 }}}
+
+== Appendix B: jar generation ==
+
+  mvn package
+
+or without tests:
+
+  mvn package -Dmaven.test.skip=true
+
+== Appendix C: war generation ==
+
+  mvn compile war:war
+
+== Appendix D: inclusion in your gwt application ==
+
+Add to your pom.xml (or include the jars)
+
+In your .gwt.xml include:
+
+  <inherits name="com.calclab.emite.Emite" />
+
+and if you use the emiteuiplugin:
+
+  <inherits name="com.calclab.emiteuiplugin.EmiteUIPlugin" />
+
