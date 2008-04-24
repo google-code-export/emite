@@ -115,3 +115,7 @@ and if you use the emiteuiplugin:
 
   <inherits name="com.calclab.emiteuiplugin.EmiteUIPlugin" />
 
+as a dependency, we use gwt-log:
+
+http://code.google.com/p/gwt-log/wiki/GettingStarted
+
