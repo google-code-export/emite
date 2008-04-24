@@ -1,8 +1,6 @@
 package com.calclab.emite.client.xmpp.stanzas;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
@@ -51,11 +49,6 @@ public class XmppUriTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void checkUriFormatWithoutHostFails() {
-	uri("xmpp:test/res");
-    }
-
-    @Test(expected = RuntimeException.class)
     public void checkUriFormatWithoutNodeFails() {
 	uri("xmpp:@example/res");
     }
@@ -70,6 +63,23 @@ public class XmppUriTest {
 	final XmppURI uri = uri("test@example/res");
 	assertEquals("test", uri.getNode());
 	assertEquals("example", uri.getHost());
+	assertEquals("res", uri.getResource());
+    }
+
+    @Test
+    public void shouldCreateHostURI() {
+	final XmppURI uri = uri("node@domain/resource");
+	final XmppURI host = uri.getHostURI();
+	assertNotNull(host);
+	assertFalse(host.hasNode());
+	assertFalse(host.hasResource());
+    }
+
+    @Test
+    public void shouldParseURIWithoutNode() {
+	final XmppURI uri = uri("xmpp:domain/res");
+	assertFalse(uri.hasNode());
+	assertEquals("domain", uri.getHost());
 	assertEquals("res", uri.getResource());
     }
 

@@ -52,7 +52,7 @@ public class MUCRoomManagerTest {
 		+ "<priority>5</priority>" + "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item affiliation='owner' role='moderator' jid='vjrj@localhost/Psi' />" + "<status code='201' />"
 		+ "</x>" + "</presence>");
-	emite.verifySentWithCallback(new IQ(Type.set));
+	emite.verifyIQSent(new IQ(Type.set));
     }
 
     @Test
