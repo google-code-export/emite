@@ -65,7 +65,7 @@ public class RoomTest {
     @Test
     public void shouldFireListenersWhenSubjectChange() {
         // Dani I don't understand what I'm doing wrong with this test (by the
-        // way I found the bug in subject change in Room.java)
+        // way, I found the bug in subject change in Room.java ;) )
         emite.receives(genSubjectChangeMessage());
         verify(listener).onSubjectSet(userURI.getResource(), "Some subject");
     }

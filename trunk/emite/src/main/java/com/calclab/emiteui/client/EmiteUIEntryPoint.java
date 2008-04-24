@@ -40,6 +40,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
+import com.gwtext.client.widgets.form.Label;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 
@@ -48,6 +49,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
     private static final String GWT_PROPERTY_PASSWD = "gwt_property_passwd";
     private static final String GWT_PROPERTY_HTTPBASE = "gwt_property_httpbase";
     private static final String GWT_PROPERTY_ROOMHOST = "gwt_property_roomhost";
+    private static final String GWT_PROPERTY_INFOHTML = "gwt_property_infohtml";
     private DefaultDispatcher dispatcher;
     private TextField passwd;
     private TextField jid;
@@ -79,6 +81,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
     public void onModuleLoadCont() {
         createFormPanel();
+        createInfoPanel();
         createExtUI();
     }
 
@@ -132,6 +135,24 @@ public class EmiteUIEntryPoint implements EntryPoint {
         panel.add(formPanel);
 
         RootPanel.get().add(panel);
+    }
+
+    private void createInfoPanel() {
+        String info = getGwtMetaProperty(GWT_PROPERTY_INFOHTML);
+        if (info.length() > 0) {
+            final Panel infoPanel = new Panel();
+            infoPanel.setTitle("Info", "info-icon");
+            infoPanel.setHeader(false);
+            infoPanel.setClosable(false);
+            infoPanel.setBorder(false);
+            infoPanel.setPaddings(15);
+            final FormPanel formPanel = new FormPanel();
+            formPanel.setFrame(true);
+            Label infoLabel = new Label(info);
+            formPanel.add(infoLabel);
+            infoPanel.add(formPanel);
+            RootPanel.get().add(infoPanel);
+        }
     }
 
     private UserChatOptions generateUserChatOptions() {
