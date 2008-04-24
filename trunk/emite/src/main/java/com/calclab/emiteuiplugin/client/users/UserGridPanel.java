@@ -159,9 +159,12 @@ public class UserGridPanel extends Panel {
                 return Format
                         .format(
                                 "<span ext:qtip=\"{3}\" ext:qtitle=\"{4}\"\" style=\"vertical-align: bottom; color: {0} ;\">{1}&nbsp;&nbsp;</span>{2}",
-                                new String[] { record.getAsString(COLOR), record.getAsString(ALIAS),
-                                        record.getAsString(STATUSIMG), record.getAsString(STATUSTEXT),
-                                        record.getAsString(JID) });
+                                new String[] {
+                                        record.getAsString(COLOR),
+                                        record.getAsString(ALIAS),
+                                        record.getAsString(STATUSIMG),
+                                        record.getAsString(STATUSTEXT).equals("null") ? " " : record
+                                                .getAsString(STATUSTEXT), record.getAsString(JID) });
             }
         };
         final ColumnConfig[] columnsConfigs = new ColumnConfig[] {

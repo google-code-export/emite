@@ -89,15 +89,6 @@ public class MultiChatPresenter implements MultiChat {
         chats = new HashMap<Chat, ChatUI>();
     }
 
-    public void activateChat(final Chat chat) {
-        final ChatUI abstractChat = getChat(chat);
-        activateChat(abstractChat);
-    }
-
-    public void activateChat(final ChatUI chatUI) {
-        view.activateChat(chatUI);
-    }
-
     public void addBuddy(final String shortName, final String longName) {
     }
 
@@ -174,9 +165,9 @@ public class MultiChatPresenter implements MultiChat {
                         final RoomUI roomUI = (RoomUI) chatUI;
                         view.setInputText(roomUI.getSavedInput());
                         view.setInviteToGroupChatButtonVisible(true);
-                        view.setSubject(roomUI.getSubject());
                         view.setSubjectVisible(true);
                         view.setSubjectEditable(roomUI.isSubjectEditable());
+                        view.setSubject(roomUI.getSubject());
                         view.setRoomUserListVisible(true);
                         roomUI.setUserListVisible(true);
                         view.focusInput();

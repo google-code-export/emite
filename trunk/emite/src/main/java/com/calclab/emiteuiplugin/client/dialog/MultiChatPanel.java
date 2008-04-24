@@ -58,6 +58,7 @@ import com.gwtext.client.widgets.event.WindowListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
+import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 import com.gwtext.client.widgets.layout.AccordionLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
@@ -70,7 +71,7 @@ public class MultiChatPanel implements MultiChatView {
     private Window dialog;
     private Button sendBtn;
     private final MultiChatPresenter presenter;
-    private TextArea subjectTextArea;
+    private TextField subject;
     private TextArea input;
     private final HashMap<String, ChatUI> panelIdToChat;
     private EmoticonPalettePanel emoticonPalettePanel;
@@ -102,18 +103,13 @@ public class MultiChatPanel implements MultiChatView {
         attachRoster();
     }
 
-    public void activateChat(final ChatUI chat) {
-        Panel chatPanel = (Panel) chat.getView();
-        centerPanel.activate(chatPanel.getId());
-        centerPanel.scrollToTab(chatPanel, true);
-    }
-
     public void addChat(final ChatUI chat) {
         Panel chatPanel = (Panel) chat.getView();
         centerPanel.add(chatPanel);
         String panelId = chatPanel.getId();
         panelIdToChat.put(panelId, chat);
-        activateChat(chat);
+        centerPanel.activate(chatPanel.getId());
+        centerPanel.scrollToTab(chatPanel, true);
     }
 
     public void attachRoomUserList(final View userListView) {
@@ -141,7 +137,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void clearSubject() {
-        subjectTextArea.reset();
+        subject.reset();
     }
 
     public void confirmCloseAll() {
@@ -258,16 +254,24 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void setSubject(final String text) {
-        subjectTextArea.setRawValue(text);
+        subject.setRawValue(text);
     }
 
     public void setSubjectEditable(final boolean editable) {
-        subjectTextArea.setDisabled(!editable);
+        subject.setDisabled(!editable);
+        if (editable) {
+            if (getSubject() == null || getSubject().equals("")) {
+                // if works put this in presenter
+                subject.setEmptyText(i18n.t("Write here a subject or topic for this room"));
+                if (subjectForm.isRendered()) {
+                    subjectForm.doLayout();
+                }
+            }
+        }
     }
 
     public void setSubjectVisible(final boolean visible) {
-        // FIXME: testing listener issue
-        // subject.setVisible(visible);
+        subject.setVisible(visible);
     }
 
     public void show() {
@@ -358,7 +362,7 @@ public class MultiChatPanel implements MultiChatView {
         dialog.setBorder(false);
         dialog.setCollapsible(true);
         dialog.setIconCls("chat-icon");
-        sendBtn = new Button(i18n.t("Send"));
+        sendBtn = new Button(i18n.tWithNT("Send", "used in button"));
         sendBtn.addListener(new ButtonListenerAdapter() {
             public void onClick(final Button button, final EventObject e) {
                 doSend(e);
@@ -425,7 +429,7 @@ public class MultiChatPanel implements MultiChatView {
                     final int rawWidth, final int rawHeight) {
                 int newWidth = adjWidth - 14;
                 input.setWidth(newWidth);
-                subjectTextArea.setWidth(newWidth);
+                subject.setWidth(newWidth);
                 inputForm.setWidth(newWidth);
                 subjectForm.setWidth(newWidth);
             }
@@ -484,11 +488,10 @@ public class MultiChatPanel implements MultiChatView {
         subjectForm = createGenericInputForm();
 
         // i18n
-        subjectTextArea = new TextArea();
+        subject = new TextField();
         // subject.setTitle(i18n.t("Subject of this room"));
-        subjectTextArea.setHeight(27);
-        subjectTextArea.setEnterIsSpecial(true);
-        subjectTextArea.addListener(new FieldListenerAdapter() {
+        subject.setHeight(27);
+        subject.addListener(new FieldListenerAdapter() {
             public void onSpecialKey(final Field field, final EventObject e) {
                 // FIXME dont works?
                 Log.info("Subject special key");
@@ -500,10 +503,18 @@ public class MultiChatPanel implements MultiChatView {
             }
         });
 
-        subjectForm.add(subjectTextArea);
+        // changeSubject = new Button(i18n.t("Change asdfasfasdfas"));
+        // changeSubject.setTitle(i18n.tWithNT("Change the subject of this
+        // room", "used in button"));
+        // changeSubject.addListener(new ButtonListenerAdapter() {
+        // public void onClick(final Button button, final EventObject e) {
+        // presenter.onModifySubjectRequested(getSubject());
+        // e.stopEvent();
+        // }
+        // });
+        subjectForm.add(subject);
         topToolbar = new MultiChatPanelTopBar(i18n, presenter);
         Panel northPanel = createInputFormWithToolBar(subjectForm, topToolbar);
-        // setSubjectEditable(false);
         return northPanel;
     }
 
@@ -543,7 +554,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private String getSubject() {
-        return subjectTextArea.getValueAsString();
+        return subject.getValueAsString();
     }
 
     private void showEmoticonPalette(final int x, final int y) {

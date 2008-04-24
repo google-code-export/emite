@@ -27,8 +27,6 @@ import com.calclab.emiteuiplugin.client.chat.ChatUI;
 
 public interface MultiChatView {
 
-    void activateChat(ChatUI chatUI);
-
     void addChat(ChatUI chat);
 
     void attachRoomUserList(View userListView);
