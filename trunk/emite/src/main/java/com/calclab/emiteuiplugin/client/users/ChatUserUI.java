@@ -22,11 +22,11 @@
 package com.calclab.emiteuiplugin.client.users;
 
 import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emiteuiplugin.client.roster.UserStatusIcon;
+import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 
 public class ChatUserUI extends AbstractChatUser {
 
-    private UserStatusIcon statusIcon;
+    private ChatIconDescriptor statusIcon;
 
     private String statusText;
 
@@ -34,7 +34,7 @@ public class ChatUserUI extends AbstractChatUser {
         super(iconUrl, rosterItem.getJID(), rosterItem.getName(), color);
     }
 
-    public UserStatusIcon getStatusIcon() {
+    public ChatIconDescriptor getStatusIcon() {
         return statusIcon;
     }
 
@@ -42,7 +42,7 @@ public class ChatUserUI extends AbstractChatUser {
         return statusText;
     }
 
-    public void setStatusIcon(final UserStatusIcon statusIcon) {
+    public void setStatusIcon(final ChatIconDescriptor statusIcon) {
         this.statusIcon = statusIcon;
     }
 

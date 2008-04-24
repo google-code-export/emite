@@ -39,6 +39,11 @@ public interface ChatIcons extends ImageBundle {
     }
 
     /**
+     * @gwt.resource add.png
+     */
+    AbstractImagePrototype add();
+
+    /**
      * @gwt.resource away.png
      */
     AbstractImagePrototype away();
@@ -49,9 +54,29 @@ public interface ChatIcons extends ImageBundle {
     AbstractImagePrototype busy();
 
     /**
+     * @gwt.resource cancel.png
+     */
+    AbstractImagePrototype cancel();
+
+    /**
      * @gwt.resource chat.png
      */
     AbstractImagePrototype chat();
+
+    /**
+     * @gwt.resource chat-new-message-small.png
+     */
+    AbstractImagePrototype chatNewMessageSmall();
+
+    /**
+     * @gwt.resource chat-small.png
+     */
+    AbstractImagePrototype chatSmall();
+
+    /**
+     * @gwt.resource del.png
+     */
+    AbstractImagePrototype del();
 
     /**
      * @gwt.resource group-chat.png
@@ -112,6 +137,16 @@ public interface ChatIcons extends ImageBundle {
      * @gwt.resource question.png
      */
     AbstractImagePrototype question();
+
+    /**
+     * @gwt.resource room-new-message-small.png
+     */
+    AbstractImagePrototype roomNewMessageSmall();
+
+    /**
+     * @gwt.resource room-small.png
+     */
+    AbstractImagePrototype roomSmall();
 
     /**
      * @gwt.resource unavailable.png

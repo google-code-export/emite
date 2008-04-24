@@ -28,7 +28,7 @@ import java.util.HashMap;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emiteuiplugin.client.dialog.StatusUtil;
+import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.ArrayReader;
 import com.gwtext.client.data.FieldDef;
@@ -230,6 +230,6 @@ public class UserGridPanel extends Panel {
     }
 
     private String formatStatusIcon(final ChatUserUI user) {
-        return StatusUtil.getUserStatusIcon(user.getStatusIcon()).getHTML();
+        return ChatUIUtils.getIcon(user.getStatusIcon()).getHTML();
     }
 }

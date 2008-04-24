@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emiteuiplugin.client.chat.ChatUIPanel.ChatTitleIcon;
+import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 
 public class ChatUIPresenterTest {
 
@@ -65,11 +65,11 @@ public class ChatUIPresenterTest {
 
     private void verifyHightLightTimes(final int times) {
         Mockito.verify(view, Mockito.times(times)).setChatTitle(otherUri.getNode(), otherUri.toString(),
-                ChatTitleIcon.chatnewmessage);
+                ChatIconDescriptor.chatnewmessagesmall);
     }
 
     private void verifyUnHightLightTimes(final int times) {
         Mockito.verify(view, Mockito.times(times)).setChatTitle(otherUri.getNode(), otherUri.toString(),
-                ChatTitleIcon.chat);
+                ChatIconDescriptor.chatsmall);
     }
 }

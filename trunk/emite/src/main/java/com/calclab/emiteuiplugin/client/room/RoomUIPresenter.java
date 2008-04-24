@@ -33,6 +33,7 @@ import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.AbstractPresenter;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPresenter;
+import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 import com.calclab.emiteuiplugin.client.users.RoomUserUI;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItem;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
@@ -56,7 +57,8 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
 
     public RoomUIPresenter(final I18nTranslationService i18n, final XmppURI otherURI, final String currentUserAlias,
             final String currentUserColor, final RoomUIListener listener) {
-        super(otherURI, currentUserAlias, currentUserColor, listener);
+        super(otherURI, currentUserAlias, currentUserColor, ChatIconDescriptor.roomsmall,
+                ChatIconDescriptor.roomnewmessagesmall, listener);
         this.i18n = i18n;
         this.currentUserAlias = currentUserAlias;
         this.listener = listener;
