@@ -34,6 +34,7 @@ public class Message extends BasicStanza {
 	super(iPacket);
     }
 
+    @Deprecated
     public Message(final String from, final String to, final String msg) {
 	super("message", "jabber:client");
 	setType(TYPE_CHAT);
@@ -48,6 +49,10 @@ public class Message extends BasicStanza {
 
     public String getBody() {
 	return getFirstChild("body").getText();
+    }
+
+    public String getSubject() {
+	return getFirstChild("subject").getText();
     }
 
     public String getThread() {
@@ -80,6 +85,11 @@ public class Message extends BasicStanza {
 
     public void setType(final Type type) {
 	setType(type.toString());
+    }
+
+    public Message Subject(final String subject) {
+	setTextToChild("subject", subject);
+	return this;
     }
 
     public Message Thread(final String thread) {
