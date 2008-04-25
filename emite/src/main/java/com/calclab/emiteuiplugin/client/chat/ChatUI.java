@@ -35,6 +35,8 @@ public interface ChatUI {
 
     void destroy();
 
+    String getChatTitle();
+
     boolean getCloseConfirmed();
 
     String getColor(String userAlias);
