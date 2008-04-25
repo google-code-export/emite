@@ -36,119 +36,124 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.gwtext.client.core.RegionPosition;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
+import com.gwtext.client.widgets.layout.BorderLayout;
+import com.gwtext.client.widgets.layout.BorderLayoutData;
 
 public class ChatUIPanel extends Panel implements ChatUIView {
 
     private static Sound sound;
 
     public static void click() {
-        if (sound == null) {
-            SoundController soundController = new SoundController();
-            soundController.setPrioritizeFlashSound(false);
-            sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
-        }
-        sound.play();
+	if (sound == null) {
+	    final SoundController soundController = new SoundController();
+	    soundController.setPrioritizeFlashSound(false);
+	    sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
+	}
+	sound.play();
     }
 
     public static String genQuickTipLabel(final String labelText, final String tipTitle, final String tipText,
-            final AbstractImagePrototype icon) {
-        String tipHtml = "<span style=\"vertical-align: middle;\" ext:qtip=\"" + tipText + "\"";
-        if (tipTitle != null && tipTitle.length() > 0) {
-            tipHtml += " ext:qtitle=\"" + tipTitle + "\"";
-        }
-        tipHtml += ">";
-        Image iconImg = new Image();
-        icon.applyTo(iconImg);
-        iconImg.setStyleName("vamiddle");
-        // setQuickTip(iconImg, tipText, tipTitle);
-        tipHtml += iconImg.toString();
-        tipHtml += "&nbsp;";
-        tipHtml += labelText;
-        tipHtml += "</span>";
-        return tipHtml;
+	    final AbstractImagePrototype icon) {
+	String tipHtml = "<span style=\"vertical-align: middle;\" ext:qtip=\"" + tipText + "\"";
+	if (tipTitle != null && tipTitle.length() > 0) {
+	    tipHtml += " ext:qtitle=\"" + tipTitle + "\"";
+	}
+	tipHtml += ">";
+	final Image iconImg = new Image();
+	icon.applyTo(iconImg);
+	iconImg.setStyleName("vamiddle");
+	// setQuickTip(iconImg, tipText, tipTitle);
+	tipHtml += iconImg.toString();
+	tipHtml += "&nbsp;";
+	tipHtml += labelText;
+	tipHtml += "</span>";
+	return tipHtml;
     }
 
     private final Panel childPanel;
 
     public ChatUIPanel(final ChatUIPresenter presenter) {
-        setClosable(true);
-        setAutoScroll(true);
-        setBorder(false);
-        childPanel = new Panel();
-        childPanel.setAutoScroll(false);
-        childPanel.setBorder(false);
-        childPanel.setPaddings(5);
-        add(childPanel);
-        addStyleName("emite-ChatPanel-Conversation");
-        this.addListener(new PanelListenerAdapter() {
-            public void onActivate(final Panel panel) {
-                presenter.onActivated();
-            }
+	setLayout(new BorderLayout());
+	setClosable(true);
+	setAutoScroll(true);
+	setBorder(false);
+	childPanel = new Panel();
+	final BorderLayoutData centerData = new BorderLayoutData(RegionPosition.CENTER);
+	childPanel.setAutoScroll(false);
+	childPanel.setBorder(false);
+	childPanel.setPaddings(5);
+	add(childPanel, centerData);
+	addStyleName("emite-ChatPanel-Conversation");
+	this.addListener(new PanelListenerAdapter() {
+	    public void onActivate(final Panel panel) {
+		presenter.onActivated();
+	    }
 
-            public void onDeactivate(final Panel panel) {
-                presenter.onDeactivated();
-            }
-        });
+	    public void onDeactivate(final Panel panel) {
+		presenter.onDeactivated();
+	    }
+	});
 
     }
 
     public void addDelimiter(final String datetime) {
-        HorizontalPanel hp = new HorizontalPanel();
-        HorizontalLine hr = new HorizontalLine();
-        hp.add(new Label(datetime));
-        hp.add(hr);
-        hp.setWidth("100%");
-        hp.setCellWidth(hr, "100%");
-        addWidget(hp);
-        hp.setStyleName("emite-ChatPanel-HorizDelimiter");
+	final HorizontalPanel hp = new HorizontalPanel();
+	final HorizontalLine hr = new HorizontalLine();
+	hp.add(new Label(datetime));
+	hp.add(hr);
+	hp.setWidth("100%");
+	hp.setCellWidth(hr, "100%");
+	addWidget(hp);
+	hp.setStyleName("emite-ChatPanel-HorizDelimiter");
     }
 
     public void addInfoMessage(final String message) {
-        HTML messageHtml = new HTML(message);
-        addWidget(messageHtml);
-        messageHtml.addStyleName("emite-ChatPanel-EventMessage");
+	final HTML messageHtml = new HTML(message);
+	addWidget(messageHtml);
+	messageHtml.addStyleName("emite-ChatPanel-EventMessage");
     }
 
     public void addMessage(final String userAlias, final String color, final String message) {
-        // FIXME: Use gwt DOM.create... for this:
-        // Element userAliasSpan = DOM.createSpan();
-        // DOM.setInnerText(userAliasSpan, userAlias);
-        // DOM.setStyleAttribute(userAliasSpan, "color", color);
-        String userHtml = "<span style=\"color: " + color + ";\">" + userAlias + "</span>:&nbsp;";
-        HTML messageHtml = new HTML(userHtml + ChatTextFormatter.format(message).getHTML());
-        addWidget(messageHtml);
+	// FIXME: Use gwt DOM.create... for this:
+	// Element userAliasSpan = DOM.createSpan();
+	// DOM.setInnerText(userAliasSpan, userAlias);
+	// DOM.setStyleAttribute(userAliasSpan, "color", color);
+	final String userHtml = "<span style=\"color: " + color + ";\">" + userAlias + "</span>:&nbsp;";
+	final HTML messageHtml = new HTML(userHtml + ChatTextFormatter.format(message).getHTML());
+	addWidget(messageHtml);
     }
 
     public void setChatTitle(final String chatTitle, final String tip, final ChatIconDescriptor iconId) {
-        // FIXME Vicente: try to do this with css (with gwt-ext don't works)
-        super.setTitle(genQuickTipLabel(chatTitle, "", tip, ChatUIUtils.getIcon(iconId)));
-        postChatTitle();
+	// FIXME Vicente: try to do this with css (with gwt-ext don't works)
+	super.setTitle(genQuickTipLabel(chatTitle, "", tip, ChatUIUtils.getIcon(iconId)));
+	postChatTitle();
     }
 
     private void addWidget(final Widget widget) {
-        childPanel.add(widget);
-        if (childPanel.isRendered()) {
-            childPanel.doLayout();
-        }
-        widget.addStyleName("emite-ChatPanel-Message");
-        scrollDown();
+	childPanel.add(widget);
+	if (childPanel.isRendered()) {
+	    childPanel.doLayout();
+	}
+	widget.addStyleName("emite-ChatPanel-Message");
+	scrollDown();
     }
 
     private Element getScrollableElement() {
-        return DOM.getParent(childPanel.getElement());
+	return DOM.getParent(childPanel.getElement());
     }
 
     private void postChatTitle() {
-        if (super.isRendered()) {
-            super.doLayout();
-            // before: tab.getTextEl().highlight()
-        }
+	if (super.isRendered()) {
+	    super.doLayout();
+	    // before: tab.getTextEl().highlight()
+	}
     }
 
     private void scrollDown() {
-        DOM.setElementPropertyInt(getScrollableElement(), "scrollTop", childPanel.getOffsetHeight());
+	DOM.setElementPropertyInt(getScrollableElement(), "scrollTop", childPanel.getOffsetHeight());
     }
 
 }

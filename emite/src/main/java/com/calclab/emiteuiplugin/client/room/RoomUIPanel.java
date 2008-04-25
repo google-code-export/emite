@@ -21,11 +21,30 @@
  */
 package com.calclab.emiteuiplugin.client.room;
 
+import org.ourproject.kune.platf.client.services.I18nTranslationService;
+
 import com.calclab.emiteuiplugin.client.chat.ChatUIPanel;
+import com.gwtext.client.core.RegionPosition;
+import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.layout.BorderLayoutData;
+import com.gwtext.client.widgets.layout.FitLayout;
 
 public class RoomUIPanel extends ChatUIPanel implements RoomUIView {
 
-    public RoomUIPanel(final RoomUIPresenter presenter) {
-        super(presenter);
+    public RoomUIPanel(final I18nTranslationService i18n, final RoomUserListUIPanel roomUserListUIPanel,
+	    final RoomUIPresenter presenter) {
+	super(presenter);
+	final BorderLayoutData eastData = new BorderLayoutData(RegionPosition.EAST);
+	final Panel userPanel = new Panel(i18n.t("Now in this room"));
+	userPanel.setLayout(new FitLayout());
+	userPanel.setBorder(false);
+	userPanel.setAutoScroll(true);
+	userPanel.setWidth(150);
+	userPanel.setIconCls("group-icon");
+	eastData.setMinSize(100);
+	eastData.setMaxSize(250);
+	eastData.setSplit(true);
+	userPanel.add(roomUserListUIPanel);
+	super.add(userPanel, eastData);
     }
 }

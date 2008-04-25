@@ -55,112 +55,113 @@ public class EmiteUIEntryPoint implements EntryPoint {
     private TextField jid;
 
     public void onModuleLoad() {
-        /*
-         * Install an UncaughtExceptionHandler which will produce <code>FATAL</code>
-         * log messages
-         */
+	/*
+	 * Install an UncaughtExceptionHandler which will produce <code>FATAL</code>
+	 * log messages
+	 */
 
-        Log.setUncaughtExceptionHandler();
+	Log.setUncaughtExceptionHandler();
 
-        // At the moment, not in runtime (in html):
-        // Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
+	// At the moment, not in runtime (in html):
+	// Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
 
-        // Log.getDivLogger().moveTo(10, 60);
-        // Log.getDivLogger().setSize("1200", "400");
+	// Log.getDivLogger().moveTo(10, 60);
+	// Log.getDivLogger().setSize("1200", "400");
 
-        /*
-         * Use a deferred command so that the UncaughtExceptionHandler catches
-         * any exceptions in onModuleLoadCont()
-         */
-        DeferredCommand.addCommand(new Command() {
-            public void execute() {
-                onModuleLoadCont();
-            }
-        });
+	/*
+	 * Use a deferred command so that the UncaughtExceptionHandler catches
+	 * any exceptions in onModuleLoadCont()
+	 */
+	DeferredCommand.addCommand(new Command() {
+	    public void execute() {
+		onModuleLoadCont();
+	    }
+	});
     }
 
     public void onModuleLoadCont() {
-        createFormPanel();
-        createInfoPanel();
-        createExtUI();
+	createFormPanel();
+	createInfoPanel();
+	createExtUI();
     }
 
     private void createExtUI() {
-        dispatcher = DefaultDispatcher.getInstance();
-        final PluginManager kunePluginManager = new PluginManager(dispatcher, new UIExtensionPointManager(),
-                new I18nTranslationServiceMocked());
-        kunePluginManager.install(new EmiteUIPlugin());
+	dispatcher = DefaultDispatcher.getInstance();
+	final PluginManager kunePluginManager = new PluginManager(dispatcher, new UIExtensionPointManager(),
+		new I18nTranslationServiceMocked());
+	kunePluginManager.install(new EmiteUIPlugin());
 
-        dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam("Emite Chat", new BoshOptions(
-                getGwtMetaProperty(GWT_PROPERTY_HTTPBASE)), getGwtMetaProperty(GWT_PROPERTY_ROOMHOST),
-                new I18nTranslationServiceMocked(), generateUserChatOptions()));
-        dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
+	dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam("Emite Chat", new BoshOptions(
+		getGwtMetaProperty(GWT_PROPERTY_HTTPBASE)), getGwtMetaProperty(GWT_PROPERTY_ROOMHOST),
+		new I18nTranslationServiceMocked(), generateUserChatOptions()));
+	dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
     }
 
     private void createFormPanel() {
-        final Panel panel = new Panel();
-        panel.setBorder(false);
-        panel.setPaddings(15);
+	final Panel panel = new Panel();
+	panel.setBorder(false);
+	panel.setPaddings(15);
 
-        final FormPanel formPanel = new FormPanel();
-        formPanel.setFrame(true);
-        formPanel.setTitle("Some external Login Form");
+	final FormPanel formPanel = new FormPanel();
+	formPanel.setFrame(true);
+	formPanel.setTitle("Some external Login Form");
 
-        formPanel.setWidth(300);
-        formPanel.setLabelWidth(75);
-        formPanel.setUrl("save-form.php");
+	formPanel.setWidth(320);
+	formPanel.setLabelWidth(75);
 
-        jid = new TextField("Jabber id", "jid", 180);
-        jid.setAllowBlank(false);
-        jid.setValue(getGwtMetaProperty(GWT_PROPERTY_JID));
-        formPanel.add(jid);
+	jid = new TextField("Jabber id", "jid", 200);
+	jid.setAllowBlank(false);
+	jid.setValue(getGwtMetaProperty(GWT_PROPERTY_JID));
+	formPanel.add(jid);
 
-        passwd = new TextField("Password", "last", 180);
-        passwd.setAllowBlank(false);
-        passwd.setValue(getGwtMetaProperty(GWT_PROPERTY_PASSWD));
-        passwd.setPassword(true);
-        formPanel.add(passwd);
+	passwd = new TextField("Password", "last", 200);
+	passwd.setAllowBlank(false);
+	passwd.setValue(getGwtMetaProperty(GWT_PROPERTY_PASSWD));
+	passwd.setPassword(true);
+	formPanel.add(passwd);
 
-        jid.addListener(new FieldListenerAdapter() {
-            public void onChange(final Field field, final Object newVal, final Object oldVal) {
-                dispatcher.fire(EmiteUIPlugin.REFLESH_USER_OPTIONS, generateUserChatOptions());
-            }
-        });
+	jid.addListener(new FieldListenerAdapter() {
+	    public void onChange(final Field field, final Object newVal, final Object oldVal) {
+		dispatcher.fire(EmiteUIPlugin.REFLESH_USER_OPTIONS, generateUserChatOptions());
+	    }
+	});
 
-        passwd.addListener(new FieldListenerAdapter() {
-            public void onChange(final Field field, final Object newVal, final Object oldVal) {
-                dispatcher.fire(EmiteUIPlugin.REFLESH_USER_OPTIONS, generateUserChatOptions());
-            }
-        });
-        panel.add(formPanel);
+	passwd.addListener(new FieldListenerAdapter() {
+	    public void onChange(final Field field, final Object newVal, final Object oldVal) {
+		dispatcher.fire(EmiteUIPlugin.REFLESH_USER_OPTIONS, generateUserChatOptions());
+	    }
+	});
+	panel.add(formPanel);
 
-        RootPanel.get().add(panel);
+	RootPanel.get().add(panel);
     }
 
     private void createInfoPanel() {
-        String info = getGwtMetaProperty(GWT_PROPERTY_INFOHTML);
-        if (info.length() > 0) {
-            final Panel infoPanel = new Panel();
-            infoPanel.setTitle("Info", "info-icon");
-            infoPanel.setHeader(false);
-            infoPanel.setClosable(false);
-            infoPanel.setBorder(false);
-            infoPanel.setPaddings(15);
-            final FormPanel formPanel = new FormPanel();
-            formPanel.setFrame(true);
-            Label infoLabel = new Label(info);
-            formPanel.add(infoLabel);
-            infoPanel.add(formPanel);
-            RootPanel.get().add(infoPanel);
-        }
+	final String info = getGwtMetaProperty(GWT_PROPERTY_INFOHTML);
+	if (info.length() > 0) {
+	    final Panel infoPanel = new Panel();
+	    infoPanel.setHeader(false);
+	    infoPanel.setClosable(false);
+	    infoPanel.setBorder(false);
+	    infoPanel.setPaddings(15);
+	    final FormPanel formPanel = new FormPanel();
+	    formPanel.setFrame(true);
+	    formPanel.setTitle("Info", "info-icon");
+	    formPanel.setWidth(320);
+	    final Label infoLabel = new Label();
+	    infoLabel.setHtml(info);
+	    formPanel.add(infoLabel);
+	    infoPanel.add(formPanel);
+	    RootPanel.get().add(infoPanel);
+	}
     }
 
     private UserChatOptions generateUserChatOptions() {
-        return new UserChatOptions(jid.getRawValue(), passwd.getRawValue(), "blue", Roster.DEF_SUBSCRIPTION_MODE);
+	return new UserChatOptions(jid.getRawValue(), passwd.getRawValue(), "blue", Roster.DEF_SUBSCRIPTION_MODE);
     }
 
     private String getGwtMetaProperty(final String property) {
-        return DOM.getElementProperty(DOM.getElementById(property), "content");
+	return DOM.getElementProperty(DOM.getElementById(property), "content");
     }
 
 }

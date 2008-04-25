@@ -21,29 +21,21 @@
  */
 package com.calclab.emiteuiplugin.client.dialog;
 
-import org.ourproject.kune.platf.client.View;
-
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 
 public interface MultiChatView {
 
     void addChat(ChatUI chat);
 
-    void attachRoomUserList(View userListView);
-
     void center();
 
     void clearInputText();
-
-    void clearRoster();
 
     void clearSubject();
 
     void confirmCloseAll();
 
     void destroy();
-
-    void expandRoster();
 
     void focusInput();
 
@@ -78,8 +70,6 @@ public interface MultiChatView {
     void setOnlineInfo();
 
     void setOwnPresence(OwnPresence ownPresence);
-
-    void setRoomUserListVisible(boolean visible);
 
     void setRosterVisible(boolean visible);
 
