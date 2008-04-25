@@ -39,54 +39,51 @@ import com.calclab.emiteuiplugin.client.room.RoomUIListener;
 import com.calclab.emiteuiplugin.client.room.RoomUIPanel;
 import com.calclab.emiteuiplugin.client.room.RoomUIPresenter;
 import com.calclab.emiteuiplugin.client.room.RoomUserListUIPanel;
-import com.calclab.emiteuiplugin.client.roster.RosterUI;
 import com.calclab.emiteuiplugin.client.roster.RosterUIPanel;
 import com.calclab.emiteuiplugin.client.roster.RosterUIPresenter;
 
 public class ChatDialogFactoryImpl implements ChatDialogFactory {
     public static class App {
-        private static ChatDialogFactoryImpl ourInstance = null;
+	private static ChatDialogFactoryImpl ourInstance = null;
 
-        public static synchronized ChatDialogFactoryImpl getInstance() {
-            if (ourInstance == null) {
-                ourInstance = new ChatDialogFactoryImpl();
-            }
-            return ourInstance;
-        }
+	public static synchronized ChatDialogFactoryImpl getInstance() {
+	    if (ourInstance == null) {
+		ourInstance = new ChatDialogFactoryImpl();
+	    }
+	    return ourInstance;
+	}
     }
 
     public ChatUI createChatUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-            final ChatUIListener listener) {
-        ChatUIPresenter presenter = new ChatUIPresenter(otherURI, currentUserAlias, currentUserColor, listener);
-        ChatUIPanel panel = new ChatUIPanel(presenter);
-        presenter.init(panel);
-        return presenter;
+	    final ChatUIListener listener) {
+	final ChatUIPresenter presenter = new ChatUIPresenter(otherURI, currentUserAlias, currentUserColor, listener);
+	final ChatUIPanel panel = new ChatUIPanel(presenter);
+	presenter.init(panel);
+	return presenter;
     }
 
     public MultiChat createMultiChat(final Xmpp xmpp, final MultiChatCreationParam param,
-            final MultiChatListener listener) {
-        I18nTranslationService i18n = param.getI18nService();
-        final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, App.getInstance(), param, listener);
-        RosterUI rosterUI = createrRosterUI(xmpp, i18n);
-        final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), rosterUI, i18n, presenter);
-        presenter.init(panel);
-        return presenter;
+	    final MultiChatListener listener) {
+	final I18nTranslationService i18n = param.getI18nService();
+	final RosterUIPresenter roster = new RosterUIPresenter(xmpp, i18n);
+	final RosterUIPanel rosterPanel = new RosterUIPanel(i18n, roster);
+	roster.init(rosterPanel);
+	final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, App.getInstance(), param, listener,
+		roster);
+	final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), rosterPanel, i18n, presenter);
+	presenter.init(panel);
+	return presenter;
     }
 
     public RoomUI createRoomUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-            final I18nTranslationService i18n, final RoomUIListener listener) {
-        RoomUIPresenter presenter = new RoomUIPresenter(i18n, otherURI, currentUserAlias, currentUserColor, listener);
-        RoomUserListUIPanel roomUserListUIPanel = new RoomUserListUIPanel(i18n, presenter);
-        RoomUIPanel panel = new RoomUIPanel(presenter);
-        presenter.init(panel, roomUserListUIPanel);
-        return presenter;
-    }
-
-    public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n) {
-        RosterUIPresenter presenter = new RosterUIPresenter(xmpp, i18n);
-        RosterUIPanel panel = new RosterUIPanel(i18n, presenter);
-        presenter.init(panel);
-        return presenter;
+	    final I18nTranslationService i18n, final RoomUIListener listener) {
+	final RoomUIPresenter presenter = new RoomUIPresenter(i18n, otherURI, currentUserAlias, currentUserColor,
+		listener);
+	// FIXME: create list presenter
+	final RoomUserListUIPanel roomUserListUIPanel = new RoomUserListUIPanel(i18n, presenter);
+	final RoomUIPanel panel = new RoomUIPanel(i18n, roomUserListUIPanel, presenter);
+	presenter.init(panel, roomUserListUIPanel);
+	return presenter;
     }
 
 }

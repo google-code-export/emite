@@ -23,16 +23,12 @@ package com.calclab.emiteuiplugin.client.room;
 
 import java.util.Collection;
 
-import org.ourproject.kune.platf.client.View;
-
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 
 public interface RoomUI extends ChatUI {
 
     String getSubject();
-
-    View getUserListView();
 
     boolean isSubjectEditable();
 
@@ -45,7 +41,5 @@ public interface RoomUI extends ChatUI {
     void onOccupantsChanged(Collection<Occupant> users);
 
     void setSubject(String newSubject);
-
-    void setUserListVisible(boolean b);
 
 }

@@ -32,18 +32,15 @@ import com.calclab.emiteuiplugin.client.dialog.MultiChatListener;
 import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
 import com.calclab.emiteuiplugin.client.room.RoomUI;
 import com.calclab.emiteuiplugin.client.room.RoomUIListener;
-import com.calclab.emiteuiplugin.client.roster.RosterUI;
 
 public interface ChatDialogFactory {
 
     public ChatUI createChatUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-            ChatUIListener listener);
+	    ChatUIListener listener);
 
     public MultiChat createMultiChat(final Xmpp xmpp, MultiChatCreationParam param, final MultiChatListener listener);
 
     public RoomUI createRoomUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-            final I18nTranslationService i18n, RoomUIListener listener);
-
-    public RosterUI createrRosterUI(final Xmpp xmpp, final I18nTranslationService i18n);
+	    final I18nTranslationService i18n, RoomUIListener listener);
 
 }

@@ -56,95 +56,91 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
     private final I18nTranslationService i18n;
 
     public RoomUIPresenter(final I18nTranslationService i18n, final XmppURI otherURI, final String currentUserAlias,
-            final String currentUserColor, final RoomUIListener listener) {
-        super(otherURI, currentUserAlias, currentUserColor, ChatIconDescriptor.roomsmall,
-                ChatIconDescriptor.roomnewmessagesmall, listener);
-        this.i18n = i18n;
-        this.currentUserAlias = currentUserAlias;
-        this.listener = listener;
+	    final String currentUserColor, final RoomUIListener listener) {
+	super(otherURI, currentUserAlias, currentUserColor, ChatIconDescriptor.roomsmall,
+		ChatIconDescriptor.roomnewmessagesmall, listener);
+	this.i18n = i18n;
+	this.currentUserAlias = currentUserAlias;
+	this.listener = listener;
     }
 
     public void doAction(final String eventName, final Object param) {
-        DefaultDispatcher.getInstance().fire(eventName, param);
+	DefaultDispatcher.getInstance().fire(eventName, param);
     }
 
     public String getSubject() {
-        return subject;
-    }
-
-    public View getUserListView() {
-        return roomUserListUI.getView();
+	return subject;
     }
 
     public View getView() {
-        return view;
+	return view;
     }
 
     public void init(final RoomUIView view, final RoomUserListUIPanel roomUserListUI) {
-        super.init(view);
-        this.view = view;
-        this.roomUserListUI = roomUserListUI;
-        listener.onCreated(this);
+	super.init(view);
+	this.view = view;
+	this.roomUserListUI = roomUserListUI;
+	listener.onCreated(this);
     }
 
     public boolean isSubjectEditable() {
-        return isSubjectEditable;
+	return isSubjectEditable;
     }
 
     public void onInviteUserRequested(final String userJid, final String reasonText) {
-        listener.onInviteUserRequested(userJid, reasonText);
+	listener.onInviteUserRequested(userJid, reasonText);
     }
 
     public void onModifySubjectRequested(final String newSubject) {
-        listener.onModifySubjectRequested(newSubject);
+	listener.onModifySubjectRequested(newSubject);
     }
 
     public void onOccupantModified(final Occupant occupant) {
-        RoomUserUI roomUserUI = genRoomUser(occupant);
-        roomUserListUI.updateUser(roomUserUI, createUserMenu(roomUserUI));
+	final RoomUserUI roomUserUI = genRoomUser(occupant);
+	roomUserListUI.updateUser(roomUserUI, createUserMenu(roomUserUI));
     }
 
     public void onOccupantsChanged(final Collection<Occupant> users) {
-        roomUserListUI.removeAllUsers();
-        for (Iterator<Occupant> iterator = users.iterator(); iterator.hasNext();) {
-            Occupant occupant = iterator.next();
-            RoomUserUI roomUserUI = genRoomUser(occupant);
-            roomUserListUI.addUser(roomUserUI, createUserMenu(roomUserUI));
-            if (occupant.getUri().getResource().equals(currentUserAlias)) {
-                if (occupant.getRole().equals(Role.moderator)) {
-                    listener.setSubjectEditable(true);
-                    isSubjectEditable = true;
-                } else {
-                    listener.setSubjectEditable(false);
-                    isSubjectEditable = false;
-                }
-            }
-        }
+	roomUserListUI.removeAllUsers();
+	for (final Iterator<Occupant> iterator = users.iterator(); iterator.hasNext();) {
+	    final Occupant occupant = iterator.next();
+	    final RoomUserUI roomUserUI = genRoomUser(occupant);
+	    roomUserListUI.addUser(roomUserUI, createUserMenu(roomUserUI));
+	    if (occupant.getUri().getResource().equals(currentUserAlias)) {
+		if (occupant.getRole().equals(Role.moderator)) {
+		    listener.setSubjectEditable(true);
+		    isSubjectEditable = true;
+		} else {
+		    listener.setSubjectEditable(false);
+		    isSubjectEditable = false;
+		}
+	    }
+	}
     }
 
     public void setSubject(final String newSubject) {
-        subject = newSubject;
+	subject = newSubject;
     }
 
     public void setUserListVisible(final boolean visible) {
-        roomUserListUI.setVisible(visible);
+	roomUserListUI.setVisible(visible);
     }
 
     private UserGridMenuItem<Object> createNoActionsMenuItem() {
-        return new UserGridMenuItem<Object>("", i18n.t("No options"), NO_ACTION, null);
+	return new UserGridMenuItem<Object>("", i18n.t("No options"), NO_ACTION, null);
     }
 
     private UserGridMenuItemList createUserMenu(final RoomUserUI roomUserUI) {
-        final UserGridMenuItemList itemList = new UserGridMenuItemList();
-        switch (roomUserUI.getRole()) {
-        default:
-            itemList.addItem(createNoActionsMenuItem());
-        }
-        return itemList;
+	final UserGridMenuItemList itemList = new UserGridMenuItemList();
+	switch (roomUserUI.getRole()) {
+	default:
+	    itemList.addItem(createNoActionsMenuItem());
+	}
+	return itemList;
     }
 
     private RoomUserUI genRoomUser(final Occupant occupant) {
-        RoomUserUI roomUserUI = new RoomUserUI(occupant, super.getColor(occupant.getUri().getResource()));
-        return roomUserUI;
+	final RoomUserUI roomUserUI = new RoomUserUI(occupant, super.getColor(occupant.getUri().getResource()));
+	return roomUserUI;
     }
 }
