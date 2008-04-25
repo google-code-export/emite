@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import org.ourproject.kune.platf.client.View;
+import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.extend.UIExtensionPoint;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
@@ -139,6 +140,7 @@ public class MultiChatPresenter implements MultiChat {
 
 	    public void onHighLight(ChatUI chatUI) {
 		view.highLight();
+		fireHighLight(chatUI.getChatTitle());
 	    }
 
 	    public void onMessageAdded(final ChatUI chatUI) {
@@ -146,6 +148,7 @@ public class MultiChatPresenter implements MultiChat {
 
 	    public void onUnHighLight(ChatUI chatUI) {
 		view.unHighLight();
+		fireUnHighLight(chatUI.getChatTitle());
 	    }
 	}) : chats.get(chat);
 	finishChatCreation(chat, chatUI);
@@ -184,6 +187,7 @@ public class MultiChatPresenter implements MultiChat {
 
 		    public void onHighLight(ChatUI chatUI) {
 			view.highLight();
+			fireHighLight(chatUI.getChatTitle());
 		    }
 
 		    public void onInviteUserRequested(final String userJid, final String reasonText) {
@@ -199,6 +203,7 @@ public class MultiChatPresenter implements MultiChat {
 
 		    public void onUnHighLight(ChatUI chatUI) {
 			view.unHighLight();
+			fireUnHighLight(chatUI.getChatTitle());
 		    }
 
 		}) : chats.get(chat));
@@ -455,6 +460,14 @@ public class MultiChatPresenter implements MultiChat {
 	currentChat = chatUI;
 	chats.put(chat, chatUI);
 	checkThereAreChats();
+    }
+
+    private void fireHighLight(final String title) {
+	DefaultDispatcher.getInstance().fire(EmiteUIPlugin.ON_HIGHTLIGHTWINDOW, title);
+    }
+
+    private void fireUnHighLight(final String title) {
+	DefaultDispatcher.getInstance().fire(EmiteUIPlugin.ON_UNHIGHTLIGHTWINDOW, title);
     }
 
     private ChatUI getChat(final Chat chat) {

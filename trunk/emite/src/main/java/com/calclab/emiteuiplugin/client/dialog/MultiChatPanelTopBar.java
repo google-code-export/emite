@@ -260,7 +260,8 @@ public class MultiChatPanelTopBar extends Toolbar {
     private Menu createStatusMenu() {
 	final Menu statusMenu = new Menu();
 	statusMenu.setShadow(true);
-	statusMenu.addItem(new TextItem("<b class=\"menu-title\">" + i18n.t("Change your status") + "</b>"));
+	statusMenu.addItem(new TextItem("<b style=\"margin: 5px 0px;\" class=\"menu-title\">"
+		+ i18n.t("Change your status") + "</b>"));
 	onlineMenuItem = createStatusCheckItem(OwnStatus.online);
 	onlineCustomMenuItem = createStatusCheckItem(OwnStatus.onlinecustom);
 	busyMenuItem = createStatusCheckItem(OwnStatus.busy);

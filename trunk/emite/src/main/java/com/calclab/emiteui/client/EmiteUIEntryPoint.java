@@ -21,6 +21,7 @@
  */
 package com.calclab.emiteui.client;
 
+import org.ourproject.kune.platf.client.dispatch.Action;
 import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 import org.ourproject.kune.platf.client.extend.PluginManager;
 import org.ourproject.kune.platf.client.extend.UIExtensionPointManager;
@@ -95,6 +96,22 @@ public class EmiteUIEntryPoint implements EntryPoint {
 		getGwtMetaProperty(GWT_PROPERTY_HTTPBASE)), getGwtMetaProperty(GWT_PROPERTY_ROOMHOST),
 		new I18nTranslationServiceMocked(), generateUserChatOptions()));
 	dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
+
+	dispatcher.subscribe(EmiteUIPlugin.ON_UNHIGHTLIGHTWINDOW, new Action<String>() {
+	    public void execute(final String chatTitle) {
+		// FIXME: js
+		// Do something with window.parent.document.title
+		// like remove (* chatTitle)
+	    }
+	});
+
+	dispatcher.subscribe(EmiteUIPlugin.ON_HIGHTLIGHTWINDOW, new Action<String>() {
+	    public void execute(final String chatTitle) {
+		// FIXME: js
+		// Do something with window.parent.document.title
+		// like put (* chatTitle)
+	    }
+	});
     }
 
     private void createFormPanel() {
