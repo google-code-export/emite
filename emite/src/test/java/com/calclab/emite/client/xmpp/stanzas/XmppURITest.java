@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
-public class XmppUriTest {
+public class XmppURITest {
 
     @Test
     public void checkEqualsContract() {
@@ -53,19 +53,6 @@ public class XmppUriTest {
 	uri("xmpp:@example/res");
     }
 
-    public void checkUriFormatWithoutResource() {
-	final XmppURI uri = uri("xmpp:test@example");
-	assertFalse(uri.hasResource());
-    }
-
-    @Test
-    public void checkUriFormatWithoutXmpp() {
-	final XmppURI uri = uri("test@example/res");
-	assertEquals("test", uri.getNode());
-	assertEquals("example", uri.getHost());
-	assertEquals("res", uri.getResource());
-    }
-
     @Test
     public void shouldCreateHostURI() {
 	final XmppURI uri = uri("node@domain/resource");
@@ -73,14 +60,35 @@ public class XmppUriTest {
 	assertNotNull(host);
 	assertFalse(host.hasNode());
 	assertFalse(host.hasResource());
+	assertEquals("node@domain/resource", uri.toString());
+    }
+
+    @Test
+    public void shouldParseNull() {
+	assertNull(uri(null));
     }
 
     @Test
     public void shouldParseURIWithoutNode() {
-	final XmppURI uri = uri("xmpp:domain/res");
+	final XmppURI uri = uri("domain/res");
 	assertFalse(uri.hasNode());
+	assertNull(uri.getNode());
 	assertEquals("domain", uri.getHost());
 	assertEquals("res", uri.getResource());
+	assertEquals("domain/res", uri.toString());
+    }
+
+    @Test
+    public void shouldParseWithNoPrefix() {
+	final XmppURI uri = uri("test@example/res");
+	assertEquals("test", uri.getNode());
+	assertEquals("example", uri.getHost());
+	assertEquals("res", uri.getResource());
+    }
+
+    public void shouldParseWithNoResource() {
+	final XmppURI uri = uri("xmpp:test@example");
+	assertFalse(uri.hasResource());
     }
 
 }

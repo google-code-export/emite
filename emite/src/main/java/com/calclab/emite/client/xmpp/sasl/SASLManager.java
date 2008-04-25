@@ -114,9 +114,7 @@ public class SASLManager implements Installable {
     }
 
     private void startAuthorizationRequest() {
-	final String userName = uri.getNode();
-	final boolean hasUserName = userName == null || userName.trim().length() > 0;
-	final IPacket response = hasUserName ? createPlainAuthorization() : createAnonymousAuthorization();
+	final IPacket response = uri.hasNode() ? createPlainAuthorization() : createAnonymousAuthorization();
 	emite.send(response);
     }
 }

@@ -37,6 +37,9 @@ public class XmppURI {
     }
 
     public static XmppURI uri(final String xmppUri) {
+	if (xmppUri == null)
+	    return null;
+
 	String node = null;
 	String domain = null;
 	String resource = null;
@@ -86,7 +89,7 @@ public class XmppURI {
 	this.node = node;
 	this.host = host;
 	this.resource = resource;
-	this.representation = node + "@" + host + (resource != null ? "/" + resource : "");
+	this.representation = (node != null ? node + "@" : "") + host + (resource != null ? "/" + resource : "");
     }
 
     @Override
