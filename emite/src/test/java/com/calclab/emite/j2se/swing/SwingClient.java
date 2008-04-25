@@ -222,7 +222,7 @@ public class SwingClient {
                         roomPanel.setUsers(users);
                     }
 
-                    public void onSubjectSet(final String nick, final String newSubject) {
+                    public void onSubjectChanged(final String nick, final String newSubject) {
                         roomPanel.showIcomingMessage(nick, "New subject: " + newSubject);
                     }
                 });

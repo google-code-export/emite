@@ -36,12 +36,6 @@ public class RosterManagerTest {
 		+ "<item jid='name@domain/res' name='the name'><group>the group</group></item></query></iq>");
 	emite.answerSuccess();
     }
-    
-    @Test
-    public void shouldHandlePresence() {
-	emite.receives("<presence from='userInRoster@domain/res' to='user@domain/res'><priority>2</priority></presence>");
-	verify(roster).changePresence(eq(uri("userInRoster@domain/res")), (Presence) anyObject());
-    }
 
     @Test
     public void shouldHandleIQSets() {
@@ -49,6 +43,13 @@ public class RosterManagerTest {
 		+ "subscription='none' name='MyContact'><group>MyBuddies</group></item></query></iq>");
 	emite.verifySent("<iq xmlns='jabber:client' type='result' id='theId' />");
 	verify(roster).changeSubscription(uri("contact@example.org"), "none");
+    }
+
+    @Test
+    public void shouldHandlePresence() {
+	emite
+		.receives("<presence from='userInRoster@domain/res' to='user@domain/res'><priority>2</priority></presence>");
+	verify(roster).changePresence(eq(uri("userInRoster@domain/res")), (Presence) anyObject());
     }
 
     @Test

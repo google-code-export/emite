@@ -27,7 +27,8 @@ import com.calclab.emite.client.im.chat.ChatListener;
 
 public interface RoomListener extends ChatListener {
 
-    public void onSubjectSet(String nick, String newSubject);
+    // FIXME: preferiría enviar el ocupante, y no el nick!
+    public void onSubjectChanged(String nick, String newSubject);
 
     void onOccupantModified(Occupant occupant);
 

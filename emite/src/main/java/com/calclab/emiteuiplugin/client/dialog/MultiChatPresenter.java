@@ -439,7 +439,7 @@ public class MultiChatPresenter implements MultiChat {
                         roomUI.onOccupantsChanged(occupants);
                     }
 
-                    public void onSubjectSet(final String nick, final String newSubject) {
+                    public void onSubjectChanged(final String nick, final String newSubject) {
                         roomUI.setSubject(newSubject);
                         roomUI.addInfoMessage(i18n.t("[%s] as changed the subject to: ", nick) + newSubject);
                         if (currentChat.equals(roomUI)) {

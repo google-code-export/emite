@@ -12,7 +12,7 @@ import org.mockito.ArgumentMatcher;
 
 import com.calclab.emite.client.core.packet.IPacket;
 
-class IsPacketLike extends ArgumentMatcher<IPacket> {
+public class IsPacketLike extends ArgumentMatcher<IPacket> {
     private final IPacket original;
 
     public IsPacketLike(final IPacket expected) {
