@@ -25,62 +25,89 @@ import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.extra.muc.Occupant.Role;
-import com.calclab.emiteuiplugin.client.AbstractPresenter;
 import com.calclab.emiteuiplugin.client.users.RoomUserUI;
 import com.calclab.emiteuiplugin.client.users.UserGridMenu;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
 import com.calclab.emiteuiplugin.client.users.UserGridPanel;
+import com.gwtext.client.core.EventObject;
+import com.gwtext.client.widgets.Button;
+import com.gwtext.client.widgets.Toolbar;
+import com.gwtext.client.widgets.ToolbarButton;
+import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 
 public class RoomUserListUIPanel extends UserGridPanel implements View {
 
     private final String moderatorLabel;
     private final String visitorLabel;
     private final String participantLabel;
-    private final AbstractPresenter presenter;
+    private final RoomUIPresenter presenter;
+    private final I18nTranslationService i18n;
 
-    public RoomUserListUIPanel(final I18nTranslationService i18n, final AbstractPresenter presenter) {
-        this.presenter = presenter;
-        moderatorLabel = i18n.t("Moderator");
-        participantLabel = i18n.t("Participant");
-        visitorLabel = i18n.t("Visitor");
+    public RoomUserListUIPanel(final I18nTranslationService i18n, final RoomUIPresenter presenter) {
+	this.i18n = i18n;
+	this.presenter = presenter;
+	moderatorLabel = i18n.t("Moderator");
+	participantLabel = i18n.t("Participant");
+	visitorLabel = i18n.t("Visitor");
+	createUserListBottomBar();
     }
 
     public void addUser(final RoomUserUI roomUser, final UserGridMenuItemList menuItemList) {
-        UserGridMenu menu = new UserGridMenu(presenter);
-        menu.setMenuItemList(menuItemList);
-        super.addUser(roomUser, menu, formatUserType(roomUser.getRole()));
+	final UserGridMenu menu = new UserGridMenu(presenter);
+	menu.setMenuItemList(menuItemList);
+	super.addUser(roomUser, menu, formatUserType(roomUser.getRole()));
     }
 
     public View getView() {
-        return this;
+	return this;
     }
 
     public void removeAllUsers() {
-        super.removeAllUsers();
+	super.removeAllUsers();
     }
 
     public void removeUser(final RoomUserUI roomUser) {
-        super.removeUser(roomUser);
+	super.removeUser(roomUser);
 
     }
 
     public void updateUser(final RoomUserUI roomUser, final UserGridMenuItemList menuItemList) {
-        UserGridMenu menu = new UserGridMenu(presenter);
-        menu.setMenuItemList(menuItemList);
-        super.removeUser(roomUser);
+	final UserGridMenu menu = new UserGridMenu(presenter);
+	menu.setMenuItemList(menuItemList);
+	super.removeUser(roomUser);
+    }
+
+    private void createUserListBottomBar() {
+	final ToolbarButton inviteUserToGroupChat = new ToolbarButton();
+	inviteUserToGroupChat.setIcon("images/group_add.gif");
+	inviteUserToGroupChat.setCls("x-btn-icon");
+	inviteUserToGroupChat.setTooltip(i18n.t("Invite another user to this chat room"));
+	inviteUserToGroupChat.addListener(new ButtonListenerAdapter() {
+	    private InviteToRoomPanel inviteToRoomDialog;
+
+	    public void onClick(final Button button, final EventObject e) {
+		if (inviteToRoomDialog == null) {
+		    inviteToRoomDialog = new InviteToRoomPanel(i18n, presenter);
+		}
+		inviteToRoomDialog.show();
+	    }
+	});
+	final Toolbar bottomToolbar = new Toolbar();
+	bottomToolbar.addButton(inviteUserToGroupChat);
+	super.setBottomToolbar(bottomToolbar);
     }
 
     private String formatUserType(final Role role) {
-        switch (role) {
-        case moderator:
-            return moderatorLabel;
-        case participant:
-            return participantLabel;
-        case visitor:
-            return visitorLabel;
-        default:
-            return "";
-        }
+	switch (role) {
+	case moderator:
+	    return moderatorLabel;
+	case participant:
+	    return participantLabel;
+	case visitor:
+	    return visitorLabel;
+	default:
+	    return "";
+	}
     }
 
 }

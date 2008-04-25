@@ -26,4 +26,8 @@ import org.ourproject.kune.platf.client.View;
 import com.calclab.emiteuiplugin.client.chat.ChatUIView;
 
 public interface RoomUIView extends ChatUIView, View {
+
+    void setSubject(String newSubject);
+
+    void setSubjectEditable(boolean editable);
 }

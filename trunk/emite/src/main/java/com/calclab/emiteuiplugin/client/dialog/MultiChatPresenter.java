@@ -121,9 +121,6 @@ public class MultiChatPresenter implements MultiChat {
 		.getNode(), userChatOptions.getColor(), new ChatUIListener() {
 	    public void onActivate(final ChatUI chatUI) {
 		view.setInputText(chatUI.getSavedInput());
-		view.setInviteToGroupChatButtonVisible(false);
-		view.clearSubject();
-		view.setSubjectVisible(false);
 		view.focusInput();
 		currentChat = chatUI;
 	    }
@@ -165,10 +162,6 @@ public class MultiChatPresenter implements MultiChat {
 		    public void onActivate(final ChatUI chatUI) {
 			final RoomUI roomUI = (RoomUI) chatUI;
 			view.setInputText(roomUI.getSavedInput());
-			view.setInviteToGroupChatButtonVisible(true);
-			view.setSubjectVisible(true);
-			view.setSubjectEditable(roomUI.isSubjectEditable());
-			view.setSubject(roomUI.getSubject());
 			view.focusInput();
 			currentChat = chatUI;
 		    }
@@ -208,9 +201,6 @@ public class MultiChatPresenter implements MultiChat {
 			view.unHighLight();
 		    }
 
-		    public void setSubjectEditable(final boolean editable) {
-			view.setSubjectEditable(editable);
-		    }
 		}) : chats.get(chat));
 
 	finishChatCreation(chat, roomUI);
@@ -240,11 +230,6 @@ public class MultiChatPresenter implements MultiChat {
 	createXmppListeners();
     }
 
-    public void inviteUserToRoom(final String userJid, final String reasonText) {
-	final RoomUI roomUI = (RoomUI) currentChat;
-	roomUI.onInviteUserRequested(userJid, reasonText);
-    }
-
     public void joinRoom(final String roomName, final String serverName) {
 	xmpp.getRoomManager().openChat(uri(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
     }
@@ -252,7 +237,6 @@ public class MultiChatPresenter implements MultiChat {
     public void onModifySubjectRequested(final String newSubject) {
 	final RoomUI roomUI = (RoomUI) currentChat;
 	roomUI.onModifySubjectRequested(newSubject);
-	view.clearSubject();
     }
 
     public void setOwnPresence(final OwnPresence ownPresence) {
@@ -437,12 +421,9 @@ public class MultiChatPresenter implements MultiChat {
 			roomUI.onOccupantsChanged(occupants);
 		    }
 
-                    public void onSubjectChanged(final String nick, final String newSubject) {
+		    public void onSubjectChanged(final String nick, final String newSubject) {
 			roomUI.setSubject(newSubject);
 			roomUI.addInfoMessage(i18n.t("[%s] as changed the subject to: ", nick) + newSubject);
-			if (currentChat.equals(roomUI)) {
-			    view.setSubject(newSubject);
-			}
 		    }
 		});
 	    }
@@ -506,13 +487,10 @@ public class MultiChatPresenter implements MultiChat {
     private void reset() {
 	currentChat = null;
 	view.setCloseAllOptionEnabled(false);
-	view.setSubjectEditable(false);
 	view.setInfoPanelVisible(true);
-	view.setInviteToGroupChatButtonVisible(false);
 	view.setSendEnabled(false);
 	view.setInputEditable(false);
 	view.setEmoticonButtonEnabled(false);
-	view.clearSubject();
     }
 
     private void setInputEnabled(final boolean enabled) {

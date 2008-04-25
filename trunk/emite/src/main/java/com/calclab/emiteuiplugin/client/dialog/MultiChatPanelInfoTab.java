@@ -31,27 +31,28 @@ public class MultiChatPanelInfoTab extends Panel {
     private final I18nTranslationService i18n;
 
     public MultiChatPanelInfoTab(final I18nTranslationService i18n) {
-        this.i18n = i18n;
-        setTitle(i18n.t("Info"), "info-icon");
-        setHeader(false);
-        setClosable(false);
-        infoLabel = new Label();
-        add(infoLabel);
-        setPaddings(7);
+	this.i18n = i18n;
+	setTitle(i18n.t("Info"), "info-icon");
+	setBorder(false);
+	setHeader(false);
+	setClosable(false);
+	infoLabel = new Label();
+	add(infoLabel);
+	setPaddings(7);
     }
 
     public void setOfflineInfo() {
-        infoLabel.setText(i18n.t("To start a chat you need to be 'online'."));
-        if (isRendered()) {
-            doLayout();
-        }
+	infoLabel.setText(i18n.t("To start a chat you need to be 'online'."));
+	if (isRendered()) {
+	    doLayout();
+	}
     }
 
     public void setOnlineInfo() {
-        infoLabel.setText(i18n.t("To start a chat, select a buddy or join to a chat room. "
-                + "If you don't have buddies you can add them. "));
-        if (isRendered()) {
-            doLayout();
-        }
+	infoLabel.setText(i18n.t("To start a chat, select a buddy or join to a chat room. "
+		+ "If you don't have buddies you can add them. "));
+	if (isRendered()) {
+	    doLayout();
+	}
     }
 }

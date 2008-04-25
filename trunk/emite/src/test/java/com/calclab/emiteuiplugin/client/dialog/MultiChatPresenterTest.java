@@ -92,7 +92,6 @@ public class MultiChatPresenterTest {
 	Mockito.verify(multiChatPanel).setInfoPanelVisible(false);
 	Mockito.verify(multiChatPanel, Mockito.times(2)).setCloseAllOptionEnabled(false);
 	Mockito.verify(multiChatPanel, Mockito.times(2)).setInfoPanelVisible(true);
-	Mockito.verify(multiChatPanel, Mockito.times(2)).setSubjectEditable(false);
 	Mockito.verify(multiChatPanel, Mockito.times(2)).setSendEnabled(false);
 	Mockito.verify(multiChatPanel, Mockito.times(2)).setInputEditable(false);
 	Mockito.verify(multiChatPanel, Mockito.times(2)).setEmoticonButtonEnabled(false);

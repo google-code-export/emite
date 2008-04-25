@@ -25,7 +25,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogExtended;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogListener;
-import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
 import com.gwtext.client.widgets.ToolTip;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextField;
@@ -33,77 +32,80 @@ import com.gwtext.client.widgets.form.TextField;
 public class InviteToRoomPanel {
 
     private final I18nTranslationService i18n;
-    private final MultiChatPresenter presenter;
+    private final RoomUIPresenter presenter;
     private BasicDialogExtended dialog;
     private FormPanel formPanel;
     private TextField jid;
     private TextField reason;
 
-    public InviteToRoomPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
-        this.i18n = i18n;
-        this.presenter = presenter;
+    public InviteToRoomPanel(final I18nTranslationService i18n, final RoomUIPresenter presenter) {
+	this.i18n = i18n;
+	this.presenter = presenter;
     }
 
     public void reset() {
-        formPanel.getForm().reset();
+	formPanel.getForm().reset();
     }
 
     public void show() {
-        if (dialog == null) {
-            dialog = new BasicDialogExtended(i18n.t("Invite someone to this room"), false, false, 330, 160,
-                    "chat-icon", i18n.tWithNT("Invite", "used in button"), i18n.tWithNT("Cancel", "used in button"),
-                    new BasicDialogListener() {
+	if (dialog == null) {
+	    dialog = new BasicDialogExtended(i18n.t("Invite someone to this room"), false, false, 330, 160,
+		    "chat-icon", i18n.tWithNT("Invite", "used in button"), i18n.tWithNT("Cancel", "used in button"),
+		    new BasicDialogListener() {
 
-                        public void onCancelButtonClick() {
-                            dialog.hide();
-                            reset();
-                        }
+			public void onCancelButtonClick() {
+			    dialog.hide();
+			    reset();
+			}
 
-                        public void onFirstButtonClick() {
-                            jid.validate();
-                            reason.validate();
-                            if (formPanel.getForm().isValid()) {
-                                presenter.inviteUserToRoom(jid.getValueAsString(), reason.getValueAsString());
-                                dialog.hide();
-                                reset();
-                            }
-                        }
+			public void onFirstButtonClick() {
+			    dialog.getEl().mask();
+			    jid.validate();
+			    reason.validate();
+			    if (formPanel.getForm().isValid()) {
+				presenter.inviteUserToRoom(jid.getValueAsString(), reason.getValueAsString());
+				dialog.hide();
+				reset();
+				dialog.getEl().unmask();
+			    }
+			    dialog.getEl().unmask();
+			}
 
-                    });
-            dialog.setResizable(false);
-            createForm();
+		    });
+	    dialog.setResizable(false);
+	    createForm();
 
-            // TODO define a UI Extension Point here
-        }
-        dialog.show();
-        jid.focus();
+	    // TODO define a UI Extension Point here
+	}
+	dialog.show();
+	jid.focus();
     }
 
     private void createForm() {
-        formPanel = new FormPanel();
-        formPanel.setFrame(true);
-        formPanel.setAutoScroll(false);
+	formPanel = new FormPanel();
+	formPanel.setFrame(true);
+	formPanel.setAutoScroll(false);
 
-        formPanel.setWidth(333);
-        formPanel.setLabelWidth(100);
-        formPanel.setPaddings(10);
+	formPanel.setWidth(333);
+	formPanel.setLabelWidth(100);
+	formPanel.setPaddings(10);
 
-        jid = new TextField(i18n.t("Invite to (some Jabber Id)"), "jid", 150);
-        jid.setAllowBlank(false);
-        // jid.setVtype(VType.EMAIL);
-        jid.setValidationEvent(false);
-        ToolTip fieldToolTip = new ToolTip(i18n.t("Note that the 'Jabber Id' sometimes is the same as the email "
-                + "(in gmail accounts for instance)."));
-        fieldToolTip.applyTo(jid);
-        jid.setValidateOnBlur(false);
-        formPanel.add(jid);
+	jid = new TextField(i18n.t("Invite to (some Jabber Id)"), "jid", 150);
+	jid.setAllowBlank(false);
+	// jid.setVtype(VType.EMAIL);
+	jid.setValidationEvent(false);
+	final ToolTip fieldToolTip = new ToolTip(i18n.t("Note that the 'Jabber Id' sometimes is the same as the email "
+		+ "(in gmail accounts for instance)."));
+	fieldToolTip.applyTo(jid);
+	jid.setValidateOnBlur(false);
+	formPanel.add(jid);
 
-        reason = new TextField(i18n.t("Invitation reason"), "jid", 150);
-        reason.setAllowBlank(false);
-        reason.setValidationEvent(false);
-        reason.setValue(i18n.t("Join to our conversation"));
-        formPanel.add(reason);
+	reason = new TextField(i18n.t("Invitation reason"), "jid", 150);
+	reason.setAllowBlank(false);
+	reason.setValidationEvent(false);
+	reason.setValue(i18n.t("Join to our conversation"));
+	formPanel.add(reason);
 
-        dialog.add(formPanel);
+	dialog.add(formPanel);
     }
 }

@@ -43,8 +43,6 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
 
     private RoomUIView view;
 
-    private String subject;
-
     private boolean isSubjectEditable;
 
     private RoomUserListUIPanel roomUserListUI;
@@ -68,10 +66,6 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
 	DefaultDispatcher.getInstance().fire(eventName, param);
     }
 
-    public String getSubject() {
-	return subject;
-    }
-
     public View getView() {
 	return view;
     }
@@ -81,6 +75,10 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
 	this.view = view;
 	this.roomUserListUI = roomUserListUI;
 	listener.onCreated(this);
+    }
+
+    public void inviteUserToRoom(final String userJid, final String reasonText) {
+	listener.onInviteUserRequested(userJid, reasonText);
     }
 
     public boolean isSubjectEditable() {
@@ -108,10 +106,10 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
 	    roomUserListUI.addUser(roomUserUI, createUserMenu(roomUserUI));
 	    if (occupant.getUri().getResource().equals(currentUserAlias)) {
 		if (occupant.getRole().equals(Role.moderator)) {
-		    listener.setSubjectEditable(true);
+		    view.setSubjectEditable(true);
 		    isSubjectEditable = true;
 		} else {
-		    listener.setSubjectEditable(false);
+		    view.setSubjectEditable(false);
 		    isSubjectEditable = false;
 		}
 	    }
@@ -119,7 +117,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
     }
 
     public void setSubject(final String newSubject) {
-	subject = newSubject;
+	view.setSubject(newSubject);
     }
 
     public void setUserListVisible(final boolean visible) {

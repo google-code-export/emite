@@ -9,7 +9,7 @@ then
   mkdir src/main/webapp/gwt
 fi
 
-cp -R target/emite-0.2.0/com.calclab.emiteui.EmiteUI/ src/main/webapp/gwt/com.calclab.emiteui.EmiteUI/
-cp -R target/emite-0.2.0/com.calclab.emite.examples.chat.Chat src/main/webapp/gwt/com.calclab.emite.examples.chat.Chat/
+cp -R target/emite-0.2.0/com.calclab.emiteui.EmiteUI/std src/main/webapp/gwt/com.calclab.emiteui.EmiteUI/
+cp -R target/emite-0.2.0/com.calclab.emite.examples.chat.Chat/std src/main/webapp/gwt/com.calclab.emite.examples.chat.Chat/
 
 mvn jetty:run
