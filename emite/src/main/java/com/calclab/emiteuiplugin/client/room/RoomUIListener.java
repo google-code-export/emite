@@ -32,6 +32,4 @@ public interface RoomUIListener extends ChatUIListener {
 
     public void onModifySubjectRequested(String newSubject);
 
-    public void setSubjectEditable(boolean editable);
-
 }

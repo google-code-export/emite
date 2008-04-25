@@ -28,11 +28,7 @@ import com.calclab.emiteuiplugin.client.chat.ChatUI;
 
 public interface RoomUI extends ChatUI {
 
-    String getSubject();
-
     boolean isSubjectEditable();
-
-    void onInviteUserRequested(String userJid, String reasonText);
 
     void onModifySubjectRequested(String newSubject);
 

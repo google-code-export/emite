@@ -31,8 +31,6 @@ public interface MultiChatView {
 
     void clearInputText();
 
-    void clearSubject();
-
     void confirmCloseAll();
 
     void destroy();
@@ -59,8 +57,6 @@ public interface MultiChatView {
 
     void setInputText(String savedInput);
 
-    void setInviteToGroupChatButtonVisible(boolean visible);
-
     void setJoinRoomEnabled(boolean b);
 
     void setLoadingVisible(boolean visible);
@@ -74,12 +70,6 @@ public interface MultiChatView {
     void setRosterVisible(boolean visible);
 
     void setSendEnabled(boolean enabled);
-
-    void setSubject(String subject);
-
-    void setSubjectEditable(boolean editable);
-
-    void setSubjectVisible(boolean visible);
 
     void show();
 

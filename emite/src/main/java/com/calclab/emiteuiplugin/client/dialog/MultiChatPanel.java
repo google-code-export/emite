@@ -27,8 +27,8 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
+import com.calclab.emiteuiplugin.client.roster.RosterItemPanel;
 import com.calclab.emiteuiplugin.client.roster.RosterUIPanel;
 import com.calclab.emiteuiplugin.client.utils.ChatIcons;
 import com.calclab.emiteuiplugin.client.utils.emoticons.EmoticonPaletteListener;
@@ -38,6 +38,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.gwtext.client.core.EventObject;
+import com.gwtext.client.core.Position;
 import com.gwtext.client.core.RegionPosition;
 import com.gwtext.client.widgets.BoxComponent;
 import com.gwtext.client.widgets.Button;
@@ -56,7 +57,6 @@ import com.gwtext.client.widgets.event.WindowListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
-import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 import com.gwtext.client.widgets.layout.BorderLayout;
 import com.gwtext.client.widgets.layout.BorderLayoutData;
@@ -68,7 +68,6 @@ public class MultiChatPanel implements MultiChatView {
     private Window dialog;
     private Button sendBtn;
     private final MultiChatPresenter presenter;
-    private TextField subject;
     private TextArea input;
     private final HashMap<String, ChatUI> panelIdToChat;
     private EmoticonPalettePanel emoticonPalettePanel;
@@ -81,9 +80,9 @@ public class MultiChatPanel implements MultiChatView {
     private MultiChatPanelInfoTab infoPanel;
     private Panel southPanel;
     private FormPanel inputForm;
-    private FormPanel subjectForm;
     private Panel eastPanel;
     private final String chatDialogTitle;
+    private ToolbarButton addRosterItem;
 
     public MultiChatPanel(final String chatDialogTitle, final RosterUIPanel rosterUIPanel,
 	    final I18nTranslationService i18n, final MultiChatPresenter presenter) {
@@ -110,10 +109,6 @@ public class MultiChatPanel implements MultiChatView {
 
     public void clearInputText() {
 	input.reset();
-    }
-
-    public void clearSubject() {
-	subject.reset();
     }
 
     public void confirmCloseAll() {
@@ -145,7 +140,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void setAddRosterItemButtonVisible(final boolean visible) {
-	topToolbar.setAddRosterItemButtonVisible(visible);
+	addRosterItem.setVisible(visible);
     }
 
     public void setCloseAllOptionEnabled(final boolean enabled) {
@@ -172,10 +167,6 @@ public class MultiChatPanel implements MultiChatView {
 
     public void setInputText(final String text) {
 	input.setRawValue(text);
-    }
-
-    public void setInviteToGroupChatButtonVisible(final boolean visible) {
-	topToolbar.setInviteToGroupChatButtonVisible(visible);
     }
 
     public void setJoinRoomEnabled(final boolean enabled) {
@@ -215,27 +206,6 @@ public class MultiChatPanel implements MultiChatView {
 	}
     }
 
-    public void setSubject(final String text) {
-	subject.setRawValue(text);
-    }
-
-    public void setSubjectEditable(final boolean editable) {
-	subject.setDisabled(!editable);
-	if (editable) {
-	    if (getSubject() == null || getSubject().equals("")) {
-		// if works put this in presenter
-		subject.setEmptyText(i18n.t("Write here a subject or topic for this room"));
-		if (subjectForm.isRendered()) {
-		    subjectForm.doLayout();
-		}
-	    }
-	}
-    }
-
-    public void setSubjectVisible(final boolean visible) {
-	subject.setVisible(visible);
-    }
-
     public void show() {
 	dialog.show();
 	dialog.expand();
@@ -266,7 +236,7 @@ public class MultiChatPanel implements MultiChatView {
 
     private Panel createInputPanel() {
 	inputForm = createGenericInputForm();
-	input = new TextArea();
+	input = new TextArea("Input", "input");
 	input.setHeight(47);
 	input.setEnterIsSpecial(true);
 	input.addListener(new FieldListenerAdapter() {
@@ -312,6 +282,7 @@ public class MultiChatPanel implements MultiChatView {
 
     private void createLayout() {
 	dialog = new BasicDialog(chatDialogTitle, false, false, 600, 415, 300, 300);
+	dialog.setButtonAlign(Position.LEFT);
 	dialog.setBorder(false);
 	dialog.setCollapsible(true);
 	dialog.setIconCls("chat-icon");
@@ -325,10 +296,11 @@ public class MultiChatPanel implements MultiChatView {
 	dialog.setLayout(new BorderLayout());
 
 	final Panel northPanel = new Panel();
-	northPanel.setHeight(54);
-	northPanel.add(createSubjectPanel());
+	// northPanel.setHeight(27);
 	northPanel.setBorder(false);
 	final BorderLayoutData northData = new BorderLayoutData(RegionPosition.NORTH);
+	topToolbar = new MultiChatPanelTopBar(i18n, presenter);
+	northPanel.setTopToolbar(topToolbar);
 	dialog.add(northPanel, northData);
 
 	southPanel = new Panel();
@@ -346,15 +318,31 @@ public class MultiChatPanel implements MultiChatView {
 	eastPanel.setLayout(new FitLayout());
 	eastPanel.setAutoScroll(true);
 	eastPanel.setIconCls("userf-icon");
-	eastPanel.add(rosterUIPanel);
+	addRosterItem = new ToolbarButton();
+	addRosterItem.setIcon("images/user_add.gif");
+	addRosterItem.setCls("x-btn-icon");
+	addRosterItem.setTooltip(i18n.t("Add a new buddy"));
+	final Toolbar bottomToolbar = new Toolbar();
+	bottomToolbar.addButton(addRosterItem);
+	bottomToolbar.setHeight(27);
+	eastPanel.setBottomToolbar(bottomToolbar);
+	addRosterItem.addListener(new ButtonListenerAdapter() {
+	    private RosterItemPanel rosterItemPanel;
 
+	    public void onClick(final Button button, final EventObject e) {
+		if (rosterItemPanel == null) {
+		    rosterItemPanel = new RosterItemPanel(i18n, presenter);
+		}
+		rosterItemPanel.show();
+	    }
+	});
+	eastPanel.add(rosterUIPanel);
 	final BorderLayoutData eastData = new BorderLayoutData(RegionPosition.EAST);
 
 	eastData.setMinSize(100);
 	eastData.setMaxSize(250);
-	eastData.setSplit(true);
-	eastData.setMargins(2, 0, 1, 0);
-	eastData.setSplit(true);
+	// FIXME: when manual calc of size, set this to true
+	eastData.setSplit(false);
 	dialog.add(eastPanel, eastData);
 
 	centerPanel = new TabPanel();
@@ -383,9 +371,7 @@ public class MultiChatPanel implements MultiChatView {
 		    final int rawWidth, final int rawHeight) {
 		final int newWidth = adjWidth - 14;
 		input.setWidth(newWidth);
-		subject.setWidth(newWidth);
 		inputForm.setWidth(newWidth);
-		subjectForm.setWidth(newWidth);
 	    }
 	});
 
@@ -438,48 +424,10 @@ public class MultiChatPanel implements MultiChatView {
 	});
     }
 
-    private Panel createSubjectPanel() {
-	subjectForm = createGenericInputForm();
-
-	// i18n
-	subject = new TextField();
-	// subject.setTitle(i18n.t("Subject of this room"));
-	subject.setHeight(27);
-	subject.addListener(new FieldListenerAdapter() {
-	    public void onSpecialKey(final Field field, final EventObject e) {
-		// FIXME dont works?
-		Log.info("Subject special key");
-		if (e.getKey() == 13) {
-		    Log.info("Subject enter fired");
-		    presenter.onModifySubjectRequested(getSubject());
-		    e.stopEvent();
-		}
-	    }
-	});
-
-	// changeSubject = new Button(i18n.t("Change asdfasfasdfas"));
-	// changeSubject.setTitle(i18n.tWithNT("Change the subject of this
-	// room", "used in button"));
-	// changeSubject.addListener(new ButtonListenerAdapter() {
-	// public void onClick(final Button button, final EventObject e) {
-	// presenter.onModifySubjectRequested(getSubject());
-	// e.stopEvent();
-	// }
-	// });
-	subjectForm.add(subject);
-	topToolbar = new MultiChatPanelTopBar(i18n, presenter);
-	final Panel northPanel = createInputFormWithToolBar(subjectForm, topToolbar);
-	return northPanel;
-    }
-
     private void doSend(final EventObject e) {
 	presenter.onCurrentUserSend(getInputText());
 	e.stopEvent();
 	input.focus();
-    }
-
-    private String getSubject() {
-	return subject.getValueAsString();
     }
 
     private void showEmoticonPalette(final int x, final int y) {

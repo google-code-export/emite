@@ -23,8 +23,6 @@ package com.calclab.emiteuiplugin.client.chat;
 
 import org.ourproject.kune.platf.client.ui.HorizontalLine;
 
-import com.allen_sauer.gwt.voices.client.Sound;
-import com.allen_sauer.gwt.voices.client.SoundController;
 import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 import com.calclab.emiteuiplugin.client.utils.ChatTextFormatter;
 import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
@@ -44,15 +42,14 @@ import com.gwtext.client.widgets.layout.BorderLayoutData;
 
 public class ChatUIPanel extends Panel implements ChatUIView {
 
-    private static Sound sound;
-
     public static void click() {
-	if (sound == null) {
-	    final SoundController soundController = new SoundController();
-	    soundController.setPrioritizeFlashSound(false);
-	    sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
-	}
-	sound.play();
+	// if (sound == null) {
+	// final SoundController soundController = new SoundController();
+	// soundController.setPrioritizeFlashSound(false);
+	// sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV,
+	// "click.wav");
+	// }
+	// sound.play();
     }
 
     public static String genQuickTipLabel(final String labelText, final String tipTitle, final String tipText,
@@ -74,18 +71,23 @@ public class ChatUIPanel extends Panel implements ChatUIView {
     }
 
     private final Panel childPanel;
+    private final Panel conversationPanel;
 
     public ChatUIPanel(final ChatUIPresenter presenter) {
 	setLayout(new BorderLayout());
+	conversationPanel = new Panel();
+	conversationPanel.setBorder(false);
+	conversationPanel.setAutoScroll(true);
 	setClosable(true);
-	setAutoScroll(true);
+	setAutoScroll(false);
 	setBorder(false);
 	childPanel = new Panel();
 	final BorderLayoutData centerData = new BorderLayoutData(RegionPosition.CENTER);
 	childPanel.setAutoScroll(false);
 	childPanel.setBorder(false);
 	childPanel.setPaddings(5);
-	add(childPanel, centerData);
+	conversationPanel.add(childPanel);
+	add(conversationPanel, centerData);
 	addStyleName("emite-ChatPanel-Conversation");
 	this.addListener(new PanelListenerAdapter() {
 	    public void onActivate(final Panel panel) {
@@ -96,7 +98,6 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 		presenter.onDeactivated();
 	    }
 	});
-
     }
 
     public void addDelimiter(final String datetime) {

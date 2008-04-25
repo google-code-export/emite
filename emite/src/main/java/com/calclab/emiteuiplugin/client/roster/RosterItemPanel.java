@@ -66,18 +66,18 @@ public class RosterItemPanel {
 			}
 
 			private void doAddItem() {
-			    // dialog.getEl().mask();
+			    // FIXME duplicate code
+			    dialog.getEl().mask();
 			    name.validate();
 			    jid.validate();
 			    if (formPanel.getForm().isValid()) {
 				presenter.addRosterItem(name.getValueAsString(), jid.getValueAsString());
 				dialog.hide();
 				reset();
-				// dialog.getEl().unmask();
+				dialog.getEl().unmask();
 			    }
-			    // dialog.getEl().unmask();
+			    dialog.getEl().unmask();
 			}
-
 		    });
 	    dialog.setResizable(false);
 	    createForm();

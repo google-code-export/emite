@@ -62,6 +62,7 @@ public class UserGridPanel extends Panel {
     private RecordDef recordDef;
     private Store store;
     private GridPanel grid;
+    private GridView view;
 
     public UserGridPanel() {
 	setBorder(false);
@@ -103,6 +104,10 @@ public class UserGridPanel extends Panel {
     public void resizeGrid(final int newWidthAvailable) {
 	// TODO
 	// grid.setWidth(newWidthAvailable - SOMETHING);
+    }
+
+    public void setEmptyText(final String emptyText) {
+	view.setEmptyText(emptyText);
     }
 
     public void updateRosterItem(final ChatUserUI user, final UserGridMenu menu) {
@@ -198,17 +203,18 @@ public class UserGridPanel extends Panel {
 
 	// grid.setAutoExpandColumn(ALIAS);
 	grid.stripeRows(true);
-	final GridView view = new GridView();
+	view = new GridView();
 	// i18n
 	view.setEmptyText("Nobody");
 	// view.setAutoFill(true);
 	grid.setView(view);
 	grid.setHideColumnHeader(true);
 	grid.setBorder(false);
-	// grid.setAutoHeight(true);
 	grid.setAutoScroll(true);
-	// countriesGrid.setEnableDragDrop(true);
-	// countriesGrid.setDdGroup("myDDGroup");
+	grid.setEnableDragDrop(true);
+	// FIXME: put different ids here
+	grid.setDdGroup("someUserDDGroup");
+	grid.setDragDropText("Sorry: User drag & drop in development");
 	super.add(grid);
     }
 
@@ -220,7 +226,6 @@ public class UserGridPanel extends Panel {
 
 	if (isRendered()) {
 	    this.doLayout();
-	    // this.syncSize();
 	}
     }
 

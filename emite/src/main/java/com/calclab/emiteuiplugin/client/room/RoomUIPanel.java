@@ -22,6 +22,8 @@
 package com.calclab.emiteuiplugin.client.room;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
+import org.ourproject.kune.platf.client.ui.EditableClickListener;
+import org.ourproject.kune.platf.client.ui.EditableIconLabel;
 
 import com.calclab.emiteuiplugin.client.chat.ChatUIPanel;
 import com.gwtext.client.core.RegionPosition;
@@ -31,20 +33,70 @@ import com.gwtext.client.widgets.layout.FitLayout;
 
 public class RoomUIPanel extends ChatUIPanel implements RoomUIView {
 
+    private final RoomUIPresenter presenter;
+    private final I18nTranslationService i18n;
+    private EditableIconLabel subject;
+
     public RoomUIPanel(final I18nTranslationService i18n, final RoomUserListUIPanel roomUserListUIPanel,
 	    final RoomUIPresenter presenter) {
 	super(presenter);
+	this.i18n = i18n;
+	this.presenter = presenter;
+
 	final BorderLayoutData eastData = new BorderLayoutData(RegionPosition.EAST);
-	final Panel userPanel = new Panel(i18n.t("Now in this room"));
-	userPanel.setLayout(new FitLayout());
-	userPanel.setBorder(false);
-	userPanel.setAutoScroll(true);
-	userPanel.setWidth(150);
-	userPanel.setIconCls("group-icon");
+	final Panel eastPanel = new Panel(i18n.t("Now in this room"));
+	eastPanel.setLayout(new FitLayout());
+	eastPanel.setBorder(false);
+	eastPanel.setAutoScroll(true);
+	eastPanel.setCollapsible(true);
+	eastPanel.setWidth(150);
+	eastPanel.setIconCls("group-icon");
 	eastData.setMinSize(100);
 	eastData.setMaxSize(250);
-	eastData.setSplit(true);
-	userPanel.add(roomUserListUIPanel);
-	super.add(userPanel, eastData);
+	// FIXME: when manual calc of size, set this to true
+	eastData.setSplit(false);
+	eastPanel.add(roomUserListUIPanel);
+	super.add(eastPanel, eastData);
+
+	final Panel northPanel = new Panel();
+	northPanel.setHeight(27);
+	northPanel.add(createSubjectPanel());
+	northPanel.setBorder(false);
+	final BorderLayoutData northData = new BorderLayoutData(RegionPosition.NORTH);
+	northData.setSplit(false);
+	super.add(northPanel, northData);
     }
+
+    public void setSubject(final String newSubject) {
+	subject.setText(newSubject);
+    }
+
+    public void setSubjectEditable(final boolean editable) {
+	subject.setEditable(editable);
+    }
+
+    private Panel createSubjectPanel() {
+	subject = new EditableIconLabel(i18n.t("Welcome to this room"), new EditableClickListener() {
+	    public void onEdited(final String text) {
+		presenter.onModifySubjectRequested(text);
+	    }
+	});
+	subject.setHeight("27");
+	// subject.addStyleName("x-panel-tbar");
+	// subject.addStyleName("x-panel-tbar-noheader");
+	subject.addStyleName("x-panel-header");
+	subject.addStyleName("x-panel-header-noborder");
+	subject.addStyleName("x-unselectable");
+	subject.setClickToRenameLabel(i18n.t("Click to rename this room"));
+	subject.setRenameDialogLabel(i18n.t("Write a new subject for this room"));
+	subject.setRenameDialogTitle(i18n.t("Change the subject"));
+	final Panel subjectPanel = new Panel();
+	subjectPanel.add(subject);
+	// final Toolbar topBar = new Toolbar();
+	// topBar.addElement(subject.getElement());
+	// subjectPanel.setTopToolbar(topBar);
+	subjectPanel.setBorder(false);
+	return subjectPanel;
+    }
+
 }

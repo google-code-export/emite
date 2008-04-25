@@ -57,7 +57,6 @@ public class JoinRoomPanel {
 	    dialog = new BasicDialogExtended(i18n.t("Join a chat room"), false, false, 330, 160, "chat-icon", i18n
 		    .tWithNT("Join", "used in button"), i18n.tWithNT("Cancel", "used in button"),
 		    new BasicDialogListener() {
-
 			public void onCancelButtonClick() {
 			    dialog.hide();
 			    reset();
@@ -66,7 +65,6 @@ public class JoinRoomPanel {
 			public void onFirstButtonClick() {
 			    doJoin();
 			}
-
 		    });
 	    dialog.setResizable(false);
 	    createForm();
@@ -112,15 +110,14 @@ public class JoinRoomPanel {
     }
 
     private void doJoin() {
-	// dialog.getEl().mask();
+	dialog.getEl().mask();
 	roomName.validate();
 	roomHostName.validate();
 	if (formPanel.getForm().isValid()) {
 	    presenter.joinRoom(roomName.getValueAsString(), roomHostName.getValueAsString());
 	    dialog.hide();
 	    reset();
-	    // dialog.getEl().unmask();
 	}
-	// dialog.getEl().unmask();
+	dialog.getEl().unmask();
     }
 }
