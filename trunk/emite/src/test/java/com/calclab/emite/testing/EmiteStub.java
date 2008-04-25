@@ -104,8 +104,13 @@ public class EmiteStub implements Emite {
 	assertEquals(times, published.size());
     }
 
+    public void verifySent(final IPacket packet) {
+	assertContains(packet, sent);
+    }
+
     public void verifySent(final String expected) {
-	assertContains(xmler.toXML(expected), sent);
+	final IPacket packet = xmler.toXML(expected);
+	verifySent(packet);
     }
 
     private void assertContains(final IPacket expected, final ArrayList<IPacket> list) {

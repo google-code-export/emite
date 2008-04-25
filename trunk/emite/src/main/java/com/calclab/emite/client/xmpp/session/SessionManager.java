@@ -55,7 +55,8 @@ public class SessionManager implements Installable {
 	}
 
 	public static Event login(final XmppURI uri, final String password) {
-	    return (Event) SessionManager.Events.onDoLogin.Params("uri", uri.toString()).With("password", password);
+	    final String strURI = uri != null ? uri.toString() : null;
+	    return (Event) SessionManager.Events.onDoLogin.Params("uri", strURI).With("password", password);
 	}
     }
 
