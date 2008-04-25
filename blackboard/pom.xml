@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.calclab</groupId>
+	<artifactId>blackboard</artifactId>
+	<packaging>jar</packaging>
+	<version>0.0.1</version>
+	<description>emite example</description>
+	<name>emite blackboard</name>
+	<url>http://emite.googlecode.com</url>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.totsp.gwt</groupId>
+				<artifactId>maven-googlewebtoolkit2-plugin</artifactId>
+				<version>2.0-beta14</version>
+				<configuration>
+					<!-- <logLevel>INFO</logLevel> -->
+					<style>OBF</style>
+					<runTarget>
+						com.calclab.blackboard.Blackboard/Blackboard.html
+					</runTarget>
+					<compileTarget>
+						<param></param>
+					</compileTarget>
+					<compileTargets>
+						<compileTarget>
+							com.calclab.blackboard.Blackboard
+						</compileTarget>
+					</compileTargets>
+					<generatorRootClasses></generatorRootClasses>
+					<generatorDestinationPackage>
+						com.calclab.blackboard.Blackboard
+					</generatorDestinationPackage>
+					<generateGettersAndSetters>
+						false
+					</generateGettersAndSetters>
+					<generatePropertyChangeSupport>
+						false
+					</generatePropertyChangeSupport>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<!-- <goal>mergewebxml</goal> -->
+							<!-- <goal>compile</goal> -->
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.5</version>
+				<configuration>
+					<contextPath>/</contextPath>
+					<scanIntervalSeconds>0</scanIntervalSeconds>
+					<connectors>
+						<connector
+							implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+							<port>4444</port>
+							<maxIdleTime>60000</maxIdleTime>
+						</connector>
+					</connectors>
+
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+
+		<!--  gwt -->
+		<dependency>
+			<groupId>com.calclab</groupId>
+			<artifactId>emite</artifactId>
+			<version>0.2.0</version>
+		</dependency>
+
+		<!--  TESTING -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+</project>
