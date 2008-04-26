@@ -37,11 +37,16 @@ import com.gwtext.client.data.Record;
 import com.gwtext.client.data.RecordDef;
 import com.gwtext.client.data.Store;
 import com.gwtext.client.data.StringFieldDef;
+import com.gwtext.client.dd.DragData;
+import com.gwtext.client.dd.DragSource;
+import com.gwtext.client.dd.DropTarget;
+import com.gwtext.client.dd.DropTargetConfig;
 import com.gwtext.client.util.Format;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.grid.CellMetadata;
 import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
+import com.gwtext.client.widgets.grid.GridDragData;
 import com.gwtext.client.widgets.grid.GridPanel;
 import com.gwtext.client.widgets.grid.GridView;
 import com.gwtext.client.widgets.grid.Renderer;
@@ -50,6 +55,7 @@ import com.gwtext.client.widgets.layout.FitLayout;
 
 public class UserGridPanel extends Panel {
 
+    public static final String INVITE_TO_GROUP_DD = "inviteToGroupDD";
     private static final String ALIAS = "alias";
     private static final String COLOR = "color";
     private static final String IMG = "img";
@@ -62,14 +68,26 @@ public class UserGridPanel extends Panel {
     private RecordDef recordDef;
     private Store store;
     private GridPanel grid;
-    private GridView view;
 
-    public UserGridPanel() {
+    public UserGridPanel(final String emptyText) {
+	this(emptyText, null, null);
+    }
+
+    public UserGridPanel(final String emptyText, final DragGridConfiguration dragGridConfiguration) {
+	this(emptyText, dragGridConfiguration, null);
+    }
+
+    public UserGridPanel(final String emptyText, final DragGridConfiguration dragGridConfiguration,
+	    final DropGridConfiguration dropGridConfiguration) {
 	setBorder(false);
 	setLayout(new FitLayout());
-	createGrid();
+	createGrid(emptyText, dragGridConfiguration, dropGridConfiguration);
 	menuMap = new HashMap<XmppURI, UserGridMenu>();
 	recordMap = new HashMap<XmppURI, Record>();
+    }
+
+    public UserGridPanel(final String emptyText, final DropGridConfiguration dropGridConfiguration) {
+	this(emptyText, null, dropGridConfiguration);
     }
 
     public void addUser(final ChatUserUI user, final UserGridMenu menu) {
@@ -106,17 +124,13 @@ public class UserGridPanel extends Panel {
 	// grid.setWidth(newWidthAvailable - SOMETHING);
     }
 
-    public void setEmptyText(final String emptyText) {
-	view.setEmptyText(emptyText);
-    }
-
     public void updateRosterItem(final ChatUserUI user, final UserGridMenu menu) {
 	final Record recordToUpdate = recordMap.get(user.getURI());
 	recordToUpdate.set(IMG, user.getIconUrl());
 	recordToUpdate.set(ALIAS, formatAlias(user));
 	recordToUpdate.set(JID, formatJid(user));
 	recordToUpdate.set(COLOR, user.getColor());
-	recordToUpdate.set(STATUSTEXT, user.getStatusText());
+	recordToUpdate.set(STATUSTEXT, formatStatus(user.getStatusText()));
 	recordToUpdate.set(STATUSIMG, formatStatusIcon(user));
 	menuMap.put(user.getURI(), menu);
 	doLayoutIfNeeded();
@@ -125,14 +139,49 @@ public class UserGridPanel extends Panel {
     private void addRecord(final AbstractChatUser user, final String statusIcon, final String statusTextOrig,
 	    final UserGridMenu menu) {
 	final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), formatJid(user),
-		formatAlias(user), user.getColor(), statusIcon, statusTextOrig });
+		formatAlias(user), user.getColor(), statusIcon, formatStatus(statusTextOrig) });
 	recordMap.put(user.getURI(), newUserRecord);
 	store.add(newUserRecord);
 	menuMap.put(user.getURI(), menu);
 	doLayoutIfNeeded();
     }
 
-    private void createGrid() {
+    private void configureDrag(final DragGridConfiguration dragGridConfiguration) {
+	grid.setEnableDragDrop(true);
+	grid.setDdGroup(dragGridConfiguration.getDdGroupId());
+	grid.setDragDropText(dragGridConfiguration.getDragMessage());
+    }
+
+    private void configureDrop(final DropGridConfiguration dropGridConfiguration) {
+	grid.setEnableDragDrop(true);
+	grid.setDdGroup(dropGridConfiguration.getDdGroupId());
+	final DropTargetConfig dCfg = new DropTargetConfig();
+	dCfg.setTarget(true);
+	dCfg.setdDdGroup(dropGridConfiguration.getDdGroupId());
+	new DropTarget(grid, dCfg) {
+	    public boolean notifyDrop(final DragSource src, final EventObject e, final DragData dragData) {
+		if (dragData instanceof GridDragData) {
+		    final GridDragData gridDragData = (GridDragData) dragData;
+		    final Record[] records = gridDragData.getSelections();
+		    for (int i = 0; i < records.length; i++) {
+			dropGridConfiguration.getListener().onDrop(XmppURI.jid(records[i].getAsString(JID)));
+		    }
+		}
+		return true;
+	    }
+
+	    public String notifyEnter(final DragSource src, final EventObject e, final DragData data) {
+		return "x-tree-drop-ok-append";
+	    }
+
+	    public String notifyOver(final DragSource src, final EventObject e, final DragData data) {
+		return "x-tree-drop-ok-append";
+	    }
+	};
+    }
+
+    private void createGrid(final String emptyText, final DragGridConfiguration dragGridConfiguration,
+	    final DropGridConfiguration dropGridConfiguration) {
 	grid = new GridPanel();
 	fieldDefs = new FieldDef[] { new StringFieldDef(IMG), new StringFieldDef(JID), new StringFieldDef(ALIAS),
 		new StringFieldDef(COLOR), new StringFieldDef(STATUSIMG), new StringFieldDef(STATUSTEXT) };
@@ -143,6 +192,7 @@ public class UserGridPanel extends Panel {
 	final ArrayReader reader = new ArrayReader(1, recordDef);
 	store = new Store(proxy, reader);
 	store.load();
+	store.sort(ALIAS);
 	grid.setStore(store);
 
 	// GroupingStore store = new GroupingStore();
@@ -179,7 +229,6 @@ public class UserGridPanel extends Panel {
 	grid.setColumnModel(columnModel);
 
 	grid.addGridRowListener(new GridRowListener() {
-
 	    public void onRowClick(final GridPanel grid, final int rowIndex, final EventObject e) {
 		showMenu(rowIndex, e);
 	    }
@@ -198,23 +247,25 @@ public class UserGridPanel extends Panel {
 		final UserGridMenu menu = menuMap.get(uri(jid));
 		menu.showMenu(e);
 	    }
-
 	});
-
 	// grid.setAutoExpandColumn(ALIAS);
 	grid.stripeRows(true);
-	view = new GridView();
+	final GridView view = new GridView();
 	// i18n
-	view.setEmptyText("Nobody");
 	// view.setAutoFill(true);
+	view.setEmptyText(emptyText);
 	grid.setView(view);
 	grid.setHideColumnHeader(true);
 	grid.setBorder(false);
 	grid.setAutoScroll(true);
-	grid.setEnableDragDrop(true);
-	// FIXME: put different ids here
-	grid.setDdGroup("someUserDDGroup");
-	grid.setDragDropText("Sorry: User drag & drop in development");
+	if (dropGridConfiguration != null) {
+	    configureDrop(dropGridConfiguration);
+	}
+	if (dragGridConfiguration != null) {
+	    configureDrag(dragGridConfiguration);
+	} else {
+	    grid.setDraggable(false);
+	}
 	super.add(grid);
     }
 
@@ -223,18 +274,27 @@ public class UserGridPanel extends Panel {
 	// You should only explicitly call doLayout() if you add a child
 	// component to a parent Container after the container has been
 	// rendered.
-
 	if (isRendered()) {
 	    this.doLayout();
 	}
     }
 
     private String formatAlias(final AbstractChatUser user) {
-	return user.getAlias() != null ? user.getAlias() : user.getURI().getNode();
+	final String alias = user.getAlias();
+	if (alias == null || alias.length() == 0) {
+	    return user.getURI().getNode();
+	} else {
+	    return alias;
+	}
     }
 
     private String formatJid(final AbstractChatUser user) {
 	return user.getURI().toString();
+    }
+
+    private String formatStatus(final String statusText) {
+	// ext don't like ""
+	return statusText == null ? " " : statusText;
     }
 
     private String formatStatusIcon(final ChatUserUI user) {

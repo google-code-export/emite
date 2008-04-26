@@ -52,7 +52,9 @@ public class ChatUIPresenter implements ChatUI {
 	this.unhighIcon = unhighIcon;
 	this.highIcon = highIcon;
 	this.listener = listener;
-	this.chatTitle = otherURI.getNode();
+	// Messages from server has no node
+	final String node = otherURI.getNode();
+	this.chatTitle = node != null ? node : otherURI.getHost();
 	userColors = new HashMap<String, String>();
 	userColors.put(currentUserAlias, currentUserColor);
     }

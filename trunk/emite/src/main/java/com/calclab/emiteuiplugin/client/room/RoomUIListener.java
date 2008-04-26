@@ -21,6 +21,7 @@
  */
 package com.calclab.emiteuiplugin.client.room;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
 
@@ -28,7 +29,7 @@ public interface RoomUIListener extends ChatUIListener {
 
     public void onCreated(ChatUI chatUI);
 
-    public void onInviteUserRequested(String userJid, String reasonText);
+    public void onInviteUserRequested(XmppURI userJid, String reasonText);
 
     public void onModifySubjectRequested(String newSubject);
 
