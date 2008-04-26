@@ -324,7 +324,7 @@ public class MultiChatPanel implements MultiChatView {
 	addRosterItem.setTooltip(i18n.t("Add a new buddy"));
 	final Toolbar bottomToolbar = new Toolbar();
 	bottomToolbar.addButton(addRosterItem);
-	bottomToolbar.setHeight(27);
+	bottomToolbar.setHeight(26);
 	eastPanel.setBottomToolbar(bottomToolbar);
 	addRosterItem.addListener(new ButtonListenerAdapter() {
 	    private RosterItemPanel rosterItemPanel;

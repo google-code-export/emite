@@ -46,7 +46,7 @@ public class RoomUIPanel extends ChatUIPanel implements RoomUIView {
 	final BorderLayoutData eastData = new BorderLayoutData(RegionPosition.EAST);
 	final Panel eastPanel = new Panel(i18n.t("Now in this room"));
 	eastPanel.setLayout(new FitLayout());
-	eastPanel.setBorder(false);
+	// eastPanel.setBorder(false);
 	eastPanel.setAutoScroll(true);
 	eastPanel.setCollapsible(true);
 	eastPanel.setWidth(150);

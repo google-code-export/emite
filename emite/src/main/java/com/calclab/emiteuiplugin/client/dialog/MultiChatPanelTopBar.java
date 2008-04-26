@@ -62,7 +62,7 @@ public class MultiChatPanelTopBar extends Toolbar {
     private CheckItem manualSubsItem;
     private CheckItem autoRejectSubsItem;
     private CheckItem autoAcceptSubsItem;
-    private final Item joinOption;
+    private final ToolbarButton joinOption;
 
     public MultiChatPanelTopBar(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
 	this.i18n = i18n;
@@ -70,13 +70,12 @@ public class MultiChatPanelTopBar extends Toolbar {
 
 	final Menu chatMenu = new Menu();
 	chatMenu.setShadow(true);
-	joinOption = new Item();
-	joinOption.setText(i18n.t("Join a chat room"));
+	joinOption = new ToolbarButton(i18n.t("Join a chat room"));
 	joinOption.setIcon("images/group-chat.gif");
-	joinOption.addListener(new BaseItemListenerAdapter() {
+	joinOption.addListener(new ButtonListenerAdapter() {
 	    private JoinRoomPanel joinRoomPanel;
 
-	    public void onClick(final BaseItem item, final EventObject e) {
+	    public void onClick(final Button button, final EventObject e) {
 		if (joinRoomPanel == null) {
 		    joinRoomPanel = new JoinRoomPanel(i18n, presenter);
 		}
@@ -86,7 +85,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 	closeAllOption = createCloseAllMenuItem(i18n);
 
 	final MenuItem optionsItem = new MenuItem(i18n.t("Options"), createOptionsMenu());
-	chatMenu.addItem(joinOption);
+	// chatMenu.addItem(joinOption);
 	chatMenu.addItem(closeAllOption);
 	chatMenu.addItem(optionsItem);
 
@@ -112,6 +111,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 	setLoadingVisible(false);
 
 	this.addFill();
+	this.addButton(joinOption);
 
 	// final EntityLiveSearchListener inviteUserToRoomListener = new
 	// EntityLiveSearchListener() {

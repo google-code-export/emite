@@ -23,6 +23,7 @@ package com.calclab.emiteuiplugin.client.room;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogExtended;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogListener;
 import com.gwtext.client.widgets.ToolTip;
@@ -63,7 +64,8 @@ public class InviteToRoomPanel {
 			    jid.validate();
 			    reason.validate();
 			    if (formPanel.getForm().isValid()) {
-				presenter.inviteUserToRoom(jid.getValueAsString(), reason.getValueAsString());
+				presenter.onInviteUserRequested(XmppURI.jid(jid.getValueAsString()), reason
+					.getValueAsString());
 				dialog.hide();
 				reset();
 				dialog.getEl().unmask();
