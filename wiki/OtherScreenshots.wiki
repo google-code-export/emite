@@ -1,11 +1,13 @@
 Some other screenshots:
 
- * Our first real chat:
-
-http://emite.googlecode.com/svn/wiki/emite-1s-real-chat.png
-
  * Multi-chat room in action:
 
 http://emite.googlecode.com/svn/wiki/emite-muc1.png
+
+== Old ones ==
+
+ * Our first real chat:
+
+http://emite.googlecode.com/svn/wiki/emite-1s-real-chat.png
 
 More are comming...
