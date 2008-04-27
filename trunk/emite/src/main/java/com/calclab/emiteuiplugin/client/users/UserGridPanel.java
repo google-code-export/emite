@@ -133,6 +133,7 @@ public class UserGridPanel extends Panel {
 	recordToUpdate.set(STATUSTEXT, formatStatus(user.getStatusText()));
 	recordToUpdate.set(STATUSIMG, formatStatusIcon(user));
 	menuMap.put(user.getURI(), menu);
+	sort();
 	doLayoutIfNeeded();
     }
 
@@ -143,6 +144,7 @@ public class UserGridPanel extends Panel {
 	recordMap.put(user.getURI(), newUserRecord);
 	store.add(newUserRecord);
 	menuMap.put(user.getURI(), menu);
+	sort();
 	doLayoutIfNeeded();
     }
 
@@ -192,7 +194,6 @@ public class UserGridPanel extends Panel {
 	final ArrayReader reader = new ArrayReader(1, recordDef);
 	store = new Store(proxy, reader);
 	store.load();
-	store.sort(ALIAS);
 	grid.setStore(store);
 
 	// GroupingStore store = new GroupingStore();
@@ -299,5 +300,9 @@ public class UserGridPanel extends Panel {
 
     private String formatStatusIcon(final ChatUserUI user) {
 	return ChatUIUtils.getIcon(user.getStatusIcon()).getHTML();
+    }
+
+    private void sort() {
+	store.sort(ALIAS);
     }
 }
