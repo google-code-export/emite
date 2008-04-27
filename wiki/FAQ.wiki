@@ -21,7 +21,7 @@ Maybe, see our [http://code.google.com/p/emite/issues/list issue/enhancement lis
 
 == In emiteui there is a bug, what can I do? ==
 
-Please add <code>?log_level=DEBUG</code> to the url and try to fill us an [http://code.google.com/p/emite/issues/list issue] with some debug info.
+Please add <code>?log_level=DEBUG</code> to the url and use firebug firefox extension to see the output. Try to fill us an [http://code.google.com/p/emite/issues/list issue] with some debug info.
 
 == How can I help? ==
 
