@@ -297,7 +297,7 @@ public class MultiChatPanel implements MultiChatView {
 
     private void createKuneIconBottomBar() {
 	bottomIcon = new BottomTrayIcon(i18n.t("Show/hide chat dialog"));
-	bottomIcon.addMainButton(icons.chat(), new Command() {
+	bottomIcon.addMainButton(icons.groupChat(), new Command() {
 	    public void execute() {
 		if (dialog.isVisible()) {
 		    dialog.hide();

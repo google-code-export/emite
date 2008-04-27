@@ -21,9 +21,11 @@
  */
 package com.calclab.emiteui.client;
 
+import org.ourproject.kune.platf.client.PlatformEvents;
 import org.ourproject.kune.platf.client.dispatch.Action;
 import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 import org.ourproject.kune.platf.client.extend.PluginManager;
+import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 import org.ourproject.kune.platf.client.extend.UIExtensionPointManager;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
@@ -38,6 +40,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
@@ -91,11 +94,6 @@ public class EmiteUIEntryPoint implements EntryPoint {
 		new I18nTranslationServiceMocked());
 	kunePluginManager.install(new EmiteUIPlugin());
 
-	dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam(EMITE_DEF_TITLE, new BoshOptions(
-		getGwtMetaProperty(GWT_PROPERTY_HTTPBASE)), getGwtMetaProperty(GWT_PROPERTY_ROOMHOST),
-		new I18nTranslationServiceMocked(), generateUserChatOptions()));
-	dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
-
 	dispatcher.subscribe(EmiteUIPlugin.ON_UNHIGHTLIGHTWINDOW, new Action<String>() {
 	    public void execute(final String chatTitle) {
 		setWindowTitle("(* " + chatTitle + ") " + initialWindowTitle);
@@ -107,6 +105,18 @@ public class EmiteUIEntryPoint implements EntryPoint {
 		setWindowTitle(initialWindowTitle);
 	    }
 	});
+
+	dispatcher.subscribe(PlatformEvents.ATTACH_TO_EXT_POINT, new Action<UIExtensionElement>() {
+	    public void execute(final UIExtensionElement extPoint) {
+		RootPanel.get().add((Widget) extPoint.getView(), 320, 15);
+	    }
+	});
+
+	dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam(EMITE_DEF_TITLE, new BoshOptions(
+		getGwtMetaProperty(GWT_PROPERTY_HTTPBASE)), getGwtMetaProperty(GWT_PROPERTY_ROOMHOST),
+		new I18nTranslationServiceMocked(), generateUserChatOptions()));
+	dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
+
     }
 
     private void createFormPanel() {
