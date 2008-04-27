@@ -60,7 +60,6 @@ public class InviteToRoomPanel {
 			}
 
 			public void onFirstButtonClick() {
-			    dialog.getEl().mask();
 			    jid.validate();
 			    reason.validate();
 			    if (formPanel.getForm().isValid()) {
@@ -68,9 +67,7 @@ public class InviteToRoomPanel {
 					.getValueAsString());
 				dialog.hide();
 				reset();
-				dialog.getEl().unmask();
 			    }
-			    dialog.getEl().unmask();
 			}
 
 		    });

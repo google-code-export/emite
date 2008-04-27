@@ -21,6 +21,7 @@
  */
 package com.calclab.emiteuiplugin.client.dialog;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 
 public interface MultiChatView {
@@ -44,6 +45,8 @@ public interface MultiChatView {
     void highLight();
 
     void removeChat(ChatUI chatUI);
+
+    void roomJoinConfirm(XmppURI invitor, XmppURI roomURI, String reason);
 
     void setAddRosterItemButtonVisible(boolean visible);
 
