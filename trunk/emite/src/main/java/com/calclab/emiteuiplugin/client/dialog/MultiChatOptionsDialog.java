@@ -24,7 +24,7 @@ package com.calclab.emiteuiplugin.client.dialog;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
-import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
+import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emiteuiplugin.client.UserChatOptions;
 import com.gwtext.client.widgets.ColorPalette;
 import com.gwtext.client.widgets.event.ColorPaletteListenerAdapter;
@@ -54,118 +54,119 @@ public class MultiChatOptionsDialog {
     private UserChatOptions currentOptions;
 
     public MultiChatOptionsDialog(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
-        this.i18n = i18n;
-        this.presenter = presenter;
-    }
-
-    public void show() {
-        if (dialog == null) {
-            createOptionsForm();
-            selectedColor = currentOptions.getColor();
-            dialog = new BasicDialogExtended(i18n.t("Chat options"), false, false, 350, 260, "useradd-icon", i18n
-                    .tWithNT("Save", "used in button"), i18n.tWithNT("Cancel", "used in button"),
-                    new BasicDialogListener() {
-                        public void onCancelButtonClick() {
-                            dialog.hide();
-                        }
-
-                        public void onFirstButtonClick() {
-                            if (!currentOptions.getColor().equals(selectedColor)) {
-                                presenter.onUserColorChanged(selectedColor);
-                            }
-                            SubscriptionMode subscriptionSelected;
-                            if (autoAcceptRadio.getValue()) {
-                                subscriptionSelected = SubscriptionMode.auto_accept_all;
-                            } else if (autoRejectRadio.getValue()) {
-                                subscriptionSelected = SubscriptionMode.auto_reject_all;
-                            } else {
-                                subscriptionSelected = SubscriptionMode.manual;
-                            }
-                            presenter.onUserSubscriptionModeChanged(subscriptionSelected);
-                            dialog.hide();
-                        }
-                    });
-        }
-        setOptions(currentOptions);
-        dialog.show();
+	this.i18n = i18n;
+	this.presenter = presenter;
     }
 
     public void setChatOptions(final UserChatOptions userChatOptions) {
-        this.currentOptions = userChatOptions;
+	this.currentOptions = userChatOptions;
+    }
+
+    public void show() {
+	if (dialog == null) {
+	    createOptionsForm();
+	    selectedColor = currentOptions.getColor();
+	    dialog = new BasicDialogExtended(i18n.t("Chat options"), false, false, 350, 260, "useradd-icon", i18n
+		    .tWithNT("Save", "used in button"), i18n.tWithNT("Cancel", "used in button"),
+		    new BasicDialogListener() {
+			public void onCancelButtonClick() {
+			    dialog.hide();
+			}
+
+			public void onFirstButtonClick() {
+			    if (!currentOptions.getColor().equals(selectedColor)) {
+				presenter.onUserColorChanged(selectedColor);
+			    }
+			    SubscriptionMode subscriptionSelected;
+			    if (autoAcceptRadio.getValue()) {
+				subscriptionSelected = SubscriptionMode.autoAcceptAll;
+			    } else if (autoRejectRadio.getValue()) {
+				subscriptionSelected = SubscriptionMode.autoRejectAll;
+			    } else {
+				subscriptionSelected = SubscriptionMode.manual;
+			    }
+			    presenter.onUserSubscriptionModeChanged(subscriptionSelected);
+			    dialog.hide();
+			}
+		    });
+	}
+	setOptions(currentOptions);
+	dialog.show();
     }
 
     private void createOptionsForm() {
-        formPanel = new FormPanel();
-        formPanel.setFrame(true);
+	formPanel = new FormPanel();
+	formPanel.setFrame(true);
 
-        formPanel.setWidth(333);
-        formPanel.setLabelWidth(100);
-        formPanel.setPaddings(10);
+	formPanel.setWidth(333);
+	formPanel.setLabelWidth(100);
+	formPanel.setPaddings(10);
 
-        Label label = new Label();
-        label.setHtml("<p>" + i18n.t("Select your chat options:") + "</p>");
-        label.setWidth(270);
-        label.setHeight(40);
-        formPanel.add(label);
+	final Label label = new Label();
+	label.setHtml("<p>" + i18n.t("Select your chat options:") + "</p>");
+	label.setWidth(270);
+	label.setHeight(40);
+	formPanel.add(label);
 
-        userTextField = new TextField("Color");
-        userTextField.setWidth(146);
-        userTextField.setValue(i18n.t("Your color"));
+	userTextField = new TextField("Color");
+	userTextField.setWidth(146);
+	userTextField.setValue(i18n.t("Your color"));
 
-        ColorPalette colorPalette = new ColorPalette();
-        colorPalette.addListener(new ColorPaletteListenerAdapter() {
-            public void onSelect(final ColorPalette colorPalette, final String color) {
-                setColor(color);
-            }
-        });
+	final ColorPalette colorPalette = new ColorPalette();
+	colorPalette.addListener(new ColorPaletteListenerAdapter() {
+	    @Override
+	    public void onSelect(final ColorPalette colorPalette, final String color) {
+		setColor(color);
+	    }
+	});
 
-        colorPalette.setTitle("Pick a color");
+	colorPalette.setTitle("Pick a color");
 
-        FieldSet groupTypeFieldSet = new FieldSet(i18n.t("Subscription options"));
-        groupTypeFieldSet.setStyle("margin-left: 105px");
-        groupTypeFieldSet.setCollapsible(false);
-        formPanel.add(groupTypeFieldSet);
+	final FieldSet groupTypeFieldSet = new FieldSet(i18n.t("Subscription options"));
+	groupTypeFieldSet.setStyle("margin-left: 105px");
+	groupTypeFieldSet.setCollapsible(false);
+	formPanel.add(groupTypeFieldSet);
 
-        autoAcceptRadio = new Radio();
-        createRadio(groupTypeFieldSet, autoAcceptRadio,
-                "Automatically accept other users request for add you as a buddy");
+	autoAcceptRadio = new Radio();
+	createRadio(groupTypeFieldSet, autoAcceptRadio,
+		"Automatically accept other users request for add you as a buddy");
 
-        autoRejectRadio = new Radio();
-        createRadio(groupTypeFieldSet, autoRejectRadio,
-                "Automatically reject other users request for add you as a buddy");
+	autoRejectRadio = new Radio();
+	createRadio(groupTypeFieldSet, autoRejectRadio,
+		"Automatically reject other users request for add you as a buddy");
 
-        manualRadio = new Radio();
-        createRadio(groupTypeFieldSet, manualRadio, "Manually accept/reject other users request for add you as a buddy");
+	manualRadio = new Radio();
+	createRadio(groupTypeFieldSet, manualRadio, "Manually accept/reject other users request for add you as a buddy");
 
-        dialog.add(formPanel);
+	dialog.add(formPanel);
 
     }
 
     private void createRadio(final FieldSet fieldSet, final Radio radio, final String label) {
-        radio.setName(TYPEOFSUBS_FIELD);
-        radio.setBoxLabel(label);
-        radio.setAutoCreate(true);
-        radio.setHideLabel(true);
-        fieldSet.add(radio);
-    }
-
-    private void setOptions(final UserChatOptions options) {
-        setColor(options.getColor());
-        switch (options.getSubscriptionMode()) {
-        case auto_accept_all:
-            autoAcceptRadio.setChecked(true);
-            break;
-        case auto_reject_all:
-            autoRejectRadio.setChecked(true);
-            break;
-        default:
-            manualRadio.setChecked(true);
-        }
-
+	radio.setName(TYPEOFSUBS_FIELD);
+	radio.setBoxLabel(label);
+	radio.setAutoCreate(true);
+	radio.setHideLabel(true);
+	fieldSet.add(radio);
     }
 
     private void setColor(final String color) {
-        userTextField.setStyle("color:" + color + ";background-image:none;");
+	userTextField.setStyle("color:" + color + ";background-image:none;");
+    }
+
+    private void setOptions(final UserChatOptions options) {
+	setColor(options.getColor());
+	switch (options.getSubscriptionMode()) {
+	case autoAcceptAll:
+	    autoAcceptRadio.setChecked(true);
+	    break;
+	case autoRejectAll:
+	    autoRejectRadio.setChecked(true);
+	    break;
+	default:
+	    manualRadio.setChecked(true);
+	}
+
     }
 
 }

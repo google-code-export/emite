@@ -28,7 +28,7 @@ public class EmiteTest {
 	final long rid = Long.parseLong(att);
 	assertTrue(rid > 1000);
 
-	stream.newRequest(null);
+	stream.prepareBody(null);
 	body = stream.clearBody();
 	assertEquals(Long.parseLong(body.getAttribute("rid")), rid + 1);
 

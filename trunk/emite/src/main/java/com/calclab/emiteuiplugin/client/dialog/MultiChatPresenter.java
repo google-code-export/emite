@@ -47,7 +47,7 @@ import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.im.presence.PresenceManager;
-import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
+import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -311,7 +311,7 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     protected void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
-	xmpp.getRoster().setSubscriptionMode(subscriptionMode);
+	xmpp.getRosterManager().setSubscriptionMode(subscriptionMode);
 	userChatOptions.setSubscriptionMode(subscriptionMode);
 	listener.onUserSubscriptionModeChanged(subscriptionMode);
     }

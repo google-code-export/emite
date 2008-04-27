@@ -44,7 +44,7 @@ import com.calclab.emite.client.core.services.Services;
 public class BoshManager implements ConnectorCallback, DispatcherStateListener, Installable {
 
     public static class Events {
-	public static final Event onDoRestart = new Event("connection:do:restart");
+	public static final Event onRestart = new Event("connection:do:restart");
 
 	public static final Event onDoStart = new Event("connection:do:start");
 	public static final Event stop = new Event("connection:do:stop");
@@ -53,6 +53,10 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
 	public static Event error(final String cause, final String info) {
 	    return (Event) onError.Params("cause", cause).With("info", info);
+	}
+
+	public static IPacket restart(final String domain) {
+	    return BoshManager.Events.onRestart.Params("domain", domain);
 	}
 
 	public static IPacket start(final String host) {
@@ -78,7 +82,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
     public void dispatchingBegins() {
 	if (isRunning) {
 	    Log.debug("DISPATCH BEGINS >>>>>>>>>>>");
-	    stream.newRequest(state.getSID());
+	    stream.prepareBody(state.getSID());
 	}
     }
 
@@ -101,9 +105,9 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
     }
 
     public void install() {
-	emite.subscribe(when(BoshManager.Events.onDoRestart), new PacketListener() {
+	emite.subscribe(when(BoshManager.Events.onRestart), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventRestart(received.getAttribute("domain"));
+		stream.setRestart(received.getAttribute("domain"));
 	    }
 	});
 	emite.subscribe(when(BoshManager.Events.onDoStart), new PacketListener() {
@@ -199,10 +203,6 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     void eventError(final IPacket received) {
 	isRunning = false;
-    }
-
-    void eventRestart(final String domain) {
-	stream.setRestart(domain);
     }
 
     void eventStart(final String domain) {

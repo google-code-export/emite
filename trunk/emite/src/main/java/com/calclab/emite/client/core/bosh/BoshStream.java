@@ -45,7 +45,10 @@ public class BoshStream implements Stream {
 	return body.getChildrenCount() == 0;
     }
 
-    public void newRequest(final String sid) {
+    /**
+     * Create a new body element if dont exists previously
+     */
+    public void prepareBody(final String sid) {
 	if (this.body == null) {
 	    requestID++;
 	    body = createBody();

@@ -30,6 +30,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.im.roster.Roster;
+import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emiteuiplugin.client.EmiteUIPlugin;
 import com.calclab.emiteuiplugin.client.UserChatOptions;
 import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
@@ -138,12 +139,14 @@ public class EmiteUIEntryPoint implements EntryPoint {
 	formPanel.add(passwd);
 
 	jid.addListener(new FieldListenerAdapter() {
+	    @Override
 	    public void onChange(final Field field, final Object newVal, final Object oldVal) {
 		dispatcher.fire(EmiteUIPlugin.REFLESH_USER_OPTIONS, generateUserChatOptions());
 	    }
 	});
 
 	passwd.addListener(new FieldListenerAdapter() {
+	    @Override
 	    public void onChange(final Field field, final Object newVal, final Object oldVal) {
 		dispatcher.fire(EmiteUIPlugin.REFLESH_USER_OPTIONS, generateUserChatOptions());
 	    }
@@ -174,7 +177,9 @@ public class EmiteUIEntryPoint implements EntryPoint {
     }
 
     private UserChatOptions generateUserChatOptions() {
-	return new UserChatOptions(jid.getRawValue(), passwd.getRawValue(), "blue", Roster.DEF_SUBSCRIPTION_MODE);
+	// FIXME: vicente, no deberíamos acceder a esta constante, sino
+	// preguntarle al roster manager en qué modo está...
+	return new UserChatOptions(jid.getRawValue(), passwd.getRawValue(), "blue", RosterManager.DEF_SUBSCRIPTION_MODE);
     }
 
     private String getGwtMetaProperty(final String property) {

@@ -62,6 +62,7 @@ public class SessionManager implements Installable {
 
     private Session session;
     private final Emite emite;
+    private XmppURI userURI;
 
     public SessionManager(final Emite emite) {
 	this.emite = emite;
@@ -70,11 +71,13 @@ public class SessionManager implements Installable {
     public void doLogin(final XmppURI uri, final String password) {
 	emite.publish(Events.login(uri, password));
 	emite.publish(BoshManager.Events.start(uri.getHost()));
+	userURI = uri;
     }
 
     public void doLogout() {
 	emite.publish(BoshManager.Events.stop);
 	emite.publish(SessionManager.Events.onLoggedOut);
+	userURI = null;
     }
 
     public void install() {
@@ -116,18 +119,7 @@ public class SessionManager implements Installable {
 	emite.subscribe(when(Events.onBinded), new PacketListener() {
 	    public void handle(final IPacket received) {
 		final String uri = received.getAttribute("uri");
-		final XmppURI userURI = uri(uri);
-		final IQ iq = new IQ(IQ.Type.set, userURI, userURI.getHostURI());
-		iq.Includes("session", "urn:ietf:params:xml:ns:xmpp-session");
-
-		emite.sendIQ("session", iq, new PacketListener() {
-		    public void handle(final IPacket received) {
-			if (IQ.isSuccess(received)) {
-			    session.setState(Session.State.connected);
-			    emite.publish(Events.loggedIn(uri));
-			}
-		    }
-		});
+		sendSessionRequest(uri);
 	    }
 
 	});
@@ -139,7 +131,7 @@ public class SessionManager implements Installable {
 
     void eventAuthorized() {
 	session.setState(Session.State.authorized);
-	emite.publish(BoshManager.Events.onDoRestart);
+	emite.publish(BoshManager.Events.restart(userURI.getHost()));
     }
 
     void eventLoggedOut() {
@@ -150,6 +142,22 @@ public class SessionManager implements Installable {
     void eventOnError() {
 	session.setState(Session.State.error);
 	session.setState(Session.State.disconnected);
+    }
+
+    private void sendSessionRequest(final String uri) {
+	userURI = uri(uri);
+	final IQ iq = new IQ(IQ.Type.set, userURI, userURI.getHostURI());
+	iq.Includes("session", "urn:ietf:params:xml:ns:xmpp-session");
+
+	emite.sendIQ("session", iq, new PacketListener() {
+	    public void handle(final IPacket received) {
+		if (IQ.isSuccess(received)) {
+		    session.setState(Session.State.connected);
+		    emite.publish(Events.loggedIn(uri));
+		}
+	    }
+	});
+
     }
 
 }

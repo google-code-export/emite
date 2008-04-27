@@ -10,6 +10,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterItem;
+import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -73,8 +74,11 @@ public class MultiChatPresenterTest {
 	Mockito.stub(
 		factory.createChatUI((XmppURI) Mockito.anyObject(), (String) Mockito.anyObject(), (String) Mockito
 			.anyObject(), (ChatUIListener) Mockito.anyObject())).toReturn(chatUI);
+
+	// FIXME: vicente, no deberíamos acceder a esta constante, sino
+	// preguntarle al roster manager en qué modo está...
 	final MultiChatCreationParam param = new MultiChatCreationParam("Chat title", null, "rooms.localhost", i18n,
-		new UserChatOptions(sessionUserJid, "passwdofuser", "blue", Roster.DEF_SUBSCRIPTION_MODE));
+		new UserChatOptions(sessionUserJid, "passwdofuser", "blue", RosterManager.DEF_SUBSCRIPTION_MODE));
 
 	multiChat = new MultiChatPresenter(xmpp, i18n, factory, param, multiChatlistener, roster);
 	multiChat.init(multiChatPanel);

@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteuiplugin.client;
 
-import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
+import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 
 public class UserChatOptions {
 
@@ -31,35 +31,35 @@ public class UserChatOptions {
     private final String userPassword;
 
     public UserChatOptions(final String userJid, final String userPassword, final String color,
-            final SubscriptionMode subscriptionMode) {
-        this.userJid = userJid;
-        this.userPassword = userPassword;
-        this.color = color;
-        this.subscriptionMode = subscriptionMode;
+	    final SubscriptionMode subscriptionMode) {
+	this.userJid = userJid;
+	this.userPassword = userPassword;
+	this.color = color;
+	this.subscriptionMode = subscriptionMode;
     }
 
     public String getColor() {
-        return color;
+	return color;
     }
 
     public SubscriptionMode getSubscriptionMode() {
-        return subscriptionMode;
+	return subscriptionMode;
     }
 
     public String getUserJid() {
-        return userJid;
+	return userJid;
     }
 
     public String getUserPassword() {
-        return userPassword;
+	return userPassword;
     }
 
     public void setColor(final String color) {
-        this.color = color;
+	this.color = color;
     }
 
     public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
-        this.subscriptionMode = subscriptionMode;
+	this.subscriptionMode = subscriptionMode;
     }
 
 }

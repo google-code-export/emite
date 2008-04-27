@@ -53,37 +53,12 @@ public class PresenceManager implements Installable {
 	this.userURI = null;
     }
 
-    /**
-     * subscribed -- The sender has allowed the recipient to receive their
-     * presence.
-     */
-    public void acceptSubscription(final Presence presence) {
-	replySubscription(presence, Presence.Type.subscribed);
-    }
-
     public void addListener(final PresenceListener presenceListener) {
 	this.listeners.add(presenceListener);
     }
 
     public IPacket answerTo(final Presence presence) {
 	return new Presence(userURI).To(presence.getFrom());
-    }
-
-    /**
-     * If a user would like to cancel a previously-granted subscription request,
-     * it sends a presence stanza of type "unsubscribed".
-     */
-    public void cancelSubscriptor(final XmppURI to) {
-	final Presence unsubscription = new Presence(Presence.Type.unsubscribed, userURI, to);
-	emite.send(unsubscription);
-    }
-
-    /**
-     * unsubscribed -- The subscription request has been denied or a
-     * previously-granted subscription has been cancelled.
-     */
-    public void denySubscription(final Presence presence) {
-	replySubscription(presence, Presence.Type.unsubscribed);
     }
 
     public Presence getCurrentPresence() {
@@ -122,25 +97,6 @@ public class PresenceManager implements Installable {
 
 	});
 
-    }
-
-    /**
-     * A request to subscribe to another entity's presence is made by sending a
-     * presence stanza of type "subscribe".
-     * 
-     */
-    public void requestSubscribe(final XmppURI to) {
-	final Presence unsubscribeRequest = new Presence(Presence.Type.subscribe, userURI, to);
-	emite.send(unsubscribeRequest);
-    }
-
-    /**
-     * If a user would like to unsubscribe from the presence of another entity,
-     * it sends a presence stanza of type "unsubscribe".
-     */
-    public void requestUnsubscribe(final XmppURI to) {
-	final Presence unsubscribeRequest = new Presence(Presence.Type.unsubscribe, userURI, to);
-	emite.send(unsubscribeRequest);
     }
 
     /**
@@ -196,15 +152,7 @@ public class PresenceManager implements Installable {
 
 	final Type type = presence.getType();
 	switch (type) {
-	case subscribe:
-	    fireSubscriptionRequest(presence);
-	    break;
-	case subscribed:
-	    fireSubscribedReceived(presence);
-	    break;
-	case unsubscribed:
-	    fireUnsubscribedReceived(presence);
-	    break;
+
 	case probe:
 	    emite.send(currentPresence);
 	    break;
@@ -233,36 +181,8 @@ public class PresenceManager implements Installable {
 	}
     }
 
-    private void fireSubscribedReceived(final Presence presence) {
-	for (final PresenceListener listener : listeners) {
-	    listener.onSubscribedReceived(presence);
-	}
-    }
-
-    private void fireSubscriptionRequest(final Presence presence) {
-	for (final PresenceListener listener : listeners) {
-	    listener.onSubscriptionRequest(presence);
-	}
-    }
-
-    private void fireUnsubscribedReceived(final Presence presence) {
-	for (final PresenceListener listener : listeners) {
-	    listener.onUnsubscribedReceived(presence);
-	}
-    }
-
     private boolean isLoggedIn() {
 	return currentPresence != null;
-    }
-
-    private void replySubscription(final Presence presence, final Presence.Type type) {
-	if (presence.getType() == Presence.Type.subscribe) {
-	    final Presence response = new Presence(type, userURI, presence.getFromURI());
-	    emite.send(response);
-	} else {
-	    // throw exception: its a programming error
-	    throw new RuntimeException("Trying to accept/deny a non subscription request");
-	}
     }
 
     private void sendDelayedPresence() {

@@ -40,24 +40,10 @@ public class PresenceManagerTest {
     }
 
     @Test
-    public void managerShouldFireSubscriptionRequests() {
-	final Presence presence = createPresence(Type.subscribe);
-	emite.receives(presence);
-	Mockito.verify(presenceListener).onSubscriptionRequest((Presence) TestMatchers.packetLike(presence));
-    }
-
-    @Test
     public void managerShouldFireUnavailablePresence() {
 	final Presence presence = createPresence(Type.unavailable);
 	emite.receives(presence);
 	Mockito.verify(presenceListener).onPresenceReceived((Presence) TestMatchers.packetLike(presence));
-    }
-
-    @Test
-    public void managerShouldFireUnsubscribeEvents() {
-	final Presence presence = createPresence(Type.unsubscribed);
-	emite.receives(presence);
-	Mockito.verify(presenceListener).onUnsubscribedReceived((Presence) TestMatchers.packetLike(presence));
     }
 
     @Test

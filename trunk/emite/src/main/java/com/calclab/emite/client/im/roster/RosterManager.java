@@ -41,21 +41,81 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class RosterManager extends SessionComponent implements Installable {
-
     public static class Events {
 	public static final Event ready = new Event("roster:on:ready");
     }
 
+    public static enum SubscriptionMode {
+	autoAcceptAll, autoRejectAll, manual
+    }
+
+    public static final SubscriptionMode DEF_SUBSCRIPTION_MODE = SubscriptionMode.manual;
+
     private final Roster roster;
+
+    private SubscriptionMode subscriptionMode;
+    private final ArrayList<RosterManagerListener> listeners;
 
     public RosterManager(final Emite emite, final Roster roster) {
 	super(emite);
 	this.roster = roster;
+	this.subscriptionMode = DEF_SUBSCRIPTION_MODE;
+	this.listeners = new ArrayList<RosterManagerListener>();
     }
 
+    /**
+     * subscribed -- The sender has allowed the recipient to receive their
+     * presence.
+     */
+    public void acceptSubscription(final Presence presence) {
+	if (presence.getType() == Presence.Type.subscribe) {
+	    final XmppURI from = presence.getFromURI();
+	    final RosterItem item = new RosterItem(from, Subscription.none, from.getNode());
+	    roster.add(item);
+	    final Presence response = new Presence(Presence.Type.subscribed, userURI, from);
+	    emite.send(response);
+	} else {
+	    // throw exception: its a programming error
+	    throw new RuntimeException("Trying to accept/deny a non subscription request");
+	}
+	requestSubscribe(presence.getFromURI());
+    }
+
+    public void addListener(final RosterManagerListener listener) {
+	listeners.add(listener);
+    }
+
+    /**
+     * If a user would like to cancel a previously-granted subscription request,
+     * it sends a presence stanza of type "unsubscribed".
+     */
+    public void cancelSubscriptor(final XmppURI to) {
+	final Presence unsubscription = new Presence(Presence.Type.unsubscribed, userURI, to);
+	emite.send(unsubscription);
+    }
+
+    /**
+     * unsubscribed -- The subscription request has been denied or a
+     * previously-granted subscription has been cancelled.
+     */
+    public void denySubscription(final Presence presence) {
+	if (presence.getType() == Presence.Type.subscribe) {
+	    final Presence response = new Presence(Presence.Type.unsubscribed, userURI, presence.getFromURI());
+	    emite.send(response);
+	} else {
+	    // throw exception: its a programming error
+	    throw new RuntimeException("Trying to accept/deny a non subscription request");
+	}
+    }
+
+    public SubscriptionMode getSubscriptionMode() {
+	return subscriptionMode;
+    }
+
+    @Override
     public void install() {
 	super.install();
-	
+
 	emite.subscribe(when(new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", null).With("xmlns", null)),
 		new PacketListener() {
 		    public void handle(final IPacket received) {
@@ -69,14 +129,28 @@ public class RosterManager extends SessionComponent implements Installable {
 	emite.subscribe(when("presence"), new PacketListener() {
 	    public void handle(final IPacket received) {
 		final Presence presence = new Presence(received);
-		roster.changePresence(presence.getFromURI(), presence);
+		switch (presence.getType()) {
+		case subscribe:
+		    handleSubscriptionRequest(presence);
+		    break;
+		case subscribed:
+		    fireSubscribedReceived(presence);
+		    break;
+		case unsubscribed:
+		    fireUnsubscribedReceived(presence);
+		    break;
+		case available:
+		case unavailable:
+		    roster.changePresence(presence.getFromURI(), presence);
+		    break;
+		}
 	    }
 	});
     }
-    
+
     @Override
-    public void loggedIn(XmppURI uri) {
-        super.loggedIn(uri);
+    public void loggedIn(final XmppURI uri) {
+	super.loggedIn(uri);
 	requestRoster();
     }
 
@@ -85,7 +159,8 @@ public class RosterManager extends SessionComponent implements Installable {
      * 
      * At any time, a user MAY add an item to his or her roster.
      * 
-     * @param the JID of the user you want to add 
+     * @param the
+     *                JID of the user you want to add
      * @param name
      * @param group
      * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
@@ -132,6 +207,29 @@ public class RosterManager extends SessionComponent implements Installable {
 	});
     }
 
+    /**
+     * A request to subscribe to another entity's presence is made by sending a
+     * presence stanza of type "subscribe".
+     * 
+     */
+    public void requestSubscribe(final XmppURI to) {
+	final Presence unsubscribeRequest = new Presence(Presence.Type.subscribe, userURI, to);
+	emite.send(unsubscribeRequest);
+    }
+
+    /**
+     * If a user would like to unsubscribe from the presence of another entity,
+     * it sends a presence stanza of type "unsubscribe".
+     */
+    public void requestUnsubscribe(final XmppURI to) {
+	final Presence unsubscribeRequest = new Presence(Presence.Type.unsubscribe, userURI, to);
+	emite.send(unsubscribeRequest);
+    }
+
+    public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
+	this.subscriptionMode = subscriptionMode;
+    }
+
     private RosterItem convert(final IPacket item) {
 	final String jid = item.getAttribute("jid");
 	final XmppURI uri = uri(jid);
@@ -139,9 +237,39 @@ public class RosterManager extends SessionComponent implements Installable {
 	return new RosterItem(uri, subscription, item.getAttribute("name"));
     }
 
+    private void fireSubscribedReceived(final Presence presence) {
+	for (final RosterManagerListener listener : listeners) {
+	    listener.onSubscribedReceived(presence, subscriptionMode);
+	}
+    }
+
+    private void fireSubscriptionRequest(final Presence presence) {
+	for (final RosterManagerListener listener : listeners) {
+	    listener.onSubscriptionRequest(presence, subscriptionMode);
+	}
+    }
+
+    private void fireUnsubscribedReceived(final Presence presence) {
+	for (final RosterManagerListener listener : listeners) {
+	    listener.onUnsubscribedReceived(presence, subscriptionMode);
+	}
+    }
+
     private List<? extends IPacket> getItems(final IPacket iPacket) {
 	final List<? extends IPacket> items = iPacket.getFirstChild("query").getChildren();
 	return items;
+    }
+
+    private void handleSubscriptionRequest(final Presence presence) {
+	switch (subscriptionMode) {
+	case autoAcceptAll:
+	    acceptSubscription(presence);
+	    break;
+	case autoRejectAll:
+	    denySubscription(presence);
+	    break;
+	}
+	fireSubscriptionRequest(presence);
     }
 
     private void requestRoster() {

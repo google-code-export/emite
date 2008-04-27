@@ -11,6 +11,7 @@ import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteStub;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class SessionManagerTest {
 
@@ -29,9 +30,10 @@ public class SessionManagerTest {
 
     @Test
     public void shouldHandleAuthorization() {
+	manager.doLogin(uri("name@domain/resource"), "password");
 	manager.eventAuthorized();
 	verify(session).setState(State.authorized);
-	emite.verifyPublished(BoshManager.Events.onDoRestart);
+	emite.verifyPublished(BoshManager.Events.restart("domain"));
     }
 
     @Test

@@ -23,7 +23,7 @@ package com.calclab.emiteuiplugin.client.dialog;
 
 import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 
-import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
+import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 
 public interface MultiChatListener {
 
@@ -31,8 +31,8 @@ public interface MultiChatListener {
 
     void doAction(String eventId, Object param);
 
-    void onUserSubscriptionModeChanged(SubscriptionMode subscriptionMode);
-
     void onUserColorChanged(String color);
+
+    void onUserSubscriptionModeChanged(SubscriptionMode subscriptionMode);
 
 }
