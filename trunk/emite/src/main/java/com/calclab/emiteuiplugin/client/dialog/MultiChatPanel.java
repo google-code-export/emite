@@ -240,6 +240,7 @@ public class MultiChatPanel implements MultiChatView {
     private void click() {
 	final Sound sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
 	sound.play();
+	sound.stop();
     }
 
     private void configureSound() {
@@ -474,6 +475,10 @@ public class MultiChatPanel implements MultiChatView {
 	emoticonPopup.setPopupPosition(x - 10, y - 150);
 	emoticonPopup.setWidget(emoticonPalettePanel);
 	emoticonPopup.setVisible(true);
-	DOM.setElementPropertyInt(emoticonPopup.getElement(), "zIndex", 10000);
+	DeferredCommand.addCommand(new Command() {
+	    public void execute() {
+		DOM.setElementPropertyInt(emoticonPopup.getElement(), "zIndex", 11000);
+	    }
+	});
     }
 }
