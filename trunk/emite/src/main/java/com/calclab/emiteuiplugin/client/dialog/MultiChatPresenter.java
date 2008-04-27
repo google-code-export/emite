@@ -35,8 +35,6 @@ import org.ourproject.kune.platf.client.extend.UIExtensionPoint;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.allen_sauer.gwt.voices.client.Sound;
-import com.allen_sauer.gwt.voices.client.SoundController;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.extra.muc.Room;
@@ -68,16 +66,7 @@ import com.calclab.emiteuiplugin.client.roster.RosterUI;
 public class MultiChatPresenter implements MultiChat {
     private static final OwnPresence OFFLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.offline);
     private static final OwnPresence ONLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.online);
-    private static Sound sound;
 
-    public static void click() {
-	if (sound == null) {
-	    final SoundController soundController = new SoundController();
-	    soundController.setPrioritizeFlashSound(false);
-	    sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
-	}
-	sound.play();
-    }
     private final HashMap<Chat, ChatUI> chats;
     private ChatUI currentChat;
     private XmppURI currentUserJid;
@@ -154,7 +143,6 @@ public class MultiChatPresenter implements MultiChat {
 
 	    public void onHighLight(ChatUI chatUI) {
 		view.highLight();
-		click();
 		fireHighLight(chatUI.getChatTitle());
 	    }
 
@@ -173,7 +161,6 @@ public class MultiChatPresenter implements MultiChat {
     public RoomUI createRoom(final Chat chat, final String userAlias) {
 	final RoomUI roomUI = (RoomUI) (chats.get(chat) == null ? factory.createRoomUI(chat.getOtherURI(),
 		currentUserJid.getNode(), userChatOptions.getColor(), i18n, new RoomUIListener() {
-
 		    // FIXME: some code are duplicated with ChatUI Listener
 		    // (make an
 		    // abstract listener)
@@ -202,7 +189,6 @@ public class MultiChatPresenter implements MultiChat {
 
 		    public void onHighLight(ChatUI chatUI) {
 			view.highLight();
-			click();
 			fireHighLight(chatUI.getChatTitle());
 		    }
 
@@ -450,7 +436,7 @@ public class MultiChatPresenter implements MultiChat {
 	    }
 
 	    public void onInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
-		roomManager.openChat(roomURI);
+		view.roomJoinConfirm(invitor, roomURI, reason);
 	    }
 	});
 

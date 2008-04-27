@@ -29,4 +29,21 @@ EOF
 NUM=$(( $NUM + 1 ))
 done
 
+for NAME in dani antonio jef roberto vlad samer vicente
+do
+cat <<EOF
+<User>
+  <Username>${NAME}</Username>
+  <Password>${NAME}</Password>
+  <Email>test${NAME}@example.com</Email>
+  <Name>test user ${NAME}</Name>
+  <CreationDate>1125442154664</CreationDate>
+  <ModifiedDate>1125442154664</ModifiedDate>
+  <Roster>
+  </Roster>
+</User>
+
+EOF
+done
+
 echo "</Openfire>"

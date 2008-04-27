@@ -27,6 +27,9 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.BottomTrayIcon;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
+import com.allen_sauer.gwt.voices.client.Sound;
+import com.allen_sauer.gwt.voices.client.SoundController;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.roster.RosterItemPanel;
 import com.calclab.emiteuiplugin.client.roster.RosterUIPanel;
@@ -83,6 +86,7 @@ public class MultiChatPanel implements MultiChatView {
     private Panel eastPanel;
     private final String chatDialogTitle;
     private ToolbarButton addRosterItem;
+    private SoundController soundController;
 
     public MultiChatPanel(final String chatDialogTitle, final RosterUIPanel rosterUIPanel,
 	    final I18nTranslationService i18n, final MultiChatPresenter presenter) {
@@ -92,6 +96,7 @@ public class MultiChatPanel implements MultiChatView {
 	this.presenter = presenter;
 	panelIdToChat = new HashMap<String, ChatUI>();
 	createLayout();
+	configureSound();
     }
 
     public void addChat(final ChatUI chat) {
@@ -132,11 +137,24 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void highLight() {
-	// TODO Auto-generated method stub
+	// TODO: change menuItem of bottom tray icon
+	click();
     }
 
     public void removeChat(final ChatUI chatUI) {
 	centerPanel.remove(((Panel) chatUI.getView()).getId());
+    }
+
+    public void roomJoinConfirm(final XmppURI invitor, final XmppURI roomURI, final String reason) {
+	MessageBox.confirm(i18n.t("Join to chat room [%s]?", roomURI.getJID().toString()), i18n.t(
+		"[%s] are inviting you to join this room: ", invitor.getJID().toString())
+		+ reason, new MessageBox.ConfirmCallback() {
+	    public void execute(final String btnID) {
+		if (btnID.equals("yes")) {
+		    presenter.joinRoom(roomURI.getNode(), roomURI.getHost());
+		}
+	    }
+	});
     }
 
     public void setAddRosterItemButtonVisible(final boolean visible) {
@@ -216,7 +234,17 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     public void unHighLight() {
-	// TODO Auto-generated method stub
+	// TODO: Change MenuItem of bottom tray icon
+    }
+
+    private void click() {
+	final Sound sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
+	sound.play();
+    }
+
+    private void configureSound() {
+	soundController = new SoundController();
+	soundController.setPrioritizeFlashSound(false);
     }
 
     private FormPanel createGenericInputForm() {
@@ -443,8 +471,9 @@ public class MultiChatPanel implements MultiChatView {
 	emoticonPopup = new PopupPanel(true);
 	emoticonPopup.setVisible(false);
 	emoticonPopup.show();
-	emoticonPopup.setPopupPosition(x + 2, y - 160);
+	emoticonPopup.setPopupPosition(x - 10, y - 150);
 	emoticonPopup.setWidget(emoticonPalettePanel);
 	emoticonPopup.setVisible(true);
+	DOM.setElementPropertyInt(emoticonPopup.getElement(), "zIndex", 10000);
     }
 }
