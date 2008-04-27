@@ -29,7 +29,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emiteuiplugin.client.EmiteUIPlugin;
 import com.calclab.emiteuiplugin.client.UserChatOptions;
@@ -47,33 +46,31 @@ import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 
 public class EmiteUIEntryPoint implements EntryPoint {
+    private static final String EMITE_DEF_TITLE = "Emite Chat";
     private static final String GWT_PROPERTY_JID = "gwt_property_jid";
     private static final String GWT_PROPERTY_PASSWD = "gwt_property_passwd";
     private static final String GWT_PROPERTY_HTTPBASE = "gwt_property_httpbase";
     private static final String GWT_PROPERTY_ROOMHOST = "gwt_property_roomhost";
     private static final String GWT_PROPERTY_INFOHTML = "gwt_property_infohtml";
+
+    private static native String getWindowTitle()
+    /*-{
+    return $wnd.parent.document.title;
+    }-*/;
+
+    private static native void setWindowTitle(String title)
+    /*-{
+        $wnd.parent.document.title=title;
+    }-*/;
+
     private DefaultDispatcher dispatcher;
     private TextField passwd;
+
     private TextField jid;
+    private String initialWindowTitle;
 
     public void onModuleLoad() {
-	/*
-	 * Install an UncaughtExceptionHandler which will produce <code>FATAL</code>
-	 * log messages
-	 */
-
 	Log.setUncaughtExceptionHandler();
-
-	// At the moment, not in runtime (in html):
-	// Log.setCurrentLogLevel(Log.LOG_LEVEL_DEBUG);
-
-	// Log.getDivLogger().moveTo(10, 60);
-	// Log.getDivLogger().setSize("1200", "400");
-
-	/*
-	 * Use a deferred command so that the UncaughtExceptionHandler catches
-	 * any exceptions in onModuleLoadCont()
-	 */
 	DeferredCommand.addCommand(new Command() {
 	    public void execute() {
 		onModuleLoadCont();
@@ -82,6 +79,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
     }
 
     public void onModuleLoadCont() {
+	initialWindowTitle = getWindowTitle();
 	createFormPanel();
 	createInfoPanel();
 	createExtUI();
@@ -93,24 +91,20 @@ public class EmiteUIEntryPoint implements EntryPoint {
 		new I18nTranslationServiceMocked());
 	kunePluginManager.install(new EmiteUIPlugin());
 
-	dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam("Emite Chat", new BoshOptions(
+	dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam(EMITE_DEF_TITLE, new BoshOptions(
 		getGwtMetaProperty(GWT_PROPERTY_HTTPBASE)), getGwtMetaProperty(GWT_PROPERTY_ROOMHOST),
 		new I18nTranslationServiceMocked(), generateUserChatOptions()));
 	dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
 
 	dispatcher.subscribe(EmiteUIPlugin.ON_UNHIGHTLIGHTWINDOW, new Action<String>() {
 	    public void execute(final String chatTitle) {
-		// FIXME: js
-		// Do something with window.parent.document.title
-		// like remove (* chatTitle)
+		setWindowTitle("(* " + chatTitle + ") " + initialWindowTitle);
 	    }
 	});
 
 	dispatcher.subscribe(EmiteUIPlugin.ON_HIGHTLIGHTWINDOW, new Action<String>() {
 	    public void execute(final String chatTitle) {
-		// FIXME: js
-		// Do something with window.parent.document.title
-		// like put (* chatTitle)
+		setWindowTitle(initialWindowTitle);
 	    }
 	});
     }
@@ -177,8 +171,6 @@ public class EmiteUIEntryPoint implements EntryPoint {
     }
 
     private UserChatOptions generateUserChatOptions() {
-	// FIXME: vicente, no deberíamos acceder a esta constante, sino
-	// preguntarle al roster manager en qué modo está...
 	return new UserChatOptions(jid.getRawValue(), passwd.getRawValue(), "blue", RosterManager.DEF_SUBSCRIPTION_MODE);
     }
 
