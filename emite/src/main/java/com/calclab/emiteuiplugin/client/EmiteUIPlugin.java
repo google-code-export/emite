@@ -28,7 +28,7 @@ import org.ourproject.kune.platf.client.extend.Plugin;
 import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
+import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.dialog.MultiChat;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatListener;

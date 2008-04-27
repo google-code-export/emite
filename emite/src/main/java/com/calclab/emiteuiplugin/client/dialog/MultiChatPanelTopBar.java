@@ -23,7 +23,7 @@ package com.calclab.emiteuiplugin.client.dialog;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.im.roster.Roster.SubscriptionMode;
+import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emiteuiplugin.client.dialog.OwnPresence.OwnStatus;
 import com.calclab.emiteuiplugin.client.room.JoinRoomPanel;
 import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
@@ -75,6 +75,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 	joinOption.addListener(new ButtonListenerAdapter() {
 	    private JoinRoomPanel joinRoomPanel;
 
+	    @Override
 	    public void onClick(final Button button, final EventObject e) {
 		if (joinRoomPanel == null) {
 		    joinRoomPanel = new JoinRoomPanel(i18n, presenter);
@@ -99,6 +100,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 	statusButton.setTooltip(i18n.t("Set status"));
 	this.addButton(statusButton);
 	statusButton.addListener(new ButtonListenerAdapter() {
+	    @Override
 	    public void onClick(final Button button, final EventObject e) {
 		statusMenu.show("chat-menu-button");
 	    }
@@ -178,10 +180,10 @@ public class MultiChatPanelTopBar extends Toolbar {
 
     public void setSubscritionMode(final SubscriptionMode mode) {
 	switch (mode) {
-	case auto_accept_all:
+	case autoAcceptAll:
 	    autoAcceptSubsItem.setChecked(true);
 	    break;
-	case auto_reject_all:
+	case autoRejectAll:
 	    autoRejectSubsItem.setChecked(true);
 	    break;
 	default:
@@ -195,6 +197,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 	closeAllOption.setText(i18n.t("Close all chats"));
 	closeAllOption.setIconCls("exit-icon");
 	closeAllOption.addListener(new BaseItemListenerAdapter() {
+	    @Override
 	    public void onClick(final BaseItem item, final EventObject e) {
 		confirmCloseAll();
 	    }
@@ -234,6 +237,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 	case online:
 	case busy:
 	    checkItem.addListener(new BaseItemListenerAdapter() {
+		@Override
 		public void onClick(final BaseItem item, final EventObject e) {
 		    presenter.setOwnPresence(new OwnPresence(ownStatus));
 		}
@@ -242,6 +246,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 	case busycustom:
 	case onlinecustom:
 	    checkItem.addListener(new BaseItemListenerAdapter() {
+		@Override
 		public void onClick(final BaseItem item, final EventObject e) {
 		    MessageBox.prompt(i18n.t("Set your status message"), i18n
 			    .t("Set your status text (something like 'Out for dinner' or 'Working')"),
@@ -278,6 +283,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 
     private CheckItem createSubscritionItem(final String text, final Menu submenu, final SubscriptionMode mode) {
 	final CheckItemListenerAdapter listener = new CheckItemListenerAdapter() {
+	    @Override
 	    public void onCheckChange(CheckItem item, boolean checked) {
 		if (checked) {
 		    presenter.onUserSubscriptionModeChanged(mode);
@@ -298,9 +304,9 @@ public class MultiChatPanelTopBar extends Toolbar {
 	submenu.setMinWidth(10);
 	autoAcceptSubsItem = createSubscritionItem(i18n
 		.t("Automatically accept users as buddies when a user request it"), submenu,
-		SubscriptionMode.auto_accept_all);
+		SubscriptionMode.autoAcceptAll);
 	autoRejectSubsItem = createSubscritionItem(i18n.t("Automatically reject new buddies inclusion requests"),
-		submenu, SubscriptionMode.auto_reject_all);
+		submenu, SubscriptionMode.autoRejectAll);
 	manualSubsItem = createSubscritionItem(i18n.t("Manual accept or reject new buddies inclusion requests"),
 		submenu, SubscriptionMode.manual);
 	return submenu;

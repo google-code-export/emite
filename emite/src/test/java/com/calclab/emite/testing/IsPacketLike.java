@@ -32,9 +32,6 @@ public class IsPacketLike extends ArgumentMatcher<IPacket> {
 	    final HashMap<String, String> atts = expected.getAttributes();
 	    for (final String name : atts.keySet()) {
 		if (!expected.hasAttribute(name) || !actual.hasAttribute(name, expected.getAttribute(name))) {
-
-		    assertTrue("Expected attribute " + name + ": " + expected.getAttribute(name) + " but was "
-			    + actual.getAttribute(name), false);
 		    return false;
 		}
 	    }

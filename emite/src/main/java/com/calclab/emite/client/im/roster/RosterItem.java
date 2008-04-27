@@ -63,8 +63,8 @@ public class RosterItem {
     private Presence presence;
     private Subscription subscription;
 
-    public RosterItem(final XmppURI uri, final Subscription subscription, final String name) {
-	this.jid = uri;
+    public RosterItem(final XmppURI jid, final Subscription subscription, final String name) {
+	this.jid = jid.getJID();
 	this.subscription = subscription;
 	this.name = name;
 	this.groups = new ArrayList<String>();
@@ -76,7 +76,7 @@ public class RosterItem {
     }
 
     public XmppURI getJID() {
-	return jid.getJID();
+	return jid;
     }
 
     public String getName() {

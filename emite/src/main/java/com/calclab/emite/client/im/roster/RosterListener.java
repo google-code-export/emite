@@ -24,7 +24,8 @@ package com.calclab.emite.client.im.roster;
 import java.util.Collection;
 
 public interface RosterListener {
+    void onItemChanged(RosterItem item);
+
     void onRosterChanged(Collection<RosterItem> items);
 
-    void onItemChanged(RosterItem item);
 }

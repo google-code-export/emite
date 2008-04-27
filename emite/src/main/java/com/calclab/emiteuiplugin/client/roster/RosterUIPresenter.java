@@ -35,7 +35,10 @@ import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterListener;
+import com.calclab.emite.client.im.roster.RosterManager;
+import com.calclab.emite.client.im.roster.RosterManagerListener;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
+import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
@@ -57,12 +60,14 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     private final I18nTranslationService i18n;
     private final PresenceManager presenceManager;
     private final Roster roster;
+    private RosterManager rosterManager;
 
     public RosterUIPresenter(final Xmpp xmpp, final I18nTranslationService i18n) {
         this.xmpp = xmpp;
         this.i18n = i18n;
         rosterMap = new HashMap<XmppURI, ChatUserUI>();
         presenceManager = xmpp.getPresenceManager();
+        rosterManager = xmpp.getRosterManager();
         roster = xmpp.getRoster();
     }
 
@@ -74,15 +79,15 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     public void doAction(final String eventName, final Object param) {
         if (eventName.equals(ON_CANCEL_SUBSCRITOR)) {
             final XmppURI userURI = (XmppURI) param;
-            presenceManager.cancelSubscriptor(userURI);
+            rosterManager.cancelSubscriptor(userURI);
             // view.removeRosterItem(getUserByJid(userURI.getJid()));
             // rosterMap.remove(userURI.getJid());
         } else if (eventName.equals(ON_REQUEST_REMOVE_ROSTERITEM)) {
             final XmppURI userURI = (XmppURI) param;
-            xmpp.getRosterManager().requestRemoveItem(userURI);
+            rosterManager.requestRemoveItem(userURI);
         } else if (eventName.equals(ON_REQUEST_SUBSCRIBE)) {
             final XmppURI userURI = (XmppURI) param;
-            xmpp.getPresenceManager().requestSubscribe(userURI);
+            rosterManager.requestSubscribe(userURI);
         }
         DefaultDispatcher.getInstance().fire(eventName, param);
     }
@@ -101,13 +106,11 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     }
 
     public void onPresenceAccepted(final Presence presence) {
-        presenceManager.acceptSubscription(presence);
-        // Auto requesting the subscription to contact, I think is useful
-        presenceManager.requestSubscribe(presence.getFromURI());
+        rosterManager.acceptSubscription(presence);
     }
 
     public void onPresenceNotAccepted(final Presence presence) {
-        presenceManager.denySubscription(presence);
+        rosterManager.denySubscription(presence);
     }
 
     String formatRosterItemStatusText(final Presence presence, final Subscription subscription) {
@@ -188,10 +191,10 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                 } else {
                     /*
                      * 2.2.2.1. Show
-                     * 
+                     *
                      * If no <show/> element is provided, the entity is assumed
                      * to be online and available.
-                     * 
+                     *
                      */
                     itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
                 }
@@ -210,7 +213,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
             default:
                 /**
                  * 2.2.1. Types of Presence
-                 * 
+                 *
                  * The 'type' attribute of a presence stanza is OPTIONAL. A
                  * presence stanza that does not possess a 'type' attribute is
                  * used to signal to the server that the sender is online and
@@ -296,12 +299,9 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
             }
         });
 
-        presenceManager.addListener(new PresenceListener() {
-            public void onPresenceReceived(final Presence presence) {
-                logPresence(presence);
-            }
+        rosterManager.addListener(new RosterManagerListener () {
 
-            public void onSubscribedReceived(final Presence presence) {
+            public void onSubscribedReceived(final Presence presence, SubscriptionMode currentMode) {
                 Log.info("SUBS RECEIVED");
                 XmppURI fromURI = presence.getFromURI();
                 ChatUserUI user = rosterMap.get(fromURI);
@@ -310,15 +310,15 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                 }
             }
 
-            public void onSubscriptionRequest(final Presence presence) {
-                switch (xmpp.getRoster().getSubscriptionMode()) {
-                case auto_accept_all:
+            public void onSubscriptionRequest(final Presence presence, SubscriptionMode currentMode) {
+                switch (currentMode) {
+                case autoAcceptAll:
                     Log.info("Accepting because we are auto accepting");
-                    onPresenceAccepted(presence);
+//                    onPresenceAccepted(presence);
                     break;
-                case auto_reject_all:
+                case autoRejectAll:
                     Log.info("Rejecting because we are auto rejecting");
-                    onPresenceNotAccepted(presence);
+//                    onPresenceNotAccepted(presence);
                     break;
                 default:
                     Log.info("Manual accept/reject");
@@ -327,11 +327,18 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                 }
             }
 
-            public void onUnsubscribedReceived(final Presence presence) {
+            public void onUnsubscribedReceived(final Presence presence, SubscriptionMode currentMode) {
                 Log.info("UNSUBS RECEIVED");
                 // FIXME: Inform about unsubscription?
             }
         });
+
+        presenceManager.addListener(new PresenceListener() {
+            public void onPresenceReceived(final Presence presence) {
+                logPresence(presence);
+            }
+        });
+
     }
 
     private void logPresence(final Presence presence) {
@@ -339,3 +346,4 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                 + presence.getShow() + " status: " + presence.getStatus());
     }
 }
+

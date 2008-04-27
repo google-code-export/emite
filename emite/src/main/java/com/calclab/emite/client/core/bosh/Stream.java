@@ -31,7 +31,7 @@ public interface Stream {
 
     boolean isEmpty();
 
-    void newRequest(String sid);
+    void prepareBody(String sid);
 
     void setRestart(String domain);
 

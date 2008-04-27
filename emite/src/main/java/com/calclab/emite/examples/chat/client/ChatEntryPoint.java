@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.examples.chat.client;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -31,6 +33,7 @@ import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterListener;
+import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -45,8 +48,6 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class ChatEntryPoint implements EntryPoint {
 
@@ -166,6 +167,7 @@ public class ChatEntryPoint implements EntryPoint {
 
 	});
 
+	xmpp.getRosterManager().setSubscriptionMode(SubscriptionMode.autoAcceptAll);
 	xmpp.getRoster().addListener(new RosterListener() {
 	    public void onItemChanged(final RosterItem item) {
 	    }

@@ -30,6 +30,8 @@ import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterListener;
+import com.calclab.emite.client.im.roster.RosterManagerListener;
+import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -45,7 +47,7 @@ import com.calclab.emite.j2se.swing.RosterPanel.RosterPanelListener;
 public class SwingClient {
 
     public static void main(final String args[]) {
-        new SwingClient(new JFrame("emite swing client")).start();
+	new SwingClient(new JFrame("emite swing client")).start();
     }
     private final ConversationsPanel conversationsPanel;
     private final JFrame frame;
@@ -60,233 +62,237 @@ public class SwingClient {
     private Xmpp xmpp;
 
     public SwingClient(final JFrame frame) {
-        this.frame = frame;
-        root = new JPanel(new BorderLayout());
+	this.frame = frame;
+	root = new JPanel(new BorderLayout());
 
-        loginPanel = new LoginPanel(new LoginPanelListener() {
-            public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
-                final String resource = "emite-swing";
-                createXMPP(httpBase);
-                xmpp.login(new XmppURI(userName, domain, resource), password, null, "hola!");
-            }
+	loginPanel = new LoginPanel(new LoginPanelListener() {
+	    public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
+		final String resource = "emite-swing";
+		createXMPP(httpBase);
+		xmpp.login(new XmppURI(userName, domain, resource), password, null, "hola!");
+	    }
 
-            public void onLogout() {
-                xmpp.logout();
-                xmpp = null;
-            }
+	    public void onLogout() {
+		xmpp.logout();
+		xmpp = null;
+	    }
 
-        });
-        rosterPanel = new RosterPanel(frame, new RosterPanelListener() {
-            public void onAddRosterItem(final String uri, final String name) {
-                xmpp.getRosterManager().requestAddItem(uri(uri), name, null);
-            }
+	});
+	rosterPanel = new RosterPanel(frame, new RosterPanelListener() {
+	    public void onAddRosterItem(final String uri, final String name) {
+		xmpp.getRosterManager().requestAddItem(uri(uri), name, null);
+	    }
 
-            public void onRemoveItem(final RosterItem item) {
-                xmpp.getRosterManager().requestRemoveItem(item.getJID());
-            }
+	    public void onRemoveItem(final RosterItem item) {
+		xmpp.getRosterManager().requestRemoveItem(item.getJID());
+	    }
 
-            public void onStartChat(final RosterItem item) {
-                xmpp.getChatManager().openChat(item.getJID());
-            }
-        });
+	    public void onStartChat(final RosterItem item) {
+		xmpp.getChatManager().openChat(item.getJID());
+	    }
+	});
 
-        roomsPanel = new RoomsPanel(new RoomsPanelListener() {
-            public void onRoomEnterd(final String roomName) {
-                final RoomManager roomManager = MUCModule.getRoomManager(xmpp.getComponents());
-                roomManager.openChat(uri(roomName));
-            }
-        });
+	roomsPanel = new RoomsPanel(new RoomsPanelListener() {
+	    public void onRoomEnterd(final String roomName) {
+		final RoomManager roomManager = MUCModule.getRoomManager(xmpp.getComponents());
+		roomManager.openChat(uri(roomName));
+	    }
+	});
 
-        conversationsPanel = new ConversationsPanel();
-        status = new JLabel("emite test client");
+	conversationsPanel = new ConversationsPanel();
+	status = new JLabel("emite test client");
 
-        root.add(loginPanel, BorderLayout.NORTH);
-        root.add(conversationsPanel, BorderLayout.CENTER);
-        root.add(status, BorderLayout.SOUTH);
+	root.add(loginPanel, BorderLayout.NORTH);
+	root.add(conversationsPanel, BorderLayout.CENTER);
+	root.add(status, BorderLayout.SOUTH);
 
-        tabs = new JTabbedPane();
-        tabs.add("chats", rosterPanel);
-        tabs.add("rooms", roomsPanel);
+	tabs = new JTabbedPane();
+	tabs.add("chats", rosterPanel);
+	tabs.add("rooms", roomsPanel);
 
-        root.add(tabs, BorderLayout.EAST);
+	root.add(tabs, BorderLayout.EAST);
 
     }
 
     private void createXMPP(final String httpbase) {
-        final Container container = J2SEPlugin.install(new DefaultContainer(), new HttpConnectorListener() {
-            public void onError(final String id, final String cause) {
-                System.out.println("CONN # " + id + "-ERROR: " + cause);
-            }
+	final Container container = J2SEPlugin.install(new DefaultContainer(), new HttpConnectorListener() {
+	    public void onError(final String id, final String cause) {
+		System.out.println("CONN # " + id + "-ERROR: " + cause);
+	    }
 
-            public void onFinish(final String id, final long duration) {
-            }
+	    public void onFinish(final String id, final long duration) {
+	    }
 
-            public void onResponse(final String id, final String response) {
-                System.out.println("IN: " + response);
-            }
+	    public void onResponse(final String id, final String response) {
+		System.out.println("IN: " + response);
+	    }
 
-            public void onSend(final String id, final String xml) {
-                System.out.println("OUT: " + xml);
-            }
+	    public void onSend(final String id, final String xml) {
+		System.out.println("OUT: " + xml);
+	    }
 
-            public void onStart(final String id) {
-            }
+	    public void onStart(final String id) {
+	    }
 
-        });
-        this.xmpp = new Xmpp(container, new BoshOptions(httpbase));
+	});
+	this.xmpp = new Xmpp(container, new BoshOptions(httpbase));
 
-        xmpp.getSession().addListener(new SessionListener() {
-            public void onStateChanged(final State old, final State current) {
-                print("STATE: " + current);
-                final boolean isConnected = current == State.connected;
-                loginPanel.showState("state: " + current.toString(), isConnected);
-                tabs.setEnabled(isConnected);
-                if (current == State.disconnected) {
-                    rosterPanel.clear();
-                } else if (current == State.notAuthorized) {
-                    JOptionPane.showMessageDialog(frame, "lo siento, tienes mal la contraseña -o el usuario ;)-");
-                }
-            }
-        });
-        xmpp.getChatManager().addListener(new ChatManagerListener() {
-            public void onChatClosed(final Chat chat) {
-                conversationsPanel.close(chat.getID());
-            }
+	xmpp.getSession().addListener(new SessionListener() {
+	    public void onStateChanged(final State old, final State current) {
+		print("STATE: " + current);
+		final boolean isConnected = current == State.connected;
+		loginPanel.showState("state: " + current.toString(), isConnected);
+		tabs.setEnabled(isConnected);
+		if (current == State.disconnected) {
+		    rosterPanel.clear();
+		} else if (current == State.notAuthorized) {
+		    JOptionPane.showMessageDialog(frame, "lo siento, tienes mal la contraseña -o el usuario ;)-");
+		}
+	    }
+	});
+	xmpp.getChatManager().addListener(new ChatManagerListener() {
+	    public void onChatClosed(final Chat chat) {
+		conversationsPanel.close(chat.getID());
+	    }
 
-            public void onChatCreated(final Chat chat) {
-                final ChatPanel chatPanel = conversationsPanel.createChat(chat.getOtherURI().toString(), chat.getID(),
-                        new ChatPanelListener() {
-                            public void onClose(final ChatPanel source) {
-                                xmpp.getChatManager().close(chat);
+	    public void onChatCreated(final Chat chat) {
+		final ChatPanel chatPanel = conversationsPanel.createChat(chat.getOtherURI().toString(), chat.getID(),
+			new ChatPanelListener() {
+			    public void onClose(final ChatPanel source) {
+				xmpp.getChatManager().close(chat);
 
-                            }
+			    }
 
-                            public void onSend(final ChatPanel source, final String text) {
-                                chat.send(text);
-                                source.clearMessage();
-                            }
+			    public void onSend(final ChatPanel source, final String text) {
+				chat.send(text);
+				source.clearMessage();
+			    }
 
-                        });
-                chat.addListener(new ChatListener() {
-                    public void onMessageReceived(final Chat chat, final Message message) {
-                        chatPanel.showIcomingMessage(message.getFrom(), message.getBody());
-                    }
+			});
+		chat.addListener(new ChatListener() {
+		    public void onMessageReceived(final Chat chat, final Message message) {
+			chatPanel.showIcomingMessage(message.getFrom(), message.getBody());
+		    }
 
-                    public void onMessageSent(final Chat chat, final Message message) {
-                        chatPanel.showOutMessage(message.getBody());
-                    }
-                });
-                chatPanel.clearMessage();
-            }
-        });
+		    public void onMessageSent(final Chat chat, final Message message) {
+			chatPanel.showOutMessage(message.getBody());
+		    }
+		});
+		chatPanel.clearMessage();
+	    }
+	});
 
-        final RoomManager roomManager = MUCModule.getRoomManager(xmpp.getComponents());
-        roomManager.addListener(new RoomManagerListener() {
-            public void onChatClosed(final Chat chat) {
-                conversationsPanel.close(chat.getID());
-            }
+	final RoomManager roomManager = MUCModule.getRoomManager(xmpp.getComponents());
+	roomManager.addListener(new RoomManagerListener() {
+	    public void onChatClosed(final Chat chat) {
+		conversationsPanel.close(chat.getID());
+	    }
 
-            public void onChatCreated(final Chat room) {
-                final RoomPanel roomPanel = conversationsPanel.createRoom(room.getOtherURI(), room.getID(),
-                        new RoomPanelListener() {
-                            public void onClose(final ChatPanel source) {
-                                MUCModule.getRoomManager(xmpp.getComponents()).close(room);
-                            }
+	    public void onChatCreated(final Chat room) {
+		final RoomPanel roomPanel = conversationsPanel.createRoom(room.getOtherURI(), room.getID(),
+			new RoomPanelListener() {
+			    public void onClose(final ChatPanel source) {
+				MUCModule.getRoomManager(xmpp.getComponents()).close(room);
+			    }
 
-                            public void onInviteUser(final String userJid, final String reasonText) {
-                                ((Room) room).sendInvitationTo(userJid, reasonText);
-                            }
+			    public void onInviteUser(final String userJid, final String reasonText) {
+				((Room) room).sendInvitationTo(userJid, reasonText);
+			    }
 
-                            public void onModifySubject(final String newSubject) {
-                                ((Room) room).setSubject(newSubject);
-                            }
+			    public void onModifySubject(final String newSubject) {
+				((Room) room).setSubject(newSubject);
+			    }
 
-                            public void onSend(final ChatPanel source, final String text) {
-                                room.send(text);
-                                source.clearMessage();
-                            }
-                        });
-                room.addListener(new RoomListener() {
-                    public void onMessageReceived(final Chat chat, final Message message) {
-                        roomPanel.showIcomingMessage(message.getFrom(), message.getBody());
-                    }
+			    public void onSend(final ChatPanel source, final String text) {
+				room.send(text);
+				source.clearMessage();
+			    }
+			});
+		room.addListener(new RoomListener() {
+		    public void onMessageReceived(final Chat chat, final Message message) {
+			roomPanel.showIcomingMessage(message.getFrom(), message.getBody());
+		    }
 
-                    public void onMessageSent(final Chat chat, final Message message) {
-                        roomPanel.showOutMessage(message.getBody());
-                    }
+		    public void onMessageSent(final Chat chat, final Message message) {
+			roomPanel.showOutMessage(message.getBody());
+		    }
 
-                    public void onOccupantModified(final Occupant occupant) {
-                    }
+		    public void onOccupantModified(final Occupant occupant) {
+		    }
 
-                    public void onOccupantsChanged(final Collection<Occupant> users) {
-                        roomPanel.setUsers(users);
-                    }
+		    public void onOccupantsChanged(final Collection<Occupant> users) {
+			roomPanel.setUsers(users);
+		    }
 
-                    public void onSubjectChanged(final String nick, final String newSubject) {
-                        roomPanel.showIcomingMessage(nick, "New subject: " + newSubject);
-                    }
-                });
-            }
+		    public void onSubjectChanged(final String nick, final String newSubject) {
+			roomPanel.showIcomingMessage(nick, "New subject: " + newSubject);
+		    }
+		});
+	    }
 
-            public void onInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
-                roomManager.openChat(roomURI);
-            }
-        });
+	    public void onInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
+		roomManager.openChat(roomURI);
+	    }
+	});
 
-        xmpp.getRoster().addListener(new RosterListener() {
-            public void onItemChanged(final RosterItem item) {
-                print("ROSTER ITEM PRESENCE CHANGED");
-                rosterPanel.refresh();
-            }
+	xmpp.getRoster().addListener(new RosterListener() {
+	    public void onItemChanged(final RosterItem item) {
+		print("ROSTER ITEM PRESENCE CHANGED");
+		rosterPanel.refresh();
+	    }
 
-            public void onRosterChanged(final Collection<RosterItem> items) {
-                print("ROSTER INITIALIZED");
-                rosterPanel.clear();
-                for (final RosterItem item : items) {
-                    rosterPanel.add(item.getName(), item);
-                }
-            }
-        });
-        xmpp.getPresenceManager().addListener(new PresenceListener() {
-            public void onPresenceReceived(final Presence presence) {
-                print("PRESENCE!!: " + presence);
-            }
+	    public void onRosterChanged(final Collection<RosterItem> items) {
+		print("ROSTER INITIALIZED");
+		rosterPanel.clear();
+		for (final RosterItem item : items) {
+		    rosterPanel.add(item.getName(), item);
+		}
+	    }
 
-            public void onSubscribedReceived(final Presence presence) {
-            }
+	});
 
-            public void onSubscriptionRequest(final Presence presence) {
-                final Object message = presence.getFrom() + " want to add you to his/her roster. Accept?";
-                final int result = JOptionPane.showConfirmDialog(frame, message);
-                if (result == JOptionPane.OK_OPTION) {
-                    xmpp.getPresenceManager().acceptSubscription(presence);
-                }
-                print("SUBSCRIPTION: " + presence);
-            }
+	xmpp.getRosterManager().addListener(new RosterManagerListener() {
+	    public void onSubscribedReceived(final Presence presence, final SubscriptionMode mode) {
+	    }
 
-            public void onUnsubscribedReceived(final Presence presence) {
-            }
-        });
+	    public void onSubscriptionRequest(final Presence presence, final SubscriptionMode mode) {
+		final Object message = presence.getFrom() + " want to add you to his/her roster. Accept?";
+		final int result = JOptionPane.showConfirmDialog(frame, message);
+		if (result == JOptionPane.OK_OPTION) {
+		    xmpp.getRosterManager().acceptSubscription(presence);
+		}
+		print("SUBSCRIPTION: " + presence);
+	    }
 
+	    public void onUnsubscribedReceived(final Presence presence, final SubscriptionMode mode) {
+	    }
+	});
+
+	xmpp.getPresenceManager().addListener(new PresenceListener() {
+	    public void onPresenceReceived(final Presence presence) {
+		print("PRESENCE!!: " + presence);
+	    }
+
+	});
     }
 
     private void print(final String message) {
-        Log.info(message);
-        status.setText(message);
+	Log.info(message);
+	status.setText(message);
     }
 
     private void start() {
-        frame.setContentPane(root);
-        frame.setSize(900, 400);
-        frame.setVisible(true);
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(final WindowEvent e) {
-                if (xmpp != null) {
-                    xmpp.stop();
-                }
-                System.exit(0);
-            }
-        });
+	frame.setContentPane(root);
+	frame.setSize(900, 400);
+	frame.setVisible(true);
+	frame.addWindowListener(new WindowAdapter() {
+	    @Override
+	    public void windowClosing(final WindowEvent e) {
+		if (xmpp != null) {
+		    xmpp.stop();
+		}
+		System.exit(0);
+	    }
+	});
     }
 }

@@ -32,7 +32,7 @@ public class RosterTest {
     public void shouldFindByJID() {
 	final RosterItem item = new RosterItem(uri("someone@domain/resource"), null, null);
 	roster.add(item);
-	assertSame(item, roster.findItemByURI(uri("someone@domain/different_resource")));
+	assertSame(item, roster.findItemByJID(uri("someone@domain/different_resource")));
     }
 
     @Test

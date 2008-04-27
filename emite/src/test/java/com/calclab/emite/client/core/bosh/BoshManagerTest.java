@@ -1,8 +1,7 @@
 package com.calclab.emite.client.core.bosh;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +11,7 @@ import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.testing.EmiteStub;
 
 public class BoshManagerTest {
+    private static final String DOMAIN = "domain";
     private Services services;
     private EmiteStub emite;
     private BoshStream stream;
@@ -26,6 +26,28 @@ public class BoshManagerTest {
 	options = new BoshOptions("http-bind");
 	manager = new BoshManager(services, emite, stream, options);
 	manager.install();
+    }
+
+    @Test
+    public void shouldDispatchIncommingStanzas() {
+	startManager();
+	stub(services.toXML("<body />")).toReturn(new Packet("body"));
+	manager.onResponseReceived(200, "<body />");
+	emite.verifyPublished("<body />");
+    }
+
+    @Test
+    public void shouldHanldeRestart() {
+	startManager();
+	emite.receives(BoshManager.Events.restart(DOMAIN));
+	verify(stream).setRestart(DOMAIN);
+    }
+
+    @Test
+    public void shouldPrepareBodyWhenDispatchingBegins() {
+	startManager();
+	manager.dispatchingBegins();
+	verify(stream).prepareBody(null);
     }
 
     @Test
@@ -57,7 +79,7 @@ public class BoshManagerTest {
 
     private void startManager() {
 	manager.dispatchingBegins();
-	manager.eventStart("domain");
+	manager.eventStart(DOMAIN);
     }
 
 }
