@@ -469,7 +469,7 @@ public class MultiChatPanel implements MultiChatView {
 		}
 	    });
 	}
-	emoticonPopup = new PopupPanel(true);
+	emoticonPopup = new PopupPanel(false);
 	emoticonPopup.setVisible(false);
 	emoticonPopup.show();
 	emoticonPopup.setPopupPosition(x - 10, y - 150);
