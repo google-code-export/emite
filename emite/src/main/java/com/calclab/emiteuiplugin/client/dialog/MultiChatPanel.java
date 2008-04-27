@@ -87,6 +87,7 @@ public class MultiChatPanel implements MultiChatView {
     private final String chatDialogTitle;
     private ToolbarButton addRosterItem;
     private SoundController soundController;
+    private Sound sound;
 
     public MultiChatPanel(final String chatDialogTitle, final RosterUIPanel rosterUIPanel,
 	    final I18nTranslationService i18n, final MultiChatPresenter presenter) {
@@ -238,14 +239,13 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private void click() {
-	final Sound sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
 	sound.play();
-	sound.stop();
     }
 
     private void configureSound() {
 	soundController = new SoundController();
 	soundController.setPrioritizeFlashSound(false);
+	sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
     }
 
     private FormPanel createGenericInputForm() {
