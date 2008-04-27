@@ -6,5 +6,6 @@ then
   EXTRA=$USER@
 fi
 
-rsync  --progress -C -r target/emite-0.2.0/com.calclab.emiteui.EmiteUI/std/ ${EXTRA}ourproject.org:/home/groups/kune/htdocs/emitedemo/
-rsync  --progress -C -r target/emite-0.2.0/com.calclab.emiteui.EmiteUI/std/EmiteUIDemo.html target/emite-0.2.0/com.calclab.emiteui.EmiteUI/std/EmiteUI.html
+chmod -R g+rw target/emite-0.2.0/com.calclab.emiteui.EmiteUI/std/
+rsync --progress -C -r -p target/emite-0.2.0/com.calclab.emiteui.EmiteUI/std/ ${EXTRA}ourproject.org:/home/groups/kune/htdocs/emitedemo/
+rsync --progress -C -r -p target/emite-0.2.0/com.calclab.emiteui.EmiteUI/std/EmiteUIDemo.html  ${EXTRA}ourproject.org:/home/groups/kune/htdocs/emitedemo/EmiteUI.html
