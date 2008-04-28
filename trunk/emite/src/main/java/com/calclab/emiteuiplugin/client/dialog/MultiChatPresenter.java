@@ -288,8 +288,10 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     protected void onCurrentUserSend(final String message) {
-	currentChat.onCurrentUserSend(message);
-	view.clearInputText();
+	if (!(message.equals("") || message == null)) {
+	    currentChat.onCurrentUserSend(message);
+	    view.clearInputText();
+	}
     }
 
     protected void onUserColorChanged(final String color) {
