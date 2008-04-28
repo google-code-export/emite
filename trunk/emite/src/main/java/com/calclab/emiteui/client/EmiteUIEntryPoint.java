@@ -32,8 +32,10 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.im.roster.RosterManager;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.EmiteUIPlugin;
 import com.calclab.emiteuiplugin.client.UserChatOptions;
+import com.calclab.emiteuiplugin.client.params.AvatarProvider;
 import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
@@ -112,9 +114,14 @@ public class EmiteUIEntryPoint implements EntryPoint {
 	    }
 	});
 
+	final AvatarProvider avatarProvider = new AvatarProvider() {
+	    public String getAvatarURL(XmppURI userURI) {
+		return "images/person-def.gif";
+	    }
+	};
 	dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam(EMITE_DEF_TITLE, new BoshOptions(
 		getGwtMetaProperty(GWT_PROPERTY_HTTPBASE)), getGwtMetaProperty(GWT_PROPERTY_ROOMHOST),
-		new I18nTranslationServiceMocked(), generateUserChatOptions()));
+		new I18nTranslationServiceMocked(), avatarProvider, generateUserChatOptions()));
 	dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
 
     }

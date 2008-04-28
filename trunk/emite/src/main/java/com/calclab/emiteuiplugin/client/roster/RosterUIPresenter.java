@@ -44,6 +44,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emiteuiplugin.client.AbstractPresenter;
 import com.calclab.emiteuiplugin.client.EmiteUIPlugin;
+import com.calclab.emiteuiplugin.client.params.AvatarProvider;
 import com.calclab.emiteuiplugin.client.users.ChatUserUI;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItem;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
@@ -55,295 +56,294 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     public static final String ON_REQUEST_SUBSCRIBE = "emiteuiplugin.onrequestsubscribeitem";
 
     private RosterUIView view;
-    private final Xmpp xmpp;
     private final HashMap<XmppURI, ChatUserUI> rosterMap;
     private final I18nTranslationService i18n;
     private final PresenceManager presenceManager;
     private final Roster roster;
-    private RosterManager rosterManager;
+    private final RosterManager rosterManager;
+    private final AvatarProvider avatarProvider;
 
-    public RosterUIPresenter(final Xmpp xmpp, final I18nTranslationService i18n) {
-        this.xmpp = xmpp;
-        this.i18n = i18n;
-        rosterMap = new HashMap<XmppURI, ChatUserUI>();
-        presenceManager = xmpp.getPresenceManager();
-        rosterManager = xmpp.getRosterManager();
-        roster = xmpp.getRoster();
+    public RosterUIPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final AvatarProvider avatarProvider) {
+	this.i18n = i18n;
+	this.avatarProvider = avatarProvider;
+	rosterMap = new HashMap<XmppURI, ChatUserUI>();
+	presenceManager = xmpp.getPresenceManager();
+	rosterManager = xmpp.getRosterManager();
+	roster = xmpp.getRoster();
     }
 
     public void clearRoster() {
-        rosterMap.clear();
-        view.clearRoster();
+	rosterMap.clear();
+	view.clearRoster();
     }
 
     public void doAction(final String eventName, final Object param) {
-        if (eventName.equals(ON_CANCEL_SUBSCRITOR)) {
-            final XmppURI userURI = (XmppURI) param;
-            rosterManager.cancelSubscriptor(userURI);
-            // view.removeRosterItem(getUserByJid(userURI.getJid()));
-            // rosterMap.remove(userURI.getJid());
-        } else if (eventName.equals(ON_REQUEST_REMOVE_ROSTERITEM)) {
-            final XmppURI userURI = (XmppURI) param;
-            rosterManager.requestRemoveItem(userURI);
-        } else if (eventName.equals(ON_REQUEST_SUBSCRIBE)) {
-            final XmppURI userURI = (XmppURI) param;
-            rosterManager.requestSubscribe(userURI);
-        }
-        DefaultDispatcher.getInstance().fire(eventName, param);
+	if (eventName.equals(ON_CANCEL_SUBSCRITOR)) {
+	    final XmppURI userURI = (XmppURI) param;
+	    rosterManager.cancelSubscriptor(userURI);
+	    // view.removeRosterItem(getUserByJid(userURI.getJid()));
+	    // rosterMap.remove(userURI.getJid());
+	} else if (eventName.equals(ON_REQUEST_REMOVE_ROSTERITEM)) {
+	    final XmppURI userURI = (XmppURI) param;
+	    rosterManager.requestRemoveItem(userURI);
+	} else if (eventName.equals(ON_REQUEST_SUBSCRIBE)) {
+	    final XmppURI userURI = (XmppURI) param;
+	    rosterManager.requestSubscribe(userURI);
+	}
+	DefaultDispatcher.getInstance().fire(eventName, param);
     }
 
     public ChatUserUI getUserByJid(final XmppURI jid) {
-        return rosterMap.get(jid);
+	return rosterMap.get(jid);
     }
 
     public View getView() {
-        return view;
+	return view;
     }
 
     public void init(final RosterUIView view) {
-        this.view = view;
-        createXmppListeners();
+	this.view = view;
+	createXmppListeners();
     }
 
     public void onPresenceAccepted(final Presence presence) {
-        rosterManager.acceptSubscription(presence);
+	rosterManager.acceptSubscription(presence);
     }
 
     public void onPresenceNotAccepted(final Presence presence) {
-        rosterManager.denySubscription(presence);
+	rosterManager.denySubscription(presence);
     }
 
     String formatRosterItemStatusText(final Presence presence, final Subscription subscription) {
-        String statusText = "";
-        if (presence != null) {
-            statusText = presence.getStatus();
-        }
-        if (statusText == null || statusText.equals("null")) {
-            statusText = "";
-        }
-        if (subscription != null) {
-            switch (subscription) {
-            case both:
-            case from:
-            case none:
-            case to:
-                statusText += " (" + subscription.toString() + ")";
-            }
-        }
-        return statusText.equals("") ? " " : statusText;
+	String statusText = "";
+	if (presence != null) {
+	    statusText = presence.getStatus();
+	}
+	if (statusText == null || statusText.equals("null")) {
+	    statusText = "";
+	}
+	if (subscription != null) {
+	    switch (subscription) {
+	    case both:
+	    case from:
+	    case none:
+	    case to:
+		statusText += " (" + subscription.toString() + ")";
+	    }
+	}
+	return statusText.equals("") ? " " : statusText;
     }
 
     ChatIconDescriptor getPresenceIcon(final Presence presence) {
-        switch (presence.getType()) {
-        case available:
-            switch (presence.getShow()) {
-            case chat:
-            case away:
-            case dnd:
-            case xa:
-            case available:
-                return ChatIconDescriptor.valueOf(presence.getShow().toString());
-            case notSpecified:
-                return ChatIconDescriptor.available;
-            }
-        case unavailable:
-            switch (presence.getShow()) {
-            case away:
-            case notSpecified:
-                return ChatIconDescriptor.offline;
-            case unknown:
-                return ChatIconDescriptor.unknown;
-            }
-        }
-        return ChatIconDescriptor.unknown;
+	switch (presence.getType()) {
+	case available:
+	    switch (presence.getShow()) {
+	    case chat:
+	    case away:
+	    case dnd:
+	    case xa:
+	    case available:
+		return ChatIconDescriptor.valueOf(presence.getShow().toString());
+	    case notSpecified:
+		return ChatIconDescriptor.available;
+	    }
+	case unavailable:
+	    switch (presence.getShow()) {
+	    case away:
+	    case notSpecified:
+		return ChatIconDescriptor.offline;
+	    case unknown:
+		return ChatIconDescriptor.unknown;
+	    }
+	}
+	return ChatIconDescriptor.unknown;
     }
 
     private UserGridMenuItemList createMenuItemList(final RosterItem item) {
-        return createMenuItemList(item.getJID(), item.getPresence(), item.getSubscription());
+	return createMenuItemList(item.getJID(), item.getPresence(), item.getSubscription());
     }
 
     private UserGridMenuItemList createMenuItemList(final XmppURI userURI, final Presence presence,
-            final Subscription subscription) {
-        Type statusType;
-        final UserGridMenuItemList itemList = new UserGridMenuItemList();
-        if (presence == null) {
-            statusType = Presence.Type.unavailable;
-        } else {
-            statusType = presence.getType();
-        }
-        switch (subscription) {
-        case both:
-        case to:
-            switch (statusType) {
-            case available:
-                itemList.addItem(createStartChatMenuItem(userURI));
-                if (presence.getShow() != null) {
-                    switch (presence.getShow()) {
-                    case available:
-                    case chat:
-                    case dnd:
-                    case xa:
-                    case away:
-                        itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
-                        break;
-                    }
+	    final Subscription subscription) {
+	Type statusType;
+	final UserGridMenuItemList itemList = new UserGridMenuItemList();
+	if (presence == null) {
+	    statusType = Presence.Type.unavailable;
+	} else {
+	    statusType = presence.getType();
+	}
+	switch (subscription) {
+	case both:
+	case to:
+	    switch (statusType) {
+	    case available:
+		itemList.addItem(createStartChatMenuItem(userURI));
+		if (presence.getShow() != null) {
+		    switch (presence.getShow()) {
+		    case available:
+		    case chat:
+		    case dnd:
+		    case xa:
+		    case away:
+			itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
+			break;
+		    }
 
-                } else {
-                    /*
-                     * 2.2.2.1. Show
-                     *
-                     * If no <show/> element is provided, the entity is assumed
-                     * to be online and available.
-                     *
-                     */
-                    itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
-                }
-                break;
-            case unavailable:
-                itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
-                break;
-            case subscribed:
-                itemList.addItem(createStartChatMenuItem(userURI));
-                itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
-                break;
-            case unsubscribed:
-                itemList.addItem(createStartChatMenuItem(userURI));
-                itemList.addItem(createSubscribeBuddyMenuItem(userURI));
-                break;
-            default:
-                /**
-                 * 2.2.1. Types of Presence
-                 *
-                 * The 'type' attribute of a presence stanza is OPTIONAL. A
-                 * presence stanza that does not possess a 'type' attribute is
-                 * used to signal to the server that the sender is online and
-                 * available for communication. If included, the 'type'
-                 * attribute specifies a lack of availability, a request to
-                 * manage a subscription to another entity's presence, a request
-                 * for another entity's current presence, or an error related to
-                 * a previously-sent presence stanza.
-                 */
-                itemList.addItem(createStartChatMenuItem(userURI));
-            }
-            break;
-        case from:
-            itemList.addItem(createStartChatMenuItem(userURI));
-        case none:
-            itemList.addItem(createSubscribeBuddyMenuItem(userURI));
-            break;
-        default:
-            Log.error("Code bug, subscription: " + subscription);
-        }
-        itemList.addItem(createRemoveBuddyMenuItem(userURI));
-        return itemList;
+		} else {
+		    /*
+		     * 2.2.2.1. Show
+		     * 
+		     * If no <show/> element is provided, the entity is assumed
+		     * to be online and available.
+		     * 
+		     */
+		    itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
+		}
+		break;
+	    case unavailable:
+		itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
+		break;
+	    case subscribed:
+		itemList.addItem(createStartChatMenuItem(userURI));
+		itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
+		break;
+	    case unsubscribed:
+		itemList.addItem(createStartChatMenuItem(userURI));
+		itemList.addItem(createSubscribeBuddyMenuItem(userURI));
+		break;
+	    default:
+		/**
+		 * 2.2.1. Types of Presence
+		 * 
+		 * The 'type' attribute of a presence stanza is OPTIONAL. A
+		 * presence stanza that does not possess a 'type' attribute is
+		 * used to signal to the server that the sender is online and
+		 * available for communication. If included, the 'type'
+		 * attribute specifies a lack of availability, a request to
+		 * manage a subscription to another entity's presence, a request
+		 * for another entity's current presence, or an error related to
+		 * a previously-sent presence stanza.
+		 */
+		itemList.addItem(createStartChatMenuItem(userURI));
+	    }
+	    break;
+	case from:
+	    itemList.addItem(createStartChatMenuItem(userURI));
+	case none:
+	    itemList.addItem(createSubscribeBuddyMenuItem(userURI));
+	    break;
+	default:
+	    Log.error("Code bug, subscription: " + subscription);
+	}
+	itemList.addItem(createRemoveBuddyMenuItem(userURI));
+	return itemList;
     }
 
     private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final XmppURI userURI) {
-        return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove this buddy"), ON_REQUEST_REMOVE_ROSTERITEM,
-                userURI);
+	return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove this buddy"), ON_REQUEST_REMOVE_ROSTERITEM,
+		userURI);
     }
 
     private UserGridMenuItem<XmppURI> createStartChatMenuItem(final XmppURI userURI) {
-        return new UserGridMenuItem<XmppURI>("newchat-icon", i18n.t("Start a chat with this buddy"),
-                EmiteUIPlugin.CHATOPEN, userURI);
+	return new UserGridMenuItem<XmppURI>("newchat-icon", i18n.t("Start a chat with this buddy"),
+		EmiteUIPlugin.CHATOPEN, userURI);
     }
 
     private UserGridMenuItem<XmppURI> createSubscribeBuddyMenuItem(final XmppURI userURI) {
-        return new UserGridMenuItem<XmppURI>("add-icon", i18n.t("Request to see when this buddy is connected or not"),
-                ON_REQUEST_SUBSCRIBE, userURI);
+	return new UserGridMenuItem<XmppURI>("add-icon", i18n.t("Request to see when this buddy is connected or not"),
+		ON_REQUEST_SUBSCRIBE, userURI);
     }
 
     private UserGridMenuItem<XmppURI> createUnsubscribeBuddyMenuItem(final XmppURI userURI) {
-        return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Stop to see when this buddy is connected or not"),
-                ON_CANCEL_SUBSCRITOR, userURI);
+	return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Stop to see when this buddy is connected or not"),
+		ON_CANCEL_SUBSCRITOR, userURI);
     }
 
     private void createXmppListeners() {
-        roster.addListener(new RosterListener() {
-            public void onItemChanged(final RosterItem item) {
-                final ChatUserUI user = rosterMap.get(item.getJID());
-                if (user == null) {
-                    Log.error("Trying to update a user is not in roster: " + item.getJID() + " ----> Roster: "
-                            + rosterMap);
-                } else {
-                    logRosterItem("Updating", item);
-                    user.setStatusIcon(getPresenceIcon(item.getPresence()));
-                    user.setStatusText(formatRosterItemStatusText(item.getPresence(), item.getSubscription()));
-                    view.updateRosterItem(user, createMenuItemList(item));
-                }
-            }
+	roster.addListener(new RosterListener() {
+	    public void onItemChanged(final RosterItem item) {
+		final ChatUserUI user = rosterMap.get(item.getJID());
+		if (user == null) {
+		    Log.error("Trying to update a user is not in roster: " + item.getJID() + " ----> Roster: "
+			    + rosterMap);
+		} else {
+		    logRosterItem("Updating", item);
+		    user.setStatusIcon(getPresenceIcon(item.getPresence()));
+		    user.setStatusText(formatRosterItemStatusText(item.getPresence(), item.getSubscription()));
+		    view.updateRosterItem(user, createMenuItemList(item));
+		}
+	    }
 
-            public void onRosterChanged(final Collection<RosterItem> roster) {
-                rosterMap.clear();
-                view.clearRoster();
-                for (final RosterItem item : roster) {
-                    logRosterItem("Adding", item);
-                    final ChatUserUI user = new ChatUserUI("images/person-def.gif", item, "black");
-                    user.setStatusIcon(getPresenceIcon(item.getPresence()));
-                    rosterMap.put(user.getURI(), user);
-                    view.addRosterItem(user, createMenuItemList(item));
-                }
-                DefaultDispatcher.getInstance().fire(EmiteUIPlugin.ON_ROSTER_CHANGED, roster);
-            }
+	    public void onRosterChanged(final Collection<RosterItem> roster) {
+		rosterMap.clear();
+		view.clearRoster();
+		for (final RosterItem item : roster) {
+		    logRosterItem("Adding", item);
+		    final ChatUserUI user = new ChatUserUI(avatarProvider.getAvatarURL(item.getJID()), item, "black");
+		    user.setStatusIcon(getPresenceIcon(item.getPresence()));
+		    rosterMap.put(user.getURI(), user);
+		    view.addRosterItem(user, createMenuItemList(item));
+		}
+		DefaultDispatcher.getInstance().fire(EmiteUIPlugin.ON_ROSTER_CHANGED, roster);
+	    }
 
-            private void logRosterItem(final String operation, final RosterItem item) {
-                final String name = item.getName();
-                final Presence presence = item.getPresence();
-                Log.info(operation + " roster item: " + item.getJID() + " name: " + name + " subsc: "
-                        + item.getSubscription());
-                if (presence != null) {
-                    logPresence(presence);
-                } else {
-                    Log.info("with null presence");
-                }
-            }
-        });
+	    private void logRosterItem(final String operation, final RosterItem item) {
+		final String name = item.getName();
+		final Presence presence = item.getPresence();
+		Log.info(operation + " roster item: " + item.getJID() + " name: " + name + " subsc: "
+			+ item.getSubscription());
+		if (presence != null) {
+		    logPresence(presence);
+		} else {
+		    Log.info("with null presence");
+		}
+	    }
+	});
 
-        rosterManager.addListener(new RosterManagerListener () {
+	rosterManager.addListener(new RosterManagerListener() {
 
-            public void onSubscribedReceived(final Presence presence, SubscriptionMode currentMode) {
-                Log.info("SUBS RECEIVED");
-                XmppURI fromURI = presence.getFromURI();
-                ChatUserUI user = rosterMap.get(fromURI);
-                if (user != null) {
-                    view.updateRosterItem(user, createMenuItemList(fromURI, presence, Subscription.to));
-                }
-            }
+	    public void onSubscribedReceived(final Presence presence, final SubscriptionMode currentMode) {
+		Log.info("SUBS RECEIVED");
+		final XmppURI fromURI = presence.getFromURI();
+		final ChatUserUI user = rosterMap.get(fromURI);
+		if (user != null) {
+		    view.updateRosterItem(user, createMenuItemList(fromURI, presence, Subscription.to));
+		}
+	    }
 
-            public void onSubscriptionRequest(final Presence presence, SubscriptionMode currentMode) {
-                switch (currentMode) {
-                case autoAcceptAll:
-                    Log.info("Accepting because we are auto accepting");
-//                    onPresenceAccepted(presence);
-                    break;
-                case autoRejectAll:
-                    Log.info("Rejecting because we are auto rejecting");
-//                    onPresenceNotAccepted(presence);
-                    break;
-                default:
-                    Log.info("Manual accept/reject");
-                    view.confirmSusbscriptionRequest(presence);
-                    break;
-                }
-            }
+	    public void onSubscriptionRequest(final Presence presence, final SubscriptionMode currentMode) {
+		switch (currentMode) {
+		case autoAcceptAll:
+		    Log.info("Accepting because we are auto accepting");
+		    // onPresenceAccepted(presence);
+		    break;
+		case autoRejectAll:
+		    Log.info("Rejecting because we are auto rejecting");
+		    // onPresenceNotAccepted(presence);
+		    break;
+		default:
+		    Log.info("Manual accept/reject");
+		    view.confirmSusbscriptionRequest(presence);
+		    break;
+		}
+	    }
 
-            public void onUnsubscribedReceived(final Presence presence, SubscriptionMode currentMode) {
-                Log.info("UNSUBS RECEIVED");
-                // FIXME: Inform about unsubscription?
-            }
-        });
+	    public void onUnsubscribedReceived(final Presence presence, final SubscriptionMode currentMode) {
+		Log.info("UNSUBS RECEIVED");
+		// FIXME: Inform about unsubscription?
+	    }
+	});
 
-        presenceManager.addListener(new PresenceListener() {
-            public void onPresenceReceived(final Presence presence) {
-                logPresence(presence);
-            }
-        });
+	presenceManager.addListener(new PresenceListener() {
+	    public void onPresenceReceived(final Presence presence) {
+		logPresence(presence);
+	    }
+	});
 
     }
 
     private void logPresence(final Presence presence) {
-        Log.info("PRESENCE: type: " + presence.getType() + " from: " + presence.getFrom() + " show: "
-                + presence.getShow() + " status: " + presence.getStatus());
+	Log.info("PRESENCE: type: " + presence.getType() + " from: " + presence.getFrom() + " show: "
+		+ presence.getShow() + " status: " + presence.getStatus());
     }
 }
-

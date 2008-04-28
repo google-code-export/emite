@@ -8,7 +8,6 @@ import org.mockito.Mockito;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
@@ -21,6 +20,7 @@ import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPresenter;
 import com.calclab.emiteuiplugin.client.chat.ChatUIView;
+import com.calclab.emiteuiplugin.client.params.AvatarProvider;
 import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
 import com.calclab.emiteuiplugin.client.roster.RosterUI;
 import com.calclab.emiteuiplugin.client.roster.RosterUIView;
@@ -75,10 +75,15 @@ public class MultiChatPresenterTest {
 		factory.createChatUI((XmppURI) Mockito.anyObject(), (String) Mockito.anyObject(), (String) Mockito
 			.anyObject(), (ChatUIListener) Mockito.anyObject())).toReturn(chatUI);
 
-	// FIXME: vicente, no deberíamos acceder a esta constante, sino
-	// preguntarle al roster manager en qué modo está...
+	final AvatarProvider avatarProvider = new AvatarProvider() {
+	    public String getAvatarURL(XmppURI userURI) {
+		return "images/person-def.gif";
+	    }
+	};
+
 	final MultiChatCreationParam param = new MultiChatCreationParam("Chat title", null, "rooms.localhost", i18n,
-		new UserChatOptions(sessionUserJid, "passwdofuser", "blue", RosterManager.DEF_SUBSCRIPTION_MODE));
+		avatarProvider, new UserChatOptions(sessionUserJid, "passwdofuser", "blue",
+			RosterManager.DEF_SUBSCRIPTION_MODE));
 
 	multiChat = new MultiChatPresenter(xmpp, i18n, factory, param, multiChatlistener, roster);
 	multiChat.init(multiChatPanel);

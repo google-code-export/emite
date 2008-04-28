@@ -37,6 +37,8 @@ public interface MultiChat {
 
     public void setUserChatOptions(UserChatOptions param);
 
+    public void setVCardAvatar(String photoBinary);
+
     public void show();
 
 }

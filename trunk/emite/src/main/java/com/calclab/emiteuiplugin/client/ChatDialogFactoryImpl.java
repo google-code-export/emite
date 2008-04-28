@@ -65,7 +65,7 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
     public MultiChat createMultiChat(final Xmpp xmpp, final MultiChatCreationParam param,
 	    final MultiChatListener listener) {
 	final I18nTranslationService i18n = param.getI18nService();
-	final RosterUIPresenter roster = new RosterUIPresenter(xmpp, i18n);
+	final RosterUIPresenter roster = new RosterUIPresenter(xmpp, i18n, param.getAvatarProvider());
 	final RosterUIPanel rosterPanel = new RosterUIPanel(i18n, roster);
 	roster.init(rosterPanel);
 	final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, App.getInstance(), param, listener,

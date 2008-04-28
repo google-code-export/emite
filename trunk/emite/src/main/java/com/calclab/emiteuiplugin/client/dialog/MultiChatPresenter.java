@@ -272,6 +272,10 @@ public class MultiChatPresenter implements MultiChat {
 	this.currentUserPasswd = userChatOptions.getUserPassword();
     }
 
+    public void setVCardAvatar(final String photoBinary) {
+	xmpp.getAvatarManager().setVCardAvatar(photoBinary);
+    }
+
     public void show() {
 	view.show();
     }

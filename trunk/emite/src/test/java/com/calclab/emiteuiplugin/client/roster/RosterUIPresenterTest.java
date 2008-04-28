@@ -18,6 +18,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emiteui.client.MockitoXmpp;
+import com.calclab.emiteuiplugin.client.params.AvatarProvider;
 
 public class RosterUIPresenterTest {
 
@@ -58,7 +59,13 @@ public class RosterUIPresenterTest {
 	rosterUIView = Mockito.mock(RosterUIView.class);
 	final I18nTranslationServiceMocked i18n = new I18nTranslationServiceMocked();
 
-	rosterUI = new RosterUIPresenter(xmpp, i18n);
+	final AvatarProvider avatarProvider = new AvatarProvider() {
+	    public String getAvatarURL(XmppURI userURI) {
+		return "images/person-def.gif";
+	    }
+	};
+
+	rosterUI = new RosterUIPresenter(xmpp, i18n, avatarProvider);
 	rosterUI.init(rosterUIView);
 
 	// Stubs

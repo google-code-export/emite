@@ -33,34 +33,41 @@ public class MultiChatCreationParam {
     private final I18nTranslationService i18nService;
     private final String roomHost;
     private final String chatDialogTitle;
+    private final AvatarProvider avatarProvider;
 
     public MultiChatCreationParam(final String chatDialogTitle, final BoshOptions boshOptions, final String roomHost,
-            final I18nTranslationService i18nService, final UserChatOptions userChatOptions) {
-        this.chatDialogTitle = chatDialogTitle;
-        this.boshOptions = boshOptions;
-        this.roomHost = roomHost;
-        this.i18nService = i18nService;
-        this.userChatOptions = userChatOptions;
+	    final I18nTranslationService i18nService, final AvatarProvider avatarProvider,
+	    final UserChatOptions userChatOptions) {
+	this.chatDialogTitle = chatDialogTitle;
+	this.boshOptions = boshOptions;
+	this.roomHost = roomHost;
+	this.i18nService = i18nService;
+	this.avatarProvider = avatarProvider;
+	this.userChatOptions = userChatOptions;
+    }
+
+    public AvatarProvider getAvatarProvider() {
+	return avatarProvider;
     }
 
     public BoshOptions getBoshOptions() {
-        return boshOptions;
+	return boshOptions;
     }
 
     public String getChatDialogTitle() {
-        return chatDialogTitle;
+	return chatDialogTitle;
     }
 
     public I18nTranslationService getI18nService() {
-        return i18nService;
+	return i18nService;
     }
 
     public String getRoomHost() {
-        return roomHost;
+	return roomHost;
     }
 
     public UserChatOptions getUserChatOptions() {
-        return userChatOptions;
+	return userChatOptions;
     }
 
 }
