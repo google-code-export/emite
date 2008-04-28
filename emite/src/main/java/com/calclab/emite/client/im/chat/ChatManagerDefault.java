@@ -87,7 +87,8 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager,
 	Chat chat = findChat(to, null);
 	if (chat == null) {
 	    final String theThread = String.valueOf(Math.random() * 1000000);
-	    chat = createChat(to, theThread);
+	    chat = new ChatDefault(to, userURI, theThread, emite);
+	    addChat(chat);
 	}
 	return chat;
     }
@@ -120,8 +121,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager,
 	}
     }
 
-    private ChatDefault createChat(final XmppURI from, final String thread) {
-	final ChatDefault chat = new ChatDefault(from, userURI, thread, emite);
+    private Chat addChat(final Chat chat) {
 	chats.add(chat);
 	fireChatCreated(chat);
 	return chat;
@@ -158,14 +158,17 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager,
     }
 
     private void onChatMessageReceived(final Message message) {
-	final XmppURI from = message.getFromURI();
-	final String thread = message.getThread();
+	if (message.hasChild("body")) {
+	    final XmppURI from = message.getFromURI();
+	    final String thread = message.getThread();
 
-	Chat chat = findChat(from, thread);
-	if (chat == null) {
-	    chat = createChat(from, thread);
+	    Chat chat = findChat(from, thread);
+	    if (chat == null) {
+		final ChatDefault chat1 = new ChatDefault(from, userURI, thread, emite);
+		chat = addChat(chat1);
+	    }
+	    ((ChatDefault) chat).fireMessageReceived(message);
 	}
-	((ChatDefault) chat).fireMessageReceived(message);
     }
 
 }
