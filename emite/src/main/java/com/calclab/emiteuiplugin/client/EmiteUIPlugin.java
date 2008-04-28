@@ -51,6 +51,7 @@ public class EmiteUIPlugin extends Plugin {
     public static final String CHATOPEN = "emiteuiplugin.chatopen";
     public static final String ROOMOPEN = "emiteuiplugin.roomopen";
     public static final String REFLESH_USER_OPTIONS = "emiteuiplugin.refreshuseroptions";
+    public static final String SET_OWN_AVATAR = "emiteuiplugin.setavatar";
 
     // Output events
     public static final String ON_USER_COLOR_SELECTED = "emiteuiplugin.usercoloselected";
@@ -153,6 +154,11 @@ public class EmiteUIPlugin extends Plugin {
 		dispatcher.subscribe(SET_OWN_PRESENCE, new Action<OwnPresence>() {
 		    public void execute(final OwnPresence ownPresence) {
 			multiChatDialog.setOwnPresence(ownPresence);
+		    }
+		});
+		dispatcher.subscribe(SET_OWN_AVATAR, new Action<String>() {
+		    public void execute(final String photoBinary) {
+			multiChatDialog.setVCardAvatar(photoBinary);
 		    }
 		});
 

@@ -20,7 +20,7 @@ public class AvatarManagerTest {
     public void managerShouldPublishAvatar() {
 	manager.loggedIn(uri("luther@example.com/roundabout"));
 	final String photo = "some base64 encoded photo";
-	manager.setVCardAvatard(photo);
+	manager.setVCardAvatar(photo);
 	emite.verifyIQSent("<iq xmlns='jabber:client' from='luther@example.com/roundabout' type='set'>"
 		+ "<vCard prodid='-//HandGen//NONSGML vGen v1.0//EN' version='2.0' "
 		+ "xmlns='vcard-temp' xdbns='vcard-temp'>"

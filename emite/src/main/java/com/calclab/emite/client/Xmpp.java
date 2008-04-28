@@ -27,6 +27,7 @@ import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.services.gwt.GWTServicesPlugin;
+import com.calclab.emite.client.extra.avatar.AvatarManager;
 import com.calclab.emite.client.extra.avatar.AvatarModule;
 import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.extra.muc.RoomManager;
@@ -59,6 +60,10 @@ public class Xmpp {
 	installDefaultPlugins(container, options);
     }
 
+    public AvatarManager getAvatarManager() {
+	return AvatarModule.getAvatarManager(container);
+    }
+
     public ChatManager getChatManager() {
 	return InstantMessagingModule.getChat(container);
     }
@@ -75,8 +80,6 @@ public class Xmpp {
 	return InstantMessagingModule.getManager(container);
     }
 
-    // FIXME: Dani, revisar (añadi esto para poder mockear igual que con el
-    // resto...)
     public RoomManager getRoomManager() {
 	return MUCModule.getRoomManager(container);
     }
