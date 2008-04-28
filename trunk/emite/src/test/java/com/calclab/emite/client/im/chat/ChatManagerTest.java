@@ -8,9 +8,12 @@ import org.mockito.Mockito;
 
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteStub;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 
 public class ChatManagerTest {
@@ -25,7 +28,7 @@ public class ChatManagerTest {
 	}
 
     }
-    private static final String MYSELF = "self@domain";
+    private static final XmppURI MYSELF = uri("self@domain");
     private ChatManagerDefault manager;
     private ChatManagerListener listener;
 
@@ -37,7 +40,7 @@ public class ChatManagerTest {
 	manager = new ChatManagerDefault(emite);
 	listener = Mockito.mock(ChatManagerListener.class);
 	manager.addListener(listener);
-	manager.setUserURI(MYSELF);
+	manager.setUserURI(MYSELF.toString());
 	manager.install();
     }
 
@@ -49,15 +52,15 @@ public class ChatManagerTest {
 
     @Test
     public void managerShouldCreateOneChatForSameResource() {
-	emite.receives(new Message("source@domain/resource1", MYSELF, "message 1"));
-	emite.receives(new Message("source@domain/resource1", MYSELF, "message 2"));
+	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 1"));
+	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
 	verify(listener, times(1)).onChatCreated((Chat) anyObject());
     }
 
     @Test
     public void managerShouldCreateOneChatIfResourceIsNotAvailable() {
-	emite.receives(new Message("source@domain", MYSELF, "message 1"));
-	emite.receives(new Message("source@domain/resource1", MYSELF, "message 2"));
+	emite.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
+	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
 	verify(listener, times(1)).onChatCreated((Chat) anyObject());
     }
 
@@ -78,10 +81,24 @@ public class ChatManagerTest {
 	assertEquals(null, trap.chat.getThread());
     }
 
+    /**
+     * Issue 42
+     */
+    @Test
+    public void shouldNotPublishMessagesWithoutBody() {
+	final Chat chat = manager.openChat(uri("someone@domain"));
+	final ChatListener chatListener = mock(ChatListener.class);
+	chat.addListener(chatListener);
+	emite.receives("<message type='chat' id='purplee8b92642' to='user@domain' "
+		+ "from='someone@domain'><x xmlns='jabber:x:event'/><active"
+		+ "xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	verify(chatListener, never()).onMessageReceived(same(chat), (Message) anyObject());
+    }
+
     @Test
     public void shouldUseSameRoomWhenAnswering() {
 	final Chat chat = manager.openChat(uri("someone@domain"));
-	emite.receives(new Message("someone@domain/resource", MYSELF, "answer").Thread(chat.getThread()));
+	emite.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer").Thread(chat.getThread()));
 	verify(listener, times(1)).onChatCreated(chat);
     }
 }
