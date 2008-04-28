@@ -39,11 +39,11 @@ import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 public class SessionManager implements Installable {
     public static class Events {
 	public static final Event onAuthorized = new Event("session:on:authorized");
-	public static final Event onAuthorizationFailed = new Event("session:on:authization-failed");
+	public static final Event onAuthorizationFailed = new Event("session:on:authorization-failed");
 	public static final Event onBinded = new Event("session:on:binded");
 	public static final Event onLoggedOut = new Event("session:on:logout");
 	public static final Event onDoLogin = new Event("session:do:login");
-	public static IPacket onDoAuthorization = new Event("session:do:authization");
+	public static IPacket onDoAuthorization = new Event("session:do:authorization");
 	public static final Event onLoggedIn = new Event("session:on:login");
 
 	public static Event binded(final String jid) {

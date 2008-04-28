@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.client.core.bosh;
 
+import com.allen_sauer.gwt.log.client.Log;
+
 public class BoshState {
     public static final int TIME_NOW = 0;
     public static final int TIME_NEVER = -1;
@@ -56,15 +58,18 @@ public class BoshState {
     public int getState(final long currentTime) {
 	int time = 0;
 	if (!isCurrentResponseEmpty) {
+	    Log.debug("Sending not empty. Conn: " + currentConnections);
 	    time = TIME_NOW;
 	} else {
 	    if (currentConnections > 0) {
+		Log.debug("Not send. Too many conn: " + currentConnections);
 		time = TIME_NEVER;
 	    } else {
 		final int delay = getNecesaryDelayFromLastRequest(currentTime);
 		if (delay > 0) {
 		    time = delay;
 		} else {
+		    Log.debug("Sending: Poll overhead: " + delay + ", connections: " + currentConnections);
 		    time = TIME_NOW;
 		}
 	    }
