@@ -171,6 +171,8 @@ public class ChatTextFormatter {
     private static String replace(String message, final String[] from, final String to) {
 	for (int j = 0; j < from.length; j++) {
 	    message = message.replaceAll("(^|[\\s])" + from[j] + "([\\s]|$)", "$1" + to + "$2");
+	    // two times for: :) :) :) :)
+	    message = message.replaceAll("(^|[\\s])" + from[j] + "([\\s]|$)", "$1" + to + "$2");
 	}
 	return message;
     }

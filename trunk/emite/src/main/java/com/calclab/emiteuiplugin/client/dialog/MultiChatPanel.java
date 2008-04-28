@@ -201,6 +201,11 @@ public class MultiChatPanel implements MultiChatView {
 	infoPanel.setOfflineInfo();
     }
 
+    public void setOfflineTitle() {
+	dialog.setTitle(chatDialogTitle);
+	ifRenderedDoLayout();
+    }
+
     public void setOnlineInfo() {
 	infoPanel.setOnlineInfo();
     }
@@ -224,6 +229,11 @@ public class MultiChatPanel implements MultiChatView {
 	} else {
 	    sendBtn.disable();
 	}
+    }
+
+    public void setTitleConectedAs(final XmppURI currentUserJid) {
+	dialog.setTitle(chatDialogTitle + " (" + currentUserJid + ")");
+	ifRenderedDoLayout();
     }
 
     public void show() {
@@ -458,6 +468,12 @@ public class MultiChatPanel implements MultiChatView {
 	presenter.onCurrentUserSend(getInputText());
 	e.stopEvent();
 	input.focus();
+    }
+
+    private void ifRenderedDoLayout() {
+	if (dialog.isRendered()) {
+	    dialog.doLayout();
+	}
     }
 
     private void showEmoticonPalette(final int x, final int y) {

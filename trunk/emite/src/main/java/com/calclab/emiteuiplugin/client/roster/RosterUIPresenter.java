@@ -30,6 +30,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.core.packet.TextUtils;
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
@@ -41,6 +42,7 @@ import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emiteuiplugin.client.AbstractPresenter;
 import com.calclab.emiteuiplugin.client.EmiteUIPlugin;
@@ -48,6 +50,7 @@ import com.calclab.emiteuiplugin.client.params.AvatarProvider;
 import com.calclab.emiteuiplugin.client.users.ChatUserUI;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItem;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
+import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
 
 public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
@@ -81,8 +84,6 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	if (eventName.equals(ON_CANCEL_SUBSCRITOR)) {
 	    final XmppURI userURI = (XmppURI) param;
 	    rosterManager.cancelSubscriptor(userURI);
-	    // view.removeRosterItem(getUserByJid(userURI.getJid()));
-	    // rosterMap.remove(userURI.getJid());
 	} else if (eventName.equals(ON_REQUEST_REMOVE_ROSTERITEM)) {
 	    final XmppURI userURI = (XmppURI) param;
 	    rosterManager.requestRemoveItem(userURI);
@@ -120,7 +121,14 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	    statusText = presence.getStatus();
 	}
 	if (statusText == null || statusText.equals("null")) {
+	    // FIXME: Dani we are receiving "null" as String
 	    statusText = "";
+	}
+	if (presence != null) {
+	    final Show show = presence.getShow();
+	    if (statusText.equals("")) {
+		statusText += ChatUIUtils.getShowText(i18n, show);
+	    }
 	}
 	// Only for test:
 	// if (subscription != null) {
@@ -132,7 +140,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	// statusText += " (" + subscription.toString() + ")";
 	// }
 	// }
-	return statusText.equals("") ? " " : statusText;
+	return statusText.equals("") ? " " : TextUtils.escape(statusText);
     }
 
     ChatIconDescriptor getPresenceIcon(final Presence presence) {

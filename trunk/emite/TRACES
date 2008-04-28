@@ -1,3 +1,42 @@
+*************** SUBS NOT PRESENCE *********
+
+
+GWT CONNECTOR RECEIVED: <body xmlns="http://jabber.org/protocol/httpbind"></body>7B6FEA1727AF507FA... (line 24)
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@317B6FEA1727AF507FA... (line 24)
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>7B6FEA1727AF507FA... (line 24)
+[DEBUG] <<<<<<<<<<<< DISPATCH ENDS7B6FEA1727AF507FA... (line 24)
+[DEBUG] DELAY: -17B6FEA1727AF507FA... (line 24)
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><iq type="set" id="345-132" to="vjrj@emitedemo.ourproject.org/emiteui-1209391461542"><query xmlns="jabber:iq:roster"><item jid="dani@emitedemo.ourproject.org" name="dani-e" subscription="both"/></query></iq></body>7B6FEA1727AF507FA... (line 24)
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@327B6FEA1727AF507FA... (line 24)
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>7B6FEA1727AF507FA... (line 24)
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@337B6FEA1727AF507FA... (line 24)
+[DEBUG] Dispatching: <event xmlns="emite:event" type="connection:do:send"><iq xmlns="jabber:client" type="result" id="345-132" /></event>7B6FEA1727AF507FA... (line 24)
+[INFO] Updating roster item: dani@emitedemo.ourproject.org name: dani subsc: both7B6FEA1727AF507FA... (line 24)
+[INFO] PRESENCE: type: unavailable from: null show: away status: null7B6FEA1727AF507FA... (line 24)
+[DEBUG] <<<<<<<<<<<< DISPATCH ENDS7B6FEA1727AF507FA... (line 24)
+[DEBUG] DELAY: 07B6FEA1727AF507FA... (line 24)
+[DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="301574" sid="395dbe39"><iq xmlns="jabber:client" type="result" id="345-132" /></body>7B6FEA1727AF507FA... (line 24)
+POST http://emite.ourproject.org/proxy (64639ms)7B6FEA1727AF507FA... (line 1815)
+ParamsHeadersPostResponse
+Response Headers
+Request Headers
+<body xmlns="http://jabber.org/protocol/httpbind"></body>
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns='http://jabber.org/protocol/httpbind'><presence to="vjrj@emitedemo.ourproject.org/emiteui-1209391461542" from="dani@emitedemo.ourproject.org" type="subscribed"/></body>7B6FEA1727AF507FA... (line 24)
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@347B6FEA1727AF507FA... (line 24)
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>7B6FEA1727AF507FA... (line 24)
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@357B6FEA1727AF507FA... (line 24)
+[INFO] SUBS RECEIVED7B6FEA1727AF507FA... (line 24)
+[INFO] PRESENCE: type: subscribed from: dani@emitedemo.ourproject.org show: notSpecified status: null7B6FEA1727AF507FA... (line 24)
+[DEBUG] <<<<<<<<<<<< DISPATCH ENDS7B6FEA1727AF507FA... (line 24)
+[DEBUG] DELAY: -17B6FEA1727AF507FA... (line 24)
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns="http://jabber.org/protocol/httpbind"></body>7B6FEA1727AF507FA... (line 24)
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@367B6FEA1727AF507FA... (line 24)
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>7B6FEA1727AF507FA... (line 24)
+[DEBUG] <<<<<<<<<<<< DISPATCH ENDS7B6FEA1727AF507FA... (line 24)
+[DEBUG] DELAY: 07B6FEA1727AF507FA... (line 24)
+[DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="301575" sid="395dbe39" />7B6FEA1727AF507FA... (line 24)
+
+
 
 **************** AUTH PROBLEM *************
 [DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="771950" sid="d256439c"><auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="PLAIN">dGVzdDFAZW1pdGVkZW1vLm91cnByb2plY3Qub3JnAHRlc3QxAHRlc3Qx</auth></body>DFC005D2E8BDE2274... (line 24)
