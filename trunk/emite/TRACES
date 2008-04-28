@@ -1,4 +1,14 @@
 
+**************** AUTH PROBLEM *************
+[DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="771950" sid="d256439c"><auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="PLAIN">dGVzdDFAZW1pdGVkZW1vLm91cnByb2plY3Qub3JnAHRlc3QxAHRlc3Qx</auth></body>DFC005D2E8BDE2274... (line 24)
+POST http://emite.ourproject.org/proxy (4192ms)DFC005D2E8BDE2274... (line 1815)
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns="http://jabber.org/protocol/httpbind" type="terminal" condition="item-not-found"></body>DFC005D2E8BDE2274... (line 24)
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@75DFC005D2E8BDE2274... (line 24)
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>DFC005D2E8BDE2274... (line 24)
+[DEBUG] Dispatching: <event xmlns="emite:event" type="connection:on:error" cause="terminal" info="item-not-found" />DFC005D2E8BDE2274... (line 24)
+[INFO] STATE CHANGED: error - old: connectingDFC005D2E8BDE2274... (line 24)
+[INFO] STATE CHANGED: disconnected - old: error
+
 **************** PROBLEMA AL ENTRAR A UNA SALA YA CREADA
 [DEBUG] DELAY: 07874C5D74DB0786EA... (line 24)
 [DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="247674" sid="7361c91b" />7874C5D74DB0786EA... (line 24)

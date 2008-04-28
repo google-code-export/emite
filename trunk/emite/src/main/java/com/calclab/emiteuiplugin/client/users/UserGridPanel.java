@@ -220,8 +220,8 @@ public class UserGridPanel extends Panel {
 					record.getAsString(COLOR),
 					record.getAsString(ALIAS),
 					record.getAsString(STATUSIMG),
-					record.getAsString(STATUSTEXT).equals("null") ? " " : record
-						.getAsString(STATUSTEXT), record.getAsString(JID) });
+					record.getAsString(STATUSTEXT).equals("null") ? " " : TextUtils.escape(record
+						.getAsString(STATUSTEXT)), record.getAsString(JID) });
 	    }
 	};
 	final ColumnConfig[] columnsConfigs = new ColumnConfig[] {
@@ -296,7 +296,7 @@ public class UserGridPanel extends Panel {
 
     private String formatStatus(final String statusText) {
 	// ext don't like ""
-	return statusText == null ? " " : TextUtils.escape(statusText);
+	return statusText == null ? " " : statusText;
     }
 
     private String formatStatusIcon(final ChatUserUI user) {
