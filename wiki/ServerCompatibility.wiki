@@ -4,7 +4,7 @@ Emite Xmpp servers compatibily matrix:
 || openfire || 3.3.2 || yes || Some server issue affects emite connectivity || ||
 || openfire || 3.4.6 || no || || ||
 || openfire || 3.5.0 || no || BOSH bug in server || ||
-|| openfire || 3.5.1 || yes || Some [http://www.igniterealtime.org/community/message/169420 issue] [http://code.google.com/p/emite/issues/detail?id=6&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary%20Component issu6] in openfire cause problems of connectivity || Under test in our demo ||
+|| openfire || 3.5.1 || yes || Some [http://www.igniterealtime.org/community/message/169420 openfire issue], [http://code.google.com/p/emite/issues/detail?id=6&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary%20Component #6] cause problems of connectivity || Under test in our demo ||
 || jabberd  || 1.4.3 || no || Protocol compatibility issue || ||
 || tigase   || ? || ? || Not tested || ||
 || ejabberd || ? || ? || Not tested || ||
