@@ -64,6 +64,8 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 	}
     }
 
+    public static final int POLL_SECURITY = 1500;
+
     private final String httpBase;
     private boolean isRunning;
     private final Services services;
@@ -192,7 +194,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 		final String sid = body.getAttribute("sid");
 		state.setSID(sid);
 		stream.setSID(sid);
-		state.setPoll(body.getAttributeAsInt("polling") * 1000 + 500);
+		state.setPoll(body.getAttributeAsInt("polling") * 1000 + POLL_SECURITY);
 	    }
 	    final List<? extends IPacket> children = body.getChildren();
 	    for (final IPacket stanza : children) {

@@ -65,7 +65,7 @@ public class BoshManagerTest {
 		.receives("<body xmlns='http://jabber.org/protocol/httpbind' xmlns:stream='http://etherx.jabber.org/streams' "
 			+ "authid='505ea252' sid='theSid' secure='true' requests='2' inactivity='30' polling='5' wait='60' ver='1.6'></body>");
 	assertEquals("theSid", manager.getState().getSID());
-	assertEquals(5500, manager.getState().getPoll());
+	assertEquals(5000 + BoshManager.POLL_SECURITY, manager.getState().getPoll());
     }
 
     @Test
