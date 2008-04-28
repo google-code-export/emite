@@ -29,6 +29,7 @@ import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.allen_sauer.gwt.voices.client.Sound;
 import com.allen_sauer.gwt.voices.client.SoundController;
+import com.calclab.emite.client.core.packet.TextUtils;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.roster.RosterItemPanel;
@@ -149,7 +150,7 @@ public class MultiChatPanel implements MultiChatView {
     public void roomJoinConfirm(final XmppURI invitor, final XmppURI roomURI, final String reason) {
 	MessageBox.confirm(i18n.t("Join to chat room [%s]?", roomURI.getJID().toString()), i18n.t(
 		"[%s] are inviting you to join this room: ", invitor.getJID().toString())
-		+ reason, new MessageBox.ConfirmCallback() {
+		+ TextUtils.escape(reason), new MessageBox.ConfirmCallback() {
 	    public void execute(final String btnID) {
 		if (btnID.equals("yes")) {
 		    presenter.joinRoom(roomURI.getNode(), roomURI.getHost());

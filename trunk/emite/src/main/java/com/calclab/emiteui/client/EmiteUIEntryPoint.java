@@ -98,13 +98,13 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
 	dispatcher.subscribe(EmiteUIPlugin.ON_UNHIGHTLIGHTWINDOW, new Action<String>() {
 	    public void execute(final String chatTitle) {
-		setWindowTitle("(* " + chatTitle + ") " + initialWindowTitle);
+		setWindowTitle(initialWindowTitle);
 	    }
 	});
 
 	dispatcher.subscribe(EmiteUIPlugin.ON_HIGHTLIGHTWINDOW, new Action<String>() {
 	    public void execute(final String chatTitle) {
-		setWindowTitle(initialWindowTitle);
+		setWindowTitle("(* " + chatTitle + ") " + initialWindowTitle);
 	    }
 	});
 

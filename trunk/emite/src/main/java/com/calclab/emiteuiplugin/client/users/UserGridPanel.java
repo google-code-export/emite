@@ -26,6 +26,7 @@ import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.core.packet.TextUtils;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
@@ -295,7 +296,7 @@ public class UserGridPanel extends Panel {
 
     private String formatStatus(final String statusText) {
 	// ext don't like ""
-	return statusText == null ? " " : statusText;
+	return statusText == null ? " " : TextUtils.escape(statusText);
     }
 
     private String formatStatusIcon(final ChatUserUI user) {

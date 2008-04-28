@@ -122,15 +122,16 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	if (statusText == null || statusText.equals("null")) {
 	    statusText = "";
 	}
-	if (subscription != null) {
-	    switch (subscription) {
-	    case both:
-	    case from:
-	    case none:
-	    case to:
-		statusText += " (" + subscription.toString() + ")";
-	    }
-	}
+	// Only for test:
+	// if (subscription != null) {
+	// switch (subscription) {
+	// case both:
+	// case from:
+	// case none:
+	// case to:
+	// statusText += " (" + subscription.toString() + ")";
+	// }
+	// }
 	return statusText.equals("") ? " " : statusText;
     }
 
@@ -284,6 +285,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 		    rosterMap.put(user.getURI(), user);
 		    view.addRosterItem(user, createMenuItemList(item));
 		}
+		// For external use:
 		DefaultDispatcher.getInstance().fire(EmiteUIPlugin.ON_ROSTER_CHANGED, roster);
 	    }
 

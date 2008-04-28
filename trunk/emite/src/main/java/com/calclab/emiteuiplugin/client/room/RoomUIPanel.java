@@ -82,8 +82,6 @@ public class RoomUIPanel extends ChatUIPanel implements RoomUIView {
 	    }
 	});
 	subject.setHeight("27");
-	// subject.addStyleName("x-panel-tbar");
-	// subject.addStyleName("x-panel-tbar-noheader");
 	subject.addStyleName("x-panel-header");
 	subject.addStyleName("x-panel-header-noborder");
 	subject.addStyleName("x-unselectable");
@@ -92,9 +90,6 @@ public class RoomUIPanel extends ChatUIPanel implements RoomUIView {
 	subject.setRenameDialogTitle(i18n.t("Change the subject"));
 	final Panel subjectPanel = new Panel();
 	subjectPanel.add(subject);
-	// final Toolbar topBar = new Toolbar();
-	// topBar.addElement(subject.getElement());
-	// subjectPanel.setTopToolbar(topBar);
 	subjectPanel.setBorder(false);
 	return subjectPanel;
     }
