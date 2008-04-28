@@ -319,6 +319,7 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     void doAfterLogout() {
+	view.setOfflineTitle();
 	view.setLoadingVisible(false);
 	view.setAddRosterItemButtonVisible(false);
 	view.setJoinRoomEnabled(false);
@@ -447,6 +448,7 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     private void doAfterLogin() {
+	view.setTitleConectedAs(currentUserJid);
 	view.setLoadingVisible(false);
 	view.setAddRosterItemButtonVisible(true);
 	view.setJoinRoomEnabled(true);

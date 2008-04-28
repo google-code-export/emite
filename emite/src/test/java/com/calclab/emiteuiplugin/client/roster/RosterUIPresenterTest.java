@@ -19,6 +19,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emiteui.client.MockitoXmpp;
 import com.calclab.emiteuiplugin.client.params.AvatarProvider;
+import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
 
 public class RosterUIPresenterTest {
 
@@ -31,6 +32,7 @@ public class RosterUIPresenterTest {
     private XmppURI otherUri;
     private XmppURI meUri;
     private RosterManager rosterManager;
+    private I18nTranslationServiceMocked i18n;
 
     @Test
     public void availableTypeMustShowApropiateIcon() {
@@ -52,13 +54,12 @@ public class RosterUIPresenterTest {
 
 	// Mocks creation
 	final MockitoXmpp xmpp = new MockitoXmpp();
+	rosterManager = xmpp.getRosterManager();
 	presenceManager = xmpp.getPresenceManager();
 	presenceListener = Mockito.mock(PresenceListener.class);
-	rosterManager = Mockito.mock(RosterManager.class);
 	presenceManager.addListener(presenceListener);
 	rosterUIView = Mockito.mock(RosterUIView.class);
-	final I18nTranslationServiceMocked i18n = new I18nTranslationServiceMocked();
-
+	i18n = new I18nTranslationServiceMocked();
 	final AvatarProvider avatarProvider = new AvatarProvider() {
 	    public String getAvatarURL(XmppURI userURI) {
 		return "images/person-def.gif";
@@ -82,9 +83,9 @@ public class RosterUIPresenterTest {
 	// space? yes, a gwt-ext issue
 	assertEquals(" ", rosterUI.formatRosterItemStatusText(null, null));
 	Presence presence = createPresence(Type.available, Show.dnd, null);
-	assertEquals(" ", rosterUI.formatRosterItemStatusText(presence, null));
+	assertEquals(ChatUIUtils.getShowText(i18n, Show.dnd), rosterUI.formatRosterItemStatusText(presence, null));
 	presence = createPresence(Type.available, Show.dnd, "null");
-	assertEquals(" ", rosterUI.formatRosterItemStatusText(presence, null));
+	assertEquals(ChatUIUtils.getShowText(i18n, Show.dnd), rosterUI.formatRosterItemStatusText(presence, null));
     }
 
     @Test

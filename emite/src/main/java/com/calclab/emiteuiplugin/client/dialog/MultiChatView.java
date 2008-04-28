@@ -66,6 +66,8 @@ public interface MultiChatView {
 
     void setOfflineInfo();
 
+    void setOfflineTitle();
+
     void setOnlineInfo();
 
     void setOwnPresence(OwnPresence ownPresence);
@@ -73,6 +75,8 @@ public interface MultiChatView {
     void setRosterVisible(boolean visible);
 
     void setSendEnabled(boolean enabled);
+
+    void setTitleConectedAs(XmppURI currentUserJid);
 
     void show();
 
