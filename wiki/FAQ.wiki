@@ -3,17 +3,17 @@
 
 = Emite FAQ =
 
-== How can I integrate Emite library in my GWT application? == 
+== How can I integrate the emite xmpp library in my GWT application? == 
 
-Just include the emite.jar in your app and a inherits in your gwt.xml. See the [http://code.google.com/p/emite/wiki/QuickStart QuickStart] for more details.
+Just include the emite.jar in your app and one inherits in your gwt.xml. See the [http://code.google.com/p/emite/wiki/QuickStart QuickStart] for more details.
 
-== How can I integrate Emite UI in my GWT application ? ==
+== How can I integrate emiteui in my GWT application ? ==
 
 See the EmiteUIEntryPoint class and the [http://code.google.com/p/emite/wiki/QuickStart QuickStart] for more details.
 
-== And if I'm not using GWT how can I integrate the Emite UI in my web site? ==
+== And if I'm not using GWT how can I integrate the emiteui in my web site? ==
 
-Integrate Emite UI in another web site must be easy buy you must adapt EmiteUIEntryPoint for your necesities. See EmiteUI.html also.
+Integrate emiteui in another web site must be easy buy you must adapt EmiteUIEntryPoint for your necessities. See EmiteUI.html also.
 
 == I'm new with Java and/or GWT, how can I ... ? ==
 
@@ -25,19 +25,19 @@ Well you can use a proxy to resend the bosh petitions, to another server. But yo
 
 == What kind of authentication types emite supports? ==
 
-Sorry, initially we only support PLAIN authentication. Be carefull then with your accounts info.
+Sorry, initially we only support PLAIN authentication. Be carefully then with your accounts info.
 
-== Do you will support in the future XEP-XXXX or foo feature? ==
+== Do you will support in the future XEP-XXXX or _foo_ feature? ==
 
 Maybe, see our [http://code.google.com/p/emite/issues/list issue/enhancement list]. Emite is very modular and easy to extend, patches are welcome.
 
-== In emiteui there is a bug, what can I do? ==
+== In emiteui/demo there is a bug, what can I do? ==
 
 Please add <code>?log_level=DEBUG</code> to the url and use firebug firefox extension to see the output. Try to fill us an [http://code.google.com/p/emite/issues/list issue] with some debug info.
 
 == How can I help? ==
 
-See our [http://code.google.com/p/emite/issues/list issue list], and maybe subscribe to our devel list. Patches are welcome.
+See our [http://code.google.com/p/emite/issues/list issue list], and maybe subscribe to our development group list. Patches are welcome.
 
 == But, emite scales? ==
 
@@ -46,4 +46,3 @@ If you BOSH connector scales, and your xmpp server scales, ((e)) scales.
 == I have an error? It doesn't works for me! (with no more info) == 
 
 Yes? A recommended reading: [http://catb.org/~esr/faqs/smart-questions.html How To Ask Questions The Smart Way].
-
