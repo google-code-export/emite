@@ -1,3 +1,40 @@
+
+[DEBUG] <<<<<<<<<<<< DISPATCH ENDS
+[DEBUG] Not send. Too many conn: 1
+[DEBUG] DELAY: -1
+[DEBUG] Dispatching: <event xmlns="emite:event" type="session:on:logout" />
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>
+[DEBUG] Dispatching: <event xmlns="emite:event" type="connection:do:stop" />
+[INFO] STATE CHANGED: disconnected - old: connected
+[DEBUG] Dispatching: <event xmlns="emite:event" type="connection:do:send"><presence xmlns="jabber:client" type="unavailable" from="test9@emitedemo.ourproject.org/emiteui-1209477008176" to="emitedemo.ourproject.org" /></event>
+[DEBUG] <<<<<<<<<<<< DISPATCH ENDS
+[DEBUG] Sending not empty. Conn: 1
+[DEBUG] DELAY: 0
+[DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="1207758" sid="ae7ff278" type="terminate"><presence xmlns="jabber:client" type="unavailable" from="test9@emitedemo.ourproject.org/emiteui-1209477008176" to="emitedemo.ourproject.org" /></body>
+POST http://emite.ourproject.org/proxy (12129ms)
+[INFO] STATE CHANGED: connecting - old: disconnected
+[DEBUG] Dispatching: <event xmlns="emite:event" type="session:do:login" uri="test9@emitedemo.ourproject.org/emiteui-1209478304466" password="test9" />
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>
+[DEBUG] <<<<<<<<<<<< DISPATCH ENDS
+[DEBUG] Not send. Too many conn: 2
+[DEBUG] DELAY: -1
+[DEBUG] Dispatching: <event xmlns="emite:event" type="connection:do:start" domain="emitedemo.ourproject.org" />
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>
+[DEBUG] <<<<<<<<<<<< DISPATCH ENDS
+[DEBUG] Sending: Poll overhead: -73, connections: 0
+[DEBUG] DELAY: 0
+[DEBUG] GWT CONNECTOR SEND: <body xmlns="http://jabber.org/protocol/httpbind" rid="1033023" content="text/xml; charset=utf-8" to="emitedemo.ourproject.org" secure="true" ver="1.6" wait="60" ack="1" hold="1" xml:lang="en" />
+POST http://emite.ourproject.org/proxy (11577ms)
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns="http://jabber.org/protocol/httpbind"></body>
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@31
+[DEBUG] DISPATCH BEGINS >>>>>>>>>>>
+[FATAL] Uncaught Exception: java.lang.NumberFormatException: Unable to parse null 
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns="http://jabber.org/protocol/httpbind"></body>
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@32
+[DEBUG] GWT CONNECTOR RECEIVED: <body xmlns="http://jabber.org/protocol/httpbind" xmlns:stream="http://etherx.jabber.org/streams" authid="8c91dec0" sid="8c91dec0" secure="true" requests="2" inactivity="30" polling="5" wait="60" ver="1.6"><stream:features><mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl"><mechanism>DIGEST-MD5</mechanism><mechanism>PLAIN</mechanism><mechanism>ANONYMOUS</mechanism><mechanism>CRAM-MD5</mechanism></mechanisms><compression xmlns="http://jabber.org/features/compress"><method>zlib</method></compression><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"/><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></stream:features></body>
+[DEBUG] Dispatching: com.calclab.emite.client.core.packet.gwt.GWTPacket@33
+
+
 *************** SUBS NOT PRESENCE *********
 
 

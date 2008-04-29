@@ -299,10 +299,10 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	    private void logRosterItem(final String operation, final RosterItem item) {
 		final String name = item.getName();
 		final Presence presence = item.getPresence();
-		Log.info(operation + " roster item: " + item.getJID() + " name: " + name + " subsc: "
+		Log.info(operation + " roster item: " + item.getJID() + ", name: " + name + ", subsc: "
 			+ item.getSubscription());
 		if (presence != null) {
-		    logPresence(presence);
+		    logPresence(presence, "procesed after RosterChanged or RosterItemChanged");
 		} else {
 		    Log.info("with null presence");
 		}
@@ -315,6 +315,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 		Log.info("SUBS RECEIVED");
 		final XmppURI fromURI = presence.getFromURI();
 		final ChatUserUI user = rosterMap.get(fromURI);
+		// This is only while bug #53 is solved
 		if (user != null) {
 		    view.updateRosterItem(user, createMenuItemList(fromURI, presence, Subscription.to));
 		}
@@ -345,14 +346,14 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
 	presenceManager.addListener(new PresenceListener() {
 	    public void onPresenceReceived(final Presence presence) {
-		logPresence(presence);
+		logPresence(presence, "not processed in RosterUIPresenter presence listener but logged");
 	    }
 	});
 
     }
 
-    private void logPresence(final Presence presence) {
-	Log.info("PRESENCE: type: " + presence.getType() + " from: " + presence.getFrom() + " show: "
-		+ presence.getShow() + " status: " + presence.getStatus());
+    private void logPresence(final Presence presence, final String subTitle) {
+	Log.info("PRESENCE: type: " + presence.getType() + ", from: " + presence.getFrom() + ", show: "
+		+ presence.getShow() + ", status: " + presence.getStatus() + "(" + subTitle + ")");
     }
 }

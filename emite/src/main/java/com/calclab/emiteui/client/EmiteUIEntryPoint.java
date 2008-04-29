@@ -21,6 +21,8 @@
  */
 package com.calclab.emiteui.client;
 
+import java.util.Date;
+
 import org.ourproject.kune.platf.client.PlatformEvents;
 import org.ourproject.kune.platf.client.dispatch.Action;
 import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
@@ -57,6 +59,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
     private static final String GWT_PROPERTY_HTTPBASE = "gwt_property_httpbase";
     private static final String GWT_PROPERTY_ROOMHOST = "gwt_property_roomhost";
     private static final String GWT_PROPERTY_INFOHTML = "gwt_property_infohtml";
+    private static final String GWT_PROPERTY_RELEASE = "gwt_property_release";
 
     private static native String getWindowTitle()
     /*-{
@@ -188,7 +191,9 @@ public class EmiteUIEntryPoint implements EntryPoint {
     }
 
     private UserChatOptions generateUserChatOptions() {
-	return new UserChatOptions(jid.getRawValue(), passwd.getRawValue(), "blue", RosterManager.DEF_SUBSCRIPTION_MODE);
+	final String resource = "emiteui-" + new Date().getTime() + "-" + getGwtMetaProperty(GWT_PROPERTY_RELEASE);
+	return new UserChatOptions(jid.getRawValue(), passwd.getRawValue(), resource, "blue",
+		RosterManager.DEF_SUBSCRIPTION_MODE);
     }
 
     private String getGwtMetaProperty(final String property) {

@@ -25,7 +25,6 @@ import static com.calclab.emite.client.xmpp.stanzas.XmppURI.jid;
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 
 import org.ourproject.kune.platf.client.View;
@@ -376,7 +375,7 @@ public class MultiChatPresenter implements MultiChat {
 		Log.info("STATE CHANGED: " + current + " - old: " + old);
 		switch (current) {
 		case notAuthorized:
-		    view.showAlert(i18n.t("Error in authentication. Wrong user jid or password."));
+		    view.showAlert(i18n.t("Error in authentication. Wrong user jabber id or password."));
 		    break;
 		case connected:
 		    doAfterLogin();
@@ -494,9 +493,8 @@ public class MultiChatPresenter implements MultiChat {
     private void loginIfnecessary(final Show status, final String statusText) {
 	switch (xmpp.getSession().getState()) {
 	case disconnected:
-	    final String resource = "emiteui-" + new Date().getTime();
-	    xmpp.login(new XmppURI(currentUserJid.getNode(), currentUserJid.getHost(), resource), currentUserPasswd,
-		    status, statusText);
+	    xmpp.login(new XmppURI(currentUserJid.getNode(), currentUserJid.getHost(), userChatOptions.getResource()),
+		    currentUserPasswd, status, statusText);
 	    break;
 	case authorized:
 	case connecting:
