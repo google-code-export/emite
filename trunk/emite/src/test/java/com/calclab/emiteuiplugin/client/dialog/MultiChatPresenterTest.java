@@ -82,7 +82,7 @@ public class MultiChatPresenterTest {
 	};
 
 	final MultiChatCreationParam param = new MultiChatCreationParam("Chat title", null, "rooms.localhost", i18n,
-		avatarProvider, new UserChatOptions(sessionUserJid, "passwdofuser", "blue",
+		avatarProvider, new UserChatOptions(sessionUserJid, "passwdofuser", "resource", "blue",
 			RosterManager.DEF_SUBSCRIPTION_MODE));
 
 	multiChat = new MultiChatPresenter(xmpp, i18n, factory, param, multiChatlistener, roster);

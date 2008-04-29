@@ -29,17 +29,23 @@ public class UserChatOptions {
     SubscriptionMode subscriptionMode;
     private final String userJid;
     private final String userPassword;
+    private final String resource;
 
-    public UserChatOptions(final String userJid, final String userPassword, final String color,
+    public UserChatOptions(final String userJid, final String userPassword, final String resource, final String color,
 	    final SubscriptionMode subscriptionMode) {
 	this.userJid = userJid;
 	this.userPassword = userPassword;
+	this.resource = resource;
 	this.color = color;
 	this.subscriptionMode = subscriptionMode;
     }
 
     public String getColor() {
 	return color;
+    }
+
+    public String getResource() {
+	return resource;
     }
 
     public SubscriptionMode getSubscriptionMode() {
