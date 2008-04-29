@@ -34,17 +34,18 @@ public class BoshState {
     private String sid;
 
     private boolean isCurrentResponseEmpty;
+    private final String domain;
 
-    public BoshState(final long currentTime) {
-	this.sid = null;
-	this.currentConnections = 0;
-	this.poll = 1;
-	this.isTerminating = false;
-	lastSendTime = currentTime;
+    public BoshState(final String domain) {
+	this.domain = domain;
     }
 
     public int getCurrentRequestsCount() {
 	return currentConnections;
+    }
+
+    public String getDomain() {
+	return domain;
     }
 
     public int getPoll() {
@@ -75,6 +76,14 @@ public class BoshState {
 	    }
 	}
 	return time;
+    }
+
+    public void init(final long currentTime) {
+	this.sid = null;
+	this.currentConnections = 0;
+	this.poll = 1;
+	this.isTerminating = false;
+	lastSendTime = currentTime;
     }
 
     public boolean isFirstResponse() {

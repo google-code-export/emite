@@ -15,16 +15,16 @@ public class BoshManagerTest {
     private Services services;
     private EmiteStub emite;
     private BoshStream stream;
-    private BoshOptions options;
     private BoshManager manager;
+    private BoshState state;
 
     @Before
     public void aaCreate() {
 	services = mock(Services.class);
 	emite = new EmiteStub();
 	stream = mock(BoshStream.class);
-	options = new BoshOptions("http-bind");
-	manager = new BoshManager(services, emite, stream, options);
+	state = mock(BoshState.class);
+	manager = new BoshManager(services, emite, stream, state);
 	manager.install();
     }
 
@@ -61,11 +61,12 @@ public class BoshManagerTest {
     @Test
     public void shouldSetSIDWhenFirstBody() {
 	startManager();
+	stub(state.isFirstResponse()).toReturn(true);
 	emite
 		.receives("<body xmlns='http://jabber.org/protocol/httpbind' xmlns:stream='http://etherx.jabber.org/streams' "
 			+ "authid='505ea252' sid='theSid' secure='true' requests='2' inactivity='30' polling='5' wait='60' ver='1.6'></body>");
-	assertEquals("theSid", manager.getState().getSID());
-	assertEquals(5000 + BoshManager.POLL_SECURITY, manager.getState().getPoll());
+	verify(state).setSID("theSid");
+	verify(state).setPoll(5000 + BoshManager.POLL_SECURITY);
     }
 
     @Test
