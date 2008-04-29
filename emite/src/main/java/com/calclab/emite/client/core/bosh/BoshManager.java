@@ -68,34 +68,31 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     private boolean isRunning;
     private final Services services;
-    private final BoshState state;
-    private final Stream stream;
+    private final Bosh bosh;
     private final Emite emite;
 
-    public BoshManager(final Services services, final Emite emite, final Stream stream, final BoshState state) {
+    public BoshManager(final Services services, final Emite emite, final Bosh bosh) {
 	this.services = services;
 	this.emite = emite;
-	this.stream = stream;
-	this.state = state;
+	this.bosh = bosh;
 	emite.addListener(this);
     }
 
     public void dispatchingBegins() {
+	Log.debug("DISPATCH BEGINS >>>>>>>>>>>");
 	if (isRunning) {
-	    Log.debug("DISPATCH BEGINS >>>>>>>>>>>");
-	    stream.prepareBody(state.getSID());
+	    bosh.prepareBody();
 	}
     }
 
     public void dispatchingEnds() {
 	Log.debug("<<<<<<<<<<<< DISPATCH ENDS");
 	if (isRunning) {
-	    state.setResponseEmpty(stream.isEmpty());
-	    final int delay = state.getState(services.getCurrentTime());
+	    final int delay = bosh.getState(services.getCurrentTime());
 	    Log.debug("DELAY: " + delay);
-	    if (delay == BoshState.TIME_NOW) {
+	    if (delay == Bosh.TIME_NOW) {
 		sendResponse();
-	    } else if (delay == BoshState.TIME_NEVER) {
+	    } else if (delay == Bosh.TIME_NEVER) {
 		// we are currently bussy
 	    } else {
 		pull(delay);
@@ -108,7 +105,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
     public void install() {
 	emite.subscribe(when(BoshManager.Events.onRestart), new PacketListener() {
 	    public void handle(final IPacket received) {
-		stream.setRestart(received.getAttribute("domain"));
+		bosh.setRestart(received.getAttribute("domain"));
 	    }
 	});
 	emite.subscribe(when(BoshManager.Events.onDoStart), new PacketListener() {
@@ -152,7 +149,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
      * @see ConnectorCallback
      */
     public void onError(final Throwable throwable) {
-	state.responseRecevied();
+	bosh.responseRecevied();
 	error("connector-error", throwable.getMessage());
     }
 
@@ -162,7 +159,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
      * @see ConnectorCallback
      */
     public void onResponseReceived(final int statusCode, final String content) {
-	state.responseRecevied();
+	bosh.responseRecevied();
 
 	if (statusCode >= 400) {
 	    error("response-status", "" + statusCode);
@@ -170,7 +167,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 	    final IPacket response = services.toXML(content);
 	    if (!isRunning) {
 
-	    } else if (state.isTerminateSent()) {
+	    } else if (bosh.isTerminateSent()) {
 		isRunning = false;
 	    } else if ("body".equals(response.getName())) {
 		emite.publish(response);
@@ -189,11 +186,10 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 	if (isTerminal(body)) {
 	    error("terminal", body.getAttribute("condition"));
 	} else {
-	    if (state.isFirstResponse()) {
+	    if (bosh.isFirstResponse()) {
 		final String sid = body.getAttribute("sid");
-		state.setSID(sid);
-		stream.setSID(sid);
-		state.setPoll(body.getAttributeAsInt("polling") * 1000 + POLL_SECURITY);
+		bosh.setSID(sid);
+		bosh.setPoll(body.getAttributeAsInt("polling") * 1000 + POLL_SECURITY);
 	    }
 	    final List<? extends IPacket> children = body.getChildren();
 	    for (final IPacket stanza : children) {
@@ -208,13 +204,12 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     void eventStart(final String domain) {
 	isRunning = true;
-	this.state.init(services.getCurrentTime());
-	this.stream.start(domain);
+	this.bosh.init(services.getCurrentTime());
+
     }
 
     void eventStop() {
-	stream.setTerminate();
-	state.setTerminating(true);
+	bosh.setTerminating(true);
     }
 
     private void error(final String cause, final String info) {
@@ -237,8 +232,8 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     private void sendResponse() {
 	try {
-	    services.send(state.getDomain(), services.toString(stream.clearBody()), this);
-	    state.requestSentAt(services.getCurrentTime());
+	    services.send(bosh.getDomain(), services.toString(bosh.getResponse()), this);
+	    bosh.requestSentAt(services.getCurrentTime());
 	} catch (final ConnectorException e) {
 	    error("connector:send-exception", e.getMessage());
 	}

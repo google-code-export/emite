@@ -24,7 +24,7 @@ package com.calclab.emite.client.core;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.core.bosh.BoshState;
+import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.bosh.BoshStream;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteBosh;
@@ -59,8 +59,8 @@ public class CoreModule {
 	final EmiteBosh emite = new EmiteBosh(dispatcher, stream);
 	container.install(COMPONENT_EMITE, emite);
 
-	final BoshState state = new BoshState(options.getHttpBase());
-	final BoshManager boshManager = new BoshManager(services, emite, stream, state);
+	final Bosh bosh = new Bosh(stream, options);
+	final BoshManager boshManager = new BoshManager(services, emite, bosh);
 	container.install(COMPONENT_BOSH, boshManager);
 
     }

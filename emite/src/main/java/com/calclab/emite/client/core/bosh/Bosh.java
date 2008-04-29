@@ -22,8 +22,9 @@
 package com.calclab.emite.client.core.bosh;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.core.packet.IPacket;
 
-public class BoshState {
+public class Bosh {
     public static final int TIME_NOW = 0;
     public static final int TIME_NEVER = -1;
 
@@ -35,9 +36,11 @@ public class BoshState {
 
     private boolean isCurrentResponseEmpty;
     private final String domain;
+    private final Stream stream;
 
-    public BoshState(final String domain) {
-	this.domain = domain;
+    public Bosh(final Stream stream, final BoshOptions options) {
+	this.stream = stream;
+	this.domain = options.getHttpBase();
     }
 
     public int getCurrentRequestsCount() {
@@ -52,11 +55,16 @@ public class BoshState {
 	return poll;
     }
 
+    public IPacket getResponse() {
+	return stream.clearBody();
+    }
+
     public String getSID() {
 	return sid;
     }
 
     public int getState(final long currentTime) {
+	setResponseEmpty(stream.isEmpty());
 	int time = 0;
 	if (!isCurrentResponseEmpty) {
 	    Log.debug("Sending not empty. Conn: " + currentConnections);
@@ -84,6 +92,7 @@ public class BoshState {
 	this.poll = 1;
 	this.isTerminating = false;
 	lastSendTime = currentTime;
+	this.stream.start(domain);
     }
 
     public boolean isFirstResponse() {
@@ -92,6 +101,10 @@ public class BoshState {
 
     public boolean isTerminateSent() {
 	return isTerminating;
+    }
+
+    public void prepareBody() {
+	stream.prepareBody(getSID());
     }
 
     public void requestSentAt(final long lastSendTime) {
@@ -111,16 +124,23 @@ public class BoshState {
 	this.isCurrentResponseEmpty = isResponseEmpty;
     }
 
+    public void setRestart(final String domain) {
+	stream.setRestart(domain);
+    }
+
     public void setSID(final String sid) {
 	if (this.sid != null) {
 	    throw new RuntimeException("can't change the sid");
 	}
+	stream.setSID(sid);
 	this.sid = sid;
     }
 
     public void setTerminating(final boolean isTerminating) {
 	this.isTerminating = isTerminating;
-
+	if (isTerminating) {
+	    stream.setTerminate();
+	}
     }
 
     private int getNecesaryDelayFromLastRequest(final long currentTime) {
