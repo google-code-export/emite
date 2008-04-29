@@ -87,15 +87,13 @@ public class ChatUIUtils {
 	String textLabel = "";
 
 	switch (show) {
+	case notSpecified:
 	case chat:
 	    textLabel = i18n.t("Available");
 	    break;
 	case away:
 	case xa:
 	    textLabel = i18n.t("Away");
-	    break;
-	case unknown:
-	    textLabel = i18n.t("Status unknown");
 	    break;
 	case dnd:
 	    textLabel = i18n.t("Don't disturb");

@@ -153,6 +153,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	    case xa:
 		return ChatIconDescriptor.valueOf(presence.getShow().toString());
 	    case notSpecified:
+	    case unknown:
 		return ChatIconDescriptor.available;
 	    }
 	case unavailable:
