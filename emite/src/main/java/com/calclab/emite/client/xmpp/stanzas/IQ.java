@@ -61,7 +61,7 @@ public class IQ extends BasicStanza {
     }
 
     public IQ To(final XmppURI toURI) {
-	setTo(toURI.toString());
+	setTo(toURI);
 	return this;
     }
 

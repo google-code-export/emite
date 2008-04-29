@@ -93,7 +93,7 @@ public class RosterItem {
 
     public void setPresence(final Presence presence) {
 	if (presence == null) {
-	    this.presence = new Presence(Type.unavailable, (String) null, null).With(Show.away);
+	    this.presence = new Presence(Type.unavailable, null, null).With(Show.away);
 	} else {
 	    this.presence = presence;
 	}

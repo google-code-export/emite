@@ -136,7 +136,7 @@ public class PresenceManager implements Installable {
      */
     void eventLoggedOut() {
 	if (isLoggedIn()) {
-	    final Presence presence = new Presence(Type.unavailable, userURI.toString(), userURI.getHost());
+	    final Presence presence = new Presence(Type.unavailable, userURI, userURI.getHostURI());
 	    emite.send(presence);
 	    delayedPresence = null;
 	    currentPresence = null;
@@ -185,8 +185,8 @@ public class PresenceManager implements Installable {
     }
 
     private void sendDelayedPresence() {
-	delayedPresence.setFrom(userURI.toString());
-	delayedPresence.setTo(userURI.getHost());
+	delayedPresence.setFrom(userURI);
+	delayedPresence.setTo(userURI.getHostURI());
 	setOwnPresence(delayedPresence);
 	delayedPresence = null;
     }

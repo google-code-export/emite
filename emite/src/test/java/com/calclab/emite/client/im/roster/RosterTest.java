@@ -45,9 +45,9 @@ public class RosterTest {
 
     @Test
     public void shouldFireListenerWhenItemRemoved() {
-	roster.add(new RosterItem(uri("one@domain"), Subscription.none, "one"));
+	roster.add(new RosterItem(uri("one@domain/resource1"), Subscription.none, "one"));
 	verify(listener, atLeastOnce()).onRosterChanged(isCollectionOfSize(1));
-	roster.removeItem(uri("one@domain"));
+	roster.removeItem(uri("one@domain/resource2"));
 	verify(listener, atLeastOnce()).onRosterChanged(isCollectionOfSize(0));
     }
 
