@@ -151,7 +151,6 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	    case away:
 	    case dnd:
 	    case xa:
-	    case available:
 		return ChatIconDescriptor.valueOf(presence.getShow().toString());
 	    case notSpecified:
 		return ChatIconDescriptor.available;
@@ -189,7 +188,6 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 		itemList.addItem(createStartChatMenuItem(userURI));
 		if (presence.getShow() != null) {
 		    switch (presence.getShow()) {
-		    case available:
 		    case chat:
 		    case dnd:
 		    case xa:

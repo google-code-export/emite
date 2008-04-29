@@ -40,7 +40,7 @@ public class Presence extends BasicStanza {
      * </p>
      */
     public static enum Show {
-	available, away, chat, dnd, xa, notSpecified, unknown
+	away, chat, dnd, xa, notSpecified, unknown
     }
 
     public enum Type {

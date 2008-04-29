@@ -251,7 +251,7 @@ public class MultiChatPresenter implements MultiChat {
 	switch (ownPresence.getStatus()) {
 	case online:
 	case onlinecustom:
-	    status = Show.available;
+	    status = Show.chat;
 	    loginIfnecessary(status, ownPresence.getStatusText());
 	    break;
 	case busy:

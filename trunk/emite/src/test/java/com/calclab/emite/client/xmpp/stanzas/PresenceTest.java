@@ -26,8 +26,8 @@ public class PresenceTest {
     public void shouldGetShow() {
 	Presence presence = new Presence(new Packet("presence"));
 	assertSame(Show.notSpecified, presence.getShow());
-	presence = new Presence(new Packet("presence").With(new Packet("show").WithText(Show.available.toString())));
-	assertSame(Show.available, presence.getShow());
+	presence = new Presence(new Packet("presence").With(new Packet("show").WithText(Show.chat.toString())));
+	assertSame(Show.chat, presence.getShow());
 	presence = new Presence(new Packet("presence").With(new Packet("show").WithText("not valid show")));
 	assertSame(Show.unknown, presence.getShow());
     }
