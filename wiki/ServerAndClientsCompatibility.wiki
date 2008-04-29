@@ -1,4 +1,4 @@
-Emite Xmpp servers compatibily matrix:
+Emite Xmpp servers compatibility matrix:
 
 || *Xmpp Server* || *Version* || *Compatible?* || *Know Issues* || *Notes* ||
 || openfire || 3.3.2 || yes || Some server issue affects emite connectivity || ||
@@ -22,4 +22,3 @@ How emite talk with other clients:
 || gmail (web) || yes || Currently gmail web version don't support rooms || ||
 || gtalk (client) || ? || || ||
 || iChat || yes || || ||
-
