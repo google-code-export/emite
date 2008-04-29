@@ -467,6 +467,7 @@ public class MultiChatPresenter implements MultiChat {
 
     private void finishChatCreation(final Chat chat, final ChatUI chatUI) {
 	view.addChat(chatUI);
+	view.highLight();
 	currentChat = chatUI;
 	chats.put(chat, chatUI);
 	checkThereAreChats();
