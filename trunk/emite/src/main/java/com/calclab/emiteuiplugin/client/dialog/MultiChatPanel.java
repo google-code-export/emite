@@ -220,9 +220,10 @@ public class MultiChatPanel implements MultiChatView {
 	    if (eastPanel.isRendered()) {
 		eastPanel.doLayout();
 	    }
-	    eastPanel.enable();
+	    // FIXME: in 0.3.0 do this in header maybe
+	    // eastPanel.enable();
 	} else {
-	    eastPanel.disable();
+	    // eastPanel.disable();
 	}
     }
 
