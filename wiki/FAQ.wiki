@@ -3,6 +3,18 @@
 
 = Emite FAQ =
 
+== How can I integrate Emite library in my GWT application? == 
+
+Just include the emite.jar in your app and a inherits in your gwt.xml. See the [http://code.google.com/p/emite/wiki/QuickStart QuickStart] for more details.
+
+== How can I integrate Emite UI in my GWT application ? ==
+
+See the EmiteUIEntryPoint class and the [http://code.google.com/p/emite/wiki/QuickStart QuickStart] for more details.
+
+== And if I'm not using GWT how can I integrate the Emite UI in my web site? ==
+
+Integrate Emite UI in another web site must be easy buy you must adapt EmiteUIEntryPoint for your necesities. See EmiteUI.html also.
+
 == I'm new with Java and/or GWT, how can I ... ? ==
 
 We recommend you to read and play a little bit with GWT for instance with [http://code.google.com/webtoolkit/gettingstarted.html Getting Started with GWT], also try to run the GWT Samples. After that try to build, install a run our samples.
