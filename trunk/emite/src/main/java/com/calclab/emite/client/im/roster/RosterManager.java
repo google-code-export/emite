@@ -134,7 +134,7 @@ public class RosterManager extends SessionComponent implements Installable {
 		    handleSubscriptionRequest(presence);
 		    break;
 		case subscribed:
-		    fireSubscribedReceived(presence);
+		    handleUnsubscriptionRequest(presence);
 		    break;
 		case unsubscribed:
 		    fireUnsubscribedReceived(presence);
@@ -145,6 +145,7 @@ public class RosterManager extends SessionComponent implements Installable {
 		    break;
 		}
 	    }
+
 	});
     }
 
@@ -270,6 +271,11 @@ public class RosterManager extends SessionComponent implements Installable {
 	    break;
 	}
 	fireSubscriptionRequest(presence);
+    }
+
+    private void handleUnsubscriptionRequest(final Presence presence) {
+	roster.removeItem(presence.getFromURI());
+	fireSubscribedReceived(presence);
     }
 
     private void requestRoster() {

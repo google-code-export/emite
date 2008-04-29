@@ -98,32 +98,24 @@ public class Presence extends BasicStanza {
     }
 
     public Presence() {
-	this(null, (String) null, (String) null);
+	this(null, null, null);
     }
 
     public Presence(final IPacket stanza) {
 	super(stanza);
     }
 
-    public Presence(final Type type, final String from, final String to) {
+    public Presence(final Type type, final XmppURI from, final XmppURI to) {
 	super("presence", "jabber:client");
 	if (type != null) {
 	    setType(type.toString());
 	}
-	if (from != null) {
-	    setFrom(from.toString());
-	}
-	if (to != null) {
-	    setTo(to.toString());
-	}
-    }
-
-    public Presence(final Type type, final XmppURI from, final XmppURI to) {
-	this(type, from != null ? from.toString() : null, to != null ? to.toString() : null);
+	setFrom(from);
+	setTo(to);
     }
 
     public Presence(final XmppURI from) {
-	this(null, from.toString(), null);
+	this(null, from, null);
     }
 
     /**

@@ -22,7 +22,6 @@ public class EmiteStub implements Emite {
     private final ArrayList<IPacket> published;
     private IPacket lastIQSent;
     private final ArrayList<IPacket> sent;
-    private StringBuffer contentsString;
 
     public EmiteStub() {
 	xmler = new TigaseXMLService();
