@@ -9,7 +9,7 @@ We recommend you to read and play a little bit with GWT for instance with [http:
 
 == I need to install a xmpp server? ==
 
-Well you can use a proxy to resend the bosh petitions, to another server. But you have to respect the [http://code.google.com/support/bin/answer.py?answer=77865&topic=13006 same origin policy]. Also see our [http://code.google.com/p/emite/wiki/ServerCompatibility Server Compatibility Matrix].
+Well you can use a proxy to resend the bosh petitions, to another server. But you have to respect the [http://code.google.com/support/bin/answer.py?answer=77865&topic=13006 same origin policy]. Also see our [http://code.google.com/p/emite/wiki/ServerAndClientsCompatibility Server and Client Compatibility Matrix].
 
 == What kind of authentication types emite supports? ==
 
