@@ -9,3 +9,17 @@ Emite Xmpp servers compatibily matrix:
 || jabberd  || 1.4.3 || no || Protocol compatibility issue || ||
 || tigase   || ? || ? || Not tested || ||
 || ejabberd || ? || ? || Not tested || ||
+
+
+== Clients ===
+
+How emite talk with other clients:
+
+|| *Xmpp Client* || *Compatible?* || *Know Issues* || *Notes ||
+|| pidjin || yes || || ||
+|| psi || yes || || ||
+|| audium || yes || || ||
+|| gmail (web) || yes || gmail web version don't suppor currently rooms || ||
+|| gtalk (client) || ? || || ||
+|| iChat || yes || || ||
+
