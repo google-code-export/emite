@@ -22,6 +22,7 @@
 package com.calclab.emite.client.im.presence;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 
 import java.util.ArrayList;
 
@@ -36,8 +37,6 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
-
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class PresenceManager implements Installable {
     private Presence delayedPresence;
@@ -108,7 +107,7 @@ public class PresenceManager implements Installable {
      * 'type' attribute with a value of "unavailable". (
      */
     public void setOwnPresence(final String statusMessage, final Show show) {
-	final Show showValue = show != null ? show : Presence.Show.available;
+	final Show showValue = show != null ? show : Presence.Show.chat;
 	final Presence presence = new Presence().With(showValue);
 	if (statusMessage != null) {
 	    presence.setStatus(statusMessage);
