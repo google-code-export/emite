@@ -66,18 +66,17 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     public static final int POLL_SECURITY = 1500;
 
-    private final String httpBase;
     private boolean isRunning;
     private final Services services;
-    private BoshState state;
+    private final BoshState state;
     private final Stream stream;
     private final Emite emite;
 
-    public BoshManager(final Services services, final Emite emite, final Stream stream, final BoshOptions options) {
+    public BoshManager(final Services services, final Emite emite, final Stream stream, final BoshState state) {
 	this.services = services;
 	this.emite = emite;
 	this.stream = stream;
-	this.httpBase = options.getHttpBase();
+	this.state = state;
 	emite.addListener(this);
     }
 
@@ -209,17 +208,13 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     void eventStart(final String domain) {
 	isRunning = true;
-	this.state = new BoshState(services.getCurrentTime());
+	this.state.init(services.getCurrentTime());
 	this.stream.start(domain);
     }
 
     void eventStop() {
 	stream.setTerminate();
 	state.setTerminating(true);
-    }
-
-    BoshState getState() {
-	return state;
     }
 
     private void error(final String cause, final String info) {
@@ -242,7 +237,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     private void sendResponse() {
 	try {
-	    services.send(httpBase, services.toString(stream.clearBody()), this);
+	    services.send(state.getDomain(), services.toString(stream.clearBody()), this);
 	    state.requestSentAt(services.getCurrentTime());
 	} catch (final ConnectorException e) {
 	    error("connector:send-exception", e.getMessage());
