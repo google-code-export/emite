@@ -3,8 +3,11 @@ package com.calclab.emite.client.im.roster;
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import static com.calclab.emite.testing.TestMatchers.isListOfSize;
 import static com.calclab.emite.testing.TestMatchers.packetLike;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -126,7 +129,8 @@ public class RosterManagerTest {
 	final Presence presence = new Presence(Presence.Type.unsubscribed, uri("from@domain"), uri("to@domain"));
 	emite.receives(presence);
 	verify(listener).onUnsubscribedReceived((Presence) packetLike(presence), same(SubscriptionMode.manual));
-	verify(roster).removeItem(uri("from@domain"));
+	// Not now, maybe in the future (0.3.0):
+	// verify(roster).removeItem(uri("from@domain"));
     }
 
 }

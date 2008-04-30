@@ -13,5 +13,6 @@ then
 fi
 
 chmod -R g+rw target/emite-0.2.0/com.calclab.emiteui.EmiteUI/std/
+# from time to time use --delete
 rsync --progress -C -r -p target/emite-0.2.0/com.calclab.emiteui.EmiteUI/std/ ${EXTRA}ourproject.org:/home/groups/kune/htdocs/emitedemo/$EXTRADEST
 rsync --progress -C -r -p target/emite-0.2.0/com.calclab.emiteui.EmiteUI/std/EmiteUIDemo.html  ${EXTRA}ourproject.org:/home/groups/kune/htdocs/emitedemo/${EXTRADEST}index.html

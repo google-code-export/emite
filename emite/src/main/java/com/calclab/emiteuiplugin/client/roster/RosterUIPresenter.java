@@ -57,6 +57,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     public static final String ON_CANCEL_SUBSCRITOR = "emiteuiplugin.oncancelsubscriptor";
     public static final String ON_REQUEST_REMOVE_ROSTERITEM = "emiteuiplugin.onrequestremoveitem";
     public static final String ON_REQUEST_SUBSCRIBE = "emiteuiplugin.onrequestsubscribeitem";
+    public static final String ON_REQUEST_UNSUBSCRIBE = "emiteuiplugin.onrequestunsubscribeitem";
 
     private RosterUIView view;
     private final HashMap<XmppURI, ChatUserUI> rosterMap;
@@ -84,6 +85,9 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	if (eventName.equals(ON_CANCEL_SUBSCRITOR)) {
 	    final XmppURI userURI = (XmppURI) param;
 	    rosterManager.cancelSubscriptor(userURI);
+	} else if (eventName.equals(ON_REQUEST_UNSUBSCRIBE)) {
+	    final XmppURI userURI = (XmppURI) param;
+	    rosterManager.requestUnsubscribe(userURI);
 	} else if (eventName.equals(ON_REQUEST_REMOVE_ROSTERITEM)) {
 	    final XmppURI userURI = (XmppURI) param;
 	    rosterManager.requestRemoveItem(userURI);
@@ -168,6 +172,11 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	return ChatIconDescriptor.unknown;
     }
 
+    private UserGridMenuItem<XmppURI> createCancelSubscriptorBuddyMenuItem(final XmppURI userURI) {
+	return new UserGridMenuItem<XmppURI>("del-icon",
+		i18n.t("Stop to show when I'm connected or not to this buddy"), ON_CANCEL_SUBSCRITOR, userURI);
+    }
+
     private UserGridMenuItemList createMenuItemList(final RosterItem item) {
 	return createMenuItemList(item.getJID(), item.getPresence(), item.getSubscription());
     }
@@ -243,6 +252,12 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	default:
 	    Log.error("Code bug, subscription: " + subscription);
 	}
+	switch (subscription) {
+	case both:
+	case from:
+	    itemList.addItem(createCancelSubscriptorBuddyMenuItem(userURI));
+	    break;
+	}
 	itemList.addItem(createRemoveBuddyMenuItem(userURI));
 	return itemList;
     }
@@ -264,7 +279,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
     private UserGridMenuItem<XmppURI> createUnsubscribeBuddyMenuItem(final XmppURI userURI) {
 	return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Stop to see when this buddy is connected or not"),
-		ON_CANCEL_SUBSCRITOR, userURI);
+		ON_REQUEST_UNSUBSCRIBE, userURI);
     }
 
     private void createXmppListeners() {
