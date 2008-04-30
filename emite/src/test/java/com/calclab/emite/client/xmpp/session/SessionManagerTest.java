@@ -31,9 +31,9 @@ public class SessionManagerTest {
     @Test
     public void shouldHandleAuthorization() {
 	manager.doLogin(uri("name@domain/resource"), "password");
-	manager.eventAuthorized();
+	emite.receives(SessionManager.Events.onAuthorized);
 	verify(session).setState(State.authorized);
-	emite.verifyPublished(BoshManager.Events.restart("domain"));
+	emite.verifyPublished(BoshManager.Events.onRestart);
     }
 
     @Test
@@ -55,14 +55,14 @@ public class SessionManagerTest {
 
     @Test
     public void shouldSetStatesWhenError() {
-	manager.eventOnError();
+	emite.receives(BoshManager.Events.error("cause", "info"));
 	verify(session).setState(State.error);
 	verify(session).setState(State.disconnected);
     }
 
     @Test
     public void shouldStopAndDisconnectWhenLoggedOut() {
-	manager.eventLoggedOut();
+	emite.receives(SessionManager.Events.onLoggedOut);
 	verify(session).setState(State.disconnected);
 	emite.verifyPublished(BoshManager.Events.stop);
     }

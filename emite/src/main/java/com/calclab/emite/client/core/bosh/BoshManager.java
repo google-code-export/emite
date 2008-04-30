@@ -27,6 +27,7 @@ import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.components.Installable;
+import com.calclab.emite.client.core.bosh.Bosh.BoshState;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
@@ -45,7 +46,6 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     public static class Events {
 	public static final Event onRestart = new Event("connection:do:restart");
-
 	public static final Event onDoStart = new Event("connection:do:start");
 	public static final Event stop = new Event("connection:do:stop");
 	public static final Event onError = new Event("connection:on:error");
@@ -55,21 +55,16 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 	    return (Event) onError.Params("cause", cause).With("info", info);
 	}
 
-	public static IPacket restart(final String domain) {
-	    return BoshManager.Events.onRestart.Params("domain", domain);
-	}
-
-	public static IPacket start(final String host) {
-	    return BoshManager.Events.onDoStart.Params("domain", host);
+	public static IPacket start(final String domain) {
+	    return BoshManager.Events.onDoStart.Params("domain", domain);
 	}
     }
-
-    public static final int POLL_SECURITY = 1500;
 
     private boolean isRunning;
     private final Services services;
     private final Bosh bosh;
     private final Emite emite;
+    private String domain;
 
     public BoshManager(final Services services, final Emite emite, final Bosh bosh) {
 	this.services = services;
@@ -80,22 +75,19 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     public void dispatchingBegins() {
 	Log.debug("DISPATCH BEGINS >>>>>>>>>>>");
-	if (isRunning) {
+	if (isRunning()) {
 	    bosh.prepareBody();
 	}
     }
 
     public void dispatchingEnds() {
 	Log.debug("<<<<<<<<<<<< DISPATCH ENDS");
-	if (isRunning) {
-	    final int delay = bosh.getState(services.getCurrentTime());
-	    Log.debug("DELAY: " + delay);
-	    if (delay == Bosh.TIME_NOW) {
+	if (isRunning()) {
+	    final BoshState state = bosh.getState(services.getCurrentTime());
+	    if (state.shouldSend()) {
 		sendResponse();
-	    } else if (delay == Bosh.TIME_NEVER) {
-		// we are currently bussy
-	    } else {
-		pull(delay);
+	    } else if (state.shouldWait()) {
+		pull(state.getTime());
 	    }
 	} else {
 	    Log.debug("BOSH IS STOP. NO NEED TO SEND ANYTHING");
@@ -105,24 +97,37 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
     public void install() {
 	emite.subscribe(when(BoshManager.Events.onRestart), new PacketListener() {
 	    public void handle(final IPacket received) {
-		bosh.setRestart(received.getAttribute("domain"));
+		bosh.setRestart(domain);
 	    }
 	});
 	emite.subscribe(when(BoshManager.Events.onDoStart), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventStart(received.getAttribute("domain"));
+		eventStart(domain);
 	    }
 
 	});
 	emite.subscribe(when("body"), new PacketListener() {
 	    public void handle(final IPacket iPacket) {
-		eventBody(iPacket);
+		if (isTerminal(iPacket)) {
+		    error("terminal", iPacket.getAttribute("condition"));
+		} else {
+		    if (bosh.isFirstResponse()) {
+			final String sid = iPacket.getAttribute("sid");
+			final int poll = iPacket.getAttributeAsInt("polling");
+			final int requests = iPacket.getAttributeAsInt("requests");
+			bosh.setAttributes(sid, poll, requests);
+		    }
+		    final List<? extends IPacket> children = iPacket.getChildren();
+		    for (final IPacket stanza : children) {
+			emite.publish(stanza);
+		    }
+		}
 	    }
 	});
 
 	emite.subscribe(when(BoshManager.Events.onError), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventError(received);
+		setRunning(false);
 	    }
 	});
 
@@ -149,7 +154,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
      * @see ConnectorCallback
      */
     public void onError(final Throwable throwable) {
-	bosh.responseRecevied();
+	bosh.requestCountDecreases();
 	error("connector-error", throwable.getMessage());
     }
 
@@ -159,16 +164,16 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
      * @see ConnectorCallback
      */
     public void onResponseReceived(final int statusCode, final String content) {
-	bosh.responseRecevied();
+	bosh.requestCountDecreases();
 
 	if (statusCode >= 400) {
 	    error("response-status", "" + statusCode);
 	} else {
 	    final IPacket response = services.toXML(content);
-	    if (!isRunning) {
+	    if (!isRunning()) {
 
 	    } else if (bosh.isTerminateSent()) {
-		isRunning = false;
+		setRunning(false);
 	    } else if ("body".equals(response.getName())) {
 		emite.publish(response);
 	    } else {
@@ -177,34 +182,16 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 	}
     }
 
+    public void setDomain(final String domain) {
+	this.domain = domain;
+    }
+
+    public void setRunning(final boolean isRunning) {
+	this.isRunning = isRunning;
+    }
+
     public void uninstall() {
 	// TODO Auto-generated method stub
-
-    }
-
-    void eventBody(final IPacket body) {
-	if (isTerminal(body)) {
-	    error("terminal", body.getAttribute("condition"));
-	} else {
-	    if (bosh.isFirstResponse()) {
-		final String sid = body.getAttribute("sid");
-		bosh.setSID(sid);
-		bosh.setPoll(body.getAttributeAsInt("polling") * 1000 + POLL_SECURITY);
-	    }
-	    final List<? extends IPacket> children = body.getChildren();
-	    for (final IPacket stanza : children) {
-		emite.publish(stanza);
-	    }
-	}
-    }
-
-    void eventError(final IPacket received) {
-	isRunning = false;
-    }
-
-    void eventStart(final String domain) {
-	isRunning = true;
-	this.bosh.init(services.getCurrentTime());
 
     }
 
@@ -213,8 +200,15 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
     }
 
     private void error(final String cause, final String info) {
-	isRunning = false;
+	setRunning(false);
 	emite.publish(BoshManager.Events.error(cause, info));
+    }
+
+    private void eventStart(final String domain) {
+	setDomain(domain);
+	setRunning(true);
+	this.bosh.init(services.getCurrentTime());
+
     }
 
     private boolean isTerminal(final IPacket body) {
@@ -232,8 +226,8 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     private void sendResponse() {
 	try {
-	    services.send(bosh.getDomain(), services.toString(bosh.getResponse()), this);
-	    bosh.requestSentAt(services.getCurrentTime());
+	    services.send(bosh.getHttpBase(), services.toString(bosh.getResponse()), this);
+	    bosh.requestCountEncreasesAt(services.getCurrentTime());
 	} catch (final ConnectorException e) {
 	    error("connector:send-exception", e.getMessage());
 	}

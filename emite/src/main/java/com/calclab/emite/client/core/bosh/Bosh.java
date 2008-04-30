@@ -25,30 +25,54 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.packet.IPacket;
 
 public class Bosh {
-    public static final int TIME_NOW = 0;
-    public static final int TIME_NEVER = -1;
+    public static class BoshState {
+	private final int time;
+
+	private BoshState(final int time) {
+	    this.time = time;
+	}
+
+	public int getTime() {
+	    return time;
+	}
+
+	public boolean shouldIgnore() {
+	    return time < 0;
+	}
+
+	public boolean shouldSend() {
+	    return time == 0;
+	}
+
+	public boolean shouldWait() {
+	    return time > 0;
+	}
+    }
+    private static final BoshState SEND = new BoshState(0);
+    private static final BoshState IGNORE = new BoshState(-1);
 
     private int currentConnections;
     private boolean isTerminating;
     private long lastSendTime;
     private int poll;
-    private String sid;
 
-    private boolean isCurrentResponseEmpty;
-    private final String domain;
+    private String sid;
     private final Stream stream;
+    private int requests;
+
+    private final BoshOptions options;
 
     public Bosh(final Stream stream, final BoshOptions options) {
 	this.stream = stream;
-	this.domain = options.getHttpBase();
+	this.options = options;
     }
 
     public int getCurrentRequestsCount() {
 	return currentConnections;
     }
 
-    public String getDomain() {
-	return domain;
+    public String getHttpBase() {
+	return options.getHttpBase();
     }
 
     public int getPoll() {
@@ -63,27 +87,34 @@ public class Bosh {
 	return sid;
     }
 
-    public int getState(final long currentTime) {
-	setResponseEmpty(stream.isEmpty());
-	int time = 0;
-	if (!isCurrentResponseEmpty) {
-	    Log.debug("Sending not empty. Conn: " + currentConnections);
-	    time = TIME_NOW;
+    public BoshState getState(final long currentTime) {
+	BoshState state = null;
+
+	if (!stream.isEmpty()) {
+	    if (currentConnections < requests) {
+		Log.debug("STATE - SEND: Not empty request and current connections ok (" + currentConnections + ")");
+		state = SEND;
+	    } else {
+		Log.debug("STATE - NOT SEND: Not empty request, but too many connections (" + currentConnections + ")");
+		state = IGNORE;
+	    }
 	} else {
 	    if (currentConnections > 0) {
-		Log.debug("Not send. Too many conn: " + currentConnections);
-		time = TIME_NEVER;
+		Log.debug("STATE - NOT SEND: Empty request and connections running (" + currentConnections + ")");
+		state = IGNORE;
 	    } else {
-		final int delay = getNecesaryDelayFromLastRequest(currentTime);
-		if (delay > 0) {
-		    time = delay;
+		final int delay = (int) (currentTime - lastSendTime);
+		if (delay <= poll) {
+		    Log.debug("STATE - NOT SEND: Empty request, no conn but too frequent: " + delay);
+		    state = new BoshState(poll - delay);
 		} else {
-		    Log.debug("Sending: Poll overhead: " + delay + ", connections: " + currentConnections);
-		    time = TIME_NOW;
+		    Log.debug("STATE - SEND: Empty request, not connections (" + currentConnections
+			    + ") and delay ok: " + delay + " with poll: " + poll);
+		    state = SEND;
 		}
 	    }
 	}
-	return time;
+	return state;
     }
 
     public void init(final long currentTime) {
@@ -92,7 +123,7 @@ public class Bosh {
 	this.poll = 1;
 	this.isTerminating = false;
 	lastSendTime = currentTime;
-	this.stream.start(domain);
+	this.stream.start(options.getHttpBase());
     }
 
     public boolean isFirstResponse() {
@@ -107,35 +138,23 @@ public class Bosh {
 	stream.prepareBody(getSID());
     }
 
-    public void requestSentAt(final long lastSendTime) {
+    public void requestCountDecreases() {
+	currentConnections--;
+    }
+
+    public void requestCountEncreasesAt(final long lastSendTime) {
 	this.lastSendTime = lastSendTime;
 	currentConnections++;
     }
 
-    public void responseRecevied() {
-	currentConnections--;
-    }
-
-    public void setPoll(final int poll) {
-	this.poll = poll;
-    }
-
-    public void setResponseEmpty(final boolean isResponseEmpty) {
-	this.isCurrentResponseEmpty = isResponseEmpty;
+    public void setAttributes(final String sid, final int poll, final int requests) {
+	this.poll = poll * 1000 + options.getWait();
+	this.requests = requests;
+	setSID(sid);
     }
 
     public void setRestart(final String domain) {
 	stream.setRestart(domain);
-    }
-
-    public void setSID(final String sid) {
-	if (this.sid != null) {
-	    final String message = "can't change the sid";
-	    Log.error(message);
-	    throw new RuntimeException(message);
-	}
-	stream.setSID(sid);
-	this.sid = sid;
     }
 
     public void setTerminating(final boolean isTerminating) {
@@ -145,11 +164,14 @@ public class Bosh {
 	}
     }
 
-    private int getNecesaryDelayFromLastRequest(final long currentTime) {
-	final int ms = poll;
-	final int diference = (int) (currentTime - lastSendTime);
-	final int total = ms - diference;
-	return total;
+    private void setSID(final String sid) {
+	if (this.sid != null) {
+	    final String message = "can't change the sid";
+	    Log.error(message);
+	    throw new RuntimeException(message);
+	}
+	stream.setSID(sid);
+	this.sid = sid;
     }
 
 }
