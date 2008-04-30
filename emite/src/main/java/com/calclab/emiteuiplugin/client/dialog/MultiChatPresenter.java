@@ -124,8 +124,8 @@ public class MultiChatPresenter implements MultiChat {
 		.getNode(), userChatOptions.getColor(), new ChatUIListener() {
 	    public void onActivate(final ChatUI chatUI) {
 		view.setInputText(chatUI.getSavedInput());
-		view.focusInput();
 		currentChat = chatUI;
+		view.focusInput();
 	    }
 
 	    public void onCloseConfirmed(final ChatUI chatUI) {
@@ -166,8 +166,8 @@ public class MultiChatPresenter implements MultiChat {
 		    public void onActivate(final ChatUI chatUI) {
 			final RoomUI roomUI = (RoomUI) chatUI;
 			view.setInputText(roomUI.getSavedInput());
-			view.focusInput();
 			currentChat = chatUI;
+			view.focusInput();
 		    }
 
 		    public void onCloseConfirmed(final ChatUI chatUI) {
@@ -238,6 +238,14 @@ public class MultiChatPresenter implements MultiChat {
 
     public void joinRoom(final String roomName, final String serverName) {
 	xmpp.getRoomManager().openChat(uri(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
+    }
+
+    public void onInputFocus() {
+	currentChat.onInputFocus();
+    }
+
+    public void onInputUnFocus() {
+	currentChat.onInputUnFocus();
     }
 
     public void onModifySubjectRequested(final String newSubject) {
@@ -341,7 +349,8 @@ public class MultiChatPresenter implements MultiChat {
 
     void messageReceived(final Chat chat, final Message message) {
 	final ChatUI chatUI = getChat(chat);
-	chatUI.addMessage(message.getFromURI().getNode(), message.getBody());
+	final String node = message.getFromURI().getNode();
+	chatUI.addMessage(node != null ? node : message.getFromURI().toString(), message.getBody());
     }
 
     void messageReceivedInRoom(final Chat chat, final Message message) {

@@ -93,6 +93,13 @@ public class MultiChatPresenterTest {
     }
 
     @Test
+    public void broadCastMessageNotEmptyFrom() {
+	final Message message = new Message(XmppURI.jid("emitedemo.ourproject.org"), uri(sessionUserJid), messageBody);
+	multiChat.messageReceived(chat, message);
+	Mockito.verify(chatUIView).addMessage("emitedemo.ourproject.org", "green", messageBody);
+    }
+
+    @Test
     public void closeAllChatsWithoutConfirmation() {
 	multiChat.closeAllChats(true);
 	multiChat.doAfterCloseConfirmed(chat, chatUI);

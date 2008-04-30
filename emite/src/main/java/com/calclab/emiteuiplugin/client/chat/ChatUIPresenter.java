@@ -134,6 +134,14 @@ public class ChatUIPresenter implements ChatUI {
 	listener.onCurrentUserSend(message);
     }
 
+    public void onInputFocus() {
+	onActivated();
+    }
+
+    public void onInputUnFocus() {
+	onDeactivated();
+    }
+
     public void saveInput(final String inputText) {
 	savedInput = inputText;
     }
