@@ -99,19 +99,22 @@ public class SessionManager implements Installable {
 
 	emite.subscribe(when(Events.onAuthorized), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventAuthorized();
+		session.setState(Session.State.authorized);
+		emite.publish(BoshManager.Events.onRestart);
 	    }
 	});
 
 	emite.subscribe(when(SessionManager.Events.onLoggedOut), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventLoggedOut();
+		emite.publish(BoshManager.Events.stop);
+		session.setState(Session.State.disconnected);
 	    }
 	});
 
 	emite.subscribe(when(BoshManager.Events.onError), new PacketListener() {
 	    public void handle(final IPacket received) {
-		eventOnError();
+		session.setState(Session.State.error);
+		session.setState(Session.State.disconnected);
 	    }
 
 	});
@@ -127,21 +130,6 @@ public class SessionManager implements Installable {
 
     public void setSession(final Session session) {
 	this.session = session;
-    }
-
-    void eventAuthorized() {
-	session.setState(Session.State.authorized);
-	emite.publish(BoshManager.Events.restart(userURI.getHost()));
-    }
-
-    void eventLoggedOut() {
-	emite.publish(BoshManager.Events.stop);
-	session.setState(Session.State.disconnected);
-    }
-
-    void eventOnError() {
-	session.setState(Session.State.error);
-	session.setState(Session.State.disconnected);
     }
 
     private void sendSessionRequest(final String uri) {
