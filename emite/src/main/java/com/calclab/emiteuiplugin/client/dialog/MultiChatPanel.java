@@ -50,6 +50,8 @@ import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Container;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.QuickTip;
+import com.gwtext.client.widgets.QuickTips;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.Toolbar;
 import com.gwtext.client.widgets.ToolbarButton;
@@ -92,6 +94,7 @@ public class MultiChatPanel implements MultiChatView {
 
     public MultiChatPanel(final String chatDialogTitle, final RosterUIPanel rosterUIPanel,
 	    final I18nTranslationService i18n, final MultiChatPresenter presenter) {
+	quickTipsInit();
 	this.chatDialogTitle = chatDialogTitle;
 	this.rosterUIPanel = rosterUIPanel;
 	this.i18n = i18n;
@@ -486,6 +489,15 @@ public class MultiChatPanel implements MultiChatView {
 	if (dialog.isRendered()) {
 	    dialog.doLayout();
 	}
+    }
+
+    private void quickTipsInit() {
+	QuickTips.init();
+	final QuickTip quickTipInstance = QuickTips.getQuickTip();
+	quickTipInstance.setDismissDelay(7000);
+	quickTipInstance.setHideDelay(400);
+	quickTipInstance.setInterceptTitles(true);
+	quickTipInstance.setMinWidth(100);
     }
 
     private void showEmoticonPalette(final int x, final int y) {
