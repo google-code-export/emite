@@ -29,14 +29,16 @@ import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
 
 public interface RosterUIView extends View {
 
-    void removeRosterItem(ChatUserUI chatUserUI);
+    void addRosterItem(ChatUserUI user, UserGridMenuItemList menuItemList);
+
+    void clearRoster();
 
     void confirmSusbscriptionRequest(Presence presence);
 
-    void addRosterItem(ChatUserUI user, UserGridMenuItemList menuItemList);
+    void removeRosterItem(ChatUserUI chatUserUI);
+
+    void showMessageAboutUnsuscription(Presence presence);
 
     void updateRosterItem(ChatUserUI user, UserGridMenuItemList menuItemList);
-
-    void clearRoster();
 
 }

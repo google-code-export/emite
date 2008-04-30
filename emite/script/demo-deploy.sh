@@ -2,12 +2,12 @@
 PARAM=$#
 USER=$1
 DEST=$2
-if [ $PARAM -eq 1 ]
+if [ $PARAM -gt 0 ]
 then
   EXTRA=$USER@
 fi
 
-if [ $PARAM -eq 2 ]
+if [ $PARAM -gt 1 ]
 then
   EXTRADEST=$DEST/
 fi
