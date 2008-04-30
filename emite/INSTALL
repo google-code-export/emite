@@ -108,11 +108,13 @@ In your .gwt.xml include:
 
   <inherits name="com.calclab.emite.Emite" />
 
-and if you use the emiteuiplugin:
+we use gwt-log:
+
+http://code.google.com/p/gwt-log/wiki/GettingStarted
+
+and if you use the emiteui/emiteuiplugin:
 
   <inherits name="com.calclab.emiteuiplugin.EmiteUIPlugin" />
 
-as a dependency, we use gwt-log:
-
-http://code.google.com/p/gwt-log/wiki/GettingStarted
+and you have to download [http://extjs.com extjs] 2.0.2 and put it in src/main/java/com/calclab/emiteui/public/js/ext or in <yourProjectSrc>/public/js/ext (See gwt-ext 2.0.3 documentation for more directions).
 
