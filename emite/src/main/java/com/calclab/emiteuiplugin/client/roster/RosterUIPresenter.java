@@ -354,6 +354,6 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
     private void logPresence(final Presence presence, final String subTitle) {
 	Log.info("PRESENCE: type: " + presence.getType() + ", from: " + presence.getFrom() + ", show: "
-		+ presence.getShow() + ", status: " + presence.getStatus() + "(" + subTitle + ")");
+		+ presence.getShow() + ", status: " + presence.getStatus() + " (" + subTitle + ")");
     }
 }

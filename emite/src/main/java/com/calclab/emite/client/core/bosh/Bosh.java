@@ -130,7 +130,9 @@ public class Bosh {
 
     public void setSID(final String sid) {
 	if (this.sid != null) {
-	    throw new RuntimeException("can't change the sid");
+	    final String message = "can't change the sid";
+	    Log.error(message);
+	    throw new RuntimeException(message);
 	}
 	stream.setSID(sid);
 	this.sid = sid;
