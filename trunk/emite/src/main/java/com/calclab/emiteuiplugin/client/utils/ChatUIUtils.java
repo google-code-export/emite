@@ -84,12 +84,13 @@ public class ChatUIUtils {
     }
 
     public static String getShowText(final I18nTranslationService i18n, final Show show) {
+	// FIXME This must be in RosterUIPresenter (with the icon switch)
 	String textLabel = "";
 
 	switch (show) {
-	case notSpecified:
+	// case null ---> available = Online
 	case chat:
-	    textLabel = i18n.t("Available");
+	    textLabel = i18n.t("Available to Chat");
 	    break;
 	case away:
 	case xa:
