@@ -27,13 +27,17 @@ Well you can use a proxy to resend the bosh petitions, to another server. But yo
 
 Sorry, initially we only support PLAIN authentication. Be carefully then with your accounts info.
 
+== I'm using firefox in debian/ubuntu and I can't hear sounds when a message arrives to emiteui, what can I do? ==
+
+apt-get install mozilla-mplayer # it works for us...
+
 == Do you will support in the future XEP-XXXX or _foo_ feature? ==
 
 Maybe, see our [http://code.google.com/p/emite/issues/list issue/enhancement list]. Emite is very modular and easy to extend, patches are welcome.
 
 == In emiteui/demo there is a bug, what can I do? ==
 
-Please add <code>?log_level=DEBUG</code> to the url and use firebug firefox extension to see the output. Try to fill us an [http://code.google.com/p/emite/issues/list issue] with some debug info.
+Please add <code>?log_level=DEBUG#</code> to the url and use firebug firefox extension to see the output. Try to fill us an [http://code.google.com/p/emite/issues/list issue] with some debug info.
 
 == How can I help? ==
 
