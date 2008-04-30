@@ -71,6 +71,10 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
 	MessageBox.alert(i18n.t("[%s] has removed you from his/her buddies list", user.getURI().toString()));
     }
 
+    public void showMessageAboutUnsuscription(final Presence presence) {
+	MessageBox.alert(i18n.t("[%s] has removed you from his/her buddies list", presence.getFrom()));
+    }
+
     public void updateRosterItem(final ChatUserUI user, final UserGridMenuItemList menuItemList) {
 	final UserGridMenu menu = new UserGridMenu(presenter);
 	menu.setMenuItemList(menuItemList);

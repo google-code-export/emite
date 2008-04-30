@@ -310,29 +310,13 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	});
 
 	rosterManager.addListener(new RosterManagerListener() {
-
-	    // FIXME: Vicente, este método nunca se llama (ahora, cuando se
-	    // subscrito alguien
-	    // a nuestro roster, recibes un onItemChanged)
-	    public void onSubscribedReceived(final Presence presence, final SubscriptionMode currentMode) {
-		Log.info("SUBS RECEIVED");
-		final XmppURI fromURI = presence.getFromURI();
-		final ChatUserUI user = rosterMap.get(fromURI);
-		// This is only while bug #53 is solved
-		if (user != null) {
-		    view.updateRosterItem(user, createMenuItemList(fromURI, presence, Subscription.to));
-		}
-	    }
-
 	    public void onSubscriptionRequest(final Presence presence, final SubscriptionMode currentMode) {
 		switch (currentMode) {
 		case autoAcceptAll:
 		    Log.info("Accepting because we are auto accepting");
-		    // onPresenceAccepted(presence);
 		    break;
 		case autoRejectAll:
 		    Log.info("Rejecting because we are auto rejecting");
-		    // onPresenceNotAccepted(presence);
 		    break;
 		default:
 		    Log.info("Manual accept/reject");
@@ -343,7 +327,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
 	    public void onUnsubscribedReceived(final Presence presence, final SubscriptionMode currentMode) {
 		Log.info("UNSUBS RECEIVED");
-		// FIXME: Inform about unsubscription?
+		view.showMessageAboutUnsuscription(presence);
 	    }
 	});
 

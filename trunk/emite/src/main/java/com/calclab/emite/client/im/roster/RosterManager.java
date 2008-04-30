@@ -134,7 +134,7 @@ public class RosterManager extends SessionComponent implements Installable {
 		    handleSubscriptionRequest(presence);
 		    break;
 		case unsubscribed:
-		    fireUnsubscribedReceived(presence);
+		    handleUnsubscribedReceived(presence);
 		    break;
 		case available:
 		case subscribed:
@@ -246,7 +246,10 @@ public class RosterManager extends SessionComponent implements Installable {
     }
 
     private void fireUnsubscribedReceived(final Presence presence) {
-	roster.removeItem(presence.getFromURI());
+	// We don't remove the item if the other unsubscribe ("to"
+	// subscription), later we think to simplify this with less states
+	// roster.removeItem(presence.getFromURI());
+	roster.changePresence(presence.getFromURI(), presence);
 	for (final RosterManagerListener listener : listeners) {
 	    listener.onUnsubscribedReceived(presence, subscriptionMode);
 	}
@@ -267,6 +270,10 @@ public class RosterManager extends SessionComponent implements Installable {
 	    break;
 	}
 	fireSubscriptionRequest(presence);
+    }
+
+    private void handleUnsubscribedReceived(final Presence presence) {
+	fireUnsubscribedReceived(presence);
     }
 
     private void requestRoster() {
