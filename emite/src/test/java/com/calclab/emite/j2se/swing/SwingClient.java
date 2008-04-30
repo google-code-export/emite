@@ -252,9 +252,6 @@ public class SwingClient {
 	});
 
 	xmpp.getRosterManager().addListener(new RosterManagerListener() {
-	    public void onSubscribedReceived(final Presence presence, final SubscriptionMode mode) {
-	    }
-
 	    public void onSubscriptionRequest(final Presence presence, final SubscriptionMode mode) {
 		final Object message = presence.getFrom() + " want to add you to his/her roster. Accept?";
 		final int result = JOptionPane.showConfirmDialog(frame, message);

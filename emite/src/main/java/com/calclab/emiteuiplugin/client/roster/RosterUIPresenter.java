@@ -311,6 +311,9 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
 	rosterManager.addListener(new RosterManagerListener() {
 
+	    // FIXME: Vicente, este método nunca se llama (ahora, cuando se
+	    // subscrito alguien
+	    // a nuestro roster, recibes un onItemChanged)
 	    public void onSubscribedReceived(final Presence presence, final SubscriptionMode currentMode) {
 		Log.info("SUBS RECEIVED");
 		final XmppURI fromURI = presence.getFromURI();
