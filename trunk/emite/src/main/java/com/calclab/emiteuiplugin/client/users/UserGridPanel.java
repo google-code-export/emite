@@ -30,7 +30,10 @@ import com.calclab.emite.client.core.packet.TextUtils;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.Image;
 import com.gwtext.client.core.EventObject;
+import com.gwtext.client.core.SortDir;
 import com.gwtext.client.data.ArrayReader;
 import com.gwtext.client.data.FieldDef;
 import com.gwtext.client.data.MemoryProxy;
@@ -127,12 +130,16 @@ public class UserGridPanel extends Panel {
 
     public void updateRosterItem(final ChatUserUI user, final UserGridMenu menu) {
 	final Record recordToUpdate = recordMap.get(user.getURI());
+	final String alias = formatAlias(user);
+	final String jid = formatJid(user);
+	final String statusFormated = formatStatus(alias, user.getStatusText());
 	recordToUpdate.set(IMG, user.getIconUrl());
-	recordToUpdate.set(ALIAS, formatAlias(user));
-	recordToUpdate.set(JID, formatJid(user));
+	recordToUpdate.set(ALIAS, alias);
+	recordToUpdate.set(JID, jid);
 	recordToUpdate.set(COLOR, user.getColor());
-	recordToUpdate.set(STATUSTEXT, formatStatus(user.getStatusText()));
+	recordToUpdate.set(STATUSTEXT, statusFormated);
 	recordToUpdate.set(STATUSIMG, formatStatusIcon(user));
+	store.commitChanges();
 	menuMap.put(user.getURI(), menu);
 	sort();
 	doLayoutIfNeeded();
@@ -140,8 +147,11 @@ public class UserGridPanel extends Panel {
 
     private void addRecord(final AbstractChatUser user, final String statusIcon, final String statusTextOrig,
 	    final UserGridMenu menu) {
-	final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), formatJid(user),
-		formatAlias(user), user.getColor(), statusIcon, formatStatus(statusTextOrig) });
+	final String alias = formatAlias(user);
+	final String jid = formatJid(user);
+	final String statusFormated = formatStatus(alias, statusTextOrig);
+	final Record newUserRecord = recordDef.createRecord(new Object[] { user.getIconUrl(), jid, alias,
+		user.getColor(), statusIcon, statusFormated });
 	recordMap.put(user.getURI(), newUserRecord);
 	store.add(newUserRecord);
 	menuMap.put(user.getURI(), menu);
@@ -194,6 +204,7 @@ public class UserGridPanel extends Panel {
 
 	final ArrayReader reader = new ArrayReader(1, recordDef);
 	store = new Store(proxy, reader);
+	store.setDefaultSort(ALIAS, SortDir.ASC);
 	store.load();
 	grid.setStore(store);
 
@@ -215,21 +226,28 @@ public class UserGridPanel extends Panel {
 		    final int rowIndex, final int colNum, final Store store) {
 		return Format
 			.format(
-				"<span ext:qtip=\"{3}\" ext:qtitle=\"{4}\"\" style=\"vertical-align: bottom; color: {0} ;\">{1}&nbsp;&nbsp;</span>{2}",
+				"<span ext:qtip=\"<b>{3}</b><br/>{2}\" style=\"vertical-align: middle; color: {0} ;\">{1}</span>",
 				new String[] {
 					record.getAsString(COLOR),
 					record.getAsString(ALIAS),
-					record.getAsString(STATUSIMG),
 					record.getAsString(STATUSTEXT).equals("null") ? " " : TextUtils.escape(record
 						.getAsString(STATUSTEXT)), record.getAsString(JID) });
 	    }
 	};
+	final Renderer userStatusRender = new Renderer() {
+	    public String render(final Object value, final CellMetadata cellMetadata, final Record record,
+		    final int rowIndex, final int colNum, final Store store) {
+		return Format.format("{0}", new String[] { record.getAsString(STATUSIMG) });
+	    }
+	};
 	final ColumnConfig[] columnsConfigs = new ColumnConfig[] {
 		new ColumnConfig("Image", IMG, 24, false, iconRender, IMG),
-		new ColumnConfig("Alias", ALIAS, 105, true, userAliasRender, ALIAS) };
+		new ColumnConfig("Alias", ALIAS, 105, true, userAliasRender, ALIAS),
+		new ColumnConfig("Status", STATUSIMG, 24, true, userStatusRender, STATUSIMG) };
 	final ColumnModel columnModel = new ColumnModel(columnsConfigs);
 	grid.setColumnModel(columnModel);
-
+	grid.setAutoExpandColumn(ALIAS);
+	grid.setAutoExpandMax(81);
 	grid.addGridRowListener(new GridRowListener() {
 	    public void onRowClick(final GridPanel grid, final int rowIndex, final EventObject e) {
 		showMenu(rowIndex, e);
@@ -250,11 +268,9 @@ public class UserGridPanel extends Panel {
 		menu.showMenu(e);
 	    }
 	});
-	// grid.setAutoExpandColumn(ALIAS);
 	grid.stripeRows(true);
 	final GridView view = new GridView();
 	// i18n
-	// view.setAutoFill(true);
 	view.setEmptyText(emptyText);
 	grid.setView(view);
 	grid.setHideColumnHeader(true);
@@ -294,16 +310,25 @@ public class UserGridPanel extends Panel {
 	return user.getURI().toString();
     }
 
-    private String formatStatus(final String statusText) {
+    private String formatStatus(final String userAlias, final String statusText) {
 	// ext don't like ""
-	return statusText == null ? " " : statusText;
+	final String statusFormated = statusText != null ? "<br/>" + statusText : "";
+	return userAlias + statusFormated;
     }
 
     private String formatStatusIcon(final ChatUserUI user) {
-	return ChatUIUtils.getIcon(user.getStatusIcon()).getHTML();
+	final AbstractImagePrototype icon = ChatUIUtils.getIcon(user.getStatusIcon());
+	final Image iconImg = new Image();
+	icon.applyTo(iconImg);
+	// Don't works:
+	// final ToolTip tooltip = new ToolTip();
+	// tooltip.setHtml("foo foo foo <b>bold</b> foo foo.");
+	// tooltip.setWidth(150);
+	// tooltip.applyTo(iconImg.getElement());
+	return iconImg.toString();
     }
 
     private void sort() {
-	store.sort(ALIAS);
+	// store.sort(ALIAS);
     }
 }
