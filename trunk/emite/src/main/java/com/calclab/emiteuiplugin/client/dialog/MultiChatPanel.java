@@ -284,6 +284,14 @@ public class MultiChatPanel implements MultiChatView {
 	input.setHeight(47);
 	input.setEnterIsSpecial(true);
 	input.addListener(new FieldListenerAdapter() {
+	    public void onBlur(final Field field) {
+		presenter.onInputUnFocus();
+	    }
+
+	    public void onFocus(final Field field) {
+		presenter.onInputFocus();
+	    }
+
 	    public void onSpecialKey(final Field field, final EventObject e) {
 		if (e.getKey() == 13) {
 		    doSend(e);

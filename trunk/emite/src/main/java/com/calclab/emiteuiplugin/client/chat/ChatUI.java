@@ -51,6 +51,10 @@ public interface ChatUI {
 
     void onCurrentUserSend(String message);
 
+    void onInputFocus();
+
+    void onInputUnFocus();
+
     void saveInput(String inputText);
 
     void setCloseConfirmed(boolean confirmed);
