@@ -133,13 +133,11 @@ public class RosterManager extends SessionComponent implements Installable {
 		case subscribe:
 		    handleSubscriptionRequest(presence);
 		    break;
-		case subscribed:
-		    handleUnsubscriptionRequest(presence);
-		    break;
 		case unsubscribed:
 		    fireUnsubscribedReceived(presence);
 		    break;
 		case available:
+		case subscribed:
 		case unavailable:
 		    roster.changePresence(presence.getFromURI(), presence);
 		    break;
@@ -210,11 +208,14 @@ public class RosterManager extends SessionComponent implements Installable {
 
     /**
      * A request to subscribe to another entity's presence is made by sending a
-     * presence stanza of type "subscribe".
+     * presence stanza of type "subscribe". If the subscription request is being
+     * sent to an instant messaging contact, the JID supplied in the 'to'
+     * attribute SHOULD be of the form <contact@example.org> rather than
+     * <contact@example.org/resource>
      * 
      */
     public void requestSubscribe(final XmppURI to) {
-	final Presence unsubscribeRequest = new Presence(Presence.Type.subscribe, userURI, to);
+	final Presence unsubscribeRequest = new Presence(Presence.Type.subscribe, userURI, to.getJID());
 	emite.send(unsubscribeRequest);
     }
 
@@ -238,12 +239,6 @@ public class RosterManager extends SessionComponent implements Installable {
 	return new RosterItem(uri, subscription, item.getAttribute("name"));
     }
 
-    private void fireSubscribedReceived(final Presence presence) {
-	for (final RosterManagerListener listener : listeners) {
-	    listener.onSubscribedReceived(presence, subscriptionMode);
-	}
-    }
-
     private void fireSubscriptionRequest(final Presence presence) {
 	for (final RosterManagerListener listener : listeners) {
 	    listener.onSubscriptionRequest(presence, subscriptionMode);
@@ -251,6 +246,7 @@ public class RosterManager extends SessionComponent implements Installable {
     }
 
     private void fireUnsubscribedReceived(final Presence presence) {
+	roster.removeItem(presence.getFromURI());
 	for (final RosterManagerListener listener : listeners) {
 	    listener.onUnsubscribedReceived(presence, subscriptionMode);
 	}
@@ -271,11 +267,6 @@ public class RosterManager extends SessionComponent implements Installable {
 	    break;
 	}
 	fireSubscriptionRequest(presence);
-    }
-
-    private void handleUnsubscriptionRequest(final Presence presence) {
-	roster.removeItem(presence.getFromURI());
-	fireSubscribedReceived(presence);
     }
 
     private void requestRoster() {

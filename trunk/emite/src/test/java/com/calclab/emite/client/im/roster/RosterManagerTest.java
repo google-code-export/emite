@@ -67,22 +67,6 @@ public class RosterManagerTest {
     }
 
     @Test
-    public void shouldFireSubscriptionRequests() {
-	manager.setSubscriptionMode(SubscriptionMode.manual);
-	final Presence presence = new Presence(Presence.Type.subscribed, uri("from@domain"), uri("to@domain"));
-	emite.receives(presence);
-	Mockito.verify(listener).onSubscribedReceived((Presence) packetLike(presence), same(SubscriptionMode.manual));
-    }
-
-    @Test
-    public void shouldFireUnsubscribeEvents() {
-	manager.setSubscriptionMode(SubscriptionMode.manual);
-	final Presence presence = new Presence(Presence.Type.unsubscribed, uri("from@domain"), uri("to@domain"));
-	emite.receives(presence);
-	Mockito.verify(listener).onUnsubscribedReceived((Presence) packetLike(presence), same(SubscriptionMode.manual));
-    }
-
-    @Test
     public void shouldHandleIQSets() {
 	emite.receives("<iq id='theId' type='set'><query xmlns='jabber:iq:roster'><item jid='contact@example.org' "
 		+ "subscription='none' name='MyContact'><group>MyBuddies</group></item></query></iq>");
@@ -92,9 +76,16 @@ public class RosterManagerTest {
 
     @Test
     public void shouldHandlePresence() {
-	emite
-		.receives("<presence from='userInRoster@domain/res' to='user@domain/res'><priority>2</priority></presence>");
+	emite.receives("<presence from='userInRoster@domain/res' to='user@domain/res'>"
+		+ "<priority>2</priority></presence>");
 	verify(roster).changePresence(eq(uri("userInRoster@domain/res")), (Presence) anyObject());
+    }
+
+    @Test
+    public void shouldInformWhenSubscribed() {
+	final String presence = "<presence from='contact@example.org' to='user@example.com' type='subscribed'/>";
+	emite.receives(presence);
+	verify(roster).changePresence(eq(uri("contact@example.org")), (Presence) anyObject());
     }
 
     @Test
@@ -121,6 +112,21 @@ public class RosterManagerTest {
 		+ "<item jid='name1@domain' subscription='both' name='complete name1' />"
 		+ "<item jid='name2@domain' subscription='both' name='complete name2' />" + "</query></iq>");
 	verify(roster).setItems(isListOfSize(2));
+    }
+
+    @Test
+    public void shouldRequestSubscribe() {
+	manager.requestSubscribe(uri("some@domain/res"));
+	emite.verifySent("<presence to='some@domain' type='subscribe' />");
+    }
+
+    @Test
+    public void shouldUnsubscribe() {
+	manager.setSubscriptionMode(SubscriptionMode.manual);
+	final Presence presence = new Presence(Presence.Type.unsubscribed, uri("from@domain"), uri("to@domain"));
+	emite.receives(presence);
+	verify(listener).onUnsubscribedReceived((Presence) packetLike(presence), same(SubscriptionMode.manual));
+	verify(roster).removeItem(uri("from@domain"));
     }
 
 }
