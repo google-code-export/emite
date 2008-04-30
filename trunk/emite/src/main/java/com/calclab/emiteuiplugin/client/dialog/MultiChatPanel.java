@@ -225,8 +225,10 @@ public class MultiChatPanel implements MultiChatView {
 	    }
 	    // FIXME: in 0.3.0 do this in header maybe
 	    // eastPanel.enable();
+	    eastPanel.expand();
 	} else {
 	    // eastPanel.disable();
+	    eastPanel.collapse();
 	}
     }
 

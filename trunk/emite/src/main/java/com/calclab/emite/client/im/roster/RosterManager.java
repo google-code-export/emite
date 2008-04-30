@@ -246,8 +246,12 @@ public class RosterManager extends SessionComponent implements Installable {
     }
 
     private void fireUnsubscribedReceived(final Presence presence) {
+	// FIXME: Dani, check this
 	// We don't remove the item if the other unsubscribe ("to"
 	// subscription), later we think to simplify this with less states
+	// but I think is not responsability of the library to siplify this kind
+	// of things:
+	//
 	// roster.removeItem(presence.getFromURI());
 	roster.changePresence(presence.getFromURI(), presence);
 	for (final RosterManagerListener listener : listeners) {
