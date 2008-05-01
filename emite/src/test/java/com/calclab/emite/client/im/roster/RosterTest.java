@@ -1,5 +1,6 @@
 package com.calclab.emite.client.im.roster;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import static com.calclab.emite.testing.TestMatchers.hasSame;
 import static com.calclab.emite.testing.TestMatchers.isCollectionOfSize;
 import static org.junit.Assert.assertSame;
@@ -15,7 +16,6 @@ import org.junit.Test;
 
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class RosterTest {
     private RosterListener listener;
@@ -43,6 +43,7 @@ public class RosterTest {
 	verify(listener).onItemChanged(item);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldFireListenerWhenItemRemoved() {
 	roster.add(new RosterItem(uri("one@domain/resource1"), Subscription.none, "one"));
@@ -51,6 +52,7 @@ public class RosterTest {
 	verify(listener, atLeastOnce()).onRosterChanged(isCollectionOfSize(0));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldInformWhenRosterChanged() {
 	final List<RosterItem> itemCollection = new ArrayList<RosterItem>();
@@ -59,6 +61,7 @@ public class RosterTest {
 	verify(listener).onRosterChanged(hasSame(itemCollection));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldInformWhenRosterItemChanged() {
 	roster.setItems(new ArrayList<RosterItem>());
