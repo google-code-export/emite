@@ -5,23 +5,20 @@
 
 == Why do I need to install a proxy ==
 
-Emite its a pure xmpp library (all the code is converted to javascript before execute). But you will need to install a proxy in the server side because of the same-origin-policy security measure in the all the browsers (this may change in the near future: http://ejohn.org/blog/cross-site-xmlhttprequest/)
+Emite its a pure xmpp library (all the code is converted to javascript before execute). But you will need to install a proxy in the server side because of the [http://code.google.com/support/bin/answer.py?answer=77865&topic=13006 same origin policy] security measure in the all the browsers (this may change in the near future: http://ejohn.org/blog/cross-site-xmlhttprequest/)
 
 So we need to install a proxy that redirect all the local HttpRequest coming from the client (your browser) to the real Xmpp Server.
 
 
-
-
-
 == How can I install a proxy ==
-A java implementation of this proxy are bundled for testing purposes in the emite library, but in production envirorments we should delegate this task in the real server (i.e. Apache2)
+A java implementation of this proxy are bundled for testing purposes in the emite library, but in production environments we should delegate this task in the real server (i.e. Apache2)
 You can run the proxy simply typing {{{mvn jetty:run}}} inside the emite project directory
 
 == How can I configure the included proxy ==
 You can change the default settings in the web.xml included in the sources of emite
 
-== What if my XMPP server doesnt support Htto Bind? ==
-Bundled is also a java servlet that implements HttpBind (JabberHTTPBind http://zeank.in-berlin.de/jhb/, thanks Stefan) that you can use (at your own risk)
+== What if my XMPP server doesn't support Http Bind? ==
+Bundled is also a java servlet that implements HttpBind [http://zeank.in-berlin.de/jhb/ JabberHTTPBind] (thanks Stefan) that you can use (at your own risk)
 
 == How can I configure Apache as proxy ==
 {{{// TODO ;) }}}

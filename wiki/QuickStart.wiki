@@ -32,7 +32,22 @@ There are other ways, but the fastest is to use maven2:
   # create a new maven project: {{{mvn archetype:create -DgroupId=com.mycompany.app -DartifactId=my-webapp -DarchetypeArtifactId=maven-archetype-webapp}}}
   # Add this to the resulting pom.xml:
 {{{
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+ ...
+
+  <dependencies>
+    <dependency>
+      <groupId>com.calclab</groupId>
+      <artifactId>emite</artifactId>
+      <version>0.2.0</version>
+    </dependency>
+  </dependencies>
+</project>
 }}}
+
+See Appendix C for more pom.xml configuration options. You can also take a look to http://emite.googlecode.com/svn/trunk/blackboard/ for an example of an application that uses Emite library.
+
   # Create a new gwt project with the current gwt module dependencies:
 {{{
 <!-- library: required -->
@@ -44,8 +59,6 @@ There are other ways, but the fastest is to use maven2:
 }}}
 
 Also, if you want to use the ui you have to configure the connection settings in the html file. Take a look at http://emite.googlecode.com/svn/trunk/emite/src/main/java/com/calclab/emiteui/public/EmiteUI.html to see an example.
-
-You can also take a look to http://emite.googlecode.com/svn/trunk/blackboard/ as example of an application that uses Emite library.
 
 
 == Appendix A: Configuration of maven ==
@@ -87,3 +100,80 @@ To generate a jar from the sources type {{{mvn package}}} , or {{{mvn install}}}
 
 If you're planning to install it in your own web server, you can generate a war with: {{{mvn compile war:war}}}
 
+== Appendix C: more pom.xml options ==
+
+We usually use [http://code.google.com/p/gwt-maven/ gwt-maven] plugin to compile and run the gwt applications, and jetty to run the proxies. You can configure them adding this lines to pom.xml
+{{{
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.totsp.gwt</groupId>
+        <artifactId>maven-googlewebtoolkit2-plugin</artifactId>
+        <version>2.0-beta14</version>
+        <configuration>
+          <style>OBF</style>
+          <runTarget>
+            [[ YOUR APP HTML FILE HERE ]]
+          </runTarget>
+          <compileTarget>
+            <param></param>
+          </compileTarget>
+          <compileTargets>
+            <compileTarget>
+            [[ YOUR APP MODULE NAME HERE ]]
+            </compileTarget>
+          </compileTargets>
+          <generatorRootClasses></generatorRootClasses>
+          <generatorDestinationPackage>
+            [[ YOUR APP MODULE NAME HERE ]]
+          </generatorDestinationPackage>
+          <generateGettersAndSetters>
+            false
+          </generateGettersAndSetters>
+          <generatePropertyChangeSupport>
+            false
+          </generatePropertyChangeSupport>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <!-- <goal>mergewebxml</goal> -->
+              <!-- <goal>compile</goal> -->
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>maven-jetty-plugin</artifactId>
+        <version>6.1.5</version>
+        <configuration>
+          <contextPath>/</contextPath>
+          <scanIntervalSeconds>0</scanIntervalSeconds>
+          <connectors>
+            <connector
+              implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+              <port>4444</port>
+              <maxIdleTime>60000</maxIdleTime>
+            </connector>
+          </connectors>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
+
+
+}}}}
