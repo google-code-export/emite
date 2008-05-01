@@ -24,11 +24,11 @@ You need a running xmpp server with Http Binding connection enabled. See our [ht
   # inside the emite directory type {{{mvn gwt:gwt}}} to run emite using the GWTShell ...
   # ... or type {{{./script/server.sh}}} to compile the sources to javascript, and start a jetty server with a proxy installed, and run the example looking at:
 
-== Create a project to use emite ==
+== Use emite in your own project ==
 
 There are other ways, but the fastest is to use maven2:
 
-  # create a new maven project: {{{mvn archetype:create -DgroupId=com.mycompany.app -DartifactId=my-webapp -DarchetypeArtifactId=maven-archetype-webapp}}}
+  # create a new maven project if needed: {{{mvn archetype:create -DgroupId=com.mycompany.app -DartifactId=my-webapp -DarchetypeArtifactId=maven-archetype-webapp}}}
   # Add this to the resulting pom.xml:
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
