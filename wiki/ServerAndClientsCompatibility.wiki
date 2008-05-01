@@ -19,6 +19,6 @@ How emite talk with other clients:
 || pidjin || yes || || ||
 || psi || yes || || ||
 || audium || yes || || ||
-|| gmail (web) || yes || Currently gmail web version don't support rooms || ||
+|| gmail (web) || yes ||  || ||
 || gtalk (client) || ? || || ||
 || iChat || yes || || ||

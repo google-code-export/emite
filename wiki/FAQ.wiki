@@ -3,7 +3,30 @@
 
 = Emite FAQ =
 
-== How can I integrate the emite xmpp library in my GWT application? == 
+== Why do I need to install a proxy ==
+
+Emite its a pure xmpp library (all the code is converted to javascript before execute). But you will need to install a proxy in the server side because of the same-origin-policy security measure in the all the browsers (this may change in the near future: http://ejohn.org/blog/cross-site-xmlhttprequest/)
+
+So we need to install a proxy that redirect all the local HttpRequest coming from the client (your browser) to the real Xmpp Server.
+
+
+
+
+
+== How can I install a proxy ==
+A java implementation of this proxy are bundled for testing purposes in the emite library, but in production envirorments we should delegate this task in the real server (i.e. Apache2)
+You can run the proxy simply typing {{{mvn jetty:run}}} inside the emite project directory
+
+== How can I configure the included proxy ==
+You can change the default settings in the web.xml included in the sources of emite
+
+== What if my XMPP server doesnt support Htto Bind? ==
+Bundled is also a java servlet that implements HttpBind (JabberHTTPBind http://zeank.in-berlin.de/jhb/, thanks Stefan) that you can use (at your own risk)
+
+== How can I configure Apache as proxy ==
+{{{// TODO ;) }}}
+
+== How can I integrate the emite xmpp library in my GWT application? ==
 
 Just include the emite.jar in your app and one inherits in your gwt.xml. See the [http://code.google.com/p/emite/wiki/QuickStart QuickStart] for more details.
 
@@ -47,6 +70,6 @@ See our [http://code.google.com/p/emite/issues/list issue list], and maybe subsc
 
 If you BOSH connector scales, and your xmpp server scales, ((e)) scales.
 
-== I have an error? It doesn't works for me! (with no more info) == 
+== I have an error? It doesn't works for me! (with no more info) ==
 
 Yes? A recommended reading: [http://catb.org/~esr/faqs/smart-questions.html How To Ask Questions The Smart Way].

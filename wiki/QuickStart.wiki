@@ -1,61 +1,52 @@
-#summary How to get the example running
+#summary How to get the ui running and create a new app with emite
 #labels Featured
 
 
-= Introduction =
+Emite its a pure gwt library, so no server code is involved.
+You may ask yourself [FAQ why do you I need to install a proxy?]
 
-Bundled with the library there is a gwt ui example. This is the guide to get the example running.
 
-== Server proxy: why? ==
 
-Emite its a pure xmpp library. That means that there is no need of server processing to acomplish the tasks... but we need install a server... The reason is because as a security feature, you cannot call pages on 3rd-party domains using the browser HttpRequest object (this may change in the near future: http://ejohn.org/blog/cross-site-xmlhttprequest/)
+== Prerequisites ==
 
-So we need to install a proxy that redirect all the local HttpRequest coming from the client to the real Xmpp Server.
+You need a running xmpp server with Http Binding connection enabled. See our [http://code.google.com/p/emite/wiki/ServerAndClientsCompatibility Server and Client Compatibility Matrix]
 
-Two java implementation of this proxy are included for testing purposes in the emite library, but in production envirorments we usually delegate this task in the real server (i.e. Apache2)
 
-The first implementation is a real proxy and installed in the /proxy url and the second implementation is a bosh servlet (to connecto to a non bosh-jabber-servers) and its instaled at /http-bosh (see web.xml for more details)
+== Environment setup ==
 
-== Pre-requsites ==
+  # install maven2 version 2.0.7 or over (http://maven.apache.org)
+  # download GWT *version 1.5*. Currently, *only works with Milestone1* due a gwt-ext issue
+  # create or modify the maven {{{~/.m2/settings.xml}}} file to use the 1.5M1 distribution of gwt (see Appendix1)
+  # configure your server Http Binding Service to listen at {{{http://localhost:8383/http-bind/}}} or tweak the web.xml file of emite to change this values
 
-You need a running xmpp server with bosh manager (or you can use the bosh servlet with the jabber server you want). By default we use: localhost:8383/http-bind (but you can change it easily in the web.xml configuration file). 
-OpenFire is the easiest way to get this, but any other xmpp server with bosh support can handle (i.e. Tigase server)
+== Run the example from the sources ==
 
-  # install maven2 ( http://maven.apache.org/ )
-  # Install GWT *version 1.5*. It doesn't work with earlier versions (we are currently using 1.5 Milestone 1)
-  # Create or configure .m2/settings.xml file to use the 1.5 distribution of gwt (see Appendix 1)
+  # check out the code: {{{svn checkout http://emite.googlecode.com/svn/trunk/ emite}}}
+  # inside the emite directory type {{{mvn gwt:gwt}}} to run emite using the GWTShell ...
+  # ... or type {{{./script/server.sh}}} to compile the sources to javascript, and start a jetty server with a proxy installed, and run the example looking at:
 
-== Compile the gwt:sources ==
+== Create a project to use emite ==
 
-Inside the project folder type:
+There are other ways, but the fastest is to use maven2:
+
+  # create a new maven project: {{{mvn archetype:create -DgroupId=com.mycompany.app -DartifactId=my-webapp -DarchetypeArtifactId=maven-archetype-webapp}}}
+  # Add this to the resulting pom.xml:
 {{{
-mvn gwt:compile
 }}}
-to compile the sources
-
-
-== Run the servlet proxy ==
-
-if you use a linux envirorment, write:
+  # Create a new gwt project with the current gwt module dependencies:
 {{{
-./script/server.sh
+<!-- library: required -->
+<inherits name="com.calclab.emite.Emite" />
+<!-- if you want to include the emite ui in your application -->
+<inherits name="com.calclab.emiteuiplugin.EmiteUIPlugin" />
+<!-- to make GWTShell use the java proxy -->
+<servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
 }}}
-to copy the compiled js to the destination folder and run the proxy servlet.
-If you are not unix', take a look to the script to know which are
-the folders you have to copy and then:
-{{{
-mvn jetty:run
-}}}
-to run the proxy
 
-== Run the examples ==
+Also, if you want to use the ui you have to configure the connection settings in the html file. Take a look at http://emite.googlecode.com/svn/trunk/emite/src/main/java/com/calclab/emiteui/public/EmiteUI.html to see an example.
 
-Point the browser to:
-http://localhost:4444/gwt/com.calclab.emiteui.EmiteUI/EmiteUI.html
-to see the full featured emite-ui
-or point to browser to:
-http://localhost:4444/gwt/com.calclab.emite.examples.chat.Chat/Chat.html
-to see the chat example
+You can also take a look to http://emite.googlecode.com/svn/trunk/blackboard/ as example of an application that uses Emite library.
+
 
 == Appendix A: Configuration of maven ==
 
@@ -90,33 +81,9 @@ Example of maven .m2/settings.xml to work with gwt-maven plugin:
 </settings>
 }}}
 
-== Appendix B: jar generation ==
+== Appendix B: jar and war generation ==
 
-  mvn package
+To generate a jar from the sources type {{{mvn package}}} , or {{{mvn install}}} to install it in your current maven repository.
 
-or without tests:
-
-  mvn package -Dmaven.test.skip=true
-
-== Appendix C: war generation ==
-
-  mvn compile war:war
-
-== Appendix D: inclusion in your gwt application ==
-
-Add to your pom.xml (or include the jars)
-
-In your .gwt.xml include:
-
-  <inherits name="com.calclab.emite.Emite" />
-
-we use gwt-log:
-
-http://code.google.com/p/gwt-log/wiki/GettingStarted
-
-and if you use the emiteui/emiteuiplugin:
-
-  <inherits name="com.calclab.emiteuiplugin.EmiteUIPlugin" />
-
-and you have to download [http://extjs.com extjs] 2.0.2 and put it in src/main/java/com/calclab/emiteui/public/js/ext or in <yourProjectSrc>/public/js/ext (See gwt-ext 2.0.3 documentation for more directions).
+If you're planning to install it in your own web server, you can generate a war with: {{{mvn compile war:war}}}
 
