@@ -60,12 +60,10 @@ Sorry, initially we only support PLAIN authentication. Be carefully then with yo
 We are focusing in power up FLOSS community and encourage the development of free/libre web alternatives to proprietary web services (like meebo or gmail).
 
 This is why we are using the Affero GPL v3:
-http://www.fsf.org/licensing/licenses/agpl-3.0.html
-http://en.wikipedia.org/wiki/Affero_GPL
+* http://www.fsf.org/licensing/licenses/agpl-3.0.html
+* http://en.wikipedia.org/wiki/Affero_GPL
 
-Related:
-"Why you shouldn't use the Lesser GPL for your next library"
-http://www.gnu.org/licenses/why-not-lgpl.html
+Related: [http://www.gnu.org/licenses/why-not-lgpl.html Why you shouldn't use the Lesser GPL for your next library].
 
 We are thinking/talking about use a dual-licensing in the future, but we have to study more the implications.
 
