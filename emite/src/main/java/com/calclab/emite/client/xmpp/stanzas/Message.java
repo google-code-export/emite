@@ -28,23 +28,38 @@ public class Message extends BasicStanza {
 	chat, error, groupchat, headlines, normal
     }
 
-    private static final String TYPE_CHAT = "chat";
+    public Message() {
+	this(null, null, null);
+    }
 
     public Message(final IPacket iPacket) {
 	super(iPacket);
     }
 
-    @Deprecated
-    public Message(final String from, final String to, final String msg) {
-	super("message", "jabber:client");
-	setType(TYPE_CHAT);
-	setFrom(from);
-	setTo(to);
-	setMessage(msg);
+    /**
+     * Create a chat (type) message
+     * 
+     * @param fromUri
+     * @param toURI
+     * @param message
+     */
+    public Message(final XmppURI fromUri, final XmppURI toURI, final String message) {
+	this(fromUri, toURI, message, Type.chat);
     }
 
-    public Message(final XmppURI fromUri, final XmppURI toURI, final String message) {
-	this(fromUri.toString(), toURI.toString(), message);
+    /**
+     * Create a message
+     * 
+     * @param fromUri
+     * @param toURI
+     * @param message
+     */
+    public Message(final XmppURI fromUri, final XmppURI toURI, final String message, final Type type) {
+	super("message", "jabber:client");
+	setType(type);
+	setFrom(fromUri);
+	setTo(toURI);
+	setMessage(message);
     }
 
     public String getBody() {

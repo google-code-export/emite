@@ -101,8 +101,7 @@ public class Room implements Chat {
     }
 
     public void send(final String text) {
-	final Message message = new Message(userURI, roomURI, text);
-	message.setType(Message.Type.groupchat);
+	final Message message = new Message(userURI, roomURI, text, Message.Type.groupchat);
 	emite.send(message);
 	for (final ChatListener listener : listeners) {
 	    listener.onMessageSent(this, message);

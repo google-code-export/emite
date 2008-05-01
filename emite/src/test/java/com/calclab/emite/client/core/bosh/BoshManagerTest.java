@@ -10,18 +10,18 @@ import org.junit.Test;
 
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Services;
-import com.calclab.emite.testing.EmiteStub;
+import com.calclab.emite.testing.EmiteTestHelper;
 
 public class BoshManagerTest {
     private Services services;
-    private EmiteStub emite;
+    private EmiteTestHelper emite;
     private BoshManager manager;
     private Bosh bosh;
 
     @Before
     public void aaCreate() {
 	services = mock(Services.class);
-	emite = new EmiteStub();
+	emite = new EmiteTestHelper();
 	bosh = mock(Bosh.class);
 	manager = new BoshManager(services, emite, bosh);
 	manager.install();

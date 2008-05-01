@@ -94,7 +94,7 @@ public class SwingClient {
 
 	roomsPanel = new RoomsPanel(new RoomsPanelListener() {
 	    public void onRoomEnterd(final String roomName) {
-		final RoomManager roomManager = MUCModule.getRoomManager(xmpp.getComponents());
+		final RoomManager roomManager = MUCModule.getRoomManager(xmpp);
 		roomManager.openChat(uri(roomName));
 	    }
 	});
@@ -182,7 +182,7 @@ public class SwingClient {
 	    }
 	});
 
-	final RoomManager roomManager = MUCModule.getRoomManager(xmpp.getComponents());
+	final RoomManager roomManager = MUCModule.getRoomManager(xmpp);
 	roomManager.addListener(new RoomManagerListener() {
 	    public void onChatClosed(final Chat chat) {
 		conversationsPanel.close(chat.getID());
@@ -192,7 +192,7 @@ public class SwingClient {
 		final RoomPanel roomPanel = conversationsPanel.createRoom(room.getOtherURI(), room.getID(),
 			new RoomPanelListener() {
 			    public void onClose(final ChatPanel source) {
-				MUCModule.getRoomManager(xmpp.getComponents()).close(room);
+				MUCModule.getRoomManager(xmpp).close(room);
 			    }
 
 			    public void onInviteUser(final String userJid, final String reasonText) {

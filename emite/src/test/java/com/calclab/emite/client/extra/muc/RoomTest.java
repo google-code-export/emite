@@ -18,7 +18,7 @@ import org.junit.Test;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.EmiteStub;
+import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.TestMatchers;
 
 @SuppressWarnings("unchecked")
@@ -26,7 +26,7 @@ public class RoomTest {
 
     private RoomListener listener;
     private Room room;
-    private EmiteStub emite;
+    private EmiteTestHelper emite;
     private XmppURI userURI;
     private XmppURI roomURI;
 
@@ -34,7 +34,7 @@ public class RoomTest {
     public void aaCreate() {
 	userURI = uri("user@domain/res");
 	roomURI = uri("room@domain/nick");
-	emite = new EmiteStub();
+	emite = new EmiteTestHelper();
 	room = new Room(userURI, roomURI, "roomName", emite);
 	listener = mock(RoomListener.class);
 	room.addListener(listener);

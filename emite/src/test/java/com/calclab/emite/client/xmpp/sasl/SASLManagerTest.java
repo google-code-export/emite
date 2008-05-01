@@ -5,18 +5,18 @@ import org.junit.Test;
 
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.session.SessionManager;
-import com.calclab.emite.testing.EmiteStub;
+import com.calclab.emite.testing.EmiteTestHelper;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class SASLManagerTest {
 
-    private EmiteStub emite;
+    private EmiteTestHelper emite;
     private SASLManager manager;
 
     @Before
     public void aaCreate() {
-	emite = new EmiteStub();
+	emite = new EmiteTestHelper();
 	manager = new SASLManager(emite);
 	manager.install();
     }

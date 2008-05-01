@@ -45,11 +45,6 @@ public class MockitoXmpp extends Xmpp {
     }
 
     @Override
-    public Container getComponents() {
-	return components;
-    }
-
-    @Override
     public Dispatcher getDispatcher() {
 	return dispatcher;
     }

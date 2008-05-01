@@ -17,18 +17,18 @@ import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.testing.EmiteStub;
+import com.calclab.emite.testing.EmiteTestHelper;
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class MUCRoomManagerTest {
 
-    private EmiteStub emite;
+    private EmiteTestHelper emite;
     private RoomManagerListener listener;
     private MUCRoomManager manager;
 
     @Before
     public void aaCreate() {
-	emite = new EmiteStub();
+	emite = new EmiteTestHelper();
 	manager = new MUCRoomManager(emite);
 	listener = mock(RoomManagerListener.class);
 	manager.addListener(listener);
