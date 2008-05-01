@@ -5,25 +5,25 @@ A simple Echo componente would be like this:
 {{{
 public class Echo implements Installable {
 
-    private final Emite emite;
+  private final Emite emite;
 
-    public Echo(final Emite emite) {
-  this.emite = emite;
-    }
+  public Echo(final Emite emite) {
+    this.emite = emite;
+  }
 
-    public void install() {
-  emite.subscribe(Matchers.when("message"), new PacketListener() {
+  public void install() {
+    emite.subscribe(Matchers.when("message"), new PacketListener() {
       public void handle(final IPacket received) {
-    echo(new Message(received));
+        echo(new Message(received));
       }
-  });
-    }
+    });
+  }
 
-    private void echo(final Message message) {
-  // exchange the from and to...
-  final Message response = new Message(message.getToURI(), message.getFromURI(), message.getBody());
-  emite.send(response);
-    }
+  private void echo(final Message message) {
+    // exchange the from and to...
+    final Message response = new Message(message.getToURI(), message.getFromURI(), message.getBody());
+    emite.send(response);
+  }
 }
 }}}
 
@@ -31,17 +31,17 @@ We should pack several related components in a module: just a class with a coupl
 {{{
 public class EchoModule {
 
-    private static final String COMPONENT_ECHO = "echo:echo";
+  private static final String COMPONENT_ECHO = "echo:echo";
 
-    public static Echo getEcho(final Container container) {
-  return (Echo) container.get(COMPONENT_ECHO);
-    }
+  public static Echo getEcho(final Container container) {
+    return (Echo) container.get(COMPONENT_ECHO);
+  }
 
-    public static void install(final Container container) {
-  final Emite emite = CoreModule.getEmite(container);
-  final Echo echo = new Echo(emite);
-  container.install(COMPONENT_ECHO, echo);
-    }
+  public static void install(final Container container) {
+    final Emite emite = CoreModule.getEmite(container);
+    final Echo echo = new Echo(emite);
+    container.install(COMPONENT_ECHO, echo);
+  }
 }
 }}}
 
@@ -53,11 +53,11 @@ EchoModule.install(xmpp);
 
 Emite is also very easy to test:
 public class EchoTest {
-    @Test
-    public void shouldAnswer() {
-  final EmiteTestHelper emite = new EmiteTestHelper();
-  emite.install(new Echo(emite));
-  emite.receives("<message from='contact@domain' to='me@domain'><body>Hello!</body></message>");
-  emite.verifySent("<message from='me@domain' to='contact@domain'><body>Hello!</body></message>");
-    }
+  @Test
+  public void shouldAnswer() {
+    final EmiteTestHelper emite = new EmiteTestHelper();
+    emite.install(new Echo(emite));
+    emite.receives("<message from='contact@domain' to='me@domain'><body>Hello!</body></message>");
+    emite.verifySent("<message from='me@domain' to='contact@domain'><body>Hello!</body></message>");
+  }
 }
