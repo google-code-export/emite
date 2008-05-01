@@ -55,7 +55,7 @@ Well you can use a proxy to resend the bosh petitions, to another server. But yo
 
 Sorry, initially we only support PLAIN authentication. Be carefully then with your accounts info.
 
-== Why you are using the Affero GNU GPL?
+== Why you are using the Affero GNU GPL? ==
 
 We are focusing in power up FLOSS community and encourage the development of free/libre web alternatives to proprietary web services (like meebo or gmail).
 
