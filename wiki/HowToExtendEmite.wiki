@@ -31,7 +31,7 @@ public class Echo implements Installable {
 
 === Write a module ===
 We should pack several related components in a module: just a class with a couple of static methods.
-We use the container to register objects, but also to retrieve other components previously registered (the dependencies). Here we us the emite component from the CoreModule:
+We use the container to register objects, but also to retrieve other components previously registered (the dependencies). Here we need the emite component from the !CoreModule:
 {{{
 public class EchoModule {
 
@@ -50,17 +50,19 @@ public class EchoModule {
 }}}
 
 === Use the module ===
-You can install the module in a container. The xmpp is a container preloaded with three modules (CoreModule, XMPPModule and InstantMessagingModule).
+You can install the module in a container. The xmpp is a container preloaded with three modules (!CoreModule, !XMPPModule and !InstantMessagingModule).
 {{{
 final Xmpp xmpp = Xmpp.create(new BoshOptions("/http-base"));
 EchoModule.install(xmpp);
-{{{
+}}}
+
 
 === Testing the components ===
 There is a special handy class EmiteTestHelper that implements Emite interface and also provides
   # {{{receives}}} method to simulate an incoming event or stanza
   # {{{verifyXXX}}} family methods to verify the behaviour of our components
 All the testing infraestrcture is based on JUnit and Mockito, so you can use all tools they provide. Emite library have hundred of test; they are one of the fastest way to learn how emite works. Here is our test:
+{{{
 public class EchoTest {
   @Test
   public void shouldAnswer() {
@@ -70,3 +72,4 @@ public class EchoTest {
     emite.verifySent("<message from='me@domain' to='contact@domain'><body>Hello!</body></message>");
   }
 }
+}}}
