@@ -31,7 +31,6 @@ public class ChatTest {
 
     @Test
     public void shouldSendThreadWhenSpecified() {
-
 	chat.send("the message");
 	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'"
 		+ " xmlns='jabber:client'><body>the message</body><thread>theThread</thread></message>");
