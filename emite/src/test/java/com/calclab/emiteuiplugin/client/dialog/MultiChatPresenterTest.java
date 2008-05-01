@@ -116,19 +116,19 @@ public class MultiChatPresenterTest {
 
     @Test
     public void removeAndCreateChat() {
-	multiChat.onCurrentUserSend(messageBody);
+	multiChat.onCurrentUserSendWithEnter(messageBody);
 	multiChat.closeAllChats(false);
 	multiChat.createChat(chat);
-	multiChat.onCurrentUserSend(messageBody);
+	multiChat.onCurrentUserSendWithButton(messageBody);
 	Mockito.verify(chatListener, Mockito.times(2)).onCurrentUserSend(messageBody);
     }
 
     @Test
     public void removeAndCreateChat2() {
-	multiChat.onCurrentUserSend(messageBody);
+	multiChat.onCurrentUserSendWithEnter(messageBody);
 	// FIXME multiChat.closePairChat(chatUI);
 	multiChat.createChat(chat);
-	multiChat.onCurrentUserSend(messageBody);
+	multiChat.onCurrentUserSendWithButton(messageBody);
 	Mockito.verify(chatListener, Mockito.times(2)).onCurrentUserSend(messageBody);
     }
 

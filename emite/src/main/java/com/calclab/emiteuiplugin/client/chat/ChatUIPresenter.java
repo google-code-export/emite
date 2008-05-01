@@ -135,11 +135,11 @@ public class ChatUIPresenter implements ChatUI {
     }
 
     public void onInputFocus() {
-	onActivated();
+	unHightAndActive();
     }
 
     public void onInputUnFocus() {
-	onDeactivated();
+	isActive = false;
     }
 
     public void saveInput(final String inputText) {
@@ -161,10 +161,7 @@ public class ChatUIPresenter implements ChatUI {
     }
 
     protected void onActivated() {
-	if (alreadyHightlighted) {
-	    unHighLightChatTitle();
-	}
-	isActive = true;
+	unHightAndActive();
 	listener.onActivate(this);
     }
 
@@ -185,5 +182,12 @@ public class ChatUIPresenter implements ChatUI {
 	    oldColor = 0;
 	}
 	return color;
+    }
+
+    private void unHightAndActive() {
+	if (alreadyHightlighted) {
+	    unHighLightChatTitle();
+	}
+	isActive = true;
     }
 }

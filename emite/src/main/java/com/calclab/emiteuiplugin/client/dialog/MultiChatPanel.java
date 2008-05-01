@@ -299,8 +299,7 @@ public class MultiChatPanel implements MultiChatView {
 
 	    public void onSpecialKey(final Field field, final EventObject e) {
 		if (e.getKey() == 13) {
-		    doSend(e);
-		    e.stopEvent();
+		    doSendWithEnter(e);
 		}
 	    }
 	});
@@ -346,7 +345,7 @@ public class MultiChatPanel implements MultiChatView {
 	sendBtn = new Button(i18n.tWithNT("Send", "used in button"));
 	sendBtn.addListener(new ButtonListenerAdapter() {
 	    public void onClick(final Button button, final EventObject e) {
-		doSend(e);
+		doSendWithButton(e);
 	    }
 	});
 	dialog.addButton(sendBtn);
@@ -481,10 +480,16 @@ public class MultiChatPanel implements MultiChatView {
 	});
     }
 
-    private void doSend(final EventObject e) {
-	presenter.onCurrentUserSend(getInputText());
+    private void doSendWithButton(final EventObject e) {
+	final String inputText = getInputText();
 	e.stopEvent();
-	input.focus();
+	presenter.onCurrentUserSendWithButton(inputText);
+    }
+
+    private void doSendWithEnter(final EventObject e) {
+	final String inputText = getInputText();
+	e.stopEvent();
+	presenter.onCurrentUserSendWithEnter(inputText);
     }
 
     private void ifRenderedDoLayout() {
@@ -506,7 +511,7 @@ public class MultiChatPanel implements MultiChatView {
 	if (emoticonPalettePanel == null) {
 	    emoticonPalettePanel = new EmoticonPalettePanel(new EmoticonPaletteListener() {
 		public void onEmoticonSelected(final String emoticonText) {
-		    input.setRawValue(input.getText() + " " + emoticonText + " ");
+		    setInputText(getInputText() + " " + emoticonText + " ");
 		    emoticonPopup.hide();
 		    input.focus();
 		}
