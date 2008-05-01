@@ -106,7 +106,9 @@ We usually use [http://code.google.com/p/gwt-maven/ gwt-maven] plugin to compile
 
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  ...
+  
+ <!-- more stuff here -->
+
   <build>
     <plugins>
       <plugin>
@@ -175,4 +177,4 @@ We usually use [http://code.google.com/p/gwt-maven/ gwt-maven] plugin to compile
 </project>
 
 
-}}}}
+}}}
