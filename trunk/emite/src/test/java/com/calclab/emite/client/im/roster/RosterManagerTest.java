@@ -107,6 +107,7 @@ public class RosterManagerTest {
 	verify(roster).removeItem(uri);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldRequestRosterOnLogin() {
 	emite.receives(SessionManager.Events.loggedIn("user@domain/res"));
