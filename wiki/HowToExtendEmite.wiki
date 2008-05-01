@@ -1,7 +1,9 @@
 #labels Featured,Phase-Implementation
 
 Extend emite its an easy task. You can use the emite object to subscribe, publish events or send stanzas.
-A simple Echo componente would be like this:
+
+=== Write the components ===
+Components are simple objects implementing Installable interface. Normally they have a dependency (in the constructor) with emite. A simple Echo component would be like this:
 {{{
 public class Echo implements Installable {
 
@@ -27,7 +29,9 @@ public class Echo implements Installable {
 }
 }}}
 
-We should pack several related components in a module: just a class with a couple of static methods:
+=== Write a module ===
+We should pack several related components in a module: just a class with a couple of static methods.
+We use the container to register objects, but also to retrieve other components previously registered (the dependencies). Here we us the emite component from the CoreModule:
 {{{
 public class EchoModule {
 
@@ -45,13 +49,18 @@ public class EchoModule {
 }
 }}}
 
-And we can use like this:
+=== Use the module ===
+You can install the module in a container. The xmpp is a container preloaded with three modules (CoreModule, XMPPModule and InstantMessagingModule).
 {{{
 final Xmpp xmpp = Xmpp.create(new BoshOptions("/http-base"));
 EchoModule.install(xmpp);
 {{{
 
-Emite is also very easy to test:
+=== Testing the components ===
+There is a special handy class EmiteTestHelper that implements Emite interface and also provides
+  # {{{receives}}} method to simulate an incoming event or stanza
+  # {{{verifyXXX}}} family methods to verify the behaviour of our components
+All the testing infraestrcture is based on JUnit and Mockito, so you can use all tools they provide. Emite library have hundred of test; they are one of the fastest way to learn how emite works. Here is our test:
 public class EchoTest {
   @Test
   public void shouldAnswer() {
