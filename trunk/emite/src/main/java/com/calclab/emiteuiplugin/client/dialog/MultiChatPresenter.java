@@ -294,11 +294,13 @@ public class MultiChatPresenter implements MultiChat {
 	}
     }
 
-    protected void onCurrentUserSend(final String message) {
-	if (!(message.equals("") || message == null)) {
-	    currentChat.onCurrentUserSend(message);
-	    view.clearInputText();
-	}
+    protected void onCurrentUserSendWithButton(final String message) {
+	onCurrentUserSend(message);
+	view.focusInput();
+    }
+
+    protected void onCurrentUserSendWithEnter(final String message) {
+	onCurrentUserSend(message);
     }
 
     protected void onUserColorChanged(final String color) {
@@ -512,6 +514,14 @@ public class MultiChatPresenter implements MultiChat {
 	    break;
 	case error:
 	    Log.error("Trying to set status and whe have a internal error");
+	}
+    }
+
+    private void onCurrentUserSend(final String message) {
+	boolean isEmpty = message == null || message.equals("");
+	if (!isEmpty) {
+	    view.clearInputText();
+	    currentChat.onCurrentUserSend(message);
 	}
     }
 
