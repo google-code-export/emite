@@ -44,27 +44,4 @@
     </servlet-mapping>
 
 
-
-    <servlet>
-        <servlet-name>ExmiteUIProxy</servlet-name>
-        <servlet-class>de.spieleck.servlets.ProxyServlet</servlet-class>
-        <init-param>
-            <param-name>remotePath</param-name>
-            <param-value>/http-bind/</param-value>
-        </init-param>
-        <init-param>
-            <param-name>remoteServer</param-name>
-            <param-value>localhost</param-value>
-        </init-param>
-        <init-param>
-            <param-name>remotePort</param-name>
-            <param-value>8383</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ExmiteUIProxy</servlet-name>
-        <url-pattern>
-            /gwt/com.calclab.emiteui.Example/http-bind
-        </url-pattern>
-    </servlet-mapping>
 </web-app>
