@@ -3,7 +3,7 @@
 
 
 Emite its a pure gwt library, so no server code is involved.
-You may ask yourself [FAQ why do you I need to install a proxy?]
+You may ask yourself "[FAQ why do you I need to install a proxy?]"
 
 
 
@@ -58,7 +58,7 @@ See Appendix C for more pom.xml configuration options. You can also take a look 
 <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
 }}}
 
-Also, if you want to use the ui you have to configure the connection settings in the html file. Take a look at http://emite.googlecode.com/svn/trunk/emite/src/main/java/com/calclab/emiteui/public/EmiteUI.html to see an example.
+Also, if you want *to use the ui you have to configure the connection settings in your app's html file*. Take a look at http://emite.googlecode.com/svn/trunk/emite/src/main/java/com/calclab/emiteui/public/EmiteUI.html to see an example.
 
 
 == Appendix A: Configuration of maven ==
@@ -124,19 +124,19 @@ We usually use [http://code.google.com/p/gwt-maven/ gwt-maven] plugin to compile
         <configuration>
           <style>OBF</style>
           <runTarget>
-            [[ YOUR APP HTML FILE HERE ]]
+       <!-- [[ YOUR APP HTML FILE HERE ]] -->
           </runTarget>
           <compileTarget>
             <param></param>
           </compileTarget>
           <compileTargets>
             <compileTarget>
-            [[ YOUR APP MODULE NAME HERE ]]
+        <!-- [[ YOUR APP MODULE NAME HERE ]] -->
             </compileTarget>
           </compileTargets>
           <generatorRootClasses></generatorRootClasses>
           <generatorDestinationPackage>
-            [[ YOUR APP MODULE NAME HERE ]]
+       <!-- [[ YOUR APP MODULE NAME HERE ]] -->
           </generatorDestinationPackage>
           <generateGettersAndSetters>
             false
