@@ -4,17 +4,17 @@ import org.junit.Before;
 import static org.mockito.Mockito.*;
 import org.junit.Test;
 
-import com.calclab.emite.testing.EmiteStub;
+import com.calclab.emite.testing.EmiteTestHelper;
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class ChatTest {
-    private EmiteStub emite;
+    private EmiteTestHelper emite;
     private ChatDefault chat;
     private ChatListener listener;
 
     @Before
     public void aaCreate() {
-	this.emite = new EmiteStub();
+	this.emite = new EmiteTestHelper();
 	chat = new ChatDefault(uri("other@domain/otherRes"), uri("self@domain/res"), "theThread", emite);
 	listener = mock(ChatListener.class);
 	chat.addListener(listener);

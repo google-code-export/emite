@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.EmiteStub;
+import com.calclab.emite.testing.EmiteTestHelper;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 import static org.mockito.Matchers.anyObject;
@@ -32,11 +32,11 @@ public class ChatManagerTest {
     private ChatManagerDefault manager;
     private ChatManagerListener listener;
 
-    private EmiteStub emite;
+    private EmiteTestHelper emite;
 
     @Before
     public void aaCreate() {
-	emite = new EmiteStub();
+	emite = new EmiteTestHelper();
 	manager = new ChatManagerDefault(emite);
 	listener = Mockito.mock(ChatManagerListener.class);
 	manager.addListener(listener);

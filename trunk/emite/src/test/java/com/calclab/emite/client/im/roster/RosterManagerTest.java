@@ -19,17 +19,17 @@ import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.testing.EmiteStub;
+import com.calclab.emite.testing.EmiteTestHelper;
 
 public class RosterManagerTest {
-    private EmiteStub emite;
+    private EmiteTestHelper emite;
     private RosterManager manager;
     private Roster roster;
     private RosterManagerListener listener;
 
     @Before
     public void aaCreate() {
-	emite = new EmiteStub();
+	emite = new EmiteTestHelper();
 	roster = mock(Roster.class);
 	manager = new RosterManager(emite, roster);
 	manager.install();

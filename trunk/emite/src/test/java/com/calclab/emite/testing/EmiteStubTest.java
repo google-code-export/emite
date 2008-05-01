@@ -7,11 +7,11 @@ import com.calclab.emite.client.core.packet.Packet;
 
 public class EmiteStubTest {
 
-    private EmiteStub emite;
+    private EmiteTestHelper emite;
 
     @Before
     public void aaCreate() {
-	emite = new EmiteStub();
+	emite = new EmiteTestHelper();
     }
 
     @Test

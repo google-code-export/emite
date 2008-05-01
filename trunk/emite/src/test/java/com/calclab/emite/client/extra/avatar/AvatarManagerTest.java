@@ -4,15 +4,15 @@ import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.testing.EmiteStub;
+import com.calclab.emite.testing.EmiteTestHelper;
 
 public class AvatarManagerTest {
-    private EmiteStub emite;
+    private EmiteTestHelper emite;
     private AvatarManager manager;
 
     @Before
     public void aaaCreateManager() {
-	emite = new EmiteStub();
+	emite = new EmiteTestHelper();
 	manager = new AvatarManager(emite);
     }
 

@@ -10,18 +10,18 @@ import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.testing.EmiteStub;
+import com.calclab.emite.testing.EmiteTestHelper;
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class SessionManagerTest {
 
-    private EmiteStub emite;
+    private EmiteTestHelper emite;
     private SessionManager manager;
     private Session session;
 
     @Before
     public void aaCreate() {
-	emite = new EmiteStub();
+	emite = new EmiteTestHelper();
 	session = mock(Session.class);
 	manager = new SessionManager(emite);
 	manager.install();

@@ -35,11 +35,11 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
  * 
  */
 class ChatDefault implements Chat {
-    private final XmppURI from;
+    protected final XmppURI from;
+    protected final XmppURI other;
+    protected final String thread;
     private final String id;
     private final ArrayList<ChatListener> listeners;
-    private final XmppURI other;
-    private final String thread;
     private final Emite emite;
 
     public ChatDefault(final XmppURI other, final XmppURI myself, final String thread, final Emite emite) {
@@ -89,17 +89,20 @@ class ChatDefault implements Chat {
     }
 
     public void send(final String body) {
-	final Message message = new Message(from, other, body);
-	message.setThread(thread);
+	final Message message = new Message(from, other, body).Thread(thread);
 	emite.send(message);
-	for (final ChatListener listener : listeners) {
-	    listener.onMessageSent(this, message);
-	}
+	fireMessageSent(message);
     }
 
     @Override
     public String toString() {
 	return id;
+    }
+
+    protected void fireMessageSent(final Message message) {
+	for (final ChatListener listener : listeners) {
+	    listener.onMessageSent(this, message);
+	}
     }
 
     void fireMessageReceived(final Message message) {

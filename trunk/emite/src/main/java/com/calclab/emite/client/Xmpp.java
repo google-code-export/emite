@@ -21,6 +21,7 @@
  */
 package com.calclab.emite.client;
 
+import com.calclab.emite.client.components.AbstractContainer;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.components.DefaultContainer;
 import com.calclab.emite.client.core.CoreModule;
@@ -41,7 +42,7 @@ import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class Xmpp {
+public class Xmpp extends AbstractContainer {
 
     public static Xmpp create(final BoshOptions options) {
 	final DefaultContainer c = new DefaultContainer();
@@ -49,52 +50,47 @@ public class Xmpp {
 	return new Xmpp(c, options);
     }
 
-    private final Container container;
     private Session session;
     private boolean isStarted;
 
     public Xmpp(final Container container, final BoshOptions options) {
+	super(container);
 	this.isStarted = false;
-	this.container = container;
 	this.session = null;
 	installDefaultPlugins(container, options);
     }
 
     public AvatarManager getAvatarManager() {
-	return AvatarModule.getAvatarManager(container);
+	return AvatarModule.getAvatarManager(this);
     }
 
     public ChatManager getChatManager() {
-	return InstantMessagingModule.getChat(container);
-    }
-
-    public Container getComponents() {
-	return container;
+	return InstantMessagingModule.getChat(this);
     }
 
     public Dispatcher getDispatcher() {
-	return CoreModule.getDispatcher(container);
+	return CoreModule.getDispatcher(this);
     }
 
     public PresenceManager getPresenceManager() {
-	return InstantMessagingModule.getManager(container);
+	return InstantMessagingModule.getManager(this);
     }
 
     public RoomManager getRoomManager() {
-	return MUCModule.getRoomManager(container);
+	return MUCModule.getRoomManager(this);
     }
 
     public Roster getRoster() {
-	return InstantMessagingModule.getRoster(container);
+	return InstantMessagingModule.getRoster(this);
     }
 
     public RosterManager getRosterManager() {
-	return InstantMessagingModule.getRosterManager(container);
+	return InstantMessagingModule.getRosterManager(this);
     }
 
     public Session getSession() {
 	if (session == null) {
-	    session = XMPPModule.getSession(container);
+	    session = XMPPModule.getSession(this);
 	}
 	return session;
     }
@@ -112,7 +108,7 @@ public class Xmpp {
     public void start() {
 	if (!isStarted) {
 	    isStarted = true;
-	    container.install();
+	    this.install();
 	}
     }
 

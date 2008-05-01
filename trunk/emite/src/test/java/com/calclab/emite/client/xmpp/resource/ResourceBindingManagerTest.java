@@ -5,17 +5,17 @@ import org.junit.Test;
 
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
-import com.calclab.emite.testing.EmiteStub;
+import com.calclab.emite.testing.EmiteTestHelper;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class ResourceBindingManagerTest {
 
-    private EmiteStub emite;
+    private EmiteTestHelper emite;
 
     @Before
     public void aaCreate() {
-	emite = new EmiteStub();
+	emite = new EmiteTestHelper();
 	final ResourceBindingManager manager = new ResourceBindingManager(emite);
 	manager.install();
     }

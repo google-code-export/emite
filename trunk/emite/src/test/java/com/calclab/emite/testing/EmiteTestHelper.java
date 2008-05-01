@@ -12,9 +12,10 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
+import com.calclab.emite.examples.echo.Echo;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 
-public class EmiteStub implements Emite {
+public class EmiteTestHelper implements Emite {
 
     private final DispatcherDefault dispatcher;
     private final TigaseXMLService xmler;
@@ -23,7 +24,7 @@ public class EmiteStub implements Emite {
     private IPacket lastIQSent;
     private final ArrayList<IPacket> sent;
 
-    public EmiteStub() {
+    public EmiteTestHelper() {
 	xmler = new TigaseXMLService();
 	dispatcher = new DispatcherDefault();
 	published = new ArrayList<IPacket>();
@@ -49,6 +50,10 @@ public class EmiteStub implements Emite {
 
     public void clearPublished() {
 	published.clear();
+    }
+
+    public void install(final Echo echo) {
+	echo.install();
     }
 
     public void publish(final IPacket packet) {
