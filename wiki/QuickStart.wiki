@@ -14,8 +14,8 @@ You need a running xmpp server with Http Binding connection enabled. See our [ht
 == Environment setup ==
 
   # install maven2 version 2.0.7 or over (http://maven.apache.org)
-  # download GWT *version 1.5*. Currently, *only works with Milestone1* due a gwt-ext issue
-  # create or modify the maven {{{~/.m2/settings.xml}}} file to use the 1.5M1 distribution of gwt (see Appendix1)
+  # download GWT *version 1.5*. Currently, our version 0.2.0 *only works with Milestone1* due a gwt-ext issue (but our svn version now supports 1.5M2)
+  # create or modify the maven {{{~/.m2/settings.xml}}} file to use the 1.5M1 distribution of gwt (see Appendix A)
   # configure your server Http Binding Service to listen at {{{http://localhost:8383/http-bind/}}} or tweak the web.xml file of emite to change this values
 
 == Run the example from the sources ==
