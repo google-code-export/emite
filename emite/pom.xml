@@ -170,13 +170,13 @@
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
-      <version>0.0.2030</version>
+      <version>0.0.2415</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-servlet</artifactId>
-      <version>0.0.2030</version>
+      <version>0.0.2415</version>
     </dependency>
 
     <!-- other -->
@@ -203,7 +203,7 @@
     <dependency>
       <groupId>com.gwtext</groupId>
       <artifactId>gwtext</artifactId>
-      <version>2.0.3</version>
+      <version>2.0.4-beta1</version>
     </dependency>
     <dependency>
       <groupId>org.ourproject.kune</groupId>

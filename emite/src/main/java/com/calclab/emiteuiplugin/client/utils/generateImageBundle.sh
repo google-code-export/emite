@@ -34,7 +34,7 @@ public interface Images extends ImageBundle {
 EOF
 for i in `ls -1 *png *gif 2> /dev/null`
 do
-   echo -e "/**\n * @gwt.resource $i\n */\nAbstractImagePrototype" \
-  `echo ·$i |cut -d '.' -f 1 | sed 's/-/ /g' | sed 's/_/ /g' | perl -ne '@a=split;foreach (@a) {push @b,ucfirst};print "@b\n"' | sed 's/ //g' | sed 's/·//g'`"();\n"
+   echo -e "\n@Resource(\"$i\")\nAbstractImagePrototype" \
+  `echo ·$i |cut -d '.' -f 1 | sed 's/-/ /g' | sed 's/_/ /g' | perl -ne '@a=split;foreach (@a) {push @b,ucfirst};print "@b\n"' | sed 's/ //g' | sed 's/·//g'`"();"
 done
 echo "}"

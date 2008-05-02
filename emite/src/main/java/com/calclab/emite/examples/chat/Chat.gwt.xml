@@ -3,8 +3,6 @@
   <inherits name="com.calclab.emite.Emite" />
   <inherits name="com.allen_sauer.gwt.log.gwt-log" />
 
-  <set-linker name="std" />
-
   <entry-point
     class="com.calclab.emite.examples.chat.client.ChatEntryPoint" />
 

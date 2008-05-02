@@ -28,194 +28,121 @@ import com.google.gwt.user.client.ui.ImageBundle;
 public interface Emoticons extends ImageBundle {
 
     public static class App {
-        private static Emoticons ourInstance = null;
+	private static Emoticons ourInstance = null;
 
-        public static synchronized Emoticons getInstance() {
-            if (ourInstance == null) {
-                ourInstance = (Emoticons) GWT.create(Emoticons.class);
-            }
-            return ourInstance;
-        }
+	public static synchronized Emoticons getInstance() {
+	    if (ourInstance == null) {
+		ourInstance = (Emoticons) GWT.create(Emoticons.class);
+	    }
+	    return ourInstance;
+	}
     }
 
-    /**
-     * @gwt.resource alien.png
-     */
+    @Resource("alien.png")
     AbstractImagePrototype alien();
 
-    /**
-     * @gwt.resource andy.png
-     */
+    @Resource("andy.png")
     AbstractImagePrototype andy();
 
-    /**
-     * @gwt.resource angel.png
-     */
+    @Resource("angel.png")
     AbstractImagePrototype angel();
 
-    /**
-     * @gwt.resource angry.png
-     */
+    @Resource("angry.png")
     AbstractImagePrototype angry();
 
-    /**
-     * @gwt.resource bandit.png
-     */
+    @Resource("bandit.png")
     AbstractImagePrototype bandit();
 
-    /**
-     * @gwt.resource blushing.png
-     */
+    @Resource("blushing.png")
     AbstractImagePrototype blushing();
 
-    /**
-     * @gwt.resource bullet_black.png
-     */
+    @Resource("bullet_black.png")
     AbstractImagePrototype bulletBlack();
 
-    /**
-     * @gwt.resource bullet_star.png
-     */
+    @Resource("bullet_star.png")
     AbstractImagePrototype bulletStar();
 
-    /**
-     * @gwt.resource cool.png
-     */
+    @Resource("cool.png")
     AbstractImagePrototype cool();
 
-    /**
-     * @gwt.resource crying.png
-     */
+    @Resource("crying.png")
     AbstractImagePrototype crying();
 
-    /**
-     * @gwt.resource devil.png
-     */
+    @Resource("devil.png")
     AbstractImagePrototype devil();
 
-    /**
-     * @gwt.resource grin.png
-     */
+    @Resource("grin.png")
     AbstractImagePrototype grin();
 
-    /**
-     * @gwt.resource happy.png
-     */
+    @Resource("happy.png")
     AbstractImagePrototype happy();
 
-    /**
-     * @gwt.resource heart.png
-     */
+    @Resource("heart.png")
     AbstractImagePrototype heart();
 
-    /**
-     * @gwt.resource joyful.png
-     */
+    @Resource("joyful.png")
     AbstractImagePrototype joyful();
 
-    /**
-     * @gwt.resource kissing.png
-     */
+    @Resource("kissing.png")
     AbstractImagePrototype kissing();
 
-    /**
-     * @gwt.resource lol.png
-     */
+    @Resource("lol.png")
     AbstractImagePrototype lol();
 
-    /**
-     * @gwt.resource love.png
-     */
+    @Resource("love.png")
     AbstractImagePrototype love();
 
-    /**
-     * @gwt.resource ninja.png
-     */
+    @Resource("ninja.png")
     AbstractImagePrototype ninja();
 
-    /**
-     * @gwt.resource pinched.png
-     */
+    @Resource("pinched.png")
     AbstractImagePrototype pinched();
 
-    /**
-     * @gwt.resource policeman.png
-     */
+    @Resource("policeman.png")
     AbstractImagePrototype policeman();
 
-    /**
-     * @gwt.resource pouty.png
-     */
+    @Resource("pouty.png")
     AbstractImagePrototype pouty();
 
-    /**
-     * @gwt.resource sad.png
-     */
+    @Resource("sad.png")
     AbstractImagePrototype sad();
 
-    /**
-     * @gwt.resource sick.png
-     */
+    @Resource("sick.png")
     AbstractImagePrototype sick();
 
-    /**
-     * @gwt.resource sideways.png
-     */
+    @Resource("sideways.png")
     AbstractImagePrototype sideways();
 
-    /**
-     * @gwt.resource sleeping.png
-     */
+    @Resource("sleeping.png")
     AbstractImagePrototype sleeping();
 
-    /**
-     * @gwt.resource smile.png
-     */
+    @Resource("smile.png")
     AbstractImagePrototype smile();
 
-    /**
-     * @gwt.resource surprised.png
-     */
+    @Resource("surprised.png")
     AbstractImagePrototype surprised();
 
-    /**
-     * @gwt.resource tongue.png
-     */
+    @Resource("tongue.png")
     AbstractImagePrototype tongue();
 
-    /**
-     * @gwt.resource uncertain.png
-     */
+    @Resource("uncertain.png")
     AbstractImagePrototype uncertain();
 
-    /**
-     * @gwt.resource unsure.png
-     */
+    @Resource("unsure.png")
     AbstractImagePrototype unsure();
 
-    /**
-     * @gwt.resource w00t.png
-     */
+    @Resource("w00t.png")
     AbstractImagePrototype w00t();
 
-    /**
-     * @gwt.resource whistling.png
-     */
+    @Resource("whistling.png")
     AbstractImagePrototype whistling();
 
-    /**
-     * @gwt.resource wink.png
-     */
+    @Resource("wink.png")
     AbstractImagePrototype wink();
 
-    /**
-     * @gwt.resource wizard.png
-     */
+    @Resource("wizard.png")
     AbstractImagePrototype wizard();
 
-    /**
-     * @gwt.resource wondering.png
-     */
+    @Resource("wondering.png")
     AbstractImagePrototype wondering();
-
 }

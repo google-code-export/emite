@@ -1,7 +1,5 @@
 <module>
 
-  <set-linker name="std" />
-
   <inherits name="com.google.gwt.xml.XML" />
   <inherits name="com.google.gwt.http.HTTP" />
   <entry-point class="com.calclab.emite.client.EmiteEntryPoint" />

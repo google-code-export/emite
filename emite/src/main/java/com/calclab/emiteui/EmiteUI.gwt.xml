@@ -3,6 +3,4 @@
   <inherits name="com.calclab.emiteuiplugin.EmiteUIPlugin" />
   <entry-point class="com.calclab.emiteui.client.EmiteUIEntryPoint" />
   <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
-
-  <set-linker name="std" />
 </module>
