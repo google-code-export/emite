@@ -52,7 +52,7 @@
           <!--<style>OBF</style>-->
           <style>OBF</style>
           <runTarget>
-            com.calclab.emiteui.EmiteUi/EmiteUi.html
+            com.calclab.emiteui.EmiteUI/EmiteUI.html
           </runTarget>
           <compileTarget>
             <param></param>
