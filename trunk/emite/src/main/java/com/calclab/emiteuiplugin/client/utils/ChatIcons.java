@@ -28,139 +28,88 @@ import com.google.gwt.user.client.ui.ImageBundle;
 public interface ChatIcons extends ImageBundle {
 
     public static class App {
-        private static ChatIcons ourInstance = null;
+	private static ChatIcons ourInstance = null;
 
-        public static synchronized ChatIcons getInstance() {
-            if (ourInstance == null) {
-                ourInstance = (ChatIcons) GWT.create(ChatIcons.class);
-            }
-            return ourInstance;
-        }
+	public static synchronized ChatIcons getInstance() {
+	    if (ourInstance == null) {
+		ourInstance = (ChatIcons) GWT.create(ChatIcons.class);
+	    }
+	    return ourInstance;
+	}
     }
 
-    /**
-     * @gwt.resource add.png
-     */
+    @Resource("add.png")
     AbstractImagePrototype add();
 
-    /**
-     * @gwt.resource away.png
-     */
+    @Resource("away.png")
     AbstractImagePrototype away();
 
-    /**
-     * @gwt.resource busy.png
-     */
+    @Resource("busy.png")
     AbstractImagePrototype busy();
 
-    /**
-     * @gwt.resource cancel.png
-     */
+    @Resource("cancel.png")
     AbstractImagePrototype cancel();
 
-    /**
-     * @gwt.resource chat.png
-     */
+    @Resource("chat.png")
     AbstractImagePrototype chat();
 
-    /**
-     * @gwt.resource chat-new-message-small.png
-     */
+    @Resource("chat-new-message-small.png")
     AbstractImagePrototype chatNewMessageSmall();
 
-    /**
-     * @gwt.resource chat-small.png
-     */
+    @Resource("chat-small.png")
     AbstractImagePrototype chatSmall();
 
-    /**
-     * @gwt.resource del.png
-     */
+    @Resource("del.png")
     AbstractImagePrototype del();
 
-    /**
-     * @gwt.resource group-chat.png
-     */
+    @Resource("group-chat.png")
     AbstractImagePrototype groupChat();
 
-    /**
-     * @gwt.resource info.png
-     */
+    @Resource("info.png")
     AbstractImagePrototype info();
 
-    /**
-     * @gwt.resource info-lamp.png
-     */
+    @Resource("info-lamp.png")
     AbstractImagePrototype infoLamp();
 
-    /**
-     * @gwt.resource invisible.png
-     */
+    @Resource("invisible.png")
     AbstractImagePrototype invisible();
 
-    /**
-     * @gwt.resource message.png
-     */
+    @Resource("message.png")
     AbstractImagePrototype message();
 
-    /**
-     * @gwt.resource new-chat.png
-     */
+    @Resource("new-chat.png")
     AbstractImagePrototype newChat();
 
-    /**
-     * @gwt.resource new-email.png
-     */
+    @Resource("new-email.png")
     AbstractImagePrototype newEmail();
 
-    /**
-     * @gwt.resource new-message.png
-     */
+    @Resource("new-message.png")
     AbstractImagePrototype newMessage();
 
-    /**
-     * @gwt.resource not-authorized.png
-     */
+    @Resource("not-authorized.png")
     AbstractImagePrototype notAuthorized();
 
-    /**
-     * @gwt.resource offline.png
-     */
+    @Resource("offline.png")
     AbstractImagePrototype offline();
 
-    /**
-     * @gwt.resource online.png
-     */
+    @Resource("online.png")
     AbstractImagePrototype online();
 
-    /**
-     * @gwt.resource question.png
-     */
+    @Resource("question.png")
     AbstractImagePrototype question();
 
-    /**
-     * @gwt.resource room-new-message-small.png
-     */
+    @Resource("room-new-message-small.png")
     AbstractImagePrototype roomNewMessageSmall();
 
-    /**
-     * @gwt.resource room-small.png
-     */
+    @Resource("room-small.png")
     AbstractImagePrototype roomSmall();
 
-    /**
-     * @gwt.resource unavailable.png
-     */
+    @Resource("unavailable.png")
     AbstractImagePrototype unavailable();
 
-    /**
-     * @gwt.resource user_add.png
-     */
+    @Resource("user_add.png")
     AbstractImagePrototype userAdd();
 
-    /**
-     * @gwt.resource xa.png
-     */
+    @Resource("xa.png")
     AbstractImagePrototype xa();
-
 }

@@ -43,6 +43,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Panel;
@@ -61,16 +62,6 @@ public class EmiteUIEntryPoint implements EntryPoint {
     private static final String GWT_PROPERTY_INFOHTML = "gwt_property_infohtml";
     private static final String GWT_PROPERTY_RELEASE = "gwt_property_release";
 
-    private static native String getWindowTitle()
-    /*-{
-    return $wnd.parent.document.title;
-    }-*/;
-
-    private static native void setWindowTitle(String title)
-    /*-{
-        $wnd.parent.document.title=title;
-    }-*/;
-
     private DefaultDispatcher dispatcher;
     private TextField passwd;
 
@@ -87,7 +78,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
     }
 
     public void onModuleLoadCont() {
-	initialWindowTitle = getWindowTitle();
+	initialWindowTitle = Window.getTitle();
 	createFormPanel();
 	createInfoPanel();
 	createExtUI();
@@ -101,13 +92,13 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
 	dispatcher.subscribe(EmiteUIPlugin.ON_UNHIGHTLIGHTWINDOW, new Action<String>() {
 	    public void execute(final String chatTitle) {
-		setWindowTitle(initialWindowTitle);
+		Window.setTitle(initialWindowTitle);
 	    }
 	});
 
 	dispatcher.subscribe(EmiteUIPlugin.ON_HIGHTLIGHTWINDOW, new Action<String>() {
 	    public void execute(final String chatTitle) {
-		setWindowTitle("(* " + chatTitle + ") " + initialWindowTitle);
+		Window.setTitle("(* " + chatTitle + ") " + initialWindowTitle);
 	    }
 	});
 

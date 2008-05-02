@@ -2,8 +2,6 @@
   <!-- other inherited modules, such as com.google.gwt.user.User -->
   <inherits name="com.google.gwt.user.User" />
 
-  <set-linker name="std" />
-
   <inherits name="com.calclab.emite.Emite" />
   <inherits name="com.allen_sauer.gwt.log.gwt-log" />
   <inherits name='com.allen_sauer.gwt.voices.gwt-voices'/>
