@@ -1,0 +1,32 @@
+#summary changelog of emite releases
+#labels Phase-Design
+= Emite change log =
+
+
+== 0.2.1 ==
+_maintenance release_
+
+=== general ===
+  # GWT1.5M2 support
+
+
+=== emite library ===
+  # Echo example added
+
+
+
+== 0.2.0 ==
+_first public release_
+
+=== general ===
+  # Simple chat example
+
+=== emite library ===
+  # Modules, events and components system
+  # BOSH implemented
+  # SASL plain 
+  # Core XMPP plugin (stanzas, XmppURI)
+  # !InstantMessaging plugin: chat, presence and roster
+  # MUC (multi-user-chat) plugin: rooms
+
+=== emite ui ===
