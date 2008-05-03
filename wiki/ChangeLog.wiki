@@ -2,18 +2,14 @@
 #labels Phase-Design
 = Emite change log =
 
-
 == 0.2.1 ==
 _maintenance release_
 
 === general ===
   # GWT1.5M2 support
 
-
 === emite library ===
   # Echo example added
-
-
 
 == 0.2.0 ==
 _first public release_
@@ -30,3 +26,7 @@ _first public release_
   # MUC (multi-user-chat) plugin: rooms
 
 === emite ui ===
+  # Basic Chat, Roster and Presence support
+  # MUC support with Drag&Drop
+  # i18n support
+  # Extensible UI system 
