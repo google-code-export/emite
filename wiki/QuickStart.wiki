@@ -1,5 +1,5 @@
 #summary How to get the ui running and create a new app with emite
-#labels Featured
+#labels Featured,Phase-Deploy
 
 
 Emite its a pure gwt library, so no server code is involved.
@@ -22,7 +22,7 @@ You need a running xmpp server with Http Binding connection enabled. See our [ht
 
   # check out the code: {{{svn checkout http://emite.googlecode.com/svn/trunk/ emite}}}
   # inside the emite directory type {{{mvn gwt:gwt}}} to run emite using the GWTShell ...
-  # ... or type {{{./script/server.sh}}} to compile the sources to javascript, and start a jetty server with a proxy installed, and run the example looking at:
+  # ... or type {{{./script/server.sh}}} to compile the sources to javascript, and start a jetty server with a proxy installed, and run the example looking at: {{{http://localhost:4444/gwt/EmiteUI.html}}}
 
 == Use emite in your own project ==
 
