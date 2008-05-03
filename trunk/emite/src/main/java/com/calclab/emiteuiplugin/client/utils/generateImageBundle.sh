@@ -1,9 +1,7 @@
 #
 # Generates methods AbstractImagePrototype with the content of the directory:
 #
-#	/**
-#	 * @gwt.resource arrow-down-white.gif
-#	 */
+#       @Resource("image")
 #	AbstractImagePrototype arrowDownWhite();
 #
 
