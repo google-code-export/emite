@@ -19,20 +19,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.core.services;
+package com.calclab.emite.client.components;
 
-import com.calclab.emite.client.components.Container;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class ServicesPlugin {
+@SuppressWarnings("serial")
+public class HashContainer extends HashMap<String, Component> implements Container {
+    private final ArrayList<Installable> startables;
 
-    private static final String COMPONENT_SERVICES = "services";
-
-    public static Services getServices(final Container container) {
-	return (Services) container.get(COMPONENT_SERVICES);
+    public HashContainer() {
+	this.startables = new ArrayList<Installable>();
     }
 
-    public static void install(final Container container, final Services services) {
-	container.register(COMPONENT_SERVICES, services);
+    public Component get(final String componentName) {
+	return super.get(componentName);
+    }
+
+    public void install() {
+	for (final Installable c : startables) {
+	    c.install();
+	}
+    }
+
+    public void register(final String name, final Component component) {
+	super.put(name, component);
+    }
+
+    public void register(final String name, final Installable installable) {
+	register(name, (Component) installable);
+	startables.add(installable);
     }
 
 }

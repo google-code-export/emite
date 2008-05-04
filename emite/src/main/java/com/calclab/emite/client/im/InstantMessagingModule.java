@@ -57,15 +57,15 @@ public class InstantMessagingModule {
     public static void load(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(emite);
-	container.install(COMPONENT_CHAT, chatManagerDefault);
+	container.register(COMPONENT_CHAT, chatManagerDefault);
 
 	final Roster roster = new Roster();
 	final RosterManager rosterManager = new RosterManager(emite, roster);
 	container.register(COMPONENT_ROSTER, roster);
-	container.install(COMPONENT_ROSTER_MANAGER, rosterManager);
+	container.register(COMPONENT_ROSTER_MANAGER, rosterManager);
 
 	final PresenceManager manager = new PresenceManager(emite);
-	container.install(COMPONENT_MANAGER, manager);
+	container.register(COMPONENT_MANAGER, manager);
     }
 
 }

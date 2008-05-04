@@ -101,7 +101,7 @@ public class SessionManager implements Installable {
 	emite.subscribe(when(Events.onAuthorized), new PacketListener() {
 	    public void handle(final IPacket received) {
 		session.setState(Session.State.authorized);
-		emite.publish(BoshManager.Events.onRestart);
+		emite.publish(BoshManager.Events.onRestartStream);
 	    }
 	});
 

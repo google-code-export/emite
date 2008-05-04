@@ -34,7 +34,7 @@ public class SessionManagerTest {
 	manager.doLogin(uri("name@domain/resource"), "password");
 	emite.receives(SessionManager.Events.onAuthorized);
 	verify(session).setState(State.authorized);
-	emite.verifyPublished(BoshManager.Events.onRestart);
+	emite.verifyPublished(BoshManager.Events.onRestartStream);
     }
 
     @Test

@@ -41,15 +41,15 @@ public class XMPPModule {
 
     public static void load(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
-	container.install("resourceManager", new ResourceBindingManager(emite));
+	container.register("resourceManager", new ResourceBindingManager(emite));
 
-	container.install(COMPONENT_SASL, new SASLManager(emite));
+	container.register(COMPONENT_SASL, new SASLManager(emite));
 
 	final SessionManager manager = new SessionManager(emite);
 	final Session session = new Session(manager);
 	manager.setSession(session);
 	container.register(XMPPModule.COMPONENT_SESSION, session);
-	container.install(XMPPModule.COMPONENT_SESSION_MANAGER, manager);
+	container.register(XMPPModule.COMPONENT_SESSION_MANAGER, manager);
     }
 
 }

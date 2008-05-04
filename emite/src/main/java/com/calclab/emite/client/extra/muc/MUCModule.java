@@ -36,6 +36,6 @@ public class MUCModule {
     public static void install(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	final MUCRoomManager rooms = new MUCRoomManager(emite);
-	container.install(COMPONENTS_MANAGER, rooms);
+	container.register(COMPONENTS_MANAGER, rooms);
     }
 }

@@ -32,7 +32,7 @@ import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.core.services.Services;
-import com.calclab.emite.client.core.services.ServicesPlugin;
+import com.calclab.emite.client.core.services.ServicesAbstractModule;
 
 public class CoreModule {
     public static final String COMPONENT_BOSH = "bosh:manager";
@@ -49,7 +49,7 @@ public class CoreModule {
 
     public static void load(final Container container, final BoshOptions options) {
 	// dependencies
-	final Services services = ServicesPlugin.getServices(container);
+	final Services services = ServicesAbstractModule.getServices(container);
 
 	// injections
 	final DispatcherDefault dispatcher = new DispatcherDefault();
@@ -57,11 +57,11 @@ public class CoreModule {
 
 	final Stream stream = new BoshStream();
 	final EmiteBosh emite = new EmiteBosh(dispatcher, stream);
-	container.install(COMPONENT_EMITE, emite);
+	container.register(COMPONENT_EMITE, emite);
 
 	final Bosh bosh = new Bosh(stream, options);
 	final BoshManager boshManager = new BoshManager(services, emite, bosh);
-	container.install(COMPONENT_BOSH, boshManager);
+	container.register(COMPONENT_BOSH, boshManager);
 
     }
 
