@@ -39,7 +39,7 @@ public class XMPPModule {
 	return (Session) container.get(XMPPModule.COMPONENT_SESSION);
     }
 
-    public static void install(final Container container) {
+    public static void load(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	container.install("resourceManager", new ResourceBindingManager(emite));
 

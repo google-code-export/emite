@@ -35,9 +35,9 @@ import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesPlugin;
 
 public class CoreModule {
-    private static final String COMPONENT_BOSH = "bosh:manager";
-    private static final String COMPONENT_DISPATCHER = "dispatcher";
-    private static final String COMPONENT_EMITE = "emite";
+    public static final String COMPONENT_BOSH = "bosh:manager";
+    public static final String COMPONENT_DISPATCHER = "dispatcher";
+    public static final String COMPONENT_EMITE = "emite";
 
     public static Dispatcher getDispatcher(final Container container) {
 	return (Dispatcher) container.get(COMPONENT_DISPATCHER);
@@ -47,7 +47,7 @@ public class CoreModule {
 	return (Emite) container.get(COMPONENT_EMITE);
     }
 
-    public static void install(final Container container, final BoshOptions options) {
+    public static void load(final Container container, final BoshOptions options) {
 	// dependencies
 	final Services services = ServicesPlugin.getServices(container);
 

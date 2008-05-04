@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.core.bosh.BoshManager;
+import com.calclab.emite.client.core.dispatcher.Dispatcher.Events;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
@@ -40,7 +41,7 @@ public class SessionManagerTest {
     public void shouldInformAboutBadAuthentication() {
 	emite.receives(SessionManager.Events.onAuthorizationFailed);
 	verify(session).setState(State.notAuthorized);
-	emite.verifyPublished(BoshManager.Events.error("not-authorized", ""));
+	emite.verifyPublished(Events.error("not-authorized", ""));
     }
 
     @Test
@@ -55,7 +56,7 @@ public class SessionManagerTest {
 
     @Test
     public void shouldSetStatesWhenError() {
-	emite.receives(BoshManager.Events.error("cause", "info"));
+	emite.receives(Events.error("cause", "info"));
 	verify(session).setState(State.error);
 	verify(session).setState(State.disconnected);
     }

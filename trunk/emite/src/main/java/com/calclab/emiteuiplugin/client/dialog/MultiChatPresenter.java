@@ -35,6 +35,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.extra.avatar.AvatarModule;
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.extra.muc.Room;
 import com.calclab.emite.client.extra.muc.RoomListener;
@@ -140,7 +141,7 @@ public class MultiChatPresenter implements MultiChat {
 		chatUI.saveInput(view.getInputText());
 	    }
 
-	    public void onHighLight(ChatUI chatUI) {
+	    public void onHighLight(final ChatUI chatUI) {
 		view.highLight();
 		fireHighLight(chatUI.getChatTitle());
 	    }
@@ -148,7 +149,7 @@ public class MultiChatPresenter implements MultiChat {
 	    public void onMessageAdded(final ChatUI chatUI) {
 	    }
 
-	    public void onUnHighLight(ChatUI chatUI) {
+	    public void onUnHighLight(final ChatUI chatUI) {
 		view.unHighLight();
 		fireUnHighLight(chatUI.getChatTitle());
 	    }
@@ -186,7 +187,7 @@ public class MultiChatPresenter implements MultiChat {
 			chatUI.saveInput(view.getInputText());
 		    }
 
-		    public void onHighLight(ChatUI chatUI) {
+		    public void onHighLight(final ChatUI chatUI) {
 			view.highLight();
 			fireHighLight(chatUI.getChatTitle());
 		    }
@@ -202,7 +203,7 @@ public class MultiChatPresenter implements MultiChat {
 			((Room) chat).setSubject(newSubject);
 		    }
 
-		    public void onUnHighLight(ChatUI chatUI) {
+		    public void onUnHighLight(final ChatUI chatUI) {
 			view.unHighLight();
 			fireUnHighLight(chatUI.getChatTitle());
 		    }
@@ -280,7 +281,7 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     public void setVCardAvatar(final String photoBinary) {
-	xmpp.getAvatarManager().setVCardAvatar(photoBinary);
+	AvatarModule.getAvatarManager(xmpp).setVCardAvatar(photoBinary);
     }
 
     public void show() {
@@ -518,7 +519,7 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     private void onCurrentUserSend(final String message) {
-	boolean isEmpty = message == null || message.equals("");
+	final boolean isEmpty = message == null || message.equals("");
 	if (!isEmpty) {
 	    view.clearInputText();
 	    currentChat.onCurrentUserSend(message);

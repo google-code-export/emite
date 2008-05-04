@@ -27,8 +27,7 @@ import com.calclab.emite.client.components.DefaultContainer;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
-import com.calclab.emite.client.core.services.gwt.GWTServicesPlugin;
-import com.calclab.emite.client.extra.avatar.AvatarManager;
+import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
 import com.calclab.emite.client.extra.avatar.AvatarModule;
 import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.extra.muc.RoomManager;
@@ -46,7 +45,7 @@ public class Xmpp extends AbstractContainer {
 
     public static Xmpp create(final BoshOptions options) {
 	final DefaultContainer c = new DefaultContainer();
-	GWTServicesPlugin.install(c);
+	GWTServicesModule.load(c);
 	return new Xmpp(c, options);
     }
 
@@ -58,10 +57,6 @@ public class Xmpp extends AbstractContainer {
 	this.isStarted = false;
 	this.session = null;
 	installDefaultPlugins(container, options);
-    }
-
-    public AvatarManager getAvatarManager() {
-	return AvatarModule.getAvatarManager(this);
     }
 
     public ChatManager getChatManager() {
@@ -119,11 +114,12 @@ public class Xmpp extends AbstractContainer {
     }
 
     private void installDefaultPlugins(final Container container, final BoshOptions options) {
-	CoreModule.install(container, options);
-	XMPPModule.install(container);
-	InstantMessagingModule.install(container);
+	CoreModule.load(container, options);
+	XMPPModule.load(container);
+	InstantMessagingModule.load(container);
+	// TODO: not here!
 	MUCModule.install(container);
-	AvatarModule.install(container);
+	AvatarModule.load(container);
     }
 
 }

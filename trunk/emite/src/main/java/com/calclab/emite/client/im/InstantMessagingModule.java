@@ -54,7 +54,7 @@ public class InstantMessagingModule {
 	return (RosterManager) container.get(COMPONENT_ROSTER_MANAGER);
     }
 
-    public static void install(final Container container) {
+    public static void load(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(emite);
 	container.install(COMPONENT_CHAT, chatManagerDefault);

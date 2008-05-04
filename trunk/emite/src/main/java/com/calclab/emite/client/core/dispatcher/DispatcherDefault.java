@@ -27,6 +27,7 @@ import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
+import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 
 public class DispatcherDefault implements Dispatcher {
@@ -78,6 +79,21 @@ public class DispatcherDefault implements Dispatcher {
 	}
     }
 
+    private void fireErrorEvent(final Exception t) {
+	this.queue.clear();
+	final Event error = Events.error("exception", t.getMessage());
+	final List<Subscriptor> eventSubscriptors = subscriptors.get(error.getName());
+	for (final Subscriptor subscriptor : eventSubscriptors) {
+	    try {
+		if (subscriptor.matcher.matches(error)) {
+		    subscriptor.packetListener.handle(error);
+		}
+	    } catch (final Exception e) {
+	    }
+	}
+
+    }
+
     private List<Subscriptor> getSubscriptorList(final String name) {
 	List<Subscriptor> list = subscriptors.get(name);
 	if (list == null) {
@@ -91,10 +107,14 @@ public class DispatcherDefault implements Dispatcher {
     private synchronized void start() {
 	isCurrentlyDispatching = true;
 	listeners.fireBeforeDispatch();
-	while (queue.size() > 0) {
-	    final IPacket next = queue.remove(0);
-	    fireActions(next, subscriptors.get(null));
-	    fireActions(next, getSubscriptorList(next.getName()));
+	try {
+	    while (queue.size() > 0) {
+		final IPacket next = queue.remove(0);
+		fireActions(next, subscriptors.get(null));
+		fireActions(next, getSubscriptorList(next.getName()));
+	    }
+	} catch (final Exception exception) {
+	    fireErrorEvent(exception);
 	}
 	isCurrentlyDispatching = false;
 	listeners.fireAfterDispatch();
