@@ -54,6 +54,8 @@ import com.gwtext.client.widgets.grid.GridDragData;
 import com.gwtext.client.widgets.grid.GridPanel;
 import com.gwtext.client.widgets.grid.GridView;
 import com.gwtext.client.widgets.grid.Renderer;
+import com.gwtext.client.widgets.grid.RowSelectionModel;
+import com.gwtext.client.widgets.grid.event.GridCellListenerAdapter;
 import com.gwtext.client.widgets.grid.event.GridRowListener;
 import com.gwtext.client.widgets.layout.FitLayout;
 
@@ -72,17 +74,11 @@ public class UserGridPanel extends Panel {
     private RecordDef recordDef;
     private Store store;
     private GridPanel grid;
-
-    public UserGridPanel(final String emptyText) {
-	this(emptyText, null, null);
-    }
-
-    public UserGridPanel(final String emptyText, final DragGridConfiguration dragGridConfiguration) {
-	this(emptyText, dragGridConfiguration, null);
-    }
+    private final UserGridListener listener;
 
     public UserGridPanel(final String emptyText, final DragGridConfiguration dragGridConfiguration,
-	    final DropGridConfiguration dropGridConfiguration) {
+	    final DropGridConfiguration dropGridConfiguration, final UserGridListener listener) {
+	this.listener = listener;
 	setBorder(false);
 	setLayout(new FitLayout());
 	createGrid(emptyText, dragGridConfiguration, dropGridConfiguration);
@@ -90,8 +86,18 @@ public class UserGridPanel extends Panel {
 	recordMap = new HashMap<XmppURI, Record>();
     }
 
-    public UserGridPanel(final String emptyText, final DropGridConfiguration dropGridConfiguration) {
-	this(emptyText, null, dropGridConfiguration);
+    public UserGridPanel(final String emptyText, final DragGridConfiguration dragGridConfiguration,
+	    final UserGridListener listener) {
+	this(emptyText, dragGridConfiguration, null, listener);
+    }
+
+    public UserGridPanel(final String emptyText, final DropGridConfiguration dropGridConfiguration,
+	    final UserGridListener listener) {
+	this(emptyText, null, dropGridConfiguration, listener);
+    }
+
+    public UserGridPanel(final String emptyText, final UserGridListener listener) {
+	this(emptyText, null, null, listener);
     }
 
     public void addUser(final ChatUserUI user, final UserGridMenu menu) {
@@ -248,6 +254,12 @@ public class UserGridPanel extends Panel {
 	grid.setColumnModel(columnModel);
 	grid.setAutoExpandColumn(ALIAS);
 	grid.setAutoExpandMax(81);
+	grid.setSelectionModel(new RowSelectionModel());
+	grid.addGridCellListener(new GridCellListenerAdapter() {
+	    public void onCellDblClick(final GridPanel grid, final int rowIndex, final int colIndex, final EventObject e) {
+		onDoubleClick(rowIndex);
+	    }
+	});
 	grid.addGridRowListener(new GridRowListener() {
 	    public void onRowClick(final GridPanel grid, final int rowIndex, final EventObject e) {
 		showMenu(rowIndex, e);
@@ -258,7 +270,8 @@ public class UserGridPanel extends Panel {
 	    }
 
 	    public void onRowDblClick(final GridPanel grid, final int rowIndex, final EventObject e) {
-		showMenu(rowIndex, e);
+		Log.debug("Row double click");
+		onDoubleClick(rowIndex);
 	    }
 
 	    private void showMenu(final int rowIndex, final EventObject e) {
@@ -326,6 +339,13 @@ public class UserGridPanel extends Panel {
 	// tooltip.setWidth(150);
 	// tooltip.applyTo(iconImg.getElement());
 	return iconImg.toString();
+    }
+
+    private void onDoubleClick(final int rowIndex) {
+	Log.info("Double click in user");
+	final Record record = store.getRecordAt(rowIndex);
+	final String jid = record.getAsString(JID);
+	listener.onDoubleClick(uri(jid));
     }
 
     private void sort() {

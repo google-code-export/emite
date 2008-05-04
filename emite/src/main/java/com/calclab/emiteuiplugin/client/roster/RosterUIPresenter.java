@@ -31,6 +31,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.packet.TextUtils;
+import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
@@ -66,6 +67,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     private final Roster roster;
     private final RosterManager rosterManager;
     private final AvatarProvider avatarProvider;
+    private final ChatManager chatManager;
 
     public RosterUIPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final AvatarProvider avatarProvider) {
 	this.i18n = i18n;
@@ -74,6 +76,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 	presenceManager = xmpp.getPresenceManager();
 	rosterManager = xmpp.getRosterManager();
 	roster = xmpp.getRoster();
+	chatManager = xmpp.getChatManager();
     }
 
     public void clearRoster() {
@@ -117,6 +120,10 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
     public void onPresenceNotAccepted(final Presence presence) {
 	rosterManager.denySubscription(presence);
+    }
+
+    public void openChat(final XmppURI userJid) {
+	chatManager.openChat(userJid);
     }
 
     String formatRosterItemStatusText(final Presence presence, final Subscription subscription) {
