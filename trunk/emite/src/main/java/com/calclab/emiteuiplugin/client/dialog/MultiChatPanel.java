@@ -499,12 +499,15 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private void quickTipsInit() {
-	QuickTips.init();
-	final QuickTip quickTipInstance = QuickTips.getQuickTip();
-	quickTipInstance.setDismissDelay(7000);
-	quickTipInstance.setHideDelay(400);
-	quickTipInstance.setInterceptTitles(true);
-	quickTipInstance.setMinWidth(100);
+	if (!QuickTips.isEnabled()) {
+	    // If not enabled before by another UI component
+	    QuickTips.init();
+	    final QuickTip quickTipInstance = QuickTips.getQuickTip();
+	    quickTipInstance.setInterceptTitles(true);
+	    quickTipInstance.setDismissDelay(7000);
+	    quickTipInstance.setHideDelay(400);
+	    quickTipInstance.setMinWidth(100);
+	}
     }
 
     private void showEmoticonPalette(final int x, final int y) {

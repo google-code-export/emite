@@ -1,12 +1,27 @@
 #!/bin/bash
 
-PARAM=$#
+PARAMS=$#
 JAR=$1
 GROUP=$2
 ARTIFACT=$3
 VER=$4
+USER=$5
 
-DESTHOST=ourproject.org
+# CORRECT PARAMS ###############################################################
+
+if [ $PARAMS -lt 4 ]
+then
+  echo "Use: $0 <jar> <group> <artifact> <version> <username>"
+  echo "$0 target/emite-0.2.2-emiteuiplugin.jar com.calclab.emite emiteuiplugin 0.2.2 luther"
+  exit
+fi
+
+if [ $PARAMS -gt 4 ]
+then
+  EXTRA=$USER@
+fi
+
+DESTHOST=${EXTRA}ourproject.org
 DESTREPO=/home/groups/kune/htdocs/mavenrepo 
 
 DIRDESTREL=`echo $GROUP| sed 's/\./\//g'`
