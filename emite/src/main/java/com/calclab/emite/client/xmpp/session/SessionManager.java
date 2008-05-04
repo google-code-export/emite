@@ -26,6 +26,7 @@ import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
@@ -85,7 +86,7 @@ public class SessionManager implements Installable {
 	emite.subscribe(when(Events.onAuthorizationFailed), new PacketListener() {
 	    public void handle(final IPacket received) {
 		session.setState(State.notAuthorized);
-		emite.publish(BoshManager.Events.error("not-authorized", ""));
+		emite.publish(Dispatcher.Events.error("not-authorized", ""));
 	    }
 	});
 
@@ -111,7 +112,7 @@ public class SessionManager implements Installable {
 	    }
 	});
 
-	emite.subscribe(when(BoshManager.Events.onError), new PacketListener() {
+	emite.subscribe(when(Dispatcher.Events.onError), new PacketListener() {
 	    public void handle(final IPacket received) {
 		session.setState(Session.State.error);
 		session.setState(Session.State.disconnected);

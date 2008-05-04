@@ -33,7 +33,7 @@ public class AvatarModule {
         return (AvatarManager) components.get(COMPONENTS_MANAGER);
     }
 
-    public static void install(final Container container) {
+    public static void load(final Container container) {
         final Emite emite = CoreModule.getEmite(container);
         final AvatarManager avatar = new AvatarManager(emite);
         container.install(COMPONENTS_MANAGER, avatar);

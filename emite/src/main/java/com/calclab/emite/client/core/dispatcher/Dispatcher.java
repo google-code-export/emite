@@ -23,9 +23,20 @@ package com.calclab.emite.client.core.dispatcher;
 
 import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
+import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 
 public interface Dispatcher extends Component {
+
+    public static class Events {
+
+	public static final Event onError = new Event("connection:on:error");
+
+	public static Event error(final String cause, final String info) {
+	    return (Event) Events.onError.Params("cause", cause).With("info", info);
+	}
+
+    }
 
     public void addListener(DispatcherStateListener listener);
 

@@ -29,10 +29,10 @@ import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesPlugin;
 
-public class GWTServicesPlugin implements Services {
+public class GWTServicesModule implements Services {
 
-    public static void install(final Container container) {
-	ServicesPlugin.install(container, new GWTServicesPlugin());
+    public static void load(final Container container) {
+	ServicesPlugin.install(container, new GWTServicesModule());
     }
 
     public long getCurrentTime() {

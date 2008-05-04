@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.calclab.emite.client.core.dispatcher.Dispatcher.Events;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.testing.EmiteTestHelper;
@@ -72,7 +73,7 @@ public class BoshManagerTest {
 	emite.receives("<body xmlns='http://jabber.org/protocol/httpbind' type='terminal' "
 		+ "condition='policy-violation'></body>");
 	assertFalse(manager.isRunning());
-	emite.verifyPublished(BoshManager.Events.error("terminal", "policy-violation"));
+	emite.verifyPublished(Events.error("terminal", "policy-violation"));
     }
 
 }

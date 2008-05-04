@@ -1,15 +1,16 @@
 package com.calclab.emite.client.core.dispatcher;
 
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
+import static org.mockito.Mockito.*;
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.*;
+import static com.calclab.emite.testing.TestMatchers.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.calclab.emite.client.core.dispatcher.Dispatcher.Events;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
+import com.calclab.emite.client.core.dispatcher.matcher.Matchers;
 import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
@@ -56,5 +57,22 @@ public class DispatcherTest {
 	final Packet other = new Packet("other name");
 	dispatcher.publish(other);
 	verify(listener, times(0)).handle(other);
+    }
+
+    @Test
+    public void shouldFireErrorEventWhenException() {
+	final PacketListener errorProducer = mock(PacketListener.class);
+	stubVoid(errorProducer).toThrow(new RuntimeException("the message")).on().handle((IPacket) anyObject());
+	dispatcher.subscribe(Matchers.ANYTHING, errorProducer);
+
+	final PacketListener wrongErrorListener = mock(PacketListener.class);
+	stubVoid(wrongErrorListener).toThrow(new RuntimeException("something here")).on().handle((IPacket) anyObject());
+	dispatcher.subscribe(when(Events.onError), wrongErrorListener);
+
+	final PacketListener errorListener = mock(PacketListener.class);
+	dispatcher.subscribe(when(Events.onError), errorListener);
+	dispatcher.publish(new Packet("anything"));
+	verify(wrongErrorListener, times(1)).handle(packetLike(Events.onError));
+	verify(errorListener, times(1)).handle(packetLike(Events.onError.Params("info", "the message")));
     }
 }

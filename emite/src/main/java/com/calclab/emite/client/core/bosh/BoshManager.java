@@ -28,6 +28,7 @@ import java.util.List;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Bosh.BoshState;
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
@@ -48,12 +49,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 	public static final Event onRestart = new Event("connection:do:restart");
 	public static final Event onDoStart = new Event("connection:do:start");
 	public static final Event stop = new Event("connection:do:stop");
-	public static final Event onError = new Event("connection:on:error");
 	protected final static Event pull = new Event("connection:do:pull");
-
-	public static Event error(final String cause, final String info) {
-	    return (Event) onError.Params("cause", cause).With("info", info);
-	}
 
 	public static IPacket start(final String domain) {
 	    return BoshManager.Events.onDoStart.Params("domain", domain);
@@ -125,7 +121,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 	    }
 	});
 
-	emite.subscribe(when(BoshManager.Events.onError), new PacketListener() {
+	emite.subscribe(when(Dispatcher.Events.onError), new PacketListener() {
 	    public void handle(final IPacket received) {
 		setRunning(false);
 	    }
@@ -190,25 +186,19 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 	this.isRunning = isRunning;
     }
 
-    public void uninstall() {
-	// TODO Auto-generated method stub
-
-    }
-
     void eventStop() {
 	bosh.setTerminating(true);
     }
 
     private void error(final String cause, final String info) {
 	setRunning(false);
-	emite.publish(BoshManager.Events.error(cause, info));
+	emite.publish(Dispatcher.Events.error(cause, info));
     }
 
     private void eventStart(final String domain) {
 	setDomain(domain);
 	setRunning(true);
 	this.bosh.init(services.getCurrentTime());
-
     }
 
     private boolean isTerminal(final IPacket body) {
