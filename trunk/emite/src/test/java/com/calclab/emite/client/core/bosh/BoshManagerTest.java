@@ -1,15 +1,18 @@
 package com.calclab.emite.client.core.bosh;
 
-import static org.junit.Assert.assertFalse;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.Dispatcher.Events;
+import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.services.ConnectorCallback;
+import com.calclab.emite.client.core.services.ConnectorException;
+import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.testing.EmiteTestHelper;
 
@@ -38,10 +41,23 @@ public class BoshManagerTest {
     }
 
     @Test
+    public void shouldHandleStreamErrors() {
+	emite.receives("<stream:error />");
+	emite.verifyPublished(Dispatcher.Events.onError);
+    }
+
+    @Test
     public void shouldHanldeRestart() {
 	manager.setDomain("domain");
-	emite.receives(BoshManager.Events.onRestart);
+	emite.receives(BoshManager.Events.onRestartStream);
 	verify(bosh).setRestart("domain");
+    }
+
+    @Test
+    public void shouldPrepareBodyBeforeDispatching() {
+	manager.setRunning(true);
+	manager.dispatchingBegins();
+	verify(bosh).prepareBody();
     }
 
     @Test
@@ -59,6 +75,32 @@ public class BoshManagerTest {
     }
 
     @Test
+    public void shouldPullAfterDispatching() {
+	manager.setRunning(true);
+	stub(bosh.getState(anyLong())).toReturn(Bosh.shouldWait(10000));
+	manager.dispatchingEnds();
+
+	verify(services).schedule(eq(10000), (ScheduledAction) anyObject());
+    }
+
+    @Test
+    public void shouldSendResponseAfterDispatching() throws ConnectorException {
+	manager.setRunning(true);
+	stub(bosh.getState(anyLong())).toReturn(Bosh.SEND);
+	stub(bosh.getHttpBase()).toReturn("the http-base");
+	stub(services.toString((IPacket) anyObject())).toReturn("the response");
+
+	manager.dispatchingEnds();
+	verify(services).send(eq("the http-base"), eq("the response"), (ConnectorCallback) anyObject());
+    }
+
+    @Test
+    public void shouldSendTerminatingWhenStop() {
+	emite.receives(BoshManager.Events.stop);
+	verify(bosh).setTerminating(true);
+    }
+
+    @Test
     public void shouldSetSIDWhenFirstBody() {
 	stub(bosh.isFirstResponse()).toReturn(true);
 	emite.receives("<body xmlns='http://jabber.org/protocol/httpbind' "
@@ -66,6 +108,19 @@ public class BoshManagerTest {
 		+ "authid='505ea252' sid='theSid' secure='true' requests='2' inactivity='30' "
 		+ "polling='5' wait='60' ver='1.6'></body>");
 	verify(bosh).setAttributes("theSid", 5, 2);
+    }
+
+    @Test
+    public void shouldStart() {
+	emite.receives(BoshManager.Events.start("this is the domain"));
+	assertTrue(manager.isRunning());
+	assertEquals("this is the domain", manager.getDomain());
+    }
+
+    @Test
+    public void shouldStopOnError() {
+	emite.receives(Dispatcher.Events.error("exception", "some exception info"));
+	assertFalse(manager.isRunning());
     }
 
     @Test

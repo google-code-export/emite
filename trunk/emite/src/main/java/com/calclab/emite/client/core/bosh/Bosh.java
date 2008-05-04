@@ -48,16 +48,20 @@ public class Bosh {
 	    return time > 0;
 	}
     }
-    private static final BoshState SEND = new BoshState(0);
-    private static final BoshState IGNORE = new BoshState(-1);
+    public static final BoshState SEND = new BoshState(0);
+    public static final BoshState IGNORE = new BoshState(-1);
 
+    static BoshState shouldWait(final int time) {
+	return new BoshState(time);
+    }
     private int currentConnections;
     private boolean isTerminating;
     private long lastSendTime;
-    private int poll;
 
+    private int poll;
     private String sid;
     private final Stream stream;
+
     private int requests;
 
     private final BoshOptions options;
@@ -106,7 +110,7 @@ public class Bosh {
 		final int delay = (int) (currentTime - lastSendTime);
 		if (delay <= poll) {
 		    Log.debug("STATE - NOT SEND: Empty request, no conn but too frequent: " + delay);
-		    state = new BoshState(poll - delay);
+		    state = Bosh.shouldWait(poll - delay);
 		} else {
 		    Log.debug("STATE - SEND: Empty request, not connections (" + currentConnections
 			    + ") and delay ok: " + delay + " with poll: " + poll);

@@ -36,6 +36,6 @@ public class AvatarModule {
     public static void load(final Container container) {
         final Emite emite = CoreModule.getEmite(container);
         final AvatarManager avatar = new AvatarManager(emite);
-        container.install(COMPONENTS_MANAGER, avatar);
+        container.register(COMPONENTS_MANAGER, avatar);
     }
 }

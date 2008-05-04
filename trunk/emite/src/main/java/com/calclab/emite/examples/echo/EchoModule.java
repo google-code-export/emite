@@ -15,6 +15,6 @@ public class EchoModule {
     public static void install(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	final Echo echo = new Echo(emite);
-	container.install(COMPONENT_ECHO, echo);
+	container.register(COMPONENT_ECHO, echo);
     }
 }

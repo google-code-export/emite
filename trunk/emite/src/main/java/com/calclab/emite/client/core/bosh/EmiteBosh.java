@@ -32,6 +32,8 @@ import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.*;
+
 /**
  * REPONSABILITIES: mantains a body handle id iq's SEND
  * 
@@ -40,7 +42,11 @@ import com.calclab.emite.client.core.packet.IPacket;
  */
 public class EmiteBosh implements Emite, Installable {
     public static class Events {
-	public static final Event send = new Event("connection:do:send");
+	public static final Event onDoSend = new Event("connection:do:send");
+
+	public static IPacket send(final IPacket packet) {
+	    return new Event(EmiteBosh.Events.onDoSend).With(packet);
+	}
     }
 
     private final Dispatcher dispatcher;
@@ -58,18 +64,16 @@ public class EmiteBosh implements Emite, Installable {
     }
 
     public void attach() {
-	dispatcher.subscribe(new PacketMatcher(EmiteBosh.Events.send), new PacketListener() {
+	dispatcher.subscribe(new PacketMatcher(EmiteBosh.Events.onDoSend), new PacketListener() {
 	    public void handle(final IPacket received) {
-		final List<? extends IPacket> children = received.getChildren();
-		for (final IPacket child : children) {
-		    stream.addResponse(child);
-		}
+		onSend(received);
 	    }
 	});
-	dispatcher.subscribe(Matcher.ANYTHING, new PacketListener() {
+	dispatcher.subscribe(when("iq"), new PacketListener() {
 	    public void handle(final IPacket received) {
-		manager.handle(received);
+		onIQ(received);
 	    }
+
 	});
     }
 
@@ -77,26 +81,38 @@ public class EmiteBosh implements Emite, Installable {
 	attach();
     }
 
-    public void uninstall() {
-
-    }
-
     public void publish(final IPacket packet) {
 	dispatcher.publish(packet);
     }
 
     public void send(final IPacket packet) {
-	dispatcher.publish(new Event(EmiteBosh.Events.send).With(packet));
+	dispatcher.publish(Events.send(packet));
     }
 
-    public void sendIQ(final String category, final IPacket packet, final PacketListener packetListener) {
+    public String sendIQ(final String category, final IPacket packet, final PacketListener packetListener) {
 	final String id = manager.register(category, packetListener);
 	packet.setAttribute("id", id);
 	send(packet);
+	return id;
     }
 
     public void subscribe(final Matcher matcher, final PacketListener packetListener) {
 	dispatcher.subscribe(matcher, packetListener);
+    }
+
+    public void uninstall() {
+
+    }
+
+    void onIQ(final IPacket received) {
+	manager.handle(received);
+    }
+
+    void onSend(final IPacket received) {
+	final List<? extends IPacket> children = received.getChildren();
+	for (final IPacket child : children) {
+	    stream.addResponse(child);
+	}
     }
 
 }

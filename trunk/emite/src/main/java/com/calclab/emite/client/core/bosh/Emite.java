@@ -39,6 +39,7 @@ public interface Emite extends Dispatcher {
      * @param the
      *                IQ
      * @param listener
+     * @return the generated id
      */
-    void sendIQ(String category, IPacket iq, PacketListener listener);
+    String sendIQ(String category, IPacket iq, PacketListener listener);
 }

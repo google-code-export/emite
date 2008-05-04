@@ -21,9 +21,9 @@
  */
 package com.calclab.emite.client;
 
-import com.calclab.emite.client.components.AbstractContainer;
+import com.calclab.emite.client.components.DelegatedContainer;
 import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.components.DefaultContainer;
+import com.calclab.emite.client.components.HashContainer;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
@@ -41,10 +41,10 @@ import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class Xmpp extends AbstractContainer {
+public class Xmpp extends DelegatedContainer {
 
     public static Xmpp create(final BoshOptions options) {
-	final DefaultContainer c = new DefaultContainer();
+	final HashContainer c = new HashContainer();
 	GWTServicesModule.load(c);
 	return new Xmpp(c, options);
     }

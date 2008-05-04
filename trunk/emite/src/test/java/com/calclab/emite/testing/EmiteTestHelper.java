@@ -72,9 +72,10 @@ public class EmiteTestHelper implements Emite {
 	sent.add(packet);
     }
 
-    public void sendIQ(final String category, final IPacket packet, final PacketListener listener) {
+    public String sendIQ(final String category, final IPacket packet, final PacketListener listener) {
 	lastIQSent = packet;
 	this.lastCallback = listener;
+	return "validID";
     }
 
     public void subscribe(final Matcher matcher, final PacketListener packetListener) {

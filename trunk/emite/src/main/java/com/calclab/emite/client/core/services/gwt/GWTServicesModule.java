@@ -27,12 +27,12 @@ import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
-import com.calclab.emite.client.core.services.ServicesPlugin;
+import com.calclab.emite.client.core.services.ServicesAbstractModule;
 
 public class GWTServicesModule implements Services {
 
     public static void load(final Container container) {
-	ServicesPlugin.install(container, new GWTServicesModule());
+	ServicesAbstractModule.setServices(container, new GWTServicesModule());
     }
 
     public long getCurrentTime() {

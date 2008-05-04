@@ -25,7 +25,7 @@ public interface Container extends Installable {
 
     Component get(String componentName);
 
-    void install(String componentName, Installable startable);
+    void register(String componentName, Installable startable);
 
     void register(String componentName, Component component);
 

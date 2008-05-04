@@ -1,9 +1,9 @@
 package com.calclab.emite.client.components;
 
-public class AbstractContainer implements Container {
+public class DelegatedContainer implements Container {
     private final Container delegate;
 
-    public AbstractContainer(final Container delegate) {
+    public DelegatedContainer(final Container delegate) {
 	this.delegate = delegate;
     }
 
@@ -15,12 +15,12 @@ public class AbstractContainer implements Container {
 	delegate.install();
     }
 
-    public void install(final String componentName, final Installable startable) {
-	delegate.install(componentName, startable);
-    }
-
     public void register(final String componentName, final Component component) {
 	delegate.register(componentName, component);
+    }
+
+    public void register(final String componentName, final Installable installable) {
+	delegate.register(componentName, installable);
     }
 
 }
