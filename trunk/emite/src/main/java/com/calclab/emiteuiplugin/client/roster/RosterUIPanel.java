@@ -24,8 +24,10 @@ package com.calclab.emiteuiplugin.client.roster;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.users.ChatUserUI;
 import com.calclab.emiteuiplugin.client.users.DragGridConfiguration;
+import com.calclab.emiteuiplugin.client.users.UserGridListener;
 import com.calclab.emiteuiplugin.client.users.UserGridMenu;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
 import com.calclab.emiteuiplugin.client.users.UserGridPanel;
@@ -38,7 +40,13 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
 
     public RosterUIPanel(final I18nTranslationService i18n, final RosterUIPresenter presenter) {
 	super(i18n.t("No buddies at this moment"), new DragGridConfiguration(INVITE_TO_GROUP_DD, i18n
-		.t("Drop into a room to invite the user to join the chat room")));
+		.t("Drop in the chat area to start a chat.")
+		+ "<br/>" + i18n.t("Drop into a room to invite the user to join the chat room")),
+		new UserGridListener() {
+		    public void onDoubleClick(final XmppURI userJid) {
+			presenter.openChat(userJid);
+		    }
+		});
 	this.i18n = i18n;
 	this.presenter = presenter;
     }

@@ -31,6 +31,7 @@ import com.calclab.emiteuiplugin.client.users.DragGridConfiguration;
 import com.calclab.emiteuiplugin.client.users.DropGridConfiguration;
 import com.calclab.emiteuiplugin.client.users.RoomUserUI;
 import com.calclab.emiteuiplugin.client.users.UserGridDropListener;
+import com.calclab.emiteuiplugin.client.users.UserGridListener;
 import com.calclab.emiteuiplugin.client.users.UserGridMenu;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
 import com.calclab.emiteuiplugin.client.users.UserGridPanel;
@@ -57,7 +58,12 @@ public class RoomUserListUIPanel extends UserGridPanel implements View {
 				// FIXME: Create a dialog
 				presenter.onInviteUserRequested(userURI, "Join to our conversation");
 			    }
-			}));
+			}), new UserGridListener() {
+
+		    public void onDoubleClick(final XmppURI userJid) {
+			// Nothing (at this moment) ...
+		    }
+		});
 	this.i18n = i18n;
 	this.presenter = presenter;
 	moderatorLabel = i18n.t("Moderator");
