@@ -51,11 +51,11 @@ public class EmiteBosh implements Emite, Installable {
 
     private final Dispatcher dispatcher;
     private final IDManager manager;
-    private final Stream stream;
+    private final IStream iStream;
 
-    public EmiteBosh(final Dispatcher dispatcher, final Stream stream) {
+    public EmiteBosh(final Dispatcher dispatcher, final IStream iStream) {
 	this.dispatcher = dispatcher;
-	this.stream = stream;
+	this.iStream = iStream;
 	this.manager = new IDManager();
     }
 
@@ -111,7 +111,7 @@ public class EmiteBosh implements Emite, Installable {
     void onSend(final IPacket received) {
 	final List<? extends IPacket> children = received.getChildren();
 	for (final IPacket child : children) {
-	    stream.addResponse(child);
+	    iStream.addResponse(child);
 	}
     }
 

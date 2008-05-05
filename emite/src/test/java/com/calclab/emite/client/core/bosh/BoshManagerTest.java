@@ -48,9 +48,8 @@ public class BoshManagerTest {
 
     @Test
     public void shouldHanldeRestart() {
-	manager.setDomain("domain");
 	emite.receives(BoshManager.Events.onRestartStream);
-	verify(bosh).setRestart("domain");
+	verify(bosh).setRestart();
     }
 
     @Test
@@ -112,9 +111,11 @@ public class BoshManagerTest {
 
     @Test
     public void shouldStart() {
-	emite.receives(BoshManager.Events.start("this is the domain"));
+	final String domain = "this-is-the-domain";
+	emite.receives(BoshManager.Events.start(domain));
 	assertTrue(manager.isRunning());
-	assertEquals("this is the domain", manager.getDomain());
+	assertEquals(domain, manager.getDomain());
+	verify(bosh).init(anyLong(), eq(domain));
     }
 
     @Test

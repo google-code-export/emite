@@ -97,14 +97,14 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
     public void install() {
 	emite.subscribe(when(BoshManager.Events.onRestartStream), new PacketListener() {
 	    public void handle(final IPacket received) {
-		bosh.setRestart(domain);
+		bosh.setRestart();
 	    }
 	});
 	emite.subscribe(when(BoshManager.Events.onDoStart), new PacketListener() {
 	    public void handle(final IPacket received) {
 		setDomain(received.getAttribute("domain"));
 		setRunning(true);
-		bosh.init(services.getCurrentTime());
+		bosh.init(services.getCurrentTime(), getDomain());
 	    }
 
 	});

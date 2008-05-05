@@ -16,20 +16,20 @@ public class EmiteTest {
 
     private EmiteBosh emite;
     private Dispatcher dispatcher;
-    private Stream stream;
+    private IStream iStream;
 
     @Before
     public void beforeTest() {
-	stream = mock(Stream.class);
+	iStream = mock(IStream.class);
 	dispatcher = mock(Dispatcher.class);
-	emite = new EmiteBosh(dispatcher, stream);
+	emite = new EmiteBosh(dispatcher, iStream);
     }
 
     @Test
     public void shouldChangeStreamOnSend() {
 	final IPacket packet = new Packet("child");
 	emite.onSend(EmiteBosh.Events.send(packet));
-	verify(stream).addResponse(same(packet));
+	verify(iStream).addResponse(same(packet));
     }
 
     @Test
