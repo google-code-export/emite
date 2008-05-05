@@ -27,11 +27,13 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.users.ChatUserUI;
 import com.calclab.emiteuiplugin.client.users.DragGridConfiguration;
+import com.calclab.emiteuiplugin.client.users.DropGridConfiguration;
 import com.calclab.emiteuiplugin.client.users.UserGridListener;
 import com.calclab.emiteuiplugin.client.users.UserGridMenu;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
 import com.calclab.emiteuiplugin.client.users.UserGridPanel;
 import com.gwtext.client.widgets.MessageBox;
+import com.gwtext.client.widgets.Panel;
 
 public class RosterUIPanel extends UserGridPanel implements RosterUIView {
 
@@ -39,7 +41,7 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
     private final I18nTranslationService i18n;
 
     public RosterUIPanel(final I18nTranslationService i18n, final RosterUIPresenter presenter) {
-	super(i18n.t("No buddies at this moment"), new DragGridConfiguration(INVITE_TO_GROUP_DD, i18n
+	super(i18n.t("No buddies at this moment"), new DragGridConfiguration(USER_GROUP_DD, i18n
 		.t("Drop in the chat area to start a chat.")
 		+ "<br/>" + i18n.t("Drop into a room to invite the user to join the chat room")),
 		new UserGridListener() {
@@ -59,6 +61,10 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
 
     public void clearRoster() {
 	super.removeAllUsers();
+    }
+
+    public void confDropInPanel(final Panel panel, final DropGridConfiguration dropGridConfiguration) {
+	super.confDropInPanel(panel, dropGridConfiguration);
     }
 
     public void confirmSusbscriptionRequest(final Presence presence) {

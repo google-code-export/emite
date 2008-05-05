@@ -38,7 +38,6 @@ public class ChatUIPresenter implements ChatUI {
     private final ChatUIListener listener;
     private int oldColor;
     private final HashMap<String, String> userColors;
-    private boolean closeConfirmed;
     private final String chatTitle;
     private final XmppURI otherURI;
     private boolean isActive;
@@ -93,10 +92,6 @@ public class ChatUIPresenter implements ChatUI {
 	return chatTitle;
     }
 
-    public boolean getCloseConfirmed() {
-	return closeConfirmed;
-    }
-
     public String getColor(final String userAlias) {
 	String color = userColors.get(userAlias);
 	if (color == null) {
@@ -126,8 +121,8 @@ public class ChatUIPresenter implements ChatUI {
 	unHighLightChatTitle();
     }
 
-    public void onCloseCloseConfirmed() {
-	listener.onCloseConfirmed(this);
+    public void onClose() {
+	listener.onClose(this);
     }
 
     public void onCurrentUserSend(final String message) {
@@ -142,12 +137,12 @@ public class ChatUIPresenter implements ChatUI {
 	isActive = false;
     }
 
-    public void saveInput(final String inputText) {
-	savedInput = inputText;
+    public void onUserDrop(final XmppURI userURI) {
+	listener.onUserDrop(userURI);
     }
 
-    public void setCloseConfirmed(final boolean confirmed) {
-	this.closeConfirmed = confirmed;
+    public void saveInput(final String inputText) {
+	savedInput = inputText;
     }
 
     public void setUserColor(final String userAlias, final String color) {

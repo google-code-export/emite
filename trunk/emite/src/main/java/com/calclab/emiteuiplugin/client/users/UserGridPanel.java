@@ -60,12 +60,11 @@ import com.gwtext.client.widgets.grid.event.GridRowListener;
 import com.gwtext.client.widgets.layout.FitLayout;
 
 public class UserGridPanel extends Panel {
-
-    public static final String INVITE_TO_GROUP_DD = "inviteToGroupDD";
+    public static final String USER_GROUP_DD = "userGroupDD";
+    public static final String JID = "jid";
     private static final String ALIAS = "alias";
     private static final String COLOR = "color";
     private static final String IMG = "img";
-    private static final String JID = "jid";
     private static final String STATUSIMG = "status";
     private static final String STATUSTEXT = "statustext";
     private FieldDef[] fieldDefs;
@@ -108,6 +107,35 @@ public class UserGridPanel extends Panel {
     public void addUser(final RoomUserUI user, final UserGridMenu menu, final String userType) {
 	final String img = user.getRole().equals(Role.moderator) ? "images/moderatoruser.gif" : "images/normaluser.gif";
 	addRecord(user, "<img src=\"" + img + "\">", userType, menu);
+    }
+
+    public void confDropInPanel(final Panel panel, final DropGridConfiguration dropGridConfiguration) {
+	// FIXME: This doesn't works :-/
+	// http://extjs.com/forum/showthread.php?t=18105
+	final DropTargetConfig dCfg = new DropTargetConfig();
+	dCfg.setTarget(true);
+	dCfg.setdDdGroup(dropGridConfiguration.getDdGroupId());
+	new DropTarget(panel, dCfg) {
+	    public boolean notifyDrop(final DragSource src, final EventObject e, final DragData dragData) {
+		if (dragData instanceof GridDragData) {
+		    final GridDragData gridDragData = (GridDragData) dragData;
+		    final Record[] records = gridDragData.getSelections();
+		    for (int i = 0; i < records.length; i++) {
+			dropGridConfiguration.getListener().onDrop(
+				XmppURI.jid(records[i].getAsString(UserGridPanel.JID)));
+		    }
+		}
+		return true;
+	    }
+
+	    public String notifyEnter(final DragSource src, final EventObject e, final DragData data) {
+		return "x-tree-drop-ok-append";
+	    }
+
+	    public String notifyOver(final DragSource src, final EventObject e, final DragData data) {
+		return "x-tree-drop-ok-append";
+	    }
+	};
     }
 
     public void removeAllUsers() {
