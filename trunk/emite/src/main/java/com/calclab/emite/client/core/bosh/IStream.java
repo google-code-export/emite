@@ -24,7 +24,7 @@ package com.calclab.emite.client.core.bosh;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 
-public interface Stream {
+public interface IStream {
     void addResponse(IPacket response);
 
     Packet clearBody();

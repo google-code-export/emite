@@ -10,27 +10,28 @@ import com.calclab.emite.client.core.bosh.Bosh.BoshState;
 
 public class BoshTest {
 
-    private Stream stream;
+    private IStream iStream;
     private Bosh bosh;
     private BoshOptions options;
 
     @Before
     public void aaCreate() {
-	stream = mock(Stream.class);
+	iStream = mock(IStream.class);
 	options = new BoshOptions("domain");
-	bosh = new Bosh(stream, options);
+	bosh = new Bosh(iStream, options);
     }
 
     @Test
     public void shouldPrepareBody() {
 	bosh.prepareBody();
-	verify(stream).prepareBody(null);
+	verify(iStream).prepareBody(null);
     }
 
     @Test
     public void shouldRestartStream() {
-	bosh.setRestart("domain");
-	verify(stream).setRestart("domain");
+	bosh.init(0, "the-domain");
+	bosh.setRestart();
+	verify(iStream).setRestart("the-domain");
     }
 
     @Test
@@ -41,9 +42,9 @@ public class BoshTest {
 
     @Test
     public void whenBodyEmptyCheckRequestCount() {
-	stub(stream.isEmpty()).toReturn(true);
+	stub(iStream.isEmpty()).toReturn(true);
 	bosh.setAttributes("theSID", 5, 2);
-	bosh.init(0);
+	bosh.init(0, "the domain");
 	assertTrue(bosh.getState(10).shouldSend());
 	bosh.requestCountEncreasesAt(20);
 	assertTrue(bosh.getState(1000000).shouldIgnore());
@@ -51,8 +52,8 @@ public class BoshTest {
 
     @Test
     public void whenBodyEmptyNotPoll() {
-	stub(stream.isEmpty()).toReturn(true);
-	bosh.init(0);
+	stub(iStream.isEmpty()).toReturn(true);
+	bosh.init(0, "the-domain");
 	bosh.setAttributes("theSid", 5, 2);
 	bosh.requestCountEncreasesAt(1000);
 	bosh.requestCountDecreases();
@@ -63,7 +64,7 @@ public class BoshTest {
 
     @Test
     public void whenBodyNotEmptyCheckRequestCount() {
-	stub(stream.isEmpty()).toReturn(false);
+	stub(iStream.isEmpty()).toReturn(false);
 	bosh.setAttributes("theSID", 5, 2);
 	assertTrue(bosh.getState(System.currentTimeMillis()).shouldSend());
 	bosh.requestCountEncreasesAt(System.currentTimeMillis());

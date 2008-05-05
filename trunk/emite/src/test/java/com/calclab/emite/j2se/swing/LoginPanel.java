@@ -45,6 +45,7 @@ public class LoginPanel extends JPanel {
 	selectHttpBase.addItem("http://localhost:8383/http-bind/");
 	selectHttpBase.addItem("http://localhost:4444/http-bosh");
 	selectHttpBase.addItem("http://localhost:4444/http-bind");
+	selectHttpBase.addItem("http://localhost:5280/http-bind/");
 	selectHttpBase.addItem("http://emite.ourproject.org/proxy");
 	selectHttpBase.setSelectedIndex(0);
 	fieldDomain = new JTextField("localhost");

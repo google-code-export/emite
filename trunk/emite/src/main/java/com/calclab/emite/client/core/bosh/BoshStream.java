@@ -24,7 +24,7 @@ package com.calclab.emite.client.core.bosh;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 
-public class BoshStream implements Stream {
+public class BoshStream implements IStream {
     private Packet body;
     private long requestID;
 
@@ -75,6 +75,15 @@ public class BoshStream implements Stream {
     public void start(final String domain) {
 	this.requestID = (int) (Math.random() * 1245234);
 	body = createInitialBody(domain);
+    }
+
+    /**
+     * Testing purposes only
+     * 
+     * @return
+     */
+    Packet getBody() {
+	return body;
     }
 
     private Packet createBody() {
