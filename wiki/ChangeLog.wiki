@@ -2,6 +2,14 @@
 #labels Phase-Design
 = Emite change log =
 
+== next release ==
+
+== emite library ==
+  # Fixed a bug that prevents login against ejabberd
+
+== emite ui ==
+  # Hyperlinks (in converations) are now clickeables
+
 == 0.2.1 ==
 _maintenance release_
 
