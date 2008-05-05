@@ -23,6 +23,8 @@ package com.calclab.emiteuiplugin.client.chat;
 
 import org.ourproject.kune.platf.client.View;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+
 public interface ChatUI {
 
     void addDelimiter(String date);
@@ -37,8 +39,6 @@ public interface ChatUI {
 
     String getChatTitle();
 
-    boolean getCloseConfirmed();
-
     String getColor(String userAlias);
 
     String getSavedInput();
@@ -47,7 +47,7 @@ public interface ChatUI {
 
     void highLightChatTitle();
 
-    void onCloseCloseConfirmed();
+    void onClose();
 
     void onCurrentUserSend(String message);
 
@@ -55,9 +55,9 @@ public interface ChatUI {
 
     void onInputUnFocus();
 
-    void saveInput(String inputText);
+    void onUserDrop(XmppURI userURI);
 
-    void setCloseConfirmed(boolean confirmed);
+    void saveInput(String inputText);
 
     void setUserColor(String userAlias, String color);
 

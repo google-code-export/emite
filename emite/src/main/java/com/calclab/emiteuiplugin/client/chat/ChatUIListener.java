@@ -21,11 +21,13 @@
  */
 package com.calclab.emiteuiplugin.client.chat;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+
 public interface ChatUIListener {
 
     void onActivate(ChatUI chatUI);
 
-    void onCloseConfirmed(ChatUI chatUI);
+    void onClose(ChatUI chatUI);
 
     void onCurrentUserSend(String message);
 
@@ -36,5 +38,7 @@ public interface ChatUIListener {
     void onMessageAdded(ChatUI chatUI);
 
     void onUnHighLight(ChatUI chatUI);
+
+    void onUserDrop(XmppURI userURI);
 
 }

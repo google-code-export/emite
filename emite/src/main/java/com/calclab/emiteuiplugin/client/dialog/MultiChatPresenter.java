@@ -129,8 +129,8 @@ public class MultiChatPresenter implements MultiChat {
 		view.focusInput();
 	    }
 
-	    public void onCloseConfirmed(final ChatUI chatUI) {
-		doAfterCloseConfirmed(chat, chatUI);
+	    public void onClose(final ChatUI chatUI) {
+		doClose(chat, chatUI);
 	    }
 
 	    public void onCurrentUserSend(final String message) {
@@ -153,6 +153,12 @@ public class MultiChatPresenter implements MultiChat {
 		view.unHighLight();
 		fireUnHighLight(chatUI.getChatTitle());
 	    }
+
+	    public void onUserDrop(XmppURI userURI) {
+		if (!chat.getOtherURI().equals(userURI)) {
+		    joinChat(userURI);
+		}
+	    }
 	}) : chats.get(chat);
 	finishChatCreation(chat, chatUI);
 	return chatUI;
@@ -171,8 +177,8 @@ public class MultiChatPresenter implements MultiChat {
 			view.focusInput();
 		    }
 
-		    public void onCloseConfirmed(final ChatUI chatUI) {
-			doAfterCloseConfirmed(chat, chatUI);
+		    public void onClose(final ChatUI chatUI) {
+			doClose(chat, chatUI);
 		    }
 
 		    public void onCreated(final ChatUI chatUI) {
@@ -208,6 +214,12 @@ public class MultiChatPresenter implements MultiChat {
 			fireUnHighLight(chatUI.getChatTitle());
 		    }
 
+		    public void onUserDrop(XmppURI userURI) {
+			// FIXME (do a dialog for this, same in RoomUserListUIP)
+			Log.info("Sending invitation");
+			((Room) chat).sendInvitationTo(userURI.toString(), "Join to our conversation");
+		    }
+
 		}) : chats.get(chat));
 
 	finishChatCreation(chat, roomUI);
@@ -237,6 +249,10 @@ public class MultiChatPresenter implements MultiChat {
 	createXmppListeners();
     }
 
+    public void joinChat(final XmppURI userURI) {
+	xmpp.getChatManager().openChat(userURI);
+    }
+
     public void joinRoom(final String roomName, final String serverName) {
 	xmpp.getRoomManager().openChat(uri(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
     }
@@ -252,6 +268,14 @@ public class MultiChatPresenter implements MultiChat {
     public void onModifySubjectRequested(final String newSubject) {
 	final RoomUI roomUI = (RoomUI) currentChat;
 	roomUI.onModifySubjectRequested(newSubject);
+    }
+
+    public void onUserDropped(final XmppURI userURI) {
+	if (currentChat != null) {
+	    currentChat.onUserDrop(userURI);
+	} else {
+	    joinChat(userURI);
+	}
     }
 
     public void setOwnPresence(final OwnPresence ownPresence) {
@@ -319,15 +343,7 @@ public class MultiChatPresenter implements MultiChat {
     }
 
     void closeChatUI(final ChatUI chatUI) {
-	chatUI.setCloseConfirmed(true);
-	chatUI.onCloseCloseConfirmed();
-    }
-
-    void doAfterCloseConfirmed(final Chat chat, final ChatUI chatUI) {
-	xmpp.getChatManager().close(chat);
-	chats.remove(chat);
-	chatUI.destroy();
-	checkNoChats();
+	chatUI.onClose();
     }
 
     void doAfterLogout() {
@@ -340,6 +356,13 @@ public class MultiChatPresenter implements MultiChat {
 	view.setInputEditable(false);
 	view.setOwnPresence(OFFLINE_OWN_PRESENCE);
 	roster.clearRoster();
+    }
+
+    void doClose(final Chat chat, final ChatUI chatUI) {
+	xmpp.getChatManager().close(chat);
+	chats.remove(chat);
+	chatUI.destroy();
+	checkNoChats();
     }
 
     void doConnecting() {

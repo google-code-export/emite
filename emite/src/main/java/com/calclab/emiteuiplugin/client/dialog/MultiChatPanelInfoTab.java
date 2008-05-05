@@ -31,6 +31,8 @@ public class MultiChatPanelInfoTab extends Panel {
     private final I18nTranslationService i18n;
 
     public MultiChatPanelInfoTab(final I18nTranslationService i18n) {
+	setAttribute("enableDragDrop", true, true);
+	setAttribute("enableDrop", true, true);
 	this.i18n = i18n;
 	setTitle(i18n.t("Info"), "info-icon");
 	setBorder(false);

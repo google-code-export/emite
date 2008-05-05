@@ -24,13 +24,10 @@ package com.calclab.emiteuiplugin.client.room;
 import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.users.DragGridConfiguration;
-import com.calclab.emiteuiplugin.client.users.DropGridConfiguration;
 import com.calclab.emiteuiplugin.client.users.RoomUserUI;
-import com.calclab.emiteuiplugin.client.users.UserGridDropListener;
 import com.calclab.emiteuiplugin.client.users.UserGridListener;
 import com.calclab.emiteuiplugin.client.users.UserGridMenu;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
@@ -51,15 +48,7 @@ public class RoomUserListUIPanel extends UserGridPanel implements View {
 
     public RoomUserListUIPanel(final I18nTranslationService i18n, final RoomUIPresenter presenter) {
 	super(i18n.t("Nobody in this room"),
-		new DragGridConfiguration("none", "Room users drag & drop in development"), new DropGridConfiguration(
-			INVITE_TO_GROUP_DD, new UserGridDropListener() {
-			    public void onDrop(final XmppURI userURI) {
-				Log.info("Sending invitation to" + userURI);
-				// FIXME: Create a dialog
-				presenter.onInviteUserRequested(userURI, "Join to our conversation");
-			    }
-			}), new UserGridListener() {
-
+		new DragGridConfiguration("none", "Room users drag & drop in development"), new UserGridListener() {
 		    public void onDoubleClick(final XmppURI userJid) {
 			// Nothing (at this moment) ...
 		    }

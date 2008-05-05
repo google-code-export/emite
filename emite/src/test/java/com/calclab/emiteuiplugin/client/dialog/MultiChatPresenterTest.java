@@ -102,7 +102,7 @@ public class MultiChatPresenterTest {
     @Test
     public void closeAllChatsWithoutConfirmation() {
 	multiChat.closeAllChats(true);
-	multiChat.doAfterCloseConfirmed(chat, chatUI);
+	multiChat.doClose(chat, chatUI);
 	Mockito.verify(multiChatPanel).setCloseAllOptionEnabled(true);
 	// TODO check order
 	Mockito.verify(multiChatPanel).setInfoPanelVisible(false);

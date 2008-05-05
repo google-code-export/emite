@@ -34,6 +34,9 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.roster.RosterItemPanel;
 import com.calclab.emiteuiplugin.client.roster.RosterUIPanel;
+import com.calclab.emiteuiplugin.client.users.DropGridConfiguration;
+import com.calclab.emiteuiplugin.client.users.UserGridDropListener;
+import com.calclab.emiteuiplugin.client.users.UserGridPanel;
 import com.calclab.emiteuiplugin.client.utils.ChatIcons;
 import com.calclab.emiteuiplugin.client.utils.emoticons.EmoticonPaletteListener;
 import com.calclab.emiteuiplugin.client.utils.emoticons.EmoticonPalettePanel;
@@ -262,6 +265,15 @@ public class MultiChatPanel implements MultiChatView {
 	sound.play();
     }
 
+    private void configureDrop() {
+	rosterUIPanel.confDropInPanel(centerPanel, new DropGridConfiguration(UserGridPanel.USER_GROUP_DD,
+		new UserGridDropListener() {
+		    public void onDrop(final XmppURI userURI) {
+			presenter.onUserDropped(userURI);
+		    }
+		}));
+    }
+
     private void configureSound() {
 	soundController = new SoundController();
 	soundController.setPrioritizeFlashSound(false);
@@ -401,7 +413,11 @@ public class MultiChatPanel implements MultiChatView {
 	eastData.setSplit(false);
 	dialog.add(eastPanel, eastData);
 
-	centerPanel = new TabPanel();
+	centerPanel = new TabPanel() {
+	    {
+		setAttribute("enableDragDrop", true, true);
+	    }
+	};
 	centerPanel.setBorder(true);
 	centerPanel.setEnableTabScroll(true);
 	centerPanel.setAutoScroll(false);
@@ -411,6 +427,8 @@ public class MultiChatPanel implements MultiChatView {
 	dialog.add(centerPanel, centerData);
 
 	createListeners();
+
+	configureDrop();
 
 	createKuneIconBottomBar();
     }
@@ -453,30 +471,13 @@ public class MultiChatPanel implements MultiChatView {
 		if (component.getId().equals(infoPanel.getId())) {
 		    // Closing empty chats info
 		    return true;
-		}
-		if (chatUI.getCloseConfirmed()) {
-		    panelIdToChat.remove(panelId);
-		    return true;
 		} else {
-		    MessageBox.confirm(i18n.t("Confirm"), i18n.t("Are you sure you want to exit from this chat?"),
-			    new MessageBox.ConfirmCallback() {
-				public void execute(final String btnID) {
-				    if (btnID.equals("yes")) {
-					presenter.closeChatUI(chatUI);
-					self.remove(panelId);
-				    }
-				}
-			    });
-		    DeferredCommand.addCommand(new Command() {
-			public void execute() {
-			    DOM.setStyleAttribute(dialog.getElement(), "zIndex", "9000");
-			    DOM.setStyleAttribute(MessageBox.getDialog().getElement(), "zIndex", "10000");
-			}
-		    });
+		    presenter.closeChatUI(chatUI);
+		    panelIdToChat.remove(panelId);
+		    // self.remove(panelId);
+		    return true;
 		}
-		return false;
 	    }
-
 	});
     }
 
@@ -520,7 +521,7 @@ public class MultiChatPanel implements MultiChatView {
 		}
 	    });
 	}
-	emoticonPopup = new PopupPanel(false);
+	emoticonPopup = new PopupPanel(true);
 	emoticonPopup.setVisible(false);
 	emoticonPopup.show();
 	emoticonPopup.setPopupPosition(x - 10, y - 150);
