@@ -6,9 +6,11 @@
 
 == emite library ==
   # Fixed a bug that prevents login against ejabberd
+  # error hadlers
 
 == emite ui ==
-  # Hyperlinks (in converations) are now clickeables
+  # Hyperlinks (in conversations) are now clickeables
+  # more drag & drop support (now you can drag a user to start a chat)
 
 == 0.2.1 ==
 _maintenance release_
