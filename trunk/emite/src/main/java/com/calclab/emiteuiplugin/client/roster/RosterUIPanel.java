@@ -69,7 +69,7 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
 
     public void confirmSusbscriptionRequest(final Presence presence) {
 	MessageBox.confirm(i18n.t("Confirm"), i18n.t("[%s] want to add you as a buddy. Do you want to permit?",
-		presence.getFrom()), new MessageBox.ConfirmCallback() {
+		presence.getFromURI().getJID().toString()), new MessageBox.ConfirmCallback() {
 	    public void execute(final String btnID) {
 		if (btnID.equals("yes")) {
 		    presenter.onPresenceAccepted(presence);
