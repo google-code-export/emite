@@ -36,6 +36,17 @@ public class ChatTextFormatterTest {
     }
 
     @Test
+    public void formatURLs() {
+	final String[] urls = new String[] { "http://emite.googlecode.com/", "ftp://debian.org/",
+		"http://www.google.com/search?hl=es&rls=GGGL%2CGGGL%3A2006-28%2CGGGL%3Aes&q=emite&btnG=Buscar&lr=",
+		"http://del.icio.us/search/?fr=del_icio_us&p=xmpp+gwt&type=all" };
+	for (int i = 0; i < urls.length; i++) {
+	    final String url = urls[i];
+	    assertEquals("<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>", ChatTextFormatter.formatUrls(url));
+	}
+    }
+
+    @Test
     public void onlySpaces() {
 	final String message = "a:)a";
 	final String format = ChatTextFormatter.preFormatEmoticons(message);
