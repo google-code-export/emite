@@ -1,8 +1,13 @@
 package com.calclab.emite.j2se.swing;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,12 +31,17 @@ public class LoginPanel extends JPanel {
     private JPasswordField fieldPassword;
     private JLabel labelState;
     private final LoginPanelListener listener;
-    private JComboBox selectHttpBase;
+    private JComboBox selectConfiguration;
+    private JTextField fieldHttpBase;
 
     public LoginPanel(final LoginPanelListener listener) {
-	super(new FlowLayout(FlowLayout.LEFT));
+	super(new BorderLayout());
 	this.listener = listener;
 	init();
+    }
+
+    public void addConfiguration(final ConnectionConfiguration connectionConfiguration) {
+	selectConfiguration.addItem(connectionConfiguration);
     }
 
     public void showState(final String message, final boolean isConnected) {
@@ -41,26 +51,25 @@ public class LoginPanel extends JPanel {
     }
 
     private void init() {
-	selectHttpBase = new JComboBox();
-	selectHttpBase.addItem("http://localhost:8383/http-bind/");
-	selectHttpBase.addItem("http://localhost:4444/http-bosh");
-	selectHttpBase.addItem("http://localhost:4444/http-bind");
-	selectHttpBase.addItem("http://localhost:5280/http-bind/");
-	selectHttpBase.addItem("http://emite.ourproject.org/proxy");
-	selectHttpBase.setSelectedIndex(0);
-	fieldDomain = new JTextField("localhost");
-	fieldName = new JTextField("admin");
-	fieldPassword = new JPasswordField("easyeasy");
-	add(selectHttpBase);
-	add(fieldDomain);
-	add(fieldName);
-	add(fieldPassword);
+	final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	selectConfiguration = new JComboBox();
+	selectConfiguration.addItemListener(new ItemListener() {
+	    public void itemStateChanged(final ItemEvent e) {
+		final ConnectionConfiguration config = (ConnectionConfiguration) selectConfiguration.getSelectedItem();
+		fieldHttpBase.setText(config.httpBase);
+		fieldDomain.setText(config.domain);
+		fieldName.setText(config.userName);
+		fieldPassword.setText(config.password);
+	    }
+
+	});
+	panel.add(selectConfiguration);
 
 	btnLogin = new JButton("login");
 	btnLogin.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		listener.onLogin(selectHttpBase.getSelectedItem().toString(), fieldDomain.getText(), fieldName
-			.getText(), new String(fieldPassword.getPassword()));
+		listener.onLogin(fieldHttpBase.getText(), fieldDomain.getText(), fieldName.getText(), new String(
+			fieldPassword.getPassword()));
 	    }
 	});
 	btnLogout = new JButton("logout");
@@ -69,10 +78,25 @@ public class LoginPanel extends JPanel {
 		listener.onLogout();
 	    }
 	});
-	add(btnLogin);
-	add(btnLogout);
+	panel.add(btnLogin);
+	panel.add(btnLogout);
 
 	labelState = new JLabel("current state: none (connected: false)");
-	add(labelState);
+	panel.add(labelState);
+
+	final JPanel panelFields = new JPanel(new GridLayout(1, 4));
+	panelFields.setMinimumSize(new Dimension(200, 1));
+	fieldHttpBase = new JTextField("http url here");
+	fieldDomain = new JTextField("domain here");
+	fieldName = new JTextField("user name here");
+	fieldPassword = new JPasswordField("password here");
+	panelFields.add(fieldHttpBase);
+	panelFields.add(fieldDomain);
+	panelFields.add(fieldName);
+	panelFields.add(fieldPassword);
+
+	add(panel, BorderLayout.NORTH);
+	add(panelFields);
+
     }
 }

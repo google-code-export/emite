@@ -60,15 +60,15 @@ public class Bosh {
 
     private int poll;
     private String sid;
-    private final IStream iStream;
+    private final Stream stream;
 
     private int requests;
 
     private final BoshOptions options;
     private String domain;
 
-    public Bosh(final IStream iStream, final BoshOptions options) {
-	this.iStream = iStream;
+    public Bosh(final Stream iStream, final BoshOptions options) {
+	this.stream = iStream;
 	this.options = options;
     }
 
@@ -85,7 +85,7 @@ public class Bosh {
     }
 
     public IPacket getResponse() {
-	return iStream.clearBody();
+	return stream.clearBody();
     }
 
     public String getSID() {
@@ -95,7 +95,7 @@ public class Bosh {
     public BoshState getState(final long currentTime) {
 	BoshState state = null;
 
-	if (!iStream.isEmpty()) {
+	if (!stream.isEmpty()) {
 	    if (currentConnections < requests) {
 		Log.debug("STATE - SEND: Not empty request and current connections ok (" + currentConnections + ")");
 		state = SEND;
@@ -129,7 +129,7 @@ public class Bosh {
 	this.poll = 1;
 	this.isTerminating = false;
 	lastSendTime = currentTime;
-	this.iStream.start(domain);
+	this.stream.start(domain);
     }
 
     public boolean isFirstResponse() {
@@ -141,7 +141,7 @@ public class Bosh {
     }
 
     public void prepareBody() {
-	iStream.prepareBody(getSID());
+	stream.prepareBody(getSID());
     }
 
     public void requestCountDecreases() {
@@ -160,13 +160,13 @@ public class Bosh {
     }
 
     public void setRestart() {
-	iStream.setRestart(domain);
+	stream.setRestart(domain);
     }
 
     public void setTerminating(final boolean isTerminating) {
 	this.isTerminating = isTerminating;
 	if (isTerminating) {
-	    iStream.setTerminate();
+	    stream.setTerminate();
 	}
     }
 
@@ -176,7 +176,7 @@ public class Bosh {
 	    Log.error(message);
 	    throw new RuntimeException(message);
 	}
-	iStream.setSID(sid);
+	stream.setSID(sid);
 	this.sid = sid;
     }
 

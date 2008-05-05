@@ -78,6 +78,19 @@ public class SwingClient {
 	    }
 
 	});
+
+	loginPanel.addConfiguration(new ConnectionConfiguration("empty", "", "", "", ""));
+	loginPanel.addConfiguration(new ConnectionConfiguration("admin @ local openfire",
+		"http://localhost:8383/http-bind/", "localhost", "admin", "easyeasy"));
+	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ local ejabberd",
+		"http://localhost:5280/http-bind/", "mandarine", "dani", "dani"));
+	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ emite demo",
+		"http://emite.ourproject.org/proxy", "emitedemo.ourproject.org", "dani", "dani"));
+	loginPanel.addConfiguration(new ConnectionConfiguration("test1 @ jetty proxy",
+		"http://localhost:4444/http-bind", "localhost", "test1", "test1"));
+	loginPanel.addConfiguration(new ConnectionConfiguration("test1 @ jetty bosh servlet",
+		"http://emite.ourproject.org/proxy", "localhost", "test1", "test1"));
+
 	rosterPanel = new RosterPanel(frame, new RosterPanelListener() {
 	    public void onAddRosterItem(final String uri, final String name) {
 		xmpp.getRosterManager().requestAddItem(uri(uri), name, null);

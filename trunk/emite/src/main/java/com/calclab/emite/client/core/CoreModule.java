@@ -22,13 +22,12 @@
 package com.calclab.emite.client.core;
 
 import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.core.bosh.Bosh;
-import com.calclab.emite.client.core.bosh.BoshStream;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteBosh;
-import com.calclab.emite.client.core.bosh.IStream;
+import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.core.services.Services;
@@ -55,7 +54,7 @@ public class CoreModule {
 	final DispatcherDefault dispatcher = new DispatcherDefault();
 	container.register(COMPONENT_DISPATCHER, dispatcher);
 
-	final IStream iStream = new BoshStream();
+	final Stream iStream = new Stream();
 	final EmiteBosh emite = new EmiteBosh(dispatcher, iStream);
 	container.register(COMPONENT_EMITE, emite);
 
