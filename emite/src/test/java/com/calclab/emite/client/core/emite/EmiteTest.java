@@ -7,15 +7,15 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.core.bosh.BoshStream;
+import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.packet.Packet;
 
 public class EmiteTest {
-    private BoshStream stream;
+    private Stream stream;
 
     @Before
     public void aaCreate() {
-	stream = new BoshStream();
+	stream = new Stream();
     }
 
     @Test

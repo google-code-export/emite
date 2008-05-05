@@ -24,11 +24,11 @@ package com.calclab.emite.client.core.bosh;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 
-public class BoshStream implements IStream {
+public class Stream {
     private Packet body;
     private long requestID;
 
-    public BoshStream() {
+    public Stream() {
     }
 
     public void addResponse(final IPacket child) {
@@ -94,8 +94,9 @@ public class BoshStream implements IStream {
 
     private Packet createInitialBody(final String domain) {
 	final Packet initalBody = createBody();
-	initalBody.With("content", "text/xml; charset=utf-8").With("to", domain).With("secure", "true").With("ver",
-		"1.6").With("wait", "60").With("ack", "1").With("hold", "1").With("xml:lang", "en");
+	initalBody.With("content", "text/xml; charset=utf-8").With("to", domain).With("secure", "true").With("wait",
+		"60").With("ack", "1").With("hold", "1").With("xml:lang", "en");
+	initalBody.With("xmpp:version", "1.0").With("xmlns:xmpp", "urn:xmpp:xbosh");
 	return initalBody;
     }
 }
