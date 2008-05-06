@@ -74,8 +74,8 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager,
     }
 
     @Override
-    public void loggedOut() {
-	super.loggedOut();
+    public void logOut() {
+	super.logOut();
 	final ArrayList<Chat> toBeRemoved = new ArrayList<Chat>();
 	toBeRemoved.addAll(chats);
 	for (final Chat chat : toBeRemoved) {

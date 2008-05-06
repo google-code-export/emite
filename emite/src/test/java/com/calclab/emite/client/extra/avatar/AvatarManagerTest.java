@@ -18,7 +18,7 @@ public class AvatarManagerTest {
 
     @Test
     public void managerShouldPublishAvatar() {
-	manager.loggedIn(uri("luther@example.com/roundabout"));
+	manager.logIn(uri("luther@example.com/roundabout"));
 	final String photo = "some base64 encoded photo";
 	manager.setVCardAvatar(photo);
 	emite.verifyIQSent("<iq xmlns='jabber:client' from='luther@example.com/roundabout' type='set'>"

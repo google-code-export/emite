@@ -148,8 +148,8 @@ public class RosterManager extends SessionComponent implements Installable {
     }
 
     @Override
-    public void loggedIn(final XmppURI uri) {
-	super.loggedIn(uri);
+    public void logIn(final XmppURI uri) {
+	super.logIn(uri);
 	requestRoster();
     }
 

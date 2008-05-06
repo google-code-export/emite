@@ -28,12 +28,12 @@ public class SessionComponent implements Installable {
     public void install() {
 	emite.subscribe(when(SessionManager.Events.onLoggedOut), new PacketListener() {
 	    public void handle(final IPacket received) {
-		loggedOut();
+		logOut();
 	    }
 	});
 	emite.subscribe(when(SessionManager.Events.onLoggedIn), new PacketListener() {
 	    public void handle(final IPacket received) {
-		loggedIn(uri(received.getAttribute("uri")));
+		logIn(uri(received.getAttribute("uri")));
 	    }
 	});
     }
@@ -42,11 +42,11 @@ public class SessionComponent implements Installable {
 	return this.userURI != null;
     }
 
-    public void loggedIn(final XmppURI uri) {
+    public void logIn(final XmppURI uri) {
 	this.userURI = uri;
     }
 
-    public void loggedOut() {
+    public void logOut() {
 	this.userURI = null;
     }
 }

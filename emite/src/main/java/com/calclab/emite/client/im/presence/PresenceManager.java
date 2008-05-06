@@ -71,8 +71,10 @@ public class PresenceManager extends SessionComponent {
 	    public void handle(final IPacket received) {
 		currentPresence = new Presence(userURI).With(Presence.Show.chat);
 		emite.send(currentPresence);
-		if (delayedPresence != null)
-		    sendDelayedPresence();
+		if (delayedPresence != null) {
+		    broadcastPresence(delayedPresence);
+		    delayedPresence = null;
+		}
 	    }
 	});
 
@@ -109,14 +111,14 @@ public class PresenceManager extends SessionComponent {
      * available).
      */
     @Override
-    public void loggedOut() {
+    public void logOut() {
 	if (isLoggedIn()) {
 	    final Presence presence = new Presence(Type.unavailable, userURI, userURI.getHostURI());
 	    emite.send(presence);
 	    delayedPresence = null;
 	    currentPresence = null;
 	}
-	super.loggedOut();
+	super.logOut();
     }
 
     /**
@@ -129,17 +131,23 @@ public class PresenceManager extends SessionComponent {
      */
     public void setOwnPresence(final String statusMessage, final Show show) {
 	final Show showValue = show != null ? show : Presence.Show.chat;
+
 	final Presence presence = new Presence().With(showValue);
 	if (statusMessage != null) {
 	    presence.setStatus(statusMessage);
 	}
 
 	if (isLoggedIn()) {
-	    emite.send(presence);
-	    currentPresence = presence;
+	    broadcastPresence(presence);
 	} else {
 	    delayedPresence = presence;
 	}
+    }
+
+    private void broadcastPresence(final Presence presence) {
+	presence.setFrom(userURI);
+	emite.send(presence);
+	currentPresence = presence;
     };
 
     private void firePresenceReceived(final Presence presence) {
@@ -148,10 +156,4 @@ public class PresenceManager extends SessionComponent {
 	}
     }
 
-    private void sendDelayedPresence() {
-	delayedPresence.setFrom(userURI);
-	emite.send(delayedPresence);
-	currentPresence = delayedPresence;
-	delayedPresence = null;
-    }
 }
