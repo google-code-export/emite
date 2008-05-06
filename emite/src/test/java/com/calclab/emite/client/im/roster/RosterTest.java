@@ -1,8 +1,8 @@
 package com.calclab.emite.client.im.roster;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.TestMatchers.hasSame;
-import static com.calclab.emite.testing.TestMatchers.isCollectionOfSize;
+import static com.calclab.emite.testing.MockitoEmiteHelper.hasSame;
+import static com.calclab.emite.testing.MockitoEmiteHelper.isCollectionOfSize;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;

@@ -19,7 +19,7 @@ import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.TestMatchers;
+import com.calclab.emite.testing.MockitoEmiteHelper;
 
 @SuppressWarnings("unchecked")
 public class RoomTest {
@@ -44,7 +44,7 @@ public class RoomTest {
     public void shouldAddOccupantAndFireListeners() {
 	final XmppURI uri = uri("room@domain/name");
 	final Occupant occupant = room.setOccupantPresence(uri, "aff", "role");
-	verify(listener).onOccupantsChanged(TestMatchers.isCollectionOfSize(1));
+	verify(listener).onOccupantsChanged(MockitoEmiteHelper.isCollectionOfSize(1));
 	final Occupant result = room.findOccupant(uri);
 	assertEquals(occupant, result);
     }

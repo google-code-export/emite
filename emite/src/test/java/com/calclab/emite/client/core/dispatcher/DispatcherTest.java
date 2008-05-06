@@ -3,7 +3,7 @@ package com.calclab.emite.client.core.dispatcher;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.*;
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.*;
-import static com.calclab.emite.testing.TestMatchers.*;
+import static com.calclab.emite.testing.MockitoEmiteHelper.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

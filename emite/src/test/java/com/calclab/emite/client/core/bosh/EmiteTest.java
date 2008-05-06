@@ -10,7 +10,7 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 
-import static com.calclab.emite.testing.TestMatchers.*;
+import static com.calclab.emite.testing.MockitoEmiteHelper.*;
 
 public class EmiteTest {
 

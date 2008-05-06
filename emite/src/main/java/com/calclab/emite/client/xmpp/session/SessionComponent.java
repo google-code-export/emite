@@ -9,6 +9,13 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
+/**
+ * An base class to extend if you need components with the current user uri as
+ * state information.
+ * 
+ * @author dani
+ * 
+ */
 public class SessionComponent implements Installable {
     protected final Emite emite;
     protected XmppURI userURI;
@@ -29,6 +36,10 @@ public class SessionComponent implements Installable {
 		loggedIn(uri(received.getAttribute("uri")));
 	    }
 	});
+    }
+
+    public boolean isLoggedIn() {
+	return this.userURI != null;
     }
 
     public void loggedIn(final XmppURI uri) {
