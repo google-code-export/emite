@@ -1,6 +1,6 @@
 package com.calclab.emite.client.extra.muc;
 
-import static com.calclab.emite.testing.TestMatchers.packetLike;
+import static com.calclab.emite.testing.MockitoEmiteHelper.packetLike;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;

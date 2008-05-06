@@ -3,6 +3,7 @@
  */
 package com.calclab.emite.testing;
 
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,24 +18,35 @@ public class IsPacketLike extends ArgumentMatcher<IPacket> {
 	this.original = expected;
     }
 
-    @Override
-    public boolean matches(final Object argument) {
-	return areEquals(original, (IPacket) argument);
+    public boolean matches(final IPacket actual, final PrintStream out) {
+	final String result = areEquals(original, actual);
+	out.print(result);
+	return result == null;
     }
 
-    private boolean areEquals(final IPacket expected, final IPacket actual) {
+    @Override
+    public boolean matches(final Object argument) {
+	return areEquals(original, (IPacket) argument) == null;
+    }
+
+    private String areEquals(final IPacket expected, final IPacket actual) {
 	if (actual == null) {
-	    return false;
+	    return fail("element", expected.toString(), "[null]");
 	}
 	if (expected.getName().equals(actual.getName())) {
 	    final HashMap<String, String> atts = expected.getAttributes();
 	    for (final String name : atts.keySet()) {
 		if (!expected.hasAttribute(name) || !actual.hasAttribute(name, expected.getAttribute(name))) {
-		    return false;
+		    return fail("attribute " + name, expected.getAttribute(name), actual.getAttribute(name));
 		}
 	    }
 	} else {
-	    return false;
+	    return fail("element name", expected.getName(), actual.getName());
+	}
+
+	final String expectedText = expected.getText();
+	if (expectedText != null && !expectedText.equals(actual.getText())) {
+	    return fail("text value", expectedText, actual.getText());
 	}
 
 	final List<? extends IPacket> expChildren = expected.getChildren();
@@ -44,11 +56,18 @@ public class IsPacketLike extends ArgumentMatcher<IPacket> {
 
 	for (int index = 0; index < total; index++) {
 	    if (index == max) {
-		return false;
-	    } else if (!areEquals(expChildren.get(index), actChildren.get(index))) {
-		return false;
+		return fail("number of childrens for " + expected.getName(), Integer.toString(total), Integer
+			.toString(max));
+	    } else {
+		final String result = areEquals(expChildren.get(index), actChildren.get(index));
+		if (result != null)
+		    return result;
 	    }
 	}
-	return true;
+	return null;
+    }
+
+    private String fail(final String target, final String expected, final String actual) {
+	return "failed on " + target + ". expected: " + expected + " but was " + actual;
     }
 }

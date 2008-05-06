@@ -1,8 +1,13 @@
 package com.calclab.emite.testing;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 
+import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
@@ -12,7 +17,6 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.examples.echo.Echo;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 
 public class EmiteTestHelper implements Emite {
@@ -52,8 +56,8 @@ public class EmiteTestHelper implements Emite {
 	published.clear();
     }
 
-    public void install(final Echo echo) {
-	echo.install();
+    public void install(final Installable component) {
+	component.install();
     }
 
     public void publish(final IPacket packet) {
@@ -91,6 +95,10 @@ public class EmiteTestHelper implements Emite {
 
     public void verifyIQSent(final String xml) {
 	verifyIQSent(xmler.toXML(xml));
+    }
+
+    public void verifyNothingSent() {
+	assertEquals("number of sent stanzas", 0, sent.size());
     }
 
     public void verifyNotPublished(final Packet packet) {

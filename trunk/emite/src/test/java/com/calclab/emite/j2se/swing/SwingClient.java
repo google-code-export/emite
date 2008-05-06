@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -69,7 +70,8 @@ public class SwingClient {
 	    public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
 		final String resource = "emite-swing";
 		createXMPP(httpBase);
-		xmpp.login(new XmppURI(userName, domain, resource), password, null, "hola!");
+		xmpp.login(new XmppURI(userName, domain, resource), password, Presence.Show.dnd, "do not disturb at: "
+			+ new Date().toString());
 	    }
 
 	    public void onLogout() {
