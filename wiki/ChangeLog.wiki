@@ -2,6 +2,12 @@
 #labels Phase-Design
 = Emite change log =
 
+*this document is deprecated. please use the following link to see the changelog:*
+[http://code.google.com/p/emite/issues/list?can=1&q=&colspec=ID+Type+Status+Priority+Milestone+Owner+Summary+Component&x=component&y=milestone&mode=grid&cells=tiles ChangelogInIssues]
+
+
+
+
 == next release ==
 
 == emite library ==
