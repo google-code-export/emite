@@ -26,7 +26,7 @@ import java.util.HashMap;
 import com.calclab.emite.client.container.Container;
 
 @SuppressWarnings("serial")
-public class HashContainer extends HashMap<Class<?>, Object> implements Container {
+public class BasicContainer extends HashMap<Class<?>, Object> implements Container {
 
     public <T> T get(final Class<T> componentType) {
 	return (T) super.get(componentType);

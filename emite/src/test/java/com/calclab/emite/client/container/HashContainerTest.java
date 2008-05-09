@@ -3,18 +3,18 @@ package com.calclab.emite.client.container;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.container.HashContainer;
+import com.calclab.emite.client.container.BasicContainer;
 
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
 public class HashContainerTest {
 
-    private HashContainer container;
+    private BasicContainer container;
 
     @Before
     public void beforeTest() {
-	container = new HashContainer();
+	container = new BasicContainer();
     }
 
     @Test
