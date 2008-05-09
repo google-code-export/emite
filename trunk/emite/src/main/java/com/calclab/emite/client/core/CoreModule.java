@@ -24,7 +24,6 @@ package com.calclab.emite.client.core;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.bosh.BoshManager;
-import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteBosh;
 import com.calclab.emite.client.core.bosh.Stream;
@@ -34,9 +33,14 @@ import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesAbstractModule;
 
 public class CoreModule {
-    public static final String COMPONENT_BOSH = "bosh:manager";
+    public static final String COMPONENT_BOSH_MANAGER = "core:manager";
+    public static final String COMPONENT_BOSH = "core:bosh";
     public static final String COMPONENT_DISPATCHER = "dispatcher";
     public static final String COMPONENT_EMITE = "emite";
+
+    public static Bosh getBosh(final Container container) {
+	return (Bosh) container.get(COMPONENT_BOSH);
+    }
 
     public static Dispatcher getDispatcher(final Container container) {
 	return (Dispatcher) container.get(COMPONENT_DISPATCHER);
@@ -46,7 +50,7 @@ public class CoreModule {
 	return (Emite) container.get(COMPONENT_EMITE);
     }
 
-    public static void load(final Container container, final BoshOptions options) {
+    public static void load(final Container container) {
 	// dependencies
 	final Services services = ServicesAbstractModule.getServices(container);
 
@@ -58,9 +62,10 @@ public class CoreModule {
 	final EmiteBosh emite = new EmiteBosh(dispatcher, iStream);
 	container.register(COMPONENT_EMITE, emite);
 
-	final Bosh bosh = new Bosh(iStream, options);
+	final Bosh bosh = new Bosh(iStream);
+	container.register(COMPONENT_BOSH, bosh);
 	final BoshManager boshManager = new BoshManager(services, emite, bosh);
-	container.register(COMPONENT_BOSH, boshManager);
+	container.register(COMPONENT_BOSH_MANAGER, boshManager);
 
     }
 

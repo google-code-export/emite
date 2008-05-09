@@ -216,6 +216,8 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 	    bosh.requestCountEncreasesAt(services.getCurrentTime());
 	} catch (final ConnectorException e) {
 	    emite.publish(Dispatcher.Events.error("connector:send-exception", e.getMessage()));
+	} catch (final Exception e) {
+	    emite.publish(Dispatcher.Events.error("connector:exception", e.getMessage()));
 	}
     }
 }

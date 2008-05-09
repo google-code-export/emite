@@ -43,20 +43,20 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class Xmpp extends DelegatedContainer {
 
-    public static Xmpp create(final BoshOptions options) {
+    public static Xmpp create() {
 	final HashContainer c = new HashContainer();
 	GWTServicesModule.load(c);
-	return new Xmpp(c, options);
+	return new Xmpp(c);
     }
 
     private Session session;
     private boolean isStarted;
 
-    public Xmpp(final Container container, final BoshOptions options) {
+    public Xmpp(final Container container) {
 	super(container);
 	this.isStarted = false;
 	this.session = null;
-	installDefaultPlugins(container, options);
+	installDefaultPlugins(container);
     }
 
     public ChatManager getChatManager() {
@@ -100,6 +100,14 @@ public class Xmpp extends DelegatedContainer {
 	session.logout();
     }
 
+    public void setBoshOptions(final BoshOptions boshOptions) {
+	CoreModule.getBosh(this).setOptions(boshOptions);
+    }
+
+    public void setHttpBase(final String httpBase) {
+	CoreModule.getBosh(this).getOptions().httpBase = httpBase;
+    }
+
     public void start() {
 	if (!isStarted) {
 	    isStarted = true;
@@ -113,13 +121,12 @@ public class Xmpp extends DelegatedContainer {
 	}
     }
 
-    private void installDefaultPlugins(final Container container, final BoshOptions options) {
-	CoreModule.load(container, options);
+    private void installDefaultPlugins(final Container container) {
+	CoreModule.load(container);
 	XMPPModule.load(container);
 	InstantMessagingModule.load(container);
 	// TODO: not here!
 	MUCModule.install(container);
 	AvatarModule.load(container);
     }
-
 }

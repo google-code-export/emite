@@ -17,8 +17,8 @@ public class BoshTest {
     @Before
     public void aaCreate() {
 	stream = mock(Stream.class);
-	options = new BoshOptions("domain");
-	bosh = new Bosh(stream, options);
+	bosh = new Bosh(stream);
+	options = bosh.getOptions();
     }
 
     @Test
@@ -37,7 +37,7 @@ public class BoshTest {
     @Test
     public void shouldSetAttributes() {
 	bosh.setAttributes("theSID", 5, 2);
-	assertEquals(5000 + options.getWait(), bosh.getPoll());
+	assertEquals(5000 + options.wait, bosh.getPoll());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class BoshTest {
 	bosh.requestCountDecreases();
 	final BoshState state = bosh.getState(2000);
 	assertTrue(state.shouldWait());
-	assertEquals(4000 + options.getWait(), state.getTime());
+	assertEquals(4000 + options.wait, state.getTime());
     }
 
     @Test

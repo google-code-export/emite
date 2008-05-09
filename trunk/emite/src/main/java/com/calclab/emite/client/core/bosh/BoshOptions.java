@@ -22,10 +22,18 @@
 package com.calclab.emite.client.core.bosh;
 
 public class BoshOptions {
-    private final int hold;
-    private final String httpBase;
-    private final String version;
-    private final int wait;
+    public int hold;
+
+    /**
+     * The proxy address url
+     */
+    public String httpBase;
+    public String version;
+    public int wait;
+
+    public BoshOptions() {
+	this(null, "1.6", 2000, 1);
+    }
 
     public BoshOptions(final String httpBase) {
 	this(httpBase, "1.6", 2000, 1);
@@ -36,22 +44,6 @@ public class BoshOptions {
 	this.version = version;
 	this.wait = wait;
 	this.hold = hold;
-    }
-
-    public int getHold() {
-	return hold;
-    }
-
-    public String getHttpBase() {
-	return httpBase;
-    }
-
-    public String getVersion() {
-	return version;
-    }
-
-    public int getWait() {
-	return wait;
     }
 
 }

@@ -14,21 +14,21 @@ public class SessionTest {
     private Session session;
 
     @Before
-    public void aaCreate() {
+    public void beforeTest() {
 	manager = mock(SessionManager.class);
 	session = new Session(manager);
     }
 
     @Test
-    public void shouldFireCurrentStateWhenAddAListener() {
+    public void shouldInformAboutStateChanges() {
 	final State initialState = State.disconnected;
 	session.setState(initialState);
 	final SessionListener listener1 = mock(SessionListener.class);
 	final SessionListener listener2 = mock(SessionListener.class);
 	session.addListener(listener2);
 	session.addListener(listener1);
-	verify(listener1).onStateChanged(initialState, initialState);
-	verify(listener2).onStateChanged(initialState, initialState);
+	// verify(listener1).onStateChanged(initialState, initialState);
+	// verify(listener2).onStateChanged(initialState, initialState);
 	final State newState = State.connected;
 	session.setState(newState);
 	verify(listener1).onStateChanged(initialState, newState);
