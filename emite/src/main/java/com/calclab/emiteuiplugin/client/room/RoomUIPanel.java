@@ -25,8 +25,11 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.EditableClickListener;
 import org.ourproject.kune.platf.client.ui.EditableIconLabel;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPanel;
 import com.gwtext.client.core.RegionPosition;
+import com.gwtext.client.widgets.MessageBox;
+import com.gwtext.client.widgets.MessageBoxConfig;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.layout.BorderLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
@@ -38,60 +41,86 @@ public class RoomUIPanel extends ChatUIPanel implements RoomUIView {
     private EditableIconLabel subject;
 
     public RoomUIPanel(final I18nTranslationService i18n, final RoomUserListUIPanel roomUserListUIPanel,
-	    final RoomUIPresenter presenter) {
-	super(presenter);
-	this.i18n = i18n;
-	this.presenter = presenter;
+            final RoomUIPresenter presenter) {
+        super(presenter);
+        this.i18n = i18n;
+        this.presenter = presenter;
 
-	final BorderLayoutData eastData = new BorderLayoutData(RegionPosition.EAST);
-	final Panel eastPanel = new Panel(i18n.t("Now in this room"));
-	eastPanel.setLayout(new FitLayout());
-	// eastPanel.setBorder(false);
-	eastPanel.setAutoScroll(true);
-	eastPanel.setCollapsible(true);
-	eastPanel.setWidth(150);
-	eastPanel.setIconCls("group-icon");
-	eastData.setMinSize(100);
-	eastData.setMaxSize(250);
-	// FIXME: when manual calc of size, set this to true
-	eastData.setSplit(false);
-	eastPanel.add(roomUserListUIPanel);
-	super.add(eastPanel, eastData);
+        final BorderLayoutData eastData = new BorderLayoutData(RegionPosition.EAST);
+        final Panel eastPanel = new Panel(i18n.t("Now in this room"));
+        eastPanel.setLayout(new FitLayout());
+        // eastPanel.setBorder(false);
+        eastPanel.setAutoScroll(true);
+        eastPanel.setCollapsible(true);
+        eastPanel.setWidth(150);
+        eastPanel.setIconCls("group-icon");
+        eastData.setMinSize(100);
+        eastData.setMaxSize(250);
+        // FIXME: when manual calc of size, set this to true
+        eastData.setSplit(false);
+        eastPanel.add(roomUserListUIPanel);
+        super.add(eastPanel, eastData);
 
-	final Panel northPanel = new Panel();
-	northPanel.setHeight(27);
-	northPanel.add(createSubjectPanel());
-	northPanel.setBorder(false);
-	final BorderLayoutData northData = new BorderLayoutData(RegionPosition.NORTH);
-	northData.setSplit(false);
-	super.add(northPanel, northData);
+        final Panel northPanel = new Panel();
+        northPanel.setHeight(27);
+        northPanel.add(createSubjectPanel());
+        northPanel.setBorder(false);
+        final BorderLayoutData northData = new BorderLayoutData(RegionPosition.NORTH);
+        northData.setSplit(false);
+        super.add(northPanel, northData);
+    }
+
+    public void askInvitation(final XmppURI userURI, final String invitationReason) {
+        MessageBox.show(new MessageBoxConfig() {
+            {
+                setClosable(true);
+                setModal(false);
+                setWidth(300);
+                setDefaultTextHeight(2);
+                setButtons(MessageBox.OKCANCEL);
+                setTitle(i18n.t("You are inviting to: ") + userURI.toString());
+                setMsg(i18n.t("Write the invitation text"));
+                setCallback(new MessageBox.PromptCallback() {
+                    public void execute(final String btnID, final String text) {
+                        if (btnID.equals("ok") && text != null) {
+                            presenter.onInviteUserRequested(userURI, text);
+                        } else {
+                            // Do nothing
+                        }
+                    }
+                });
+                setMultiline(true);
+                // def value and other invitation messages sended
+                setValue(invitationReason);
+            }
+        });
     }
 
     public void setSubject(final String newSubject) {
-	subject.setText(newSubject);
+        subject.setText(newSubject);
     }
 
     public void setSubjectEditable(final boolean editable) {
-	subject.setEditable(editable);
+        subject.setEditable(editable);
     }
 
     private Panel createSubjectPanel() {
-	subject = new EditableIconLabel(i18n.t("Welcome to this room"), new EditableClickListener() {
-	    public void onEdited(final String text) {
-		presenter.onModifySubjectRequested(text);
-	    }
-	});
-	subject.setHeight("27");
-	subject.addStyleName("x-panel-header");
-	subject.addStyleName("x-panel-header-noborder");
-	subject.addStyleName("x-unselectable");
-	subject.setClickToRenameLabel(i18n.t("Click to rename this room"));
-	subject.setRenameDialogLabel(i18n.t("Write a new subject for this room"));
-	subject.setRenameDialogTitle(i18n.t("Change the subject"));
-	final Panel subjectPanel = new Panel();
-	subjectPanel.add(subject);
-	subjectPanel.setBorder(false);
-	return subjectPanel;
+        subject = new EditableIconLabel(i18n.t("Welcome to this room"), new EditableClickListener() {
+            public void onEdited(final String text) {
+                presenter.onModifySubjectRequested(text);
+            }
+        });
+        subject.setHeight("27");
+        subject.addStyleName("x-panel-header");
+        subject.addStyleName("x-panel-header-noborder");
+        subject.addStyleName("x-unselectable");
+        subject.setClickToRenameLabel(i18n.t("Click to rename this room"));
+        subject.setRenameDialogLabel(i18n.t("Write a new subject for this room"));
+        subject.setRenameDialogTitle(i18n.t("Change the subject"));
+        final Panel subjectPanel = new Panel();
+        subjectPanel.add(subject);
+        subjectPanel.setBorder(false);
+        return subjectPanel;
     }
 
 }
