@@ -177,6 +177,7 @@
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-servlet</artifactId>
       <version>0.0.2415</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- other -->
@@ -209,6 +210,11 @@
       <groupId>org.ourproject.kune</groupId>
       <artifactId>kune-core</artifactId>
       <version>0.0.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.extjs.gxt</groupId>
+      <artifactId>gxt</artifactId>
+      <version>1.0-beta2</version>
     </dependency>
 
     <!--  TESTING -->

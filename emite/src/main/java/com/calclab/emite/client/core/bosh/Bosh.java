@@ -22,9 +22,10 @@
 package com.calclab.emite.client.core.bosh;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.core.packet.IPacket;
 
-public class Bosh {
+public class Bosh implements Component {
     public static class BoshState {
 	private final int time;
 
@@ -64,12 +65,12 @@ public class Bosh {
 
     private int requests;
 
-    private final BoshOptions options;
+    private BoshOptions options;
     private String domain;
 
-    public Bosh(final Stream iStream, final BoshOptions options) {
+    public Bosh(final Stream iStream) {
 	this.stream = iStream;
-	this.options = options;
+	this.options = new BoshOptions();
     }
 
     public int getCurrentRequestsCount() {
@@ -77,7 +78,11 @@ public class Bosh {
     }
 
     public String getHttpBase() {
-	return options.getHttpBase();
+	return options.httpBase;
+    }
+
+    public BoshOptions getOptions() {
+	return options;
     }
 
     public int getPoll() {
@@ -154,9 +159,13 @@ public class Bosh {
     }
 
     public void setAttributes(final String sid, final int poll, final int requests) {
-	this.poll = poll * 1000 + options.getWait();
+	this.poll = poll * 1000 + options.wait;
 	this.requests = requests;
 	setSID(sid);
+    }
+
+    public void setOptions(final BoshOptions boshOptions) {
+	this.options = boshOptions;
     }
 
     public void setRestart() {

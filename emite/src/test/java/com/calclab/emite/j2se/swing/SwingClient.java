@@ -18,7 +18,6 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.components.Container;
 import com.calclab.emite.client.components.HashContainer;
-import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.extra.muc.Room;
@@ -65,11 +64,12 @@ public class SwingClient {
     public SwingClient(final JFrame frame) {
 	this.frame = frame;
 	root = new JPanel(new BorderLayout());
+	createXMPP();
 
 	loginPanel = new LoginPanel(new LoginPanelListener() {
 	    public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
 		final String resource = "emite-swing";
-		createXMPP(httpBase);
+		xmpp.setHttpBase(httpBase);
 		xmpp.login(new XmppURI(userName, domain, resource), password, Presence.Show.dnd, "do not disturb at: "
 			+ new Date().toString());
 	    }
@@ -129,7 +129,7 @@ public class SwingClient {
 
     }
 
-    private void createXMPP(final String httpbase) {
+    private void createXMPP() {
 	final Container container = J2SEPlugin.install(new HashContainer(), new HttpConnectorListener() {
 	    public void onError(final String id, final String cause) {
 		System.out.println("CONN # " + id + "-ERROR: " + cause);
@@ -150,7 +150,7 @@ public class SwingClient {
 	    }
 
 	});
-	this.xmpp = new Xmpp(container, new BoshOptions(httpbase));
+	this.xmpp = new Xmpp(container);
 
 	xmpp.getSession().addListener(new SessionListener() {
 	    public void onStateChanged(final State old, final State current) {
@@ -290,7 +290,8 @@ public class SwingClient {
 
     private void print(final String message) {
 	Log.info(message);
-	status.setText(message);
+	if (status != null)
+	    status.setText(message);
     }
 
     private void start() {

@@ -74,6 +74,15 @@ public class BoshManagerTest {
     }
 
     @Test
+    public void shouldPublishErrorIfServicesFails() throws ConnectorException {
+	manager.setRunning(true);
+	stub(bosh.getState(anyLong())).toReturn(Bosh.SEND);
+	stub(services.toString((IPacket) anyObject())).toThrow(new RuntimeException("the message"));
+	manager.dispatchingEnds();
+	emite.verifyPublished(Dispatcher.Events.onError);
+    }
+
+    @Test
     public void shouldPullAfterDispatching() {
 	manager.setRunning(true);
 	stub(bosh.getState(anyLong())).toReturn(Bosh.shouldWait(10000));
@@ -131,5 +140,4 @@ public class BoshManagerTest {
 	assertFalse(manager.isRunning());
 	emite.verifyPublished(Events.error("terminal", "policy-violation"));
     }
-
 }

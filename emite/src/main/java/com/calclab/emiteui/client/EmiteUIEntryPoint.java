@@ -109,7 +109,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
 	});
 
 	final AvatarProvider avatarProvider = new AvatarProvider() {
-	    public String getAvatarURL(XmppURI userURI) {
+	    public String getAvatarURL(final XmppURI userURI) {
 		return "images/person-def.gif";
 	    }
 	};

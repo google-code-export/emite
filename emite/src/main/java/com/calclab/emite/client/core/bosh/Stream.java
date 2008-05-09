@@ -53,7 +53,6 @@ public class Stream {
 	    requestID++;
 	    body = createBody();
 	    setSID(sid);
-	} else {
 	}
     }
 

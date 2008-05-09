@@ -81,7 +81,8 @@ public class EmiteUIPlugin extends Plugin {
 	    }
 
 	    private void createChatDialog(final MultiChatCreationParam param) {
-		final Xmpp xmpp = Xmpp.create(param.getBoshOptions());
+		final Xmpp xmpp = Xmpp.create();
+		xmpp.setBoshOptions(param.getBoshOptions());
 
 		multiChatDialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(xmpp, param,
 			new MultiChatListener() {

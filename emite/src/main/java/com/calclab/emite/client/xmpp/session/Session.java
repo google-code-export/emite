@@ -44,7 +44,7 @@ public class Session implements Component {
 
     public void addListener(final SessionListener listener) {
 	listeners.add(listener);
-	listener.onStateChanged(state, state);
+	// listener.onStateChanged(state, state);
     }
 
     public State getState() {

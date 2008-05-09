@@ -4,7 +4,6 @@ import static org.mockito.Mockito.mock;
 
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.components.HashContainer;
-import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.im.chat.ChatManager;
@@ -26,7 +25,7 @@ public class MockitoXmpp extends Xmpp {
     private final RoomManager roomManager;
 
     public MockitoXmpp() {
-	super(new HashContainer(), mock(BoshOptions.class));
+	super(new HashContainer());
 	chat = mock(ChatManager.class);
 	dispatcher = mock(Dispatcher.class);
 	presenceManager = mock(PresenceManager.class);
