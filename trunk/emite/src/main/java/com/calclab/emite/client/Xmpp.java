@@ -23,12 +23,11 @@ package com.calclab.emite.client;
 
 import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.container.DelegatedContainer;
-import com.calclab.emite.client.container.HashContainer;
+import com.calclab.emite.client.container.BasicContainer;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
-import com.calclab.emite.client.extra.avatar.AvatarModule;
 import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.im.InstantMessagingModule;
@@ -43,10 +42,15 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class Xmpp extends DelegatedContainer {
 
+    /**
+     * Ready to use Xmpp object in GWT environments
+     * 
+     * @return
+     */
     public static Xmpp create() {
-	final HashContainer c = new HashContainer();
-	GWTServicesModule.load(c);
-	return new Xmpp(c);
+	final BasicContainer container = new BasicContainer();
+	GWTServicesModule.load(container);
+	return create(container);
     }
 
     /**
@@ -57,21 +61,29 @@ public class Xmpp extends DelegatedContainer {
      */
     @Deprecated
     public static Xmpp create(final BoshOptions options) {
-	final HashContainer c = new HashContainer();
-	GWTServicesModule.load(c);
-	final Xmpp xmpp = new Xmpp(c);
+	final Xmpp xmpp = create();
 	xmpp.setBoshOptions(options);
 	return xmpp;
+    }
+
+    /**
+     * Create a Xmpp object using the following container (you need to load a
+     * ServicesModule first!)
+     * 
+     * @param container
+     * @return
+     */
+    public static Xmpp create(final Container container) {
+	return EmiteModule.load(container);
     }
 
     private Session session;
     private final boolean isStarted;
 
-    public Xmpp(final Container container) {
+    protected Xmpp(final Container container) {
 	super(container);
 	this.isStarted = false;
 	this.session = null;
-	installDefaultPlugins(container);
     }
 
     public ChatManager getChatManager() {
@@ -132,12 +144,4 @@ public class Xmpp extends DelegatedContainer {
 	}
     }
 
-    private void installDefaultPlugins(final Container container) {
-	CoreModule.load(container);
-	XMPPModule.load(container);
-	InstantMessagingModule.load(container);
-	// TODO: not here!
-	MUCModule.install(container);
-	AvatarModule.load(container);
-    }
 }
