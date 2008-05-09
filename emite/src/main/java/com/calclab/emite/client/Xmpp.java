@@ -49,6 +49,21 @@ public class Xmpp extends DelegatedContainer {
 	return new Xmpp(c);
     }
 
+    /**
+     * should use Xmpp.create() ... and setBoshOptions()...
+     * 
+     * @param options
+     * @return
+     */
+    @Deprecated
+    public static Xmpp create(final BoshOptions options) {
+	final HashContainer c = new HashContainer();
+	GWTServicesModule.load(c);
+	final Xmpp xmpp = new Xmpp(c);
+	xmpp.setBoshOptions(options);
+	return xmpp;
+    }
+
     private Session session;
     private final boolean isStarted;
 
