@@ -31,7 +31,7 @@ import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 public class ChatUIPresenter implements ChatUI {
 
     private static final String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
-	    "purple", "fuchsia", "maroon", "red" };
+            "purple", "fuchsia", "maroon", "red" };
     private ChatUIView view;
     private String savedInput;
 
@@ -46,143 +46,143 @@ public class ChatUIPresenter implements ChatUI {
     private final ChatIconDescriptor highIcon;
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-	    final ChatIconDescriptor unhighIcon, final ChatIconDescriptor highIcon, final ChatUIListener listener) {
-	this.otherURI = otherURI;
-	this.unhighIcon = unhighIcon;
-	this.highIcon = highIcon;
-	this.listener = listener;
-	// Messages from server has no node
-	final String node = otherURI.getNode();
-	this.chatTitle = node != null ? node : otherURI.getHost();
-	userColors = new HashMap<String, String>();
-	userColors.put(currentUserAlias, currentUserColor);
+            final ChatIconDescriptor unhighIcon, final ChatIconDescriptor highIcon, final ChatUIListener listener) {
+        this.otherURI = otherURI;
+        this.unhighIcon = unhighIcon;
+        this.highIcon = highIcon;
+        this.listener = listener;
+        // Messages from server has no node
+        final String node = otherURI.getNode();
+        this.chatTitle = node != null ? node : otherURI.getHost();
+        userColors = new HashMap<String, String>();
+        userColors.put(currentUserAlias, currentUserColor);
     }
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-	    final ChatUIListener listener) {
-	// Def Constructor for chats
-	this(otherURI, currentUserAlias, currentUserColor, ChatIconDescriptor.chatsmall,
-		ChatIconDescriptor.chatnewmessagesmall, listener);
+            final ChatUIListener listener) {
+        // Def Constructor for chats
+        this(otherURI, currentUserAlias, currentUserColor, ChatIconDescriptor.chatsmall,
+                ChatIconDescriptor.chatnewmessagesmall, listener);
     }
 
     public void addDelimiter(final String date) {
-	view.addDelimiter(date);
+        view.addDelimiter(date);
     }
 
     public void addInfoMessage(final String message) {
-	checkIfHighlightNeeded();
-	view.addInfoMessage(message);
+        checkIfHighlightNeeded();
+        view.addInfoMessage(message);
     }
 
     public void addMessage(final String userAlias, final String message) {
-	checkIfHighlightNeeded();
-	view.addMessage(userAlias, getColor(userAlias), message);
-	listener.onMessageAdded(this);
+        checkIfHighlightNeeded();
+        view.addMessage(userAlias, getColor(userAlias), message);
+        listener.onMessageAdded(this);
     }
 
     public void clearSavedInput() {
-	saveInput(null);
+        saveInput(null);
     }
 
     public void destroy() {
-	view.destroy();
+        view.destroy();
     }
 
     public String getChatTitle() {
-	return chatTitle;
+        return chatTitle;
     }
 
     public String getColor(final String userAlias) {
-	String color = userColors.get(userAlias);
-	if (color == null) {
-	    color = getNextColor();
-	    setUserColor(userAlias, color);
-	}
-	return color;
+        String color = userColors.get(userAlias);
+        if (color == null) {
+            color = getNextColor();
+            setUserColor(userAlias, color);
+        }
+        return color;
     }
 
     public String getSavedInput() {
-	return savedInput;
+        return savedInput;
     }
 
     public View getView() {
-	return view;
+        return view;
     }
 
     public void highLightChatTitle() {
-	view.setChatTitle(chatTitle, otherURI.toString(), highIcon);
-	alreadyHightlighted = true;
-	listener.onHighLight(this);
+        view.setChatTitle(chatTitle, otherURI.toString(), highIcon);
+        alreadyHightlighted = true;
+        listener.onHighLight(this);
     }
 
     public void init(final ChatUIView view) {
-	this.view = view;
-	isActive = true;
-	unHighLightChatTitle();
+        this.view = view;
+        isActive = true;
+        unHighLightChatTitle();
     }
 
     public void onClose() {
-	listener.onClose(this);
+        listener.onClose(this);
     }
 
     public void onCurrentUserSend(final String message) {
-	listener.onCurrentUserSend(message);
+        listener.onCurrentUserSend(message);
     }
 
     public void onInputFocus() {
-	unHightAndActive();
+        unHightAndActive();
     }
 
     public void onInputUnFocus() {
-	isActive = false;
+        isActive = false;
     }
 
     public void onUserDrop(final XmppURI userURI) {
-	listener.onUserDrop(userURI);
+        listener.onUserDrop(this, userURI);
     }
 
     public void saveInput(final String inputText) {
-	savedInput = inputText;
+        savedInput = inputText;
     }
 
     public void setUserColor(final String userAlias, final String color) {
-	userColors.put(userAlias, color);
+        userColors.put(userAlias, color);
     }
 
     public void unHighLightChatTitle() {
-	view.setChatTitle(chatTitle, otherURI.toString(), unhighIcon);
-	alreadyHightlighted = false;
-	listener.onUnHighLight(this);
+        view.setChatTitle(chatTitle, otherURI.toString(), unhighIcon);
+        alreadyHightlighted = false;
+        listener.onUnHighLight(this);
     }
 
     protected void onActivated() {
-	unHightAndActive();
-	listener.onActivate(this);
+        unHightAndActive();
+        listener.onActivate(this);
     }
 
     protected void onDeactivated() {
-	isActive = false;
-	listener.onDeactivate(this);
+        isActive = false;
+        listener.onDeactivate(this);
     }
 
     private void checkIfHighlightNeeded() {
-	if (!isActive && !alreadyHightlighted) {
-	    highLightChatTitle();
-	}
+        if (!isActive && !alreadyHightlighted) {
+            highLightChatTitle();
+        }
     }
 
     private String getNextColor() {
-	final String color = USERCOLORS[oldColor++];
-	if (oldColor >= USERCOLORS.length) {
-	    oldColor = 0;
-	}
-	return color;
+        final String color = USERCOLORS[oldColor++];
+        if (oldColor >= USERCOLORS.length) {
+            oldColor = 0;
+        }
+        return color;
     }
 
     private void unHightAndActive() {
-	if (alreadyHightlighted) {
-	    unHighLightChatTitle();
-	}
-	isActive = true;
+        if (alreadyHightlighted) {
+            unHighLightChatTitle();
+        }
+        isActive = true;
     }
 }

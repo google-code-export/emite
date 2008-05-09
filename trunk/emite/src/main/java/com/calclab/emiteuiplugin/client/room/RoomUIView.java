@@ -23,9 +23,12 @@ package com.calclab.emiteuiplugin.client.room;
 
 import org.ourproject.kune.platf.client.View;
 
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIView;
 
 public interface RoomUIView extends ChatUIView, View {
+
+    void askInvitation(XmppURI userURI, String invitationReason);
 
     void setSubject(String newSubject);
 

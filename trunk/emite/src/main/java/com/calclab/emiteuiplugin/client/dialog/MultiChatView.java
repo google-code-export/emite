@@ -50,6 +50,8 @@ public interface MultiChatView {
 
     void setAddRosterItemButtonVisible(boolean visible);
 
+    void setBottomInfoMessage(String message);
+
     void setCloseAllOptionEnabled(boolean enabled);
 
     void setEmoticonButtonEnabled(boolean enabled);

@@ -39,6 +39,6 @@ public interface ChatUIListener {
 
     void onUnHighLight(ChatUI chatUI);
 
-    void onUserDrop(XmppURI userURI);
+    void onUserDrop(ChatUI chatUI, XmppURI userURI);
 
 }

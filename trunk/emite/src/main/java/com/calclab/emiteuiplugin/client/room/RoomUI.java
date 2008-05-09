@@ -24,9 +24,12 @@ package com.calclab.emiteuiplugin.client.room;
 import java.util.Collection;
 
 import com.calclab.emite.client.extra.muc.Occupant;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 
 public interface RoomUI extends ChatUI {
+
+    void askInvitation(XmppURI userURI);
 
     boolean isSubjectEditable();
 

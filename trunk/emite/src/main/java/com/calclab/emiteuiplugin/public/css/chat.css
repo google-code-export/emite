@@ -5,6 +5,11 @@
 .emite-ChatPanel-Conversation {
 }
 
+.emite-bottom-message {
+  background-color: #FAD163;
+  padding: 0 5px;
+}
+
 .emite-ChatPanel-Message {
   margin: 0 7px;
 }
