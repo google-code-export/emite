@@ -16,13 +16,17 @@
     </pluginRepository>
     <pluginRepository>
       <id>gwt-maven</id>
-      <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+      <url>
+        http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/
+      </url>
     </pluginRepository>
   </pluginRepositories>
   <repositories>
     <repository>
       <id>gwt-maven</id>
-      <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+      <url>
+        http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/
+      </url>
     </repository>
     <repository>
       <id>kune-maven</id>
@@ -54,18 +58,30 @@
           <runTarget>
             com.calclab.emiteui.EmiteUI/EmiteUI.html
           </runTarget>
+          <!--
+            <runTarget>
+            com.calclab.uimite.UIMite/UIMite.html
+            </runTarget>
+          -->
           <compileTarget>
             <param></param>
           </compileTarget>
           <compileTargets>
-            <compileTarget>com.calclab.emite.Emite</compileTarget>
+            <compileTarget>
+              com.calclab.emite.Emite
+            </compileTarget>
             <compileTarget>
               com.calclab.emite.examples.chat.Chat
             </compileTarget>
             <compileTarget>
               com.calclab.emiteuiplugin.EmiteUIPlugin
             </compileTarget>
-            <compileTarget>com.calclab.emiteui.EmiteUI</compileTarget>
+            <compileTarget>
+              com.calclab.emiteui.EmiteUI
+            </compileTarget>
+            <compileTarget>
+              com.calclab.uimite.UIMite
+            </compileTarget>
           </compileTargets>
           <generatorRootClasses>
             <value>com.calclab.emite.MyBean</value>
@@ -74,7 +90,9 @@
           <generatorDestinationPackage>
             com.calclab.examplechat.EmiteUI
           </generatorDestinationPackage>
-          <generateGettersAndSetters>true</generateGettersAndSetters>
+          <generateGettersAndSetters>
+            true
+          </generateGettersAndSetters>
           <generatePropertyChangeSupport>
             true
           </generatePropertyChangeSupport>
@@ -147,8 +165,12 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>2.0.1</version>
         <configuration>
-           <warSourceExcludes>WEB-INF/lib/*.jar</warSourceExcludes>
-           <dependentWarExcludes>**/*.class</dependentWarExcludes>
+          <warSourceExcludes>
+            WEB-INF/lib/*.jar
+          </warSourceExcludes>
+          <dependentWarExcludes>
+            **/*.class
+          </dependentWarExcludes>
         </configuration>
       </plugin>
     </plugins>
@@ -211,11 +233,13 @@
       <artifactId>kune-core</artifactId>
       <version>0.0.3</version>
     </dependency>
-    <dependency>
+    <!--
+      <dependency>
       <groupId>com.extjs.gxt</groupId>
       <artifactId>gxt</artifactId>
       <version>1.0-beta2</version>
-    </dependency>
+      </dependency>
+    -->
 
     <!--  TESTING -->
     <dependency>

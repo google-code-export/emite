@@ -55,7 +55,25 @@ public class SASLManager {
 	return Base64Coder.encodeString(auth);
     }
 
-    protected void install() {
+    private void clearState() {
+	uri = null;
+	password = null;
+	waitingForAuthorization = false;
+    }
+
+    private IPacket createAnonymousAuthorization() {
+	final IPacket auth = new Packet("auth", XMLNS).With("mechanism", "ANONYMOUS");
+	return auth;
+    }
+
+    private IPacket createPlainAuthorization() {
+	final IPacket auth = new Packet("auth", XMLNS).With("mechanism", "PLAIN");
+	final String encoded = encode(uri.getHost(), uri.getNode(), password);
+	auth.setText(encoded);
+	return auth;
+    }
+
+    private void install() {
 	emite.subscribe(when(SessionManager.Events.onDoLogin), new PacketListener() {
 	    public void handle(final IPacket received) {
 		uri = uri(received.getAttribute("uri"));
@@ -91,24 +109,6 @@ public class SASLManager {
 	    }
 	});
 
-    }
-
-    private void clearState() {
-	uri = null;
-	password = null;
-	waitingForAuthorization = false;
-    }
-
-    private IPacket createAnonymousAuthorization() {
-	final IPacket auth = new Packet("auth", XMLNS).With("mechanism", "ANONYMOUS");
-	return auth;
-    }
-
-    private IPacket createPlainAuthorization() {
-	final IPacket auth = new Packet("auth", XMLNS).With("mechanism", "PLAIN");
-	final String encoded = encode(uri.getHost(), uri.getNode(), password);
-	auth.setText(encoded);
-	return auth;
     }
 
     private void startAuthorizationRequest() {

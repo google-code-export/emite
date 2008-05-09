@@ -1,13 +1,15 @@
 package com.calclab.uimite.client;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+
 import com.calclab.emite.client.EmiteModule;
-import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.container.BasicContainer;
+import com.calclab.emite.client.container.Container;
 import com.calclab.uimite.client.chat.ChatUIModule;
 import com.calclab.uimite.client.config.XmppAutoConfigModule;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class UIMiteEntryPoint implements EntryPoint {
 
@@ -17,7 +19,9 @@ public class UIMiteEntryPoint implements EntryPoint {
 	XmppAutoConfigModule.load(container);
 	ChatUIModule.load(container);
 
-	RootPanel.get().add(new Label("hola"));
+	final ChatUIModule chatUIModule = container.get(ChatUIModule.class);
+	final UIView chat = chatUIModule.createChat(uri("dani@localhost"), "dani", uri("test1@localhost"));
+	RootPanel.get().add((Widget) chat);
     }
 
 }
