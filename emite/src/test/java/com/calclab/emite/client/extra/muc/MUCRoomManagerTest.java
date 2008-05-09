@@ -32,7 +32,6 @@ public class MUCRoomManagerTest {
 	manager = new MUCRoomManager(emite);
 	listener = mock(RoomManagerListener.class);
 	manager.addListener(listener);
-	manager.install();
     }
 
     @Test

@@ -21,9 +21,10 @@
  */
 package com.calclab.emite.client.core.bosh;
 
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+
 import java.util.List;
 
-import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
@@ -32,15 +33,13 @@ import com.calclab.emite.client.core.dispatcher.matcher.PacketMatcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 
-import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.*;
-
 /**
  * REPONSABILITIES: mantains a body handle id iq's SEND
  * 
  * @author dani
  * 
  */
-public class EmiteBosh implements Emite, Installable {
+public class EmiteBosh implements Emite {
     public static class Events {
 	public static final Event onDoSend = new Event("connection:do:send");
 
@@ -57,28 +56,11 @@ public class EmiteBosh implements Emite, Installable {
 	this.dispatcher = dispatcher;
 	this.stream = iStream;
 	this.manager = new IDManager();
+	install();
     }
 
     public void addListener(final DispatcherStateListener listener) {
 	dispatcher.addListener(listener);
-    }
-
-    public void attach() {
-	dispatcher.subscribe(new PacketMatcher(EmiteBosh.Events.onDoSend), new PacketListener() {
-	    public void handle(final IPacket received) {
-		onSend(received);
-	    }
-	});
-	dispatcher.subscribe(when("iq"), new PacketListener() {
-	    public void handle(final IPacket received) {
-		onIQ(received);
-	    }
-
-	});
-    }
-
-    public void install() {
-	attach();
     }
 
     public void publish(final IPacket packet) {
@@ -113,6 +95,19 @@ public class EmiteBosh implements Emite, Installable {
 	for (final IPacket child : children) {
 	    stream.addResponse(child);
 	}
+    }
+
+    private void install() {
+	dispatcher.subscribe(new PacketMatcher(EmiteBosh.Events.onDoSend), new PacketListener() {
+	    public void handle(final IPacket received) {
+		onSend(received);
+	    }
+	});
+	dispatcher.subscribe(when("iq"), new PacketListener() {
+	    public void handle(final IPacket received) {
+		onIQ(received);
+	    }
+	});
     }
 
 }

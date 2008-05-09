@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.core.services.gwt;
 
-import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;

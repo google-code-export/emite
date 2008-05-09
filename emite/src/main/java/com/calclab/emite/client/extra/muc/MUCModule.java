@@ -21,16 +21,15 @@
  */
 package com.calclab.emite.client.extra.muc;
 
-import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
 
 public class MUCModule {
-
-    private static final String COMPONENTS_MANAGER = "muc:manager";
+    private static final Class<MUCRoomManager> COMPONENTS_MANAGER = MUCRoomManager.class;
 
     public static RoomManager getRoomManager(final Container components) {
-	return (RoomManager) components.get(COMPONENTS_MANAGER);
+	return components.get(COMPONENTS_MANAGER);
     }
 
     public static void install(final Container container) {

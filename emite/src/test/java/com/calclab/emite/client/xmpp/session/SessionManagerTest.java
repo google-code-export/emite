@@ -25,7 +25,6 @@ public class SessionManagerTest {
 	emite = new EmiteTestHelper();
 	session = mock(Session.class);
 	manager = new SessionManager(emite);
-	manager.install();
 	manager.setSession(session);
     }
 

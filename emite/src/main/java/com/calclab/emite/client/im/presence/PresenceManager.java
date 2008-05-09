@@ -44,6 +44,7 @@ public class PresenceManager extends SessionComponent {
 	super(emite);
 	this.listeners = new ArrayList<PresenceListener>();
 	this.currentPresence = null;
+	install();
     }
 
     public void addListener(final PresenceListener presenceListener) {
@@ -57,47 +58,6 @@ public class PresenceManager extends SessionComponent {
      */
     public Presence getCurrentPresence() {
 	return currentPresence;
-    }
-
-    /**
-     * Upon connecting to the server and becoming an active resource, a client
-     * SHOULD request the roster before sending initial presence
-     */
-    @Override
-    public void install() {
-	super.install();
-
-	emite.subscribe(when(RosterManager.Events.ready), new PacketListener() {
-	    public void handle(final IPacket received) {
-		currentPresence = new Presence(userURI).With(Presence.Show.chat);
-		emite.send(currentPresence);
-		if (delayedPresence != null) {
-		    broadcastPresence(delayedPresence);
-		    delayedPresence = null;
-		}
-	    }
-	});
-
-	emite.subscribe(when("presence"), new PacketListener() {
-	    public void handle(final IPacket received) {
-
-		final Presence presence = new Presence(received);
-		switch (presence.getType()) {
-
-		case probe:
-		    emite.send(currentPresence);
-		    break;
-		case error:
-		    // FIXME: what should we do?
-		    Log.warn("Error presence!!!");
-		    break;
-		default:
-		    firePresenceReceived(presence);
-		    break;
-		}
-	    }
-	});
-
     }
 
     /**
@@ -148,12 +108,50 @@ public class PresenceManager extends SessionComponent {
 	presence.setFrom(userURI);
 	emite.send(presence);
 	currentPresence = presence;
-    };
+    }
 
     private void firePresenceReceived(final Presence presence) {
 	for (final PresenceListener listener : listeners) {
 	    listener.onPresenceReceived(presence);
 	}
+    };
+
+    /**
+     * Upon connecting to the server and becoming an active resource, a client
+     * SHOULD request the roster before sending initial presence
+     */
+    private void install() {
+	emite.subscribe(when(RosterManager.Events.ready), new PacketListener() {
+	    public void handle(final IPacket received) {
+		currentPresence = new Presence(userURI).With(Presence.Show.chat);
+		emite.send(currentPresence);
+		if (delayedPresence != null) {
+		    broadcastPresence(delayedPresence);
+		    delayedPresence = null;
+		}
+	    }
+	});
+
+	emite.subscribe(when("presence"), new PacketListener() {
+	    public void handle(final IPacket received) {
+
+		final Presence presence = new Presence(received);
+		switch (presence.getType()) {
+
+		case probe:
+		    emite.send(currentPresence);
+		    break;
+		case error:
+		    // FIXME: what should we do?
+		    Log.warn("Error presence!!!");
+		    break;
+		default:
+		    firePresenceReceived(presence);
+		    break;
+		}
+	    }
+	});
+
     }
 
 }

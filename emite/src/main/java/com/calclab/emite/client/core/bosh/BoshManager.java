@@ -26,7 +26,6 @@ import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Bosh.BoshState;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
@@ -43,7 +42,7 @@ import com.calclab.emite.client.core.services.Services;
  * @author dani
  * 
  */
-public class BoshManager implements ConnectorCallback, DispatcherStateListener, Installable {
+public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 
     public static class Events {
 	public static final Event onRestartStream = new Event("connection:do:restart_stream");
@@ -67,6 +66,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 	this.emite = emite;
 	this.bosh = bosh;
 	emite.addListener(this);
+	install();
     }
 
     public void dispatchingBegins() {
@@ -92,58 +92,6 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
 
     public String getDomain() {
 	return domain;
-    }
-
-    public void install() {
-	emite.subscribe(when(BoshManager.Events.onRestartStream), new PacketListener() {
-	    public void handle(final IPacket received) {
-		bosh.setRestart();
-	    }
-	});
-	emite.subscribe(when(BoshManager.Events.onDoStart), new PacketListener() {
-	    public void handle(final IPacket received) {
-		setDomain(received.getAttribute("domain"));
-		setRunning(true);
-		bosh.init(services.getCurrentTime(), getDomain());
-	    }
-
-	});
-	emite.subscribe(when("body"), new PacketListener() {
-	    public void handle(final IPacket iPacket) {
-		if (isTerminal(iPacket)) {
-		    emite.publish(Dispatcher.Events.error("terminal", iPacket.getAttribute("condition")));
-		} else {
-		    if (bosh.isFirstResponse()) {
-			final String sid = iPacket.getAttribute("sid");
-			final int poll = iPacket.getAttributeAsInt("polling");
-			final int requests = iPacket.getAttributeAsInt("requests");
-			bosh.setAttributes(sid, poll, requests);
-		    }
-		    final List<? extends IPacket> children = iPacket.getChildren();
-		    for (final IPacket stanza : children) {
-			emite.publish(stanza);
-		    }
-		}
-	    }
-	});
-
-	emite.subscribe(when(Dispatcher.Events.onError), new PacketListener() {
-	    public void handle(final IPacket received) {
-		setRunning(false);
-	    }
-	});
-
-	emite.subscribe(when("stream:error"), new PacketListener() {
-	    public void handle(final IPacket received) {
-		emite.publish(Dispatcher.Events.error("stream:error", ""));
-	    }
-	});
-
-	emite.subscribe(when(BoshManager.Events.stop), new PacketListener() {
-	    public void handle(final IPacket received) {
-		bosh.setTerminating(true);
-	    }
-	});
     }
 
     public boolean isRunning() {
@@ -195,6 +143,58 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener, 
      */
     void setRunning(final boolean isRunning) {
 	this.isRunning = isRunning;
+    }
+
+    private void install() {
+	emite.subscribe(when(BoshManager.Events.onRestartStream), new PacketListener() {
+	    public void handle(final IPacket received) {
+		bosh.setRestart();
+	    }
+	});
+	emite.subscribe(when(BoshManager.Events.onDoStart), new PacketListener() {
+	    public void handle(final IPacket received) {
+		setDomain(received.getAttribute("domain"));
+		setRunning(true);
+		bosh.init(services.getCurrentTime(), getDomain());
+	    }
+
+	});
+	emite.subscribe(when("body"), new PacketListener() {
+	    public void handle(final IPacket iPacket) {
+		if (isTerminal(iPacket)) {
+		    emite.publish(Dispatcher.Events.error("terminal", iPacket.getAttribute("condition")));
+		} else {
+		    if (bosh.isFirstResponse()) {
+			final String sid = iPacket.getAttribute("sid");
+			final int poll = iPacket.getAttributeAsInt("polling");
+			final int requests = iPacket.getAttributeAsInt("requests");
+			bosh.setAttributes(sid, poll, requests);
+		    }
+		    final List<? extends IPacket> children = iPacket.getChildren();
+		    for (final IPacket stanza : children) {
+			emite.publish(stanza);
+		    }
+		}
+	    }
+	});
+
+	emite.subscribe(when(Dispatcher.Events.onError), new PacketListener() {
+	    public void handle(final IPacket received) {
+		setRunning(false);
+	    }
+	});
+
+	emite.subscribe(when("stream:error"), new PacketListener() {
+	    public void handle(final IPacket received) {
+		emite.publish(Dispatcher.Events.error("stream:error", ""));
+	    }
+	});
+
+	emite.subscribe(when(BoshManager.Events.stop), new PacketListener() {
+	    public void handle(final IPacket received) {
+		bosh.setTerminating(true);
+	    }
+	});
     }
 
     private boolean isTerminal(final IPacket body) {

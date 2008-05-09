@@ -22,13 +22,13 @@
 package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
@@ -38,9 +38,7 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
-
-public class ChatManagerDefault extends SessionComponent implements ChatManager, Installable {
+public class ChatManagerDefault extends SessionComponent implements ChatManager {
     protected final HashSet<Chat> chats;
     protected final ArrayList<ChatManagerListener> listeners;
 
@@ -48,6 +46,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager,
 	super(emite);
 	this.listeners = new ArrayList<ChatManagerListener>();
 	this.chats = new HashSet<Chat>();
+	install();
     }
 
     public void addListener(final ChatManagerListener listener) {
@@ -61,16 +60,6 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager,
 
     public Collection<? extends Chat> getChats() {
 	return chats;
-    }
-
-    @Override
-    public void install() {
-	super.install();
-	emite.subscribe(when(new Packet("message", null)), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventMessage(new Message(received));
-	    }
-	});
     }
 
     @Override
@@ -155,6 +144,14 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager,
 	}
 
 	return selected;
+    }
+
+    private void install() {
+	emite.subscribe(when(new Packet("message", null)), new PacketListener() {
+	    public void handle(final IPacket received) {
+		eventMessage(new Message(received));
+	    }
+	});
     }
 
     private void onChatMessageReceived(final Message message) {

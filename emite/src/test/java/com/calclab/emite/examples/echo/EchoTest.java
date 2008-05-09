@@ -9,7 +9,7 @@ public class EchoTest {
     @Test
     public void shouldAnswer() {
 	final EmiteTestHelper emite = new EmiteTestHelper();
-	emite.install(new Echo(emite));
+	new Echo(emite);
 	emite.receives("<message from='contact@domain' to='me@domain'><body>Hello!</body></message>");
 	emite.verifySent("<message from='me@domain' to='contact@domain'><body>Hello!</body></message>");
     }

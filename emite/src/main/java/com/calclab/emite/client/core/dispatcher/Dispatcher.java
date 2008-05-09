@@ -21,12 +21,11 @@
  */
 package com.calclab.emite.client.core.dispatcher;
 
-import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.core.dispatcher.matcher.Matcher;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 
-public interface Dispatcher extends Component {
+public interface Dispatcher {
 
     public static class Events {
 

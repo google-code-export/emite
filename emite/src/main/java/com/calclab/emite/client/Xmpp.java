@@ -21,9 +21,9 @@
  */
 package com.calclab.emite.client;
 
-import com.calclab.emite.client.components.DelegatedContainer;
-import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.components.HashContainer;
+import com.calclab.emite.client.container.Container;
+import com.calclab.emite.client.container.DelegatedContainer;
+import com.calclab.emite.client.container.HashContainer;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
@@ -50,7 +50,7 @@ public class Xmpp extends DelegatedContainer {
     }
 
     private Session session;
-    private boolean isStarted;
+    private final boolean isStarted;
 
     public Xmpp(final Container container) {
 	super(container);
@@ -109,10 +109,6 @@ public class Xmpp extends DelegatedContainer {
     }
 
     public void start() {
-	if (!isStarted) {
-	    isStarted = true;
-	    this.install();
-	}
     }
 
     public void stop() {
