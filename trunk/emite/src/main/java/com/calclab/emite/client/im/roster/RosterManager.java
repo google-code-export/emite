@@ -27,7 +27,6 @@ import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
@@ -40,7 +39,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
-public class RosterManager extends SessionComponent implements Installable {
+public class RosterManager extends SessionComponent {
     public static class Events {
 	public static final Event ready = new Event("roster:on:ready");
     }
@@ -61,6 +60,7 @@ public class RosterManager extends SessionComponent implements Installable {
 	this.roster = roster;
 	this.subscriptionMode = DEF_SUBSCRIPTION_MODE;
 	this.listeners = new ArrayList<RosterManagerListener>();
+	install();
     }
 
     /**
@@ -110,41 +110,6 @@ public class RosterManager extends SessionComponent implements Installable {
 
     public SubscriptionMode getSubscriptionMode() {
 	return subscriptionMode;
-    }
-
-    @Override
-    public void install() {
-	super.install();
-
-	emite.subscribe(when(new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", null).With("xmlns", null)),
-		new PacketListener() {
-		    public void handle(final IPacket received) {
-			emite.send(new IQ(IQ.Type.result).With("id", received.getAttribute("id")));
-			final IPacket item = received.getFirstChild("query").getFirstChild("item");
-			final String jid = item.getAttribute("jid");
-			roster.changeSubscription(uri(jid), item.getAttribute("subscription"));
-		    }
-		});
-
-	emite.subscribe(when("presence"), new PacketListener() {
-	    public void handle(final IPacket received) {
-		final Presence presence = new Presence(received);
-		switch (presence.getType()) {
-		case subscribe:
-		    handleSubscriptionRequest(presence);
-		    break;
-		case unsubscribed:
-		    handleUnsubscribedReceived(presence);
-		    break;
-		case available:
-		case subscribed:
-		case unavailable:
-		    roster.changePresence(presence.getFromURI(), presence);
-		    break;
-		}
-	    }
-
-	});
     }
 
     @Override
@@ -278,6 +243,38 @@ public class RosterManager extends SessionComponent implements Installable {
 
     private void handleUnsubscribedReceived(final Presence presence) {
 	fireUnsubscribedReceived(presence);
+    }
+
+    private void install() {
+	emite.subscribe(when(new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", null).With("xmlns", null)),
+		new PacketListener() {
+		    public void handle(final IPacket received) {
+			emite.send(new IQ(IQ.Type.result).With("id", received.getAttribute("id")));
+			final IPacket item = received.getFirstChild("query").getFirstChild("item");
+			final String jid = item.getAttribute("jid");
+			roster.changeSubscription(uri(jid), item.getAttribute("subscription"));
+		    }
+		});
+
+	emite.subscribe(when("presence"), new PacketListener() {
+	    public void handle(final IPacket received) {
+		final Presence presence = new Presence(received);
+		switch (presence.getType()) {
+		case subscribe:
+		    handleSubscriptionRequest(presence);
+		    break;
+		case unsubscribed:
+		    handleUnsubscribedReceived(presence);
+		    break;
+		case available:
+		case subscribed:
+		case unavailable:
+		    roster.changePresence(presence.getFromURI(), presence);
+		    break;
+		}
+	    }
+
+	});
     }
 
     private void requestRoster() {

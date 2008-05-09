@@ -21,14 +21,13 @@
  */
 package com.calclab.emite.client.core.services;
 
-import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.container.Container;
 
 public class ServicesAbstractModule {
-
-    private static final String COMPONENT_SERVICES = "services";
+    private static final Class<Services> COMPONENT_SERVICES = Services.class;
 
     public static Services getServices(final Container container) {
-	return (Services) container.get(COMPONENT_SERVICES);
+	return container.get(COMPONENT_SERVICES);
     }
 
     public static void setServices(final Container container, final Services services) {

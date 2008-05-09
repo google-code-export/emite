@@ -32,7 +32,6 @@ public class RosterManagerTest {
 	emite = new EmiteTestHelper();
 	roster = mock(Roster.class);
 	manager = new RosterManager(emite, roster);
-	manager.install();
 	listener = mock(RosterManagerListener.class);
 	manager.addListener(listener);
     }

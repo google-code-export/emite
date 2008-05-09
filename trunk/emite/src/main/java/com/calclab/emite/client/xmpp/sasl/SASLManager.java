@@ -22,8 +22,8 @@
 package com.calclab.emite.client.xmpp.sasl;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 
-import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
@@ -32,9 +32,7 @@ import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.session.SessionManager.Events;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
-
-public class SASLManager implements Installable {
+public class SASLManager {
     private static final String SEP = new String(new char[] { 0 });
 
     private static final String XMLNS = "urn:ietf:params:xml:ns:xmpp-sasl";
@@ -48,11 +46,16 @@ public class SASLManager implements Installable {
 
     public SASLManager(final Emite emite) {
 	this.emite = emite;
+	install();
 	clearState();
-
     }
 
-    public void install() {
+    protected String encode(final String domain, final String userName, final String password) {
+	final String auth = userName + "@" + domain + SEP + userName + SEP + password;
+	return Base64Coder.encodeString(auth);
+    }
+
+    protected void install() {
 	emite.subscribe(when(SessionManager.Events.onDoLogin), new PacketListener() {
 	    public void handle(final IPacket received) {
 		uri = uri(received.getAttribute("uri"));
@@ -88,11 +91,6 @@ public class SASLManager implements Installable {
 	    }
 	});
 
-    }
-
-    protected String encode(final String domain, final String userName, final String password) {
-	final String auth = userName + "@" + domain + SEP + userName + SEP + password;
-	return Base64Coder.encodeString(auth);
     }
 
     private void clearState() {

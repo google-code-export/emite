@@ -1,21 +1,21 @@
 package com.calclab.emite.examples.echo;
 
-import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.dispatcher.matcher.Matchers;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 
-public class Echo implements Installable {
+public class Echo {
 
     private final Emite emite;
 
     public Echo(final Emite emite) {
 	this.emite = emite;
+	install();
     }
 
-    public void install() {
+    protected void install() {
 	emite.subscribe(Matchers.when("message"), new PacketListener() {
 	    public void handle(final IPacket received) {
 		echo(new Message(received));

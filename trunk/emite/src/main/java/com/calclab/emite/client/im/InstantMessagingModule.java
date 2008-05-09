@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.im;
 
-import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
@@ -30,28 +30,25 @@ import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
 
 public class InstantMessagingModule {
-    private static final String COMPONENT_CHAT = "chat";
-
-    private static final String COMPONENT_ROSTER = "roster";
-
-    private static final String COMPONENT_ROSTER_MANAGER = "roster:manager";
-
-    private static final String COMPONENT_MANAGER = "presence:manager";
+    private static final Class<ChatManagerDefault> COMPONENT_CHAT = ChatManagerDefault.class;
+    private static final Class<Roster> COMPONENT_ROSTER = Roster.class;
+    private static final Class<RosterManager> COMPONENT_ROSTER_MANAGER = RosterManager.class;
+    private static final Class<PresenceManager> COMPONENT_MANAGER = PresenceManager.class;
 
     public static ChatManagerDefault getChat(final Container container) {
-	return (ChatManagerDefault) container.get(COMPONENT_CHAT);
+	return container.get(COMPONENT_CHAT);
     }
 
     public static PresenceManager getManager(final Container container) {
-	return (PresenceManager) container.get(COMPONENT_MANAGER);
+	return container.get(COMPONENT_MANAGER);
     }
 
     public static Roster getRoster(final Container container) {
-	return (Roster) container.get(COMPONENT_ROSTER);
+	return container.get(COMPONENT_ROSTER);
     }
 
     public static RosterManager getRosterManager(final Container container) {
-	return (RosterManager) container.get(COMPONENT_ROSTER_MANAGER);
+	return container.get(COMPONENT_ROSTER_MANAGER);
     }
 
     public static void load(final Container container) {

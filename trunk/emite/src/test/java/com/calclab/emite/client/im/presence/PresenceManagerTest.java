@@ -25,7 +25,6 @@ public class PresenceManagerTest {
     public void beforeTest() {
 	emite = new EmiteTestHelper();
 	manager = new PresenceManager(emite);
-	emite.install(manager);
 
 	presenceListener = Mockito.mock(PresenceListener.class);
 	manager.addListener(presenceListener);

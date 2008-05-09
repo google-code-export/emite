@@ -23,10 +23,9 @@ package com.calclab.emite.client.xmpp.session;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class Session implements Component {
+public class Session {
 
     public static enum State {
 	authorized, connected, connecting, disconnected, error, notAuthorized

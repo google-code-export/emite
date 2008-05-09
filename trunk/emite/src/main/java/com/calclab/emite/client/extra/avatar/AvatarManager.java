@@ -21,7 +21,6 @@
  */
 package com.calclab.emite.client.extra.avatar;
 
-import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
@@ -33,15 +32,10 @@ import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
  * XEP-0153 implementation
  * 
  */
-public class AvatarManager extends SessionComponent implements Installable {
+public class AvatarManager extends SessionComponent {
 
     public AvatarManager(final Emite emite) {
 	super(emite);
-    }
-
-    @Override
-    public void install() {
-	super.install();
     }
 
     public void setVCardAvatar(final String photoBinary) {

@@ -26,11 +26,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class Roster implements Component {
+public class Roster {
 
     // Only JIDs
     private final HashMap<XmppURI, RosterItem> items;
@@ -38,64 +37,64 @@ public class Roster implements Component {
     private final ArrayList<RosterListener> listeners;
 
     public Roster() {
-        listeners = new ArrayList<RosterListener>();
-        items = new HashMap<XmppURI, RosterItem>();
+	listeners = new ArrayList<RosterListener>();
+	items = new HashMap<XmppURI, RosterItem>();
     }
 
     public void addListener(final RosterListener listener) {
-        listeners.add(listener);
+	listeners.add(listener);
     }
 
     public void changePresence(final XmppURI uri, final Presence presence) {
-        final RosterItem item = findItemByJID(uri);
-        if (item != null) {
-            item.setPresence(presence);
-            fireItemChanged(item);
-        }
+	final RosterItem item = findItemByJID(uri);
+	if (item != null) {
+	    item.setPresence(presence);
+	    fireItemChanged(item);
+	}
     }
 
     public void changeSubscription(final XmppURI jid, final String subscription) {
-        final RosterItem item = findItemByJID(jid);
-        if (item != null) {
-            item.setSubscription(subscription);
-            fireItemChanged(item);
-        }
+	final RosterItem item = findItemByJID(jid);
+	if (item != null) {
+	    item.setSubscription(subscription);
+	    fireItemChanged(item);
+	}
     }
 
     public RosterItem findItemByJID(final XmppURI jid) {
-        return items.get(jid.getJID());
+	return items.get(jid.getJID());
     }
 
     public void removeItem(final XmppURI jid) {
-        final RosterItem removed = items.remove(jid.getJID());
-        if (removed != null) {
-            fireRosterChanged();
-        }
+	final RosterItem removed = items.remove(jid.getJID());
+	if (removed != null) {
+	    fireRosterChanged();
+	}
     }
 
     void add(final RosterItem item) {
-        items.put(item.getJID(), item);
-        fireRosterChanged();
+	items.put(item.getJID(), item);
+	fireRosterChanged();
     }
 
     void setItems(final List<RosterItem> itemCollection) {
-        items.clear();
-        for (final RosterItem item : itemCollection) {
-            items.put(item.getJID(), item);
-        }
-        fireRosterChanged();
+	items.clear();
+	for (final RosterItem item : itemCollection) {
+	    items.put(item.getJID(), item);
+	}
+	fireRosterChanged();
     }
 
     private void fireItemChanged(final RosterItem item) {
-        for (final RosterListener listener : listeners) {
-            listener.onItemChanged(item);
-        }
+	for (final RosterListener listener : listeners) {
+	    listener.onItemChanged(item);
+	}
     }
 
     private void fireRosterChanged() {
-        for (final RosterListener listener : listeners) {
-            listener.onRosterChanged(items.values());
-        }
+	for (final RosterListener listener : listeners) {
+	    listener.onRosterChanged(items.values());
+	}
     }
 
 }

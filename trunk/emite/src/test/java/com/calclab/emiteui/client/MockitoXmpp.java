@@ -3,7 +3,7 @@ package com.calclab.emiteui.client;
 import static org.mockito.Mockito.mock;
 
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.components.HashContainer;
+import com.calclab.emite.client.container.HashContainer;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.im.chat.ChatManager;

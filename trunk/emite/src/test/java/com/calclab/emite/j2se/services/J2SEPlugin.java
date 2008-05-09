@@ -1,16 +1,16 @@
 package com.calclab.emite.j2se.services;
 
-import com.calclab.emite.client.components.Component;
-import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
+import com.calclab.emite.client.core.services.ServicesAbstractModule;
 
-public class J2SEPlugin implements Component, Services {
+public class J2SEPlugin implements Services {
     public static Container install(final Container container, final HttpConnectorListener listener) {
-	container.register("services", new J2SEPlugin(listener));
+	ServicesAbstractModule.setServices(container, new J2SEPlugin(listener));
 	return container;
     }
 

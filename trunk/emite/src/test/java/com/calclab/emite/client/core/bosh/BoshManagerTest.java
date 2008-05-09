@@ -28,7 +28,6 @@ public class BoshManagerTest {
 	emite = new EmiteTestHelper();
 	bosh = mock(Bosh.class);
 	manager = new BoshManager(services, emite, bosh);
-	manager.install();
     }
 
     @Test

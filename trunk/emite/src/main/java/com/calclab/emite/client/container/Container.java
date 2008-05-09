@@ -19,9 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.components;
+package com.calclab.emite.client.container;
 
-public interface Installable extends Component {
-    public void install();
+public interface Container {
+
+    <T> T get(Class<T> componentType);
+
+    <T> T register(Class<T> componentType, T component);
 
 }

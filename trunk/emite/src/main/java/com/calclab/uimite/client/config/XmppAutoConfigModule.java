@@ -1,6 +1,6 @@
 package com.calclab.uimite.client.config;
 
-import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.container.Container;
 
 public class XmppAutoConfigModule {
 

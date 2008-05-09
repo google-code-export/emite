@@ -21,10 +21,9 @@
  */
 package com.calclab.emite.client.core.services;
 
-import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.core.packet.IPacket;
 
-public interface Services extends Component {
+public interface Services {
     long getCurrentTime();
 
     void schedule(int msecs, ScheduledAction action);

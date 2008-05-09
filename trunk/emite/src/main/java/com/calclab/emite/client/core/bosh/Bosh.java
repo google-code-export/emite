@@ -22,10 +22,9 @@
 package com.calclab.emite.client.core.bosh;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.components.Component;
 import com.calclab.emite.client.core.packet.IPacket;
 
-public class Bosh implements Component {
+public class Bosh {
     public static class BoshState {
 	private final int time;
 

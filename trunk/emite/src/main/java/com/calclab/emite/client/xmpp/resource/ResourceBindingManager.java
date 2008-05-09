@@ -22,25 +22,25 @@
 package com.calclab.emite.client.xmpp.resource;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 
-import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
-public class ResourceBindingManager implements Installable {
+public class ResourceBindingManager {
     private String resource;
     private final Emite emite;
 
     public ResourceBindingManager(final Emite emite) {
 	this.emite = emite;
 	resource = null;
+	install();
     }
 
-    public void install() {
+    protected void install() {
 	emite.subscribe(when(SessionManager.Events.onDoLogin), new PacketListener() {
 	    public void handle(final IPacket received) {
 		resource = uri(received.getAttribute("uri")).getResource();

@@ -41,7 +41,6 @@ public class ChatManagerTest {
 	listener = Mockito.mock(ChatManagerListener.class);
 	manager.addListener(listener);
 	manager.setUserURI(MYSELF.toString());
-	manager.install();
     }
 
     @Test

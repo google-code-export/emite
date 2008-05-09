@@ -16,8 +16,8 @@ import javax.swing.JTabbedPane;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.components.Container;
-import com.calclab.emite.client.components.HashContainer;
+import com.calclab.emite.client.container.Container;
+import com.calclab.emite.client.container.HashContainer;
 import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.extra.muc.Room;

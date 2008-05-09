@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
@@ -54,10 +53,6 @@ public class EmiteTestHelper implements Emite {
 
     public void clearPublished() {
 	published.clear();
-    }
-
-    public void install(final Installable component) {
-	component.install();
     }
 
     public void publish(final IPacket packet) {

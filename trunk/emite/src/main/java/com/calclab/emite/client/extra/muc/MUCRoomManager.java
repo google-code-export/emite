@@ -24,7 +24,7 @@ package com.calclab.emite.client.extra.muc;
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 
 import java.util.HashMap;
-import com.calclab.emite.client.components.Installable;
+
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
@@ -41,12 +41,13 @@ import com.calclab.emite.client.xmpp.stanzas.Stanza;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 
-public class MUCRoomManager extends ChatManagerDefault implements RoomManager, Installable {
+public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     private final HashMap<XmppURI, Room> rooms;
 
     public MUCRoomManager(final Emite emite) {
 	super(emite);
 	this.rooms = new HashMap<XmppURI, Room>();
+	install();
     }
 
     @Override
@@ -56,16 +57,6 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager, I
 	    room.close();
 	    fireChatClosed(room);
 	}
-    }
-
-    @Override
-    public void install() {
-	super.install();
-	emite.subscribe(when("presence"), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventPresence(new Presence(received));
-	    }
-	});
     }
 
     @Override
@@ -145,6 +136,14 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager, I
 
     private void handleRoomInvitation(final XmppURI roomURI, final Stanza invitation) {
 	fireInvitationReceived(invitation.getFromURI(), roomURI, invitation.getFirstChild("reason").getText());
+    }
+
+    private void install() {
+	emite.subscribe(when("presence"), new PacketListener() {
+	    public void handle(final IPacket received) {
+		eventPresence(new Presence(received));
+	    }
+	});
     }
 
     private boolean isNewRoom(final IPacket xtension) {

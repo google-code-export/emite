@@ -22,8 +22,8 @@
 package com.calclab.emite.client.xmpp.session;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 
-import com.calclab.emite.client.components.Installable;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
@@ -35,9 +35,7 @@ import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
-
-public class SessionManager implements Installable {
+public class SessionManager {
     public static class Events {
 	public static final Event onAuthorized = new Event("session:on:authorized");
 	public static final Event onAuthorizationFailed = new Event("session:on:authorization-failed");
@@ -67,6 +65,7 @@ public class SessionManager implements Installable {
 
     public SessionManager(final Emite emite) {
 	this.emite = emite;
+	install();
     }
 
     public void doLogin(final XmppURI uri, final String password) {
@@ -81,8 +80,11 @@ public class SessionManager implements Installable {
 	userURI = null;
     }
 
-    public void install() {
+    public void setSession(final Session session) {
+	this.session = session;
+    }
 
+    private void install() {
 	emite.subscribe(when(Events.onAuthorizationFailed), new PacketListener() {
 	    public void handle(final IPacket received) {
 		session.setState(State.notAuthorized);
@@ -127,10 +129,6 @@ public class SessionManager implements Installable {
 	    }
 
 	});
-    }
-
-    public void setSession(final Session session) {
-	this.session = session;
     }
 
     private void sendSessionRequest(final String uri) {

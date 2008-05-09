@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.core;
 
-import com.calclab.emite.client.components.Container;
+import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
@@ -33,21 +33,21 @@ import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesAbstractModule;
 
 public class CoreModule {
-    public static final String COMPONENT_BOSH_MANAGER = "core:manager";
-    public static final String COMPONENT_BOSH = "core:bosh";
-    public static final String COMPONENT_DISPATCHER = "dispatcher";
-    public static final String COMPONENT_EMITE = "emite";
+    public static final Class<BoshManager> COMPONENT_BOSH_MANAGER = BoshManager.class;
+    public static final Class<Bosh> COMPONENT_BOSH = Bosh.class;
+    public static final Class<Dispatcher> COMPONENT_DISPATCHER = Dispatcher.class;
+    public static final Class<Emite> COMPONENT_EMITE = Emite.class;
 
     public static Bosh getBosh(final Container container) {
-	return (Bosh) container.get(COMPONENT_BOSH);
+	return container.get(COMPONENT_BOSH);
     }
 
     public static Dispatcher getDispatcher(final Container container) {
-	return (Dispatcher) container.get(COMPONENT_DISPATCHER);
+	return container.get(COMPONENT_DISPATCHER);
     }
 
     public static Emite getEmite(final Container container) {
-	return (Emite) container.get(COMPONENT_EMITE);
+	return container.get(COMPONENT_EMITE);
     }
 
     public static void load(final Container container) {
