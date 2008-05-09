@@ -33,40 +33,26 @@ import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesAbstractModule;
 
 public class CoreModule {
-    public static final Class<BoshManager> COMPONENT_BOSH_MANAGER = BoshManager.class;
-    public static final Class<Bosh> COMPONENT_BOSH = Bosh.class;
-    public static final Class<Dispatcher> COMPONENT_DISPATCHER = Dispatcher.class;
-    public static final Class<Emite> COMPONENT_EMITE = Emite.class;
-
     public static Bosh getBosh(final Container container) {
-	return container.get(COMPONENT_BOSH);
+	return container.get(Bosh.class);
     }
 
     public static Dispatcher getDispatcher(final Container container) {
-	return container.get(COMPONENT_DISPATCHER);
+	return container.get(Dispatcher.class);
     }
 
     public static Emite getEmite(final Container container) {
-	return container.get(COMPONENT_EMITE);
+	return container.get(Emite.class);
     }
 
     public static void load(final Container container) {
-	// dependencies
 	final Services services = ServicesAbstractModule.getServices(container);
 
-	// injections
-	final DispatcherDefault dispatcher = new DispatcherDefault();
-	container.register(COMPONENT_DISPATCHER, dispatcher);
-
-	final Stream iStream = new Stream();
-	final EmiteBosh emite = new EmiteBosh(dispatcher, iStream);
-	container.register(COMPONENT_EMITE, emite);
-
-	final Bosh bosh = new Bosh(iStream);
-	container.register(COMPONENT_BOSH, bosh);
-	final BoshManager boshManager = new BoshManager(services, emite, bosh);
-	container.register(COMPONENT_BOSH_MANAGER, boshManager);
-
+	final Dispatcher dispatcher = container.register(Dispatcher.class, new DispatcherDefault());
+	final Stream stream = new Stream();
+	final Emite emite = container.register(Emite.class, new EmiteBosh(dispatcher, stream));
+	final Bosh bosh = container.register(Bosh.class, new Bosh(stream));
+	container.register(BoshManager.class, new BoshManager(services, emite, bosh));
     }
 
 }

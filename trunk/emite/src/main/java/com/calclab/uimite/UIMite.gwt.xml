@@ -1,6 +1,8 @@
 <module>
   <inherits name="com.calclab.emite.Emite" />
-  <inherits name='com.extjs.gxt.ui.GXT'/>
+  <!--
+    <inherits name='com.extjs.gxt.ui.GXT'/>
+  -->
   <entry-point class="com.calclab.uimite.client.UIMiteEntryPoint" />
   <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
 </module>

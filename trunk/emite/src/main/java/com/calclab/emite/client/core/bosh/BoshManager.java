@@ -45,10 +45,10 @@ import com.calclab.emite.client.core.services.Services;
 public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 
     public static class Events {
-	public static final Event onRestartStream = new Event("connection:do:restart_stream");
-	public static final Event onDoStart = new Event("connection:do:start");
-	public static final Event stop = new Event("connection:do:stop");
-	protected final static Event pull = new Event("connection:do:pull");
+	public static final Event onRestartStream = new Event("bosh-manager:do:restart_stream");
+	public static final Event onDoStart = new Event("bosh-manager:do:start");
+	public static final Event stop = new Event("bosh-manager:do:stop");
+	protected final static Event pull = new Event("bosh-manager:do:pull");
 
 	public static IPacket start(final String domain) {
 	    return BoshManager.Events.onDoStart.Params("domain", domain);
@@ -146,6 +146,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
     }
 
     private void install() {
+	Log.debug("INSTALLING BOSH MANAGER");
 	emite.subscribe(when(BoshManager.Events.onRestartStream), new PacketListener() {
 	    public void handle(final IPacket received) {
 		bosh.setRestart();
@@ -153,6 +154,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 	});
 	emite.subscribe(when(BoshManager.Events.onDoStart), new PacketListener() {
 	    public void handle(final IPacket received) {
+		Log.debug("START IN BOSH MANAGER!!!");
 		setDomain(received.getAttribute("domain"));
 		setRunning(true);
 		bosh.init(services.getCurrentTime(), getDomain());

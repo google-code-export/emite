@@ -18,7 +18,6 @@ public class SASLManagerTest {
     public void aaCreate() {
 	emite = new EmiteTestHelper();
 	manager = new SASLManager(emite);
-	manager.install();
     }
 
     @Test
