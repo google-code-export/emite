@@ -68,19 +68,22 @@
           </compileTarget>
           <compileTargets>
             <compileTarget>
-              com.calclab.emite.Emite
+              com.calclab.emiteui.EmiteUI
             </compileTarget>
             <compileTarget>
-              com.calclab.emite.examples.chat.Chat
+              com.calclab.emite.Emite
             </compileTarget>
             <compileTarget>
               com.calclab.emiteuiplugin.EmiteUIPlugin
             </compileTarget>
             <compileTarget>
-              com.calclab.emiteui.EmiteUI
+              com.calclab.emite.examples.chat.Chat
             </compileTarget>
             <compileTarget>
               com.calclab.uimite.UIMite
+            </compileTarget>
+            <compileTarget>
+              com.calclab.emiteuisample.EmiteUISample
             </compileTarget>
           </compileTargets>
           <generatorRootClasses>
@@ -221,7 +224,6 @@
       <version>1.0.0</version>
     </dependency>
 
-
     <!--  ui -->
     <dependency>
       <groupId>com.gwtext</groupId>
@@ -231,7 +233,7 @@
     <dependency>
       <groupId>org.ourproject.kune</groupId>
       <artifactId>kune-core</artifactId>
-      <version>0.0.3</version>
+      <version>0.0.4</version>
     </dependency>
     <!--
       <dependency>
