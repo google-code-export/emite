@@ -39,71 +39,71 @@
 }
 
 .emite-icon {
-  background-image: url(img/icon.gif) !important;
+  background-image: url(images/icon.gif) !important;
 }
 
 .exit-icon {
-  background-image: url(img/exit.gif) !important;
+  background-image: url(images/exit.gif) !important;
 }
 
 .colors-icon {
-  background-image: url(img/colors.gif) !important;
+  background-image: url(images/colors.gif) !important;
 }
 
 .chat-icon {
-  background-image: url(img/chat.gif) !important;
+  background-image: url(images/emite-chat.gif) !important;
 }
 
 .group-icon {
-  background-image: url(img/group.gif) !important;
+  background-image: url(images/group.gif) !important;
 }
 
 .user-icon {
-  background-image: url(img/user.gif) !important;
+  background-image: url(images/user.gif) !important;
 }
 
 .userf-icon {
-  background-image: url(img/userf.gif) !important;
+  background-image: url(images/userf.gif) !important;
 }
 
 .useradd-icon {
-  background-image: url(img/useradd.gif) !important;
+  background-image: url(images/useradd.gif) !important;
 }
 
 .load-icon {
-  background-image: url(img/extload.gif) !important;
+  background-image: url(images/extload.gif) !important;
 }
 
 .newchat-icon {
-  background-image: url(img/new-chat.gif) !important;
+  background-image: url(images/new-chat.gif) !important;
 }
 
 .newmessage-icon {
-  background-image: url(img/new-message.gif) !important;
+  background-image: url(images/new-message.gif) !important;
 }
 
 .groupchat-icon {
-  background-image: url(img/group-chat.gif) !important;
+  background-image: url(images/group-chat.gif) !important;
 }
 
 .add-icon {
-  background-image: url(img/add.gif) !important;
+  background-image: url(images/add.gif) !important;
 }
 
 .del-icon {
-  background-image: url(img/del.gif) !important;
+  background-image: url(images/del.gif) !important;
 }
 
 .cancel-icon {
-  background-image: url(img/cancel.gif) !important;
+  background-image: url(images/cancel.gif) !important;
 }
 
 .info-icon {
-  background-image: url(img/info.gif) !important;
+  background-image: url(images/info.gif) !important;
 }
 
 .forbidden-icon {
-  background-image: url(img/forbidden.gif) !important;
+  background-image: url(images/forbidden.gif) !important;
 }
 
 .vamiddle {

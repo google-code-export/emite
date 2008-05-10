@@ -24,8 +24,8 @@ package com.calclab.emiteuiplugin.client;
 import org.ourproject.kune.platf.client.PlatformEvents;
 import org.ourproject.kune.platf.client.dispatch.Action;
 import org.ourproject.kune.platf.client.dispatch.Dispatcher;
+import org.ourproject.kune.platf.client.extend.ExtensibleWidgetChild;
 import org.ourproject.kune.platf.client.extend.Plugin;
-import org.ourproject.kune.platf.client.extend.UIExtensionElement;
 
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
@@ -65,132 +65,132 @@ public class EmiteUIPlugin extends Plugin {
     private MultiChat multiChatDialog;
 
     public EmiteUIPlugin() {
-	super("emiteuiplugin");
+        super("emiteuiplugin");
     }
 
     @Override
     protected void start() {
 
-	final Dispatcher dispatcher = getDispatcher();
-	dispatcher.subscribe(CREATE_CHAT_DIALOG, new Action<MultiChatCreationParam>() {
-	    public void execute(final MultiChatCreationParam param) {
-		if (multiChatDialog == null) {
-		    createChatDialog(param);
-		    preFetchImages();
-		}
-	    }
+        final Dispatcher dispatcher = getDispatcher();
+        dispatcher.subscribe(CREATE_CHAT_DIALOG, new Action<MultiChatCreationParam>() {
+            public void execute(final MultiChatCreationParam param) {
+                if (multiChatDialog == null) {
+                    createChatDialog(param);
+                    preFetchImages();
+                }
+            }
 
-	    private void createChatDialog(final MultiChatCreationParam param) {
-		final Xmpp xmpp = Xmpp.create();
-		xmpp.setBoshOptions(param.getBoshOptions());
+            private void createChatDialog(final MultiChatCreationParam param) {
+                final Xmpp xmpp = Xmpp.create();
+                xmpp.setBoshOptions(param.getBoshOptions());
 
-		multiChatDialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(xmpp, param,
-			new MultiChatListener() {
+                multiChatDialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(xmpp, param,
+                        new MultiChatListener() {
 
-			    public void attachToExtPoint(final UIExtensionElement extensionElement) {
-				dispatcher.fire(PlatformEvents.ATTACH_TO_EXT_POINT, extensionElement);
-			    }
+                            public void attachToExtPoint(final ExtensibleWidgetChild extensionElement) {
+                                dispatcher.fire(PlatformEvents.ATTACH_TO_EXTENSIBLE_WIDGET, extensionElement);
+                            }
 
-			    public void doAction(final String eventId, final Object param) {
-				dispatcher.fire(eventId, param);
-			    }
+                            public void doAction(final String eventId, final Object param) {
+                                dispatcher.fire(eventId, param);
+                            }
 
-			    public void onUserColorChanged(final String color) {
-				dispatcher.fire(EmiteUIPlugin.ON_USER_COLOR_SELECTED, color);
-			    }
+                            public void onUserColorChanged(final String color) {
+                                dispatcher.fire(EmiteUIPlugin.ON_USER_COLOR_SELECTED, color);
+                            }
 
-			    public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
-				dispatcher.fire(EmiteUIPlugin.ON_USER_SUBSCRIPTION_CHANGED, subscriptionMode);
-			    }
+                            public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
+                                dispatcher.fire(EmiteUIPlugin.ON_USER_SUBSCRIPTION_CHANGED, subscriptionMode);
+                            }
 
-			});
+                        });
 
-		dispatcher.subscribe(EmiteUIPlugin.CHATOPEN, new Action<XmppURI>() {
-		    public void execute(final XmppURI param) {
-			xmpp.getChatManager().openChat(param);
-		    }
-		});
+                dispatcher.subscribe(EmiteUIPlugin.CHATOPEN, new Action<XmppURI>() {
+                    public void execute(final XmppURI param) {
+                        xmpp.getChatManager().openChat(param);
+                    }
+                });
 
-		dispatcher.subscribe(EmiteUIPlugin.ROOMOPEN, new Action<XmppURI>() {
-		    public void execute(final XmppURI param) {
-			xmpp.getRoomManager().openChat(param);
-		    }
-		});
+                dispatcher.subscribe(EmiteUIPlugin.ROOMOPEN, new Action<XmppURI>() {
+                    public void execute(final XmppURI param) {
+                        xmpp.getRoomManager().openChat(param);
+                    }
+                });
 
-		dispatcher.subscribe(CLOSE_ALLCHATS, new Action<Boolean>() {
-		    public void execute(final Boolean param) {
-			multiChatDialog.closeAllChats(param);
-		    }
-		});
+                dispatcher.subscribe(CLOSE_ALLCHATS, new Action<Boolean>() {
+                    public void execute(final Boolean param) {
+                        multiChatDialog.closeAllChats(param);
+                    }
+                });
 
-		dispatcher.subscribe(REFLESH_USER_OPTIONS, new Action<UserChatOptions>() {
-		    public void execute(final UserChatOptions param) {
-			multiChatDialog.setUserChatOptions(param);
-		    }
-		});
+                dispatcher.subscribe(REFLESH_USER_OPTIONS, new Action<UserChatOptions>() {
+                    public void execute(final UserChatOptions param) {
+                        multiChatDialog.setUserChatOptions(param);
+                    }
+                });
 
-		dispatcher.subscribe(SHOW_CHAT_DIALOG, new Action<Object>() {
-		    public void execute(final Object param) {
-			multiChatDialog.show();
-		    }
-		});
+                dispatcher.subscribe(SHOW_CHAT_DIALOG, new Action<Object>() {
+                    public void execute(final Object param) {
+                        multiChatDialog.show();
+                    }
+                });
 
-		dispatcher.subscribe(HIDE_CHAT_DIALOG, new Action<Object>() {
-		    public void execute(final Object param) {
-			multiChatDialog.hide();
-		    }
-		});
+                dispatcher.subscribe(HIDE_CHAT_DIALOG, new Action<Object>() {
+                    public void execute(final Object param) {
+                        multiChatDialog.hide();
+                    }
+                });
 
-		dispatcher.subscribe(CENTER_CHAT_DIALOG, new Action<Object>() {
-		    public void execute(final Object param) {
-			multiChatDialog.center();
-		    }
-		});
+                dispatcher.subscribe(CENTER_CHAT_DIALOG, new Action<Object>() {
+                    public void execute(final Object param) {
+                        multiChatDialog.center();
+                    }
+                });
 
-		dispatcher.subscribe(DESTROY_CHAT_DIALOG, new Action<Object>() {
-		    public void execute(final Object param) {
-			multiChatDialog.destroy();
-		    }
-		});
-		dispatcher.subscribe(SET_OWN_PRESENCE, new Action<OwnPresence>() {
-		    public void execute(final OwnPresence ownPresence) {
-			multiChatDialog.setOwnPresence(ownPresence);
-		    }
-		});
-		dispatcher.subscribe(SET_OWN_AVATAR, new Action<String>() {
-		    public void execute(final String photoBinary) {
-			multiChatDialog.setVCardAvatar(photoBinary);
-		    }
-		});
+                dispatcher.subscribe(DESTROY_CHAT_DIALOG, new Action<Object>() {
+                    public void execute(final Object param) {
+                        multiChatDialog.destroy();
+                    }
+                });
+                dispatcher.subscribe(SET_OWN_PRESENCE, new Action<OwnPresence>() {
+                    public void execute(final OwnPresence ownPresence) {
+                        multiChatDialog.setOwnPresence(ownPresence);
+                    }
+                });
+                dispatcher.subscribe(SET_OWN_AVATAR, new Action<String>() {
+                    public void execute(final String photoBinary) {
+                        multiChatDialog.setVCardAvatar(photoBinary);
+                    }
+                });
 
-	    }
+            }
 
-	});
+        });
     }
 
     @Override
     protected void stop() {
-	multiChatDialog.destroy();
+        multiChatDialog.destroy();
     }
 
     private void preFetchImages() {
-	DeferredCommand.addCommand(new Command() {
-	    public void execute() {
-		final String[] imgs = { "ext-load.gif", "group_add.gif", "group-chat.gif", "moderatoruser.gif",
-			"normaluser.gif", "person-def.gif", "smile.gif", "user_add.gif" };
-		final String[] cssImgs = { "add.gif", "cancel.gif", "chat.gif", "colors.gif ", "del.gif", "exit.gif",
-			"extload.gif", "forbidden.gif", "group-chat.gif", "group.gif", "new-chat.gif",
-			"new-message.gif", "useradd.gif", "userf.gif", "user.gif" };
-		doTheJob(imgs, "images");
-		doTheJob(cssImgs, "css/img");
-	    }
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                final String[] imgs = { "ext-load.gif", "group_add.gif", "group-chat.gif", "moderatoruser.gif",
+                        "normaluser.gif", "person-def.gif", "smile.gif", "user_add.gif" };
+                final String[] cssImgs = { "add.gif", "cancel.gif", "chat.gif", "colors.gif ", "del.gif", "exit.gif",
+                        "extload.gif", "forbidden.gif", "group-chat.gif", "group.gif", "new-chat.gif",
+                        "new-message.gif", "useradd.gif", "userf.gif", "user.gif" };
+                doTheJob(imgs, "images");
+                doTheJob(cssImgs, "css/img");
+            }
 
-	    private void doTheJob(final String[] imgs, final String prefix) {
-		for (int i = 0; i < imgs.length; i++) {
-		    final String img = imgs[i];
-		    Image.prefetch(prefix + "/" + img);
-		}
-	    }
-	});
+            private void doTheJob(final String[] imgs, final String prefix) {
+                for (int i = 0; i < imgs.length; i++) {
+                    final String img = imgs[i];
+                    Image.prefetch(prefix + "/" + img);
+                }
+            }
+        });
     }
 }

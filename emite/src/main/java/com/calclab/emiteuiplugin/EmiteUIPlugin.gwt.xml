@@ -41,6 +41,6 @@
   <script src="js/ext/adapter/ext/ext-base.js" />
   <script src="js/ext/ext-all.js" />
 
-  <stylesheet src="css/chat.css" />
+  <stylesheet src="emite.css" />
 
 </module>
