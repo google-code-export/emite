@@ -1,0 +1,69 @@
+#summary Ideas y discusiones sobre el diseño de un UI modular
+
+Hola V:
+esto es un intento de crear una pequeña discusión/documentación para la nueva arquitectura para crear UIs, tanto para emite como para kune.
+
+== Objetivos ==
+
+  * Crear componentes (gráficos) reutilizables
+  * Simplificar el código
+  * Crear módulos independientes y opcionales
+
+== Diseño general ==
+
+Para mi, se puede hablar de diseño a dos niveles
+
+*1. Diseño de módulos*
+
+Creo que el modelo de emite-lib es sencillo y suficiente para lo que necesitamos. Como sabes se basa en un contenedor genérico donde se registran una serie de compoentes (POJOs). Existe un código (los módulos, de momento clases con métodos estáticos, pero siempre estoy al borde de sustituirlos por clases con métodos no estáticos que implementan el interface Module) que se encarga de hacer labores de injección a-la-guice: saca del contenedor los objetos que necesita (las dependencias) y se los pasa a los constructores de los componentes y los registra. Regla de oro: los componentes nunca deberían depender del contenedor.
+
+*2. Diseño de componentes gráficos*
+
+Aquí es donde está la parte más peliaguda. Dando vueltas al asunto creo que para conseguir una arquitectura modular en un interface gráfico lo que necesitamos es una serie de componentes autónomos, es decir, trozos de interfaces gráficos que *funcionen por si solos*. 
+
+Una pequeña nomenclatura:
+  * View: una clase (u objeto) que hereda de algún componente (de gwt o gxt o lo que sea) y que tiene todo el código relacionado con UI y nada de lógica de negocio. Debería encapsular todo el código dependiente gwt o gxt.
+  * Presenter: una clase (u objetos) asociado a un View y que se encarga de la lógica de negocio.
+  * UIComponent (o Widget... qué prefieres? yo este último...): el conjunto, acoplado y funcional, de un View con un Presenter. Debería ser algo parecido a los [http://docs.google.com/View?docid=dfcm8vqn_1d6vx7t Server Data Driven Widgets] de gwt
+
+Un ejemplo sencillo - !StatusWidget: se trata del componente gráfico que se encarga de mostrar el estado actual de la sessión xmpp (si está logeado, si tiene un status puesto, etcétera) así como de modificarlo si el usuario lo quiere (mediante el combo box)
+Mi idea original es crear el StatusView y utilizarlo como ladrillo de construcción en Views más grandes, pero me he dado cuenta de que eso no es suficientemente modular. Creo que la idea clave es tener una método (de una factoria) que, proporcionando un objeto Xmpp, me devuelva un StatusWidget completamente funcional, es decir, que *sin intervencion alguna* sea capaz de mostrar el estado actual de la sessión xmpp y cambiarla.
+
+Ya se que esto puede sonar un poco raro, pero en términos de MVC tendríamos que la V es nuestro StatusView, el C es nuestro StatusPresenter y el M es... Xmpp
+
+El caso es que una vez que tengamos nuestro StatusWidget podemos añadir éste a otros Widget mediante una extensión (más abajo hablaré de ideas de cómo hacer las extensiones)
+La manera de crear este widget, se me ocurre, podría ser así:
+
+chatModule = container.get(ChatModule.class);
+statusWidget = chatModule.createStatusWidget();
+
+(voy a intentar implementar eso en el ejemplo)
+
+
+=== Diseño de EmiteUI en particular ===
+Aqui corto y pego el email que te envié el otro día, con una propuesta de módulos para emite UI:
+
+  * Módulo 0 *AutoConfigurationModule*: se encarga de leer las propiedades del html (o de otros lugares?) y hacer esas propiedades accesibles a otros módulos. También se encarga de configurar automáticamente, en funcion de los parámetros que encuentre, el emite ui lib (fundamentalmente el BoshOptions)
+
+  * Módulo 1 *ChatUIModule*: El modo más sencillo de emite ui es simplemente un solo Chat (conversación 1-1) ya preconfigurado (parecido a lo que tienen los de tigase en su web). El caso más interesante de este uso (a mi se me ocurre) es una página donde se abre directamente una ventana para chatear en una sala, de tal forma que se asocia una página web a una sala de conversaciones...
+Además de esto debería ser posible configurar todos los parámetros vía properties en el html.
+Módulos involucrados: módulo de configuración de emite, módulo de chat
+
+  * Módulo 2 *ConversationsUIModule*:  el tocho, instala un componente que permite crear el widget tipo el tuyo, con todos sus avíos: roster, menús, botones, posibilidad de añadir más botones, items de menú, etcétera. Utilza ChatUIModule para crear conversaciones cuando se hace doble click en el roster (por ejemplo).
+Para mi el nivel 2 sería la posibilidad de poner en tu página web un widget con la posibilidad de abrir varios chats. Se podrían configurar, mediante properties en el html, la presencia o no de roster. También contemplaría la posibilidad de mostrarlo en un dialog o no (o quizá hay que hacer un DialogModule para eso...)
+
+  * Módulo 3 *RoomModule*: la idea es que, si añadimos este módulo a nuestro contenedor, al crear un ConversationUIPanel utilizando el ConversationsUIModule, éste aparecerá preconfigurado con todas las opciones de rooms, es decir, que este módulo es completamente transparente (me explico?)
+
+=== Extensibilidad de componentes ===
+
+Con lo que cuento ahí arriba, lo que yo me imagino es algo como:
+{{{
+conversationsUIModule = container.get(ConversationsUIModule.class);
+conversationsWidget = conversationsUIModule.createConversationsWidget();
+RootPanel.get().add((com.google.gwt.Widget) conversationsWidget);
+}}}
+Es decir, que los módulos (instancias) son factorías de widgets que se pueden poner directamente en el UI de gwt. Esto tiene varias implicaciones:
+  * El createConversationsWidget crea un ConversationsView y un ConversationsPresenter y enlaza el ConversationsPresenter por un lado con el View y por otro lado con Xmpp, es decir, no tenemos que escribir ninguna línea de código adicional para que el widget funcione (está ya enlazado con xmpp)
+  * El createConversationsWidet, a pesar de crear dos objetos, sólo devuelve la vista (que es la que se añade al html con RootPanel). Esto es muy práctico porque podemos coger lo que devuelve el método y añadirlo directamente a nuestro ui, pero tiene el inconveniente de que no podemos acceder al presenter. En principio esto no debería ser ningún problema: yo creo que nunca se debería necesitar hablar con el presenter... salvo para extender el componente!
+
+Esto tiene que ver con que 
