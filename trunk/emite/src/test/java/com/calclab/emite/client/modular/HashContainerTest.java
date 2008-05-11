@@ -8,23 +8,16 @@ import org.junit.Test;
 
 public class HashContainerTest {
 
-    private BasicContainer container;
+    private SimpleContainer container;
 
     @Before
     public void beforeTest() {
-	container = new BasicContainer();
+	container = new SimpleContainer();
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldFaillToGetUnregisteredComponent() {
 	container.get(Object.class);
-    }
-
-    @Test
-    public void shouldInstallModules() {
-	final Module module = mock(Module.class);
-	container.install(module);
-	verify(module).load(same(container));
     }
 
     @Test

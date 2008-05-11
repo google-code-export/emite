@@ -3,13 +3,12 @@ package com.calclab.emiteui.client;
 import static org.mockito.Mockito.mock;
 
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.modular.BasicContainer;
+import com.calclab.emite.client.modular.ModuleContainer;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
@@ -17,7 +16,6 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 public class MockitoXmpp extends Xmpp {
 
     private final ChatManager chat;
-    private final Dispatcher dispatcher;
     private final PresenceManager presenceManager;
     private final Roster roster;
     private final RosterManager rosterManager;
@@ -25,9 +23,8 @@ public class MockitoXmpp extends Xmpp {
     private final RoomManager roomManager;
 
     public MockitoXmpp() {
-	super(new BasicContainer());
+	super(new ModuleContainer());
 	chat = mock(ChatManager.class);
-	dispatcher = mock(Dispatcher.class);
 	presenceManager = mock(PresenceManager.class);
 	roster = mock(Roster.class);
 	rosterManager = mock(RosterManager.class);
@@ -38,11 +35,6 @@ public class MockitoXmpp extends Xmpp {
     @Override
     public ChatManager getChatManager() {
 	return chat;
-    }
-
-    @Override
-    public Dispatcher getDispatcher() {
-	return dispatcher;
     }
 
     @Override

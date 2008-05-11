@@ -23,7 +23,6 @@ package com.calclab.emite.client;
 
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
 import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.extra.muc.RoomManager;
@@ -32,10 +31,10 @@ import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.modular.BasicContainer;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.DelegatedContainer;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.ModuleContainer;
 import com.calclab.emite.client.xmpp.XMPPModule;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -73,7 +72,7 @@ public class Xmpp extends DelegatedContainer {
      * @return
      */
     public static Xmpp create(final Module... modules) {
-	final BasicContainer container = EmiteModule.create(modules);
+	final ModuleContainer container = EmiteModule.create(modules);
 	return container.get(Xmpp.class);
     }
 
@@ -88,10 +87,6 @@ public class Xmpp extends DelegatedContainer {
 
     public ChatManager getChatManager() {
 	return InstantMessagingModule.getChat(this);
-    }
-
-    public Dispatcher getDispatcher() {
-	return CoreModule.getDispatcher(this);
     }
 
     public PresenceManager getPresenceManager() {
