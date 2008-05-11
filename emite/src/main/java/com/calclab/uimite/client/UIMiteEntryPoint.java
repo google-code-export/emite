@@ -20,8 +20,8 @@ public class UIMiteEntryPoint implements EntryPoint {
 	ChatUIModule.load(container);
 
 	final ChatUIModule chatUIModule = container.get(ChatUIModule.class);
-	final UIView chat = chatUIModule.createChat(uri("dani@localhost"), "dani", uri("test1@localhost"));
-	RootPanel.get().add((Widget) chat);
+	final Widget chat = chatUIModule.createSimpleChat(uri("dani@mandarine"), "dani", uri("test1@mandarine"));
+	RootPanel.get().add(chat);
     }
 
 }
