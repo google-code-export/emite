@@ -43,16 +43,19 @@ statusWidget = chatModule.createStatusWidget();
 === Diseño de EmiteUI en particular ===
 Aqui corto y pego el email que te envié el otro día, con una propuesta de módulos para emite UI:
 
-  * Módulo 0 *AutoConfigurationModule*: se encarga de leer las propiedades del html (o de otros lugares?) y hacer esas propiedades accesibles a otros módulos. También se encarga de configurar automáticamente, en funcion de los parámetros que encuentre, el emite ui lib (fundamentalmente el BoshOptions)
+  * Módulo 0:  *!AutoConfigurationModule* - se encarga de leer las propiedades del html (o de otros lugares?) y hacer esas propiedades accesibles a otros módulos. También se encarga de configurar automáticamente, en funcion de los parámetros que encuentre, el emite ui lib (fundamentalmente el BoshOptions)
 
-  * Módulo 1 *ChatUIModule*: El modo más sencillo de emite ui es simplemente un solo Chat (conversación 1-1) ya preconfigurado (parecido a lo que tienen los de tigase en su web). El caso más interesante de este uso (a mi se me ocurre) es una página donde se abre directamente una ventana para chatear en una sala, de tal forma que se asocia una página web a una sala de conversaciones...
+  * Módulo 1: *ChatUIModule* - El modo más sencillo de emite ui es simplemente un solo Chat (conversación 1-1) ya preconfigurado (parecido a lo que tienen los de tigase en su web). El caso más interesante de este uso (a mi se me ocurre) es una página donde se abre directamente una ventana para chatear en una sala, de tal forma que se asocia una página web a una sala de conversaciones...
 Además de esto debería ser posible configurar todos los parámetros vía properties en el html.
 Módulos involucrados: módulo de configuración de emite, módulo de chat
 
-  * Módulo 2 *ConversationsUIModule*:  el tocho, instala un componente que permite crear el widget tipo el tuyo, con todos sus avíos: roster, menús, botones, posibilidad de añadir más botones, items de menú, etcétera. Utilza ChatUIModule para crear conversaciones cuando se hace doble click en el roster (por ejemplo).
+  * Módulo 2: *ConversationsUIModule* - el tocho, instala un componente que permite crear el widget tipo el tuyo, con todos sus avíos: roster, menús, botones, posibilidad de añadir más botones, items de menú, etcétera. Utilza ChatUIModule para crear conversaciones cuando se hace doble click en el roster (por ejemplo).
 Para mi el nivel 2 sería la posibilidad de poner en tu página web un widget con la posibilidad de abrir varios chats. Se podrían configurar, mediante properties en el html, la presencia o no de roster. También contemplaría la posibilidad de mostrarlo en un dialog o no (o quizá hay que hacer un DialogModule para eso...)
 
-  * Módulo 3 *RoomModule*: la idea es que, si añadimos este módulo a nuestro contenedor, al crear un ConversationUIPanel utilizando el ConversationsUIModule, éste aparecerá preconfigurado con todas las opciones de rooms, es decir, que este módulo es completamente transparente (me explico?)
+  * Módulo 3: *!RoomModule* - la idea es que, si añadimos este módulo a nuestro contenedor, al crear un ConversationUIPanel utilizando el ConversationsUIModule, éste aparecerá preconfigurado con todas las opciones de rooms, es decir, que este módulo es completamente transparente (me explico?)
+
+=== Extender este modelo a kune ===
+
 
 === Extensibilidad de componentes ===
 
@@ -66,4 +69,36 @@ Es decir, que los módulos (instancias) son factorías de widgets que se pueden 
   * El createConversationsWidget crea un ConversationsView y un ConversationsPresenter y enlaza el ConversationsPresenter por un lado con el View y por otro lado con Xmpp, es decir, no tenemos que escribir ninguna línea de código adicional para que el widget funcione (está ya enlazado con xmpp)
   * El createConversationsWidet, a pesar de crear dos objetos, sólo devuelve la vista (que es la que se añade al html con RootPanel). Esto es muy práctico porque podemos coger lo que devuelve el método y añadirlo directamente a nuestro ui, pero tiene el inconveniente de que no podemos acceder al presenter. En principio esto no debería ser ningún problema: yo creo que nunca se debería necesitar hablar con el presenter... salvo para extender el componente!
 
-Esto tiene que ver con que 
+Esto tiene que ver con la extensibilidad de componentes. He estado pensando sobre el asunto y aunque no lo tengo muy claro (necesito conocer tu experiencia vicente!), me imagino varios casos de uso que se resuelven de manera distinta
+  * *Caso 1*: Crear un widget mediante la composición de otros widgets. Por ejemplo, yo quiero poner en mi página un widget que me permita cambiar mi estado y conectarme a una habitación. Para eso necesito un StatusWidget y un ChatWidget. Mi idea inicial era decirle al chatWidget que se extendiese poniendo el statusWidget al norte suyo:
+{{{
+  chatWidget.extensions.addToTop(statusWidget);
+}}}
+Visto ahora, esto no me parece muy buena idea. Creo que este tipo de composición de componentes (valga la rebuznancia) se debería hacer con las herramientas estándar que proporciona gwt:
+{{{
+statusWidget = chatUIModule.createStatusWidget();
+chatWidget = chatUIModule.creteChatWidget(uri("myRoom@domain"));
+panel = new DockPanel();
+panel.add(statusWidget, DockPanel.NORTH);
+panel.add(chatWidget, DockPanel.CENTER);
+}}}
+Igual se puede crear una clase que haga de _syntatic-sugar_:
+{{{
+new DockBuilder().addCenter(chatWidget).addNorth(statusWidget);
+}}}
+o algo similar (simplemente para simplficar el código y hacerlo más explícito en cuanto a su intencionalidad)
+
+  * *Caso 2*: existen algunos componentes que proporcionan una serie de "huecos" para insertar otros componentes. El ejemplo típico sería el de workspace de kune, donde podemos añadir herramientas (con pestañas a la derecha) o esos módulos rectangulares de la derecha con los miembros de tu grupo, por ejemlo. En ese caso habría que hacer algo como:
+{{{
+  documentWidget = documentsUIModule.createDocumentWidget();
+  groupMembersWidget = groupUIModule.createGroupMembersWidget();
+  workspace = container.get(WorkspaceWdiget.class);
+  workspace.extensions.addTool("docs", docWidget);
+  workspace.extensions.addInfoBox(groupMembersWidget);
+}}}
+
+  * *Caso 3*: otros casos diferentes, tipo añadir un elemento a un menú:
+{{{
+  conversationsWidget = conversationsUIModule.createConversationsWidget();
+  conversationsWidget.extend.addAction("open room", ..., new ActionListener() {...});
+}}}
