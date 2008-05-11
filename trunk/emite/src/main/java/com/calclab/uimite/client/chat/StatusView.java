@@ -1,6 +1,7 @@
 package com.calclab.uimite.client.chat;
 
-import com.calclab.emite.client.xmpp.session.Session.State;
+import java.util.ArrayList;
+
 import com.calclab.uimite.client.UIView;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -14,28 +15,42 @@ public class StatusView extends FlowPanel implements UIView {
 	void onStatusChanged(String status);
     }
 
-    private final StatusViewListener listener;
+    @SuppressWarnings("serial")
+    private static class StatusViewListenerCollection extends ArrayList<StatusViewListener> implements
+	    StatusViewListener {
+
+	public void onStatusChanged(final String status) {
+
+	}
+
+    }
+
     private final ListBox selector;
     private final Label labelState;
+    private final StatusViewListenerCollection listeners;
 
-    public StatusView(final StatusViewListener listener) {
+    public StatusView() {
+	this.listeners = new StatusViewListenerCollection();
 	this.selector = new ListBox(false);
 	selector.addItem("login", "login");
 	selector.addItem("logout", "logout");
 
 	selector.addChangeListener(new ChangeListener() {
 	    public void onChange(final Widget sender) {
-		listener.onStatusChanged(selector.getItemText(selector.getSelectedIndex()));
+		listeners.onStatusChanged(selector.getItemText(selector.getSelectedIndex()));
 	    }
 	});
 
 	this.labelState = new Label("welcome.");
 	this.add(selector);
 	this.add(labelState);
-	this.listener = listener;
     }
 
-    public void setState(final State state) {
-	labelState.setText("state: " + state);
+    public void addListener(final StatusViewListener listener) {
+	listeners.add(listener);
+    }
+
+    public void showState(final String state) {
+	labelState.setText(state);
     }
 }
