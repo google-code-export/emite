@@ -27,16 +27,16 @@ Una pequeña nomenclatura:
   * UIComponent (o Widget... qué prefieres? yo este último...): el conjunto, acoplado y funcional, de un View con un Presenter. Debería ser algo parecido a los [http://docs.google.com/View?docid=dfcm8vqn_1d6vx7t Server Data Driven Widgets] de gwt
 
 Un ejemplo sencillo - !StatusWidget: se trata del componente gráfico que se encarga de mostrar el estado actual de la sessión xmpp (si está logeado, si tiene un status puesto, etcétera) así como de modificarlo si el usuario lo quiere (mediante el combo box)
-Mi idea original es crear el StatusView y utilizarlo como ladrillo de construcción en Views más grandes, pero me he dado cuenta de que eso no es suficientemente modular. Creo que la idea clave es tener una método (de una factoria) que, proporcionando un objeto Xmpp, me devuelva un StatusWidget completamente funcional, es decir, que *sin intervencion alguna* sea capaz de mostrar el estado actual de la sessión xmpp y cambiarla.
+Mi idea original es crear el !StatusView y utilizarlo como ladrillo de construcción en Views más grandes, pero me he dado cuenta de que eso no es suficientemente modular. Creo que la idea clave es tener una método (de una factoria) que, proporcionando un objeto Xmpp, me devuelva un !StatusWidget completamente funcional, es decir, que *sin intervencion alguna* sea capaz de mostrar el estado actual de la sessión xmpp y cambiarla.
 
-Ya se que esto puede sonar un poco raro, pero en términos de MVC tendríamos que la V es nuestro StatusView, el C es nuestro StatusPresenter y el M es... Xmpp
+Ya se que esto puede sonar un poco raro, pero en términos de MVC tendríamos que la V es nuestro !StatusView, el C es nuestro !StatusPresenter y el M es... Xmpp
 
-El caso es que una vez que tengamos nuestro StatusWidget podemos añadir éste a otros Widget mediante una extensión (más abajo hablaré de ideas de cómo hacer las extensiones)
+El caso es que una vez que tengamos nuestro !StatusWidget podemos añadir éste a otros Widget mediante una extensión (más abajo hablaré de ideas de cómo hacer las extensiones)
 La manera de crear este widget, se me ocurre, podría ser así:
-
+{{{
 chatModule = container.get(ChatModule.class);
 statusWidget = chatModule.createStatusWidget();
-
+}}}
 (voy a intentar implementar eso en el ejemplo)
 
 
@@ -56,6 +56,21 @@ Para mi el nivel 2 sería la posibilidad de poner en tu página web un widget co
 
 === Extender este modelo a kune ===
 
+Una de las ideas claves que estoy dando vueltas es que los componentes (widgets) tienen que ser autónomos y funcionar por si mismos. Añades un widget de chat y este widget (en concreto el presenter) se encarga de hablar con emite y hacer todo lo necesario para que funcione. Es decir, el nivel de granularidad no son las vistas sino los widgets.
+
+Esto significa que cuando creas, por ejemplo, un groupMembersWidget (esa cajita de kune que está a la derecha y que muestra los miembros del grupo actual en el que está) debería mostrar, sin más ayuda, los miembros del grupo actual.
+Otro ejemplo: cuando creamos un documentWidget, éste mostrará automáticamente el documento actual.
+
+A dónde quiero llegar: para que esto funcione, igual que tenemos que el ChatPresenter habla con xmpp para hacer funcionar automáticamente el widget, tendremos que tener algo así como GroupManager (el equivalente a xmpp) que actúe como modelo y al que, por ejemplo, se le pueda consultar el grupo actual en el que estamos, así como los miembros que tiene dicho grupo. Es decir: si queremos hacer logout con emite, no hacemos {{{statusWidget.logout();}}} sino que hacemos {{{xmpp.logout();}}} y el !StatusWidget recibirá la notificación de xmpp de que ha hecho logout, y cambiará la vista para reflejar el estado.
+Lo que quiero decir es que no haremos {{{documentWidget.showDocument(document);}}} sino algo así como {{{documentsManager.setCurrentDocument(document);}}} y el widget recibirá una notificación diciendo que el documento ha cambiado.
+De igual manera no haremos: {{{membersGroupWidget.showMemebers(memebersList);}}} sino que haremos {{{groupMananger.setCurrentGroup(...);}}} y el resto será automático.
+
+No se si esto entiendes este lio que acabo de explicar (estoy un poco espeso) y, realmente, puede ser que sea muy parecido a lo que ya existe, pero concretamente la idea es:
+  * Existe una serie de modulos que *no tienen interface gráfico* que se encargan de la lógica de negocio. Un ejemplo de este modulo es EmiteModule (con todos sus sub-modulos). El objeto de clase Xmpp resultante es el que utilizarán todos los widgets de EmiteUIModule para mostrar. Otros ejemplos: DocumentModule, GroupModule. Estos módulos actúan cono Modelos de los Widgets. Si modificamos el modelo (documentManager.setCurrentDocument(...)) todas las vistas que muestren el document actual cambiarán para mostrar ese documento.
+  * Existe una serie de módulos de UI que utilizan los módulos anteriores y que son capaces de crear widgets enganchados a los módulos anteriores y complestamente funcionales. Estos widgests son la unidad mínima de componente modular.
+
+joder, si consigues enteder algo de esto, enhorabuena!!
+
 
 === Extensibilidad de componentes ===
 
@@ -67,7 +82,7 @@ RootPanel.get().add((com.google.gwt.Widget) conversationsWidget);
 }}}
 Es decir, que los módulos (instancias) son factorías de widgets que se pueden poner directamente en el UI de gwt. Esto tiene varias implicaciones:
   * El createConversationsWidget crea un ConversationsView y un ConversationsPresenter y enlaza el ConversationsPresenter por un lado con el View y por otro lado con Xmpp, es decir, no tenemos que escribir ninguna línea de código adicional para que el widget funcione (está ya enlazado con xmpp)
-  * El createConversationsWidet, a pesar de crear dos objetos, sólo devuelve la vista (que es la que se añade al html con RootPanel). Esto es muy práctico porque podemos coger lo que devuelve el método y añadirlo directamente a nuestro ui, pero tiene el inconveniente de que no podemos acceder al presenter. En principio esto no debería ser ningún problema: yo creo que nunca se debería necesitar hablar con el presenter... salvo para extender el componente!
+  * El createConversationsWidet, a pesar de crear dos objetos, sólo devuelve la vista (que es la que se añade al html con !RootPanel). Esto es muy práctico porque podemos coger lo que devuelve el método y añadirlo directamente a nuestro ui, pero tiene el inconveniente de que no podemos acceder al presenter. En principio esto no debería ser ningún problema: yo creo que nunca se debería necesitar hablar con el presenter... salvo para extender el componente!
 
 Esto tiene que ver con la extensibilidad de componentes. He estado pensando sobre el asunto y aunque no lo tengo muy claro (necesito conocer tu experiencia vicente!), me imagino varios casos de uso que se resuelven de manera distinta
   * *Caso 1*: Crear un widget mediante la composición de otros widgets. Por ejemplo, yo quiero poner en mi página un widget que me permita cambiar mi estado y conectarme a una habitación. Para eso necesito un StatusWidget y un ChatWidget. Mi idea inicial era decirle al chatWidget que se extendiese poniendo el statusWidget al norte suyo:
