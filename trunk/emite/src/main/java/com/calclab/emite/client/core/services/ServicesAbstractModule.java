@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.core.services;
 
-import com.calclab.emite.client.container.Container;
+import com.calclab.emite.client.modular.Container;
 
 public class ServicesAbstractModule {
     private static final Class<Services> COMPONENT_SERVICES = Services.class;

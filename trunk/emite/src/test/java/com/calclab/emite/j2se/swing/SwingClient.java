@@ -15,9 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.EmiteModule;
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.container.Container;
-import com.calclab.emite.client.container.BasicContainer;
 import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.extra.muc.Room;
@@ -130,7 +129,7 @@ public class SwingClient {
     }
 
     private void createXMPP() {
-	final Container container = J2SEPlugin.install(new BasicContainer(), new HttpConnectorListener() {
+	final Xmpp container = Xmpp.create(new J2SEPlugin(new HttpConnectorListener() {
 	    public void onError(final String id, final String cause) {
 		System.out.println("CONN # " + id + "-ERROR: " + cause);
 	    }
@@ -149,8 +148,8 @@ public class SwingClient {
 	    public void onStart(final String id) {
 	    }
 
-	});
-	this.xmpp = Xmpp.create(container);
+	}));
+	this.xmpp = EmiteModule.getXmpp(container);
 
 	xmpp.getSession().addListener(new SessionListener() {
 	    public void onStateChanged(final State old, final State current) {

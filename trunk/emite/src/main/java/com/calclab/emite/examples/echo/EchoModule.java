@@ -1,8 +1,8 @@
 package com.calclab.emite.examples.echo;
 
-import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.modular.Container;
 
 public class EchoModule {
     private static final Class<Echo> COMPONENT_ECHO = Echo.class;

@@ -59,7 +59,7 @@ public class DispatcherTest {
 	verify(listener, times(0)).handle(other);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void shouldFireErrorEventWhenException() {
 	final PacketListener errorProducer = mock(PacketListener.class);
 	stubVoid(errorProducer).toThrow(new RuntimeException("the message")).on().handle((IPacket) anyObject());

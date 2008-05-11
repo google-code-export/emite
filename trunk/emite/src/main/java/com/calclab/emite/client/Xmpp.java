@@ -21,9 +21,6 @@
  */
 package com.calclab.emite.client;
 
-import com.calclab.emite.client.container.Container;
-import com.calclab.emite.client.container.DelegatedContainer;
-import com.calclab.emite.client.container.BasicContainer;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
@@ -35,6 +32,10 @@ import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
+import com.calclab.emite.client.modular.BasicContainer;
+import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.DelegatedContainer;
+import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.xmpp.XMPPModule;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -48,9 +49,7 @@ public class Xmpp extends DelegatedContainer {
      * @return
      */
     public static Xmpp create() {
-	final BasicContainer container = new BasicContainer();
-	GWTServicesModule.load(container);
-	return create(container);
+	return create(new GWTServicesModule());
     }
 
     /**
@@ -73,8 +72,9 @@ public class Xmpp extends DelegatedContainer {
      * @param container
      * @return
      */
-    public static Xmpp create(final Container container) {
-	return EmiteModule.load(container);
+    public static Xmpp create(final Module... modules) {
+	final BasicContainer container = EmiteModule.create(modules);
+	return container.get(Xmpp.class);
     }
 
     private Session session;

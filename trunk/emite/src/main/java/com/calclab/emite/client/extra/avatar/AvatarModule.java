@@ -21,18 +21,19 @@
  */
 package com.calclab.emite.client.extra.avatar;
 
-import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.Module;
 
-public class AvatarModule {
+public class AvatarModule implements Module {
     private static final Class<AvatarManager> COMPONENTS_MANAGER = AvatarManager.class;
 
     public static AvatarManager getAvatarManager(final Container components) {
 	return components.get(COMPONENTS_MANAGER);
     }
 
-    public static void load(final Container container) {
+    public void load(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	final AvatarManager avatar = new AvatarManager(emite);
 	container.register(COMPONENTS_MANAGER, avatar);
