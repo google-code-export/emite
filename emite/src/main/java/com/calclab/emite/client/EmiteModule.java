@@ -4,19 +4,27 @@ import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.extra.avatar.AvatarModule;
 import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.im.InstantMessagingModule;
-import com.calclab.emite.client.modular.BasicContainer;
+import com.calclab.emite.client.modular.ModuleContainer;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.xmpp.XMPPModule;
 
 public class EmiteModule implements Module {
 
-    public static BasicContainer create(final Module... modules) {
-	final BasicContainer container = new BasicContainer();
-	container.install(modules);
-	container.install(new CoreModule(), new XMPPModule(), new InstantMessagingModule());
-	container.install(new MUCModule(), new AvatarModule());
-	container.install(new EmiteModule());
+    /**
+     * Create a container with the default Emite modules installed
+     * 
+     * @param modules
+     *                additional modules to install
+     * @return
+     */
+    public static ModuleContainer create(final Module... modules) {
+	final ModuleContainer container = new ModuleContainer();
+	container.load(modules);
+	container.load(new CoreModule(), new XMPPModule(), new InstantMessagingModule());
+	// FIXME: esto debería ir fuera de aquí
+	container.load(new MUCModule(), new AvatarModule());
+	container.load(new EmiteModule());
 	return container;
     }
 

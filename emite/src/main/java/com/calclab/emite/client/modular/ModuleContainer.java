@@ -21,29 +21,12 @@
  */
 package com.calclab.emite.client.modular;
 
-import java.util.HashMap;
-
-import com.calclab.emite.client.modular.Container;
-
 @SuppressWarnings("serial")
-public class BasicContainer extends HashMap<Class<?>, Object> implements Container {
+public class ModuleContainer extends SimpleContainer {
 
-    public <T> T get(final Class<T> componentType) {
-	final T component = (T) super.get(componentType);
-	if (component == null) {
-	    throw new RuntimeException("component not registered: " + componentType);
-	}
-	return component;
-    }
-
-    public void install(final Module... modules) {
+    public void load(final Module... modules) {
 	for (final Module m : modules) {
 	    m.load(this);
 	}
-    }
-
-    public <T> T register(final Class<T> componentType, final T component) {
-	super.put(componentType, component);
-	return component;
     }
 }
