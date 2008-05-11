@@ -21,15 +21,16 @@
  */
 package com.calclab.emite.client.im;
 
-import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
+import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.Module;
 
-public class InstantMessagingModule {
+public class InstantMessagingModule implements Module {
     private static final Class<ChatManagerDefault> COMPONENT_CHAT = ChatManagerDefault.class;
     private static final Class<Roster> COMPONENT_ROSTER = Roster.class;
     private static final Class<RosterManager> COMPONENT_ROSTER_MANAGER = RosterManager.class;
@@ -51,7 +52,7 @@ public class InstantMessagingModule {
 	return container.get(COMPONENT_ROSTER_MANAGER);
     }
 
-    public static void load(final Container container) {
+    public void load(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(emite);
 	container.register(COMPONENT_CHAT, chatManagerDefault);

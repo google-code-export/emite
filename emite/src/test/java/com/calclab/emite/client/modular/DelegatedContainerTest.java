@@ -1,10 +1,10 @@
-package com.calclab.emite.client.container;
+package com.calclab.emite.client.modular;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.container.Container;
-import com.calclab.emite.client.container.DelegatedContainer;
+import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.DelegatedContainer;
 
 import static org.mockito.Mockito.*;
 

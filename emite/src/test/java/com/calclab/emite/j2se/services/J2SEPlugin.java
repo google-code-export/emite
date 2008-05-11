@@ -1,20 +1,17 @@
 package com.calclab.emite.j2se.services;
 
-import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesAbstractModule;
+import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.Module;
 
-public class J2SEPlugin implements Services {
-    public static Container install(final Container container, final HttpConnectorListener listener) {
-	ServicesAbstractModule.setServices(container, new J2SEPlugin(listener));
-	return container;
-    }
-
+public class J2SEPlugin implements Services, Module {
     private final HttpConnector connector;
+
     private final ThreadScheduler scheduler;
     private final TigaseXMLService xmler;
 
@@ -26,6 +23,10 @@ public class J2SEPlugin implements Services {
 
     public long getCurrentTime() {
 	return scheduler.getCurrentTime();
+    }
+
+    public void load(final Container container) {
+	ServicesAbstractModule.setServices(container, this);
     }
 
     public void schedule(final int msecs, final ScheduledAction action) {

@@ -21,15 +21,16 @@
  */
 package com.calclab.emite.client.xmpp;
 
-import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 
-public class XMPPModule {
+public class XMPPModule implements Module {
 
     public static final Class<SessionManager> COMPONENT_SESSION_MANAGER = SessionManager.class;
     private static final Class<SASLManager> COMPONENT_SASL = SASLManager.class;
@@ -39,7 +40,7 @@ public class XMPPModule {
 	return container.get(XMPPModule.COMPONENT_SESSION);
     }
 
-    public static void load(final Container container) {
+    public void load(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	container.register(ResourceBindingManager.class, new ResourceBindingManager(emite));
 

@@ -21,7 +21,6 @@
  */
 package com.calclab.emite.client.core;
 
-import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
@@ -31,8 +30,10 @@ import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesAbstractModule;
+import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.Module;
 
-public class CoreModule {
+public class CoreModule implements Module {
     public static Bosh getBosh(final Container container) {
 	return container.get(Bosh.class);
     }
@@ -45,7 +46,7 @@ public class CoreModule {
 	return container.get(Emite.class);
     }
 
-    public static void load(final Container container) {
+    public void load(final Container container) {
 	final Services services = ServicesAbstractModule.getServices(container);
 
 	final Dispatcher dispatcher = container.register(Dispatcher.class, new DispatcherDefault());

@@ -81,6 +81,7 @@ public class DispatcherDefault implements Dispatcher {
 
     private void fireErrorEvent(final Exception t) {
 	this.queue.clear();
+	Log.debug("ERROR EVENT" + t.toString());
 	final Event error = Events.error("exception", t.getMessage());
 	final List<Subscriptor> eventSubscriptors = subscriptors.get(error.getName());
 	for (final Subscriptor subscriptor : eventSubscriptors) {
@@ -113,6 +114,9 @@ public class DispatcherDefault implements Dispatcher {
 		fireActions(next, subscriptors.get(null));
 		fireActions(next, getSubscriptorList(next.getName()));
 	    }
+	} catch (final RuntimeException e) {
+	    fireErrorEvent(e);
+	    throw e;
 	} catch (final Exception exception) {
 	    fireErrorEvent(exception);
 	}

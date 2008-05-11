@@ -20,7 +20,9 @@ public class StatusView extends FlowPanel implements UIView {
 	    StatusViewListener {
 
 	public void onStatusChanged(final String status) {
-
+	    for (final StatusViewListener listener : this) {
+		listener.onStatusChanged(status);
+	    }
 	}
 
     }

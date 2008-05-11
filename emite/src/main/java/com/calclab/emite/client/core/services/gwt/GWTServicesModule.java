@@ -21,22 +21,23 @@
  */
 package com.calclab.emite.client.core.services.gwt;
 
-import com.calclab.emite.client.container.Container;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesAbstractModule;
+import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.Module;
 
-public class GWTServicesModule implements Services {
-
-    public static void load(final Container container) {
-	ServicesAbstractModule.setServices(container, new GWTServicesModule());
-    }
+public class GWTServicesModule implements Services, Module {
 
     public long getCurrentTime() {
 	return GWTScheduler.getCurrentTime();
+    }
+
+    public void load(final Container container) {
+	ServicesAbstractModule.setServices(container, new GWTServicesModule());
     }
 
     public void schedule(final int msecs, final ScheduledAction action) {
