@@ -35,15 +35,15 @@ import com.calclab.emite.client.modular.Module;
 
 public class CoreModule implements Module {
     public static Bosh getBosh(final Container container) {
-	return container.get(Bosh.class);
+	return container.getInstance(Bosh.class);
     }
 
     public static Dispatcher getDispatcher(final Container container) {
-	return container.get(Dispatcher.class);
+	return container.getInstance(Dispatcher.class);
     }
 
     public static Emite getEmite(final Container container) {
-	return container.get(Emite.class);
+	return container.getInstance(Emite.class);
     }
 
     public void load(final Container container) {

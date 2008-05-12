@@ -37,19 +37,19 @@ public class InstantMessagingModule implements Module {
     private static final Class<PresenceManager> COMPONENT_MANAGER = PresenceManager.class;
 
     public static ChatManagerDefault getChat(final Container container) {
-	return container.get(COMPONENT_CHAT);
+	return container.getInstance(COMPONENT_CHAT);
     }
 
     public static PresenceManager getManager(final Container container) {
-	return container.get(COMPONENT_MANAGER);
+	return container.getInstance(COMPONENT_MANAGER);
     }
 
     public static Roster getRoster(final Container container) {
-	return container.get(COMPONENT_ROSTER);
+	return container.getInstance(COMPONENT_ROSTER);
     }
 
     public static RosterManager getRosterManager(final Container container) {
-	return container.get(COMPONENT_ROSTER_MANAGER);
+	return container.getInstance(COMPONENT_ROSTER_MANAGER);
     }
 
     public void load(final Container container) {

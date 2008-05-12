@@ -30,7 +30,7 @@ public class AvatarModule implements Module {
     private static final Class<AvatarManager> COMPONENTS_MANAGER = AvatarManager.class;
 
     public static AvatarManager getAvatarManager(final Container components) {
-	return components.get(COMPONENTS_MANAGER);
+	return components.getInstance(COMPONENTS_MANAGER);
     }
 
     public void load(final Container container) {

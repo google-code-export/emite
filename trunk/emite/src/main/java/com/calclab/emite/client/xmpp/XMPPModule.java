@@ -37,7 +37,7 @@ public class XMPPModule implements Module {
     private static final Class<Session> COMPONENT_SESSION = Session.class;
 
     public static Session getSession(final Container container) {
-	return container.get(XMPPModule.COMPONENT_SESSION);
+	return container.getInstance(XMPPModule.COMPONENT_SESSION);
     }
 
     public void load(final Container container) {

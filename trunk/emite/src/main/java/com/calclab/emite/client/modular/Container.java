@@ -21,10 +21,44 @@
  */
 package com.calclab.emite.client.modular;
 
+/**
+ * A component container
+ * 
+ * @author dani
+ */
 public interface Container {
 
-    <T> T get(Class<T> componentType);
+    /**
+     * Obtain a component registered with the given key from the container
+     * 
+     * @param <T>
+     * @param componentType
+     * @return The component, throw RuntimeException if the given component
+     *         doesnt exist
+     */
+    <T> T getInstance(Class<T> componentKey);
 
+    /**
+     * Obtain a provider of the component type from the container
+     * 
+     * @param <T>
+     * @param componentType
+     * @return
+     */
+    <T> Provider<T> getProvider(Class<T> componentKey);
+
+    /**
+     * Register a component into the container
+     * 
+     * @param <T>
+     * @param componentType
+     *                the key under this component is registered
+     * @param component
+     *                the component itself (any POJO)
+     * @return the registered component
+     */
     <T> T register(Class<T> componentType, T component);
+
+    <T> Provider<T> registerProvider(Class<T> componentKey, Provider<T> provider);
 
 }
