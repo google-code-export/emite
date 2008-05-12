@@ -21,9 +21,17 @@
  */
 package com.calclab.emite.client.modular;
 
+/**
+ * A container with module installation support
+ */
 @SuppressWarnings("serial")
 public class ModuleContainer extends SimpleContainer {
 
+    /**
+     * load the modules list into the container
+     * 
+     * @param modules
+     */
     public void load(final Module... modules) {
 	for (final Module m : modules) {
 	    m.load(this);

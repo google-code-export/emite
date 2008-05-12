@@ -27,7 +27,7 @@ public class ServicesAbstractModule {
     private static final Class<Services> COMPONENT_SERVICES = Services.class;
 
     public static Services getServices(final Container container) {
-	return container.get(COMPONENT_SERVICES);
+	return container.getInstance(COMPONENT_SERVICES);
     }
 
     public static void setServices(final Container container, final Services services) {

@@ -17,7 +17,7 @@ public class UIMiteEntryPoint implements EntryPoint {
 	final ModuleContainer container = EmiteModule.create();
 	container.load(new XmppAutoConfigModule(), new ChatUIModule());
 
-	final ChatWidgetFactory chatWidgetFactory = container.get(ChatWidgetFactory.class);
+	final ChatWidgetFactory chatWidgetFactory = container.getInstance(ChatWidgetFactory.class);
 	final Widget chat = chatWidgetFactory.createSimpleChat(uri("dani@mandarine"), "dani", uri("test1@mandarine"));
 	RootPanel.get().add(chat);
     }

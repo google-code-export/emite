@@ -1,14 +1,15 @@
 package com.calclab.emite.client.modular;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class HashContainerTest {
+public class SimpleContainerTest {
 
-    private SimpleContainer container;
+    private Container container;
 
     @Before
     public void beforeTest() {
@@ -17,14 +18,23 @@ public class HashContainerTest {
 
     @Test(expected = RuntimeException.class)
     public void shouldFaillToGetUnregisteredComponent() {
-	container.get(Object.class);
+	container.getInstance(Object.class);
     }
 
     @Test
     public void shouldRegister() {
 	final Object component = mock(Object.class);
 	container.register(Object.class, component);
-	assertSame(component, container.get(Object.class));
+	assertSame(component, container.getInstance(Object.class));
+	assertNotNull(container.getProvider(Object.class));
+    }
+
+    @Test
+    public void shouldRegisterProviders() {
+	final Provider<Object> provider = mock(Provider.class);
+	container.registerProvider(Object.class, provider);
+	container.getInstance(Object.class);
+	verify(provider).get();
     }
 
 }

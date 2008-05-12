@@ -30,7 +30,7 @@ public class MUCModule implements Module {
     private static final Class<MUCRoomManager> COMPONENTS_MANAGER = MUCRoomManager.class;
 
     public static RoomManager getRoomManager(final Container components) {
-	return components.get(COMPONENTS_MANAGER);
+	return components.getInstance(COMPONENTS_MANAGER);
     }
 
     public void load(final Container container) {

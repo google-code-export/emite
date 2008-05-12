@@ -8,7 +8,7 @@ public class EchoModule {
     private static final Class<Echo> COMPONENT_ECHO = Echo.class;
 
     public static Echo getEcho(final Container container) {
-	return container.get(COMPONENT_ECHO);
+	return container.getInstance(COMPONENT_ECHO);
     }
 
     public static void install(final Container container) {

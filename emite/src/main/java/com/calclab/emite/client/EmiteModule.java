@@ -29,7 +29,7 @@ public class EmiteModule implements Module {
     }
 
     public static Xmpp getXmpp(final Container container) {
-	return container.get(Xmpp.class);
+	return container.getInstance(Xmpp.class);
     }
 
     public void load(final Container container) {
