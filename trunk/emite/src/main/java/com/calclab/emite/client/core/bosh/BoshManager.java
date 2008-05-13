@@ -30,6 +30,7 @@ import com.calclab.emite.client.core.bosh.Bosh.BoshState;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.dispatcher.matcher.Matchers;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.services.ConnectorCallback;
@@ -46,12 +47,18 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 
     public static class Events {
 	public static final Event onRestartStream = new Event("bosh-manager:do:restart_stream");
-	public static final Event onDoStart = new Event("bosh-manager:do:start");
 	public static final Event stop = new Event("bosh-manager:do:stop");
 	protected final static Event pull = new Event("bosh-manager:do:pull");
+	static final Event onDoXStart = new Event("bosh-manager:do:start");
 
 	public static IPacket start(final String domain) {
-	    return BoshManager.Events.onDoStart.Params("domain", domain);
+	    return BoshManager.Events.onDoXStart.Params("domain", domain);
+	}
+    }
+
+    public static class Signals {
+	public void onStart(final Dispatcher dispatcher, final PacketListener listener) {
+	    dispatcher.subscribe(Matchers.when(Events.onDoXStart), listener);
 	}
     }
 
@@ -152,7 +159,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 		bosh.setRestart();
 	    }
 	});
-	emite.subscribe(when(BoshManager.Events.onDoStart), new PacketListener() {
+	emite.subscribe(when(BoshManager.Events.onDoXStart), new PacketListener() {
 	    public void handle(final IPacket received) {
 		Log.debug("START IN BOSH MANAGER!!!");
 		setDomain(received.getAttribute("domain"));

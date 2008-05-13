@@ -74,10 +74,16 @@ public class SASLManager {
     }
 
     private void install() {
-	emite.subscribe(when(SessionManager.Events.onDoLogin), new PacketListener() {
+	SessionManager.Signals.onDoLogin(emite, new PacketListener() {
 	    public void handle(final IPacket received) {
 		uri = uri(received.getAttribute("uri"));
 		password = received.getAttribute("password");
+	    }
+	});
+
+	SessionManager.Signals.onLoggedOut(emite, new PacketListener() {
+	    public void handle(final IPacket received) {
+		clearState();
 	    }
 	});
 

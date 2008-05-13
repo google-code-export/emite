@@ -30,7 +30,8 @@ public class ModuleContainer extends SimpleContainer {
     /**
      * load the modules list into the container
      * 
-     * @param modules
+     * @param module
+     *                list
      */
     public void load(final Module... modules) {
 	for (final Module m : modules) {

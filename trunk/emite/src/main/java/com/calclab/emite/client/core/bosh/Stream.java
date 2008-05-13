@@ -29,6 +29,7 @@ public class Stream {
     private long requestID;
 
     public Stream() {
+	body = null;
     }
 
     public void addResponse(final IPacket child) {
