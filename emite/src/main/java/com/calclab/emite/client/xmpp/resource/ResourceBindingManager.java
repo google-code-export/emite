@@ -41,7 +41,7 @@ public class ResourceBindingManager {
     }
 
     protected void install() {
-	emite.subscribe(when(SessionManager.Events.onDoLogin), new PacketListener() {
+	SessionManager.Signals.onDoLogin(emite, new PacketListener() {
 	    public void handle(final IPacket received) {
 		resource = uri(received.getAttribute("uri")).getResource();
 	    }

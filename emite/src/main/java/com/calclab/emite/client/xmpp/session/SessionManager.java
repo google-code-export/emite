@@ -41,8 +41,8 @@ public class SessionManager {
 	public static final Event onAuthorizationFailed = new Event("session:on:authorization-failed");
 	public static final Event onBinded = new Event("session:on:binded");
 	public static final Event onLoggedOut = new Event("session:on:logout");
-	public static final Event onDoLogin = new Event("session:do:login");
-	public static IPacket onDoAuthorization = new Event("session:do:authorization");
+	public static final Event onXDoLogin = new Event("session:do:login");
+	public static final IPacket onDoAuthorization = new Event("session:do:authorization");
 	public static final Event onLoggedIn = new Event("session:on:login");
 
 	public static Event binded(final String jid) {
@@ -55,7 +55,17 @@ public class SessionManager {
 
 	public static Event login(final XmppURI uri, final String password) {
 	    final String strURI = uri != null ? uri.toString() : null;
-	    return (Event) SessionManager.Events.onDoLogin.Params("uri", strURI).With("password", password);
+	    return (Event) SessionManager.Events.onXDoLogin.Params("uri", strURI).With("password", password);
+	}
+    }
+
+    public static class Signals {
+	public static void onDoLogin(final Dispatcher dispatcher, final PacketListener listener) {
+	    dispatcher.subscribe(when(Events.onXDoLogin), listener);
+	}
+
+	public static void onLoggedOut(final Dispatcher dispatcher, final PacketListener listener) {
+	    dispatcher.subscribe(when(Events.onLoggedOut), listener);
 	}
     }
 
