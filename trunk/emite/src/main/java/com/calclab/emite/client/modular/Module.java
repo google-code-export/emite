@@ -9,5 +9,5 @@ public interface Module {
      * Install the components into the given container
      * @param container
      */
-    public void load(Container container);
+    public void onLoad(Container container);
 }

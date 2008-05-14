@@ -21,141 +21,49 @@
  */
 package com.calclab.emiteui.client;
 
-import java.util.Date;
-
-import org.ourproject.kune.platf.client.PlatformEvents;
-import org.ourproject.kune.platf.client.dispatch.Action;
-import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
-import org.ourproject.kune.platf.client.extend.ExtensibleWidgetChild;
-
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.packet.TextUtils;
-import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emiteuiplugin.client.EmiteUI;
+import com.calclab.emite.client.modular.ModuleContainer;
+import com.calclab.emiteui.client.demo.DemoModule;
+import com.calclab.emiteui.client.demo.EmiteDemoUI;
+import com.calclab.emiteui.client.demo.LoginPanel;
+import com.calclab.emiteui.client.demo.LoginPanel.LoginPanelListener;
+import com.calclab.emiteuiplugin.client.EmiteDialog;
 import com.calclab.emiteuiplugin.client.UserChatOptions;
 import com.calclab.emiteuiplugin.client.dialog.OwnPresence.OwnStatus;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.form.Field;
-import com.gwtext.client.widgets.form.FormPanel;
-import com.gwtext.client.widgets.form.Label;
-import com.gwtext.client.widgets.form.TextField;
-import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 
 public class EmiteUIEntryPoint implements EntryPoint {
-    private static final String GWT_PROPERTY_JID = "gwt_property_jid";
-    private static final String GWT_PROPERTY_PASSWD = "gwt_property_passwd";
-    private static final String GWT_PROPERTY_HTTPBASE = "gwt_property_httpbase";
-    private static final String GWT_PROPERTY_ROOMHOST = "gwt_property_roomhost";
-    private static final String GWT_PROPERTY_INFOHTML = "gwt_property_infohtml";
-    private static final String GWT_PROPERTY_RELEASE = "gwt_property_release";
-
-    private TextField passwd;
-
-    private TextField jid;
-    private EmiteUI emiteUI;
 
     public void onModuleLoad() {
-        Log.setUncaughtExceptionHandler();
-        DeferredCommand.addCommand(new Command() {
-            public void execute() {
-                onModuleLoadCont();
-            }
-        });
+	Log.setUncaughtExceptionHandler();
+	DeferredCommand.addCommand(new Command() {
+	    public void execute() {
+		onModuleLoadCont();
+	    }
+	});
     }
 
     public void onModuleLoadCont() {
-        createFormPanel();
-        createInfoPanel();
-        createExtUI();
-    }
+	final ModuleContainer container = new ModuleContainer();
+	container.load(new EmiteUIModule(), new DemoModule());
 
-    private void createExtUI() {
-        emiteUI = new EmiteUI(generateUserChatOptions(), getGwtMetaProperty(GWT_PROPERTY_HTTPBASE),
-                getGwtMetaProperty(GWT_PROPERTY_ROOMHOST));
-        emiteUI.show(OwnStatus.offline);
-        DefaultDispatcher.getInstance().subscribe(PlatformEvents.ATTACH_TO_EXTENSIBLE_WIDGET,
-                new Action<ExtensibleWidgetChild>() {
-                    public void execute(final ExtensibleWidgetChild extChild) {
-                        RootPanel.get().add((Widget) extChild.getView(), 320, 15);
-                    }
-                });
-    }
+	final EmiteDemoUI demo = container.getInstance(EmiteDemoUI.class);
+	final EmiteDialog emiteDialog = container.getInstance(EmiteDialog.class);
 
-    private void createFormPanel() {
-        final Panel panel = new Panel();
-        panel.setBorder(false);
-        panel.setPaddings(15);
+	final LoginPanel loginPanel = demo.createLoginPanel(new LoginPanelListener() {
+	    public void onUserChanged(final UserChatOptions userChatOptions) {
+		emiteDialog.refreshUserInfo(userChatOptions);
+	    }
+	});
 
-        final FormPanel formPanel = new FormPanel();
-        formPanel.setFrame(true);
-        formPanel.setTitle("Some external Login Form");
+	demo.createShowHideButton();
+	demo.createInfoPanel();
 
-        formPanel.setWidth(320);
-        formPanel.setLabelWidth(75);
-
-        jid = new TextField("Jabber id", "jid", 200);
-        jid.setAllowBlank(false);
-        jid.setValue(getGwtMetaProperty(GWT_PROPERTY_JID));
-        formPanel.add(jid);
-
-        passwd = new TextField("Password", "last", 200);
-        passwd.setAllowBlank(false);
-        passwd.setValue(getGwtMetaProperty(GWT_PROPERTY_PASSWD));
-        passwd.setPassword(true);
-        formPanel.add(passwd);
-
-        jid.addListener(new FieldListenerAdapter() {
-            @Override
-            public void onChange(final Field field, final Object newVal, final Object oldVal) {
-                emiteUI.refreshUserInfo(generateUserChatOptions());
-            }
-        });
-
-        passwd.addListener(new FieldListenerAdapter() {
-            @Override
-            public void onChange(final Field field, final Object newVal, final Object oldVal) {
-                emiteUI.refreshUserInfo(generateUserChatOptions());
-            }
-        });
-        panel.add(formPanel);
-
-        RootPanel.get().add(panel);
-    }
-
-    private void createInfoPanel() {
-        final String info = getGwtMetaProperty(GWT_PROPERTY_INFOHTML);
-        if (info.length() > 0) {
-            final Panel infoPanel = new Panel();
-            infoPanel.setHeader(false);
-            infoPanel.setClosable(false);
-            infoPanel.setBorder(false);
-            infoPanel.setPaddings(15);
-            final FormPanel formPanel = new FormPanel();
-            formPanel.setFrame(true);
-            formPanel.setTitle("Info", "info-icon");
-            formPanel.setWidth(320);
-            final Label infoLabel = new Label();
-            infoLabel.setHtml(TextUtils.unescape(info));
-            formPanel.add(infoLabel);
-            infoPanel.add(formPanel);
-            RootPanel.get().add(infoPanel);
-        }
-    }
-
-    private UserChatOptions generateUserChatOptions() {
-        final String resource = "emiteui-" + new Date().getTime() + "-" + getGwtMetaProperty(GWT_PROPERTY_RELEASE);
-        return new UserChatOptions(jid.getRawValue(), passwd.getRawValue(), resource, "blue",
-                RosterManager.DEF_SUBSCRIPTION_MODE);
-    }
-
-    private String getGwtMetaProperty(final String property) {
-        return DOM.getElementProperty(DOM.getElementById(property), "content");
+	final DemoParameters params = container.getInstance(DemoParameters.class);
+	emiteDialog.start(loginPanel.getUserChatOptions(), params.getHttpBase(), params.getRoomHost());
+	emiteDialog.show(OwnStatus.offline);
     }
 
 }

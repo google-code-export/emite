@@ -46,14 +46,14 @@ public class CoreModule implements Module {
 	return container.getInstance(Emite.class);
     }
 
-    public void load(final Container container) {
+    public void onLoad(final Container container) {
 	final Services services = ServicesAbstractModule.getServices(container);
 
-	final Dispatcher dispatcher = container.register(Dispatcher.class, new DispatcherDefault());
+	final Dispatcher dispatcher = container.registerSingletonInstance(Dispatcher.class, new DispatcherDefault());
 	final Stream stream = new Stream();
-	final Emite emite = container.register(Emite.class, new EmiteBosh(dispatcher, stream));
-	final Bosh bosh = container.register(Bosh.class, new Bosh(stream));
-	container.register(BoshManager.class, new BoshManager(services, emite, bosh));
+	final Emite emite = container.registerSingletonInstance(Emite.class, new EmiteBosh(dispatcher, stream));
+	final Bosh bosh = container.registerSingletonInstance(Bosh.class, new Bosh(stream));
+	container.registerSingletonInstance(BoshManager.class, new BoshManager(services, emite, bosh));
     }
 
 }

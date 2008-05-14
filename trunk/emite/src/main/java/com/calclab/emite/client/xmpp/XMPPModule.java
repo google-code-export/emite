@@ -40,17 +40,17 @@ public class XMPPModule implements Module {
 	return container.getInstance(XMPPModule.COMPONENT_SESSION);
     }
 
-    public void load(final Container container) {
+    public void onLoad(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
-	container.register(ResourceBindingManager.class, new ResourceBindingManager(emite));
+	container.registerSingletonInstance(ResourceBindingManager.class, new ResourceBindingManager(emite));
 
-	container.register(COMPONENT_SASL, new SASLManager(emite));
+	container.registerSingletonInstance(COMPONENT_SASL, new SASLManager(emite));
 
 	final SessionManager manager = new SessionManager(emite);
 	final Session session = new Session(manager);
 	manager.setSession(session);
-	container.register(XMPPModule.COMPONENT_SESSION, session);
-	container.register(XMPPModule.COMPONENT_SESSION_MANAGER, manager);
+	container.registerSingletonInstance(XMPPModule.COMPONENT_SESSION, session);
+	container.registerSingletonInstance(XMPPModule.COMPONENT_SESSION_MANAGER, manager);
     }
 
 }

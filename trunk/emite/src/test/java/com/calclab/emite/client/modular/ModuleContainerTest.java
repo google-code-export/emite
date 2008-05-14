@@ -20,6 +20,6 @@ public class ModuleContainerTest {
     public void shouldInstallModules() {
 	final Module module = mock(Module.class);
 	container.load(module, module);
-	verify(module, times(2)).load(same(container));
+	verify(module, times(2)).onLoad(same(container));
     }
 }

@@ -52,18 +52,18 @@ public class InstantMessagingModule implements Module {
 	return container.getInstance(COMPONENT_ROSTER_MANAGER);
     }
 
-    public void load(final Container container) {
+    public void onLoad(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(emite);
-	container.register(COMPONENT_CHAT, chatManagerDefault);
+	container.registerSingletonInstance(COMPONENT_CHAT, chatManagerDefault);
 
 	final Roster roster = new Roster();
 	final RosterManager rosterManager = new RosterManager(emite, roster);
-	container.register(COMPONENT_ROSTER, roster);
-	container.register(COMPONENT_ROSTER_MANAGER, rosterManager);
+	container.registerSingletonInstance(COMPONENT_ROSTER, roster);
+	container.registerSingletonInstance(COMPONENT_ROSTER_MANAGER, rosterManager);
 
 	final PresenceManager manager = new PresenceManager(emite);
-	container.register(COMPONENT_MANAGER, manager);
+	container.registerSingletonInstance(COMPONENT_MANAGER, manager);
     }
 
 }

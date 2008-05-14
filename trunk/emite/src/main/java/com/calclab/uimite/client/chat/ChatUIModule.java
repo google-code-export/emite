@@ -6,8 +6,8 @@ import com.calclab.emite.client.modular.Module;
 
 public class ChatUIModule implements Module {
 
-    public void load(final Container container) {
+    public void onLoad(final Container container) {
 	final Xmpp xmpp = container.getInstance(Xmpp.class);
-	container.register(ChatWidgetFactory.class, new ChatWidgetFactory(xmpp));
+	container.registerSingletonInstance(ChatWidgetFactory.class, new ChatWidgetFactory(xmpp));
     }
 }

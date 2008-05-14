@@ -25,7 +25,7 @@ public class J2SEPlugin implements Services, Module {
 	return scheduler.getCurrentTime();
     }
 
-    public void load(final Container container) {
+    public void onLoad(final Container container) {
 	ServicesAbstractModule.setServices(container, this);
     }
 

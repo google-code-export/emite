@@ -24,8 +24,7 @@ package com.calclab.emite.client.modular;
 /**
  * A container with module installation support
  */
-@SuppressWarnings("serial")
-public class ModuleContainer extends SimpleContainer {
+public class ModuleContainer extends HashContainer {
 
     /**
      * load the modules list into the container
@@ -35,7 +34,7 @@ public class ModuleContainer extends SimpleContainer {
      */
     public void load(final Module... modules) {
 	for (final Module m : modules) {
-	    m.load(this);
+	    m.onLoad(this);
 	}
     }
 }

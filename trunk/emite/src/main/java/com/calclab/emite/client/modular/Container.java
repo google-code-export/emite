@@ -57,7 +57,7 @@ public interface Container {
      *                the component itself (any POJO)
      * @return the registered component
      */
-    <T> T register(Class<T> componentType, T component);
+    <T> T registerSingletonInstance(Class<T> componentType, T component);
 
     <T> Provider<T> registerProvider(Class<T> componentKey, Provider<T> provider);
 

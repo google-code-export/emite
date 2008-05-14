@@ -6,8 +6,8 @@ import com.calclab.emite.client.modular.Module;
 
 public class XmppAutoConfigModule implements Module {
 
-    public void load(final Container container) {
+    public void onLoad(final Container container) {
 	final Xmpp xmpp = container.getInstance(Xmpp.class);
-	container.register(Configurator.class, new Configurator(xmpp));
+	container.registerSingletonInstance(Configurator.class, new Configurator(xmpp));
     }
 }
