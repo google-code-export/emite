@@ -22,8 +22,8 @@ public class DelegatedContainerTest {
     @Test
     public void testRegister() {
 	final Object component = mock(Object.class);
-	container.register(Object.class, component);
-	verify(delegate).register(same(Object.class), same(component));
+	container.registerSingletonInstance(Object.class, component);
+	verify(delegate).registerSingletonInstance(same(Object.class), same(component));
     }
 
 }

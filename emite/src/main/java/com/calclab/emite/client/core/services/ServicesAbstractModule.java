@@ -31,7 +31,7 @@ public class ServicesAbstractModule {
     }
 
     public static void setServices(final Container container, final Services services) {
-	container.register(COMPONENT_SERVICES, services);
+	container.registerSingletonInstance(COMPONENT_SERVICES, services);
     }
 
 }

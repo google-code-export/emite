@@ -13,7 +13,7 @@ public class SimpleContainerTest {
 
     @Before
     public void beforeTest() {
-	container = new SimpleContainer();
+	container = new HashContainer();
     }
 
     @Test(expected = RuntimeException.class)
@@ -24,7 +24,7 @@ public class SimpleContainerTest {
     @Test
     public void shouldRegister() {
 	final Object component = mock(Object.class);
-	container.register(Object.class, component);
+	container.registerSingletonInstance(Object.class, component);
 	assertSame(component, container.getInstance(Object.class));
 	assertNotNull(container.getProvider(Object.class));
     }

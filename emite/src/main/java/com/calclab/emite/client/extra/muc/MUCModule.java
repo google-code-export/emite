@@ -33,9 +33,9 @@ public class MUCModule implements Module {
 	return components.getInstance(COMPONENTS_MANAGER);
     }
 
-    public void load(final Container container) {
+    public void onLoad(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	final MUCRoomManager rooms = new MUCRoomManager(emite);
-	container.register(COMPONENTS_MANAGER, rooms);
+	container.registerSingletonInstance(COMPONENTS_MANAGER, rooms);
     }
 }

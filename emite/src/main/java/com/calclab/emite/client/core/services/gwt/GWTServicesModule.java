@@ -36,7 +36,7 @@ public class GWTServicesModule implements Services, Module {
 	return GWTScheduler.getCurrentTime();
     }
 
-    public void load(final Container container) {
+    public void onLoad(final Container container) {
 	ServicesAbstractModule.setServices(container, new GWTServicesModule());
     }
 

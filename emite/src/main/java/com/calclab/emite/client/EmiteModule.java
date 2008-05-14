@@ -32,8 +32,8 @@ public class EmiteModule implements Module {
 	return container.getInstance(Xmpp.class);
     }
 
-    public void load(final Container container) {
-	container.register(Xmpp.class, new Xmpp(container));
+    public void onLoad(final Container container) {
+	container.registerSingletonInstance(Xmpp.class, new Xmpp(container));
     }
 
 }
