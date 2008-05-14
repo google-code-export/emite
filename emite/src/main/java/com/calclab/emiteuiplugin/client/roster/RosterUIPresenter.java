@@ -46,7 +46,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emiteuiplugin.client.AbstractPresenter;
-import com.calclab.emiteuiplugin.client.EmiteUIPlugin;
+import com.calclab.emiteuiplugin.client.EmiteEvents;
 import com.calclab.emiteuiplugin.client.params.AvatarProvider;
 import com.calclab.emiteuiplugin.client.users.ChatUserUI;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItem;
@@ -276,7 +276,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
     private UserGridMenuItem<XmppURI> createStartChatMenuItem(final XmppURI userURI) {
 	return new UserGridMenuItem<XmppURI>("newchat-icon", i18n.t("Start a chat with this buddy"),
-		EmiteUIPlugin.CHATOPEN, userURI);
+		EmiteEvents.CHATOPEN, userURI);
     }
 
     private UserGridMenuItem<XmppURI> createSubscribeBuddyMenuItem(final XmppURI userURI) {
@@ -315,7 +315,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 		    view.addRosterItem(user, createMenuItemList(item));
 		}
 		// For external use:
-		DefaultDispatcher.getInstance().fire(EmiteUIPlugin.ON_ROSTER_CHANGED, roster);
+		DefaultDispatcher.getInstance().fire(EmiteEvents.ON_ROSTER_CHANGED, roster);
 	    }
 
 	    private void logRosterItem(final String operation, final RosterItem item) {

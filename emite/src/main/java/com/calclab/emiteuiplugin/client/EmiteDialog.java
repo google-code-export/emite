@@ -16,6 +16,7 @@ import com.calclab.emiteuiplugin.client.dialog.OwnPresence.OwnStatus;
 import com.calclab.emiteuiplugin.client.params.AvatarProvider;
 import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
 import com.google.gwt.user.client.Window;
+import static com.calclab.emiteuiplugin.client.EmiteEvents.*;
 
 public class EmiteDialog {
     private static final String EMITE_DEF_TITLE = "Emite Chat";
@@ -26,24 +27,24 @@ public class EmiteDialog {
     }
 
     public void chat(final XmppURI otherUserURI) {
-	dispatcher.fire(EmiteUIPlugin.CHATOPEN, otherUserURI);
+	dispatcher.fire(CHATOPEN, otherUserURI);
     }
 
     public void hide() {
-	dispatcher.fire(EmiteUIPlugin.HIDE_CHAT_DIALOG, null);
+	dispatcher.fire(HIDE_CHAT_DIALOG, null);
     }
 
     public void joinRoom(final XmppURI roomURI) {
-	dispatcher.fire(EmiteUIPlugin.ROOMOPEN, roomURI);
+	dispatcher.fire(ROOMOPEN, roomURI);
     }
 
     public void refreshUserInfo(final UserChatOptions userChatOptions) {
-	dispatcher.fire(EmiteUIPlugin.REFLESH_USER_OPTIONS, userChatOptions);
+	dispatcher.fire(REFLESH_USER_OPTIONS, userChatOptions);
     }
 
     public void show(final OwnStatus stutus) {
-	dispatcher.fire(EmiteUIPlugin.SHOW_CHAT_DIALOG, null);
-	dispatcher.fire(EmiteUIPlugin.SET_OWN_PRESENCE, new OwnPresence(stutus));
+	dispatcher.fire(SHOW_CHAT_DIALOG, null);
+	dispatcher.fire(SET_OWN_PRESENCE, new OwnPresence(stutus));
 
     }
 
@@ -59,13 +60,13 @@ public class EmiteDialog {
 		new I18nTranslationServiceMocked());
 	kunePluginManager.install(new EmiteUIPlugin());
 
-	dispatcher.subscribe(EmiteUIPlugin.ON_UNHIGHTLIGHTWINDOW, new Action<String>() {
+	dispatcher.subscribe(ON_UNHIGHTLIGHTWINDOW, new Action<String>() {
 	    public void execute(final String chatTitle) {
 		Window.setTitle(initialWindowTitle);
 	    }
 	});
 
-	dispatcher.subscribe(EmiteUIPlugin.ON_HIGHTLIGHTWINDOW, new Action<String>() {
+	dispatcher.subscribe(ON_HIGHTLIGHTWINDOW, new Action<String>() {
 	    public void execute(final String chatTitle) {
 		Window.setTitle("(* " + chatTitle + ") " + initialWindowTitle);
 	    }
@@ -76,8 +77,8 @@ public class EmiteDialog {
 		return "images/person-def.gif";
 	    }
 	};
-	dispatcher.fire(EmiteUIPlugin.CREATE_CHAT_DIALOG, new MultiChatCreationParam(EMITE_DEF_TITLE, new BoshOptions(
-		httpBase), roomHost, new I18nTranslationServiceMocked(), avatarProvider, userChatOptions));
+	dispatcher.fire(CREATE_CHAT_DIALOG, new MultiChatCreationParam(EMITE_DEF_TITLE, new BoshOptions(httpBase),
+		roomHost, new I18nTranslationServiceMocked(), avatarProvider, userChatOptions));
     }
 
 }
