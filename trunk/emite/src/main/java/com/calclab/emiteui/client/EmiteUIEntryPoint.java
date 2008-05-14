@@ -48,9 +48,9 @@ public class EmiteUIEntryPoint implements EntryPoint {
     public void onModuleLoadCont() {
 	final ModuleContainer container = new ModuleContainer();
 	container.load(new EmiteUIModule(), new DemoModule());
+	final EmiteDialog emiteDialog = container.getInstance(EmiteDialog.class);
 
 	final EmiteDemoUI demo = container.getInstance(EmiteDemoUI.class);
-	final EmiteDialog emiteDialog = container.getInstance(EmiteDialog.class);
 
 	final LoginPanel loginPanel = demo.createLoginPanel(new LoginPanelListener() {
 	    public void onUserChanged(final UserChatOptions userChatOptions) {
