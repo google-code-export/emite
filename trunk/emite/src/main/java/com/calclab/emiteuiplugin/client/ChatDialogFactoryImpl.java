@@ -43,17 +43,6 @@ import com.calclab.emiteuiplugin.client.roster.RosterUIPanel;
 import com.calclab.emiteuiplugin.client.roster.RosterUIPresenter;
 
 public class ChatDialogFactoryImpl implements ChatDialogFactory {
-    public static class App {
-	private static ChatDialogFactoryImpl ourInstance = null;
-
-	public static synchronized ChatDialogFactoryImpl getInstance() {
-	    if (ourInstance == null) {
-		ourInstance = new ChatDialogFactoryImpl();
-	    }
-	    return ourInstance;
-	}
-    }
-
     public ChatUI createChatUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
 	    final ChatUIListener listener) {
 	final ChatUIPresenter presenter = new ChatUIPresenter(otherURI, currentUserAlias, currentUserColor, listener);
@@ -68,8 +57,7 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
 	final RosterUIPresenter roster = new RosterUIPresenter(xmpp, i18n, param.getAvatarProvider());
 	final RosterUIPanel rosterPanel = new RosterUIPanel(i18n, roster);
 	roster.init(rosterPanel);
-	final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, App.getInstance(), param, listener,
-		roster);
+	final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, this, param, listener, roster);
 	final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), rosterPanel, i18n, presenter);
 	presenter.init(panel);
 	return presenter;

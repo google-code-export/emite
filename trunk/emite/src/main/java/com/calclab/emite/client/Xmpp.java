@@ -52,19 +52,6 @@ public class Xmpp extends DelegatedContainer {
     }
 
     /**
-     * should use Xmpp.create() ... and setBoshOptions()...
-     * 
-     * @param options
-     * @return
-     */
-    @Deprecated
-    public static Xmpp create(final BoshOptions options) {
-	final Xmpp xmpp = create();
-	xmpp.setBoshOptions(options);
-	return xmpp;
-    }
-
-    /**
      * Create a Xmpp object using the following container (you need to load a
      * ServicesModule first!)
      * 
@@ -72,7 +59,9 @@ public class Xmpp extends DelegatedContainer {
      * @return
      */
     public static Xmpp create(final Module... modules) {
-	final ModuleContainer container = EmiteModule.create(modules);
+	final ModuleContainer container = new ModuleContainer();
+	container.add(modules);
+	EmiteModule.load(container);
 	return container.getInstance(Xmpp.class);
     }
 

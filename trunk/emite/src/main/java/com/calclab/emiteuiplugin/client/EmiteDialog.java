@@ -1,13 +1,10 @@
 package com.calclab.emiteuiplugin.client;
 
-import static com.calclab.emiteuiplugin.client.EmiteEvents.CHATOPEN;
-import static com.calclab.emiteuiplugin.client.EmiteEvents.ON_HIGHTLIGHTWINDOW;
-import static com.calclab.emiteuiplugin.client.EmiteEvents.ON_UNHIGHTLIGHTWINDOW;
-
 import java.util.Date;
 
-import org.ourproject.kune.platf.client.dispatch.Action;
+import org.ourproject.kune.platf.client.PlatformEvents;
 import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
+import org.ourproject.kune.platf.client.extend.ExtensibleWidgetChild;
 import org.ourproject.kune.platf.client.extend.ExtensibleWidgetsManager;
 import org.ourproject.kune.platf.client.extend.PluginManager;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
@@ -15,6 +12,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.im.roster.RosterManager;
+import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.dialog.MultiChat;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatListener;
@@ -28,14 +26,18 @@ public class EmiteDialog {
     private static final String EMITE_DEF_TITLE = "Emite Chat";
     private final DefaultDispatcher dispatcher;
     private MultiChat multiChatDialog;
-    private Xmpp xmpp;
+    private final Xmpp xmpp;
+    private final ChatDialogFactory factory;
+    private String initialWindowTitle;
 
-    public EmiteDialog(final DefaultDispatcher dispatcher) {
+    public EmiteDialog(final DefaultDispatcher dispatcher, final Xmpp xmpp, final ChatDialogFactory factory) {
 	this.dispatcher = dispatcher;
+	this.xmpp = xmpp;
+	this.factory = factory;
     }
 
     public void chat(final XmppURI otherUserURI) {
-	dispatcher.fire(CHATOPEN, otherUserURI);
+	xmpp.getChatManager().openChat(otherUserURI);
     }
 
     public void getChatDialog(final MultiChatCreationParam param) {
@@ -68,8 +70,8 @@ public class EmiteDialog {
     }
 
     public void start(final UserChatOptions userChatOptions, final String httpBase, final String roomHost) {
-	final String initialWindowTitle = Window.getTitle();
-	Window.getTitle();
+	initialWindowTitle = Window.getTitle();
+
 	final PluginManager kunePluginManager = new PluginManager(dispatcher, new ExtensibleWidgetsManager(),
 		new I18nTranslationServiceMocked());
 	kunePluginManager.install(new EmiteUIPlugin());
@@ -82,26 +84,43 @@ public class EmiteDialog {
 	getChatDialog(new MultiChatCreationParam(EMITE_DEF_TITLE, new BoshOptions(httpBase), roomHost,
 		new I18nTranslationServiceMocked(), avatarProvider, userChatOptions));
 
-	dispatcher.subscribe(ON_UNHIGHTLIGHTWINDOW, new Action<String>() {
-	    public void execute(final String chatTitle) {
-		Window.setTitle(initialWindowTitle);
-	    }
-	});
-
-	dispatcher.subscribe(ON_HIGHTLIGHTWINDOW, new Action<String>() {
-	    public void execute(final String chatTitle) {
-		Window.setTitle("(* " + chatTitle + ") " + initialWindowTitle);
-	    }
-	});
-
     }
 
     private MultiChat createChatDialog(final MultiChatCreationParam param) {
-	xmpp = Xmpp.create();
 	xmpp.setBoshOptions(param.getBoshOptions());
-	EmiteEvents.subscribe(xmpp, dispatcher);
-	final MultiChatListener listener = EmiteEvents.createMultiChatListener(dispatcher);
-	final MultiChat dialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(xmpp, param, listener);
+	final MultiChatListener listener = new MultiChatListener() {
+	    public void attachToExtPoint(final ExtensibleWidgetChild extensionElement) {
+		dispatcher.fire(PlatformEvents.ATTACH_TO_EXTENSIBLE_WIDGET, extensionElement);
+	    }
+
+	    public void onConversationAttended(final String chatTitle) {
+		Window.setTitle(initialWindowTitle);
+	    }
+
+	    public void onConversationUnnatended(final String chatTitle) {
+		Window.setTitle("(* " + chatTitle + ") " + initialWindowTitle);
+	    }
+
+	    public void onStateConnected() {
+		// TODO Auto-generated method stub
+
+	    }
+
+	    public void onStateDisconnected() {
+		// TODO Auto-generated method stub
+
+	    }
+
+	    public void onUserColorChanged(final String color) {
+		dispatcher.fire(EmiteEvents.ON_USER_COLOR_SELECTED, color);
+	    }
+
+	    public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
+		dispatcher.fire(EmiteEvents.ON_USER_SUBSCRIPTION_CHANGED, subscriptionMode);
+	    }
+
+	};
+	final MultiChat dialog = factory.createMultiChat(xmpp, param, listener);
 	EmiteEvents.subscribeTo(dispatcher, dialog);
 	return dialog;
     }

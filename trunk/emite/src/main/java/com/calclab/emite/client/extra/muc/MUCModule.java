@@ -33,6 +33,10 @@ public class MUCModule implements Module {
 	return components.getInstance(COMPONENTS_MANAGER);
     }
 
+    public Class<? extends Module> getType() {
+	return MUCModule.class;
+    }
+
     public void onLoad(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	final MUCRoomManager rooms = new MUCRoomManager(emite);

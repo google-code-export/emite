@@ -22,8 +22,9 @@
 package com.calclab.emite.client.core.services;
 
 import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.Module;
 
-public class ServicesAbstractModule {
+public abstract class ServicesModule implements Module {
     private static final Class<Services> COMPONENT_SERVICES = Services.class;
 
     public static Services getServices(final Container container) {
@@ -32,6 +33,10 @@ public class ServicesAbstractModule {
 
     public static void setServices(final Container container, final Services services) {
 	container.registerSingletonInstance(COMPONENT_SERVICES, services);
+    }
+
+    public Class<? extends Module> getType() {
+	return ServicesModule.class;
     }
 
 }

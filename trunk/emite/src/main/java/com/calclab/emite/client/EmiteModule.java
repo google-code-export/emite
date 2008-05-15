@@ -1,6 +1,7 @@
 package com.calclab.emite.client;
 
 import com.calclab.emite.client.core.CoreModule;
+import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
 import com.calclab.emite.client.extra.avatar.AvatarModule;
 import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.im.InstantMessagingModule;
@@ -11,25 +12,20 @@ import com.calclab.emite.client.xmpp.XMPPModule;
 
 public class EmiteModule implements Module {
 
-    /**
-     * Create a container with the default Emite modules installed
-     * 
-     * @param modules
-     *                additional modules to install
-     * @return
-     */
-    public static ModuleContainer create(final Module... modules) {
-	final ModuleContainer container = new ModuleContainer();
-	container.load(modules);
-	container.load(new CoreModule(), new XMPPModule(), new InstantMessagingModule());
-	// FIXME: esto debería ir fuera de aquí
-	container.load(new MUCModule(), new AvatarModule());
-	container.load(new EmiteModule());
-	return container;
-    }
-
     public static Xmpp getXmpp(final Container container) {
 	return container.getInstance(Xmpp.class);
+    }
+
+    public static void load(final ModuleContainer container) {
+	container.add(new GWTServicesModule());
+	container.add(new CoreModule(), new XMPPModule(), new InstantMessagingModule());
+	// FIXME: esto debería ir fuera de aquí
+	container.add(new MUCModule(), new AvatarModule());
+	container.add(new EmiteModule());
+    }
+
+    public Class<? extends Module> getType() {
+	return EmiteModule.class;
     }
 
     public void onLoad(final Container container) {

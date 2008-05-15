@@ -6,6 +6,10 @@ import com.calclab.emiteui.client.DemoParameters;
 
 public class DemoModule implements Module {
 
+    public Class<? extends Module> getType() {
+	return DemoModule.class;
+    }
+
     public void onLoad(final Container container) {
 	final DemoParameters params = container.registerSingletonInstance(DemoParameters.class, new DemoParameters());
 	container.registerSingletonInstance(EmiteDemoUI.class, new EmiteDemoUI(params));

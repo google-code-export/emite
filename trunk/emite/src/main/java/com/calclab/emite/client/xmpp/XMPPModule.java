@@ -40,6 +40,10 @@ public class XMPPModule implements Module {
 	return container.getInstance(XMPPModule.COMPONENT_SESSION);
     }
 
+    public Class<? extends Module> getType() {
+	return XMPPModule.class;
+    }
+
     public void onLoad(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	container.registerSingletonInstance(ResourceBindingManager.class, new ResourceBindingManager(emite));

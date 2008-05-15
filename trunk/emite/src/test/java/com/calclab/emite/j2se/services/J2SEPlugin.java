@@ -5,11 +5,11 @@ import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
-import com.calclab.emite.client.core.services.ServicesAbstractModule;
+import com.calclab.emite.client.core.services.ServicesModule;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 
-public class J2SEPlugin implements Services, Module {
+public class J2SEPlugin extends ServicesModule implements Services, Module {
     private final HttpConnector connector;
 
     private final ThreadScheduler scheduler;
@@ -26,7 +26,7 @@ public class J2SEPlugin implements Services, Module {
     }
 
     public void onLoad(final Container container) {
-	ServicesAbstractModule.setServices(container, this);
+	ServicesModule.setServices(container, this);
     }
 
     public void schedule(final int msecs, final ScheduledAction action) {
@@ -45,4 +45,5 @@ public class J2SEPlugin implements Services, Module {
     public IPacket toXML(final String xml) {
 	return xmler.toXML(xml);
     }
+
 }
