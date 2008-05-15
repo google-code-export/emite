@@ -25,8 +25,8 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
-import com.calclab.emiteuiplugin.client.dialog.OwnPresence.OwnStatus;
 import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
+import com.calclab.emiteuiplugin.client.status.OwnPresence.OwnStatus;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 public class ChatUIUtils {

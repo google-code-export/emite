@@ -9,22 +9,22 @@ import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emiteuiplugin.client.dialog.MultiChat;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatListener;
-import com.calclab.emiteuiplugin.client.dialog.OwnPresence;
-import com.calclab.emiteuiplugin.client.dialog.OwnPresence.OwnStatus;
+import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
 import com.calclab.emiteuiplugin.client.params.AvatarProvider;
 import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
+import com.calclab.emiteuiplugin.client.status.OwnPresence;
+import com.calclab.emiteuiplugin.client.status.OwnPresence.OwnStatus;
 import com.google.gwt.user.client.Window;
 
 public class EmiteDialog {
     private static final String EMITE_DEF_TITLE = "Emite Chat";
-    private MultiChat multiChatDialog;
+    private MultiChatPresenter multiChatDialog;
     private final Xmpp xmpp;
-    private final ChatDialogFactory factory;
+    private final EmiteUIFactory factory;
     private String initialWindowTitle;
 
-    public EmiteDialog(final Xmpp xmpp, final ChatDialogFactory factory) {
+    public EmiteDialog(final Xmpp xmpp, final EmiteUIFactory factory) {
 	this.xmpp = xmpp;
 	this.factory = factory;
     }
@@ -71,12 +71,11 @@ public class EmiteDialog {
 	    }
 	};
 	xmpp.setBoshOptions(new BoshOptions(httpBase));
-	getChatDialog(new MultiChatCreationParam(EMITE_DEF_TITLE, roomHost, new I18nTranslationServiceMocked(),
-		avatarProvider, userChatOptions));
+	getChatDialog(new MultiChatCreationParam(EMITE_DEF_TITLE, roomHost, avatarProvider, userChatOptions));
 
     }
 
-    private MultiChat createChatDialog(final MultiChatCreationParam param) {
+    private MultiChatPresenter createChatDialog(final MultiChatCreationParam param) {
 
 	final MultiChatListener listener = new MultiChatListener() {
 	    public void onConversationAttended(final String chatTitle) {
@@ -100,7 +99,7 @@ public class EmiteDialog {
 	    }
 
 	};
-	final MultiChat dialog = factory.createMultiChat(xmpp, param, listener);
+	final MultiChatPresenter dialog = factory.createMultiChat(param, listener);
 	return dialog;
     }
 

@@ -19,13 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emiteuiplugin.client.dialog;
+package com.calclab.emiteuiplugin.client.status;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
-import com.calclab.emiteuiplugin.client.dialog.OwnPresence.OwnStatus;
+import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
 import com.calclab.emiteuiplugin.client.room.JoinRoomPanel;
+import com.calclab.emiteuiplugin.client.status.OwnPresence.OwnStatus;
 import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
@@ -47,7 +48,8 @@ import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import com.gwtext.client.widgets.menu.event.CheckItemListenerAdapter;
 import com.gwtext.client.widgets.menu.event.ColorMenuListener;
 
-public class MultiChatPanelTopBar extends Toolbar {
+public class StatusPanel extends Toolbar {
+
     private final Menu statusMenu;
     private CheckItem onlineMenuItem;
     private CheckItem offlineMenuItem;
@@ -56,31 +58,27 @@ public class MultiChatPanelTopBar extends Toolbar {
     private CheckItem busyMenuItem;
     private final ToolbarMenuButton statusButton;
     private final I18nTranslationService i18n;
-    private final MultiChatPresenter presenter;
     private final Item closeAllOption;
     private final ToolbarButton loading;
     private CheckItem manualSubsItem;
     private CheckItem autoRejectSubsItem;
     private CheckItem autoAcceptSubsItem;
-    private final ToolbarButton joinOption;
 
-    public MultiChatPanelTopBar(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
+    private final ToolbarButton buttonJoinRoom;
+    private final StatusPanelListenerCollection listeners;
+
+    public StatusPanel(final I18nTranslationService i18n) {
 	this.i18n = i18n;
-	this.presenter = presenter;
+	this.listeners = new StatusPanelListenerCollection();
 
 	final Menu chatMenu = new Menu();
 	chatMenu.setShadow(true);
-	joinOption = new ToolbarButton(i18n.t("Join a chat room"));
-	joinOption.setIcon("images/group-chat.gif");
-	joinOption.addListener(new ButtonListenerAdapter() {
-	    private JoinRoomPanel joinRoomPanel;
-
+	buttonJoinRoom = new ToolbarButton(i18n.t("Join a chat room"));
+	buttonJoinRoom.setIcon("images/group-chat.gif");
+	buttonJoinRoom.addListener(new ButtonListenerAdapter() {
 	    @Override
 	    public void onClick(final Button button, final EventObject e) {
-		if (joinRoomPanel == null) {
-		    joinRoomPanel = new JoinRoomPanel(i18n, presenter);
-		}
-		joinRoomPanel.show();
+		listeners.onJoinRoom();
 	    }
 	});
 	closeAllOption = createCloseAllMenuItem(i18n);
@@ -113,23 +111,12 @@ public class MultiChatPanelTopBar extends Toolbar {
 	setLoadingVisible(false);
 
 	this.addFill();
-	this.addButton(joinOption);
+	this.addButton(buttonJoinRoom);
 
-	// final EntityLiveSearchListener inviteUserToRoomListener = new
-	// EntityLiveSearchListener() {
-	// public void onSelection(String shortName, String longName) {
-	// presenter.inviteUserToRoom(shortName, longName);
-	// }
-	// };
+    }
 
-	// final EntityLiveSearchListener addBuddyListener = new
-	// EntityLiveSearchListener() {
-	// public void onSelection(String shortName, String longName) {
-	// presenter.addBuddy(shortName, longName);
-	// }
-	// };
-
-	setSubscritionMode(presenter.getUserChatOptions().getSubscriptionMode());
+    public void addListener(final StatusPanelListener listener) {
+	listeners.add(listener);
     }
 
     public void confirmCloseAll() {
@@ -137,7 +124,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 		new MessageBox.ConfirmCallback() {
 		    public void execute(final String btnID) {
 			if (btnID.equals("yes")) {
-			    presenter.onCloseAllConfirmed();
+			    listeners.onCloseAllConfirmed();
 			}
 		    }
 		});
@@ -148,7 +135,7 @@ public class MultiChatPanelTopBar extends Toolbar {
     }
 
     public void setJoinRoomEnabled(final boolean enabled) {
-	joinOption.setDisabled(!enabled);
+	buttonJoinRoom.setDisabled(!enabled);
     }
 
     public void setLoadingVisible(final boolean visible) {
@@ -211,7 +198,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 	final ColorMenu colorMenu = new ColorMenu();
 	colorMenu.addListener(new ColorMenuListener() {
 	    public void onSelect(final ColorPalette colorPalette, final String color) {
-		presenter.onUserColorChanged(color);
+		listeners.onUserColorChanged(color);
 	    }
 	});
 
@@ -239,7 +226,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 	    checkItem.addListener(new BaseItemListenerAdapter() {
 		@Override
 		public void onClick(final BaseItem item, final EventObject e) {
-		    presenter.setOwnPresence(new OwnPresence(ownStatus));
+		    listeners.setOwnPresence(new OwnPresence(ownStatus));
 		}
 	    });
 	    break;
@@ -252,7 +239,7 @@ public class MultiChatPanelTopBar extends Toolbar {
 			    .t("Set your status text (something like 'Out for dinner' or 'Working')"),
 			    new PromptCallback() {
 				public void execute(final String btnID, final String text) {
-				    presenter.setOwnPresence(new OwnPresence(ownStatus, text));
+				    listeners.setOwnPresence(new OwnPresence(ownStatus, text));
 				}
 			    });
 		}
@@ -282,18 +269,18 @@ public class MultiChatPanelTopBar extends Toolbar {
     }
 
     private CheckItem createSubscritionItem(final String text, final Menu submenu, final SubscriptionMode mode) {
-	final CheckItemListenerAdapter listener = new CheckItemListenerAdapter() {
+	final CheckItemListenerAdapter itemListener = new CheckItemListenerAdapter() {
 	    @Override
 	    public void onCheckChange(CheckItem item, boolean checked) {
 		if (checked) {
-		    presenter.onUserSubscriptionModeChanged(mode);
+		    listeners.onUserSubscriptionModeChanged(mode);
 		}
 	    }
 	};
 	final CheckItem item = new CheckItem();
 	item.setText(text);
 	item.setGroup("subscription");
-	item.addListener(listener);
+	item.addListener(itemListener);
 	submenu.addItem(item);
 	return item;
     }
