@@ -102,8 +102,6 @@ public class EmiteDialog {
 	    }
 
 	    public void onStateConnected() {
-		// TODO Auto-generated method stub
-
 	    }
 
 	    public void onStateDisconnected() {

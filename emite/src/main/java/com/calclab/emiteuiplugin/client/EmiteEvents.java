@@ -1,13 +1,9 @@
 package com.calclab.emiteuiplugin.client;
 
-import org.ourproject.kune.platf.client.PlatformEvents;
 import org.ourproject.kune.platf.client.dispatch.Action;
 import org.ourproject.kune.platf.client.dispatch.Dispatcher;
-import org.ourproject.kune.platf.client.extend.ExtensibleWidgetChild;
 
-import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emiteuiplugin.client.dialog.MultiChat;
-import com.calclab.emiteuiplugin.client.dialog.MultiChatListener;
 
 public class EmiteEvents {
 
@@ -23,44 +19,6 @@ public class EmiteEvents {
     public static final String ON_STATE_DISCONNECTED = "emiteuiplugin.onstatedisconnected";
     public static final String ON_USER_SUBSCRIPTION_CHANGED = "emiteuiplugin.usersubschanged";
     public static final String ON_ROSTER_CHANGED = "emiteuiplugin.onrosterchanged";
-
-    public static MultiChatListener createMultiChatListener(final Dispatcher dispatcher) {
-	return new MultiChatListener() {
-
-	    public void attachToExtPoint(final ExtensibleWidgetChild extensionElement) {
-		dispatcher.fire(PlatformEvents.ATTACH_TO_EXTENSIBLE_WIDGET, extensionElement);
-	    }
-
-	    public void onConversationAttended(final String chatTitle) {
-		// TODO Auto-generated method stub
-
-	    }
-
-	    public void onConversationUnnatended(final String conversationName) {
-		// TODO Auto-generated method stub
-
-	    }
-
-	    public void onStateConnected() {
-		// TODO Auto-generated method stub
-
-	    }
-
-	    public void onStateDisconnected() {
-		// TODO Auto-generated method stub
-
-	    }
-
-	    public void onUserColorChanged(final String color) {
-		dispatcher.fire(ON_USER_COLOR_SELECTED, color);
-	    }
-
-	    public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
-		dispatcher.fire(ON_USER_SUBSCRIPTION_CHANGED, subscriptionMode);
-	    }
-
-	};
-    }
 
     public static void subscribeTo(final Dispatcher dispatcher, final MultiChat multiChatDialog) {
 
