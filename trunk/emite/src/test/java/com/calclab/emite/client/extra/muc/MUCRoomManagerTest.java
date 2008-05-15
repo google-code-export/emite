@@ -53,6 +53,24 @@ public class MUCRoomManagerTest {
     }
 
     @Test
+    public void shouldAcceptRoomPresenceWithAvatarOPorqueEsNecesarioVolverAUsarElXmlnsMucConAmorParaDaniJeJe() {
+        manager.setUserURI("user@domain/resource");
+        final Room room = manager.openChat(uri("room1@domain/nick"));
+        // Se diferencia con el shouldAcceptRoomPresenceWithAvatar en el orden
+        // de las "x" ...
+        emite.receives("<presence to='user@domain/resource' from='room1@domain/otherUser2'>" + "<priority>0</priority>"
+                + "<x xmlns='http://jabber.org/protocol/muc#user'>"
+                + "<item jid='otheruserjid@domain/otherresoruce' affiliation='none' " + "role='participant'/></x>"
+                + "<x xmlns='vcard-temp:x:update'><photo>af70fe6519d6a27a910c427c3bc551dcd36073e7</photo></x>"
+                + "</presence>");
+        assertEquals(1, room.getOccupantsCount());
+        Occupant user = room.findOccupant(uri("room1@domain/otherUser2"));
+        assertNotNull(user);
+        assertEquals(Affiliation.none, user.getAffiliation());
+        assertEquals(Role.participant, user.getRole());
+    }
+
+    @Test
     public void shouldCloseAllActiveRoomsWhenLoggedOut() {
         final Room room1 = manager.openChat(uri("room1@domain/nick"));
         final Room room2 = manager.openChat(uri("room2@domain/nick"));
