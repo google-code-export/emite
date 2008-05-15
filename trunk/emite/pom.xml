@@ -4,7 +4,7 @@
   <groupId>com.calclab</groupId>
   <artifactId>emite</artifactId>
   <packaging>jar</packaging>
-  <version>0.2.2</version>
+  <version>0.2.4</version>
   <description>emite: a pure gwt xmpp (jabber) library</description>
   <name>emite xmpp</name>
   <url>http://emite.googlecode.com</url>
@@ -235,13 +235,11 @@
       <artifactId>kune-core</artifactId>
       <version>0.0.4</version>
     </dependency>
-    <!--
       <dependency>
-      <groupId>com.extjs.gxt</groupId>
+      <groupId>com.extjs</groupId>
       <artifactId>gxt</artifactId>
       <version>1.0-beta2</version>
       </dependency>
-    -->
 
     <!--  TESTING -->
     <dependency>

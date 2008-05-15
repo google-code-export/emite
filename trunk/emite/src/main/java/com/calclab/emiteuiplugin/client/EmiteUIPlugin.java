@@ -37,55 +37,55 @@ public class EmiteUIPlugin extends Plugin {
     private MultiChat multiChatDialog;
 
     public EmiteUIPlugin() {
-	super("emiteuiplugin");
+        super("emiteuiplugin");
     }
 
     public void getChatDialog(final MultiChatCreationParam param) {
-	if (multiChatDialog == null) {
-	    createChatDialog(param);
-	    preFetchImages();
-	}
+        if (multiChatDialog == null) {
+            createChatDialog(param);
+            preFetchImages();
+        }
     }
 
     @Override
     protected void start() {
-	EmiteEvents.subscribe(this, getDispatcher());
+        EmiteEvents.subscribe(this, getDispatcher());
     }
 
     @Override
     protected void stop() {
-	multiChatDialog.destroy();
+        multiChatDialog.destroy();
     }
 
     private void createChatDialog(final MultiChatCreationParam param) {
-	final Dispatcher dispatcher = getDispatcher();
-	final Xmpp xmpp = Xmpp.create();
-	xmpp.setBoshOptions(param.getBoshOptions());
-	EmiteEvents.subscribe(xmpp, dispatcher);
-	final MultiChatListener listener = EmiteEvents.createMultiChatListener(dispatcher);
-	multiChatDialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(xmpp, param, listener);
-	EmiteEvents.subscribeTo(dispatcher, multiChatDialog);
+        final Dispatcher dispatcher = getDispatcher();
+        final Xmpp xmpp = Xmpp.create();
+        xmpp.setBoshOptions(param.getBoshOptions());
+        EmiteEvents.subscribe(xmpp, dispatcher);
+        final MultiChatListener listener = EmiteEvents.createMultiChatListener(dispatcher);
+        multiChatDialog = ChatDialogFactoryImpl.App.getInstance().createMultiChat(xmpp, param, listener);
+        EmiteEvents.subscribeTo(dispatcher, multiChatDialog);
 
     }
 
     private void preFetchImages() {
-	DeferredCommand.addCommand(new Command() {
-	    public void execute() {
-		final String[] imgs = { "ext-load.gif", "group_add.gif", "group-chat.gif", "moderatoruser.gif",
-			"normaluser.gif", "person-def.gif", "smile.gif", "user_add.gif" };
-		final String[] cssImgs = { "add.gif", "cancel.gif", "chat.gif", "colors.gif ", "del.gif", "exit.gif",
-			"extload.gif", "forbidden.gif", "group-chat.gif", "group.gif", "new-chat.gif",
-			"new-message.gif", "useradd.gif", "userf.gif", "user.gif" };
-		doTheJob(imgs, "images");
-		doTheJob(cssImgs, "css/img");
-	    }
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                final String[] imgs = { "ext-load.gif", "group_add.gif", "group-chat.gif", "moderatoruser.gif",
+                        "normaluser.gif", "person-def.gif", "smile.gif", "user_add.gif" };
+                final String[] cssImgs = { "add.gif", "cancel.gif", "chat.gif", "colors.gif ", "del.gif", "exit.gif",
+                        "extload.gif", "forbidden.gif", "group-chat.gif", "group.gif", "new-chat.gif",
+                        "new-message.gif", "useradd.gif", "userf.gif", "user.gif" };
+                prefetchImages(imgs, "images");
+                prefetchImages(cssImgs, "images");
+            }
 
-	    private void doTheJob(final String[] imgs, final String prefix) {
-		for (int i = 0; i < imgs.length; i++) {
-		    final String img = imgs[i];
-		    Image.prefetch(prefix + "/" + img);
-		}
-	    }
-	});
+            private void prefetchImages(final String[] imgs, final String prefix) {
+                for (int i = 0; i < imgs.length; i++) {
+                    final String img = imgs[i];
+                    Image.prefetch(prefix + "/" + img);
+                }
+            }
+        });
     }
 }
