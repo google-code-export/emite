@@ -27,9 +27,6 @@ import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.ourproject.kune.platf.client.View;
-import org.ourproject.kune.platf.client.extend.ExtensibleWidgetChild;
-import org.ourproject.kune.platf.client.extend.ExtensibleWidgetId;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;

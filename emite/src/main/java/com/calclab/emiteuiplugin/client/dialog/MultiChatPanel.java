@@ -40,7 +40,6 @@ import com.calclab.emiteuiplugin.client.users.UserGridPanel;
 import com.calclab.emiteuiplugin.client.utils.ChatIcons;
 import com.calclab.emiteuiplugin.client.utils.emoticons.EmoticonPaletteListener;
 import com.calclab.emiteuiplugin.client.utils.emoticons.EmoticonPalettePanel;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Label;
 import com.gwtext.client.core.EventObject;

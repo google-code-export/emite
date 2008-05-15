@@ -21,14 +21,11 @@
  */
 package com.calclab.emiteuiplugin.client;
 
-import org.ourproject.kune.platf.client.extend.Plugin;
-
-import com.calclab.emiteuiplugin.client.dialog.MultiChat;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Image;
 
-public class EmiteUIPlugin extends Plugin {
+public class ImagesHelper {
 
     public static void preFetchImages() {
 	DeferredCommand.addCommand(new Command() {
@@ -36,7 +33,7 @@ public class EmiteUIPlugin extends Plugin {
 		final String[] imgs = { "ext-load.gif", "group_add.gif", "group-chat.gif", "moderatoruser.gif",
 			"normaluser.gif", "person-def.gif", "smile.gif", "user_add.gif", "user-unavail.gif" };
 		final String[] cssImgs = { "add.gif", "cancel.gif", "emite-chat.gif", "colors.gif ", "del.gif",
-		"exit.gif", "extload.gif", "forbidden.gif", "group-chat.gif", "group.gif", "new-chat.gif",
+			"exit.gif", "extload.gif", "forbidden.gif", "group-chat.gif", "group.gif", "new-chat.gif",
 			"new-message.gif", "useradd.gif", "userf.gif", "user.gif" };
 		prefetchImages(imgs, "images");
 		prefetchImages(cssImgs, "images");
@@ -49,21 +46,6 @@ public class EmiteUIPlugin extends Plugin {
 		}
 	    }
 	});
-    }
-
-    private MultiChat multiChatDialog;
-
-    public EmiteUIPlugin() {
-	super("emiteuiplugin");
-    }
-
-    @Override
-    protected void start() {
-    }
-
-    @Override
-    protected void stop() {
-	multiChatDialog.destroy();
     }
 
 }

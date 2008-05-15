@@ -1,6 +1,7 @@
 package com.calclab.emite.client.extra.avatar;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+
 import org.junit.Before;
 import org.junit.Test;
 

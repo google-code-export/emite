@@ -1,15 +1,9 @@
 package com.calclab.emiteui.client.demo;
 
-import org.ourproject.kune.platf.client.PlatformEvents;
-import org.ourproject.kune.platf.client.dispatch.Action;
-import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
-import org.ourproject.kune.platf.client.extend.ExtensibleWidgetChild;
-
 import com.calclab.emite.client.core.packet.TextUtils;
 import com.calclab.emiteui.client.DemoParameters;
 import com.calclab.emiteui.client.demo.LoginPanel.LoginPanelListener;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.Label;

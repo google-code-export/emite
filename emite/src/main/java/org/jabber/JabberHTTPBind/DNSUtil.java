@@ -10,10 +10,11 @@
 
 package org.jabber.JabberHTTPBind;
 
-import javax.naming.directory.Attributes;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.DirContext;
 import java.util.Hashtable;
+
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
 
 /**
  * Utilty class to perform DNS lookups for XMPP services.

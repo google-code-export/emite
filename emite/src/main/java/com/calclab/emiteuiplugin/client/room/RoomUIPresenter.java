@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.ourproject.kune.platf.client.View;
-import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.extra.muc.Occupant;

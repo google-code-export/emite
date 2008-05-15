@@ -1,5 +1,6 @@
 package com.calclab.emite.client.extra.muc;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import static com.calclab.emite.testing.MockitoEmiteHelper.packetLike;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,7 +19,6 @@ import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class MUCRoomManagerTest {
 

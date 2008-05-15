@@ -1,9 +1,12 @@
 package com.calclab.emite.client.xmpp.stanzas;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+import org.junit.Test;
 
 public class XmppURITest {
 

@@ -1,16 +1,19 @@
 package com.calclab.emite.client.core.bosh;
 
-import static org.mockito.Mockito.*;
+import static com.calclab.emite.testing.MockitoEmiteHelper.packetLike;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
-
-import static com.calclab.emite.testing.MockitoEmiteHelper.*;
 
 public class EmiteTest {
 

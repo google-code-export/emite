@@ -21,12 +21,12 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
-import com.calclab.emite.client.core.packet.NoPacket;
-import com.calclab.emite.client.core.packet.Packet;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+
 import com.calclab.emite.client.core.packet.DelegatedPacket;
 import com.calclab.emite.client.core.packet.IPacket;
-
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
+import com.calclab.emite.client.core.packet.NoPacket;
+import com.calclab.emite.client.core.packet.Packet;
 
 public class BasicStanza extends DelegatedPacket implements Stanza {
     protected static final String TYPE = "type";

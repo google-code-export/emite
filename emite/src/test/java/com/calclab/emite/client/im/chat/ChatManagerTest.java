@@ -1,6 +1,16 @@
 package com.calclab.emite.client.im.chat;
 
-import static org.junit.Assert.*;
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
@@ -10,11 +20,6 @@ import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
-
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.*;
 
 public class ChatManagerTest {
 
