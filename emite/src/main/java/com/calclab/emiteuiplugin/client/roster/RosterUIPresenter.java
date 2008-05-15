@@ -196,6 +196,22 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
         return ChatIconDescriptor.unknown;
     }
 
+    void refreshRosterItemInView(final RosterItem item, final ChatUserUI user, final boolean showUnavailable) {
+        boolean mustShow = isAvailable(item) || showUnavailable;
+        if (mustShow) {
+            if (user.getVisible()) {
+                view.updateRosterItem(user, createMenuItemList(item));
+            } else {
+                view.addRosterItem(user, createMenuItemList(item));
+            }
+        } else {
+            if (user.getVisible()) {
+                view.removeRosterItem(user);
+            }
+        }
+        user.setVisible(mustShow);
+    }
+
     private UserGridMenuItem<XmppURI> createCancelSubscriptorBuddyMenuItem(final XmppURI userURI) {
         return new UserGridMenuItem<XmppURI>("del-icon",
                 i18n.t("Stop to show when I'm connected or not to this buddy"), ON_CANCEL_SUBSCRITOR, userURI);
@@ -317,8 +333,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                     logRosterItem("Updating", item);
                     user.setStatusIcon(getPresenceIcon(item.getPresence()));
                     user.setStatusText(formatRosterItemStatusText(item.getPresence(), item.getSubscription()));
-                    boolean mustShow = showUnavailableItems || isAvailable(item);
-                    refreshRosterItemInView(item, user, mustShow);
+                    refreshRosterItemInView(item, user, showUnavailableItems);
                 }
             }
 
@@ -365,6 +380,8 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
                     break;
                 default:
                     Log.info("Manual accept/reject");
+                    // FIXME: Highlight here to advice the user this pending
+                    // request...
                     view.confirmSusbscriptionRequest(presence);
                     break;
                 }
@@ -393,8 +410,8 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
             case away:
             case dnd:
             case xa:
-                return true;
             case notSpecified:
+                return true;
             case unknown:
                 return false;
             }
@@ -413,20 +430,5 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     private void logPresence(final Presence presence, final String subTitle) {
         Log.info("PRESENCE: type: " + presence.getType() + ", from: " + presence.getFrom() + ", show: "
                 + presence.getShow() + ", status: " + presence.getStatus() + " (" + subTitle + ")");
-    }
-
-    private void refreshRosterItemInView(final RosterItem item, final ChatUserUI user, final boolean mustShow) {
-        if (mustShow) {
-            if (user.getVisible()) {
-                view.updateRosterItem(user, createMenuItemList(item));
-            } else {
-                view.addRosterItem(user, createMenuItemList(item));
-            }
-        } else {
-            if (user.getVisible()) {
-                view.removeRosterItem(user);
-            }
-        }
-        user.setVisible(mustShow);
     }
 }
