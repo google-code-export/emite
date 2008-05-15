@@ -48,17 +48,21 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
-import com.calclab.emiteuiplugin.client.ChatDialogFactory;
+import com.calclab.emiteuiplugin.client.EmiteUIFactory;
 import com.calclab.emiteuiplugin.client.UserChatOptions;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
-import com.calclab.emiteuiplugin.client.dialog.OwnPresence.OwnStatus;
 import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
+import com.calclab.emiteuiplugin.client.room.JoinRoomPanel;
 import com.calclab.emiteuiplugin.client.room.RoomUI;
 import com.calclab.emiteuiplugin.client.room.RoomUIListener;
-import com.calclab.emiteuiplugin.client.roster.RosterUI;
+import com.calclab.emiteuiplugin.client.roster.RosterPresenter;
+import com.calclab.emiteuiplugin.client.status.OwnPresence;
+import com.calclab.emiteuiplugin.client.status.StatusPanel;
+import com.calclab.emiteuiplugin.client.status.StatusPanelListener;
+import com.calclab.emiteuiplugin.client.status.OwnPresence.OwnStatus;
 
-public class MultiChatPresenter implements MultiChat {
+public class MultiChatPresenter {
     private static final OwnPresence OFFLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.offline);
     private static final OwnPresence ONLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.online);
 
@@ -66,20 +70,20 @@ public class MultiChatPresenter implements MultiChat {
     private ChatUI currentChat;
     private XmppURI currentUserJid;
     private String currentUserPasswd;
-    private final ChatDialogFactory factory;
+    private final EmiteUIFactory factory;
     private final I18nTranslationService i18n;
     private final MultiChatListener listener;
     private final PresenceManager presenceManager;
     private UserChatOptions userChatOptions;
-    private MultiChatView view;
+    private MultiChatPanel view;
     private final Xmpp xmpp;
 
     private final String roomHost;
 
-    private final RosterUI roster;
+    private final RosterPresenter roster;
 
-    public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final ChatDialogFactory factory,
-	    final MultiChatCreationParam param, final MultiChatListener listener, final RosterUI roster) {
+    public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final EmiteUIFactory factory,
+	    final MultiChatCreationParam param, final MultiChatListener listener, final RosterPresenter roster) {
 	this.xmpp = xmpp;
 	this.i18n = i18n;
 	this.factory = factory;
@@ -230,10 +234,41 @@ public class MultiChatPresenter implements MultiChat {
 	view.hide();
     }
 
-    public void init(final MultiChatView view) {
+    public void init(final MultiChatPanel view) {
 	this.view = view;
 	reset();
 	createXmppListeners();
+    }
+
+    public void initStatusPanel(final StatusPanel status) {
+	status.addListener(new StatusPanelListener() {
+	    private JoinRoomPanel joinRoomPanel;
+
+	    public void onCloseAllConfirmed() {
+		MultiChatPresenter.this.onCloseAllConfirmed();
+	    }
+
+	    public void onJoinRoom() {
+		if (joinRoomPanel == null) {
+		    joinRoomPanel = new JoinRoomPanel(i18n, MultiChatPresenter.this);
+		}
+		joinRoomPanel.show();
+
+	    }
+
+	    public void onUserColorChanged(final String color) {
+		MultiChatPresenter.this.onUserColorChanged(color);
+	    }
+
+	    public void onUserSubscriptionModeChanged(final SubscriptionMode mode) {
+		MultiChatPresenter.this.onUserSubscriptionModeChanged(mode);
+	    }
+
+	    public void setOwnPresence(final OwnPresence ownPresence) {
+		MultiChatPresenter.this.setOwnPresence(ownPresence);
+	    }
+	});
+	status.setSubscritionMode(getUserChatOptions().getSubscriptionMode());
     }
 
     public void joinChat(final XmppURI userURI) {

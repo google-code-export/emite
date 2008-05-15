@@ -28,17 +28,14 @@ import com.calclab.emiteuiplugin.client.UserChatOptions;
 public class MultiChatCreationParam {
 
     private final UserChatOptions userChatOptions;
-    private final I18nTranslationService i18nService;
     private final String roomHost;
     private final String chatDialogTitle;
     private final AvatarProvider avatarProvider;
 
     public MultiChatCreationParam(final String chatDialogTitle, final String roomHost,
-	    final I18nTranslationService i18nService, final AvatarProvider avatarProvider,
-	    final UserChatOptions userChatOptions) {
+	    final AvatarProvider avatarProvider, final UserChatOptions userChatOptions) {
 	this.chatDialogTitle = chatDialogTitle;
 	this.roomHost = roomHost;
-	this.i18nService = i18nService;
 	this.avatarProvider = avatarProvider;
 	this.userChatOptions = userChatOptions;
     }
@@ -49,10 +46,6 @@ public class MultiChatCreationParam {
 
     public String getChatDialogTitle() {
 	return chatDialogTitle;
-    }
-
-    public I18nTranslationService getI18nService() {
-	return i18nService;
     }
 
     public String getRoomHost() {

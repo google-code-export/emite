@@ -42,6 +42,7 @@ public class BasicDialogExtended extends BasicDialog {
 
 	final Button firstButton = new Button(firstButtonTitle);
 	firstButton.addListener(new ButtonListenerAdapter() {
+	    @Override
 	    public void onClick(final Button button, final EventObject e) {
 		listener.onFirstButtonClick();
 	    }
@@ -51,6 +52,7 @@ public class BasicDialogExtended extends BasicDialog {
 
 	final Button cancel = new Button(cancelButtonTitle);
 	cancel.addListener(new ButtonListenerAdapter() {
+	    @Override
 	    public void onClick(final Button button, final EventObject e) {
 		listener.onCancelButtonClick();
 	    }

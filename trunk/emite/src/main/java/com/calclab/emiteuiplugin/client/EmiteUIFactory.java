@@ -24,25 +24,37 @@ package com.calclab.emiteuiplugin.client;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPanel;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPresenter;
-import com.calclab.emiteuiplugin.client.dialog.MultiChat;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatListener;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatPanel;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
+import com.calclab.emiteuiplugin.client.params.AvatarProvider;
 import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
 import com.calclab.emiteuiplugin.client.room.RoomUI;
 import com.calclab.emiteuiplugin.client.room.RoomUIListener;
 import com.calclab.emiteuiplugin.client.room.RoomUIPanel;
 import com.calclab.emiteuiplugin.client.room.RoomUIPresenter;
 import com.calclab.emiteuiplugin.client.room.RoomUserListUIPanel;
-import com.calclab.emiteuiplugin.client.roster.RosterUIPanel;
-import com.calclab.emiteuiplugin.client.roster.RosterUIPresenter;
+import com.calclab.emiteuiplugin.client.roster.RosterPanel;
+import com.calclab.emiteuiplugin.client.roster.RosterPresenter;
+import com.calclab.emiteuiplugin.client.status.OwnPresence;
+import com.calclab.emiteuiplugin.client.status.StatusPanel;
+import com.calclab.emiteuiplugin.client.status.StatusPanelListener;
 
-public class ChatDialogFactoryImpl implements ChatDialogFactory {
+public class EmiteUIFactory {
+    private final I18nTranslationService i18n;
+    private final Xmpp xmpp;
+
+    public EmiteUIFactory(final Xmpp xmpp, final I18nTranslationService i18n) {
+	this.xmpp = xmpp;
+	this.i18n = i18n;
+    }
+
     public ChatUI createChatUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
 	    final ChatUIListener listener) {
 	final ChatUIPresenter presenter = new ChatUIPresenter(otherURI, currentUserAlias, currentUserColor, listener);
@@ -51,14 +63,13 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
 	return presenter;
     }
 
-    public MultiChat createMultiChat(final Xmpp xmpp, final MultiChatCreationParam param,
-	    final MultiChatListener listener) {
-	final I18nTranslationService i18n = param.getI18nService();
-	final RosterUIPresenter roster = new RosterUIPresenter(xmpp, i18n, param.getAvatarProvider());
-	final RosterUIPanel rosterPanel = new RosterUIPanel(i18n, roster);
-	roster.init(rosterPanel);
+    public MultiChatPresenter createMultiChat(final MultiChatCreationParam param, final MultiChatListener listener) {
+	final RosterPresenter roster = createRosterUI(param.getAvatarProvider());
 	final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, this, param, listener, roster);
-	final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), rosterPanel, i18n, presenter);
+	final StatusPanel statusPanel = new StatusPanel(i18n);
+	final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), roster.getView(), statusPanel,
+		i18n, presenter);
+	presenter.initStatusPanel(statusPanel);
 	presenter.init(panel);
 	return presenter;
     }
@@ -72,6 +83,13 @@ public class ChatDialogFactoryImpl implements ChatDialogFactory {
 	final RoomUIPanel panel = new RoomUIPanel(i18n, roomUserListUIPanel, presenter);
 	presenter.init(panel, roomUserListUIPanel);
 	return presenter;
+    }
+
+    public RosterPresenter createRosterUI(final AvatarProvider provider) {
+	final RosterPresenter roster = new RosterPresenter(xmpp, i18n, provider);
+	final RosterPanel rosterPanel = new RosterPanel(i18n, roster);
+	roster.init(rosterPanel);
+	return roster;
     }
 
 }

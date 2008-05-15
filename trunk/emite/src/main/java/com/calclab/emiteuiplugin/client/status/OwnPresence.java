@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emiteuiplugin.client.dialog;
+package com.calclab.emiteuiplugin.client.status;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.xmpp.stanzas.Presence;

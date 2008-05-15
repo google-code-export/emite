@@ -1,12 +1,14 @@
 package com.calclab.emiteui.client;
 
+import org.ourproject.kune.platf.client.services.I18nTranslationService;
+import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
+
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleContainer;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emiteuiplugin.client.ChatDialogFactory;
-import com.calclab.emiteuiplugin.client.ChatDialogFactoryImpl;
+import com.calclab.emiteuiplugin.client.EmiteUIFactory;
 import com.calclab.emiteuiplugin.client.EmiteDialog;
 
 public class EmiteUIModule implements Module {
@@ -20,14 +22,17 @@ public class EmiteUIModule implements Module {
     }
 
     public void onLoad(final Container container) {
-	final Provider<Xmpp> xmppPv = container.getProvider(Xmpp.class);
+	final Xmpp xmpp = container.getInstance(Xmpp.class);
 
-	final ChatDialogFactory factory = container.registerSingletonInstance(ChatDialogFactory.class,
-		new ChatDialogFactoryImpl());
+	final I18nTranslationService i18n = container.registerSingletonInstance(I18nTranslationService.class,
+		new I18nTranslationServiceMocked());
+
+	final EmiteUIFactory factory = container.registerSingletonInstance(EmiteUIFactory.class,
+		new EmiteUIFactory(xmpp, i18n));
 
 	container.registerProvider(EmiteDialog.class, new Provider<EmiteDialog>() {
 	    public EmiteDialog get() {
-		return new EmiteDialog(xmppPv.get(), factory);
+		return new EmiteDialog(xmpp, factory);
 	    }
 
 	});
