@@ -48,12 +48,4 @@ public class EmiteDemoUI {
 	return loginPanel;
     }
 
-    public void createShowHideButton() {
-	DefaultDispatcher.getInstance().subscribe(PlatformEvents.ATTACH_TO_EXTENSIBLE_WIDGET,
-		new Action<ExtensibleWidgetChild>() {
-		    public void execute(final ExtensibleWidgetChild extChild) {
-			RootPanel.get().add((Widget) extChild.getView(), 320, 15);
-		    }
-		});
-    }
 }

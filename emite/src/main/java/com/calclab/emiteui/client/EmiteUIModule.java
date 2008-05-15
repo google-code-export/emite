@@ -1,7 +1,5 @@
 package com.calclab.emiteui.client;
 
-import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
-
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
@@ -30,7 +28,7 @@ public class EmiteUIModule implements Module {
 	// Atención: Lazy loading y EmiteUI NO es un singleton
 	container.registerProvider(EmiteDialog.class, new Provider<EmiteDialog>() {
 	    public EmiteDialog get() {
-		return new EmiteDialog(DefaultDispatcher.getInstance(), xmppPv.get(), factory);
+		return new EmiteDialog(xmppPv.get(), factory);
 	    }
 
 	});
