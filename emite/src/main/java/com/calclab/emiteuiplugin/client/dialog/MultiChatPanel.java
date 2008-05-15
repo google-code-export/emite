@@ -431,7 +431,7 @@ public class MultiChatPanel implements MultiChatView {
         showUnavailableItems.setTooltip(i18n.t("Show/hide unavailable buddies"));
         final Toolbar bottomToolbar = new Toolbar();
         bottomToolbar.addButton(addRosterItem);
-        bottomToolbar.addFill();
+        bottomToolbar.addSeparator();
         bottomToolbar.addButton(showUnavailableItems);
         bottomToolbar.setHeight(26);
         eastPanel.setBottomToolbar(bottomToolbar);
