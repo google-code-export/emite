@@ -31,15 +31,14 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emiteuiplugin.client.AbstractPresenter;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPresenter;
 import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 import com.calclab.emiteuiplugin.client.users.RoomUserUI;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItem;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
+import com.calclab.emiteuiplugin.client.users.UserGridMenuItem.UserGridMenuItemListener;
 
-public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, AbstractPresenter {
-    private static final String NO_ACTION = "emiteuiplugin.noaction";
+public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 
     private RoomUIView view;
 
@@ -133,7 +132,10 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI, Abstract
     }
 
     private UserGridMenuItem<Object> createNoActionsMenuItem() {
-        return new UserGridMenuItem<Object>("", i18n.t("No options"), NO_ACTION, null);
+        return new UserGridMenuItem<Object>("", i18n.t("No options"), new UserGridMenuItemListener() {
+            public void onAction() {
+            }
+        });
     }
 
     private UserGridMenuItemList createUserMenu(final RoomUserUI roomUserUI) {

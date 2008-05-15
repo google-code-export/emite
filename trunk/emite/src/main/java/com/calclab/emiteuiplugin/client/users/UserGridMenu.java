@@ -23,7 +23,6 @@ package com.calclab.emiteuiplugin.client.users;
 
 import java.util.Iterator;
 
-import com.calclab.emiteuiplugin.client.AbstractPresenter;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.menu.BaseItem;
 import com.gwtext.client.widgets.menu.Item;
@@ -32,15 +31,20 @@ import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 
 public class UserGridMenu {
     private final Menu menu;
-    private final AbstractPresenter presenter;
 
-    public UserGridMenu(final AbstractPresenter presenter) {
-        this.presenter = presenter;
+    public UserGridMenu() {
         menu = new Menu();
     }
 
-    public void showMenu(final EventObject e) {
-        menu.showAt(e.getXY());
+    public void addMenuItem(final UserGridMenuItem<?> menuOpt) {
+        Item menuItem = new Item(menuOpt.getTitle());
+        menuItem.setIconCls(menuOpt.getIconCls());
+        menu.addItem(menuItem);
+        menuItem.addListener(new BaseItemListenerAdapter() {
+            public void onClick(final BaseItem item, final EventObject e) {
+                menuOpt.getListener().onAction();
+            }
+        });
     }
 
     public void setMenuItemList(final UserGridMenuItemList list) {
@@ -51,15 +55,8 @@ public class UserGridMenu {
         }
     }
 
-    public void addMenuItem(final UserGridMenuItem<?> menuOpt) {
-        Item menuItem = new Item(menuOpt.getTitle());
-        menuItem.setIconCls(menuOpt.getIconCls());
-        menu.addItem(menuItem);
-        menuItem.addListener(new BaseItemListenerAdapter() {
-            public void onClick(final BaseItem item, final EventObject e) {
-                presenter.doAction(menuOpt.getEventName(), menuOpt.getParam());
-            }
-        });
+    public void showMenu(final EventObject e) {
+        menu.showAt(e.getXY());
     }
 
 }

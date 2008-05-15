@@ -367,6 +367,7 @@ public class MultiChatPanel implements MultiChatView {
     }
 
     private void createKuneIconBottomBar() {
+        // FIXME: Esto yo lo borraría ... y lo pondría fuera de emite
         bottomIcon = new BottomTrayIcon(i18n.t("Show/hide chat dialog"));
         bottomIcon.addMainButton(icons.groupChat(), new Command() {
             public void execute() {
