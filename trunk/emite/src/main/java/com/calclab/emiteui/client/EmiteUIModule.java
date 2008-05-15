@@ -16,8 +16,8 @@ public class EmiteUIModule implements Module {
 	return container;
     }
 
-    // Atención: Lazy loading y EmiteUI NO es un singleton
     public void onLoad(final Container container) {
+	// Atención: Lazy loading y EmiteUI NO es un singleton
 	container.registerProvider(EmiteDialog.class, new Provider<EmiteDialog>() {
 	    public EmiteDialog get() {
 		return new EmiteDialog(DefaultDispatcher.getInstance());
