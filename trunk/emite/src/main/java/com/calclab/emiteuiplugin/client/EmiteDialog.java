@@ -24,14 +24,12 @@ import com.google.gwt.user.client.Window;
 
 public class EmiteDialog {
     private static final String EMITE_DEF_TITLE = "Emite Chat";
-    private final DefaultDispatcher dispatcher;
     private MultiChat multiChatDialog;
     private final Xmpp xmpp;
     private final ChatDialogFactory factory;
     private String initialWindowTitle;
 
-    public EmiteDialog(final DefaultDispatcher dispatcher, final Xmpp xmpp, final ChatDialogFactory factory) {
-	this.dispatcher = dispatcher;
+    public EmiteDialog(final Xmpp xmpp, final ChatDialogFactory factory) {
 	this.xmpp = xmpp;
 	this.factory = factory;
     }
@@ -72,10 +70,6 @@ public class EmiteDialog {
     public void start(final UserChatOptions userChatOptions, final String httpBase, final String roomHost) {
 	initialWindowTitle = Window.getTitle();
 
-	final PluginManager kunePluginManager = new PluginManager(dispatcher, new ExtensibleWidgetsManager(),
-		new I18nTranslationServiceMocked());
-	kunePluginManager.install(new EmiteUIPlugin());
-
 	final AvatarProvider avatarProvider = new AvatarProvider() {
 	    public String getAvatarURL(final XmppURI userURI) {
 		return "images/person-def.gif";
@@ -89,10 +83,6 @@ public class EmiteDialog {
     private MultiChat createChatDialog(final MultiChatCreationParam param) {
 	xmpp.setBoshOptions(param.getBoshOptions());
 	final MultiChatListener listener = new MultiChatListener() {
-	    public void attachToExtPoint(final ExtensibleWidgetChild extensionElement) {
-		dispatcher.fire(PlatformEvents.ATTACH_TO_EXTENSIBLE_WIDGET, extensionElement);
-	    }
-
 	    public void onConversationAttended(final String chatTitle) {
 		Window.setTitle(initialWindowTitle);
 	    }
@@ -110,16 +100,13 @@ public class EmiteDialog {
 	    }
 
 	    public void onUserColorChanged(final String color) {
-		dispatcher.fire(EmiteEvents.ON_USER_COLOR_SELECTED, color);
 	    }
 
 	    public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
-		dispatcher.fire(EmiteEvents.ON_USER_SUBSCRIPTION_CHANGED, subscriptionMode);
 	    }
 
 	};
 	final MultiChat dialog = factory.createMultiChat(xmpp, param, listener);
-	EmiteEvents.subscribeTo(dispatcher, dialog);
 	return dialog;
     }
 

@@ -21,13 +21,9 @@
  */
 package com.calclab.emiteuiplugin.client.dialog;
 
-import org.ourproject.kune.platf.client.extend.ExtensibleWidgetChild;
-
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 
 public interface MultiChatListener {
-
-    void attachToExtPoint(ExtensibleWidgetChild extensionElement);
 
     void onConversationAttended(String chatTitle);
 

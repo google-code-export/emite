@@ -62,7 +62,6 @@ public class EmiteUIEntryPoint implements EntryPoint {
 	    }
 	});
 
-	demo.createShowHideButton();
 	demo.createInfoPanel();
 
 	final DemoParameters params = app.getInstance(DemoParameters.class);

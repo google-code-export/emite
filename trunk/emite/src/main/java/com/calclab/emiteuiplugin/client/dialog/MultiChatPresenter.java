@@ -102,10 +102,6 @@ public class MultiChatPresenter implements MultiChat {
 	xmpp.getRosterManager().requestAddItem(uri(jid), name, null);
     }
 
-    public void attachIconToBottomBar(final View view) {
-	listener.attachToExtPoint(new ExtensibleWidgetChild(ExtensibleWidgetId.CONTENT_BOTTOM_ICONBAR, view));
-    }
-
     public void center() {
 	view.center();
     }
