@@ -96,8 +96,8 @@ public class MultiChatPanel implements MultiChatView {
     private Sound sound;
     private Label bottomInfoMessage;
     private Timer bottomInfoTimer;
-
     private BasicDialog emoticonDialog;
+    private ToolbarButton showUnavailableItems;
 
     public MultiChatPanel(final String chatDialogTitle, final RosterUIPanel rosterUIPanel,
             final I18nTranslationService i18n, final MultiChatPresenter presenter) {
@@ -255,6 +255,10 @@ public class MultiChatPanel implements MultiChatView {
         } else {
             sendBtn.disable();
         }
+    }
+
+    public void setShowUnavailableItemsButtonVisible(final boolean visible) {
+        showUnavailableItems.setVisible(visible);
     }
 
     public void setTitleConectedAs(final XmppURI currentUserJid) {
@@ -418,8 +422,16 @@ public class MultiChatPanel implements MultiChatView {
         addRosterItem.setIcon("images/user_add.gif");
         addRosterItem.setCls("x-btn-icon");
         addRosterItem.setTooltip(i18n.t("Add a new buddy"));
+        showUnavailableItems = new ToolbarButton();
+        showUnavailableItems.setEnableToggle(true);
+        showUnavailableItems.setPressed(false);
+        showUnavailableItems.setIcon("images/user-unavail.gif");
+        showUnavailableItems.setCls("x-btn-icon");
+        showUnavailableItems.setTooltip(i18n.t("Show/hide unavailable buddies"));
         final Toolbar bottomToolbar = new Toolbar();
         bottomToolbar.addButton(addRosterItem);
+        bottomToolbar.addFill();
+        bottomToolbar.addButton(showUnavailableItems);
         bottomToolbar.setHeight(26);
         eastPanel.setBottomToolbar(bottomToolbar);
         addRosterItem.addListener(new ButtonListenerAdapter() {
@@ -430,6 +442,11 @@ public class MultiChatPanel implements MultiChatView {
                     rosterItemPanel = new RosterItemPanel(i18n, presenter);
                 }
                 rosterItemPanel.show();
+            }
+        });
+        showUnavailableItems.addListener(new ButtonListenerAdapter() {
+            public void onClick(final Button button, final EventObject e) {
+                presenter.showUnavailableRosterItems(button.isPressed());
             }
         });
         eastPanel.add(rosterUIPanel);

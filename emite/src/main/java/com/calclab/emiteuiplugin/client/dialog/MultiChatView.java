@@ -78,6 +78,8 @@ public interface MultiChatView {
 
     void setSendEnabled(boolean enabled);
 
+    void setShowUnavailableItemsButtonVisible(boolean visible);
+
     void setTitleConectedAs(XmppURI currentUserJid);
 
     void show();

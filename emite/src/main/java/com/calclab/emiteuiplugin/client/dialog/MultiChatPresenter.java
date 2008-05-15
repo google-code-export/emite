@@ -316,6 +316,10 @@ public class MultiChatPresenter implements MultiChat {
         view.show();
     }
 
+    public void showUnavailableRosterItems(final boolean show) {
+        roster.showUnavailableRosterItems(show);
+    }
+
     protected void onCloseAllConfirmed() {
         for (final ChatUI chatUI : chats.values()) {
             closeChatUI(chatUI);
@@ -354,6 +358,7 @@ public class MultiChatPresenter implements MultiChat {
         view.setOfflineTitle();
         view.setLoadingVisible(false);
         view.setAddRosterItemButtonVisible(false);
+        view.setShowUnavailableItemsButtonVisible(false);
         view.setJoinRoomEnabled(false);
         view.setRosterVisible(false);
         view.setOfflineInfo();
@@ -491,6 +496,7 @@ public class MultiChatPresenter implements MultiChat {
         view.setTitleConectedAs(currentUserJid);
         view.setLoadingVisible(false);
         view.setAddRosterItemButtonVisible(true);
+        view.setShowUnavailableItemsButtonVisible(true);
         view.setJoinRoomEnabled(true);
         view.setOnlineInfo();
         view.setRosterVisible(true);
@@ -557,6 +563,8 @@ public class MultiChatPresenter implements MultiChat {
         currentChat = null;
         view.setCloseAllOptionEnabled(false);
         view.setInfoPanelVisible(true);
+        view.setOfflineInfo();
+        view.setRosterVisible(false);
         view.setSendEnabled(false);
         view.setInputEditable(false);
         view.setEmoticonButtonEnabled(false);
