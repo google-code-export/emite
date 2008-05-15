@@ -56,9 +56,20 @@ import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
 
 public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
+    public static interface RosterPresenceListener {
+	void onOpenChat(XmppURI userURI);
+
+	void onRequestRemoveItem(XmppURI userURI);
+
+	void onRequestSubscribe(XmppURI userURI);
+
+	void onRequestUnsubscribe(XmppURI userURI);
+
+    }
     public static final String ON_CANCEL_SUBSCRITOR = "emiteuiplugin.oncancelsubscriptor";
     public static final String ON_REQUEST_REMOVE_ROSTERITEM = "emiteuiplugin.onrequestremoveitem";
     public static final String ON_REQUEST_SUBSCRIBE = "emiteuiplugin.onrequestsubscribeitem";
+
     public static final String ON_REQUEST_UNSUBSCRIBE = "emiteuiplugin.onrequestunsubscribeitem";
 
     private RosterUIView view;
@@ -70,6 +81,7 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     private final AvatarProvider avatarProvider;
     private final ChatManager chatManager;
     private boolean showUnavailableItems;
+    private RosterPresenceListener listener;
 
     public RosterUIPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final AvatarProvider avatarProvider) {
 	this.i18n = i18n;
@@ -127,6 +139,10 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
     public void openChat(final XmppURI userJid) {
 	chatManager.openChat(userJid);
+    }
+
+    public void setListener(final RosterPresenceListener listener) {
+	this.listener = listener;
     }
 
     public void showUnavailableRosterItems(final boolean show) {
@@ -303,11 +319,13 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     }
 
     private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final XmppURI userURI) {
+	// listener.onRequestRemoveItem(userURI);
 	return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove this buddy"), ON_REQUEST_REMOVE_ROSTERITEM,
 		userURI);
     }
 
     private UserGridMenuItem<XmppURI> createStartChatMenuItem(final XmppURI userURI) {
+	// listener.onOpenChat(userURI);
 	// return new UserGridMenuItem<XmppURI>("newchat-icon", i18n.t("Start a
 	// chat with this buddy"),
 	// EmiteEvents.CHATOPEN, userURI);
@@ -315,11 +333,13 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     }
 
     private UserGridMenuItem<XmppURI> createSubscribeBuddyMenuItem(final XmppURI userURI) {
+	// listener.onRequestSubscribe(userURI);
 	return new UserGridMenuItem<XmppURI>("add-icon", i18n.t("Request to see when this buddy is connected or not"),
 		ON_REQUEST_SUBSCRIBE, userURI);
     }
 
     private UserGridMenuItem<XmppURI> createUnsubscribeBuddyMenuItem(final XmppURI userURI) {
+	// listener.onRequestUnsubscribe(userURI);
 	return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Stop to see when this buddy is connected or not"),
 		ON_REQUEST_UNSUBSCRIBE, userURI);
     }
