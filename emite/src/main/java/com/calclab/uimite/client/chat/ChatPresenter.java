@@ -9,24 +9,27 @@ public class ChatPresenter {
 
     public ChatPresenter(final Chat chat, final ChatView view) {
 
-	chat.addListener(new ChatListener() {
-	    public void onMessageReceived(final Chat chat, final Message message) {
-		view.show(message.getFromURI().toString(), message.getBody());
-	    }
+        // FIXME: ChatPresenter ---> Chat, un poco confuso los nombres... que es
+        // UI y que no es UI...
 
-	    public void onMessageSent(final Chat chat, final Message message) {
-		view.show("me", message.getBody());
-	    }
-	});
+        chat.addListener(new ChatListener() {
+            public void onMessageReceived(final Chat chat, final Message message) {
+                view.show(message.getFromURI().toString(), message.getBody());
+            }
 
-	view.addListener(new ChatViewListener() {
-	    public void onContentChanged() {
-	    }
+            public void onMessageSent(final Chat chat, final Message message) {
+                view.show("me", message.getBody());
+            }
+        });
 
-	    public void onSend(final String text) {
-		chat.send(text);
-	    }
-	});
+        view.addListener(new ChatViewListener() {
+            public void onContentChanged() {
+            }
+
+            public void onSend(final String text) {
+                chat.send(text);
+            }
+        });
     }
 
 }

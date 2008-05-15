@@ -41,14 +41,14 @@ public class PresenceManager extends SessionComponent {
     private final ArrayList<PresenceListener> listeners;
 
     public PresenceManager(final Emite emite) {
-	super(emite);
-	this.listeners = new ArrayList<PresenceListener>();
-	this.currentPresence = null;
-	install();
+        super(emite);
+        this.listeners = new ArrayList<PresenceListener>();
+        this.currentPresence = null;
+        install();
     }
 
     public void addListener(final PresenceListener presenceListener) {
-	this.listeners.add(presenceListener);
+        this.listeners.add(presenceListener);
     }
 
     /**
@@ -57,7 +57,7 @@ public class PresenceManager extends SessionComponent {
      * @return The current users presence
      */
     public Presence getCurrentPresence() {
-	return currentPresence;
+        return currentPresence;
     }
 
     /**
@@ -72,13 +72,13 @@ public class PresenceManager extends SessionComponent {
      */
     @Override
     public void logOut() {
-	if (isLoggedIn()) {
-	    final Presence presence = new Presence(Type.unavailable, userURI, userURI.getHostURI());
-	    emite.send(presence);
-	    delayedPresence = null;
-	    currentPresence = null;
-	}
-	super.logOut();
+        if (isLoggedIn()) {
+            final Presence presence = new Presence(Type.unavailable, userURI, userURI.getHostURI());
+            emite.send(presence);
+            delayedPresence = null;
+            currentPresence = null;
+        }
+        super.logOut();
     }
 
     /**
@@ -90,30 +90,33 @@ public class PresenceManager extends SessionComponent {
      * 'type' attribute with a value of "unavailable". (
      */
     public void setOwnPresence(final String statusMessage, final Show show) {
-	final Show showValue = show != null ? show : Presence.Show.chat;
+        final Show showValue = show != null ? show : Presence.Show.notSpecified;
+        final Presence presence = new Presence();
 
-	final Presence presence = new Presence().With(showValue);
-	if (statusMessage != null) {
-	    presence.setStatus(statusMessage);
-	}
+        if (!show.equals(Show.notSpecified)) {
+            presence.setShow(showValue);
+        }
+        if (statusMessage != null) {
+            presence.setStatus(statusMessage);
+        }
 
-	if (isLoggedIn()) {
-	    broadcastPresence(presence);
-	} else {
-	    delayedPresence = presence;
-	}
+        if (isLoggedIn()) {
+            broadcastPresence(presence);
+        } else {
+            delayedPresence = presence;
+        }
     }
 
     private void broadcastPresence(final Presence presence) {
-	presence.setFrom(userURI);
-	emite.send(presence);
-	currentPresence = presence;
+        presence.setFrom(userURI);
+        emite.send(presence);
+        currentPresence = presence;
     }
 
     private void firePresenceReceived(final Presence presence) {
-	for (final PresenceListener listener : listeners) {
-	    listener.onPresenceReceived(presence);
-	}
+        for (final PresenceListener listener : listeners) {
+            listener.onPresenceReceived(presence);
+        }
     };
 
     /**
@@ -121,36 +124,36 @@ public class PresenceManager extends SessionComponent {
      * SHOULD request the roster before sending initial presence
      */
     private void install() {
-	emite.subscribe(when(RosterManager.Events.ready), new PacketListener() {
-	    public void handle(final IPacket received) {
-		currentPresence = new Presence(userURI).With(Presence.Show.chat);
-		emite.send(currentPresence);
-		if (delayedPresence != null) {
-		    broadcastPresence(delayedPresence);
-		    delayedPresence = null;
-		}
-	    }
-	});
+        emite.subscribe(when(RosterManager.Events.ready), new PacketListener() {
+            public void handle(final IPacket received) {
+                currentPresence = new Presence(userURI).With(Presence.Show.chat);
+                emite.send(currentPresence);
+                if (delayedPresence != null) {
+                    broadcastPresence(delayedPresence);
+                    delayedPresence = null;
+                }
+            }
+        });
 
-	emite.subscribe(when("presence"), new PacketListener() {
-	    public void handle(final IPacket received) {
+        emite.subscribe(when("presence"), new PacketListener() {
+            public void handle(final IPacket received) {
 
-		final Presence presence = new Presence(received);
-		switch (presence.getType()) {
+                final Presence presence = new Presence(received);
+                switch (presence.getType()) {
 
-		case probe:
-		    emite.send(currentPresence);
-		    break;
-		case error:
-		    // FIXME: what should we do?
-		    Log.warn("Error presence!!!");
-		    break;
-		default:
-		    firePresenceReceived(presence);
-		    break;
-		}
-	    }
-	});
+                case probe:
+                    emite.send(currentPresence);
+                    break;
+                case error:
+                    // FIXME: what should we do?
+                    Log.warn("Error presence!!!");
+                    break;
+                default:
+                    firePresenceReceived(presence);
+                    break;
+                }
+            }
+        });
 
     }
 

@@ -299,7 +299,7 @@ public class MultiChatPanel implements MultiChatView {
 
     private void configureSound() {
         soundController = new SoundController();
-        soundController.setPrioritizeFlashSound(false);
+        // soundController.setPrioritizeFlashSound(false);
         // soundController.setDefaultVolume(0);
         sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
     }
