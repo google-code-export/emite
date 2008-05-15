@@ -33,6 +33,10 @@ public class AvatarModule implements Module {
 	return components.getInstance(COMPONENTS_MANAGER);
     }
 
+    public Class<? extends Module> getType() {
+	return AvatarModule.class;
+    }
+
     public void onLoad(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	final AvatarManager avatar = new AvatarManager(emite);

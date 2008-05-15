@@ -22,6 +22,7 @@
 package com.calclab.emiteui.client;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.EmiteModule;
 import com.calclab.emite.client.modular.ModuleContainer;
 import com.calclab.emiteui.client.demo.DemoModule;
 import com.calclab.emiteui.client.demo.EmiteDemoUI;
@@ -46,11 +47,14 @@ public class EmiteUIEntryPoint implements EntryPoint {
     }
 
     public void onModuleLoadCont() {
-	final ModuleContainer container = new ModuleContainer();
-	container.load(new EmiteUIModule(), new DemoModule());
-	final EmiteDialog emiteDialog = container.getInstance(EmiteDialog.class);
+	final ModuleContainer app = new ModuleContainer();
+	EmiteModule.load(app);
+	EmiteUIModule.loadWithDependencies(app);
+	app.add(new DemoModule());
 
-	final EmiteDemoUI demo = container.getInstance(EmiteDemoUI.class);
+	final EmiteDialog emiteDialog = app.getInstance(EmiteDialog.class);
+
+	final EmiteDemoUI demo = app.getInstance(EmiteDemoUI.class);
 
 	final LoginPanel loginPanel = demo.createLoginPanel(new LoginPanelListener() {
 	    public void onUserChanged(final UserChatOptions userChatOptions) {
@@ -61,7 +65,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
 	demo.createShowHideButton();
 	demo.createInfoPanel();
 
-	final DemoParameters params = container.getInstance(DemoParameters.class);
+	final DemoParameters params = app.getInstance(DemoParameters.class);
 	emiteDialog.start(loginPanel.getUserChatOptions(), params.getHttpBase(), params.getRoomHost());
 	emiteDialog.show(OwnStatus.offline);
     }

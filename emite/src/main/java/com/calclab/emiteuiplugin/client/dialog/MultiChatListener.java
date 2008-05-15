@@ -29,7 +29,13 @@ public interface MultiChatListener {
 
     void attachToExtPoint(ExtensibleWidgetChild extensionElement);
 
-    void doAction(String eventId, Object param);
+    void onConversationAttended(String chatTitle);
+
+    void onConversationUnnatended(String conversationName);
+
+    void onStateConnected();
+
+    void onStateDisconnected();
 
     void onUserColorChanged(String color);
 

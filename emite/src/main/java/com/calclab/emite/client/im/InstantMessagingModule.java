@@ -52,6 +52,10 @@ public class InstantMessagingModule implements Module {
 	return container.getInstance(COMPONENT_ROSTER_MANAGER);
     }
 
+    public Class<? extends Module> getType() {
+	return InstantMessagingModule.class;
+    }
+
     public void onLoad(final Container container) {
 	final Emite emite = CoreModule.getEmite(container);
 	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(emite);

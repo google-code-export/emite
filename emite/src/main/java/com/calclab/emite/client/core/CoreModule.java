@@ -29,7 +29,7 @@ import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.core.services.Services;
-import com.calclab.emite.client.core.services.ServicesAbstractModule;
+import com.calclab.emite.client.core.services.ServicesModule;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 
@@ -46,8 +46,12 @@ public class CoreModule implements Module {
 	return container.getInstance(Emite.class);
     }
 
+    public Class<? extends Module> getType() {
+	return CoreModule.class;
+    }
+
     public void onLoad(final Container container) {
-	final Services services = ServicesAbstractModule.getServices(container);
+	final Services services = ServicesModule.getServices(container);
 
 	final Dispatcher dispatcher = container.registerSingletonInstance(Dispatcher.class, new DispatcherDefault());
 	final Stream stream = new Stream();

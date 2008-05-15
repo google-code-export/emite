@@ -26,12 +26,12 @@ public class DelegatedContainer implements Container {
 	return delegate.getProvider(componentKey);
     }
 
-    public <T> T registerSingletonInstance(final Class<T> componentType, final T component) {
-	return delegate.registerSingletonInstance(componentType, component);
-    }
-
     public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider) {
 	return delegate.registerProvider(componentKey, provider);
+    }
+
+    public <T> T registerSingletonInstance(final Class<T> componentType, final T component) {
+	return delegate.registerSingletonInstance(componentType, component);
     }
 
 }

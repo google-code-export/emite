@@ -21,10 +21,22 @@
  */
 package com.calclab.emite.client.modular;
 
+import java.util.HashMap;
+
 /**
  * A container with module installation support
  */
-public class ModuleContainer extends HashContainer {
+public class ModuleContainer extends DelegatedContainer {
+    private HashMap<Class<?>, Module> modules;
+
+    public ModuleContainer() {
+	this(new HashContainer());
+	this.modules = new HashMap<Class<?>, Module>();
+    }
+
+    public ModuleContainer(final Container delegate) {
+	super(delegate);
+    }
 
     /**
      * load the modules list into the container
@@ -32,8 +44,17 @@ public class ModuleContainer extends HashContainer {
      * @param module
      *                list
      */
-    public void load(final Module... modules) {
-	for (final Module m : modules) {
+    public void add(final Module... toAddModules) {
+	for (final Module m : toAddModules) {
+	    loadIfNeeded(m);
+	}
+    }
+
+    private void loadIfNeeded(final Module m) {
+	final Class<?> type = m.getType();
+	final Module oldModule = modules.get(type);
+	if (oldModule == null) {
+	    modules.put(type, m);
 	    m.onLoad(this);
 	}
     }
