@@ -29,10 +29,6 @@ public interface MultiChatListener {
 
     void onConversationUnnatended(String conversationName);
 
-    void onStateConnected();
-
-    void onStateDisconnected();
-
     void onUserColorChanged(String color);
 
     void onUserSubscriptionModeChanged(SubscriptionMode subscriptionMode);

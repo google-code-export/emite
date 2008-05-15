@@ -86,12 +86,6 @@ public class EmiteDialog {
 		Window.setTitle("(* " + chatTitle + ") " + initialWindowTitle);
 	    }
 
-	    public void onStateConnected() {
-	    }
-
-	    public void onStateDisconnected() {
-	    }
-
 	    public void onUserColorChanged(final String color) {
 	    }
 

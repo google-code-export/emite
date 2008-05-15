@@ -13,19 +13,32 @@ import com.calclab.emite.client.core.packet.NoPacket;
 import com.calclab.emite.client.core.packet.TextUtils;
 
 public class TigasePacket extends DSLPacket {
+    private static interface Filter {
+
+	boolean isValid(Element e);
+
+    }
+
     private final Element delegate;
 
     public TigasePacket(final Element element) {
 	this.delegate = element;
     }
 
-    public IPacket add(final String nodeName, final String xmlns) {
-	throw new RuntimeException("not implemented");
+    public TigasePacket(final String name) {
+	this(new Element(name));
     }
 
-    // TODO
-    public void addChild(final IPacket toBeSend) {
-	throw new RuntimeException("not implemented");
+    public IPacket add(final String nodeName, final String xmlns) {
+	final TigasePacket child = new TigasePacket(nodeName);
+	child.setAttribute("xmlns", xmlns);
+	addChild(child);
+	return child;
+    }
+
+    public void addChild(final IPacket child) {
+	final TigasePacket tigaseChild = (TigasePacket) child;
+	delegate.addChild(tigaseChild.delegate);
     }
 
     public String getAttribute(final String name) {
@@ -43,11 +56,22 @@ public class TigasePacket extends DSLPacket {
 
     public List<? extends IPacket> getChildren() {
 	final List<Element> children = delegate.getChildren();
-	return wrap(children);
+	return wrap(children, new Filter() {
+	    public boolean isValid(final Element e) {
+		return true;
+	    }
+
+	});
     }
 
     public List<IPacket> getChildren(final String name) {
-	return wrap(delegate.getChildren(name));
+	final List<Element> children = delegate.getChildren();
+	return wrap(children, new Filter() {
+	    public boolean isValid(final Element e) {
+		return e.getName().equals(name);
+	    }
+
+	});
     }
 
     public int getChildrenCount() {
@@ -92,11 +116,12 @@ public class TigasePacket extends DSLPacket {
 	return delegate.toString();
     }
 
-    private List<IPacket> wrap(final List<Element> children) {
+    private List<IPacket> wrap(final List<Element> children, final Filter filter) {
 	final ArrayList<IPacket> result = new ArrayList<IPacket>();
 	if (children != null) {
 	    for (final Element e : children) {
-		result.add(new TigasePacket(e));
+		if (filter.isValid(e))
+		    result.add(new TigasePacket(e));
 	    }
 	}
 	return result;
