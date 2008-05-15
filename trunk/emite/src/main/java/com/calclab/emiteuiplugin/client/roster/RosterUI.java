@@ -34,4 +34,6 @@ public interface RosterUI {
 
     View getView();
 
+    void showUnavailableRosterItems(boolean show);
+
 }

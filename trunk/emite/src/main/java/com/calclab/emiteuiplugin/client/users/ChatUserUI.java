@@ -30,6 +30,8 @@ public class ChatUserUI extends AbstractChatUser {
 
     private String statusText;
 
+    private boolean visible;
+
     public ChatUserUI(final String iconUrl, final RosterItem rosterItem, final String color) {
         super(iconUrl, rosterItem.getJID(), rosterItem.getName(), color);
     }
@@ -42,12 +44,20 @@ public class ChatUserUI extends AbstractChatUser {
         return statusText;
     }
 
+    public boolean getVisible() {
+        return visible;
+    }
+
     public void setStatusIcon(final ChatIconDescriptor statusIcon) {
         this.statusIcon = statusIcon;
     }
 
     public void setStatusText(final String statusText) {
         this.statusText = statusText;
+    }
+
+    public void setVisible(final boolean visible) {
+        this.visible = visible;
     }
 
 }
