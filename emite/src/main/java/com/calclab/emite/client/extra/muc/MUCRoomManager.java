@@ -24,6 +24,8 @@ package com.calclab.emite.client.extra.muc;
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
@@ -45,110 +47,116 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     private final HashMap<XmppURI, Room> rooms;
 
     public MUCRoomManager(final Emite emite) {
-	super(emite);
-	this.rooms = new HashMap<XmppURI, Room>();
-	install();
+        super(emite);
+        this.rooms = new HashMap<XmppURI, Room>();
+        install();
     }
 
     @Override
     public void close(final Chat whatToClose) {
-	final Room room = rooms.remove(whatToClose.getOtherURI().getJID());
-	if (room != null) {
-	    room.close();
-	    fireChatClosed(room);
-	}
+        final Room room = rooms.remove(whatToClose.getOtherURI().getJID());
+        if (room != null) {
+            room.close();
+            fireChatClosed(room);
+        }
     }
 
     @Override
     // FIXME: quizá añadir una propiedad de "locked" al Room?
     public Room openChat(final XmppURI roomURI) {
-	Room room = rooms.get(roomURI.getJID());
-	if (room == null) {
-	    room = new Room(userURI, roomURI.getJID(), "the name of the room", emite);
-	    rooms.put(roomURI.getJID(), room);
-	    chats.add(room);
-	    final Presence presence = new Presence(null, userURI, roomURI);
-	    presence.addChild(new Packet("x", "http://jabber.org/protocol/muc"));
-	    emite.send(presence);
-	    fireChatCreated(room);
-	}
-	return room;
+        Room room = rooms.get(roomURI.getJID());
+        if (room == null) {
+            room = new Room(userURI, roomURI.getJID(), "the name of the room", emite);
+            rooms.put(roomURI.getJID(), room);
+            chats.add(room);
+            final Presence presence = new Presence(null, userURI, roomURI);
+            presence.addChild(new Packet("x", "http://jabber.org/protocol/muc"));
+            emite.send(presence);
+            fireChatCreated(room);
+        }
+        return room;
     }
 
     @Override
     protected void eventMessage(final Message message) {
-	IPacket child;
-	if (message.getType() == Message.Type.groupchat) {
-	    final Room room = rooms.get(message.getFromURI().getJID());
-	    if (room != null) {
-		room.dispatch(message);
-	    }
-	} else if ((child = message.getFirstChild("x").getFirstChild("invite")) != NoPacket.INSTANCE) {
-	    handleRoomInvitation(message.getFromURI(), new BasicStanza(child));
-	}
+        IPacket child;
+        if (message.getType() == Message.Type.groupchat) {
+            final Room room = rooms.get(message.getFromURI().getJID());
+            if (room != null) {
+                room.dispatch(message);
+            }
+        } else if ((child = message.getFirstChild("x").getFirstChild("invite")) != NoPacket.INSTANCE) {
+            handleRoomInvitation(message.getFromURI(), new BasicStanza(child));
+        }
 
     }
 
     private void createInstantRoom(final Room room) {
-	final IQ iq = new IQ(Type.set, userURI, room.getOtherURI()).WithQuery("http://jabber.org/protocol/muc#owner",
-		new Packet("x", "jabber:x:data").With("type", "submit"));
-	emite.sendIQ("rooms", iq, new PacketListener() {
-	    public void handle(final IPacket received) {
-		if (IQ.isSuccess(received)) {
+        final IQ iq = new IQ(Type.set, userURI, room.getOtherURI()).WithQuery("http://jabber.org/protocol/muc#owner",
+                new Packet("x", "jabber:x:data").With("type", "submit"));
+        emite.sendIQ("rooms", iq, new PacketListener() {
+            public void handle(final IPacket received) {
+                if (IQ.isSuccess(received)) {
 
-		}
-	    }
-	});
+                }
+            }
+        });
     }
 
     /**
      * @see http://www.xmpp.org/extensions/xep-0045.html#createroom
      */
+    @SuppressWarnings("unchecked")
     private void eventPresence(final Presence presence) {
-	final XmppURI occupantURI = presence.getFromURI();
-	final Room room = rooms.get(occupantURI.getJID());
-	if (room != null) {
-	    if (presence.hasAttribute("type", "unavailable")) {
-		room.removeOccupant(occupantURI);
-	    } else {
-		final IPacket xtension = presence.getFirstChild("x");
-		if (xtension.hasAttribute("xmlns", "http://jabber.org/protocol/muc#user")) {
-		    final IPacket item = xtension.getFirstChild("item");
-		    final String affiliation = item.getAttribute("affiliation");
-		    final String role = item.getAttribute("role");
-		    room.setOccupantPresence(occupantURI, affiliation, role);
-		    if (isNewRoom(xtension)) {
-			createInstantRoom(room);
-		    }
-		}
-	    }
-	}
+        final XmppURI occupantURI = presence.getFromURI();
+        final Room room = rooms.get(occupantURI.getJID());
+        if (room != null) {
+            if (presence.hasAttribute("type", "unavailable")) {
+                room.removeOccupant(occupantURI);
+            } else {
+                // final IPacket xtension = presence.getFirstChild("x");
+                final List<? extends IPacket> children = presence.getChildren();
+                for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+                    IPacket child = (IPacket) iterator.next();
+                    if (child.getName().equals("x")
+                            && child.hasAttribute("xmlns", "http://jabber.org/protocol/muc#user")) {
+                        final IPacket item = child.getFirstChild("item");
+                        final String affiliation = item.getAttribute("affiliation");
+                        final String role = item.getAttribute("role");
+                        room.setOccupantPresence(occupantURI, affiliation, role);
+                        if (isNewRoom(child)) {
+                            createInstantRoom(room);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void fireInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
-	for (final ChatManagerListener listener : listeners) {
-	    try {
-		((RoomManagerListener) listener).onInvitationReceived(invitor, roomURI, reason);
-	    } catch (final ClassCastException e) {
-	    }
-	}
+        for (final ChatManagerListener listener : listeners) {
+            try {
+                ((RoomManagerListener) listener).onInvitationReceived(invitor, roomURI, reason);
+            } catch (final ClassCastException e) {
+            }
+        }
     }
 
     private void handleRoomInvitation(final XmppURI roomURI, final Stanza invitation) {
-	fireInvitationReceived(invitation.getFromURI(), roomURI, invitation.getFirstChild("reason").getText());
+        fireInvitationReceived(invitation.getFromURI(), roomURI, invitation.getFirstChild("reason").getText());
     }
 
     private void install() {
-	emite.subscribe(when("presence"), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventPresence(new Presence(received));
-	    }
-	});
+        emite.subscribe(when("presence"), new PacketListener() {
+            public void handle(final IPacket received) {
+                eventPresence(new Presence(received));
+            }
+        });
     }
 
     private boolean isNewRoom(final IPacket xtension) {
-	final String code = xtension.getFirstChild("status").getAttribute("code");
-	return (code != null && code.equals("201"));
+        final String code = xtension.getFirstChild("status").getAttribute("code");
+        return code != null && code.equals("201");
     }
 
 }
