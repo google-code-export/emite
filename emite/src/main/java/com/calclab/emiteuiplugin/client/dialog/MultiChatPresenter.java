@@ -442,14 +442,12 @@ public class MultiChatPresenter {
 		    break;
 		case connected:
 		    doAfterLogin();
-		    listener.onStateConnected();
 		    break;
 		case connecting:
 		    doConnecting();
 		    break;
 		case disconnected:
 		    doAfterLogout();
-		    listener.onStateDisconnected();
 		    break;
 		}
 	    }
