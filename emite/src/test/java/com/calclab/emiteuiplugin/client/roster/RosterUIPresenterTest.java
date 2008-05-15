@@ -11,7 +11,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -33,7 +32,6 @@ public class RosterUIPresenterTest {
     private RosterItem rosterItem;
     private XmppURI otherUri;
     private XmppURI meUri;
-    private RosterManager rosterManager;
     private I18nTranslationServiceMocked i18n;
 
     @Test
@@ -56,7 +54,6 @@ public class RosterUIPresenterTest {
 
         // Mocks creation
         final MockitoXmpp xmpp = new MockitoXmpp();
-        rosterManager = xmpp.getRosterManager();
         presenceManager = xmpp.getPresenceManager();
         presenceListener = Mockito.mock(PresenceListener.class);
         presenceManager.addListener(presenceListener);
@@ -106,18 +103,6 @@ public class RosterUIPresenterTest {
         assertEquals(ChatUIUtils.getShowText(i18n, Show.dnd), rosterUI.formatRosterItemStatusText(presence, null));
         presence = createPresence(Type.available, Show.dnd, "null");
         assertEquals(ChatUIUtils.getShowText(i18n, Show.dnd), rosterUI.formatRosterItemStatusText(presence, null));
-    }
-
-    @Test
-    public void subscribeAction() {
-        rosterUI.doAction(RosterUIPresenter.ON_REQUEST_SUBSCRIBE, rosterItem.getJID());
-        Mockito.verify(rosterManager).requestSubscribe(otherUri);
-    }
-
-    @Test
-    public void unSubscribeAction() {
-        rosterUI.doAction(RosterUIPresenter.ON_CANCEL_SUBSCRITOR, rosterItem.getJID());
-        Mockito.verify(rosterManager).cancelSubscriptor(otherUri);
     }
 
     @Test

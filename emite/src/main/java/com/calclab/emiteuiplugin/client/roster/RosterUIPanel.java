@@ -54,7 +54,7 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
     }
 
     public void addRosterItem(final ChatUserUI user, final UserGridMenuItemList menuItemList) {
-        final UserGridMenu menu = new UserGridMenu(presenter);
+        final UserGridMenu menu = new UserGridMenu();
         menu.setMenuItemList(menuItemList);
         super.addUser(user, menu);
     }
@@ -94,7 +94,7 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
     }
 
     public void updateRosterItem(final ChatUserUI user, final UserGridMenuItemList menuItemList) {
-        final UserGridMenu menu = new UserGridMenu(presenter);
+        final UserGridMenu menu = new UserGridMenu();
         menu.setMenuItemList(menuItemList);
         super.updateRosterItem(user, menu);
     }
