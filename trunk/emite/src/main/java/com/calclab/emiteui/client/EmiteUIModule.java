@@ -25,7 +25,6 @@ public class EmiteUIModule implements Module {
 	final ChatDialogFactory factory = container.registerSingletonInstance(ChatDialogFactory.class,
 		new ChatDialogFactoryImpl());
 
-	// Atención: Lazy loading y EmiteUI NO es un singleton
 	container.registerProvider(EmiteDialog.class, new Provider<EmiteDialog>() {
 	    public EmiteDialog get() {
 		return new EmiteDialog(xmppPv.get(), factory);

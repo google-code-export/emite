@@ -2,11 +2,6 @@ package com.calclab.emiteuiplugin.client;
 
 import java.util.Date;
 
-import org.ourproject.kune.platf.client.PlatformEvents;
-import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
-import org.ourproject.kune.platf.client.extend.ExtensibleWidgetChild;
-import org.ourproject.kune.platf.client.extend.ExtensibleWidgetsManager;
-import org.ourproject.kune.platf.client.extend.PluginManager;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.emite.client.Xmpp;
@@ -41,7 +36,7 @@ public class EmiteDialog {
     public void getChatDialog(final MultiChatCreationParam param) {
 	if (multiChatDialog == null) {
 	    multiChatDialog = createChatDialog(param);
-	    EmiteUIPlugin.preFetchImages();
+	    ImagesHelper.preFetchImages();
 	}
     }
 
@@ -75,13 +70,14 @@ public class EmiteDialog {
 		return "images/person-def.gif";
 	    }
 	};
-	getChatDialog(new MultiChatCreationParam(EMITE_DEF_TITLE, new BoshOptions(httpBase), roomHost,
-		new I18nTranslationServiceMocked(), avatarProvider, userChatOptions));
+	xmpp.setBoshOptions(new BoshOptions(httpBase));
+	getChatDialog(new MultiChatCreationParam(EMITE_DEF_TITLE, roomHost, new I18nTranslationServiceMocked(),
+		avatarProvider, userChatOptions));
 
     }
 
     private MultiChat createChatDialog(final MultiChatCreationParam param) {
-	xmpp.setBoshOptions(param.getBoshOptions());
+
 	final MultiChatListener listener = new MultiChatListener() {
 	    public void onConversationAttended(final String chatTitle) {
 		Window.setTitle(initialWindowTitle);
@@ -95,8 +91,6 @@ public class EmiteDialog {
 	    }
 
 	    public void onStateDisconnected() {
-		// TODO Auto-generated method stub
-
 	    }
 
 	    public void onUserColorChanged(final String color) {

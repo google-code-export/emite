@@ -1,5 +1,6 @@
 package com.calclab.emite.client.xmpp.session;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -12,7 +13,6 @@ import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class SessionManagerTest {
 

@@ -1,9 +1,13 @@
 package com.calclab.emite.client.core.dispatcher;
 
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+import static com.calclab.emite.testing.MockitoEmiteHelper.packetLike;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.*;
-import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.*;
-import static com.calclab.emite.testing.MockitoEmiteHelper.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.stubVoid;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

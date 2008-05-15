@@ -23,23 +23,20 @@ package com.calclab.emiteuiplugin.client.params;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emiteuiplugin.client.UserChatOptions;
 
 public class MultiChatCreationParam {
 
-    private final BoshOptions boshOptions;
     private final UserChatOptions userChatOptions;
     private final I18nTranslationService i18nService;
     private final String roomHost;
     private final String chatDialogTitle;
     private final AvatarProvider avatarProvider;
 
-    public MultiChatCreationParam(final String chatDialogTitle, final BoshOptions boshOptions, final String roomHost,
+    public MultiChatCreationParam(final String chatDialogTitle, final String roomHost,
 	    final I18nTranslationService i18nService, final AvatarProvider avatarProvider,
 	    final UserChatOptions userChatOptions) {
 	this.chatDialogTitle = chatDialogTitle;
-	this.boshOptions = boshOptions;
 	this.roomHost = roomHost;
 	this.i18nService = i18nService;
 	this.avatarProvider = avatarProvider;
@@ -48,10 +45,6 @@ public class MultiChatCreationParam {
 
     public AvatarProvider getAvatarProvider() {
 	return avatarProvider;
-    }
-
-    public BoshOptions getBoshOptions() {
-	return boshOptions;
     }
 
     public String getChatDialogTitle() {

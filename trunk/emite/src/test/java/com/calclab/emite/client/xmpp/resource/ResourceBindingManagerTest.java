@@ -1,13 +1,13 @@
 package com.calclab.emite.client.xmpp.resource;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.testing.EmiteTestHelper;
-
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class ResourceBindingManagerTest {
 

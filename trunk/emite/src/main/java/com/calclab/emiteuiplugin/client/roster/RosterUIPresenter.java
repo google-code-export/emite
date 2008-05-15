@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.ourproject.kune.platf.client.View;
-import org.ourproject.kune.platf.client.dispatch.DefaultDispatcher;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;

@@ -1,11 +1,12 @@
 package com.calclab.emite.client.im.chat;
 
+import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static org.mockito.Mockito.mock;
+
 import org.junit.Before;
-import static org.mockito.Mockito.*;
 import org.junit.Test;
 
 import com.calclab.emite.testing.EmiteTestHelper;
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.*;
 
 public class ChatTest {
     private EmiteTestHelper emite;
