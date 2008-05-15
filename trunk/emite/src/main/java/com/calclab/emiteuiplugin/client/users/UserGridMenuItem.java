@@ -23,32 +23,46 @@ package com.calclab.emiteuiplugin.client.users;
 
 public class UserGridMenuItem<T> {
 
+    public interface UserGridMenuItemListener {
+	public void onAction();
+    }
+
     final String iconCls;
     final String title;
-    final String eventName;
-    final T param;
+    String eventName;
 
+    T param;
+    private UserGridMenuItemListener listener;
+
+    @Deprecated
     public UserGridMenuItem(final String iconCls, final String title, final String eventName, final T param) {
-        this.iconCls = iconCls;
-        this.title = title;
-        this.eventName = eventName;
-        this.param = param;
+	this.iconCls = iconCls;
+	this.title = title;
+	this.eventName = eventName;
+	this.param = param;
     }
 
-    public String getIconCls() {
-        return iconCls;
-    }
-
-    public String getTitle() {
-        return title;
+    public UserGridMenuItem(final String iconCls, final String title, final UserGridMenuItemListener listener) {
+	this.listener = listener;
+	this.listener = listener;
+	this.iconCls = iconCls;
+	this.title = title;
     }
 
     public String getEventName() {
-        return eventName;
+	return eventName;
+    }
+
+    public String getIconCls() {
+	return iconCls;
     }
 
     public T getParam() {
-        return param;
+	return param;
+    }
+
+    public String getTitle() {
+	return title;
     }
 
 }

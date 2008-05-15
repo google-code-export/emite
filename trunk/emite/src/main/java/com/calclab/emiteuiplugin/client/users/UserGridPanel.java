@@ -116,6 +116,7 @@ public class UserGridPanel extends Panel {
 	dCfg.setTarget(true);
 	dCfg.setdDdGroup(dropGridConfiguration.getDdGroupId());
 	new DropTarget(panel, dCfg) {
+	    @Override
 	    public boolean notifyDrop(final DragSource src, final EventObject e, final DragData dragData) {
 		if (dragData instanceof GridDragData) {
 		    final GridDragData gridDragData = (GridDragData) dragData;
@@ -128,10 +129,12 @@ public class UserGridPanel extends Panel {
 		return true;
 	    }
 
+	    @Override
 	    public String notifyEnter(final DragSource src, final EventObject e, final DragData data) {
 		return "x-tree-drop-ok-append";
 	    }
 
+	    @Override
 	    public String notifyOver(final DragSource src, final EventObject e, final DragData data) {
 		return "x-tree-drop-ok-append";
 	    }
@@ -206,6 +209,7 @@ public class UserGridPanel extends Panel {
 	dCfg.setTarget(true);
 	dCfg.setdDdGroup(dropGridConfiguration.getDdGroupId());
 	new DropTarget(grid, dCfg) {
+	    @Override
 	    public boolean notifyDrop(final DragSource src, final EventObject e, final DragData dragData) {
 		if (dragData instanceof GridDragData) {
 		    final GridDragData gridDragData = (GridDragData) dragData;
@@ -217,10 +221,12 @@ public class UserGridPanel extends Panel {
 		return true;
 	    }
 
+	    @Override
 	    public String notifyEnter(final DragSource src, final EventObject e, final DragData data) {
 		return "x-tree-drop-ok-append";
 	    }
 
+	    @Override
 	    public String notifyOver(final DragSource src, final EventObject e, final DragData data) {
 		return "x-tree-drop-ok-append";
 	    }
@@ -284,6 +290,7 @@ public class UserGridPanel extends Panel {
 	grid.setAutoExpandMax(81);
 	grid.setSelectionModel(new RowSelectionModel());
 	grid.addGridCellListener(new GridCellListenerAdapter() {
+	    @Override
 	    public void onCellDblClick(final GridPanel grid, final int rowIndex, final int colIndex, final EventObject e) {
 		onDoubleClick(rowIndex);
 	    }

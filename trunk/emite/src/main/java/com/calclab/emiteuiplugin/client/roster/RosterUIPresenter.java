@@ -52,7 +52,10 @@ import com.calclab.emiteuiplugin.client.params.AvatarProvider;
 import com.calclab.emiteuiplugin.client.users.ChatUserUI;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItem;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
+import com.calclab.emiteuiplugin.client.users.UserGridMenuItem.UserGridMenuItemListener;
 import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.Widget;
 
 public class RosterUIPresenter implements RosterUI, AbstractPresenter {
 
@@ -319,9 +322,18 @@ public class RosterUIPresenter implements RosterUI, AbstractPresenter {
     }
 
     private UserGridMenuItem<XmppURI> createRemoveBuddyMenuItem(final XmppURI userURI) {
-	// listener.onRequestRemoveItem(userURI);
-	return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove this buddy"), ON_REQUEST_REMOVE_ROSTERITEM,
-		userURI);
+
+	return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove this buddy"),
+		new UserGridMenuItemListener() {
+
+		    public void onAction() {
+			listener.onRequestRemoveItem(userURI);
+		    }
+		});
+
+	// return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove
+	// this buddy"), ON_REQUEST_REMOVE_ROSTERITEM,
+	// userURI);
     }
 
     private UserGridMenuItem<XmppURI> createStartChatMenuItem(final XmppURI userURI) {
