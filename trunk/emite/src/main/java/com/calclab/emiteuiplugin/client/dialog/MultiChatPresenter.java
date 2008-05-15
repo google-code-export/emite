@@ -486,6 +486,7 @@ public class MultiChatPresenter implements MultiChat {
             }
 
             public void onInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
+                view.highLight();
                 view.roomJoinConfirm(invitor, roomURI, reason);
             }
         });
