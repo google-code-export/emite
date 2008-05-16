@@ -43,6 +43,8 @@ public interface ChatUI {
 
     String getSavedInput();
 
+    String getSavedMessageEventInfo();
+
     View getView();
 
     void highLightChatTitle();
@@ -58,6 +60,8 @@ public interface ChatUI {
     void onUserDrop(XmppURI userURI);
 
     void saveInput(String inputText);
+
+    void setSavedMessageEventInfo(String savedMessageEventInfo);
 
     void setUserColor(String userAlias, String color);
 
