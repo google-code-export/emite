@@ -141,6 +141,9 @@ public class ChatUIPresenter implements ChatUI {
 
     public void onClose() {
         listener.onClose(this);
+        timer.cancel();
+        // FIXME: This in lib...
+        chatState = ChatState.gone;
     }
 
     public void onComposing() {
