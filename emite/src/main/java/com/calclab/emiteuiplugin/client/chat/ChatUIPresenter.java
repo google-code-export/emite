@@ -25,13 +25,23 @@ import java.util.HashMap;
 
 import org.ourproject.kune.platf.client.View;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 
 public class ChatUIPresenter implements ChatUI {
 
+    // FIXME: this in Chat or new ChatState module, here only a listener
+    public static enum ChatState {
+        active, composing, pause, inactive, gone
+    }
+    private static final int MILLISECONS_TO_PAUSE = 5000;
+    private static final int MILLISECONS_TO_INACTIVE = 30000;
+    private static final int MILLISECONS_TO_GONE = 120000;
+
     private static final String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
             "purple", "fuchsia", "maroon", "red" };
+    public ChatState chatState;
     private ChatUIView view;
     private String savedInput;
     private String savedMessageEventInfo;
@@ -44,6 +54,7 @@ public class ChatUIPresenter implements ChatUI {
     private boolean alreadyHightlighted;
     private final ChatIconDescriptor unhighIcon;
     private final ChatIconDescriptor highIcon;
+    private ChatStateTimer timer;
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
             final ChatIconDescriptor unhighIcon, final ChatIconDescriptor highIcon, final ChatUIListener listener) {
@@ -57,6 +68,7 @@ public class ChatUIPresenter implements ChatUI {
         userColors = new HashMap<String, String>();
         userColors.put(currentUserAlias, currentUserColor);
         savedMessageEventInfo = "";
+        chatState = ChatState.active;
     }
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
@@ -120,8 +132,9 @@ public class ChatUIPresenter implements ChatUI {
         listener.onHighLight(this);
     }
 
-    public void init(final ChatUIView view) {
+    public void init(final ChatUIView view, final ChatStateTimer chatStateTimer) {
         this.view = view;
+        timer = chatStateTimer;
         isActive = true;
         unHighLightChatTitle();
     }
@@ -130,16 +143,60 @@ public class ChatUIPresenter implements ChatUI {
         listener.onClose(this);
     }
 
+    public void onComposing() {
+        if (!chatState.equals(ChatState.composing)) {
+            Log.info("Chat new state: composing");
+        }
+        timer.schedule(MILLISECONS_TO_PAUSE);
+        // FIXME: This in lib...
+        chatState = ChatState.composing;
+    }
+
     public void onCurrentUserSend(final String message) {
         listener.onCurrentUserSend(message);
     }
 
     public void onInputFocus() {
         unHightAndActive();
+        timer.cancel();
+        Log.info("Chat new state: active");
+        // FIXME: this in lib
+        chatState = ChatState.active;
     }
 
     public void onInputUnFocus() {
         isActive = false;
+        timer.schedule(MILLISECONS_TO_INACTIVE);
+        Log.info("Chat new state: pause");
+        // FIXME: this in lib
+        chatState = ChatState.pause;
+    }
+
+    public void onTime() {
+        switch (chatState) {
+        case composing:
+        case active:
+            Log.info("Chat new state: pause");
+            timer.schedule(MILLISECONS_TO_INACTIVE);
+            // FIXME: this in lib:
+            chatState = ChatState.pause;
+            break;
+        case pause:
+            Log.info("Chat new state: inactive");
+            timer.schedule(MILLISECONS_TO_GONE);
+            // FIXME: this in lib:
+            chatState = ChatState.inactive;
+            break;
+        case inactive:
+            Log.info("Chat new state: gone");
+            timer.cancel();
+            // FIXME: this in lib:
+            chatState = ChatState.gone;
+            break;
+        default:
+            timer.cancel();
+            break;
+        }
     }
 
     public void onUserDrop(final XmppURI userURI) {

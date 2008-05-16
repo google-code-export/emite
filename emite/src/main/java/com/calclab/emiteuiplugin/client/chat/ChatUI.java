@@ -51,6 +51,8 @@ public interface ChatUI {
 
     void onClose();
 
+    void onComposing();
+
     void onCurrentUserSend(String message);
 
     void onInputFocus();

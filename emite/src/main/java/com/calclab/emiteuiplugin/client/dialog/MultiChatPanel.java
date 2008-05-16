@@ -42,6 +42,7 @@ import com.calclab.emiteuiplugin.client.utils.emoticons.EmoticonPaletteListener;
 import com.calclab.emiteuiplugin.client.utils.emoticons.EmoticonPalettePanel;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Label;
+import com.gwtext.client.core.EventCallback;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.core.RegionPosition;
@@ -70,6 +71,7 @@ import com.gwtext.client.widgets.layout.BorderLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 
 public class MultiChatPanel {
+
     private static final int TIMEVISIBLE = 3000;
 
     private final RosterPanel rosterPanel;
@@ -97,6 +99,10 @@ public class MultiChatPanel {
     private ToolbarButton showUnavailableItems;
     private Label bottomInfoMessageEvent;
 
+    private EventCallback inputKeyPressListener;
+
+    private FieldListenerAdapter inputMainListener;
+
     public MultiChatPanel(final String chatDialogTitle, final RosterPanel rosterPanel, final StatusPanel statusPanel,
             final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.statusPanel = statusPanel;
@@ -118,6 +124,10 @@ public class MultiChatPanel {
         panelIdToChat.put(panelId, chat);
         centerPanel.activate(chatPanel.getId());
         centerPanel.scrollToTab(chatPanel, true);
+    }
+
+    public void addInputComposingListener() {
+        input.addKeyPressListener(inputKeyPressListener);
     }
 
     public void center() {
@@ -342,7 +352,8 @@ public class MultiChatPanel {
         input = new TextArea("Input", "input");
         input.setHeight(47);
         input.setEnterIsSpecial(true);
-        input.addListener(new FieldListenerAdapter() {
+
+        inputMainListener = new FieldListenerAdapter() {
             @Override
             public void onBlur(final Field field) {
                 presenter.onInputUnFocus();
@@ -359,7 +370,13 @@ public class MultiChatPanel {
                     doSendWithEnter(e);
                 }
             }
-        });
+        };
+        input.addListener(inputMainListener);
+        inputKeyPressListener = new EventCallback() {
+            public void execute(final EventObject e) {
+                presenter.onComposing();
+            }
+        };
         inputForm.add(input);
 
         final Toolbar inputToolbar = new Toolbar();

@@ -278,8 +278,16 @@ public class MultiChatPresenter {
         xmpp.getRoomManager().openChat(uri(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
     }
 
+    public void onComposing() {
+        // FIXME: try to remove input listener or a way to no affect performance
+        // currently gwt-ext only have a input.removeAllListeners ... and tryint
+        // to re-add focus listener don't works
+        currentChat.onComposing();
+    }
+
     public void onInputFocus() {
         currentChat.onInputFocus();
+        view.addInputComposingListener();
     }
 
     public void onInputUnFocus() {
