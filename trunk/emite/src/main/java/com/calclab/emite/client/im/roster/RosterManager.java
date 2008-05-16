@@ -41,11 +41,11 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class RosterManager extends SessionComponent {
     public static class Events {
-	public static final Event ready = new Event("roster:on:ready");
+        public static final Event ready = new Event("roster:on:ready");
     }
 
     public static enum SubscriptionMode {
-	autoAcceptAll, autoRejectAll, manual
+        autoAcceptAll, autoRejectAll, manual
     }
 
     public static final SubscriptionMode DEF_SUBSCRIPTION_MODE = SubscriptionMode.manual;
@@ -56,11 +56,11 @@ public class RosterManager extends SessionComponent {
     private final ArrayList<RosterManagerListener> listeners;
 
     public RosterManager(final Emite emite, final Roster roster) {
-	super(emite);
-	this.roster = roster;
-	this.subscriptionMode = DEF_SUBSCRIPTION_MODE;
-	this.listeners = new ArrayList<RosterManagerListener>();
-	install();
+        super(emite);
+        this.roster = roster;
+        this.subscriptionMode = DEF_SUBSCRIPTION_MODE;
+        this.listeners = new ArrayList<RosterManagerListener>();
+        install();
     }
 
     /**
@@ -68,21 +68,23 @@ public class RosterManager extends SessionComponent {
      * presence.
      */
     public void acceptSubscription(final Presence presence) {
-	if (presence.getType() == Presence.Type.subscribe) {
-	    final XmppURI from = presence.getFromURI();
-	    final RosterItem item = new RosterItem(from, Subscription.none, from.getNode());
-	    roster.add(item);
-	    final Presence response = new Presence(Presence.Type.subscribed, userURI, from);
-	    emite.send(response);
-	} else {
-	    // throw exception: its a programming error
-	    throw new RuntimeException("Trying to accept/deny a non subscription request");
-	}
-	requestSubscribe(presence.getFromURI());
+        if (presence.getType() == Presence.Type.subscribe) {
+            final XmppURI from = presence.getFromURI();
+            if (roster.findItemByJID(from.getJID()) == null) {
+                final RosterItem item = new RosterItem(from, Subscription.none, from.getNode());
+                roster.add(item);
+            }
+            final Presence response = new Presence(Presence.Type.subscribed, userURI, from);
+            emite.send(response);
+        } else {
+            // throw exception: its a programming error
+            throw new RuntimeException("Trying to accept/deny a non subscription request");
+        }
+        requestSubscribe(presence.getFromURI());
     }
 
     public void addListener(final RosterManagerListener listener) {
-	listeners.add(listener);
+        listeners.add(listener);
     }
 
     /**
@@ -90,8 +92,8 @@ public class RosterManager extends SessionComponent {
      * it sends a presence stanza of type "unsubscribed".
      */
     public void cancelSubscriptor(final XmppURI to) {
-	final Presence unsubscription = new Presence(Presence.Type.unsubscribed, userURI, to);
-	emite.send(unsubscription);
+        final Presence unsubscription = new Presence(Presence.Type.unsubscribed, userURI, to);
+        emite.send(unsubscription);
     }
 
     /**
@@ -99,23 +101,23 @@ public class RosterManager extends SessionComponent {
      * previously-granted subscription has been cancelled.
      */
     public void denySubscription(final Presence presence) {
-	if (presence.getType() == Presence.Type.subscribe) {
-	    final Presence response = new Presence(Presence.Type.unsubscribed, userURI, presence.getFromURI());
-	    emite.send(response);
-	} else {
-	    // throw exception: its a programming error
-	    throw new RuntimeException("Trying to accept/deny a non subscription request");
-	}
+        if (presence.getType() == Presence.Type.subscribe) {
+            final Presence response = new Presence(Presence.Type.unsubscribed, userURI, presence.getFromURI());
+            emite.send(response);
+        } else {
+            // throw exception: its a programming error
+            throw new RuntimeException("Trying to accept/deny a non subscription request");
+        }
     }
 
     public SubscriptionMode getSubscriptionMode() {
-	return subscriptionMode;
+        return subscriptionMode;
     }
 
     @Override
     public void logIn(final XmppURI uri) {
-	super.logIn(uri);
-	requestRoster();
+        super.logIn(uri);
+        requestRoster();
     }
 
     /**
@@ -130,23 +132,23 @@ public class RosterManager extends SessionComponent {
      * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
      */
     public void requestAddItem(final XmppURI jid, final String name, final String group) {
-	final IPacket item = new Packet("item").With("jid", jid.toString()).With("name", name);
-	if (group != null) {
-	    item.addChild(new Packet("group").WithText(group));
-	}
+        final IPacket item = new Packet("item").With("jid", jid.toString()).With("name", name);
+        if (group != null) {
+            item.addChild(new Packet("group").WithText(group));
+        }
 
-	roster.add(new RosterItem(jid, Subscription.none, name));
-	final IPacket iq = new IQ(IQ.Type.set, userURI, null).WithQuery("jabber:iq:roster", item);
-	emite.sendIQ("roster", iq, new PacketListener() {
-	    public void handle(final IPacket received) {
-		if (IQ.isSuccess(received)) {
-		    final Presence presenceRequest = new Presence(Type.subscribe, null, jid);
-		    emite.send(presenceRequest);
-		} else {
-		    roster.removeItem(jid);
-		}
-	    }
-	});
+        roster.add(new RosterItem(jid, Subscription.none, name));
+        final IPacket iq = new IQ(IQ.Type.set, userURI, null).WithQuery("jabber:iq:roster", item);
+        emite.sendIQ("roster", iq, new PacketListener() {
+            public void handle(final IPacket received) {
+                if (IQ.isSuccess(received)) {
+                    final Presence presenceRequest = new Presence(Type.subscribe, null, jid);
+                    emite.send(presenceRequest);
+                } else {
+                    roster.removeItem(jid);
+                }
+            }
+        });
     }
 
     /**
@@ -160,15 +162,15 @@ public class RosterManager extends SessionComponent {
      * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
      */
     public void requestRemoveItem(final XmppURI jid) {
-	final IQ iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", new Packet("item").With("jid", jid.toString())
-		.With("subscription", "remove"));
-	emite.sendIQ("roster", iq, new PacketListener() {
-	    public void handle(final IPacket received) {
-		if (IQ.isSuccess(received)) {
-		    roster.removeItem(jid);
-		}
-	    }
-	});
+        final IQ iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", new Packet("item").With("jid", jid.toString())
+                .With("subscription", "remove"));
+        emite.sendIQ("roster", iq, new PacketListener() {
+            public void handle(final IPacket received) {
+                if (IQ.isSuccess(received)) {
+                    roster.removeItem(jid);
+                }
+            }
+        });
     }
 
     /**
@@ -180,8 +182,8 @@ public class RosterManager extends SessionComponent {
      * 
      */
     public void requestSubscribe(final XmppURI to) {
-	final Presence unsubscribeRequest = new Presence(Presence.Type.subscribe, userURI, to.getJID());
-	emite.send(unsubscribeRequest);
+        final Presence unsubscribeRequest = new Presence(Presence.Type.subscribe, userURI, to.getJID());
+        emite.send(unsubscribeRequest);
     }
 
     /**
@@ -189,109 +191,107 @@ public class RosterManager extends SessionComponent {
      * it sends a presence stanza of type "unsubscribe".
      */
     public void requestUnsubscribe(final XmppURI to) {
-	final Presence unsubscribeRequest = new Presence(Presence.Type.unsubscribe, userURI, to);
-	emite.send(unsubscribeRequest);
+        final Presence unsubscribeRequest = new Presence(Presence.Type.unsubscribe, userURI, to);
+        emite.send(unsubscribeRequest);
     }
 
     public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
-	this.subscriptionMode = subscriptionMode;
+        this.subscriptionMode = subscriptionMode;
     }
 
     private RosterItem convert(final IPacket item) {
-	final String jid = item.getAttribute("jid");
-	final XmppURI uri = uri(jid);
-	final Subscription subscription = RosterItem.Subscription.valueOf(item.getAttribute("subscription"));
-	return new RosterItem(uri, subscription, item.getAttribute("name"));
+        final String jid = item.getAttribute("jid");
+        final XmppURI uri = uri(jid);
+        final Subscription subscription = RosterItem.Subscription.valueOf(item.getAttribute("subscription"));
+        return new RosterItem(uri, subscription, item.getAttribute("name"));
     }
 
     private void fireSubscriptionRequest(final Presence presence) {
-	for (final RosterManagerListener listener : listeners) {
-	    listener.onSubscriptionRequest(presence, subscriptionMode);
-	}
+        for (final RosterManagerListener listener : listeners) {
+            listener.onSubscriptionRequest(presence, subscriptionMode);
+        }
     }
 
     private void fireUnsubscribedReceived(final Presence presence) {
-	// FIXME: Dani, check this
-	// We don't remove the item if the other unsubscribe ("to"
-	// subscription), later we think to simplify this with less states
-	// but I think is not responsability of the library to siplify this kind
-	// of things:
-	//
-	// roster.removeItem(presence.getFromURI());
-	roster.changePresence(presence.getFromURI(), presence);
-	for (final RosterManagerListener listener : listeners) {
-	    listener.onUnsubscribedReceived(presence, subscriptionMode);
-	}
+        // FIXME: roster.changeSubscrition instead of this
+        roster.changePresence(presence.getFromURI(), presence);
+        for (final RosterManagerListener listener : listeners) {
+            listener.onUnsubscribedReceived(presence, subscriptionMode);
+        }
     }
 
     private List<? extends IPacket> getItems(final IPacket iPacket) {
-	final List<? extends IPacket> items = iPacket.getFirstChild("query").getChildren();
-	return items;
+        final List<? extends IPacket> items = iPacket.getFirstChild("query").getChildren();
+        return items;
     }
 
     private void handleSubscriptionRequest(final Presence presence) {
-	switch (subscriptionMode) {
-	case autoAcceptAll:
-	    acceptSubscription(presence);
-	    break;
-	case autoRejectAll:
-	    denySubscription(presence);
-	    break;
-	}
-	fireSubscriptionRequest(presence);
+        switch (subscriptionMode) {
+        case autoAcceptAll:
+            acceptSubscription(presence);
+            break;
+        case autoRejectAll:
+            denySubscription(presence);
+            break;
+        }
+        fireSubscriptionRequest(presence);
     }
 
     private void handleUnsubscribedReceived(final Presence presence) {
-	fireUnsubscribedReceived(presence);
+        fireUnsubscribedReceived(presence);
     }
 
     private void install() {
-	emite.subscribe(when(new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", null).With("xmlns", null)),
-		new PacketListener() {
-		    public void handle(final IPacket received) {
-			emite.send(new IQ(IQ.Type.result).With("id", received.getAttribute("id")));
-			final IPacket item = received.getFirstChild("query").getFirstChild("item");
-			final String jid = item.getAttribute("jid");
-			roster.changeSubscription(uri(jid), item.getAttribute("subscription"));
-		    }
-		});
+        emite.subscribe(when(new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", null).With("xmlns", null)),
+                new PacketListener() {
+                    public void handle(final IPacket received) {
+                        emite.send(new IQ(IQ.Type.result).With("id", received.getAttribute("id")));
+                        final IPacket item = received.getFirstChild("query").getFirstChild("item");
+                        final String jid = item.getAttribute("jid");
+                        roster.changeSubscription(uri(jid), item.getAttribute("subscription"));
+                    }
+                });
 
-	emite.subscribe(when("presence"), new PacketListener() {
-	    public void handle(final IPacket received) {
-		final Presence presence = new Presence(received);
-		switch (presence.getType()) {
-		case subscribe:
-		    handleSubscriptionRequest(presence);
-		    break;
-		case unsubscribed:
-		    handleUnsubscribedReceived(presence);
-		    break;
-		case available:
-		case subscribed:
-		case unavailable:
-		    roster.changePresence(presence.getFromURI(), presence);
-		    break;
-		}
-	    }
+        emite.subscribe(when("presence"), new PacketListener() {
+            public void handle(final IPacket received) {
+                final Presence presence = new Presence(received);
+                switch (presence.getType()) {
+                case subscribe:
+                    handleSubscriptionRequest(presence);
+                    break;
+                case unsubscribed:
+                    handleUnsubscribedReceived(presence);
+                    break;
+                case subscribed:
+                    // Subscribed, must not changePresence, only subscription
+                    // (same I think must be fixed above with unsubscribed)
+                    roster.changeSubscription(presence.getFromURI(), received.getAttribute("subscription"));
+                    break;
+                case available:
+                case unavailable:
+                    roster.changePresence(presence.getFromURI(), presence);
+                    break;
+                }
+            }
 
-	});
+        });
     }
 
     private void requestRoster() {
-	emite.sendIQ("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
-	    public void handle(final IPacket received) {
-		setRosterItems(roster, received);
-		emite.publish(RosterManager.Events.ready);
-	    }
+        emite.sendIQ("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
+            public void handle(final IPacket received) {
+                setRosterItems(roster, received);
+                emite.publish(RosterManager.Events.ready);
+            }
 
-	});
+        });
     }
 
     private void setRosterItems(final Roster roster, final IPacket received) {
-	final ArrayList<RosterItem> items = new ArrayList<RosterItem>();
-	for (final IPacket item : getItems(received)) {
-	    items.add(convert(item));
-	}
-	roster.setItems(items);
+        final ArrayList<RosterItem> items = new ArrayList<RosterItem>();
+        for (final IPacket item : getItems(received)) {
+            items.add(convert(item));
+        }
+        roster.setItems(items);
     }
 }
