@@ -34,7 +34,7 @@ public class ChatUIPresenter implements ChatUI {
             "purple", "fuchsia", "maroon", "red" };
     private ChatUIView view;
     private String savedInput;
-
+    private String savedMessageEventInfo;
     private final ChatUIListener listener;
     private int oldColor;
     private final HashMap<String, String> userColors;
@@ -56,6 +56,7 @@ public class ChatUIPresenter implements ChatUI {
         this.chatTitle = node != null ? node : otherURI.getHost();
         userColors = new HashMap<String, String>();
         userColors.put(currentUserAlias, currentUserColor);
+        savedMessageEventInfo = "";
     }
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
@@ -105,6 +106,10 @@ public class ChatUIPresenter implements ChatUI {
         return savedInput;
     }
 
+    public String getSavedMessageEventInfo() {
+        return savedMessageEventInfo;
+    }
+
     public View getView() {
         return view;
     }
@@ -143,6 +148,10 @@ public class ChatUIPresenter implements ChatUI {
 
     public void saveInput(final String inputText) {
         savedInput = inputText;
+    }
+
+    public void setSavedMessageEventInfo(final String savedMessageEventInfo) {
+        this.savedMessageEventInfo = savedMessageEventInfo;
     }
 
     public void setUserColor(final String userAlias, final String color) {
