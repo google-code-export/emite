@@ -237,7 +237,6 @@ public class MultiChatPresenter {
         this.view = view;
         reset();
         createXmppListeners();
-        view.setBottomInfoMessageEvent("Now writing");
     }
 
     public void initStatusPanel(final StatusPanel status) {
@@ -529,9 +528,9 @@ public class MultiChatPresenter {
 
     private void finishChatCreation(final Chat chat, final ChatUI chatUI) {
         view.addChat(chatUI);
-        view.highLight();
         currentChat = chatUI;
         chats.put(chat, chatUI);
+        chatUI.highLightChatTitle();
         checkThereAreChats();
     }
 
