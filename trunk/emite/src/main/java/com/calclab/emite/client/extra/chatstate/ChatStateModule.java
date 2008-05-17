@@ -21,21 +21,25 @@
  */
 package com.calclab.emite.client.extra.chatstate;
 
+import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.xmpp.session.SessionComponent;
+import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.Module;
 
-/**
- * XEP-0085: Chat State Notifications
- * http://www.xmpp.org/extensions/xep-0085.html
- */
-public class ChatStatusManager extends SessionComponent {
+public class ChatStateModule implements Module {
+    private static final Class<ChatStateManager> COMPONENTS_MANAGER = ChatStateManager.class;
 
-    public static class Events {
-
+    public static ChatStateManager getChatStatusManager(final Container components) {
+        return components.getInstance(COMPONENTS_MANAGER);
     }
 
-    public ChatStatusManager(final Emite emite) {
-        super(emite);
+    public Class<? extends Module> getType() {
+        return ChatStateModule.class;
     }
 
+    public void onLoad(final Container container) {
+        final Emite emite = CoreModule.getEmite(container);
+        final ChatStateManager chatStateManager = new ChatStateManager(emite);
+        container.registerSingletonInstance(COMPONENTS_MANAGER, chatStateManager);
+    }
 }

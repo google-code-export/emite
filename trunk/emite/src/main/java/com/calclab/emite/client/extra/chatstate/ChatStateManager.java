@@ -21,18 +21,21 @@
  */
 package com.calclab.emite.client.extra.chatstate;
 
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.xmpp.session.SessionComponent;
 
-public interface ChatStatusListener {
+/**
+ * XEP-0085: Chat State Notifications
+ * http://www.xmpp.org/extensions/xep-0085.html
+ */
+public class ChatStateManager extends SessionComponent {
 
-    void onActive(Chat chat);
+    public static class Events {
 
-    void onComposing(Chat chat);
+    }
 
-    void onGone(Chat chat);
-
-    void onInactive(Chat chat);
-
-    void onPause(Chat chat);
+    public ChatStateManager(final Emite emite) {
+        super(emite);
+    }
 
 }
