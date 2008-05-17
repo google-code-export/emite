@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.extra.messageevent;
+package com.calclab.emite.client.extra.chatstate;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
