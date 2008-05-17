@@ -26,20 +26,20 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 
-public class MessageEventModule implements Module {
-    private static final Class<MessageEventManager> COMPONENTS_MANAGER = MessageEventManager.class;
+public class ChatStatusModule implements Module {
+    private static final Class<ChatStatusManager> COMPONENTS_MANAGER = ChatStatusManager.class;
 
-    public static MessageEventManager getMessageEventManager(final Container components) {
+    public static ChatStatusManager getChatStatusManager(final Container components) {
         return components.getInstance(COMPONENTS_MANAGER);
     }
 
     public Class<? extends Module> getType() {
-        return MessageEventModule.class;
+        return ChatStatusModule.class;
     }
 
     public void onLoad(final Container container) {
         final Emite emite = CoreModule.getEmite(container);
-        final MessageEventManager messageEvent = new MessageEventManager(emite);
-        container.registerSingletonInstance(COMPONENTS_MANAGER, messageEvent);
+        final ChatStatusManager chatStatusManager = new ChatStatusManager(emite);
+        container.registerSingletonInstance(COMPONENTS_MANAGER, chatStatusManager);
     }
 }
