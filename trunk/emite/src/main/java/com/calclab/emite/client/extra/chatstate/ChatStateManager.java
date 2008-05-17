@@ -21,13 +21,21 @@
  */
 package com.calclab.emite.client.extra.chatstate;
 
+import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+
 import java.util.HashMap;
 
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
+import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 
 /**
  * XEP-0085: Chat State Notifications
@@ -41,29 +49,57 @@ import com.calclab.emite.client.xmpp.session.SessionComponent;
 public class ChatStateManager extends SessionComponent {
 
     private final HashMap<Chat, ChatState> chatStates;
+    private final ChatManagerDefault chatManager;
 
     public ChatStateManager(final Emite emite, final ChatManagerDefault chatManager) {
-	super(emite);
-	chatStates = new HashMap<Chat, ChatState>();
-	chatManager.addListener(new ChatManagerListener() {
+        super(emite);
+        this.chatManager = chatManager;
+        chatStates = new HashMap<Chat, ChatState>();
+        chatManager.addListener(new ChatManagerListener() {
 
-	    public void onChatClosed(final Chat chat) {
-		final ChatState chatState = chatStates.get(chat);
-		if (!chatState.getOtherState().equals(ChatState.Type.gone)) {
-		    // We are closing, then we send the gone state
-		    chatState.setOwnState(ChatState.Type.gone);
-		}
-		chatStates.remove(chat);
-	    }
+            public void onChatClosed(final Chat chat) {
+                final ChatState chatState = chatStates.get(chat);
+                if (chatState != null && !chatState.getOtherState().equals(ChatState.Type.gone)) {
+                    // We are closing, then we send the gone state
+                    chatState.setOwnState(ChatState.Type.gone);
+                }
+                chatStates.remove(chat);
+            }
 
-	    public void onChatCreated(final Chat chat) {
-		chatStates.put(chat, new ChatState(chat, emite));
-	    }
-	});
+            public void onChatCreated(final Chat chat) {
+                chatStates.put(chat, new ChatState(chat, emite));
+            }
+        });
+        install();
     }
 
     public ChatState getChatState(final Chat chat) {
-	return chatStates.get(chat);
+        return chatStates.get(chat);
+    }
+
+    protected void eventMessage(final Message message) {
+        final Type type = message.getType();
+        if (type.equals(Type.chat)) {
+            final XmppURI from = message.getFromURI();
+            final String thread = message.getThread();
+
+            Chat chat = chatManager.findChat(from, thread);
+            if (chat != null) {
+                ChatState chatState = chatStates.get(chat);
+                if (chatState != null) {
+                    // currently we ignore room chat states
+                    chatState.fireMessageReceived(message);
+                }
+            }
+        }
+    }
+
+    private void install() {
+        emite.subscribe(when(new Packet("message", null)), new PacketListener() {
+            public void handle(final IPacket received) {
+                eventMessage(new Message(received));
+            }
+        });
     }
 
 }

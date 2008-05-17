@@ -113,12 +113,12 @@ public class ChatUIPresenter implements ChatUI {
         return color;
     }
 
-    public String getSavedInput() {
-        return savedInput;
-    }
-
     public String getSavedChatNotification() {
         return savedChatNotification;
+    }
+
+    public String getSavedInput() {
+        return savedInput;
     }
 
     public View getView() {
@@ -269,7 +269,7 @@ public class ChatUIPresenter implements ChatUI {
     private void setOwnState(final Type type, final int time) {
         // We don't support chatState in rooms, then we let chatState = null in
         // rooms
-        if (chatState != null) {
+        if (chatState != null && chatState.getNegotiationStatus().equals(ChatState.NegotiationStatus.accepted)) {
             if (time > 0) {
                 timer.schedule(time);
             } else {

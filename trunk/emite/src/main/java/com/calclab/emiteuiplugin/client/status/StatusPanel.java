@@ -196,7 +196,7 @@ public class StatusPanel extends Toolbar {
 
         final MenuItem colorMenuItem = new MenuItem(i18n.t("Choose your color"), colorMenu);
         colorMenuItem.setIconCls("colors-icon");
-        colorMenuItem.setIcon("css/img/colors.gif");
+        colorMenuItem.setIcon("images/colors.gif");
 
         final MenuItem subsItem = new MenuItem(i18n.t("New buddies options"), createUserSubscriptionMenu());
 
