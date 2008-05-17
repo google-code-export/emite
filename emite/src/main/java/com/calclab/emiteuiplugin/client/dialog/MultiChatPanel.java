@@ -97,7 +97,7 @@ public class MultiChatPanel {
     private Timer bottomInfoTimer;
     private BasicDialog emoticonDialog;
     private ToolbarButton showUnavailableItems;
-    private Label bottomInfoMessageEvent;
+    private Label bottomChatNotification;
 
     private EventCallback inputKeyPressListener;
 
@@ -140,9 +140,9 @@ public class MultiChatPanel {
         renderSouthPanelIfNeeded();
     }
 
-    public void clearBottomInfoMessageEvent() {
-        bottomInfoMessageEvent.setText("");
-        bottomInfoMessageEvent.setVisible(false);
+    public void clearBottomChatNotification() {
+        bottomChatNotification.setText("");
+        bottomChatNotification.setVisible(false);
         renderSouthPanelIfNeeded();
     }
 
@@ -194,15 +194,15 @@ public class MultiChatPanel {
         addRosterItem.setVisible(visible);
     }
 
-    public void setBottomInfoMessage(final String message) {
-        bottomInfoMessage.setText(message);
-        bottomInfoMessage.setVisible(true);
+    public void setBottomChatNotification(final String message) {
+        bottomChatNotification.setText(message);
+        bottomChatNotification.setVisible(true);
         renderSouthPanelIfNeeded();
     }
 
-    public void setBottomInfoMessageEvent(final String message) {
-        bottomInfoMessageEvent.setText(message);
-        bottomInfoMessageEvent.setVisible(true);
+    public void setBottomInfoMessage(final String message) {
+        bottomInfoMessage.setText(message);
+        bottomInfoMessage.setVisible(true);
         renderSouthPanelIfNeeded();
     }
 
@@ -392,8 +392,8 @@ public class MultiChatPanel {
         });
         inputToolbar.addButton(emoticonButton);
         inputToolbar.addSeparator();
-        bottomInfoMessageEvent = new Label();
-        inputToolbar.addElement(bottomInfoMessageEvent.getElement());
+        bottomChatNotification = new Label();
+        inputToolbar.addElement(bottomChatNotification.getElement());
         inputToolbar.addFill();
         bottomInfoMessage = new Label();
         bottomInfoMessage.setStyleName("emite-bottom-message");

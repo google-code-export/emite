@@ -118,7 +118,7 @@ public class MultiChatPresenter {
                 .getNode(), userChatOptions.getColor(), new ChatUIListener() {
             public void onActivate(final ChatUI chatUI) {
                 view.setInputText(chatUI.getSavedInput());
-                view.setBottomInfoMessageEvent(chatUI.getSavedMessageEventInfo());
+                view.setBottomChatNotification(chatUI.getSavedChatNotification());
                 currentChat = chatUI;
                 view.focusInput();
             }
@@ -143,6 +143,10 @@ public class MultiChatPresenter {
             public void onMessageAdded(final ChatUI chatUI) {
             }
 
+            public void onNewChatNotification(String message) {
+                view.setBottomChatNotification(message);
+            }
+
             public void onUnHighLight(final ChatUI chatUI) {
                 view.unHighLight();
                 listener.onConversationAttended(chatUI.getChatTitle());
@@ -154,6 +158,7 @@ public class MultiChatPresenter {
                 }
             }
         }) : chats.get(chat);
+        chatUI.setChatState(xmpp.getChatStateManager().getChatState(chat));
         finishChatCreation(chat, chatUI);
         return chatUI;
     }
@@ -167,7 +172,7 @@ public class MultiChatPresenter {
                     public void onActivate(final ChatUI chatUI) {
                         final RoomUI roomUI = (RoomUI) chatUI;
                         view.setInputText(roomUI.getSavedInput());
-                        view.setBottomInfoMessageEvent(chatUI.getSavedMessageEventInfo());
+                        view.setBottomChatNotification(chatUI.getSavedChatNotification());
                         currentChat = chatUI;
                         view.focusInput();
                     }
@@ -203,6 +208,10 @@ public class MultiChatPresenter {
 
                     public void onModifySubjectRequested(final String newSubject) {
                         ((Room) chat).setSubject(newSubject);
+                    }
+
+                    public void onNewChatNotification(String message) {
+                        view.setBottomChatNotification(message);
                     }
 
                     public void onUnHighLight(final ChatUI chatUI) {
@@ -586,7 +595,7 @@ public class MultiChatPresenter {
         view.setSendEnabled(false);
         view.setInputEditable(false);
         view.setEmoticonButtonEnabled(false);
-        view.clearBottomInfoMessageEvent();
+        view.clearBottomChatNotification();
     }
 
     private void setInputEnabled(final boolean enabled) {

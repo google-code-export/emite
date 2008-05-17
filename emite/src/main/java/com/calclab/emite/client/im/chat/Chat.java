@@ -27,6 +27,8 @@ public interface Chat {
 
     public void addListener(final ChatListener listener);
 
+    public XmppURI getFromURI();
+
     public String getID();
 
     public XmppURI getOtherURI();

@@ -30,7 +30,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.calclab.emite.client.extra.muc.Occupant;
 import com.calclab.emite.client.extra.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emiteuiplugin.client.chat.ChatStateTimer;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPresenter;
 import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 import com.calclab.emiteuiplugin.client.users.RoomUserUI;
@@ -76,9 +75,8 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
         return view;
     }
 
-    public void init(final RoomUIView view, final RoomUserListUIPanel roomUserListUI,
-            final ChatStateTimer chatStateTimer) {
-        super.init(view, chatStateTimer);
+    public void init(final RoomUIView view, final RoomUserListUIPanel roomUserListUI) {
+        super.init(view);
         this.view = view;
         this.roomUserListUI = roomUserListUI;
         listener.onCreated(this);

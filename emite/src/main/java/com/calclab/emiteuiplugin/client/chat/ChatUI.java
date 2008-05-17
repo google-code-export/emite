@@ -23,6 +23,7 @@ package com.calclab.emiteuiplugin.client.chat;
 
 import org.ourproject.kune.platf.client.View;
 
+import com.calclab.emite.client.extra.chatstate.ChatState;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public interface ChatUI {
@@ -43,7 +44,7 @@ public interface ChatUI {
 
     String getSavedInput();
 
-    String getSavedMessageEventInfo();
+    String getSavedChatNotification();
 
     View getView();
 
@@ -62,6 +63,8 @@ public interface ChatUI {
     void onUserDrop(XmppURI userURI);
 
     void saveInput(String inputText);
+
+    void setChatState(ChatState chatState);
 
     void setSavedMessageEventInfo(String savedMessageEventInfo);
 

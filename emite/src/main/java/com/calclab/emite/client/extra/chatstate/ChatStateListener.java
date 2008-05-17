@@ -21,18 +21,16 @@
  */
 package com.calclab.emite.client.extra.chatstate;
 
-import com.calclab.emite.client.im.chat.Chat;
-
 public interface ChatStateListener {
 
-    void onActive(Chat chat);
+    void onActive();
 
-    void onComposing(Chat chat);
+    void onComposing();
 
-    void onGone(Chat chat);
+    void onGone();
 
-    void onInactive(Chat chat);
+    void onInactive();
 
-    void onPause(Chat chat);
+    void onPause();
 
 }

@@ -37,6 +37,8 @@ public interface ChatUIListener {
 
     void onMessageAdded(ChatUI chatUI);
 
+    void onNewChatNotification(String message);
+
     void onUnHighLight(ChatUI chatUI);
 
     void onUserDrop(ChatUI chatUI, XmppURI userURI);
