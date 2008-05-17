@@ -43,27 +43,27 @@ public class ChatStateManager extends SessionComponent {
     private final HashMap<Chat, ChatState> chatStates;
 
     public ChatStateManager(final Emite emite, final ChatManagerDefault chatManager) {
-        super(emite);
-        chatStates = new HashMap<Chat, ChatState>();
-        chatManager.addListener(new ChatManagerListener() {
+	super(emite);
+	chatStates = new HashMap<Chat, ChatState>();
+	chatManager.addListener(new ChatManagerListener() {
 
-            public void onChatClosed(final Chat chat) {
-                ChatState chatState = chatStates.get(chat);
-                if (!chatState.getOtherState().equals(ChatState.Type.gone)) {
-                    // We are closing, then we send the gone state
-                    chatState.setOwnState(ChatState.Type.gone);
-                }
-                chatStates.remove(chat);
-            }
+	    public void onChatClosed(final Chat chat) {
+		final ChatState chatState = chatStates.get(chat);
+		if (!chatState.getOtherState().equals(ChatState.Type.gone)) {
+		    // We are closing, then we send the gone state
+		    chatState.setOwnState(ChatState.Type.gone);
+		}
+		chatStates.remove(chat);
+	    }
 
-            public void onChatCreated(final Chat chat) {
-                chatStates.put(chat, new ChatState(chat, emite));
-            }
-        });
+	    public void onChatCreated(final Chat chat) {
+		chatStates.put(chat, new ChatState(chat, emite));
+	    }
+	});
     }
 
     public ChatState getChatState(final Chat chat) {
-        return chatStates.get(chat);
+	return chatStates.get(chat);
     }
 
 }
