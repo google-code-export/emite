@@ -58,10 +58,11 @@ public class ChatState {
     public void fireMessageReceived(final Message message) {
         for (int i = 0; i < Type.values().length; i++) {
             final Type type = Type.values()[i];
-            if (message.hasChild(type.toString())) {
+            String typeSt = type.toString();
+            if (message.hasChild(typeSt) || message.hasChild("cha:" + typeSt)) {
                 otherState = type;
                 negotiationStatus = NegotiationStatus.accepted;
-                Log.info("Receiver other chat status: " + type.toString());
+                Log.info("Receiver other chat status: " + typeSt);
                 fireOtherStateListeners(type);
             }
         }

@@ -191,11 +191,11 @@ public class ChatUIPresenter implements ChatUI {
     public void setChatState(final ChatState chatState) {
         this.chatState = chatState;
         chatState.addOtherStateListener(new ChatStateListener() {
-            String alias = otherURI.getNode() == null ? otherURI.getNode() : otherURI.getHost();
+            String alias = otherURI.getNode() != null ? otherURI.getNode() : otherURI.getHost();
 
             public void onActive() {
-                savedChatNotification = "";
-                showMessageEventInfoIfActive();
+                savedChatNotification = " ";
+                clearMessageEventInfoIfActive();
             }
 
             public void onComposing() {
@@ -217,6 +217,12 @@ public class ChatUIPresenter implements ChatUI {
             public void onPause() {
                 savedChatNotification = alias + " stop to write";
                 showMessageEventInfoIfActive();
+            }
+
+            private void clearMessageEventInfoIfActive() {
+                if (isActive) {
+                    listener.onChatNotificationClear();
+                }
             }
 
             private void showMessageEventInfoIfActive() {

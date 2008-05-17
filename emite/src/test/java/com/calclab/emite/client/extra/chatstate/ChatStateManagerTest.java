@@ -51,6 +51,13 @@ public class ChatStateManagerTest {
     }
 
     @Test
+    public void shouldFireOtherCompossingAsGmailDo() {
+        emite
+                .receives("<message to='self@domain/res' type='chat' from='other@domain/otherRes'><cha:composing xmlns:cha='http://jabber.org/protocol/chatstates'></cha:composing><nos:x xmlns:nos='google:nosave' value='disabled'></nos:x><arc:record xmlns:arc='http://jabber.org/protocol/archive' otr='false'></arc:record></message>");
+        Mockito.verify(stateListener).onComposing();
+    }
+
+    @Test
     public void shouldFireOtherCompossingToWithoutResource() {
         emite.receives("<message from='other@domain/otherRes' to='self@domain' type='chat'>" + "<thread>"
                 + chat.getThread() + "</thread>"
@@ -98,5 +105,4 @@ public class ChatStateManagerTest {
                 + "<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
                 + chat.getThread() + "</thread>" + "<pause xmlns='http://jabber.org/protocol/chatstates'/></message>");
     }
-
 }
