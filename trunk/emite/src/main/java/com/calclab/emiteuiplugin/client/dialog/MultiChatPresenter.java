@@ -116,11 +116,16 @@ public class MultiChatPresenter {
     public ChatUI createChat(final Chat chat) {
         final ChatUI chatUI = chats.get(chat) == null ? factory.createChatUI(chat.getOtherURI(), currentUserJid
                 .getNode(), userChatOptions.getColor(), new ChatUIListener() {
+
             public void onActivate(final ChatUI chatUI) {
                 view.setInputText(chatUI.getSavedInput());
                 view.setBottomChatNotification(chatUI.getSavedChatNotification());
                 currentChat = chatUI;
                 view.focusInput();
+            }
+
+            public void onChatNotificationClear() {
+                view.clearBottomChatNotification();
             }
 
             public void onClose(final ChatUI chatUI) {
@@ -175,6 +180,10 @@ public class MultiChatPresenter {
                         view.setBottomChatNotification(chatUI.getSavedChatNotification());
                         currentChat = chatUI;
                         view.focusInput();
+                    }
+
+                    public void onChatNotificationClear() {
+                        view.clearBottomChatNotification();
                     }
 
                     public void onClose(final ChatUI chatUI) {

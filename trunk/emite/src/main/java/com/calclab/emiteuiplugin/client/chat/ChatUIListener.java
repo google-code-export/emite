@@ -27,6 +27,8 @@ public interface ChatUIListener {
 
     void onActivate(ChatUI chatUI);
 
+    void onChatNotificationClear();
+
     void onClose(ChatUI chatUI);
 
     void onCurrentUserSend(String message);
