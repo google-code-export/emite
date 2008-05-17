@@ -236,6 +236,8 @@ public class MultiChatPresenter {
     public void init(final MultiChatPanel view) {
         this.view = view;
         reset();
+        view.setRosterVisible(false);
+        view.setOfflineInfo();
         createXmppListeners();
     }
 
@@ -428,6 +430,7 @@ public class MultiChatPresenter {
     private void checkNoChats() {
         if (chats.size() == 0) {
             reset();
+            view.setOfflineInfo();
         }
     }
 
@@ -580,8 +583,6 @@ public class MultiChatPresenter {
         currentChat = null;
         view.setCloseAllOptionEnabled(false);
         view.setInfoPanelVisible(true);
-        view.setOfflineInfo();
-        view.setRosterVisible(false);
         view.setSendEnabled(false);
         view.setInputEditable(false);
         view.setEmoticonButtonEnabled(false);
