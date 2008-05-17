@@ -25,7 +25,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emiteuiplugin.client.chat.ChatStateTimer;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPanel;
@@ -57,7 +56,7 @@ public class EmiteUIFactory {
             final ChatUIListener listener) {
         final ChatUIPresenter presenter = new ChatUIPresenter(otherURI, currentUserAlias, currentUserColor, listener);
         final ChatUIPanel panel = new ChatUIPanel(presenter);
-        presenter.init(panel, new ChatStateTimer(presenter));
+        presenter.init(panel);
         return presenter;
     }
 
@@ -79,7 +78,7 @@ public class EmiteUIFactory {
         // FIXME: create list presenter
         final RoomUserListUIPanel roomUserListUIPanel = new RoomUserListUIPanel(i18n, presenter);
         final RoomUIPanel panel = new RoomUIPanel(i18n, roomUserListUIPanel, presenter);
-        presenter.init(panel, roomUserListUIPanel, new ChatStateTimer(presenter));
+        presenter.init(panel, roomUserListUIPanel);
         return presenter;
     }
 

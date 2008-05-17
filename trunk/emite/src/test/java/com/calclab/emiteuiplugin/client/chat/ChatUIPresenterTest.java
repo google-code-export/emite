@@ -20,7 +20,7 @@ public class ChatUIPresenterTest {
         chatUI = new ChatUIPresenter(otherUri, "luther", "black", listener);
         view = Mockito.mock(ChatUIView.class);
         ChatStateTimer timer = Mockito.mock(ChatStateTimer.class);
-        chatUI.init(view, timer);
+        chatUI.init(view);
     }
 
     @Test

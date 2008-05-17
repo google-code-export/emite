@@ -21,21 +21,49 @@
  */
 package com.calclab.emite.client.extra.chatstate;
 
+import java.util.HashMap;
+
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
 
 /**
  * XEP-0085: Chat State Notifications
  * http://www.xmpp.org/extensions/xep-0085.html
+ * 
+ * This implementation is limited to chat conversations. Chat state in MUC rooms
+ * are not supported to avoid multicast of occupant states (in a BOSH medium can
+ * be a problem).
+ * 
  */
 public class ChatStateManager extends SessionComponent {
 
-    public static class Events {
+    private final HashMap<Chat, ChatState> chatStates;
 
+    public ChatStateManager(final Emite emite, final ChatManagerDefault chatManager) {
+        super(emite);
+        chatStates = new HashMap<Chat, ChatState>();
+        chatManager.addListener(new ChatManagerListener() {
+
+            public void onChatClosed(final Chat chat) {
+                ChatState chatState = chatStates.get(chat);
+                if (!chatState.getOtherState().equals(ChatState.Type.gone)) {
+                    // We are closing, then we send the gone state
+                    chatState.setOwnState(ChatState.Type.gone);
+                }
+                chatStates.remove(chat);
+            }
+
+            public void onChatCreated(final Chat chat) {
+                chatStates.put(chat, new ChatState(chat, emite));
+            }
+        });
     }
 
-    public ChatStateManager(final Emite emite) {
-        super(emite);
+    public ChatState getChatState(final Chat chat) {
+        return chatStates.get(chat);
     }
 
 }

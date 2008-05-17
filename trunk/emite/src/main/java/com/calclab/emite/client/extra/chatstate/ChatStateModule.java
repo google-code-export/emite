@@ -23,13 +23,15 @@ package com.calclab.emite.client.extra.chatstate;
 
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.im.InstantMessagingModule;
+import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 
 public class ChatStateModule implements Module {
     private static final Class<ChatStateManager> COMPONENTS_MANAGER = ChatStateManager.class;
 
-    public static ChatStateManager getChatStatusManager(final Container components) {
+    public static ChatStateManager getChatStateManager(final Container components) {
         return components.getInstance(COMPONENTS_MANAGER);
     }
 
@@ -39,7 +41,8 @@ public class ChatStateModule implements Module {
 
     public void onLoad(final Container container) {
         final Emite emite = CoreModule.getEmite(container);
-        final ChatStateManager chatStateManager = new ChatStateManager(emite);
+        ChatManagerDefault chatManager = InstantMessagingModule.getChat(container);
+        final ChatStateManager chatStateManager = new ChatStateManager(emite, chatManager);
         container.registerSingletonInstance(COMPONENTS_MANAGER, chatStateManager);
     }
 }
