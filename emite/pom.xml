@@ -54,7 +54,7 @@
         <configuration>
           <!-- <logLevel>INFO</logLevel> -->
           <!--<style>OBF</style>-->
-          <style>OBF</style>
+          <style>PRETTY</style>
           <runTarget>
             com.calclab.emiteui.EmiteUI/EmiteUI.html
           </runTarget>
@@ -65,6 +65,7 @@
             <compileTarget>
               com.calclab.emiteui.EmiteUI
             </compileTarget>
+            <!--
             <compileTarget>
               com.calclab.emite.Emite
             </compileTarget>
@@ -77,6 +78,7 @@
             <compileTarget>
               com.calclab.emiteuisample.EmiteUISample
             </compileTarget>
+             -->
           </compileTargets>
           <generatorRootClasses>
             <value>com.calclab.emite.MyBean</value>
