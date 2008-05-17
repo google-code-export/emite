@@ -58,11 +58,6 @@
           <runTarget>
             com.calclab.emiteui.EmiteUI/EmiteUI.html
           </runTarget>
-          <!--
-            <runTarget>
-            com.calclab.uimite.UIMite/UIMite.html
-            </runTarget>
-          -->
           <compileTarget>
             <param></param>
           </compileTarget>
@@ -78,9 +73,6 @@
             </compileTarget>
             <compileTarget>
               com.calclab.emite.examples.chat.Chat
-            </compileTarget>
-            <compileTarget>
-              com.calclab.uimite.UIMite
             </compileTarget>
             <compileTarget>
               com.calclab.emiteuisample.EmiteUISample
