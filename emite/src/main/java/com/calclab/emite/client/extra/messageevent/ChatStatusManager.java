@@ -25,8 +25,8 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
 
 /**
- * XEP-0022: Message Events implementation
- * 
+ * XEP-0085: Chat State Notifications
+ * http://www.xmpp.org/extensions/xep-0085.html
  */
 public class ChatStatusManager extends SessionComponent {
 
