@@ -21,25 +21,18 @@
  */
 package com.calclab.emite.client.extra.chatstate;
 
-import com.calclab.emite.client.core.CoreModule;
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.modular.Container;
-import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.im.chat.Chat;
 
-public class ChatStatusModule implements Module {
-    private static final Class<ChatStatusManager> COMPONENTS_MANAGER = ChatStatusManager.class;
+public interface ChatStateListener {
 
-    public static ChatStatusManager getChatStatusManager(final Container components) {
-        return components.getInstance(COMPONENTS_MANAGER);
-    }
+    void onActive(Chat chat);
 
-    public Class<? extends Module> getType() {
-        return ChatStatusModule.class;
-    }
+    void onComposing(Chat chat);
 
-    public void onLoad(final Container container) {
-        final Emite emite = CoreModule.getEmite(container);
-        final ChatStatusManager chatStatusManager = new ChatStatusManager(emite);
-        container.registerSingletonInstance(COMPONENTS_MANAGER, chatStatusManager);
-    }
+    void onGone(Chat chat);
+
+    void onInactive(Chat chat);
+
+    void onPause(Chat chat);
+
 }
