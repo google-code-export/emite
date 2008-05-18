@@ -83,8 +83,7 @@ public class EmiteTestHelper implements Emite {
 
     public PacketListener verifyIQSent(final IPacket iq) {
 	assertNotNull(lastIQSent);
-	final String message = "Expected: " + iq + "but was: " + lastIQSent;
-	assertTrue(message, new IsPacketLike(iq).matches(lastIQSent));
+	EmiteAsserts.assertPacketLike(iq, lastIQSent);
 	return lastCallback;
     }
 

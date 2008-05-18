@@ -86,6 +86,14 @@ public class PresenceManagerTest {
 	emite.verifySent("<presence from='myself@domain'><show>chat</show></presence>");
     }
 
+    @Test
+    public void shouldSendPresenceIfLoggedIn() {
+	manager.logIn(uri("myself@domain"));
+	manager.setOwnPresence(new Presence().With(Presence.Show.dnd));
+	emite.verifySent("<presence from='myself@domain'><show>dnd</show></presence>");
+
+    }
+
     private Presence createPresence(final Type type) {
 	final Presence presence = new Presence(type, uri("from@domain"), uri("to@domain"));
 	return presence;

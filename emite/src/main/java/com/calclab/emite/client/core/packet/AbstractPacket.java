@@ -21,11 +21,49 @@
  */
 package com.calclab.emite.client.core.packet;
 
-public abstract class DSLPacket implements IPacket {
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractPacket implements IPacket {
 
     public int getAttributeAsInt(final String name) {
 	final String value = getAttribute(name);
 	return Integer.parseInt(value);
+    }
+
+    public List<? extends IPacket> getChildren(final PacketFilter filter) {
+	final List<IPacket> list = new ArrayList<IPacket>();
+	for (final IPacket child : getChildren()) {
+	    if (filter.isValid(child)) {
+		list.add(child);
+	    }
+	}
+	return list;
+    }
+
+    public List<? extends IPacket> getChildren(final String name) {
+	return getChildren(new PacketFilter() {
+	    public boolean isValid(final IPacket packet) {
+		return packet.getName().equals(name);
+	    }
+	});
+    }
+
+    public IPacket getFirstChild(final PacketFilter filter) {
+	for (final IPacket child : getChildren()) {
+	    if (filter.isValid(child)) {
+		return child;
+	    }
+	}
+	return NoPacket.INSTANCE;
+    }
+
+    public IPacket getFirstChild(final String childName) {
+	return getFirstChild(new PacketFilter() {
+	    public boolean isValid(final IPacket packet) {
+		return childName.equals(packet.getName());
+	    }
+	});
     }
 
     public boolean hasAttribute(final String name) {

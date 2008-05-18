@@ -31,6 +31,7 @@ import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.NoPacket;
 import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.packet.PacketFilter;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
@@ -105,7 +106,6 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     /**
      * @see http://www.xmpp.org/extensions/xep-0045.html#createroom
      */
-    @SuppressWarnings("unchecked")
     private void eventPresence(final Presence presence) {
 	final XmppURI occupantURI = presence.getFromURI();
 	final Room room = rooms.get(occupantURI.getJID());
@@ -113,8 +113,12 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	    if (presence.hasAttribute("type", "unavailable")) {
 		room.removeOccupant(occupantURI);
 	    } else {
-		// final IPacket xtension = presence.getFirstChild("x");
-		final List<? extends IPacket> children = presence.getChildren("x");
+		final List<? extends IPacket> children = presence.getChildren(new PacketFilter() {
+		    public boolean isValid(final IPacket packet) {
+			return packet.getName().equals("x")
+				&& packet.hasAttribute("xmlns", "http://jabber.org/protocol/muc#user");
+		    }
+		});
 		for (final IPacket child : children) {
 		    final IPacket item = child.getFirstChild("item");
 		    final String affiliation = item.getAttribute("affiliation");

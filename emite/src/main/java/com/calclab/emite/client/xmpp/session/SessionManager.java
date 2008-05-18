@@ -55,7 +55,9 @@ public class SessionManager {
 
 	public static Event login(final XmppURI uri, final String password) {
 	    final String strURI = uri != null ? uri.toString() : null;
-	    return (Event) SessionManager.Events.onXDoLogin.Params("uri", strURI).With("password", password);
+	    final Event event = SessionManager.Events.onXDoLogin.Params("uri", strURI);
+	    event.setAttribute("password", password);
+	    return event;
 	}
     }
 
