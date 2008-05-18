@@ -7,7 +7,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -85,18 +84,15 @@ public class ChatManagerTest {
 	assertEquals(null, trap.chat.getThread());
     }
 
-    /**
-     * Issue 42
-     */
     @Test
-    public void shouldNotPublishMessagesWithoutBody() {
+    public void shouldPublishMessagesWithoutBody() {
 	final Chat chat = manager.openChat(uri("someone@domain"));
 	final ChatListener chatListener = mock(ChatListener.class);
 	chat.addListener(chatListener);
 	emite.receives("<message type='chat' id='purplee8b92642' to='user@domain' "
 		+ "from='someone@domain'><x xmlns='jabber:x:event'/><active"
 		+ "xmlns='http://jabber.org/protocol/chatstates'/></message>");
-	verify(chatListener, never()).onMessageReceived(same(chat), (Message) anyObject());
+	verify(chatListener, times(1)).onMessageReceived(same(chat), (Message) anyObject());
     }
 
     @Test
