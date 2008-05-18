@@ -19,7 +19,6 @@ public class ChatUIPresenterTest {
         otherUri = new XmppURI("someone", "example.com", "home");
         chatUI = new ChatUIPresenter(otherUri, "luther", "black", listener);
         view = Mockito.mock(ChatUIView.class);
-        ChatStateTimer timer = Mockito.mock(ChatStateTimer.class);
         chatUI.init(view);
     }
 
