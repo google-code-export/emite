@@ -35,21 +35,22 @@ public class ChatUIPresenter implements ChatUI {
 
     // FIXME: this in Chat or new ChatState module, here only a listener
 
-    private static final int MILLISECONS_TO_PAUSE = 5000;
+    private static final int CANCEL_TIMER = -1;
+    private static final int MILLISECONS_TO_PAUSE = 7000;
     private static final int MILLISECONS_TO_INACTIVE = 30000;
-    private static final int MILLISECONS_TO_GONE = 120000;
 
     private static final String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
             "purple", "fuchsia", "maroon", "red" };
     public ChatState chatState;
     private ChatUIView view;
     private String savedInput;
-    private String savedChatNotification;
+    private final ChatNotification savedChatNotification;
     private final ChatUIListener listener;
     private int oldColor;
     private final HashMap<String, String> userColors;
     private final String chatTitle;
     private final XmppURI otherURI;
+    // isActive is maintained because Rooms have no ChatState support currently
     private boolean isActive;
     private boolean alreadyHightlighted;
     private final ChatIconDescriptor unhighIcon;
@@ -67,7 +68,7 @@ public class ChatUIPresenter implements ChatUI {
         this.chatTitle = node != null ? node : otherURI.getHost();
         userColors = new HashMap<String, String>();
         userColors.put(currentUserAlias, currentUserColor);
-        savedChatNotification = "";
+        savedChatNotification = new ChatNotification();
     }
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
@@ -113,7 +114,7 @@ public class ChatUIPresenter implements ChatUI {
         return color;
     }
 
-    public String getSavedChatNotification() {
+    public ChatNotification getSavedChatNotification() {
         return savedChatNotification;
     }
 
@@ -138,10 +139,9 @@ public class ChatUIPresenter implements ChatUI {
     }
 
     public void onClose() {
+        unHightAndActive();
+        setOwnState(ChatState.Type.gone, CANCEL_TIMER);
         listener.onClose(this);
-        if (timer != null) {
-            timer.cancel();
-        }
     }
 
     public void onComposing() {
@@ -154,25 +154,24 @@ public class ChatUIPresenter implements ChatUI {
 
     public void onInputFocus() {
         unHightAndActive();
-        setOwnState(ChatState.Type.active, -1);
+        setOwnState(ChatState.Type.active, MILLISECONS_TO_INACTIVE);
     }
 
     public void onInputUnFocus() {
         isActive = false;
-        setOwnState(ChatState.Type.pause, MILLISECONS_TO_INACTIVE);
+        setOwnState(ChatState.Type.inactive, CANCEL_TIMER);
     }
 
     public void onTime() {
         switch (chatState.getOwnState()) {
         case composing:
-        case active:
             setOwnState(ChatState.Type.pause, MILLISECONS_TO_INACTIVE);
             break;
-        case pause:
-            setOwnState(ChatState.Type.inactive, MILLISECONS_TO_GONE);
+        case active:
+            setOwnState(ChatState.Type.inactive, CANCEL_TIMER);
             break;
-        case inactive:
-            setOwnState(ChatState.Type.gone, -1);
+        case pause:
+            setOwnState(ChatState.Type.inactive, CANCEL_TIMER);
             break;
         default:
             timer.cancel();
@@ -194,39 +193,38 @@ public class ChatUIPresenter implements ChatUI {
             String alias = otherURI.getNode() != null ? otherURI.getNode() : otherURI.getHost();
 
             public void onActive() {
-                savedChatNotification = "";
+                savedChatNotification.setNotification("");
                 clearMessageEventInfo();
             }
 
             public void onComposing() {
                 // i18n
-                savedChatNotification = alias + " is writing";
+                savedChatNotification.setNotification(alias + " is writing");
+                savedChatNotification.setStyle("e-notif-composing");
                 showMessageEventInfo();
             }
 
             public void onGone() {
-                savedChatNotification = alias + " finished the conversation";
+                savedChatNotification.setNotification(alias + " finished the conversation");
+                savedChatNotification.setStyle("e-notif-gone");
                 showMessageEventInfo();
             }
 
             public void onInactive() {
                 // FIXME: this kind of messages only for tests ...
-                savedChatNotification = alias + " is inactive";
+                savedChatNotification.setNotification(alias + " is inactive");
+                savedChatNotification.setStyle("e-notif-inactive");
                 showMessageEventInfo();
             }
 
             public void onPause() {
-                // FIXME: this kind of messages only for tests ...
-                savedChatNotification = alias + " stop to write";
+                savedChatNotification.setNotification(alias + " stop to write");
+                savedChatNotification.setStyle("e-notif-pause");
                 showMessageEventInfo();
             }
 
         });
         timer = new ChatStateTimer(this);
-    }
-
-    public void setSavedMessageEventInfo(final String savedMessageEventInfo) {
-        this.savedChatNotification = savedMessageEventInfo;
     }
 
     public void setUserColor(final String userAlias, final String color) {

@@ -40,14 +40,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="-368.15999"
-     inkscape:cy="1160.3992"
+     inkscape:cx="-242.98566"
+     inkscape:cy="902.64098"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1440"
+     inkscape:window-width="1378"
      inkscape:window-height="867"
-     inkscape:window-x="0"
+     inkscape:window-x="60"
      inkscape:window-y="0"
      showguides="true"
      inkscape:guide-bbox="true">
@@ -768,5 +768,52 @@
              id="tspan2536">ui application</tspan></text>
       </g>
     </g>
+    <path
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#008000;stroke-width:20;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="M -531,217.36218 C nan,nan nan,nan -396,135.36218"
+       id="path3339"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#008000;stroke-width:20;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="M -529.36072,215.78468 C nan,nan nan,nan -437.56574,135.86218"
+       id="path3373"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#008000;stroke-width:20;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect2565"
+       width="319"
+       height="182"
+       x="-554.2525"
+       y="-45.637817"
+       ry="20"
+       rx="22" />
+    <text
+       xml:space="preserve"
+       style="font-size:155.82290649px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Emblem;-inkscape-font-specification:Emblem Bold"
+       x="-533.53546"
+       y="92.276962"
+       id="text2529"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan2531"
+         x="-533.53546"
+         y="92.276962"
+         dy="0 0"><tspan
+           style="fill:#ff6600"
+           id="tspan2533"
+           dy="0 0 0 0 3.7638102">((  ))</tspan></tspan></text>
+    <g
+       id="g3444">
+      <path
+         sodipodi:nodetypes="cc"
+         id="path3341"
+         d="M -530.7525,222.36218 C -485.16353,160.64772 -500.56823,147.20829 -501.56594,138.94288"
+         style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#008000;stroke-width:20;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
+    <path
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:20;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="M -413.16348,126.4349 L -412.52178,146.07507 C -412.52178,146.07507 -497.45253,199.03996 -490.52986,174.24352 C -485.06513,154.66928 -491.77737,141.92808 -494.41954,137.31881 C -496.96017,132.88668 -505.29915,127.08252 -511.29145,126.35704 C -523.28947,124.90447 -413.16348,126.4349 -413.16348,126.4349 z"
+       id="path3441"
+       sodipodi:nodetypes="ccszsc" />
   </g>
 </svg>

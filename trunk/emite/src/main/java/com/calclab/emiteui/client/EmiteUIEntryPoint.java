@@ -21,7 +21,6 @@
  */
 package com.calclab.emiteui.client;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.EmiteModule;
 import com.calclab.emite.client.modular.ModuleContainer;
 import com.calclab.emiteui.client.demo.DemoModule;
@@ -38,7 +37,7 @@ import com.google.gwt.user.client.DeferredCommand;
 public class EmiteUIEntryPoint implements EntryPoint {
 
     public void onModuleLoad() {
-        Log.setUncaughtExceptionHandler();
+        // Log.setUncaughtExceptionHandler();
         DeferredCommand.addCommand(new Command() {
             public void execute() {
                 onModuleLoadCont();

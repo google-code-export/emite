@@ -54,6 +54,14 @@
   background-image: url(images/emite-chat.gif) !important;
 }
 
+.e-icon {
+  background-image: url(images/e-icon.gif) !important;
+}
+
+.e-icon-a {
+  background-image: url(images/e-icon-a.gif) !important;
+}
+
 .group-icon {
   background-image: url(images/group.gif) !important;
 }
@@ -108,6 +116,23 @@
 
 .vamiddle {
   vertical-align: middle;
+}
+
+.e-notif-composing {
+  color: green;
+  font-style: italic;
+}
+
+.e-notif-inactive {
+  color: olive;
+}
+
+.e-notif-pause {
+  color: maroon;
+}
+
+.e-notif-gone {
+  color: red;
 }
 
 .kune-EditableLabel {

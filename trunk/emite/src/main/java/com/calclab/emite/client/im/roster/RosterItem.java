@@ -24,7 +24,6 @@ package com.calclab.emite.client.im.roster;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
@@ -94,7 +93,6 @@ public class RosterItem {
 
     public void setPresence(final Presence presence) {
         if (presence == null) {
-            Log.warn("Setting presence to unavailable-away (remove this log when bug fixed)");
             this.presence = new Presence(Type.unavailable, null, null).With(Show.away);
         } else {
             this.presence = presence;

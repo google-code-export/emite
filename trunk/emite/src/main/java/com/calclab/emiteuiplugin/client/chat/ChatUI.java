@@ -42,9 +42,9 @@ public interface ChatUI {
 
     String getColor(String userAlias);
 
-    String getSavedInput();
+    ChatNotification getSavedChatNotification();
 
-    String getSavedChatNotification();
+    String getSavedInput();
 
     View getView();
 
@@ -65,8 +65,6 @@ public interface ChatUI {
     void saveInput(String inputText);
 
     void setChatState(ChatState chatState);
-
-    void setSavedMessageEventInfo(String savedMessageEventInfo);
 
     void setUserColor(String userAlias, String color);
 

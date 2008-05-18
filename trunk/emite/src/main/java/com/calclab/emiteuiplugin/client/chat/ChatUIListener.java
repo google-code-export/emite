@@ -39,7 +39,7 @@ public interface ChatUIListener {
 
     void onMessageAdded(ChatUI chatUI);
 
-    void onNewChatNotification(ChatUI chatUI, String message);
+    void onNewChatNotification(ChatUI chatUI, ChatNotification chatNotification);
 
     void onUnHighLight(ChatUI chatUI);
 
