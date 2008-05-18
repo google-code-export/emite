@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Packet extends DSLPacket {
+public class Packet extends AbstractPacket {
     private final HashMap<String, String> attributes;
     private final ArrayList<IPacket> children;
     private final String name;
@@ -71,27 +71,8 @@ public class Packet extends DSLPacket {
 	return children;
     }
 
-    public List<IPacket> getChildren(final String name) {
-	final List<IPacket> selected = new ArrayList<IPacket>();
-	for (final IPacket child : children) {
-	    if (name.equals(child.getName())) {
-		selected.add(child);
-	    }
-	}
-	return selected;
-    }
-
     public int getChildrenCount() {
 	return children.size();
-    }
-
-    public IPacket getFirstChild(final String childName) {
-	for (final IPacket child : children) {
-	    if (childName.equals(child.getName())) {
-		return child;
-	    }
-	}
-	return NoPacket.INSTANCE;
     }
 
     public String getName() {

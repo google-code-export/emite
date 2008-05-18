@@ -24,7 +24,7 @@ package com.calclab.emite.client.core.packet;
 import java.util.HashMap;
 import java.util.List;
 
-public class DelegatedPacket extends DSLPacket {
+public class DelegatedPacket implements IPacket {
     private final IPacket delegate;
 
     public DelegatedPacket(final IPacket delegate) {
@@ -39,12 +39,12 @@ public class DelegatedPacket extends DSLPacket {
 	delegate.addChild(child);
     }
 
-    public final void setText(final String text) {
-	delegate.setText(text);
-    }
-
     public final String getAttribute(final String name) {
 	return delegate.getAttribute(name);
+    }
+
+    public int getAttributeAsInt(final String name) {
+	return delegate.getAttributeAsInt(name);
     }
 
     public HashMap<String, String> getAttributes() {
@@ -55,12 +55,20 @@ public class DelegatedPacket extends DSLPacket {
 	return delegate.getChildren();
     }
 
+    public List<? extends IPacket> getChildren(final PacketFilter filter) {
+	return delegate.getChildren(filter);
+    }
+
     public List<? extends IPacket> getChildren(final String name) {
 	return delegate.getChildren(name);
     }
 
     public int getChildrenCount() {
 	return delegate.getChildrenCount();
+    }
+
+    public IPacket getFirstChild(final PacketFilter filter) {
+	return delegate.getFirstChild(filter);
     }
 
     public final IPacket getFirstChild(final String childName) {
@@ -79,6 +87,18 @@ public class DelegatedPacket extends DSLPacket {
 	return delegate.getText();
     }
 
+    public boolean hasAttribute(final String name) {
+	return delegate.hasAttribute(name);
+    }
+
+    public boolean hasAttribute(final String name, final String value) {
+	return delegate.hasAttribute(name, value);
+    }
+
+    public boolean hasChild(final String name) {
+	return delegate.hasChild(name);
+    }
+
     public void render(final StringBuffer buffer) {
 	delegate.render(buffer);
     }
@@ -87,9 +107,29 @@ public class DelegatedPacket extends DSLPacket {
 	delegate.setAttribute(name, value);
     }
 
+    public final void setText(final String text) {
+	delegate.setText(text);
+    }
+
     @Override
     public String toString() {
 	return delegate.toString();
+    }
+
+    public IPacket With(final IPacket child) {
+	return delegate.With(child);
+    }
+
+    public IPacket With(final String name, final long value) {
+	return delegate.With(name, value);
+    }
+
+    public IPacket With(final String name, final String value) {
+	return delegate.With(name, value);
+    }
+
+    public IPacket WithText(final String text) {
+	return delegate.WithText(text);
     }
 
 }

@@ -26,16 +26,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.calclab.emite.client.core.packet.DSLPacket;
+import com.calclab.emite.client.core.packet.AbstractPacket;
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.core.packet.NoPacket;
 import com.calclab.emite.client.core.packet.TextUtils;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 
-public class GWTPacket extends DSLPacket {
+public class GWTPacket extends AbstractPacket {
     private static final List<IPacket> EMPTY_LIST = new ArrayList<IPacket>();
     private final Element element;
 
@@ -76,18 +75,8 @@ public class GWTPacket extends DSLPacket {
 	return wrap(element.getChildNodes());
     }
 
-    public List<IPacket> getChildren(final String name) {
-	final NodeList nodes = element.getElementsByTagName(name);
-	return wrap(nodes);
-    }
-
     public int getChildrenCount() {
 	return element.getChildNodes().getLength();
-    }
-
-    public IPacket getFirstChild(final String childName) {
-	final NodeList nodes = element.getElementsByTagName(childName);
-	return nodes.getLength() > 0 ? new GWTPacket((Element) nodes.item(0)) : NoPacket.INSTANCE;
     }
 
     public String getName() {

@@ -57,11 +57,17 @@ public interface IPacket {
 
     void addChild(IPacket child);
 
-    void setText(String text);
-
     String getAttribute(String name);
 
     List<? extends IPacket> getChildren();
+
+    /**
+     * Return a list of descendant childs after filter by the filter
+     * 
+     * @param filter
+     * @return
+     */
+    List<? extends IPacket> getChildren(PacketFilter filter);
 
     /**
      * Return all the descendant childs with node name
@@ -69,6 +75,8 @@ public interface IPacket {
      * @param name
      */
     List<? extends IPacket> getChildren(String name);
+
+    IPacket getFirstChild(PacketFilter filter);
 
     /**
      * Return the first direct child with this name. NEVER returns null
@@ -89,6 +97,8 @@ public interface IPacket {
     void render(StringBuffer buffer);
 
     void setAttribute(String name, String value);
+
+    void setText(String text);
 
     IPacket With(String name, long value);
 

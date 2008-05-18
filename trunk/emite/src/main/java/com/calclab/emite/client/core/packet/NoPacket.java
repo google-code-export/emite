@@ -57,12 +57,20 @@ public class NoPacket implements IPacket {
 	return EMPTY_CHILDREN;
     }
 
+    public List<? extends IPacket> getChildren(final PacketFilter filter) {
+	return EMPTY_CHILDREN;
+    }
+
     public List<? extends IPacket> getChildren(final String name) {
 	return EMPTY_CHILDREN;
     }
 
     public int getChildrenCount() {
 	return 0;
+    }
+
+    public IPacket getFirstChild(final PacketFilter filter) {
+	return this;
     }
 
     public IPacket getFirstChild(final String childName) {
