@@ -50,6 +50,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emiteuiplugin.client.EmiteUIFactory;
 import com.calclab.emiteuiplugin.client.UserChatOptions;
+import com.calclab.emiteuiplugin.client.chat.ChatNotification;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
 import com.calclab.emiteuiplugin.client.params.MultiChatCreationParam;
@@ -151,9 +152,9 @@ public class MultiChatPresenter {
             public void onMessageAdded(final ChatUI chatUI) {
             }
 
-            public void onNewChatNotification(final ChatUI chatUI, String message) {
+            public void onNewChatNotification(final ChatUI chatUI, ChatNotification chatNotification) {
                 if (chatUI.equals(currentChat)) {
-                    view.setBottomChatNotification(message);
+                    view.setBottomChatNotification(chatNotification);
                 }
             }
 
@@ -227,9 +228,9 @@ public class MultiChatPresenter {
                         ((Room) chat).setSubject(newSubject);
                     }
 
-                    public void onNewChatNotification(final ChatUI chatUI, String message) {
+                    public void onNewChatNotification(final ChatUI chatUI, ChatNotification chatNotification) {
                         if (chatUI.equals(currentChat)) {
-                            view.setBottomChatNotification(message);
+                            view.setBottomChatNotification(chatNotification);
                         }
                     }
 
@@ -264,8 +265,7 @@ public class MultiChatPresenter {
     public void init(final MultiChatPanel view) {
         this.view = view;
         reset();
-        view.setRosterVisible(false);
-        view.setOfflineInfo();
+        doAfterLogout();
         createXmppListeners();
     }
 
@@ -539,7 +539,7 @@ public class MultiChatPresenter {
             }
 
             public void onInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
-                view.highLight();
+                view.click();
                 view.roomJoinConfirm(invitor, roomURI, reason);
             }
         });
@@ -576,7 +576,7 @@ public class MultiChatPresenter {
         view.addChat(chatUI);
         currentChat = chatUI;
         chats.put(chat, chatUI);
-        chatUI.highLightChatTitle();
+        view.click();
         checkThereAreChats();
     }
 

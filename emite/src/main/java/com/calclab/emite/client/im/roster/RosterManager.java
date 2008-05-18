@@ -212,8 +212,7 @@ public class RosterManager extends SessionComponent {
         }
     }
 
-    private void fireUnsubscribedReceived(final XmppURI userUnsubscribed, final String newSubscription) {
-        roster.changeSubscription(userUnsubscribed, newSubscription);
+    private void fireUnsubscribedReceived(final XmppURI userUnsubscribed) {
         for (final RosterManagerListener listener : listeners) {
             listener.onUnsubscribedReceived(userUnsubscribed);
         }
@@ -236,8 +235,8 @@ public class RosterManager extends SessionComponent {
         fireSubscriptionRequest(presence);
     }
 
-    private void handleUnsubscribedReceived(final XmppURI userUnsubscribed, final String newSubscrition) {
-        fireUnsubscribedReceived(userUnsubscribed, newSubscrition);
+    private void handleUnsubscribedReceived(final XmppURI userUnsubscribed) {
+        fireUnsubscribedReceived(userUnsubscribed);
     }
 
     private void install() {
@@ -259,10 +258,12 @@ public class RosterManager extends SessionComponent {
                     handleSubscriptionRequest(presence);
                     break;
                 case unsubscribed:
-                    handleUnsubscribedReceived(presence.getFromURI(), received.getAttribute("subscription"));
+                    // Inform to user but not update roster (only iq set update
+                    // roster)
+                    handleUnsubscribedReceived(presence.getFromURI());
                     break;
                 case subscribed:
-                    roster.changeSubscription(presence.getFromURI(), received.getAttribute("subscription"));
+                    // Fine, but do nothing (only iq set update roster)
                     break;
                 case available:
                 case unavailable:

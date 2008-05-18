@@ -28,24 +28,24 @@ import com.google.gwt.user.client.ui.Image;
 public class ImagesHelper {
 
     public static void preFetchImages() {
-	DeferredCommand.addCommand(new Command() {
-	    public void execute() {
-		final String[] imgs = { "ext-load.gif", "group_add.gif", "group-chat.gif", "moderatoruser.gif",
-			"normaluser.gif", "person-def.gif", "smile.gif", "user_add.gif", "user-unavail.gif" };
-		final String[] cssImgs = { "add.gif", "cancel.gif", "emite-chat.gif", "colors.gif ", "del.gif",
-			"exit.gif", "extload.gif", "forbidden.gif", "group-chat.gif", "group.gif", "new-chat.gif",
-			"new-message.gif", "useradd.gif", "userf.gif", "user.gif" };
-		prefetchImages(imgs, "images");
-		prefetchImages(cssImgs, "images");
-	    }
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                final String[] imgs = { "ext-load.gif", "group_add.gif", "group-chat.gif", "moderatoruser.gif",
+                        "normaluser.gif", "person-def.gif", "smile.gif", "user_add.gif", "user-unavail.gif" };
+                final String[] cssImgs = { "add.gif", "cancel.gif", "emite-chat.gif", "colors.gif ", "del.gif",
+                        "exit.gif", "extload.gif", "forbidden.gif", "group-chat.gif", "group.gif", "new-chat.gif",
+                        "new-message.gif", "useradd.gif", "userf.gif", "user.gif", "e-icon.gif", "e-icon-a.gif" };
+                prefetchImages(imgs, "images");
+                prefetchImages(cssImgs, "images");
+            }
 
-	    private void prefetchImages(final String[] imgs, final String prefix) {
-		for (int i = 0; i < imgs.length; i++) {
-		    final String img = imgs[i];
-		    Image.prefetch(prefix + "/" + img);
-		}
-	    }
-	});
+            private void prefetchImages(final String[] imgs, final String prefix) {
+                for (int i = 0; i < imgs.length; i++) {
+                    final String img = imgs[i];
+                    Image.prefetch(prefix + "/" + img);
+                }
+            }
+        });
     }
 
 }

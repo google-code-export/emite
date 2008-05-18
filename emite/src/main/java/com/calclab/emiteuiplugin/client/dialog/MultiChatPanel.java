@@ -30,6 +30,7 @@ import com.allen_sauer.gwt.voices.client.Sound;
 import com.allen_sauer.gwt.voices.client.SoundController;
 import com.calclab.emite.client.core.packet.TextUtils;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emiteuiplugin.client.chat.ChatNotification;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.roster.RosterItemPanel;
 import com.calclab.emiteuiplugin.client.roster.RosterPanel;
@@ -150,6 +151,11 @@ public class MultiChatPanel {
         input.reset();
     }
 
+    public void click() {
+        // sound.setVolume(50);
+        sound.play();
+    }
+
     public void confirmCloseAll() {
         statusPanel.confirmCloseAll();
     }
@@ -171,6 +177,8 @@ public class MultiChatPanel {
     }
 
     public void highLight() {
+        dialog.setIconCls("e-icon-a");
+        renderDialogIfNeeded();
         click();
     }
 
@@ -194,8 +202,9 @@ public class MultiChatPanel {
         addRosterItem.setVisible(visible);
     }
 
-    public void setBottomChatNotification(final String message) {
-        bottomChatNotification.setText(message);
+    public void setBottomChatNotification(final ChatNotification chatNotification) {
+        bottomChatNotification.setText(chatNotification.getNotification());
+        bottomChatNotification.setStyleName(chatNotification.getStyle());
         bottomChatNotification.setVisible(true);
         renderSouthPanelIfNeeded();
     }
@@ -299,12 +308,8 @@ public class MultiChatPanel {
     }
 
     public void unHighLight() {
-        // nothing currently
-    }
-
-    private void click() {
-        // sound.setVolume(50);
-        sound.play();
+        dialog.setIconCls("e-icon");
+        renderDialogIfNeeded();
     }
 
     private void configureBottomInfoTimer() {
@@ -408,7 +413,7 @@ public class MultiChatPanel {
         dialog.setButtonAlign(Position.LEFT);
         dialog.setBorder(false);
         dialog.setCollapsible(true);
-        dialog.setIconCls("chat-icon");
+        dialog.setIconCls("e-icon");
         sendBtn = new Button(i18n.tWithNT("Send", "used in button"));
         sendBtn.addListener(new ButtonListenerAdapter() {
             @Override
@@ -583,6 +588,12 @@ public class MultiChatPanel {
             quickTipInstance.setDismissDelay(7000);
             quickTipInstance.setHideDelay(400);
             quickTipInstance.setMinWidth(100);
+        }
+    }
+
+    private void renderDialogIfNeeded() {
+        if (dialog.isRendered()) {
+            dialog.doLayout();
         }
     }
 

@@ -396,7 +396,7 @@ public class RosterPresenter {
                 Log.info(operation + " roster item: " + item.getJID() + ", name: " + name + ", subsc: "
                         + item.getSubscription());
                 if (presence != null) {
-                    logPresence(presence, "procesed after RosterChanged or RosterItemChanged");
+                    logPresence(presence, "processed after RosterChanged or RosterItemChanged");
                 } else {
                     Log.info("with null presence");
                 }
@@ -462,7 +462,7 @@ public class RosterPresenter {
     }
 
     private void logPresence(final Presence presence, final String subTitle) {
-        Log.info("PRESENCE: type: " + presence.getType() + ", from: " + presence.getFrom() + ", show: "
-                + presence.getShow() + ", status: " + presence.getStatus() + " (" + subTitle + ")");
+        Log.info("Presence: type: " + presence.getType() + ", from: " + presence.getFrom() + ", show: "
+                + presence.getShow().toString() + ", status: " + presence.getStatus() + " (" + subTitle + ")");
     }
 }

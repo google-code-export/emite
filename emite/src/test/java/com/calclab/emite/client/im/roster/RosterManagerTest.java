@@ -85,6 +85,14 @@ public class RosterManagerTest {
     }
 
     @Test
+    public void shouldHandleIQSetsWhenSubscribed() {
+        emite.receives("<iq id='theId' type='set'><query xmlns='jabber:iq:roster'><item jid='contact@example.org' "
+                + "subscription='to' name='MyContact'><group>MyBuddies</group></item></query></iq>");
+        emite.verifySent("<iq xmlns='jabber:client' type='result' id='theId' />");
+        verify(roster).changeSubscription(uri("contact@example.org"), "to");
+    }
+
+    @Test
     public void shouldHandlePresence() {
         emite.receives("<presence from='userInRoster@domain/res' to='user@domain/res'>"
                 + "<priority>2</priority></presence>");
@@ -98,18 +106,10 @@ public class RosterManagerTest {
     }
 
     @Test
-    public void shouldInformWhenSubscribed() {
-        final String presence = "<presence from='contact@example.org' to='user@example.com' type='subscribed'/>";
-        emite.receives(presence);
-        verify(roster).changeSubscription(eq(uri("contact@example.org")), (String) anyObject());
-    }
-
-    @Test
     public void shouldInformWhenUnsubscribed() {
         final String presence = "<presence from='contact@example.org' to='user@example.com' type='unsubscribed'/>";
         emite.receives(presence);
-        verify(roster).changeSubscription(eq(uri("contact@example.org")), (String) anyObject());
-
+        Mockito.verify(listener).onUnsubscribedReceived(uri("contact@example.org"));
     }
 
     @Test
