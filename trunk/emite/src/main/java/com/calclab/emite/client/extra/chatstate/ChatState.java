@@ -3,11 +3,11 @@ package com.calclab.emite.client.extra.chatstate;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.im.chat.BeforeSendMessageFormatter;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.MessageFormatter;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 
-public class ChatState implements MessageFormatter {
+public class ChatState implements BeforeSendMessageFormatter {
 
     // TODO
     // Chat state negotiation :
@@ -35,17 +35,18 @@ public class ChatState implements MessageFormatter {
         active, composing, pause, inactive, gone
     }
 
+    public static final String XMLNS = "http://jabber.org/protocol/chatstates";
+
     private Type ownState;
     private Type otherState;
     private final Chat chat;
     private final Emite emite;
-    private final ChatStateListenersCollection listeners;
+    private ChatStateListenersCollection listeners;
     private NegotiationStatus negotiationStatus;
 
     public ChatState(final Chat chat, final Emite emite) {
         this.chat = chat;
         this.emite = emite;
-        listeners = new ChatStateListenersCollection();
         negotiationStatus = NegotiationStatus.notStarted;
     }
 
@@ -53,6 +54,9 @@ public class ChatState implements MessageFormatter {
     // Dani: no estaba/estoy seguro de que no sea necesario usar un listener
     // para avisar de los cambios de estado propios
     public void addOtherStateListener(final ChatStateListener otherStateListener) {
+        if (listeners == null) {
+            listeners = new ChatStateListenersCollection();
+        }
         listeners.add(otherStateListener);
     }
 
@@ -69,19 +73,18 @@ public class ChatState implements MessageFormatter {
         }
     }
 
-    public Message format(final Message message) {
+    public void formatBeforeSend(final Message message) {
         switch (negotiationStatus) {
         case notStarted:
             negotiationStatus = NegotiationStatus.started;
         case accepted:
-            message.add(Type.active.toString(), "http://jabber.org/protocol/chatstates");
+            message.add(Type.active.toString(), XMLNS);
             break;
         case rejected:
         case started:
             // do nothing
             break;
         }
-        return message;
     }
 
     public NegotiationStatus getNegotiationStatus() {
@@ -116,7 +119,7 @@ public class ChatState implements MessageFormatter {
                     threadPacket.setText(thread);
                     statePacket.addChild(threadPacket);
                 }
-                statePacket.add(type.toString(), "http://jabber.org/protocol/chatstates");
+                statePacket.add(type.toString(), XMLNS);
                 emite.send(statePacket);
             }
         }

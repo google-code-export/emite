@@ -26,6 +26,7 @@ import java.util.HashMap;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.im.chat.BeforeSendMessageFormatter;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
@@ -49,6 +50,10 @@ public class Room implements Chat {
         this.emite = emite;
         this.occupants = new HashMap<XmppURI, Occupant>();
         this.listeners = new ArrayList<ChatListener>();
+    }
+
+    public void addBeforeSendMessageFormatter(final BeforeSendMessageFormatter beforeSendMessageFormatter) {
+        // FIXME Nothing (until ChatDefault/ChatState not ready)
     }
 
     /**

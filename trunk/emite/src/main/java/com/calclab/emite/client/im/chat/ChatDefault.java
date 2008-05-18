@@ -41,6 +41,7 @@ class ChatDefault implements Chat {
     private final String id;
     private final ArrayList<ChatListener> listeners;
     private final Emite emite;
+    private BeforeSendMessageFormatterCollection beforeSendFormatterCollection;
 
     public ChatDefault(final XmppURI other, final XmppURI myself, final String thread, final Emite emite) {
         this.other = other;
@@ -49,6 +50,13 @@ class ChatDefault implements Chat {
         this.from = myself;
         this.listeners = new ArrayList<ChatListener>();
         this.id = generateChatID();
+    }
+
+    public void addBeforeSendMessageFormatter(final BeforeSendMessageFormatter beforeSendMessageFormatter) {
+        if (beforeSendFormatterCollection == null) {
+            beforeSendFormatterCollection = new BeforeSendMessageFormatterCollection();
+        }
+        beforeSendFormatterCollection.add(beforeSendMessageFormatter);
     }
 
     public void addListener(final ChatListener listener) {
@@ -95,7 +103,7 @@ class ChatDefault implements Chat {
 
     public void send(final String body) {
         final Message message = new Message(from, other, body).Thread(thread);
-        emite.send(message);
+        emite.send(formatBeforeSend(message));
         fireMessageSent(message);
     }
 
@@ -114,6 +122,13 @@ class ChatDefault implements Chat {
         for (final ChatListener listener : listeners) {
             listener.onMessageReceived(this, message);
         }
+    }
+
+    private Message formatBeforeSend(final Message message) {
+        if (beforeSendFormatterCollection != null) {
+            beforeSendFormatterCollection.fireMessageFormat(message);
+        }
+        return message;
     }
 
     private String generateChatID() {
