@@ -110,6 +110,19 @@ public class ChatStateManagerTest {
     }
 
     @Test
+    public void shouldStartStateAfterNegotiation() {
+        chat.send("test message");
+        emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+                + chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
+        Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
+        message.add(ChatState.Type.active.toString(), ChatState.XMLNS);
+        chatState.setOwnState(ChatState.Type.composing);
+        emite.verifySent(message.toString() + "<message from='self@domain/res' to='other@domain/otherRes' type='chat'>"
+                + "<thread>" + chat.getThread() + "</thread>"
+                + "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
+    }
+
+    @Test
     public void shouldStartStateNegotiation() {
         chat.send("test message");
         Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
@@ -118,4 +131,13 @@ public class ChatStateManagerTest {
         emite.verifySent(message.toString());
     }
 
+    @Test
+    public void shouldStartStateNegotiationOnce() {
+        chat.send("test message");
+        chat.send("test message");
+        Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
+        Message message2 = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
+        message.add(ChatState.Type.active.toString(), ChatState.XMLNS);
+        emite.verifySent(message.toString() + message2.toString());
+    }
 }
