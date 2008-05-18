@@ -21,6 +21,7 @@
  */
 package com.calclab.emite.client.im.chat;
 
+import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public interface Chat {
@@ -34,6 +35,8 @@ public interface Chat {
     public XmppURI getOtherURI();
 
     public String getThread();
+
+    public void send(Message message);
 
     public void send(final String body);
 

@@ -41,10 +41,10 @@ public class Message extends BasicStanza {
      * 
      * @param fromUri
      * @param toURI
-     * @param message
+     * @param body
      */
-    public Message(final XmppURI fromUri, final XmppURI toURI, final String message) {
-	this(fromUri, toURI, message, Type.chat);
+    public Message(final XmppURI fromUri, final XmppURI toURI, final String body) {
+	this(fromUri, toURI, body, Type.chat);
     }
 
     /**
@@ -59,7 +59,12 @@ public class Message extends BasicStanza {
 	setType(type);
 	setFrom(fromUri);
 	setTo(toURI);
-	setMessage(message);
+	setBody(message);
+    }
+
+    public Message Body(final String body) {
+	setBody(body);
+	return this;
     }
 
     public String getBody() {
@@ -94,6 +99,13 @@ public class Message extends BasicStanza {
 	}
     }
 
+    public void setBody(final String msg) {
+	if (msg != null) {
+	    final IPacket body = add("body", null);
+	    body.setText(msg);
+	}
+    }
+
     public void setThread(final String thread) {
 	super.setTextToChild("thread", thread);
     }
@@ -112,10 +124,8 @@ public class Message extends BasicStanza {
 	return this;
     }
 
-    private void setMessage(final String msg) {
-	if (msg != null) {
-	    final IPacket body = add("body", null);
-	    body.setText(msg);
-	}
+    public Message Type(final Type type) {
+	setType(type);
+	return this;
     }
 }

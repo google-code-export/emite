@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.testing.EmiteTestHelper;
 
 public class ChatTest {
@@ -35,5 +36,13 @@ public class ChatTest {
 	chat.send("the message");
 	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'"
 		+ " xmlns='jabber:client'><body>the message</body><thread>theThread</thread></message>");
+    }
+
+    @Test
+    public void shouldSendValidChatMessages() {
+	chat.send(new Message(uri("from@uri"), uri("to@uri"), "this is the body").Thread("otherThread").Type(
+		Message.Type.groupchat));
+	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'"
+		+ " xmlns='jabber:client'><body>this is the body</body><thread>theThread</thread></message>");
     }
 }

@@ -137,7 +137,7 @@ public class EmiteTestHelper implements Emite {
 	final IsPacketLike matcher = new IsPacketLike(expected);
 	for (final IPacket packet : list) {
 	    buffer.append("[").append(packet.toString()).append("]");
-	    isContained = isContained ? isContained : matcher.matches(packet);
+	    isContained = isContained ? isContained : matcher.matches(packet, System.out);
 	}
 	return isContained;
     }
