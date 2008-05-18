@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 
 /**
  * 
@@ -44,95 +45,103 @@ class ChatDefault implements Chat {
     private BeforeSendMessageFormatterCollection beforeSendFormatterCollection;
 
     public ChatDefault(final XmppURI other, final XmppURI myself, final String thread, final Emite emite) {
-        this.other = other;
-        this.thread = thread;
-        this.emite = emite;
-        this.from = myself;
-        this.listeners = new ArrayList<ChatListener>();
-        this.id = generateChatID();
+	this.other = other;
+	this.thread = thread;
+	this.emite = emite;
+	this.from = myself;
+	this.listeners = new ArrayList<ChatListener>();
+	this.id = generateChatID();
     }
 
     public void addBeforeSendMessageFormatter(final BeforeSendMessageFormatter beforeSendMessageFormatter) {
-        if (beforeSendFormatterCollection == null) {
-            beforeSendFormatterCollection = new BeforeSendMessageFormatterCollection();
-        }
-        beforeSendFormatterCollection.add(beforeSendMessageFormatter);
+	if (beforeSendFormatterCollection == null) {
+	    beforeSendFormatterCollection = new BeforeSendMessageFormatterCollection();
+	}
+	beforeSendFormatterCollection.add(beforeSendMessageFormatter);
     }
 
     public void addListener(final ChatListener listener) {
-        listeners.add(listener);
+	listeners.add(listener);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (this == obj) {
-            return true;
-        }
-        final ChatDefault other = (ChatDefault) obj;
-        return id.equals(other.id);
+	if (obj == null) {
+	    return false;
+	}
+	if (this == obj) {
+	    return true;
+	}
+	final ChatDefault other = (ChatDefault) obj;
+	return id.equals(other.id);
     }
 
     // FIXME: Dani revise this (ChatState)
     public XmppURI getFromURI() {
-        return from;
+	return from;
     }
 
     public String getID() {
-        return id;
+	return id;
     }
 
     public XmppURI getOtherURI() {
-        return other;
+	return other;
     }
 
     public String getThread() {
-        return thread;
+	return thread;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (other == null ? 0 : other.hashCode());
-        result = prime * result + (thread == null ? 0 : thread.hashCode());
-        return result;
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + (other == null ? 0 : other.hashCode());
+	result = prime * result + (thread == null ? 0 : thread.hashCode());
+	return result;
+    }
+
+    public void send(final Message message) {
+	message.setFrom(from);
+	message.setTo(other);
+	message.setThread(thread);
+	message.setType(Type.chat);
+	emite.send(formatBeforeSend(message));
+	fireMessageSent(message);
     }
 
     public void send(final String body) {
-        final Message message = new Message(from, other, body).Thread(thread);
-        emite.send(formatBeforeSend(message));
-        fireMessageSent(message);
+	final Message message = new Message().Body(body);
+	send(message);
     }
 
     @Override
     public String toString() {
-        return id;
+	return id;
     }
 
     protected void fireMessageSent(final Message message) {
-        for (final ChatListener listener : listeners) {
-            listener.onMessageSent(this, message);
-        }
+	for (final ChatListener listener : listeners) {
+	    listener.onMessageSent(this, message);
+	}
     }
 
     void fireMessageReceived(final Message message) {
-        for (final ChatListener listener : listeners) {
-            listener.onMessageReceived(this, message);
-        }
+	for (final ChatListener listener : listeners) {
+	    listener.onMessageReceived(this, message);
+	}
     }
 
     private Message formatBeforeSend(final Message message) {
-        if (beforeSendFormatterCollection != null) {
-            beforeSendFormatterCollection.fireMessageFormat(message);
-        }
-        return message;
+	if (beforeSendFormatterCollection != null) {
+	    beforeSendFormatterCollection.fireMessageFormat(message);
+	}
+	return message;
     }
 
     private String generateChatID() {
-        return "chat: " + other.toString() + "-" + thread;
+	return "chat: " + other.toString() + "-" + thread;
     }
 
 }
