@@ -212,11 +212,10 @@ public class RosterManager extends SessionComponent {
         }
     }
 
-    private void fireUnsubscribedReceived(final Presence presence) {
-        // FIXME: roster.changeSubscrition instead of this
-        roster.changePresence(presence.getFromURI(), presence);
+    private void fireUnsubscribedReceived(final XmppURI userUnsubscribed, final String newSubscription) {
+        roster.changeSubscription(userUnsubscribed, newSubscription);
         for (final RosterManagerListener listener : listeners) {
-            listener.onUnsubscribedReceived(presence, subscriptionMode);
+            listener.onUnsubscribedReceived(userUnsubscribed);
         }
     }
 
@@ -237,8 +236,8 @@ public class RosterManager extends SessionComponent {
         fireSubscriptionRequest(presence);
     }
 
-    private void handleUnsubscribedReceived(final Presence presence) {
-        fireUnsubscribedReceived(presence);
+    private void handleUnsubscribedReceived(final XmppURI userUnsubscribed, final String newSubscrition) {
+        fireUnsubscribedReceived(userUnsubscribed, newSubscrition);
     }
 
     private void install() {
@@ -260,11 +259,9 @@ public class RosterManager extends SessionComponent {
                     handleSubscriptionRequest(presence);
                     break;
                 case unsubscribed:
-                    handleUnsubscribedReceived(presence);
+                    handleUnsubscribedReceived(presence.getFromURI(), received.getAttribute("subscription"));
                     break;
                 case subscribed:
-                    // Subscribed, must not changePresence, only subscription
-                    // (same I think must be fixed above with unsubscribed)
                     roster.changeSubscription(presence.getFromURI(), received.getAttribute("subscription"));
                     break;
                 case available:

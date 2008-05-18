@@ -41,62 +41,62 @@ public class RosterPanel extends UserGridPanel {
     private final I18nTranslationService i18n;
 
     public RosterPanel(final I18nTranslationService i18n, final RosterPresenter presenter) {
-	super(i18n.t("No buddies at this moment"), new DragGridConfiguration(USER_GROUP_DD, i18n
-		.t("Drop in the chat area to start a chat.")
-		+ "<br/>" + i18n.t("Drop into a room to invite the user to join the chat room")),
-		new UserGridListener() {
-		    public void onDoubleClick(final XmppURI userJid) {
-			presenter.openChat(userJid);
-		    }
-		});
-	this.i18n = i18n;
-	this.presenter = presenter;
+        super(i18n.t("No buddies at this moment"), new DragGridConfiguration(USER_GROUP_DD, i18n
+                .t("Drop in the chat area to start a chat.")
+                + "<br/>" + i18n.t("Drop into a room to invite the user to join the chat room")),
+                new UserGridListener() {
+                    public void onDoubleClick(final XmppURI userJid) {
+                        presenter.openChat(userJid);
+                    }
+                });
+        this.i18n = i18n;
+        this.presenter = presenter;
     }
 
     public void addRosterItem(final ChatUserUI user, final UserGridMenuItemList menuItemList) {
-	final UserGridMenu menu = new UserGridMenu();
-	menu.setMenuItemList(menuItemList);
-	super.addUser(user, menu);
+        final UserGridMenu menu = new UserGridMenu();
+        menu.setMenuItemList(menuItemList);
+        super.addUser(user, menu);
     }
 
     public void clearRoster() {
-	super.removeAllUsers();
+        super.removeAllUsers();
     }
 
     @Override
     public void confDropInPanel(final Panel panel, final DropGridConfiguration dropGridConfiguration) {
-	super.confDropInPanel(panel, dropGridConfiguration);
+        super.confDropInPanel(panel, dropGridConfiguration);
     }
 
     public void confirmSusbscriptionRequest(final Presence presence) {
-	MessageBox.confirm(i18n.t("Confirm"), i18n.t("[%s] want to add you as a buddy. Do you want to permit?",
-		presence.getFromURI().getJID().toString()), new MessageBox.ConfirmCallback() {
-	    public void execute(final String btnID) {
-		if (btnID.equals("yes")) {
-		    presenter.onPresenceAccepted(presence);
-		} else {
-		    presenter.onPresenceNotAccepted(presence);
-		}
-	    }
-	});
+        MessageBox.confirm(i18n.t("Confirm"), i18n.t("[%s] want to add you as a buddy. Do you want to permit?",
+                presence.getFromURI().getJID().toString()), new MessageBox.ConfirmCallback() {
+            public void execute(final String btnID) {
+                if (btnID.equals("yes")) {
+                    presenter.onPresenceAccepted(presence);
+                } else {
+                    presenter.onPresenceNotAccepted(presence);
+                }
+            }
+        });
     }
 
     public void informRosterItemRemoved(final ChatUserUI user) {
-	// not used currently
-	MessageBox.alert(i18n.t("[%s] has removed you from his/her buddies list", user.getURI().toString()));
+        // not used currently
+        MessageBox.alert(i18n.t("[%s] has removed you from his/her buddies list", user.getURI().toString()));
     }
 
     public void removeRosterItem(final ChatUserUI user) {
-	super.removeUser(user);
+        super.removeUser(user);
     }
 
-    public void showMessageAboutUnsuscription(final Presence presence) {
-	MessageBox.alert(i18n.t("[%s] has decided to stop to show you his/her status", presence.getFrom()));
+    public void showMessageAboutUnsuscription(final XmppURI userUnsubscribed) {
+        MessageBox.alert(i18n.t("[%s] has decided to stop to show you his/her status", userUnsubscribed.toString()));
     }
 
     public void updateRosterItem(final ChatUserUI user, final UserGridMenuItemList menuItemList) {
-	final UserGridMenu menu = new UserGridMenu();
-	menu.setMenuItemList(menuItemList);
-	super.updateRosterItem(user, menu);
+        final UserGridMenu menu = new UserGridMenu();
+        menu.setMenuItemList(menuItemList);
+        super.updateRosterItem(user, menu);
     }
 }

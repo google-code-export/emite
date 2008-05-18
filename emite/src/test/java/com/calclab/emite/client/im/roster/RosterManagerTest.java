@@ -101,27 +101,15 @@ public class RosterManagerTest {
     public void shouldInformWhenSubscribed() {
         final String presence = "<presence from='contact@example.org' to='user@example.com' type='subscribed'/>";
         emite.receives(presence);
-        // FIXME: only to show where the bug is: here must check that
-        // changeSubscription is called (not changePresence), same with
-        // "unsubscribed". In the packet there are only subscription info, not
-        // status info. changePresence, removes previous status info
-        verify(roster).changePresence(eq(uri("contact@example.org")), (Presence) anyObject());
-        // correct test:
-        // verify(roster).changeSubscription(eq(uri("contact@example.org")),
-        // (String) anyObject());
+        verify(roster).changeSubscription(eq(uri("contact@example.org")), (String) anyObject());
     }
 
     @Test
     public void shouldInformWhenUnsubscribed() {
         final String presence = "<presence from='contact@example.org' to='user@example.com' type='unsubscribed'/>";
         emite.receives(presence);
-        // FIXME: only to show where the bug is: here must check that
-        // changeSubscription is called (not changePresence). In the packet
-        // there are only subscription info, not
-        // status info. changePresence, removes previous status info
         verify(roster).changeSubscription(eq(uri("contact@example.org")), (String) anyObject());
-        // to fix: not changePresence when unsubscribed, only subscription
-        // (in RosterManager.fireUnsubscribedReceived)
+
     }
 
     @Test
@@ -162,9 +150,7 @@ public class RosterManagerTest {
         manager.setSubscriptionMode(SubscriptionMode.manual);
         final Presence presence = new Presence(Presence.Type.unsubscribed, uri("from@domain"), uri("to@domain"));
         emite.receives(presence);
-        verify(listener).onUnsubscribedReceived((Presence) packetLike(presence), same(SubscriptionMode.manual));
-        // Not now, maybe in the future (0.3.0):
-        // verify(roster).removeItem(uri("from@domain"));
+        verify(listener).onUnsubscribedReceived(uri("from@domain"));
     }
 
 }
