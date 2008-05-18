@@ -4,9 +4,10 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.MessageFormatter;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 
-public class ChatState {
+public class ChatState implements MessageFormatter {
 
     // TODO
     // Chat state negotiation :
@@ -66,6 +67,21 @@ public class ChatState {
                 fireOtherStateListeners(type);
             }
         }
+    }
+
+    public Message format(final Message message) {
+        switch (negotiationStatus) {
+        case notStarted:
+            negotiationStatus = NegotiationStatus.started;
+        case accepted:
+            message.add(Type.active.toString(), "http://jabber.org/protocol/chatstates");
+            break;
+        case rejected:
+        case started:
+            // do nothing
+            break;
+        }
+        return message;
     }
 
     public NegotiationStatus getNegotiationStatus() {
