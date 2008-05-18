@@ -77,13 +77,12 @@ public class RoomUserListUIPanel extends UserGridPanel implements View {
 
     public void removeUser(final RoomUserUI roomUser) {
         super.removeUser(roomUser);
-
     }
 
     public void updateUser(final RoomUserUI roomUser, final UserGridMenuItemList menuItemList) {
-        final UserGridMenu menu = new UserGridMenu();
-        menu.setMenuItemList(menuItemList);
+        // FIXME Make a updateUser
         super.removeUser(roomUser);
+        this.addUser(roomUser, menuItemList);
     }
 
     private void createUserListBottomBar() {
