@@ -9,11 +9,13 @@ import org.mockito.Mockito;
 import com.calclab.emite.client.extra.chatstate.ChatState.Type;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
 
 public class ChatStateManagerTest {
     private static final XmppURI MYSELF = uri("self@domain/res");
+    private static final XmppURI OTHER = uri("other@domain/otherRes");
 
     private EmiteTestHelper emite;
     private ChatManagerDefault chatManager;
@@ -31,8 +33,9 @@ public class ChatStateManagerTest {
         chatStateManager = new ChatStateManager(emite, chatManager);
         chatManager.setUserURI(MYSELF.toString());
         stateListener = Mockito.mock(ChatStateListener.class);
-        chat = chatManager.openChat(uri("other@domain/otherRes"));
+        chat = chatManager.openChat(OTHER);
         chatState = chatStateManager.getChatState(chat);
+        chat.addBeforeSendMessageFormatter(chatState);
         chatState.addOtherStateListener(stateListener);
     }
 
@@ -105,4 +108,14 @@ public class ChatStateManagerTest {
                 + "<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
                 + chat.getThread() + "</thread>" + "<pause xmlns='http://jabber.org/protocol/chatstates'/></message>");
     }
+
+    @Test
+    public void shouldStartStateNegotiation() {
+        chat.send("test message");
+        Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
+        message.add(ChatState.Type.active.toString(), ChatState.XMLNS);
+        // FIXME Dani: emite.verifySent(message); ----> nullException ??
+        emite.verifySent(message.toString());
+    }
+
 }
