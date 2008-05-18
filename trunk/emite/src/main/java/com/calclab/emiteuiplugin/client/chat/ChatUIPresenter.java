@@ -194,7 +194,7 @@ public class ChatUIPresenter implements ChatUI {
             String alias = otherURI.getNode() != null ? otherURI.getNode() : otherURI.getHost();
 
             public void onActive() {
-                savedChatNotification = " ";
+                savedChatNotification = "";
                 clearMessageEventInfoIfActive();
             }
 

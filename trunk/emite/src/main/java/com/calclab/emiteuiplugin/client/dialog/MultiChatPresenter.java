@@ -129,7 +129,8 @@ public class MultiChatPresenter {
             }
 
             public void onClose(final ChatUI chatUI) {
-                doClose(chat, chatUI);
+                xmpp.getChatManager().close(chat);
+                doAfterChatClosed(chat);
             }
 
             public void onCurrentUserSend(final String message) {
@@ -187,7 +188,8 @@ public class MultiChatPresenter {
                     }
 
                     public void onClose(final ChatUI chatUI) {
-                        doClose(chat, chatUI);
+                        xmpp.getRoomManager().close(chat);
+                        doAfterChatClosed(chat);
                     }
 
                     public void onCreated(final ChatUI chatUI) {
@@ -413,13 +415,6 @@ public class MultiChatPresenter {
         roster.clearRoster();
     }
 
-    void doClose(final Chat chat, final ChatUI chatUI) {
-        xmpp.getChatManager().close(chat);
-        chats.remove(chat);
-        chatUI.destroy();
-        checkNoChats();
-    }
-
     void doConnecting() {
         view.setLoadingVisible(true);
     }
@@ -448,7 +443,6 @@ public class MultiChatPresenter {
     private void checkNoChats() {
         if (chats.size() == 0) {
             reset();
-            view.setOfflineInfo();
         }
     }
 
@@ -483,6 +477,7 @@ public class MultiChatPresenter {
 
         xmpp.getChatManager().addListener(new ChatManagerListener() {
             public void onChatClosed(final Chat chat) {
+                doAfterChatClosed(chat);
             }
 
             public void onChatCreated(final Chat chat) {
@@ -502,6 +497,7 @@ public class MultiChatPresenter {
         final RoomManager roomManager = xmpp.getRoomManager();
         roomManager.addListener(new RoomManagerListener() {
             public void onChatClosed(final Chat chat) {
+                doAfterChatClosed(chat);
             }
 
             public void onChatCreated(final Chat room) {
@@ -516,6 +512,7 @@ public class MultiChatPresenter {
                     }
 
                     public void onOccupantModified(final Occupant occupant) {
+                        Log.info("Room occupant changed (" + occupant.getUri() + ")");
                         roomUI.onOccupantModified(occupant);
                     }
 
@@ -536,6 +533,15 @@ public class MultiChatPresenter {
             }
         });
 
+    }
+
+    private void doAfterChatClosed(final Chat chat) {
+        ChatUI chatUI = chats.get(chat);
+        if (chatUI != null) {
+            chats.remove(chat);
+            chatUI.destroy();
+        }
+        checkNoChats();
     }
 
     private void doAfterLogin() {
