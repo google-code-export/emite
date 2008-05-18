@@ -195,41 +195,32 @@ public class ChatUIPresenter implements ChatUI {
 
             public void onActive() {
                 savedChatNotification = "";
-                clearMessageEventInfoIfActive();
+                clearMessageEventInfo();
             }
 
             public void onComposing() {
                 // i18n
                 savedChatNotification = alias + " is writing";
-                showMessageEventInfoIfActive();
+                showMessageEventInfo();
             }
 
             public void onGone() {
                 savedChatNotification = alias + " finished the conversation";
-                showMessageEventInfoIfActive();
+                showMessageEventInfo();
             }
 
             public void onInactive() {
+                // FIXME: this kind of messages only for tests ...
                 savedChatNotification = alias + " is inactive";
-                showMessageEventInfoIfActive();
+                showMessageEventInfo();
             }
 
             public void onPause() {
+                // FIXME: this kind of messages only for tests ...
                 savedChatNotification = alias + " stop to write";
-                showMessageEventInfoIfActive();
+                showMessageEventInfo();
             }
 
-            private void clearMessageEventInfoIfActive() {
-                if (isActive) {
-                    listener.onChatNotificationClear();
-                }
-            }
-
-            private void showMessageEventInfoIfActive() {
-                if (isActive) {
-                    listener.onNewChatNotification(savedChatNotification);
-                }
-            }
         });
         timer = new ChatStateTimer(this);
     }
@@ -264,6 +255,10 @@ public class ChatUIPresenter implements ChatUI {
         }
     }
 
+    private void clearMessageEventInfo() {
+        listener.onChatNotificationClear(this);
+    }
+
     private String getNextColor() {
         final String color = USERCOLORS[oldColor++];
         if (oldColor >= USERCOLORS.length) {
@@ -283,6 +278,10 @@ public class ChatUIPresenter implements ChatUI {
             }
             chatState.setOwnState(type);
         }
+    }
+
+    private void showMessageEventInfo() {
+        listener.onNewChatNotification(this, savedChatNotification);
     }
 
     private void unHightAndActive() {

@@ -67,7 +67,9 @@ public class ChatStateManager extends SessionComponent {
             }
 
             public void onChatCreated(final Chat chat) {
-                chatStates.put(chat, new ChatState(chat, emite));
+                ChatState chatState = new ChatState(chat, emite);
+                chatStates.put(chat, chatState);
+                chat.addBeforeSendMessageFormatter(chatState);
             }
         });
         install();

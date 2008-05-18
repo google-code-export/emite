@@ -27,7 +27,7 @@ public interface ChatUIListener {
 
     void onActivate(ChatUI chatUI);
 
-    void onChatNotificationClear();
+    void onChatNotificationClear(ChatUI chatUI);
 
     void onClose(ChatUI chatUI);
 
@@ -39,7 +39,7 @@ public interface ChatUIListener {
 
     void onMessageAdded(ChatUI chatUI);
 
-    void onNewChatNotification(String message);
+    void onNewChatNotification(ChatUI chatUI, String message);
 
     void onUnHighLight(ChatUI chatUI);
 

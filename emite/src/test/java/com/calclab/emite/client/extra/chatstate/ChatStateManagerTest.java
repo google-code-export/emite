@@ -35,7 +35,6 @@ public class ChatStateManagerTest {
         stateListener = Mockito.mock(ChatStateListener.class);
         chat = chatManager.openChat(OTHER);
         chatState = chatStateManager.getChatState(chat);
-        chat.addBeforeSendMessageFormatter(chatState);
         chatState.addOtherStateListener(stateListener);
     }
 

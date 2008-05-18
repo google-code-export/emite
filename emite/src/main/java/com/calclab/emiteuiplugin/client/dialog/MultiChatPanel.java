@@ -134,15 +134,15 @@ public class MultiChatPanel {
         dialog.center();
     }
 
-    public void clearBottomInfoMessage() {
-        bottomInfoMessage.setText("");
-        bottomInfoMessage.setVisible(false);
-        renderSouthPanelIfNeeded();
-    }
-
     public void clearBottomChatNotification() {
         bottomChatNotification.setText("");
         bottomChatNotification.setVisible(false);
+        renderSouthPanelIfNeeded();
+    }
+
+    public void clearBottomInfoMessage() {
+        bottomInfoMessage.setText("");
+        bottomInfoMessage.setVisible(false);
         renderSouthPanelIfNeeded();
     }
 
@@ -588,7 +588,7 @@ public class MultiChatPanel {
 
     private void renderSouthPanelIfNeeded() {
         if (southPanel.isRendered()) {
-            southPanel.doLayout();
+            southPanel.doLayout(false);
         }
         bottomInfoTimer.schedule(TIMEVISIBLE);
     }

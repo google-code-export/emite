@@ -14,5 +14,7 @@ fi
 
 chmod -R g+rw target/emite-0.2.4/com.calclab.emiteui.EmiteUI/
 # from time to time use --delete
-rsync --progress -C -r -p target/emite-0.2.4/com.calclab.emiteui.EmiteUI/ ${EXTRA}ourproject.org:/home/groups/kune/htdocs/emitedemo/$EXTRADEST
+rsync --delete --progress -C -r -p target/emite-0.2.4/com.calclab.emiteui.EmiteUI/ ${EXTRA}ourproject.org:/home/groups/kune/htdocs/emitedemo/$EXTRADEST
 rsync --progress -C -r -p target/emite-0.2.4/com.calclab.emiteui.EmiteUI/EmiteUIDemo.html  ${EXTRA}ourproject.org:/home/groups/kune/htdocs/emitedemo/${EXTRADEST}index.html
+
+ssh ${EXTRA}ourproject.org "chgrp -R kune /home/groups/kune/htdocs/emitedemo/"
