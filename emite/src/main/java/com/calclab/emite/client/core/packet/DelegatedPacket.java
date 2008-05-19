@@ -117,19 +117,23 @@ public class DelegatedPacket implements IPacket {
     }
 
     public IPacket With(final IPacket child) {
-	return delegate.With(child);
+	delegate.With(child);
+	return this;
     }
 
     public IPacket With(final String name, final long value) {
-	return delegate.With(name, value);
+	delegate.With(name, value);
+	return this;
     }
 
     public IPacket With(final String name, final String value) {
-	return delegate.With(name, value);
+	delegate.With(name, value);
+	return this;
     }
 
     public IPacket WithText(final String text) {
-	return delegate.WithText(text);
+	delegate.WithText(text);
+	return this;
     }
 
 }
