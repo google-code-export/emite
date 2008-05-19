@@ -32,8 +32,7 @@ public interface Dispatcher {
 	public static final Event onError = new Event("connection:on:error");
 
 	public static Event error(final String cause, final String info) {
-	    final Event event = Events.onError.Params("cause", cause);
-	    event.setAttribute("info", info);
+	    final Event event = (Event) Events.onError.Params("cause", cause).With("info", info);
 	    return event;
 	}
 
