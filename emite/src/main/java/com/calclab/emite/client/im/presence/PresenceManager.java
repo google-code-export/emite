@@ -100,11 +100,10 @@ public class PresenceManager extends SessionComponent {
      * 'type' attribute with a value of "unavailable". (
      */
     public void setOwnPresence(final String statusMessage, final Show show) {
-	final Show showValue = show != null ? show : Presence.Show.notSpecified;
 	final Presence presence = new Presence();
 
-	if (!show.equals(Show.notSpecified)) {
-	    presence.setShow(showValue);
+	if (show != null && show != Show.notSpecified) {
+	    presence.setShow(show);
 	}
 	if (statusMessage != null) {
 	    presence.setStatus(statusMessage);
