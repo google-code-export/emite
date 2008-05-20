@@ -56,7 +56,7 @@ public class ResourceBindingManager {
 
     void eventAuthorized() {
 	final IQ iq = new IQ(IQ.Type.set);
-	iq.add("bind", "urn:ietf:params:xml:ns:xmpp-bind").add("resource", null).setText(resource);
+	iq.addChild("bind", "urn:ietf:params:xml:ns:xmpp-bind").addChild("resource", null).setText(resource);
 
 	emite.sendIQ("bind", iq, new PacketListener() {
 	    public void handle(final IPacket received) {

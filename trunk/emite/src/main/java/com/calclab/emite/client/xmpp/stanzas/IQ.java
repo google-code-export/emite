@@ -22,6 +22,7 @@
 package com.calclab.emite.client.xmpp.stanzas;
 
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.Packet;
 
 public class IQ extends BasicStanza {
     public static enum Type {
@@ -52,12 +53,12 @@ public class IQ extends BasicStanza {
     }
 
     public IPacket Includes(final String name, final String xmlns) {
-	add(name, xmlns);
+	addChild(name, xmlns);
 	return this;
     }
 
     public IPacket setQuery(final String namespace) {
-	return add("query", namespace);
+	return addChild("query", namespace);
     }
 
     public IQ To(final XmppURI toURI) {
@@ -65,10 +66,16 @@ public class IQ extends BasicStanza {
 	return this;
     }
 
+    // FIXME: cómo plantear esto... no todos los IQ pueden ser modificables así
+    // solo los creados con new IQ();
+    /**
+     * 
+     */
     public IQ WithQuery(final String queryNamespace, final IPacket child) {
-	final IPacket query = add("query", queryNamespace);
+	final IPacket query = addChild("query", queryNamespace);
 	if (child != null) {
-	    query.addChild(child);
+	    final Packet danger = (Packet) query;
+	    danger.addChild(child);
 	}
 	return this;
     }

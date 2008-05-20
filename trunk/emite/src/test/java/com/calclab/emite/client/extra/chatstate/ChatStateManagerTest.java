@@ -122,7 +122,7 @@ public class ChatStateManagerTest {
         emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
                 + chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
         Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
-        message.add(ChatState.Type.active.toString(), ChatState.XMLNS);
+        message.addChild(ChatState.Type.active.toString(), ChatState.XMLNS);
         chatState.setOwnState(ChatState.Type.composing);
         emite.verifySent(message.toString() + "<message from='self@domain/res' to='other@domain/otherRes' type='chat'>"
                 + "<thread>" + chat.getThread() + "</thread>"
@@ -133,7 +133,7 @@ public class ChatStateManagerTest {
     public void shouldStartStateNegotiation() {
         chat.send("test message");
         Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
-        message.add(ChatState.Type.active.toString(), ChatState.XMLNS);
+        message.addChild(ChatState.Type.active.toString(), ChatState.XMLNS);
         // FIXME Dani: emite.verifySent(message); ----> nullException ??
         emite.verifySent(message.toString());
     }
@@ -144,7 +144,7 @@ public class ChatStateManagerTest {
         chat.send("test message");
         Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
         Message message2 = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
-        message.add(ChatState.Type.active.toString(), ChatState.XMLNS);
+        message.addChild(ChatState.Type.active.toString(), ChatState.XMLNS);
         emite.verifySent(message.toString() + message2.toString());
     }
 }

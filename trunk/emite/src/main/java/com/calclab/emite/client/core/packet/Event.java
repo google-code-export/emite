@@ -21,36 +21,22 @@
  */
 package com.calclab.emite.client.core.packet;
 
-public class Event extends DelegatedPacket {
-
+public class Event extends Packet {
     private static final String TYPE = "type";
 
-    private static IPacket cloneEvent(final Event event) {
-	return new Packet("event", "emite:event").With(TYPE, event.getType());
-    }
-
-    public Event(final Event event) {
-	super(cloneEvent(event));
-    }
-
     public Event(final String type) {
-	super(new Packet("event", "emite:event"));
+	super("event", "emite:event");
 	setAttribute(TYPE, type);
-    }
-
-    public Event Because(final IPacket info) {
-	final Event event = new Event(this);
-	event.addChild(info);
-	return event;
     }
 
     public String getType() {
 	return getAttribute(TYPE);
     }
 
-    public Event Params(final String attribute, final String value) {
-	final Event event = new Event(this);
-	event.setAttribute(attribute, value);
+    public Event Params(final String name, final String value) {
+	final Event event = new Event(getType());
+	event.setAttribute(name, value);
 	return event;
     }
+
 }

@@ -70,7 +70,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	    rooms.put(roomURI.getJID(), room);
 	    chats.add(room);
 	    final Presence presence = new Presence(null, userURI, roomURI);
-	    presence.addChild(new Packet("x", "http://jabber.org/protocol/muc"));
+	    presence.addChild("x", "http://jabber.org/protocol/muc");
 	    emite.send(presence);
 	    fireChatCreated(room);
 	}

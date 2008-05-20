@@ -35,6 +35,7 @@ import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
+import com.google.gwt.xml.client.impl.DOMNodeException;
 
 public class GWTPacket extends AbstractPacket {
     private static final List<IPacket> EMPTY_LIST = new ArrayList<IPacket>();
@@ -44,15 +45,10 @@ public class GWTPacket extends AbstractPacket {
 	this.element = element;
     }
 
-    public IPacket add(final String nodeName, final String xmlns) {
+    public IPacket addChild(final String nodeName, final String xmlns) {
 	final Element child = element.getOwnerDocument().createElement(nodeName);
 	element.appendChild(child);
 	return new GWTPacket(child);
-    }
-
-    public void addChild(final IPacket child) {
-	final GWTPacket p = (GWTPacket) child;
-	element.appendChild(p.element);
     }
 
     public String getAttribute(final String name) {
@@ -113,12 +109,25 @@ public class GWTPacket extends AbstractPacket {
 	return null;
     }
 
+    public boolean removeChild(final IPacket child) {
+	final Element childElement = ((GWTPacket) child).element;
+	try {
+	    return element.removeChild(childElement) != null;
+	} catch (final DOMNodeException e) {
+	    return false;
+	}
+    }
+
     public void render(final StringBuffer buffer) {
 	GWTXMLService.toString(this);
     }
 
     public void setAttribute(final String name, final String value) {
-	element.setAttribute(name, value);
+	if (value != null) {
+	    element.setAttribute(name, value);
+	} else {
+	    element.removeAttribute(name);
+	}
     }
 
     public void setText(final String text) {
@@ -131,6 +140,11 @@ public class GWTPacket extends AbstractPacket {
 	    }
 	}
 	element.appendChild(element.getOwnerDocument().createTextNode(escaped));
+    }
+
+    public IPacket With(final IPacket child) {
+	// TODO Auto-generated method stub
+	return null;
     }
 
     private List<IPacket> wrap(final NodeList nodes) {

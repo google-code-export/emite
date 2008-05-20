@@ -78,7 +78,7 @@ public class ChatState implements BeforeSendMessageFormatter {
         case notStarted:
             negotiationStatus = NegotiationStatus.started;
         case accepted:
-            message.add(Type.active.toString(), XMLNS);
+            message.addChild(Type.active.toString(), XMLNS);
             break;
         case rejected:
         case started:
@@ -145,7 +145,7 @@ public class ChatState implements BeforeSendMessageFormatter {
             threadPacket.setText(thread);
             statePacket.addChild(threadPacket);
         }
-        statePacket.add(type.toString(), XMLNS);
+        statePacket.addChild(type.toString(), XMLNS);
         emite.send(statePacket);
     }
 }

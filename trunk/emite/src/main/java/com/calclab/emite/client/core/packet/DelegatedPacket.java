@@ -31,12 +31,8 @@ public class DelegatedPacket implements IPacket {
 	this.delegate = delegate;
     }
 
-    public final IPacket add(final String nodeName, final String xmlns) {
-	return delegate.add(nodeName, xmlns);
-    }
-
-    public void addChild(final IPacket child) {
-	delegate.addChild(child);
+    public final IPacket addChild(final String nodeName, final String xmlns) {
+	return delegate.addChild(nodeName, xmlns);
     }
 
     public final String getAttribute(final String name) {
@@ -79,10 +75,6 @@ public class DelegatedPacket implements IPacket {
 	return delegate.getName();
     }
 
-    public IPacket getParent() {
-	return delegate.getParent();
-    }
-
     public final String getText() {
 	return delegate.getText();
     }
@@ -97,6 +89,10 @@ public class DelegatedPacket implements IPacket {
 
     public boolean hasChild(final String name) {
 	return delegate.hasChild(name);
+    }
+
+    public boolean removeChild(final IPacket child) {
+	return delegate.removeChild(child);
     }
 
     public void render(final StringBuffer buffer) {
@@ -114,11 +110,6 @@ public class DelegatedPacket implements IPacket {
     @Override
     public String toString() {
 	return delegate.toString();
-    }
-
-    public IPacket With(final IPacket child) {
-	delegate.With(child);
-	return this;
     }
 
     public IPacket With(final String name, final long value) {
