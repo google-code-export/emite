@@ -1,14 +1,17 @@
 package com.calclab.emite.client.core.packet;
 
-public class PacketTest extends IPacketAbstractTest {
+import org.junit.Test;
 
-    /**
-     * Template method
-     * 
-     * @return
-     */
-    @Override
-    protected IPacket createPacket(final String name) {
-	return new Packet(name);
+public class PacketTest {
+
+    @Test
+    public void testPacket() {
+	PacketTestSuite.runPacketTests(new AbstractHelper() {
+	    public IPacket createPacket(final String name) {
+		return new Packet(name);
+	    }
+
+	});
     }
+
 }

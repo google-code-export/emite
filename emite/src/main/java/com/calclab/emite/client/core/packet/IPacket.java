@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * TODO: no está nada claro lo del setText, getText, addText...
  * 
  * @author dani
  * 
@@ -51,11 +50,16 @@ public interface IPacket {
 
     public boolean hasAttribute(String name, String value);
 
-    public IPacket With(final IPacket child);
+    /**
+     * Removes a single instance of the specified child from this packet, if it
+     * is present (optional operation).
+     * 
+     * @param child
+     * @return true if the list contained the specified element.
+     */
+    public boolean removeChild(IPacket child);
 
-    IPacket add(String nodeName, String xmlns);
-
-    void addChild(IPacket child);
+    IPacket addChild(String nodeName, String xmlns);
 
     String getAttribute(String name);
 
@@ -87,8 +91,6 @@ public interface IPacket {
     IPacket getFirstChild(String childName);
 
     String getName();
-
-    IPacket getParent();
 
     String getText();
 

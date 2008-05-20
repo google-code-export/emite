@@ -101,7 +101,7 @@ public class Message extends BasicStanza {
 
     public void setBody(final String msg) {
 	if (msg != null) {
-	    final IPacket body = add("body", null);
+	    final IPacket body = addChild("body", null);
 	    body.setText(msg);
 	}
     }

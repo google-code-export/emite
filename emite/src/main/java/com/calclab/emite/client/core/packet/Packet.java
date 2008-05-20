@@ -45,15 +45,15 @@ public class Packet extends AbstractPacket {
 	parent = null;
     }
 
-    public IPacket add(final String name, final String xmlns) {
+    public void addChild(final IPacket child) {
+	children.add(child);
+    }
+
+    public IPacket addChild(final String name, final String xmlns) {
 	final Packet child = new Packet(name, xmlns);
 	child.parent = this;
 	add(child);
 	return child;
-    }
-
-    public void addChild(final IPacket child) {
-	children.add(child);
     }
 
     public String getAttribute(final String name) {
@@ -95,6 +95,10 @@ public class Packet extends AbstractPacket {
 	return null;
     }
 
+    public boolean removeChild(final IPacket child) {
+	return children.remove(child);
+    }
+
     public void render(final StringBuffer buffer) {
 	buffer.append("<").append(name);
 
@@ -130,6 +134,11 @@ public class Packet extends AbstractPacket {
 	final StringBuffer buffer = new StringBuffer();
 	render(buffer);
 	return buffer.toString();
+    }
+
+    public IPacket With(final IPacket child) {
+	addChild(child);
+	return this;
     }
 
     protected void add(final Packet node) {

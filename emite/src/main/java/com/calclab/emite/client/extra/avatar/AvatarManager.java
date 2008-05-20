@@ -40,12 +40,12 @@ public class AvatarManager extends SessionComponent {
 
     public void setVCardAvatar(final String photoBinary) {
 	final IQ iq = new IQ(Type.set, userURI, null);
-	final IPacket vcard = iq.add("vCard", "vcard-temp");
+	final IPacket vcard = iq.addChild("vCard", "vcard-temp");
 	vcard.With("xdbns", "vcard-temp").With("prodid", "-//HandGen//NONSGML vGen v1.0//EN");
 	vcard.setAttribute("xdbns", "vcard-temp");
 	vcard.setAttribute("prodid", "-//HandGen//NONSGML vGen v1.0//EN");
 	vcard.setAttribute("version", "2.0");
-	vcard.add("PHOTO", null).add("BINVAL", null).setText(photoBinary);
+	vcard.addChild("PHOTO", null).addChild("BINVAL", null).setText(photoBinary);
 	emite.sendIQ("avatar", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (IQ.isSuccess(received)) {

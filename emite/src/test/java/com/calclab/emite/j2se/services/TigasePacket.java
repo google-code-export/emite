@@ -23,7 +23,7 @@ public class TigasePacket extends AbstractPacket {
 	this(new Element(name));
     }
 
-    public IPacket add(final String nodeName, final String xmlns) {
+    public IPacket addChild(final String nodeName, final String xmlns) {
 	final TigasePacket child = new TigasePacket(nodeName);
 	child.setAttribute("xmlns", xmlns);
 	addChild(child);
@@ -62,13 +62,12 @@ public class TigasePacket extends AbstractPacket {
 	return delegate.getName();
     }
 
-    // TODO
-    public IPacket getParent() {
-	throw new RuntimeException("not implemented");
-    }
-
     public String getText() {
 	return TextUtils.unescape(delegate.getCData());
+    }
+
+    public boolean removeChild(final IPacket child) {
+	return delegate.removeChild(((TigasePacket) child).delegate);
     }
 
     public void render(final StringBuffer buffer) {

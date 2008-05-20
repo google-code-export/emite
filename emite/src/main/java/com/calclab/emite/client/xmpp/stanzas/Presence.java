@@ -26,6 +26,8 @@ import com.calclab.emite.client.core.packet.IPacket;
 public class Presence extends BasicStanza {
 
     /**
+     * @see http://www.xmpp.org/rfcs/rfc3921.html#stanzas
+     * 
      * 2.2.2.1. Show
      * 
      * <p>
@@ -179,7 +181,8 @@ public class Presence extends BasicStanza {
     }
 
     public void setShow(final Show value) {
-	setTextToChild("show", value.toString());
+	setTextToChild("show", (value != null && (value != Show.notSpecified || value != Show.unknown)) ? value
+		.toString() : null);
     }
 
     public void setStatus(final String statusMessage) {

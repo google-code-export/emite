@@ -81,6 +81,14 @@ public class PresenceManager extends SessionComponent {
 	super.logOut();
     }
 
+    /**
+     * Set the logged in user's presence. If the user is not logged in, the
+     * presence is sent just after the initial presence
+     * 
+     * @see http://www.xmpp.org/rfcs/rfc3921.html#presence
+     * 
+     * @param presence
+     */
     public void setOwnPresence(final Presence presence) {
 	if (isLoggedIn()) {
 	    presence.setFrom(userURI);

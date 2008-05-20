@@ -138,10 +138,10 @@ public class Room implements Chat {
 	final BasicStanza message = new BasicStanza("message", null);
 	message.setFrom(userURI);
 	message.setTo(roomURI);
-	final IPacket x = message.add("x", "http://jabber.org/protocol/muc#user");
-	final IPacket invite = x.add("invite", null);
+	final IPacket x = message.addChild("x", "http://jabber.org/protocol/muc#user");
+	final IPacket invite = x.addChild("invite", null);
 	invite.setAttribute("to", userJid);
-	final IPacket reason = invite.add("reason", null);
+	final IPacket reason = invite.addChild("reason", null);
 	reason.WithText(reasonText);
 	emite.send(message);
     }
@@ -170,7 +170,7 @@ public class Room implements Chat {
 	message.setFrom(userURI);
 	message.setTo(roomURI);
 	message.setType(Message.Type.groupchat.toString());
-	final IPacket subject = message.add("subject", null);
+	final IPacket subject = message.addChild("subject", null);
 	subject.setText(subjectText);
 	emite.send(message);
     }

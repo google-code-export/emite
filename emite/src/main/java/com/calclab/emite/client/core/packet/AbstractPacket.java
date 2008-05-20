@@ -78,11 +78,6 @@ public abstract class AbstractPacket implements IPacket {
 	return getFirstChild(name) != NoPacket.INSTANCE;
     }
 
-    public IPacket With(final IPacket child) {
-	addChild(child);
-	return this;
-    }
-
     public IPacket With(final String name, final long value) {
 	return With(name, String.valueOf(value));
     }

@@ -34,7 +34,7 @@ public class NoPacket implements IPacket {
 
     }
 
-    public IPacket add(final String nodeName, final String xmlns) {
+    public IPacket addChild(final String nodeName, final String xmlns) {
 	return this;
     }
 
@@ -98,6 +98,10 @@ public class NoPacket implements IPacket {
     }
 
     public boolean hasChild(final String name) {
+	return false;
+    }
+
+    public boolean removeChild(final IPacket child) {
 	return false;
     }
 

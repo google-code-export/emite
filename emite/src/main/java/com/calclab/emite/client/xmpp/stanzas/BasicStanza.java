@@ -94,17 +94,21 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
     }
 
     /**
-     * Add a child with a specified text. Create the child if not exists
+     * Add a child with a specified text. Create the child if not exists. If the
+     * text is null, then removes the child
      * 
-     * @param string
-     * @param thread
+     * @param nodeName
+     * @param text
      */
-    protected void setTextToChild(final String name, final String value) {
-	IPacket node = getFirstChild(name);
-	if (node == NoPacket.INSTANCE) {
-	    node = new Packet(name);
-	    this.addChild(node);
+    protected void setTextToChild(final String nodeName, final String text) {
+	if (text != null) {
+	    IPacket node = getFirstChild(nodeName);
+	    if (node == NoPacket.INSTANCE) {
+		node = this.addChild(nodeName, null);
+	    }
+	    node.setText(text);
+	} else {
+	    removeChild(getFirstChild(nodeName));
 	}
-	node.setText(value);
     }
 }

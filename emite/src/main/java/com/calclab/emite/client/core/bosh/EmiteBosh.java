@@ -44,7 +44,7 @@ public class EmiteBosh implements Emite {
 	public static final Event onDoSend = new Event("connection:do:send");
 
 	public static IPacket send(final IPacket packet) {
-	    return new Event(EmiteBosh.Events.onDoSend).With(packet);
+	    return new Event(EmiteBosh.Events.onDoSend.getType()).With(packet);
 	}
     }
 
