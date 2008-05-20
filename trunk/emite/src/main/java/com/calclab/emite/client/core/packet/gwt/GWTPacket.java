@@ -28,7 +28,9 @@ import java.util.Map;
 
 import com.calclab.emite.client.core.packet.AbstractPacket;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.NoPacket;
 import com.calclab.emite.client.core.packet.TextUtils;
+import com.calclab.emite.client.core.services.gwt.GWTXMLService;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -75,8 +77,20 @@ public class GWTPacket extends AbstractPacket {
 	return wrap(element.getChildNodes());
     }
 
+    @Override
+    public List<IPacket> getChildren(final String name) {
+	final NodeList nodes = element.getElementsByTagName(name);
+	return wrap(nodes);
+    }
+
     public int getChildrenCount() {
 	return element.getChildNodes().getLength();
+    }
+
+    @Override
+    public IPacket getFirstChild(final String childName) {
+	final NodeList nodes = element.getElementsByTagName(childName);
+	return nodes.getLength() > 0 ? new GWTPacket((Element) nodes.item(0)) : NoPacket.INSTANCE;
     }
 
     public String getName() {
@@ -99,9 +113,8 @@ public class GWTPacket extends AbstractPacket {
 	return null;
     }
 
-    // FIXME: probably doesn't work in IE
     public void render(final StringBuffer buffer) {
-	buffer.append(element.toString());
+	GWTXMLService.toString(this);
     }
 
     public void setAttribute(final String name, final String value) {

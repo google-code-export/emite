@@ -54,7 +54,7 @@
         <configuration>
           <!-- <logLevel>INFO</logLevel> -->
           <!--<style>OBF</style>-->
-          <style>OBF</style>
+          <style>PRETTY</style>
           <runTarget>
             com.calclab.emiteui.EmiteUI/EmiteUI.html
           </runTarget>
