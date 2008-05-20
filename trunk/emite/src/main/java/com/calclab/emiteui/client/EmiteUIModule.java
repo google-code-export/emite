@@ -48,8 +48,8 @@ public class EmiteUIModule implements Module {
 	final I18nTranslationService i18n = container.registerSingletonInstance(I18nTranslationService.class,
 		new I18nTranslationServiceMocked());
 
-	final EmiteUIFactory factory = container.registerSingletonInstance(EmiteUIFactory.class,
-		new EmiteUIFactory(xmpp, i18n));
+	final EmiteUIFactory factory = container.registerSingletonInstance(EmiteUIFactory.class, new EmiteUIFactory(
+		xmpp, i18n));
 
 	container.registerProvider(EmiteDialog.class, new Provider<EmiteDialog>() {
 	    public EmiteDialog get() {

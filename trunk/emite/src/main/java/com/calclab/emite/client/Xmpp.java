@@ -24,8 +24,6 @@ package com.calclab.emite.client;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
-import com.calclab.emite.client.extra.chatstate.ChatStateManager;
-import com.calclab.emite.client.extra.chatstate.ChatStateModule;
 import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.im.InstantMessagingModule;
@@ -50,7 +48,7 @@ public class Xmpp extends DelegatedContainer {
      * @return
      */
     public static Xmpp create() {
-        return create(new GWTServicesModule());
+	return create(new GWTServicesModule());
     }
 
     /**
@@ -61,77 +59,73 @@ public class Xmpp extends DelegatedContainer {
      * @return
      */
     public static Xmpp create(final Module... modules) {
-        final ModuleContainer container = new ModuleContainer();
-        container.add(modules);
-        EmiteModule.load(container);
-        return container.getInstance(Xmpp.class);
+	final ModuleContainer container = new ModuleContainer();
+	container.add(modules);
+	EmiteModule.load(container);
+	return container.getInstance(Xmpp.class);
     }
 
     private Session session;
     private final boolean isStarted;
 
     protected Xmpp(final Container container) {
-        super(container);
-        this.isStarted = false;
-        this.session = null;
+	super(container);
+	this.isStarted = false;
+	this.session = null;
     }
 
     public ChatManager getChatManager() {
-        return InstantMessagingModule.getChat(this);
-    }
-
-    public ChatStateManager getChatStateManager() {
-        return ChatStateModule.getChatStateManager(this);
+	return InstantMessagingModule.getChat(this);
     }
 
     public PresenceManager getPresenceManager() {
-        return InstantMessagingModule.getManager(this);
+	return InstantMessagingModule.getManager(this);
     }
 
     public RoomManager getRoomManager() {
-        return MUCModule.getRoomManager(this);
+	return MUCModule.getRoomManager(this);
     }
 
     public Roster getRoster() {
-        return InstantMessagingModule.getRoster(this);
+	return InstantMessagingModule.getRoster(this);
     }
 
     public RosterManager getRosterManager() {
-        return InstantMessagingModule.getRosterManager(this);
+	return InstantMessagingModule.getRosterManager(this);
     }
 
     public Session getSession() {
-        if (session == null) {
-            session = XMPPModule.getSession(this);
-        }
-        return session;
+	if (session == null) {
+	    session = XMPPModule.getSession(this);
+	}
+	return session;
     }
 
     public void login(final XmppURI uri, final String password, final Presence.Show show, final String status) {
-        start();
-        session.login(uri, password);
-        getPresenceManager().setOwnPresence(status, show);
+	start();
+	session.login(uri, password);
+	getPresenceManager().setOwnPresence(status, show);
     }
 
     public void logout() {
-        session.logout();
+	session.logout();
     }
 
     public void setBoshOptions(final BoshOptions boshOptions) {
-        CoreModule.getBosh(this).setOptions(boshOptions);
+	CoreModule.getBosh(this).setOptions(boshOptions);
     }
 
     public void setHttpBase(final String httpBase) {
-        CoreModule.getBosh(this).getOptions().httpBase = httpBase;
+	CoreModule.getBosh(this).getOptions().httpBase = httpBase;
     }
 
     public void start() {
     }
 
     public void stop() {
-        if (isStarted) {
-            logout();
-        }
+	if (isStarted) {
+	    logout();
+	}
     }
 
 }
