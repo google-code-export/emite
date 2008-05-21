@@ -142,6 +142,20 @@
             </configuration>
           </execution>
           <execution>
+            <id>proxies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>proxies</classifier>
+              <includes>
+                <include>**/JabberHTTPBind/**</include>
+                <include>**/spieleck/**</include>
+              </includes>
+            </configuration>
+          </execution>
+          <execution>
             <id>emiteuiplugin</id>
             <phase>package</phase>
             <goals>
@@ -241,8 +255,8 @@
       <artifactId>junit</artifactId>
       <version>4.4</version>
       <!--
-      <scope>test</scope>
-       -->
+        <scope>test</scope>
+      -->
     </dependency>
     <dependency>
       <groupId>commons-httpclient</groupId>
