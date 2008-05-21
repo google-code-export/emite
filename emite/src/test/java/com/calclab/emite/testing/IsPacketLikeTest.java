@@ -1,7 +1,9 @@
 package com.calclab.emite.testing;
 
+import static com.calclab.emite.testing.EmiteAsserts.assertNotPacketLike;
+import static com.calclab.emite.testing.EmiteAsserts.assertPacketLike;
+
 import org.junit.Test;
-import static com.calclab.emite.testing.EmiteAsserts.*;
 
 public class IsPacketLikeTest {
 

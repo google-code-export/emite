@@ -21,12 +21,12 @@
  */
 package com.calclab.emite.client.extra.chatstate;
 
-import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.im.InstantMessagingModule;
-import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.Provider;
+import com.calclab.emite.client.modular.Scopes;
 
 /**
  * Implements XEP-0085: Chat State Notifications
@@ -46,9 +46,14 @@ public class ChatStateModule implements Module {
     }
 
     public void onLoad(final Container container) {
-	final Emite emite = CoreModule.getEmite(container);
-	final ChatManagerDefault chatManager = InstantMessagingModule.getChat(container);
-	final ChatStateManager chatStateManager = new ChatStateManager(emite, chatManager);
-	container.registerSingletonInstance(COMPONENTS_MANAGER, chatStateManager);
+
+	container.registerProvider(ChatStateManager.class, new Provider<ChatStateManager>() {
+	    public ChatStateManager get() {
+		final Emite emite = container.getInstance(Emite.class);
+		final ChatManager chatManager = container.getInstance(ChatManager.class);
+		return new ChatStateManager(emite, chatManager);
+	    }
+	}, Scopes.SINGLETON_EAGER);
+
     }
 }

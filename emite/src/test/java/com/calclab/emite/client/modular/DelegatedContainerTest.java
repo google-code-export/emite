@@ -20,9 +20,8 @@ public class DelegatedContainerTest {
 
     @Test
     public void testRegister() {
-	final Object component = mock(Object.class);
-	container.registerSingletonInstance(Object.class, component);
-	verify(delegate).registerSingletonInstance(same(Object.class), same(component));
+	final Provider provider = mock(Provider.class);
+	container.registerProvider(Object.class, provider, Scopes.SINGLETON);
+	verify(delegate).registerProvider(same(Object.class), same(provider), same(Scopes.SINGLETON));
     }
-
 }

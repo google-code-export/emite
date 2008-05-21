@@ -21,9 +21,10 @@
  */
 package com.calclab.emite.examples.echo;
 
-import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.Provider;
+import com.calclab.emite.client.modular.Scopes;
 
 public class EchoModule {
     private static final Class<Echo> COMPONENT_ECHO = Echo.class;
@@ -33,8 +34,13 @@ public class EchoModule {
     }
 
     public static void install(final Container container) {
-	final Emite emite = CoreModule.getEmite(container);
-	final Echo echo = new Echo(emite);
-	container.registerSingletonInstance(COMPONENT_ECHO, echo);
+
+	container.registerProvider(Echo.class, new Provider<Echo>() {
+	    public Echo get() {
+		return new Echo(container.getInstance(Emite.class));
+	    }
+
+	}, Scopes.SINGLETON_EAGER);
+
     }
 }

@@ -21,8 +21,6 @@
  */
 package com.calclab.emiteuiplugin.client.params;
 
-import org.ourproject.kune.platf.client.services.I18nTranslationService;
-
 import com.calclab.emiteuiplugin.client.UserChatOptions;
 
 public class MultiChatCreationParam {

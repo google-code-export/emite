@@ -1,7 +1,6 @@
 package com.calclab.emite.client.modular;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -23,19 +22,18 @@ public class SimpleContainerTest {
     }
 
     @Test
-    public void shouldRegister() {
-	final Object component = mock(Object.class);
-	container.registerSingletonInstance(Object.class, component);
-	assertSame(component, container.getInstance(Object.class));
-	assertNotNull(container.getProvider(Object.class));
-    }
-
-    @Test
     public void shouldRegisterProviders() {
 	final Provider<Object> provider = mock(Provider.class);
-	container.registerProvider(Object.class, provider);
+	container.registerProvider(Object.class, provider, Scopes.UNSCOPED);
 	container.getInstance(Object.class);
 	verify(provider).get();
     }
 
+    @Test
+    public void shouldUseScopes() {
+	final Scope scope = mock(Scope.class);
+	final Provider provider = mock(Provider.class);
+	container.registerProvider(Object.class, provider, scope);
+	verify(scope).scope(same(Object.class), same(provider));
+    }
 }

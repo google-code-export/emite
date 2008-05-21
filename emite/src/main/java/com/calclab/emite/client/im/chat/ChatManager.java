@@ -27,12 +27,14 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public interface ChatManager {
 
-    public abstract void addListener(final ChatManagerListener listener);
+    public void addListener(final ChatManagerListener listener);
 
-    public abstract void close(Chat chat);
+    public void close(Chat chat);
 
-    public abstract Collection<? extends Chat> getChats();
+    public Chat findChat(XmppURI from, String thread);
 
-    public abstract Chat openChat(final XmppURI xmppURI);
+    public Collection<? extends Chat> getChats();
+
+    public Chat openChat(final XmppURI xmppURI);
 
 }
