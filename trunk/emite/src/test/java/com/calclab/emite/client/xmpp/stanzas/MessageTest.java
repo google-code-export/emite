@@ -1,7 +1,10 @@
 package com.calclab.emite.client.xmpp.stanzas;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+
 import org.junit.Test;
 
 import com.calclab.emite.client.core.packet.Packet;

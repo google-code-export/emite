@@ -5,6 +5,8 @@ import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleContainer;
+import com.calclab.emite.client.modular.Provider;
+import com.calclab.emite.client.modular.Scopes;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.services.PrintStreamConnectionListener;
 import com.calclab.emite.j2se.swing.SwingClient;
@@ -25,6 +27,11 @@ public class EmiteSwingClientModule implements Module {
 
     public void onLoad(final Container container) {
 	final Xmpp xmpp = container.getInstance(Xmpp.class);
-	container.registerSingletonInstance(SwingClient.class, new SwingClient(xmpp));
+
+	container.registerProvider(SwingClient.class, new Provider<SwingClient>() {
+	    public SwingClient get() {
+		return new SwingClient(xmpp);
+	    }
+	}, Scopes.SINGLETON);
     }
 }

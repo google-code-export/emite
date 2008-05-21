@@ -25,6 +25,7 @@ import java.util.Date;
 
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshOptions;
+import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -44,76 +45,76 @@ public class EmiteDialog {
     private String initialWindowTitle;
 
     public EmiteDialog(final Xmpp xmpp, final EmiteUIFactory factory) {
-        this.xmpp = xmpp;
-        this.factory = factory;
+	this.xmpp = xmpp;
+	this.factory = factory;
     }
 
     public void chat(final XmppURI otherUserURI) {
-        xmpp.getChatManager().openChat(otherUserURI);
+	xmpp.getChatManager().openChat(otherUserURI);
     }
 
     public void getChatDialog(final MultiChatCreationParam param) {
-        if (multiChatDialog == null) {
-            multiChatDialog = createChatDialog(param);
-            ImagesHelper.preFetchImages();
-        }
+	if (multiChatDialog == null) {
+	    multiChatDialog = createChatDialog(param);
+	    ImagesHelper.preFetchImages();
+	}
     }
 
     public void hide() {
-        multiChatDialog.hide();
+	multiChatDialog.hide();
     }
 
     public void joinRoom(final XmppURI roomURI) {
-        xmpp.getRoomManager().openChat(roomURI);
+	xmpp.getInstance(RoomManager.class).openChat(roomURI);
     }
 
     public void refreshUserInfo(final UserChatOptions userChatOptions) {
-        multiChatDialog.setUserChatOptions(userChatOptions);
+	multiChatDialog.setUserChatOptions(userChatOptions);
     }
 
     public void show(final OwnStatus status) {
-        multiChatDialog.show();
-        multiChatDialog.setOwnPresence(new OwnPresence(status));
+	multiChatDialog.show();
+	multiChatDialog.setOwnPresence(new OwnPresence(status));
     }
 
     public void start(final String userJid, final String userPasswd, final String httpBase, final String roomHost) {
-        start(new UserChatOptions(userJid, userPasswd, ("emiteui-" + new Date().getTime()), "blue",
-                RosterManager.DEF_SUBSCRIPTION_MODE), httpBase, roomHost);
+	start(new UserChatOptions(userJid, userPasswd, ("emiteui-" + new Date().getTime()), "blue",
+		RosterManager.DEF_SUBSCRIPTION_MODE), httpBase, roomHost);
     }
 
     public void start(final UserChatOptions userChatOptions, final String httpBase, final String roomHost) {
-        initialWindowTitle = Window.getTitle();
+	initialWindowTitle = Window.getTitle();
 
-        final AvatarProvider avatarProvider = new AvatarProvider() {
-            public String getAvatarURL(final XmppURI userURI) {
-                return "images/person-def.gif";
-            }
-        };
-        xmpp.setBoshOptions(new BoshOptions(httpBase));
-        getChatDialog(new MultiChatCreationParam(EMITE_DEF_TITLE, roomHost, avatarProvider, userChatOptions));
+	final AvatarProvider avatarProvider = new AvatarProvider() {
+	    public String getAvatarURL(final XmppURI userURI) {
+		return "images/person-def.gif";
+	    }
+	};
+	xmpp.setBoshOptions(new BoshOptions(httpBase));
+	getChatDialog(new MultiChatCreationParam(EMITE_DEF_TITLE, roomHost, avatarProvider, userChatOptions));
 
     }
 
     private MultiChatPresenter createChatDialog(final MultiChatCreationParam param) {
 
-        final MultiChatListener listener = new MultiChatListener() {
-            public void onConversationAttended(final String chatTitle) {
-                Window.setTitle(initialWindowTitle);
-            }
+	final MultiChatListener listener = new MultiChatListener() {
+	    public void onConversationAttended(final String chatTitle) {
+		Window.setTitle(initialWindowTitle);
+	    }
 
-            public void onConversationUnnatended(final String chatTitle) {
-                Window.setTitle("(* " + chatTitle + ") " + initialWindowTitle);
-            }
+	    public void onConversationUnnatended(final String chatTitle) {
+		Window.setTitle("(* " + chatTitle + ") " + initialWindowTitle);
+	    }
 
-            public void onUserColorChanged(final String color) {
-            }
+	    public void onUserColorChanged(final String color) {
+	    }
 
-            public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
-            }
+	    public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
+	    }
 
-        };
-        final MultiChatPresenter dialog = factory.createMultiChat(param, listener);
-        return dialog;
+	};
+	final MultiChatPresenter dialog = factory.createMultiChat(param, listener);
+	return dialog;
     }
 
 }

@@ -29,6 +29,8 @@ import com.calclab.emite.client.im.InstantMessagingModule;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleContainer;
+import com.calclab.emite.client.modular.Provider;
+import com.calclab.emite.client.modular.Scopes;
 import com.calclab.emite.client.xmpp.XMPPModule;
 
 public class EmiteModule implements Module {
@@ -50,7 +52,12 @@ public class EmiteModule implements Module {
     }
 
     public void onLoad(final Container container) {
-	container.registerSingletonInstance(Xmpp.class, new Xmpp(container));
+	container.registerProvider(Xmpp.class, new Provider<Xmpp>() {
+	    public Xmpp get() {
+		return new Xmpp(container);
+	    }
+
+	}, Scopes.SINGLETON);
     }
 
 }

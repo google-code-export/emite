@@ -21,53 +21,47 @@
  */
 package com.calclab.emite.client.im;
 
-import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.Provider;
+import com.calclab.emite.client.modular.Scopes;
 
 public class InstantMessagingModule implements Module {
-    private static final Class<ChatManagerDefault> COMPONENT_CHAT = ChatManagerDefault.class;
-    private static final Class<Roster> COMPONENT_ROSTER = Roster.class;
-    private static final Class<RosterManager> COMPONENT_ROSTER_MANAGER = RosterManager.class;
-    private static final Class<PresenceManager> COMPONENT_MANAGER = PresenceManager.class;
-
-    public static ChatManagerDefault getChat(final Container container) {
-	return container.getInstance(COMPONENT_CHAT);
-    }
-
-    public static PresenceManager getManager(final Container container) {
-	return container.getInstance(COMPONENT_MANAGER);
-    }
-
-    public static Roster getRoster(final Container container) {
-	return container.getInstance(COMPONENT_ROSTER);
-    }
-
-    public static RosterManager getRosterManager(final Container container) {
-	return container.getInstance(COMPONENT_ROSTER_MANAGER);
-    }
-
     public Class<? extends Module> getType() {
 	return InstantMessagingModule.class;
     }
 
     public void onLoad(final Container container) {
-	final Emite emite = CoreModule.getEmite(container);
-	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(emite);
-	container.registerSingletonInstance(COMPONENT_CHAT, chatManagerDefault);
+	container.registerProvider(ChatManager.class, new Provider<ChatManager>() {
+	    public ChatManagerDefault get() {
+		return new ChatManagerDefault(container.getInstance(Emite.class));
+	    }
+	}, Scopes.SINGLETON_EAGER);
 
-	final Roster roster = new Roster();
-	final RosterManager rosterManager = new RosterManager(emite, roster);
-	container.registerSingletonInstance(COMPONENT_ROSTER, roster);
-	container.registerSingletonInstance(COMPONENT_ROSTER_MANAGER, rosterManager);
+	container.registerProvider(Roster.class, new Provider<Roster>() {
+	    public Roster get() {
+		return new Roster();
+	    }
+	}, Scopes.SINGLETON_EAGER);
 
-	final PresenceManager manager = new PresenceManager(emite);
-	container.registerSingletonInstance(COMPONENT_MANAGER, manager);
+	container.registerProvider(RosterManager.class, new Provider<RosterManager>() {
+	    public RosterManager get() {
+		return new RosterManager(container.getInstance(Emite.class), container.getInstance(Roster.class));
+	    }
+	}, Scopes.SINGLETON_EAGER);
+
+	container.registerProvider(PresenceManager.class, new Provider<PresenceManager>() {
+	    public PresenceManager get() {
+		return new PresenceManager(container.getInstance(Emite.class));
+	    }
+	}, Scopes.SINGLETON_EAGER);
+
     }
 
 }

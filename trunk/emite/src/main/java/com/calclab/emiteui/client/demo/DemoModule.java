@@ -23,6 +23,8 @@ package com.calclab.emiteui.client.demo;
 
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.Provider;
+import com.calclab.emite.client.modular.Scopes;
 import com.calclab.emiteui.client.DemoParameters;
 
 public class DemoModule implements Module {
@@ -32,8 +34,19 @@ public class DemoModule implements Module {
     }
 
     public void onLoad(final Container container) {
-	final DemoParameters params = container.registerSingletonInstance(DemoParameters.class, new DemoParameters());
-	container.registerSingletonInstance(EmiteDemoUI.class, new EmiteDemoUI(params));
+
+	container.registerProvider(DemoParameters.class, new Provider<DemoParameters>() {
+	    public DemoParameters get() {
+		return new DemoParameters();
+	    }
+	}, Scopes.SINGLETON);
+
+	container.registerProvider(EmiteDemoUI.class, new Provider<EmiteDemoUI>() {
+	    public EmiteDemoUI get() {
+		return new EmiteDemoUI(container.getInstance(DemoParameters.class));
+	    }
+	}, Scopes.SINGLETON);
+
     }
 
 }

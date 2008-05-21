@@ -29,8 +29,9 @@ import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleContainer;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emiteuiplugin.client.EmiteUIFactory;
+import com.calclab.emite.client.modular.Scopes;
 import com.calclab.emiteuiplugin.client.EmiteDialog;
+import com.calclab.emiteuiplugin.client.EmiteUIFactory;
 
 public class EmiteUIModule implements Module {
 
@@ -43,19 +44,27 @@ public class EmiteUIModule implements Module {
     }
 
     public void onLoad(final Container container) {
-	final Xmpp xmpp = container.getInstance(Xmpp.class);
 
-	final I18nTranslationService i18n = container.registerSingletonInstance(I18nTranslationService.class,
-		new I18nTranslationServiceMocked());
+	container.registerProvider(I18nTranslationService.class, new Provider<I18nTranslationService>() {
+	    public I18nTranslationService get() {
+		return new I18nTranslationServiceMocked();
+	    }
+	}, Scopes.SINGLETON);
 
-	final EmiteUIFactory factory = container.registerSingletonInstance(EmiteUIFactory.class, new EmiteUIFactory(
-		xmpp, i18n));
+	container.registerProvider(EmiteUIFactory.class, new Provider<EmiteUIFactory>() {
+	    public EmiteUIFactory get() {
+		return new EmiteUIFactory(container.getInstance(Xmpp.class), container
+			.getInstance(I18nTranslationService.class));
+	    }
+	}, Scopes.SINGLETON);
 
 	container.registerProvider(EmiteDialog.class, new Provider<EmiteDialog>() {
 	    public EmiteDialog get() {
+		final Xmpp xmpp = container.getInstance(Xmpp.class);
+		final EmiteUIFactory factory = container.getInstance(EmiteUIFactory.class);
 		return new EmiteDialog(xmpp, factory);
 	    }
 
-	});
+	}, Scopes.UNSCOPED);
     }
 }

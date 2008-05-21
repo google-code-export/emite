@@ -29,10 +29,10 @@ import java.util.HashMap;
  * @author dani
  */
 public class HashContainer implements Container {
-    private final HashMap<Class<?>, Provider<?>> components;
+    private final HashMap<Class<?>, Provider<?>> providers;
 
     public HashContainer() {
-	this.components = new HashMap<Class<?>, Provider<?>>();
+	this.providers = new HashMap<Class<?>, Provider<?>>();
     }
 
     public <T> T getInstance(final Class<T> componentKey) {
@@ -41,24 +41,25 @@ public class HashContainer implements Container {
 
     @SuppressWarnings("unchecked")
     public <T> Provider<T> getProvider(final Class<T> componentKey) {
-	final Provider<T> provider = (Provider<T>) components.get(componentKey);
+	final Provider<T> provider = (Provider<T>) providers.get(componentKey);
 	if (provider == null) {
 	    throw new RuntimeException("component not registered: " + componentKey);
 	}
 	return provider;
     }
 
+    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider, final Scope scope) {
+	final Provider<T> scoped = scope.scope(componentKey, provider);
+	providers.put(componentKey, scoped);
+	return scoped;
+    }
+
     public <T> T registerSingletonInstance(final Class<T> componentType, final T component) {
-	registerProvider(componentType, new Provider<T>() {
+	providers.put(componentType, new Provider<T>() {
 	    public T get() {
 		return component;
 	    }
 	});
 	return component;
-    }
-
-    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider) {
-	components.put(componentKey, provider);
-	return provider;
     }
 }

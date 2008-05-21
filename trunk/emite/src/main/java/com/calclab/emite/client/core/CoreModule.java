@@ -29,9 +29,10 @@ import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.core.services.Services;
-import com.calclab.emite.client.core.services.ServicesModule;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.Provider;
+import com.calclab.emite.client.modular.Scopes;
 
 public class CoreModule implements Module {
     public static Bosh getBosh(final Container container) {
@@ -51,13 +52,39 @@ public class CoreModule implements Module {
     }
 
     public void onLoad(final Container container) {
-	final Services services = ServicesModule.getServices(container);
+	container.registerProvider(Dispatcher.class, new Provider<Dispatcher>() {
+	    public Dispatcher get() {
+		return new DispatcherDefault();
+	    }
+	}, Scopes.SINGLETON_EAGER);
 
-	final Dispatcher dispatcher = container.registerSingletonInstance(Dispatcher.class, new DispatcherDefault());
-	final Stream stream = new Stream();
-	final Emite emite = container.registerSingletonInstance(Emite.class, new EmiteBosh(dispatcher, stream));
-	final Bosh bosh = container.registerSingletonInstance(Bosh.class, new Bosh(stream));
-	container.registerSingletonInstance(BoshManager.class, new BoshManager(services, emite, bosh));
+	container.registerProvider(Stream.class, new Provider<Stream>() {
+	    public Stream get() {
+		return new Stream();
+	    }
+	}, Scopes.SINGLETON_EAGER);
+
+	container.registerProvider(Emite.class, new Provider<Emite>() {
+	    public Emite get() {
+		return new EmiteBosh(container.getInstance(Dispatcher.class), container.getInstance(Stream.class));
+	    }
+	}, Scopes.SINGLETON_EAGER);
+
+	container.registerProvider(Bosh.class, new Provider<Bosh>() {
+	    public Bosh get() {
+		return new Bosh(container.getInstance(Stream.class));
+	    }
+	}, Scopes.SINGLETON_EAGER);
+
+	container.registerProvider(BoshManager.class, new Provider<BoshManager>() {
+	    public BoshManager get() {
+		final Services services = container.getInstance(Services.class);
+		final Emite emite = container.getInstance(Emite.class);
+		final Bosh bosh = container.getInstance(Bosh.class);
+		return new BoshManager(services, emite, bosh);
+	    }
+	}, Scopes.SINGLETON_EAGER);
+
     }
 
 }

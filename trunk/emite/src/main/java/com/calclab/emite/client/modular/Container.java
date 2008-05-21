@@ -47,18 +47,5 @@ public interface Container {
      */
     <T> Provider<T> getProvider(Class<T> componentKey);
 
-    /**
-     * Register a component into the container
-     * 
-     * @param <T>
-     * @param componentType
-     *                the key under this component is registered
-     * @param component
-     *                the component itself (any POJO)
-     * @return the registered component
-     */
-    <T> T registerSingletonInstance(Class<T> componentType, T component);
-
-    <T> Provider<T> registerProvider(Class<T> componentKey, Provider<T> provider);
-
+    <T> Provider<T> registerProvider(Class<T> componentKey, Provider<T> provider, Scope scope);
 }

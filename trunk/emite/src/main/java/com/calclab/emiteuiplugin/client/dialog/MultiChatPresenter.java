@@ -196,7 +196,7 @@ public class MultiChatPresenter {
 		    }
 
 		    public void onClose(final ChatUI chatUI) {
-			xmpp.getRoomManager().close(chat);
+			xmpp.getInstance(RoomManager.class).close(chat);
 			doAfterChatClosed(chat);
 		    }
 
@@ -306,7 +306,7 @@ public class MultiChatPresenter {
     }
 
     public void joinRoom(final String roomName, final String serverName) {
-	xmpp.getRoomManager().openChat(uri(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
+	xmpp.getInstance(RoomManager.class).openChat(uri(roomName + "@" + serverName + "/" + currentUserJid.getNode()));
     }
 
     public void onComposing() {
@@ -506,7 +506,7 @@ public class MultiChatPresenter {
 	    }
 	});
 
-	final RoomManager roomManager = xmpp.getRoomManager();
+	final RoomManager roomManager = xmpp.getInstance(RoomManager.class);
 	roomManager.addListener(new RoomManagerListener() {
 	    public void onChatClosed(final Chat chat) {
 		doAfterChatClosed(chat);

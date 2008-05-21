@@ -24,9 +24,6 @@ package com.calclab.emite.client;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
-import com.calclab.emite.client.extra.muc.MUCModule;
-import com.calclab.emite.client.extra.muc.RoomManager;
-import com.calclab.emite.client.im.InstantMessagingModule;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
@@ -75,23 +72,19 @@ public class Xmpp extends DelegatedContainer {
     }
 
     public ChatManager getChatManager() {
-	return InstantMessagingModule.getChat(this);
+	return this.getInstance(ChatManager.class);
     }
 
     public PresenceManager getPresenceManager() {
-	return InstantMessagingModule.getManager(this);
-    }
-
-    public RoomManager getRoomManager() {
-	return MUCModule.getRoomManager(this);
+	return getInstance(PresenceManager.class);
     }
 
     public Roster getRoster() {
-	return InstantMessagingModule.getRoster(this);
+	return getInstance(Roster.class);
     }
 
     public RosterManager getRosterManager() {
-	return InstantMessagingModule.getRosterManager(this);
+	return getInstance(RosterManager.class);
     }
 
     public Session getSession() {

@@ -21,10 +21,11 @@
  */
 package com.calclab.emite.client.xmpp;
 
-import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.Provider;
+import com.calclab.emite.client.modular.Scopes;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.session.Session;
@@ -33,7 +34,6 @@ import com.calclab.emite.client.xmpp.session.SessionManager;
 public class XMPPModule implements Module {
 
     public static final Class<SessionManager> COMPONENT_SESSION_MANAGER = SessionManager.class;
-    private static final Class<SASLManager> COMPONENT_SASL = SASLManager.class;
     private static final Class<Session> COMPONENT_SESSION = Session.class;
 
     public static Session getSession(final Container container) {
@@ -45,16 +45,36 @@ public class XMPPModule implements Module {
     }
 
     public void onLoad(final Container container) {
-	final Emite emite = CoreModule.getEmite(container);
-	container.registerSingletonInstance(ResourceBindingManager.class, new ResourceBindingManager(emite));
 
-	container.registerSingletonInstance(COMPONENT_SASL, new SASLManager(emite));
+	container.registerProvider(ResourceBindingManager.class, new Provider<ResourceBindingManager>() {
+	    public ResourceBindingManager get() {
+		return new ResourceBindingManager(container.getInstance(Emite.class));
+	    }
+	}, Scopes.SINGLETON_EAGER);
 
-	final SessionManager manager = new SessionManager(emite);
-	final Session session = new Session(manager);
-	manager.setSession(session);
-	container.registerSingletonInstance(XMPPModule.COMPONENT_SESSION, session);
-	container.registerSingletonInstance(XMPPModule.COMPONENT_SESSION_MANAGER, manager);
+	container.registerProvider(SASLManager.class, new Provider<SASLManager>() {
+	    public SASLManager get() {
+		return new SASLManager(container.getInstance(Emite.class));
+	    }
+	}, Scopes.SINGLETON_EAGER);
+
+	container.registerProvider(SessionManager.class, new Provider<SessionManager>() {
+	    public SessionManager get() {
+		final SessionManager sessionManager = new SessionManager(container.getInstance(Emite.class));
+		return sessionManager;
+	    }
+	}, Scopes.SINGLETON_EAGER);
+
+	// FIXME: circular references
+	container.registerProvider(Session.class, new Provider<Session>() {
+	    public Session get() {
+		final SessionManager manager = container.getInstance(SessionManager.class);
+		final Session session = new Session(manager);
+		manager.setSession(session);
+		return session;
+	    }
+	}, Scopes.SINGLETON_EAGER);
+
     }
 
 }
