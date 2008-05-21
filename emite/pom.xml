@@ -66,19 +66,19 @@
               com.calclab.emiteui.EmiteUI
             </compileTarget>
             <!--
-            <compileTarget>
+              <compileTarget>
               com.calclab.emite.Emite
-            </compileTarget>
-            <compileTarget>
+              </compileTarget>
+              <compileTarget>
               com.calclab.emiteuiplugin.EmiteUIPlugin
-            </compileTarget>
-            <compileTarget>
+              </compileTarget>
+              <compileTarget>
               com.calclab.emite.examples.chat.Chat
-            </compileTarget>
-            <compileTarget>
+              </compileTarget>
+              <compileTarget>
               com.calclab.emiteuisample.EmiteUISample
-            </compileTarget>
-             -->
+              </compileTarget>
+            -->
           </compileTargets>
           <generatorRootClasses>
             <value>com.calclab.emite.MyBean</value>
@@ -190,7 +190,7 @@
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
       <version>0.0.2415</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
@@ -224,11 +224,11 @@
       <artifactId>gwtext</artifactId>
       <version>2.0.4-beta1</version>
     </dependency>
-      <dependency>
+    <dependency>
       <groupId>org.ourproject.kune</groupId>
       <artifactId>kune-core</artifactId>
       <version>0.0.4</version>
-      </dependency>
+    </dependency>
     <dependency>
       <groupId>com.extjs</groupId>
       <artifactId>gxt</artifactId>
@@ -240,7 +240,9 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.4</version>
+      <!--
       <scope>test</scope>
+       -->
     </dependency>
     <dependency>
       <groupId>commons-httpclient</groupId>
