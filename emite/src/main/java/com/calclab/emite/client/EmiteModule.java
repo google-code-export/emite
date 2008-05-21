@@ -37,7 +37,7 @@ public class EmiteModule implements Module {
 	return container.getInstance(Xmpp.class);
     }
 
-    public static void load(final ModuleContainer container) {
+    public static void loadWithDependencies(final ModuleContainer container) {
 	container.add(new GWTServicesModule());
 	container.add(new CoreModule(), new XMPPModule(), new InstantMessagingModule());
 	// FIXME: esto debería ir fuera de aquí

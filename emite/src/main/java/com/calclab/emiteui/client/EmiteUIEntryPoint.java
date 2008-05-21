@@ -48,7 +48,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
     public void onModuleLoadCont() {
         final ModuleContainer app = new ModuleContainer();
-        EmiteModule.load(app);
+        EmiteModule.loadWithDependencies(app);
         EmiteUIModule.loadWithDependencies(app);
         app.add(new DemoModule());
 
