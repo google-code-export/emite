@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.calclab.emite.client.core.packet.IPacket;
 
-public class TestingParserTest {
+public class TigaseXMLServiceTest {
 
     final String response = "<body xmlns=\"http://jabber.org/protocol/httpbind\" xmlns:stream=\"http://etherx.jabber.org/streams\" "
 	    + "authid=\"27343471\" sid=\"27343471\" secure=\"true\" requests=\"2\" inactivity=\"30\" polling=\"5\" wait=\"60\" ver=\"1.6\">"
