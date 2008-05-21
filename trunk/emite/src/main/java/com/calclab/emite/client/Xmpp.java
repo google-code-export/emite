@@ -61,7 +61,7 @@ public class Xmpp extends DelegatedContainer {
     public static Xmpp create(final Module... modules) {
 	final ModuleContainer container = new ModuleContainer();
 	container.add(modules);
-	EmiteModule.load(container);
+	EmiteModule.loadWithDependencies(container);
 	return container.getInstance(Xmpp.class);
     }
 

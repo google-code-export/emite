@@ -7,15 +7,14 @@ import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesModule;
 import com.calclab.emite.client.modular.Container;
-import com.calclab.emite.client.modular.Module;
 
-public class J2SEPlugin extends ServicesModule implements Services, Module {
+public class J2SEServicesModule extends ServicesModule implements Services {
     private final HttpConnector connector;
 
     private final ThreadScheduler scheduler;
     private final TigaseXMLService xmler;
 
-    public J2SEPlugin(final HttpConnectorListener listener) {
+    public J2SEServicesModule(final HttpConnectorListener listener) {
 	this.connector = new HttpConnector(listener);
 	scheduler = new ThreadScheduler();
 	xmler = new TigaseXMLService();
