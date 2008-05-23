@@ -10,7 +10,6 @@ public class PacketTest {
 	    public IPacket createPacket(final String name) {
 		return new Packet(name);
 	    }
-
 	});
     }
 

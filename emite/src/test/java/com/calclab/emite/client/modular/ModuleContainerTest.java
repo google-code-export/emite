@@ -24,17 +24,17 @@ public class ModuleContainerTest {
 	    return type;
 	}
 
-	public void onLoad(final Container container) {
+	public void onLoad(final ModuleBuilder builder) {
 	    loaded++;
 	}
 
     }
 
-    private ModuleContainer container;
+    private ModuleBuilder container;
 
     @Before
     public void beforeTest() {
-	this.container = new ModuleContainer();
+	this.container = new ModuleBuilder();
     }
 
     @Test

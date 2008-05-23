@@ -24,6 +24,7 @@ package com.calclab.emite.client.xmpp;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
@@ -44,31 +45,31 @@ public class XMPPModule implements Module {
 	return XMPPModule.class;
     }
 
-    public void onLoad(final Container container) {
+    public void onLoad(final ModuleBuilder builder) {
 
-	container.registerProvider(ResourceBindingManager.class, new Provider<ResourceBindingManager>() {
+	builder.registerProvider(ResourceBindingManager.class, new Provider<ResourceBindingManager>() {
 	    public ResourceBindingManager get() {
-		return new ResourceBindingManager(container.getInstance(Emite.class));
+		return new ResourceBindingManager(builder.getInstance(Emite.class));
 	    }
 	}, Scopes.SINGLETON_EAGER);
 
-	container.registerProvider(SASLManager.class, new Provider<SASLManager>() {
+	builder.registerProvider(SASLManager.class, new Provider<SASLManager>() {
 	    public SASLManager get() {
-		return new SASLManager(container.getInstance(Emite.class));
+		return new SASLManager(builder.getInstance(Emite.class));
 	    }
 	}, Scopes.SINGLETON_EAGER);
 
-	container.registerProvider(SessionManager.class, new Provider<SessionManager>() {
+	builder.registerProvider(SessionManager.class, new Provider<SessionManager>() {
 	    public SessionManager get() {
-		final SessionManager sessionManager = new SessionManager(container.getInstance(Emite.class));
+		final SessionManager sessionManager = new SessionManager(builder.getInstance(Emite.class));
 		return sessionManager;
 	    }
 	}, Scopes.SINGLETON_EAGER);
 
 	// FIXME: circular references
-	container.registerProvider(Session.class, new Provider<Session>() {
+	builder.registerProvider(Session.class, new Provider<Session>() {
 	    public Session get() {
-		final SessionManager manager = container.getInstance(SessionManager.class);
+		final SessionManager manager = builder.getInstance(SessionManager.class);
 		final Session session = new Session(manager);
 		manager.setSession(session);
 		return session;

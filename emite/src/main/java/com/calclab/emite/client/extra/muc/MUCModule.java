@@ -24,24 +24,23 @@ package com.calclab.emite.client.extra.muc;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
 
 public class MUCModule implements Module {
-    private static final Class<MUCRoomManager> COMPONENTS_MANAGER = MUCRoomManager.class;
-
     public static RoomManager getRoomManager(final Container components) {
-	return components.getInstance(COMPONENTS_MANAGER);
+	return components.getInstance(RoomManager.class);
     }
 
     public Class<? extends Module> getType() {
 	return MUCModule.class;
     }
 
-    public void onLoad(final Container container) {
-	container.registerProvider(RoomManager.class, new Provider<RoomManager>() {
+    public void onLoad(final ModuleBuilder builder) {
+	builder.registerProvider(RoomManager.class, new Provider<RoomManager>() {
 	    public MUCRoomManager get() {
-		return new MUCRoomManager(container.getInstance(Emite.class));
+		return new MUCRoomManager(builder.getInstance(Emite.class));
 	    }
 	}, Scopes.SINGLETON_EAGER);
 

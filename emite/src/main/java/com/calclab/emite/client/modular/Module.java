@@ -32,8 +32,8 @@ public interface Module {
     /**
      * Install the components into the given container
      * 
-     * @param container
+     * @param builder
      *                TODO
      */
-    public void onLoad(Container container);
+    public void onLoad(ModuleBuilder builder);
 }

@@ -26,15 +26,15 @@ import java.util.HashMap;
 /**
  * A container with module installation support
  */
-public class ModuleContainer extends DelegatedContainer {
+public class ModuleBuilder extends DelegatedContainer {
     private HashMap<Class<?>, Module> modules;
 
-    public ModuleContainer() {
+    public ModuleBuilder() {
 	this(new HashContainer());
 	this.modules = new HashMap<Class<?>, Module>();
     }
 
-    public ModuleContainer(final Container delegate) {
+    public ModuleBuilder(final Container delegate) {
 	super(delegate);
     }
 

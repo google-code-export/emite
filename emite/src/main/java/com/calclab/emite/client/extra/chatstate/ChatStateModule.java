@@ -25,6 +25,7 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
 
@@ -45,12 +46,12 @@ public class ChatStateModule implements Module {
 	return ChatStateModule.class;
     }
 
-    public void onLoad(final Container container) {
+    public void onLoad(final ModuleBuilder builder) {
 
-	container.registerProvider(ChatStateManager.class, new Provider<ChatStateManager>() {
+	builder.registerProvider(ChatStateManager.class, new Provider<ChatStateManager>() {
 	    public ChatStateManager get() {
-		final Emite emite = container.getInstance(Emite.class);
-		final ChatManager chatManager = container.getInstance(ChatManager.class);
+		final Emite emite = builder.getInstance(Emite.class);
+		final ChatManager chatManager = builder.getInstance(ChatManager.class);
 		return new ChatStateManager(emite, chatManager);
 	    }
 	}, Scopes.SINGLETON_EAGER);

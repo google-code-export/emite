@@ -29,8 +29,8 @@ import java.util.Map;
 import com.calclab.emite.client.core.packet.AbstractPacket;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.NoPacket;
+import com.calclab.emite.client.core.packet.PacketRenderer;
 import com.calclab.emite.client.core.packet.TextUtils;
-import com.calclab.emite.client.core.services.gwt.GWTXMLService;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -56,7 +56,13 @@ public class GWTPacket extends AbstractPacket {
     }
 
     public HashMap<String, String> getAttributes() {
-	throw new RuntimeException("GWTPacket.getAttributes: not implemented!");
+	final HashMap<String, String> map = new HashMap<String, String>();
+	final NamedNodeMap attributes = element.getAttributes();
+	for (int index = 0; index < attributes.getLength(); index++) {
+	    final Node attrib = attributes.item(index);
+	    map.put(attrib.getNodeName(), attrib.getNodeValue());
+	}
+	return map;
     }
 
     public Map<String, String> getAttributtes() {
@@ -119,7 +125,7 @@ public class GWTPacket extends AbstractPacket {
     }
 
     public void render(final StringBuffer buffer) {
-	GWTXMLService.toString(this);
+
     }
 
     public void setAttribute(final String name, final String value) {
@@ -142,9 +148,9 @@ public class GWTPacket extends AbstractPacket {
 	element.appendChild(element.getOwnerDocument().createTextNode(escaped));
     }
 
-    public IPacket With(final IPacket child) {
-	// TODO Auto-generated method stub
-	return null;
+    @Override
+    public String toString() {
+	return PacketRenderer.toString(this);
     }
 
     private List<IPacket> wrap(final NodeList nodes) {

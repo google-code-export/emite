@@ -24,6 +24,7 @@ package com.calclab.emite.client.extra.avatar;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
 
@@ -38,10 +39,10 @@ public class AvatarModule implements Module {
 	return AvatarModule.class;
     }
 
-    public void onLoad(final Container container) {
-	container.registerProvider(AvatarManager.class, new Provider<AvatarManager>() {
+    public void onLoad(final ModuleBuilder builder) {
+	builder.registerProvider(AvatarManager.class, new Provider<AvatarManager>() {
 	    public AvatarManager get() {
-		final Emite emite = container.getInstance(Emite.class);
+		final Emite emite = builder.getInstance(Emite.class);
 		return new AvatarManager(emite);
 	    }
 	}, Scopes.SINGLETON_EAGER);

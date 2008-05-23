@@ -24,11 +24,14 @@ package com.calclab.emiteui.client;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
+import com.calclab.emite.client.EmiteModule;
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
+import com.calclab.emite.client.extra.avatar.AvatarModule;
+import com.calclab.emite.client.extra.chatstate.ChatStateModule;
 import com.calclab.emite.client.extra.muc.MUCModule;
-import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
-import com.calclab.emite.client.modular.ModuleContainer;
+import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
 import com.calclab.emiteuiplugin.client.EmiteDialog;
@@ -36,34 +39,31 @@ import com.calclab.emiteuiplugin.client.EmiteUIFactory;
 
 public class EmiteUIModule implements Module {
 
-    public static void loadWithDependencies(final ModuleContainer container) {
-	container.add(new MUCModule());
-	container.add(new EmiteUIModule());
-    }
-
     public Class<? extends Module> getType() {
 	return EmiteUIModule.class;
     }
 
-    public void onLoad(final Container container) {
+    public void onLoad(final ModuleBuilder builder) {
+	builder.add(new GWTServicesModule());
+	builder.add(new EmiteModule(), new MUCModule(), new ChatStateModule(), new AvatarModule());
 
-	container.registerProvider(I18nTranslationService.class, new Provider<I18nTranslationService>() {
+	builder.registerProvider(I18nTranslationService.class, new Provider<I18nTranslationService>() {
 	    public I18nTranslationService get() {
 		return new I18nTranslationServiceMocked();
 	    }
 	}, Scopes.SINGLETON);
 
-	container.registerProvider(EmiteUIFactory.class, new Provider<EmiteUIFactory>() {
+	builder.registerProvider(EmiteUIFactory.class, new Provider<EmiteUIFactory>() {
 	    public EmiteUIFactory get() {
-		return new EmiteUIFactory(container.getInstance(Xmpp.class), container
+		return new EmiteUIFactory(builder.getInstance(Xmpp.class), builder
 			.getInstance(I18nTranslationService.class));
 	    }
 	}, Scopes.SINGLETON);
 
-	container.registerProvider(EmiteDialog.class, new Provider<EmiteDialog>() {
+	builder.registerProvider(EmiteDialog.class, new Provider<EmiteDialog>() {
 	    public EmiteDialog get() {
-		final Xmpp xmpp = container.getInstance(Xmpp.class);
-		final EmiteUIFactory factory = container.getInstance(EmiteUIFactory.class);
+		final Xmpp xmpp = builder.getInstance(Xmpp.class);
+		final EmiteUIFactory factory = builder.getInstance(EmiteUIFactory.class);
 		return new EmiteDialog(xmpp, factory);
 	    }
 
