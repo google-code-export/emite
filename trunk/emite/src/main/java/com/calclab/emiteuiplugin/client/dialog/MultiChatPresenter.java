@@ -93,6 +93,7 @@ public class MultiChatPresenter {
         roomHost = param.getRoomHost();
         presenceManager = xmpp.getPresenceManager();
         chats = new HashMap<Chat, ChatUI>();
+        roster.showUnavailableRosterItems(this.getUserChatOptions().isUnavailableBuddiesVisible());
     }
 
     public void addBuddy(final String shortName, final String longName) {
