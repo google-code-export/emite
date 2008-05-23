@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.calclab.emite.testing;
 
@@ -11,11 +11,12 @@ class IsCollectionOfSize<T> extends ArgumentMatcher<T> {
     private final int size;
 
     public IsCollectionOfSize(final int size) {
-        this.size = size;
+	this.size = size;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean matches(final Object list) {
-        return ((Collection) list).size() == size;
+	return ((Collection) list).size() == size;
     }
 }

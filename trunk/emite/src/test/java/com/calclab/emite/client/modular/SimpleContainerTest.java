@@ -21,6 +21,7 @@ public class SimpleContainerTest {
 	container.getInstance(Object.class);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldRegisterProviders() {
 	final Provider<Object> provider = mock(Provider.class);
@@ -29,10 +30,11 @@ public class SimpleContainerTest {
 	verify(provider).get();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldUseScopes() {
 	final Scope scope = mock(Scope.class);
-	final Provider provider = mock(Provider.class);
+	final Provider<Object> provider = mock(Provider.class);
 	container.registerProvider(Object.class, provider, scope);
 	verify(scope).scope(same(Object.class), same(provider));
     }

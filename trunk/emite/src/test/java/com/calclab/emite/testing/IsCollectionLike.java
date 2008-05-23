@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import org.mockito.ArgumentMatcher;
 
+@SuppressWarnings("unchecked")
 class IsCollectionLike<T extends Collection> extends ArgumentMatcher<T> {
     private final T expected;
 

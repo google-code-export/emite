@@ -99,27 +99,6 @@ public class Packet extends AbstractPacket {
 	return children.remove(child);
     }
 
-    public void render(final StringBuffer buffer) {
-	buffer.append("<").append(name);
-
-	for (final String key : attributes.keySet()) {
-	    final String value = attributes.get(key);
-	    if (value != null) {
-		buffer.append(" ").append(key).append("=\"");
-		buffer.append(value).append("\"");
-	    }
-	}
-	if (children.size() > 0) {
-	    buffer.append(">");
-	    for (final IPacket child : children) {
-		child.render(buffer);
-	    }
-	    buffer.append("</").append(name).append(">");
-	} else {
-	    buffer.append(" />");
-	}
-    }
-
     public void setAttribute(final String name, final String value) {
 	attributes.put(name, value);
     }
@@ -131,9 +110,7 @@ public class Packet extends AbstractPacket {
 
     @Override
     public String toString() {
-	final StringBuffer buffer = new StringBuffer();
-	render(buffer);
-	return buffer.toString();
+	return PacketRenderer.toString(this);
     }
 
     public IPacket With(final IPacket child) {

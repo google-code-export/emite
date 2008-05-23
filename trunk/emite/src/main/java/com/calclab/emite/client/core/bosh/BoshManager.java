@@ -169,17 +169,17 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 
 	});
 	emite.subscribe(when("body"), new PacketListener() {
-	    public void handle(final IPacket iPacket) {
-		if (isTerminal(iPacket)) {
-		    emite.publish(Dispatcher.Events.error("terminal", iPacket.getAttribute("condition")));
+	    public void handle(final IPacket packet) {
+		if (isTerminal(packet)) {
+		    emite.publish(Dispatcher.Events.error("terminal", packet.getAttribute("condition")));
 		} else {
 		    if (bosh.isFirstResponse()) {
-			final String sid = iPacket.getAttribute("sid");
-			final int poll = iPacket.getAttributeAsInt("polling");
-			final int requests = iPacket.getAttributeAsInt("requests");
+			final String sid = packet.getAttribute("sid");
+			final int poll = Integer.parseInt(packet.getAttribute("polling"));
+			final int requests = Integer.parseInt(packet.getAttribute("requests"));
 			bosh.setAttributes(sid, poll, requests);
 		    }
-		    final List<? extends IPacket> children = iPacket.getChildren();
+		    final List<? extends IPacket> children = packet.getChildren();
 		    for (final IPacket stanza : children) {
 			emite.publish(stanza);
 		    }

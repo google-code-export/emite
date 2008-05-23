@@ -26,11 +26,6 @@ import java.util.List;
 
 public abstract class AbstractPacket implements IPacket {
 
-    public int getAttributeAsInt(final String name) {
-	final String value = getAttribute(name);
-	return Integer.parseInt(value);
-    }
-
     public List<? extends IPacket> getChildren(final PacketFilter filter) {
 	final List<IPacket> list = new ArrayList<IPacket>();
 	for (final IPacket child : getChildren()) {
