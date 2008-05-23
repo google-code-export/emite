@@ -42,7 +42,7 @@ class ChatDefault implements Chat {
     private final String id;
     private final ArrayList<ChatListener> listeners;
     private final Emite emite;
-    private BeforeSendMessageFormatterCollection beforeSendFormatterCollection;
+    private final MessageInterceptorCollection interceptors;
 
     public ChatDefault(final XmppURI other, final XmppURI myself, final String thread, final Emite emite) {
 	this.other = other;
@@ -50,18 +50,16 @@ class ChatDefault implements Chat {
 	this.emite = emite;
 	this.from = myself;
 	this.listeners = new ArrayList<ChatListener>();
+	interceptors = new MessageInterceptorCollection();
 	this.id = generateChatID();
-    }
-
-    public void addMessageInterceptor(final MessageInterceptor messageInterceptor) {
-	if (beforeSendFormatterCollection == null) {
-	    beforeSendFormatterCollection = new BeforeSendMessageFormatterCollection();
-	}
-	beforeSendFormatterCollection.add(messageInterceptor);
     }
 
     public void addListener(final ChatListener listener) {
 	listeners.add(listener);
+    }
+
+    public void addMessageInterceptor(final MessageInterceptor messageInterceptor) {
+	interceptors.add(messageInterceptor);
     }
 
     @Override
@@ -76,7 +74,6 @@ class ChatDefault implements Chat {
 	return id.equals(other.id);
     }
 
-    // FIXME: Dani revise this (ChatState)
     public XmppURI getFromURI() {
 	return from;
     }
@@ -107,7 +104,8 @@ class ChatDefault implements Chat {
 	message.setTo(other);
 	message.setThread(thread);
 	message.setType(Type.chat);
-	emite.send(formatBeforeSend(message));
+	interceptors.onBeforeSend(message);
+	emite.send(message);
 	fireMessageSent(message);
     }
 
@@ -128,16 +126,10 @@ class ChatDefault implements Chat {
     }
 
     void fireMessageReceived(final Message message) {
+	interceptors.onBeforeReceive(message);
 	for (final ChatListener listener : listeners) {
 	    listener.onMessageReceived(this, message);
 	}
-    }
-
-    private Message formatBeforeSend(final Message message) {
-	if (beforeSendFormatterCollection != null) {
-	    beforeSendFormatterCollection.fireMessageFormat(message);
-	}
-	return message;
     }
 
     private String generateChatID() {
