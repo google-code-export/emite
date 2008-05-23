@@ -1,4 +1,4 @@
-package com.calclab.emite.client.extra.chatstate;
+package com.calclab.emite.client.xep.chatstate;
 
 import java.util.ArrayList;
 

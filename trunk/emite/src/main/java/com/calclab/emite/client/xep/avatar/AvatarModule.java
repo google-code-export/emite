@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.extra.muc;
+package com.calclab.emite.client.xep.avatar;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Container;
@@ -28,21 +28,23 @@ import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
 
-public class MUCModule implements Module {
-    public static RoomManager getRoomManager(final Container components) {
-	return components.getInstance(RoomManager.class);
+public class AvatarModule implements Module {
+    private static final Class<AvatarManager> COMPONENTS_MANAGER = AvatarManager.class;
+
+    public static AvatarManager getAvatarManager(final Container components) {
+	return components.getInstance(COMPONENTS_MANAGER);
     }
 
     public Class<? extends Module> getType() {
-	return MUCModule.class;
+	return AvatarModule.class;
     }
 
     public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(RoomManager.class, new Provider<RoomManager>() {
-	    public MUCRoomManager get() {
-		return new MUCRoomManager(builder.getInstance(Emite.class));
+	builder.registerProvider(AvatarManager.class, new Provider<AvatarManager>() {
+	    public AvatarManager get() {
+		final Emite emite = builder.getInstance(Emite.class);
+		return new AvatarManager(emite);
 	    }
 	}, Scopes.SINGLETON_EAGER);
-
     }
 }

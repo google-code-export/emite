@@ -53,11 +53,11 @@ class ChatDefault implements Chat {
 	this.id = generateChatID();
     }
 
-    public void addBeforeSendMessageFormatter(final BeforeSendMessageFormatter beforeSendMessageFormatter) {
+    public void addMessageInterceptor(final MessageInterceptor messageInterceptor) {
 	if (beforeSendFormatterCollection == null) {
 	    beforeSendFormatterCollection = new BeforeSendMessageFormatterCollection();
 	}
-	beforeSendFormatterCollection.add(beforeSendMessageFormatter);
+	beforeSendFormatterCollection.add(messageInterceptor);
     }
 
     public void addListener(final ChatListener listener) {

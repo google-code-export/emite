@@ -27,8 +27,8 @@ import java.util.Iterator;
 import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.extra.muc.Occupant;
-import com.calclab.emite.client.extra.muc.Occupant.Role;
+import com.calclab.emite.client.xep.muc.Occupant;
+import com.calclab.emite.client.xep.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPresenter;
 import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;

@@ -19,9 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.extra.muc;
+package com.calclab.emite.client.xep.muc;
 
-import com.calclab.emite.client.im.chat.ChatManager;
+import com.calclab.emite.client.im.chat.ChatManagerListener;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public interface RoomManager extends ChatManager {
+public interface RoomManagerListener extends ChatManagerListener {
+    void onInvitationReceived(XmppURI invitor, XmppURI roomURI, String reason);
 }

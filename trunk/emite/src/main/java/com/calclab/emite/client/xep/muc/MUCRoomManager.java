@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.extra.muc;
+package com.calclab.emite.client.xep.muc;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 

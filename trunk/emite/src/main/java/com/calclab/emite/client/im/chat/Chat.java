@@ -40,6 +40,6 @@ public interface Chat {
 
     public void send(final String body);
 
-    void addBeforeSendMessageFormatter(BeforeSendMessageFormatter beforeSendMessageFormatter);
+    void addMessageInterceptor(MessageInterceptor messageInterceptor);
 
 }

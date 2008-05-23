@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.extra.chatstate;
+package com.calclab.emite.client.xep.chatstate;
 
 import java.util.HashMap;
 
@@ -60,7 +60,7 @@ public class ChatStateManager extends SessionComponent {
                 final ChatState chatState = new ChatState(chat, emite);
                 chat.addListener(chatState);
                 chatStates.put(chat, chatState);
-                chat.addBeforeSendMessageFormatter(chatState);
+                chat.addMessageInterceptor(chatState);
             }
         });
     }

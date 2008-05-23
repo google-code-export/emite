@@ -1,9 +1,11 @@
-package com.calclab.emite.client.extra.muc;
+package com.calclab.emite.client.xep.muc;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+
+import com.calclab.emite.client.xep.muc.Occupant;
 
 public class RoomOccupantTest {
 

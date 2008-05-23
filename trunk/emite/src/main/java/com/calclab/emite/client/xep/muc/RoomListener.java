@@ -19,18 +19,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.extra.chatstate;
+package com.calclab.emite.client.xep.muc;
 
-public interface ChatStateListener {
+import java.util.Collection;
 
-    void onActive();
+import com.calclab.emite.client.im.chat.ChatListener;
 
-    void onComposing();
+public interface RoomListener extends ChatListener {
 
-    void onGone();
+    // FIXME: preferiría enviar el ocupante, y no el nick!
+    public void onSubjectChanged(String nick, String newSubject);
 
-    void onInactive();
+    void onOccupantModified(Occupant occupant);
 
-    void onPause();
+    void onOccupantsChanged(Collection<Occupant> occupants);
 
 }

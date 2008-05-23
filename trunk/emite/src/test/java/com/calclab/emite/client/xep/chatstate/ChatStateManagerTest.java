@@ -1,4 +1,4 @@
-package com.calclab.emite.client.extra.chatstate;
+package com.calclab.emite.client.xep.chatstate;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 
@@ -6,9 +6,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.calclab.emite.client.extra.chatstate.ChatState.Type;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.xep.chatstate.ChatState;
+import com.calclab.emite.client.xep.chatstate.ChatStateListener;
+import com.calclab.emite.client.xep.chatstate.ChatStateManager;
+import com.calclab.emite.client.xep.chatstate.ChatState.Type;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;

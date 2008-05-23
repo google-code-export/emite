@@ -12,7 +12,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.calclab.emite.client.extra.muc.Room;
+import com.calclab.emite.client.xep.muc.Room;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 @SuppressWarnings("serial")

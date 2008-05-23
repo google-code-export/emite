@@ -19,32 +19,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.extra.avatar;
+package com.calclab.emite.client.xep.chatstate;
 
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
 
-public class AvatarModule implements Module {
-    private static final Class<AvatarManager> COMPONENTS_MANAGER = AvatarManager.class;
+/**
+ * Implements XEP-0085: Chat State Notifications
+ * 
+ * @see http://www.xmpp.org/extensions/xep-0085.html
+ * 
+ */
+public class ChatStateModule implements Module {
+    private static final Class<ChatStateManager> COMPONENTS_MANAGER = ChatStateManager.class;
 
-    public static AvatarManager getAvatarManager(final Container components) {
+    public static ChatStateManager getChatStateManager(final Container components) {
 	return components.getInstance(COMPONENTS_MANAGER);
     }
 
     public Class<? extends Module> getType() {
-	return AvatarModule.class;
+	return ChatStateModule.class;
     }
 
     public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(AvatarManager.class, new Provider<AvatarManager>() {
-	    public AvatarManager get() {
+
+	builder.registerProvider(ChatStateManager.class, new Provider<ChatStateManager>() {
+	    public ChatStateManager get() {
 		final Emite emite = builder.getInstance(Emite.class);
-		return new AvatarManager(emite);
+		final ChatManager chatManager = builder.getInstance(ChatManager.class);
+		return new ChatStateManager(emite, chatManager);
 	    }
 	}, Scopes.SINGLETON_EAGER);
+
     }
 }

@@ -11,7 +11,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.calclab.emite.client.extra.muc.Occupant;
+import com.calclab.emite.client.xep.muc.Occupant;
 
 @SuppressWarnings("serial")
 public class RoomPanel extends ChatPanel {
