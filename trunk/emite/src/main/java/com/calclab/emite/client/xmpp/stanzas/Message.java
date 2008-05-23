@@ -55,7 +55,7 @@ public class Message extends BasicStanza {
      * @param message
      */
     public Message(final XmppURI fromUri, final XmppURI toURI, final String message, final Type type) {
-	super("message", "jabber:client");
+	super("message", null);
 	setType(type);
 	setFrom(fromUri);
 	setTo(toURI);

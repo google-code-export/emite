@@ -108,7 +108,7 @@ public class Presence extends BasicStanza {
     }
 
     public Presence(final Type type, final XmppURI from, final XmppURI to) {
-	super("presence", "jabber:client");
+	super("presence", null);
 	if (type != null) {
 	    setType(type.toString());
 	}
