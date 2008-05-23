@@ -25,47 +25,53 @@ import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 
 public class UserChatOptions {
 
-    String color;
-    SubscriptionMode subscriptionMode;
+    private String color;
+    private SubscriptionMode subscriptionMode;
     private final String userJid;
     private final String userPassword;
     private final String resource;
+    private final boolean unavailableBuddiesVisible;
 
     public UserChatOptions(final String userJid, final String userPassword, final String resource, final String color,
-	    final SubscriptionMode subscriptionMode) {
-	this.userJid = userJid;
-	this.userPassword = userPassword;
-	this.resource = resource;
-	this.color = color;
-	this.subscriptionMode = subscriptionMode;
+            final SubscriptionMode subscriptionMode, final boolean unavailableBuddiesVisible) {
+        this.userJid = userJid;
+        this.userPassword = userPassword;
+        this.resource = resource;
+        this.color = color;
+        this.subscriptionMode = subscriptionMode;
+        this.unavailableBuddiesVisible = unavailableBuddiesVisible;
     }
 
     public String getColor() {
-	return color;
+        return color;
     }
 
     public String getResource() {
-	return resource;
+        return resource;
     }
 
     public SubscriptionMode getSubscriptionMode() {
-	return subscriptionMode;
+        return subscriptionMode;
     }
 
     public String getUserJid() {
-	return userJid;
+        return userJid;
     }
 
     public String getUserPassword() {
-	return userPassword;
+        return userPassword;
+    }
+
+    public boolean isUnavailableBuddiesVisible() {
+        return unavailableBuddiesVisible;
     }
 
     public void setColor(final String color) {
-	this.color = color;
+        this.color = color;
     }
 
     public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
-	this.subscriptionMode = subscriptionMode;
+        this.subscriptionMode = subscriptionMode;
     }
 
 }

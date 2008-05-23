@@ -113,7 +113,7 @@ public class LoginPanel {
     public UserChatOptions getUserChatOptions() {
         final String resource = "emiteui-" + new Date().getTime() + "-" + release;
         return new UserChatOptions(fieldJid.getRawValue(), fieldPassw.getRawValue(), resource, "blue",
-                RosterManager.DEF_SUBSCRIPTION_MODE);
+                RosterManager.DEF_SUBSCRIPTION_MODE, true);
     }
 
     public void setInitalData(final String djid, final String pass, final String relVer) {
