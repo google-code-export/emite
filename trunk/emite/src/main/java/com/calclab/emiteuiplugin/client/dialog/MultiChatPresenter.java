@@ -493,9 +493,14 @@ public class MultiChatPresenter {
 	    }
 
 	    public void onChatCreated(final Chat chat) {
-		createChat(chat);
 		chat.addListener(new ChatListener() {
+		    boolean isCreated = false;
+
 		    public void onMessageReceived(final Chat chat, final Message message) {
+			if (!isCreated && message.getBody() != null) {
+			    createChat(chat);
+			    isCreated = true;
+			}
 			messageReceived(chat, message);
 		    }
 
