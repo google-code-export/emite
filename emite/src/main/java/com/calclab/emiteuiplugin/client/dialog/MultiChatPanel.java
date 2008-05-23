@@ -289,6 +289,10 @@ public class MultiChatPanel {
         }
     }
 
+    public void setShowUnavailableItemsButtonPressed(final boolean pressed) {
+        showUnavailableItems.setPressed(pressed);
+    }
+
     public void setShowUnavailableItemsButtonVisible(final boolean visible) {
         showUnavailableItems.setVisible(visible);
     }
