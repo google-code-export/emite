@@ -39,10 +39,6 @@ public class DelegatedPacket implements IPacket {
 	return delegate.getAttribute(name);
     }
 
-    public int getAttributeAsInt(final String name) {
-	return delegate.getAttributeAsInt(name);
-    }
-
     public HashMap<String, String> getAttributes() {
 	return delegate.getAttributes();
     }
@@ -93,10 +89,6 @@ public class DelegatedPacket implements IPacket {
 
     public boolean removeChild(final IPacket child) {
 	return delegate.removeChild(child);
-    }
-
-    public void render(final StringBuffer buffer) {
-	delegate.render(buffer);
     }
 
     public final void setAttribute(final String name, final String value) {

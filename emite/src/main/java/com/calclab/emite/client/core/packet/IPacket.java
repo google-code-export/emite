@@ -31,17 +31,6 @@ import java.util.List;
  */
 public interface IPacket {
 
-    /**
-     * 
-     * 
-     * @param the
-     *                attribute name
-     * @return the integer value
-     * @throws an
-     *                 exception
-     */
-    public int getAttributeAsInt(String name);
-
     public HashMap<String, String> getAttributes();
 
     public int getChildrenCount();
@@ -95,8 +84,6 @@ public interface IPacket {
     String getText();
 
     boolean hasChild(String name);
-
-    void render(StringBuffer buffer);
 
     void setAttribute(String name, String value);
 

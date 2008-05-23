@@ -18,9 +18,10 @@ public class DelegatedContainerTest {
 	container = new DelegatedContainer(delegate);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testRegister() {
-	final Provider provider = mock(Provider.class);
+	final Provider<Object> provider = mock(Provider.class);
 	container.registerProvider(Object.class, provider, Scopes.SINGLETON);
 	verify(delegate).registerProvider(same(Object.class), same(provider), same(Scopes.SINGLETON));
     }

@@ -124,10 +124,6 @@ public class GWTPacket extends AbstractPacket {
 	}
     }
 
-    public void render(final StringBuffer buffer) {
-
-    }
-
     public void setAttribute(final String name, final String value) {
 	if (value != null) {
 	    element.setAttribute(name, value);

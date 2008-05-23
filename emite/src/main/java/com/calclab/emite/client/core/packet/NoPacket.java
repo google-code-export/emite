@@ -34,19 +34,15 @@ public class NoPacket implements IPacket {
 
     }
 
+    public void addChild(final IPacket child) {
+    }
+
     public IPacket addChild(final String nodeName, final String xmlns) {
 	return this;
     }
 
-    public void addChild(final IPacket child) {
-    }
-
     public String getAttribute(final String name) {
 	return null;
-    }
-
-    public int getAttributeAsInt(final String name) {
-	return 0;
     }
 
     public HashMap<String, String> getAttributes() {

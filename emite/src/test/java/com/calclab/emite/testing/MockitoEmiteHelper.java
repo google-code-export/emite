@@ -8,6 +8,7 @@ import java.util.List;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 
+@SuppressWarnings("unchecked")
 public class MockitoEmiteHelper {
 
     public static final TigaseXMLService xmler = new TigaseXMLService();
