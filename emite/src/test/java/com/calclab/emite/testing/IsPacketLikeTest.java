@@ -27,6 +27,13 @@ public class IsPacketLikeTest {
     }
 
     @Test
+    public void testMultipleChildren() {
+	assertPacketLike("<root><child2/></root>", "<root><child1/><child2/></root>");
+	assertPacketLike("<root><child1/></root>", "<root><child1/><child2/></root>");
+	assertNotPacketLike("<root><child3/></root>", "<root><child1/><child2/></root>");
+    }
+
+    @Test
     public void testNestedChildren() {
 	assertPacketLike("<iq><child/></iq>", "<iq><child><subchild/></child></iq>");
     }

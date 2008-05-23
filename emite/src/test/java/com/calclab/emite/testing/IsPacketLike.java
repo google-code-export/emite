@@ -29,6 +29,17 @@ public class IsPacketLike extends ArgumentMatcher<IPacket> {
 	return areEquals(original, (IPacket) argument) == null;
     }
 
+    private String areContained(final IPacket expectedChild, final List<? extends IPacket> children) {
+	final int total = children.size();
+	for (int index = 0; index < total; index++) {
+	    final IPacket actual = children.get(index);
+	    final String result = areEquals(expectedChild, actual);
+	    if (result == null)
+		return null;
+	}
+	return fail("children", expectedChild.toString(), toString(children));
+    }
+
     private String areEquals(final IPacket expected, final IPacket actual) {
 	if (actual == null) {
 	    return fail("element", expected.toString(), "[null]");
@@ -51,23 +62,25 @@ public class IsPacketLike extends ArgumentMatcher<IPacket> {
 
 	final List<? extends IPacket> expChildren = expected.getChildren();
 	final List<? extends IPacket> actChildren = actual.getChildren();
-	final int total = expChildren.size();
-	final int max = actChildren.size();
 
-	for (int index = 0; index < total; index++) {
-	    if (index == max) {
-		return fail("number of childrens for " + expected.getName(), Integer.toString(total), Integer
-			.toString(max));
-	    } else {
-		final String result = areEquals(expChildren.get(index), actChildren.get(index));
-		if (result != null)
-		    return result;
-	    }
+	for (final IPacket expectedChild : expChildren) {
+	    final String result = areContained(expectedChild, actChildren);
+	    if (result != null)
+		return result;
 	}
 	return null;
     }
 
     private String fail(final String target, final String expected, final String actual) {
 	return "failed on " + target + ". expected: " + expected + " but was " + actual;
+    }
+
+    private String toString(final List<? extends IPacket> children) {
+	final StringBuffer buffer = new StringBuffer("[");
+	for (final IPacket child : children) {
+	    buffer.append(child.toString());
+	}
+	buffer.append("]");
+	return buffer.toString();
     }
 }

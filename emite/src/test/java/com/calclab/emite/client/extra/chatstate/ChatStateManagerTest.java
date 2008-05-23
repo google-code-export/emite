@@ -132,25 +132,16 @@ public class ChatStateManagerTest {
     @Test
     public void shouldStartStateNegotiation() {
 	chat.send("test message");
-	// vicente, sólo tienes que comprobar lo que necesitas comprobar, en
-	// este caso
-	// que se ha enviado un presence con un active y con un xmlns
-	emite.verifySent("<presence><active xmlns='http://jabber.org/protocol/chatstates' /></presence>");
+	emite.verifySent("<message><active xmlns='http://jabber.org/protocol/chatstates' /></message>");
     }
 
     @Test
     public void shouldStartStateNegotiationOnce() {
-	// Dani estoy intentando probar una secuencia larga de mensajes enviados
-	// / recibidos para ver como se comporta chatstate
-	// Por ejemplo, quiero enviar dos cosas, y recibir dos cosas...
-	chat.send("test message");
-	// esto debería fallar, porque estoy enviando algo que luego en message2
-	// no digo que reciba...
-	chat.send("test message CUALQUIER COSA");
-	final Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
-	final Message message2 = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
-	message.addChild(ChatState.Type.active.toString(), ChatState.XMLNS);
-	emite.verifySent(message.toString() + message2.toString());
+	chat.send("message1");
+	chat.send("message2");
+	emite.verifySent("<message><body>message1</body><active /></message>");
+	emite.verifySent("<message><body>message2</body></message>");
+	emite.verifyNotSent("<message><body>message2</body><active /></message>");
     }
 
 }

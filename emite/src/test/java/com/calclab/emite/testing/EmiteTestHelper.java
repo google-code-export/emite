@@ -99,6 +99,10 @@ public class EmiteTestHelper implements Emite {
 	assertNotContains(packet, published);
     }
 
+    public void verifyNotSent(final String xml) {
+	verifyNotSent(xmler.toXML(xml));
+    }
+
     public void verifyPublished(final IPacket expected) {
 	assertContains(expected, published);
     }
@@ -126,7 +130,7 @@ public class EmiteTestHelper implements Emite {
 	assertTrue("Expected " + expected + " contained in " + buffer, isContained);
     }
 
-    private void assertNotContains(final Packet expected, final ArrayList<IPacket> list) {
+    private void assertNotContains(final IPacket expected, final ArrayList<IPacket> list) {
 	final StringBuffer buffer = new StringBuffer();
 	final boolean isContained = contains(expected, list, buffer);
 	assertFalse("Expected " + expected + " contained in\n" + buffer, isContained);
@@ -140,6 +144,10 @@ public class EmiteTestHelper implements Emite {
 	    isContained = isContained ? isContained : matcher.matches(packet, System.out);
 	}
 	return isContained;
+    }
+
+    private void verifyNotSent(final IPacket packet) {
+	assertNotContains(packet, sent);
     }
 
 }
