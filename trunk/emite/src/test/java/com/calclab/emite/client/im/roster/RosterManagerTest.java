@@ -80,7 +80,7 @@ public class RosterManagerTest {
     public void shouldHandleIQSets() {
         emite.receives("<iq id='theId' type='set'><query xmlns='jabber:iq:roster'><item jid='contact@example.org' "
                 + "subscription='none' name='MyContact'><group>MyBuddies</group></item></query></iq>");
-        emite.verifySent("<iq xmlns='jabber:client' type='result' id='theId' />");
+        emite.verifySent("<iq type='result' id='theId' />");
         verify(roster).changeSubscription(uri("contact@example.org"), "none");
     }
 
@@ -88,7 +88,7 @@ public class RosterManagerTest {
     public void shouldHandleIQSetsWhenSubscribed() {
         emite.receives("<iq id='theId' type='set'><query xmlns='jabber:iq:roster'><item jid='contact@example.org' "
                 + "subscription='to' name='MyContact'><group>MyBuddies</group></item></query></iq>");
-        emite.verifySent("<iq xmlns='jabber:client' type='result' id='theId' />");
+        emite.verifySent("<iq type='result' id='theId' />");
         verify(roster).changeSubscription(uri("contact@example.org"), "to");
     }
 

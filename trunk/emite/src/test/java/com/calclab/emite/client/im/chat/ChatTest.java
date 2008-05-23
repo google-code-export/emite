@@ -16,33 +16,33 @@ public class ChatTest {
 
     @Before
     public void aaCreate() {
-	this.emite = new EmiteTestHelper();
-	chat = new ChatDefault(uri("other@domain/otherRes"), uri("self@domain/res"), "theThread", emite);
-	listener = mock(ChatListener.class);
-	chat.addListener(listener);
+        this.emite = new EmiteTestHelper();
+        chat = new ChatDefault(uri("other@domain/otherRes"), uri("self@domain/res"), "theThread", emite);
+        listener = mock(ChatListener.class);
+        chat.addListener(listener);
     }
 
     @Test
     public void shouldSendNoThreadWhenNotSpecified() {
-	final ChatDefault noThreadChat = new ChatDefault(uri("other@domain/otherRes"), uri("self@domain/res"), null,
-		emite);
-	noThreadChat.send("the message");
-	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' "
-		+ "type='chat' xmlns='jabber:client'><body>the message</body></message>");
+        final ChatDefault noThreadChat = new ChatDefault(uri("other@domain/otherRes"), uri("self@domain/res"), null,
+                emite);
+        noThreadChat.send("the message");
+        emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' "
+                + "type='chat'><body>the message</body></message>");
     }
 
     @Test
     public void shouldSendThreadWhenSpecified() {
-	chat.send("the message");
-	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'"
-		+ " xmlns='jabber:client'><body>the message</body><thread>theThread</thread></message>");
+        chat.send("the message");
+        emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>"
+                + "<body>the message</body><thread>theThread</thread></message>");
     }
 
     @Test
     public void shouldSendValidChatMessages() {
-	chat.send(new Message(uri("from@uri"), uri("to@uri"), "this is the body").Thread("otherThread").Type(
-		Message.Type.groupchat));
-	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'"
-		+ " xmlns='jabber:client'><body>this is the body</body><thread>theThread</thread></message>");
+        chat.send(new Message(uri("from@uri"), uri("to@uri"), "this is the body").Thread("otherThread").Type(
+                Message.Type.groupchat));
+        emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>"
+                + "<body>this is the body</body><thread>theThread</thread></message>");
     }
 }
