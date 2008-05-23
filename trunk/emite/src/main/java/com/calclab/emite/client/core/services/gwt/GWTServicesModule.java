@@ -27,8 +27,8 @@ import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesModule;
-import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.ModuleBuilder;
 
 public class GWTServicesModule extends ServicesModule implements Services, Module {
 
@@ -36,8 +36,8 @@ public class GWTServicesModule extends ServicesModule implements Services, Modul
 	return GWTScheduler.getCurrentTime();
     }
 
-    public void onLoad(final Container container) {
-	ServicesModule.setServices(container, new GWTServicesModule());
+    public void onLoad(final ModuleBuilder builder) {
+	ServicesModule.setServices(builder, new GWTServicesModule());
     }
 
     public void schedule(final int msecs, final ScheduledAction action) {

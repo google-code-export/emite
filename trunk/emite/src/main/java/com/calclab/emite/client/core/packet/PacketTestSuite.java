@@ -78,6 +78,9 @@ public final class PacketTestSuite {
 	shouldSetAndClearTheAttributes(helper);
 	shouldSetText(helper);
 	shouldRemoveChildIfPresent(helper);
+	shouldRenderAttributes(helper);
+	shouldRenderChilds(helper);
+	shouldRenderTextChildren(helper);
     }
 
     private static void shouldGetChildren(final HelperExtended helper) {
@@ -106,6 +109,24 @@ public final class PacketTestSuite {
 	helper.assertTrue(root.removeChild(child));
 	helper.assertEquals(0, root.getChildrenCount());
 	helper.log("- test ends");
+    }
+
+    private static void shouldRenderAttributes(final HelperExtended helper) {
+	final IPacket packet = helper.createPacket("root").With("attribute", "value");
+	helper.assertEquals("<root attribute=\"value\" />", PacketRenderer.toString(packet));
+    }
+
+    private static void shouldRenderChilds(final HelperExtended helper) {
+	final IPacket packet = helper.createPacket("level0");
+	final IPacket child = packet.addChild("level1", null);
+	child.addChild("level2", null);
+	helper.assertEquals("<level0><level1><level2 /></level1></level0>", PacketRenderer.toString(packet));
+    }
+
+    private static void shouldRenderTextChildren(final HelperExtended helper) {
+	final IPacket root = helper.createPacket("root");
+	root.setText("the text");
+	helper.assertEquals("<root>the text</root>", PacketRenderer.toString(root));
     }
 
     private static void shouldReturnNoPacketWhenGetFirstChild(final HelperExtended helper) {

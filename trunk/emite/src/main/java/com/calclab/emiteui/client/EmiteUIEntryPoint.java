@@ -22,8 +22,7 @@
 package com.calclab.emiteui.client;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.EmiteModule;
-import com.calclab.emite.client.modular.ModuleContainer;
+import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emiteui.client.demo.DemoModule;
 import com.calclab.emiteui.client.demo.EmiteDemoUI;
 import com.calclab.emiteui.client.demo.LoginPanel;
@@ -38,43 +37,41 @@ import com.google.gwt.user.client.DeferredCommand;
 public class EmiteUIEntryPoint implements EntryPoint {
 
     public void onModuleLoad() {
-        Log.setUncaughtExceptionHandler();
-        DeferredCommand.addCommand(new Command() {
-            public void execute() {
-                onModuleLoadCont();
-            }
-        });
+	Log.setUncaughtExceptionHandler();
+	DeferredCommand.addCommand(new Command() {
+	    public void execute() {
+		onModuleLoadCont();
+	    }
+	});
     }
 
     public void onModuleLoadCont() {
-        final ModuleContainer app = new ModuleContainer();
-        EmiteModule.loadWithDependencies(app);
-        EmiteUIModule.loadWithDependencies(app);
-        app.add(new DemoModule());
+	final ModuleBuilder app = new ModuleBuilder();
+	app.add(new EmiteUIModule(), new DemoModule());
 
-        final EmiteDialog emiteDialog = app.getInstance(EmiteDialog.class);
+	final EmiteDialog emiteDialog = app.getInstance(EmiteDialog.class);
 
-        final EmiteDemoUI demo = app.getInstance(EmiteDemoUI.class);
+	final EmiteDemoUI demo = app.getInstance(EmiteDemoUI.class);
 
-        final LoginPanel loginPanel = demo.createLoginPanel(new LoginPanelListener() {
-            public void onOffline() {
-                emiteDialog.show(OwnStatus.offline);
-            }
+	final LoginPanel loginPanel = demo.createLoginPanel(new LoginPanelListener() {
+	    public void onOffline() {
+		emiteDialog.show(OwnStatus.offline);
+	    }
 
-            public void onOnline() {
-                emiteDialog.show(OwnStatus.online);
-            }
+	    public void onOnline() {
+		emiteDialog.show(OwnStatus.online);
+	    }
 
-            public void onUserChanged(final UserChatOptions userChatOptions) {
-                emiteDialog.refreshUserInfo(userChatOptions);
-            }
-        });
+	    public void onUserChanged(final UserChatOptions userChatOptions) {
+		emiteDialog.refreshUserInfo(userChatOptions);
+	    }
+	});
 
-        demo.createInfoPanel();
+	demo.createInfoPanel();
 
-        final DemoParameters params = app.getInstance(DemoParameters.class);
-        emiteDialog.start(loginPanel.getUserChatOptions(), params.getHttpBase(), params.getRoomHost());
-        emiteDialog.show(OwnStatus.offline);
+	final DemoParameters params = app.getInstance(DemoParameters.class);
+	emiteDialog.start(loginPanel.getUserChatOptions(), params.getHttpBase(), params.getRoomHost());
+	emiteDialog.show(OwnStatus.offline);
     }
 
 }

@@ -31,7 +31,7 @@ import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.DelegatedContainer;
 import com.calclab.emite.client.modular.Module;
-import com.calclab.emite.client.modular.ModuleContainer;
+import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.xmpp.XMPPModule;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -49,16 +49,17 @@ public class Xmpp extends DelegatedContainer {
     }
 
     /**
-     * Create a Xmpp object using the following container (you need to load a
-     * ServicesModule first!)
+     * Create a Xmpp object and install the specified modules before (you need
+     * to specify a ServicesModule, like GWTServicesModule first) for example:
+     * <code>Xmpp.create(new GWTServicesModule());</code>
      * 
      * @param container
      * @return
      */
     public static Xmpp create(final Module... modules) {
-	final ModuleContainer container = new ModuleContainer();
+	final ModuleBuilder container = new ModuleBuilder();
 	container.add(modules);
-	EmiteModule.loadWithDependencies(container);
+	container.add(new EmiteModule());
 	return container.getInstance(Xmpp.class);
     }
 

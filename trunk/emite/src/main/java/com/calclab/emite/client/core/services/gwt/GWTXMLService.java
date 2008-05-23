@@ -30,9 +30,8 @@ import com.google.gwt.xml.client.XMLParser;
 
 public class GWTXMLService {
 
-    // TODO?
-    public static String toString(final IPacket iPacket) {
-	return iPacket.toString();
+    public static String toString(final IPacket packet) {
+	return packet.toString();
     }
 
     public static IPacket toXML(final String xml) {
