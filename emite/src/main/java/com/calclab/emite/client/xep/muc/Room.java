@@ -21,12 +21,11 @@
  */
 package com.calclab.emite.client.xep.muc;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.im.chat.MessageInterceptor;
+import com.calclab.emite.client.im.chat.AbstractChat;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
@@ -35,32 +34,14 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
-public class Room implements Chat {
-    private final Emite emite;
-    private final ArrayList<ChatListener> listeners;
-    private final String name;
+public class Room extends AbstractChat implements Chat {
     private final HashMap<XmppURI, Occupant> occupants;
-    private final XmppURI roomURI;
-    private final XmppURI userURI;
+    private final String name;
 
     public Room(final XmppURI userURI, final XmppURI roomURI, final String name, final Emite emite) {
-	this.userURI = userURI;
-	this.roomURI = roomURI;
+	super(userURI, roomURI, emite);
 	this.name = name;
-	this.emite = emite;
 	this.occupants = new HashMap<XmppURI, Occupant>();
-	this.listeners = new ArrayList<ChatListener>();
-    }
-
-    public void addMessageInterceptor(final MessageInterceptor messageInterceptor) {
-	// FIXME Nothing (until ChatDefault/ChatState not ready)
-    }
-
-    /**
-     * RoomListener are welcomed!
-     */
-    public void addListener(final ChatListener listener) {
-	listeners.add(listener);
     }
 
     /**
@@ -71,22 +52,22 @@ public class Room implements Chat {
      * @see http://www.xmpp.org/extensions/xep-0045.html#exit
      */
     public void close() {
-	emite.send(new Presence(Type.unavailable, userURI, roomURI));
+	emite.send(new Presence(Type.unavailable, getFromURI(), getOtherURI()));
     }
 
     public Occupant findOccupant(final XmppURI uri) {
 	return occupants.get(uri);
     }
 
-    // FIXME: Dani revise this (ChatState)
-    public XmppURI getFromURI() {
-	return userURI;
-    }
-
     public String getID() {
-	return roomURI.toString();
+	return other.toString();
     }
 
+    /**
+     * Return the room name
+     * 
+     * @return the name
+     */
     public String getName() {
 	return name;
     }
@@ -95,12 +76,22 @@ public class Room implements Chat {
 	return occupants.size();
     }
 
-    public XmppURI getOtherURI() {
-	return roomURI;
+    public String getThread() {
+	return other.getNode();
     }
 
-    public String getThread() {
-	return roomURI.getNode();
+    @Override
+    public void receive(final Message message) {
+	final String subject = message.getSubject();
+	if (subject != null) {
+	    interceptors.onBeforeReceive(message);
+	    for (final ChatListener listener : listeners) {
+		((RoomListener) listener).onSubjectChanged(message.getFromURI().getResource(), subject);
+	    }
+	}
+	if (message.getBody() != null) {
+	    super.receive(message);
+	}
     }
 
     public void removeOccupant(final XmppURI uri) {
@@ -110,19 +101,10 @@ public class Room implements Chat {
 	}
     }
 
+    @Override
     public void send(final Message message) {
-	message.setFrom(userURI);
-	message.setTo(roomURI);
 	message.setType(Message.Type.groupchat);
-	emite.send(message);
-	for (final ChatListener listener : listeners) {
-	    listener.onMessageSent(this, message);
-	}
-    }
-
-    public void send(final String body) {
-	final Message message = new Message().Body(body);
-	send(message);
+	super.send(message);
     }
 
     /**
@@ -136,8 +118,8 @@ public class Room implements Chat {
      */
     public void sendInvitationTo(final String userJid, final String reasonText) {
 	final BasicStanza message = new BasicStanza("message", null);
-	message.setFrom(userURI);
-	message.setTo(roomURI);
+	message.setFrom(from);
+	message.setTo(other);
 	final IPacket x = message.addChild("x", "http://jabber.org/protocol/muc#user");
 	final IPacket invite = x.addChild("invite", null);
 	invite.setAttribute("to", userJid);
@@ -167,35 +149,17 @@ public class Room implements Chat {
      */
     public void setSubject(final String subjectText) {
 	final BasicStanza message = new BasicStanza("message", null);
-	message.setFrom(userURI);
-	message.setTo(roomURI);
+	message.setFrom(from);
+	message.setTo(other);
 	message.setType(Message.Type.groupchat.toString());
 	final IPacket subject = message.addChild("subject", null);
 	subject.setText(subjectText);
 	emite.send(message);
     }
 
-    public void subjectChanged(final String newSubject) {
-
-    }
-
     @Override
     public String toString() {
-	return "ROOM: " + roomURI;
-    }
-
-    void dispatch(final Message message) {
-	final String subject = message.getSubject();
-	if (subject != null) {
-	    for (final ChatListener listener : listeners) {
-		((RoomListener) listener).onSubjectChanged(message.getFromURI().getResource(), subject);
-	    }
-	}
-	if (message.getBody() != null) {
-	    for (final ChatListener listener : listeners) {
-		listener.onMessageReceived(this, message);
-	    }
-	}
+	return "ROOM: " + other;
     }
 
     private void fireOccupantModified(final Occupant occupant) {

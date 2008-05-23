@@ -21,8 +21,6 @@
  */
 package com.calclab.emite.client.im.chat;
 
-import java.util.ArrayList;
-
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -35,31 +33,14 @@ import com.calclab.emite.client.xmpp.stanzas.Message.Type;
  * in one chat panel.
  * 
  */
-class ChatDefault implements Chat {
-    protected final XmppURI from;
-    protected final XmppURI other;
+public class ChatDefault extends AbstractChat {
     protected final String thread;
     private final String id;
-    private final ArrayList<ChatListener> listeners;
-    private final Emite emite;
-    private final MessageInterceptorCollection interceptors;
 
-    public ChatDefault(final XmppURI other, final XmppURI myself, final String thread, final Emite emite) {
-	this.other = other;
+    ChatDefault(final XmppURI myself, final XmppURI other, final String thread, final Emite emite) {
+	super(myself, other, emite);
 	this.thread = thread;
-	this.emite = emite;
-	this.from = myself;
-	this.listeners = new ArrayList<ChatListener>();
-	interceptors = new MessageInterceptorCollection();
 	this.id = generateChatID();
-    }
-
-    public void addListener(final ChatListener listener) {
-	listeners.add(listener);
-    }
-
-    public void addMessageInterceptor(final MessageInterceptor messageInterceptor) {
-	interceptors.add(messageInterceptor);
     }
 
     @Override
@@ -74,16 +55,8 @@ class ChatDefault implements Chat {
 	return id.equals(other.id);
     }
 
-    public XmppURI getFromURI() {
-	return from;
-    }
-
     public String getID() {
 	return id;
-    }
-
-    public XmppURI getOtherURI() {
-	return other;
     }
 
     public String getThread() {
@@ -99,37 +72,16 @@ class ChatDefault implements Chat {
 	return result;
     }
 
+    @Override
     public void send(final Message message) {
-	message.setFrom(from);
-	message.setTo(other);
 	message.setThread(thread);
 	message.setType(Type.chat);
-	interceptors.onBeforeSend(message);
-	emite.send(message);
-	fireMessageSent(message);
-    }
-
-    public void send(final String body) {
-	final Message message = new Message().Body(body);
-	send(message);
+	super.send(message);
     }
 
     @Override
     public String toString() {
 	return id;
-    }
-
-    protected void fireMessageSent(final Message message) {
-	for (final ChatListener listener : listeners) {
-	    listener.onMessageSent(this, message);
-	}
-    }
-
-    void fireMessageReceived(final Message message) {
-	interceptors.onBeforeReceive(message);
-	for (final ChatListener listener : listeners) {
-	    listener.onMessageReceived(this, message);
-	}
     }
 
     private String generateChatID() {
