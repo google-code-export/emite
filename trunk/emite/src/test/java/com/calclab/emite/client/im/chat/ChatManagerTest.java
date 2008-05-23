@@ -49,7 +49,7 @@ public class ChatManagerTest {
 
     @Test
     public void everyChatOpenedByUserShouldHaveThread() {
-	final Chat chat = manager.openChat(uri("other@domain/resource"));
+	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
 	assertNotNull(chat.getThread());
     }
 
@@ -69,7 +69,7 @@ public class ChatManagerTest {
 
     @Test
     public void shouldCloseChatWhenLoggedOut() {
-	final Chat chat = manager.openChat(uri("name@domain/resouce"));
+	final Chat chat = manager.openChat(uri("name@domain/resouce"), null, null);
 	emite.receives(SessionManager.Events.onLoggedOut);
 	verify(listener).onChatClosed(same(chat));
     }
@@ -86,7 +86,7 @@ public class ChatManagerTest {
 
     @Test
     public void shouldPublishMessagesWithoutBody() {
-	final Chat chat = manager.openChat(uri("someone@domain"));
+	final Chat chat = manager.openChat(uri("someone@domain"), null, null);
 	final ChatListener chatListener = mock(ChatListener.class);
 	chat.addListener(chatListener);
 	emite.receives("<message type='chat' id='purplee8b92642' to='user@domain' "
@@ -97,7 +97,7 @@ public class ChatManagerTest {
 
     @Test
     public void shouldUseSameRoomWhenAnswering() {
-	final Chat chat = manager.openChat(uri("someone@domain"));
+	final Chat chat = manager.openChat(uri("someone@domain"), null, null);
 	emite.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer").Thread(chat.getThread()));
 	verify(listener, times(1)).onChatCreated(chat);
     }

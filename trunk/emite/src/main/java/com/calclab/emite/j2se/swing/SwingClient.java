@@ -96,14 +96,14 @@ public class SwingClient {
 	    }
 
 	    public void onStartChat(final RosterItem item) {
-		xmpp.getChatManager().openChat(item.getJID());
+		xmpp.getChatManager().openChat(item.getJID(), null, null);
 	    }
 	});
 
 	roomsPanel = new RoomsPanel(new RoomsPanelListener() {
 	    public void onRoomEnterd(final String roomName) {
 		final RoomManager roomManager = MUCModule.getRoomManager(xmpp);
-		roomManager.openChat(uri(roomName));
+		roomManager.openChat(uri(roomName), null, null);
 	    }
 	});
 
@@ -232,7 +232,7 @@ public class SwingClient {
 	    }
 
 	    public void onInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
-		roomManager.openChat(roomURI);
+		roomManager.openChat(roomURI, null, null);
 	    }
 	});
 

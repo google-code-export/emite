@@ -50,7 +50,7 @@ public class EmiteDialog {
     }
 
     public void chat(final XmppURI otherUserURI) {
-        xmpp.getChatManager().openChat(otherUserURI);
+        xmpp.getChatManager().openChat(otherUserURI, null, null);
     }
 
     public void getChatDialog(final MultiChatCreationParam param) {
@@ -65,7 +65,7 @@ public class EmiteDialog {
     }
 
     public void joinRoom(final XmppURI roomURI) {
-        xmpp.getInstance(RoomManager.class).openChat(roomURI);
+        xmpp.getInstance(RoomManager.class).openChat(roomURI, null, null);
     }
 
     public void refreshUserInfo(final UserChatOptions userChatOptions) {
