@@ -39,8 +39,7 @@ public class MUCModule implements Module {
     }
 
     public void onLoad(final Container container) {
-
-	container.registerProvider(MUCRoomManager.class, new Provider<MUCRoomManager>() {
+	container.registerProvider(RoomManager.class, new Provider<RoomManager>() {
 	    public MUCRoomManager get() {
 		return new MUCRoomManager(container.getInstance(Emite.class));
 	    }
