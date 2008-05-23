@@ -140,11 +140,17 @@ public class ChatStateManagerTest {
 
     @Test
     public void shouldStartStateNegotiationOnce() {
+        // Dani estoy intentando probar una secuencia larga de mensajes enviados
+        // / recibidos para ver como se comporta chatstate
+        // Por ejemplo, quiero enviar dos cosas, y recibir dos cosas...
         chat.send("test message");
-        chat.send("test message");
+        // esto debería fallar, porque estoy enviando algo que luego en message2
+        // no digo que reciba...
+        chat.send("test message CUALQUIER COSA");
         Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
         Message message2 = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
         message.addChild(ChatState.Type.active.toString(), ChatState.XMLNS);
         emite.verifySent(message.toString() + message2.toString());
     }
+
 }
