@@ -40,7 +40,7 @@ public class IQ extends BasicStanza {
     }
 
     public IQ(final Type type) {
-	super(NAME, "jabber:client");
+	super(NAME, null);
 	if (type != null) {
 	    setType(type.toString());
 	}

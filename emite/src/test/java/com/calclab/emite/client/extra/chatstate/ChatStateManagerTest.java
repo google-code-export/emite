@@ -28,129 +28,129 @@ public class ChatStateManagerTest {
 
     @Before
     public void aaCreate() {
-        emite = new EmiteTestHelper();
-        chatManager = new ChatManagerDefault(emite);
-        chatStateManager = new ChatStateManager(emite, chatManager);
-        chatManager.setUserURI(MYSELF.toString());
-        stateListener = Mockito.mock(ChatStateListener.class);
-        chat = chatManager.openChat(OTHER);
-        chatState = chatStateManager.getChatState(chat);
-        chatState.addOtherStateListener(stateListener);
+	emite = new EmiteTestHelper();
+	chatManager = new ChatManagerDefault(emite);
+	chatStateManager = new ChatStateManager(emite, chatManager);
+	chatManager.setUserURI(MYSELF.toString());
+	stateListener = Mockito.mock(ChatStateListener.class);
+	chat = chatManager.openChat(OTHER);
+	chatState = chatStateManager.getChatState(chat);
+	chatState.addOtherStateListener(stateListener);
     }
 
     @Test
     public void shouldFireGone() {
-        emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>" + "<gone xmlns='http://jabber.org/protocol/chatstates'/></message>");
-        Mockito.verify(stateListener).onGone();
+	emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>" + "<gone xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	Mockito.verify(stateListener).onGone();
     }
 
     @Test
     public void shouldFireOtherCompossing() {
-        emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'><thread>"
-                + chat.getThread() + "</thread><composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
-        Mockito.verify(stateListener).onComposing();
+	emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'><thread>"
+		+ chat.getThread() + "</thread><composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	Mockito.verify(stateListener).onComposing();
     }
 
     @Test
     public void shouldFireOtherCompossingAsGmailDo() {
-        emite
-                .receives("<message to='self@domain/res' type='chat' from='other@domain/otherRes'><cha:composing xmlns:cha='http://jabber.org/protocol/chatstates'></cha:composing><nos:x xmlns:nos='google:nosave' value='disabled'></nos:x><arc:record xmlns:arc='http://jabber.org/protocol/archive' otr='false'></arc:record></message>");
-        Mockito.verify(stateListener).onComposing();
+	emite
+		.receives("<message to='self@domain/res' type='chat' from='other@domain/otherRes'><cha:composing xmlns:cha='http://jabber.org/protocol/chatstates'></cha:composing><nos:x xmlns:nos='google:nosave' value='disabled'></nos:x><arc:record xmlns:arc='http://jabber.org/protocol/archive' otr='false'></arc:record></message>");
+	Mockito.verify(stateListener).onComposing();
     }
 
     @Test
     public void shouldFireOtherCompossingToWithoutResource() {
-        emite.receives("<message from='other@domain/otherRes' to='self@domain' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>"
-                + "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
-        Mockito.verify(stateListener).onComposing();
+	emite.receives("<message from='other@domain/otherRes' to='self@domain' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>"
+		+ "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	Mockito.verify(stateListener).onComposing();
     }
 
     @Test
     public void shouldNotRepiteState() {
-        emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
-        chatState.setOwnState(Type.composing);
-        chatState.setOwnState(Type.composing);
-        chatState.setOwnState(Type.composing);
-        emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>"
-                + "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	chatState.setOwnState(Type.composing);
+	chatState.setOwnState(Type.composing);
+	chatState.setOwnState(Type.composing);
+	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>"
+		+ "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
     }
 
     @Test
     public void shouldNotSendStateIfNegotiationNotAccepted() {
-        chatState.setOwnState(Type.composing);
-        emite.verifyNothingSent();
+	chatState.setOwnState(Type.composing);
+	emite.verifyNothingSent();
     }
 
     @Test
     public void shouldSendActiveIfTheOtherStartNegotiation() {
-        emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
-        emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
     }
 
     @Test
     public void shouldSendStateIfNegotiationAccepted() {
-        emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
-        chatState.setOwnState(Type.composing);
-        emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>"
-                + "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	chatState.setOwnState(Type.composing);
+	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>"
+		+ "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
     }
 
     @Test
     public void shouldSendTwoStateIfDiferent() {
-        emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
-        chatState.setOwnState(Type.composing);
-        chatState.setOwnState(Type.pause);
-        emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>"
-                + "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>"
-                + "<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>" + "<pause xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	chatState.setOwnState(Type.composing);
+	chatState.setOwnState(Type.pause);
+	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>"
+		+ "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>"
+		+ "<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>" + "<pause xmlns='http://jabber.org/protocol/chatstates'/></message>");
     }
 
     @Test
     public void shouldStartStateAfterNegotiation() {
-        chat.send("test message");
-        emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
-                + chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
-        Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
-        message.addChild(ChatState.Type.active.toString(), ChatState.XMLNS);
-        chatState.setOwnState(ChatState.Type.composing);
-        emite.verifySent(message.toString() + "<message from='self@domain/res' to='other@domain/otherRes' type='chat'>"
-                + "<thread>" + chat.getThread() + "</thread>"
-                + "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	chat.send("test message");
+	emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
+	final Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
+	message.addChild(ChatState.Type.active.toString(), ChatState.XMLNS);
+	chatState.setOwnState(ChatState.Type.composing);
+	emite.verifySent(message.toString() + "<message from='self@domain/res' to='other@domain/otherRes' type='chat'>"
+		+ "<thread>" + chat.getThread() + "</thread>"
+		+ "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
     }
 
     @Test
     public void shouldStartStateNegotiation() {
-        chat.send("test message");
-        Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
-        message.addChild(ChatState.Type.active.toString(), ChatState.XMLNS);
-        // FIXME Dani: emite.verifySent(message); ----> nullException ??
-        emite.verifySent(message.toString());
+	chat.send("test message");
+	// vicente, sólo tienes que comprobar lo que necesitas comprobar, en
+	// este caso
+	// que se ha enviado un presence con un active y con un xmlns
+	emite.verifySent("<presence><active xmlns='http://jabber.org/protocol/chatstates' /></presence>");
     }
 
     @Test
     public void shouldStartStateNegotiationOnce() {
-        // Dani estoy intentando probar una secuencia larga de mensajes enviados
-        // / recibidos para ver como se comporta chatstate
-        // Por ejemplo, quiero enviar dos cosas, y recibir dos cosas...
-        chat.send("test message");
-        // esto debería fallar, porque estoy enviando algo que luego en message2
-        // no digo que reciba...
-        chat.send("test message CUALQUIER COSA");
-        Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
-        Message message2 = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
-        message.addChild(ChatState.Type.active.toString(), ChatState.XMLNS);
-        emite.verifySent(message.toString() + message2.toString());
+	// Dani estoy intentando probar una secuencia larga de mensajes enviados
+	// / recibidos para ver como se comporta chatstate
+	// Por ejemplo, quiero enviar dos cosas, y recibir dos cosas...
+	chat.send("test message");
+	// esto debería fallar, porque estoy enviando algo que luego en message2
+	// no digo que reciba...
+	chat.send("test message CUALQUIER COSA");
+	final Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
+	final Message message2 = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
+	message.addChild(ChatState.Type.active.toString(), ChatState.XMLNS);
+	emite.verifySent(message.toString() + message2.toString());
     }
 
 }
