@@ -501,7 +501,9 @@ public class MultiChatPresenter {
 			    createChat(chat);
 			    isCreated = true;
 			}
-			messageReceived(chat, message);
+			if (isCreated) {
+			    messageReceived(chat, message);
+			}
 		    }
 
 		    public void onMessageSent(final Chat chat, final Message message) {
