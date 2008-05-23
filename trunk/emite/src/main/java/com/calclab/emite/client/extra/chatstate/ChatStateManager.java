@@ -63,14 +63,10 @@ public class ChatStateManager extends SessionComponent {
                 chat.addBeforeSendMessageFormatter(chatState);
             }
         });
-        install();
     }
 
     public ChatState getChatState(final Chat chat) {
         return chatStates.get(chat);
-    }
-
-    private void install() {
     }
 
 }
