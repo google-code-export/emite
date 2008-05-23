@@ -163,6 +163,19 @@
             </configuration>
           </execution>
           <execution>
+            <id>modular</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>modular</classifier>
+              <includes>
+                <include>**/modular/**</include>
+              </includes>
+            </configuration>
+          </execution>
+          <execution>
             <id>emiteuiplugin</id>
             <phase>package</phase>
             <goals>

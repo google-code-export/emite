@@ -36,7 +36,7 @@ public class ChatUIPresenter implements ChatUI {
     // FIXME: this in Chat or new ChatState module, here only a listener
 
     private static final int CANCEL_TIMER = -1;
-    private static final int MILLISECONS_TO_PAUSE = 7000;
+    private static final int MILLISECONS_TO_PAUSE = 5000;
     private static final int MILLISECONS_TO_INACTIVE = 30000;
 
     private static final String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",

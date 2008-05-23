@@ -2,31 +2,16 @@ package com.calclab.emite.client.extra.chatstate;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.im.chat.BeforeSendMessageFormatter;
 import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 
-public class ChatState implements BeforeSendMessageFormatter {
-
-    // TODO
-    // Chat state negotiation :
-    // 1. If the User desires chat state notifications, the initial content
-    // message sent to the Contact MUST contain a chat state notification
-    // extension, which SHOULD be <active/>.
-    // 2. Until receiving a reply to the initial content message (or a
-    // standalone notification) from the Contact, the User MUST NOT send
-    // subsequent chat state notifications to the Contact.
-    // 3. If the Contact replies to the initial content message but does not
-    // include a chat state notification extension, the User MUST NOT send
-    // subsequent chat state notifications to the Contact.
-    // 4. If the Contact replies to the initial content message and includes an
-    // <active/> notification (or sends a standalone notification to the User),
-    // the User and Contact SHOULD send subsequent notifications for supported
-    // chat states (as specified in the next subsection) by including an
-    // <active/> notification in each content message and sending standalone
-    // notifications for the chat states they support (at a minimum, the
-    // <composing/> state).
+/**
+ * XEP-0085: Chat State Notifications
+ * http://www.xmpp.org/extensions/xep-0085.html (Version: 1.2)
+ */
+public class ChatState implements BeforeSendMessageFormatter, ChatListener {
     public static enum NegotiationStatus {
         notStarted, started, rejected, accepted
     }
@@ -38,6 +23,7 @@ public class ChatState implements BeforeSendMessageFormatter {
     public static final String XMLNS = "http://jabber.org/protocol/chatstates";
 
     private Type ownState;
+
     private Type otherState;
     private final Chat chat;
     private final Emite emite;
@@ -55,22 +41,6 @@ public class ChatState implements BeforeSendMessageFormatter {
             listeners = new ChatStateListenersCollection();
         }
         listeners.add(otherStateListener);
-    }
-
-    public void fireMessageReceived(final Message message) {
-        for (int i = 0; i < Type.values().length; i++) {
-            final Type type = Type.values()[i];
-            final String typeSt = type.toString();
-            if (message.hasChild(typeSt) || message.hasChild("cha:" + typeSt)) {
-                otherState = type;
-                if (negotiationStatus.equals(NegotiationStatus.notStarted)) {
-                    sendStateMessage(Type.active);
-                }
-                negotiationStatus = NegotiationStatus.accepted;
-                Log.info("Receiver other chat status: " + typeSt);
-                fireOtherStateListeners(type);
-            }
-        }
     }
 
     public void formatBeforeSend(final Message message) {
@@ -97,6 +67,26 @@ public class ChatState implements BeforeSendMessageFormatter {
 
     public Type getOwnState() {
         return ownState;
+    }
+
+    public void onMessageReceived(final Chat chat, final Message message) {
+        for (int i = 0; i < Type.values().length; i++) {
+            final Type type = Type.values()[i];
+            final String typeSt = type.toString();
+            if (message.hasChild(typeSt) || message.hasChild("cha:" + typeSt)) {
+                otherState = type;
+                if (negotiationStatus.equals(NegotiationStatus.notStarted)) {
+                    sendStateMessage(Type.active);
+                }
+                negotiationStatus = NegotiationStatus.accepted;
+                Log.info("Receiver other chat status: " + typeSt);
+                fireOtherStateListeners(type);
+            }
+        }
+    }
+
+    public void onMessageSent(final Chat chat, final Message message) {
+        // do nothing
     }
 
     public void setOwnState(final Type type) {
@@ -135,17 +125,8 @@ public class ChatState implements BeforeSendMessageFormatter {
     }
 
     private void sendStateMessage(final Type type) {
-        final Packet statePacket = new Packet("message");
-        statePacket.setAttribute("from", chat.getFromURI().toString());
-        statePacket.setAttribute("to", chat.getOtherURI().toString());
-        statePacket.setAttribute("type", "chat");
-        final String thread = chat.getThread();
-        if (thread != null) {
-            final Packet threadPacket = new Packet("thread");
-            threadPacket.setText(thread);
-            statePacket.addChild(threadPacket);
-        }
-        statePacket.addChild(type.toString(), XMLNS);
-        emite.send(statePacket);
+        Message message = new Message(chat.getFromURI(), chat.getOtherURI(), null).Thread(chat.getThread());
+        message.addChild(type.toString(), XMLNS);
+        emite.send(message);
     }
 }
