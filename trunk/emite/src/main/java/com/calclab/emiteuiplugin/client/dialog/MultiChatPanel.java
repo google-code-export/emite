@@ -182,6 +182,10 @@ public class MultiChatPanel {
         click();
     }
 
+    public boolean isVisible() {
+        return dialog.isVisible();
+    }
+
     public void removeChat(final ChatUI chatUI) {
         centerPanel.remove(((Panel) chatUI.getView()).getId());
     }

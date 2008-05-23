@@ -36,7 +36,7 @@ import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 
-public class LoginPanel {
+public class EmiteDemoLoginPanel {
 
     public static interface LoginPanelListener {
 
@@ -52,7 +52,7 @@ public class LoginPanel {
     private final TextField fieldPassw;
     private String release;
 
-    public LoginPanel(final LoginPanelListener listener) {
+    public EmiteDemoLoginPanel(final LoginPanelListener listener) {
         release = "not-specified";
         final Panel panel = new Panel();
         panel.setBorder(false);

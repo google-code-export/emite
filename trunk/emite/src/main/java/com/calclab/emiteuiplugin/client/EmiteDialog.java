@@ -64,6 +64,10 @@ public class EmiteDialog {
         multiChatDialog.hide();
     }
 
+    public boolean isVisible() {
+        return multiChatDialog.isVisible();
+    }
+
     public void joinRoom(final XmppURI roomURI) {
         xmpp.getInstance(RoomManager.class).openChat(roomURI, null, null);
     }
@@ -72,8 +76,12 @@ public class EmiteDialog {
         multiChatDialog.setUserChatOptions(userChatOptions);
     }
 
-    public void show(final OwnStatus status) {
+    public void show() {
         multiChatDialog.show();
+    }
+
+    public void show(final OwnStatus status) {
+        show();
         multiChatDialog.setOwnPresence(new OwnPresence(status));
     }
 
