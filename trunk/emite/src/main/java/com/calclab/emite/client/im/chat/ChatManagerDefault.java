@@ -43,19 +43,77 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
     protected final ArrayList<ChatManagerListener> listeners;
 
     public ChatManagerDefault(final Emite emite) {
-	super(emite);
-	this.listeners = new ArrayList<ChatManagerListener>();
-	this.chats = new HashSet<Chat>();
-	install();
+        super(emite);
+        this.listeners = new ArrayList<ChatManagerListener>();
+        this.chats = new HashSet<Chat>();
+        install();
     }
 
     public void addListener(final ChatManagerListener listener) {
-	listeners.add(listener);
+        listeners.add(listener);
     }
 
     public void close(final Chat chat) {
-	chats.remove(chat);
-	fireChatClosed(chat);
+        chats.remove(chat);
+        fireChatClosed(chat);
+    }
+
+    public Collection<? extends Chat> getChats() {
+        return chats;
+    }
+
+    @Override
+    public void logOut() {
+        super.logOut();
+        final ArrayList<Chat> toBeRemoved = new ArrayList<Chat>();
+        toBeRemoved.addAll(chats);
+        for (final Chat chat : toBeRemoved) {
+            close(chat);
+        }
+    }
+
+    public Chat openChat(final XmppURI to) {
+        Chat chat = findChat(to, null);
+        if (chat == null) {
+            final String theThread = String.valueOf(Math.random() * 1000000);
+            chat = new ChatDefault(to, userURI, theThread, emite);
+            addChat(chat);
+        }
+        return chat;
+    }
+
+    public void setUserURI(final String uri) {
+        this.userURI = uri(uri);
+    }
+
+    protected void eventMessage(final Message message) {
+        final Type type = message.getType();
+        switch (type) {
+        case chat:
+        case normal:
+            onChatMessageReceived(message);
+            break;
+        case error:
+            Log.warn("Error message received: " + message.toString());
+        }
+    }
+
+    protected void fireChatClosed(final Chat chat) {
+        for (final ChatManagerListener listener : listeners) {
+            listener.onChatClosed(chat);
+        }
+    }
+
+    protected void fireChatCreated(final Chat chat) {
+        for (final ChatManagerListener listener : listeners) {
+            listener.onChatCreated(chat);
+        }
+    }
+
+    private Chat addChat(final Chat chat) {
+        chats.add(chat);
+        fireChatCreated(chat);
+        return chat;
     }
 
     /**
@@ -68,104 +126,45 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
      * @return
      */
 
-    // FIXME: Dani, verify this, findChat to public :-/
-    public Chat findChat(final XmppURI from, final String thread) {
-	Chat selected = null;
+    private Chat findChat(final XmppURI from, final String thread) {
+        Chat selected = null;
 
-	for (final Chat chat : chats) {
-	    if (thread != null) {
-		if (thread.equals(chat.getThread())) {
-		    return chat;
-		}
-	    } else {
-		final XmppURI chatTargetURI = chat.getOtherURI();
-		if (from.hasResource() && from.equals(chatTargetURI)) {
-		    selected = chat;
-		} else if (from.equalsNoResource(chatTargetURI)) {
-		    selected = chat;
-		}
-	    }
-	}
+        for (final Chat chat : chats) {
+            if (thread != null) {
+                if (thread.equals(chat.getThread())) {
+                    return chat;
+                }
+            } else {
+                final XmppURI chatTargetURI = chat.getOtherURI();
+                if (from.hasResource() && from.equals(chatTargetURI)) {
+                    selected = chat;
+                } else if (from.equalsNoResource(chatTargetURI)) {
+                    selected = chat;
+                }
+            }
+        }
 
-	return selected;
-    }
-
-    public Collection<? extends Chat> getChats() {
-	return chats;
-    }
-
-    @Override
-    public void logOut() {
-	super.logOut();
-	final ArrayList<Chat> toBeRemoved = new ArrayList<Chat>();
-	toBeRemoved.addAll(chats);
-	for (final Chat chat : toBeRemoved) {
-	    close(chat);
-	}
-    }
-
-    public Chat openChat(final XmppURI to) {
-	Chat chat = findChat(to, null);
-	if (chat == null) {
-	    final String theThread = String.valueOf(Math.random() * 1000000);
-	    chat = new ChatDefault(to, userURI, theThread, emite);
-	    addChat(chat);
-	}
-	return chat;
-    }
-
-    public void setUserURI(final String uri) {
-	this.userURI = uri(uri);
-    }
-
-    protected void eventMessage(final Message message) {
-	final Type type = message.getType();
-	switch (type) {
-	case chat:
-	case normal:
-	    onChatMessageReceived(message);
-	    break;
-	case error:
-	    Log.warn("Error message received: " + message.toString());
-	}
-    }
-
-    protected void fireChatClosed(final Chat chat) {
-	for (final ChatManagerListener listener : listeners) {
-	    listener.onChatClosed(chat);
-	}
-    }
-
-    protected void fireChatCreated(final Chat chat) {
-	for (final ChatManagerListener listener : listeners) {
-	    listener.onChatCreated(chat);
-	}
-    }
-
-    private Chat addChat(final Chat chat) {
-	chats.add(chat);
-	fireChatCreated(chat);
-	return chat;
+        return selected;
     }
 
     private void install() {
-	emite.subscribe(when(new Packet("message", null)), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventMessage(new Message(received));
-	    }
-	});
+        emite.subscribe(when(new Packet("message", null)), new PacketListener() {
+            public void handle(final IPacket received) {
+                eventMessage(new Message(received));
+            }
+        });
     }
 
     private void onChatMessageReceived(final Message message) {
-	final XmppURI from = message.getFromURI();
-	final String thread = message.getThread();
+        final XmppURI from = message.getFromURI();
+        final String thread = message.getThread();
 
-	Chat chat = findChat(from, thread);
-	if (chat == null) {
-	    final ChatDefault chat1 = new ChatDefault(from, userURI, thread, emite);
-	    chat = addChat(chat1);
-	}
-	((ChatDefault) chat).fireMessageReceived(message);
+        Chat chat = findChat(from, thread);
+        if (chat == null) {
+            final ChatDefault chat1 = new ChatDefault(from, userURI, thread, emite);
+            chat = addChat(chat1);
+        }
+        ((ChatDefault) chat).fireMessageReceived(message);
     }
 
 }

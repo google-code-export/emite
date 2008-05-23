@@ -31,7 +31,6 @@ import com.gwtext.client.widgets.ToolTip;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextField;
-import com.gwtext.client.widgets.form.VType;
 import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 
 public class JoinRoomPanel {
@@ -87,7 +86,8 @@ public class JoinRoomPanel {
         roomName = new TextField(i18n.t("Room Name"), "name", 150);
         roomName.setAllowBlank(false);
         roomName.setValidationEvent(false);
-        roomName.setVtype(VType.ALPHANUM);
+        roomName.setRegex("^[a-z0-9_\\-]+$");
+        roomName.setRegexText(i18n.t("Can only contain characters, numbers, and dashes"));
         formPanel.add(roomName);
 
         roomHostName = new TextField(i18n.t("Room Server Name"), "jid", 150);

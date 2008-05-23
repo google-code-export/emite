@@ -31,8 +31,6 @@ public interface ChatManager {
 
     public void close(Chat chat);
 
-    public Chat findChat(XmppURI from, String thread);
-
     public Collection<? extends Chat> getChats();
 
     public Chat openChat(final XmppURI xmppURI);
