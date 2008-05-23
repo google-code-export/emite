@@ -21,8 +21,6 @@
  */
 package com.calclab.emite.client.xep.chatstate;
 
-import java.util.HashMap;
-
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManager;
@@ -40,33 +38,30 @@ import com.calclab.emite.client.xmpp.session.SessionComponent;
  */
 public class ChatStateManager extends SessionComponent {
 
-    private final HashMap<Chat, ChatState> chatStates;
-
     public ChatStateManager(final Emite emite, final ChatManager chatManager) {
-        super(emite);
-        chatStates = new HashMap<Chat, ChatState>();
-        chatManager.addListener(new ChatManagerListener() {
+	super(emite);
+	chatManager.addListener(new ChatManagerListener() {
 
-            public void onChatClosed(final Chat chat) {
-                final ChatState chatState = chatStates.get(chat);
-                if (chatState != null && !chatState.getOtherState().equals(ChatState.Type.gone)) {
-                    // We are closing, then we send the gone state
-                    chatState.setOwnState(ChatState.Type.gone);
-                }
-                chatStates.remove(chat);
-            }
+	    public void onChatClosed(final Chat chat) {
+		final ChatState chatState = chat.getData(ChatState.class);
+		if (chatState != null && !chatState.getOtherState().equals(ChatState.Type.gone)) {
+		    // We are closing, then we send the gone state
+		    chatState.setOwnState(ChatState.Type.gone);
+		}
+		chat.setData(ChatState.class, null);
+	    }
 
-            public void onChatCreated(final Chat chat) {
-                final ChatState chatState = new ChatState(chat, emite);
-                chat.addListener(chatState);
-                chatStates.put(chat, chatState);
-                chat.addMessageInterceptor(chatState);
-            }
-        });
+	    public void onChatCreated(final Chat chat) {
+		final ChatState chatState = new ChatState(chat, emite);
+		chat.addListener(chatState);
+		chat.setData(ChatState.class, chatState);
+		chat.addMessageInterceptor(chatState);
+	    }
+	});
     }
 
     public ChatState getChatState(final Chat chat) {
-        return chatStates.get(chat);
+	return chat.getData(ChatState.class);
     }
 
 }
