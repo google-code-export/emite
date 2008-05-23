@@ -532,8 +532,10 @@ public class MultiChatPresenter {
 			roomUI.onOccupantsChanged(occupants);
 		    }
 
-		    public void onSubjectChanged(final String nick, final String newSubject) {
+		    public void onSubjectChanged(String nick, final String newSubject) {
 			roomUI.setSubject(newSubject);
+			// FIXME: see Issue#74
+			nick = nick == null ? "[null]" : nick;
 			roomUI.addInfoMessage(i18n.t("[%s] has changed the subject to: ", nick) + newSubject);
 		    }
 		});
