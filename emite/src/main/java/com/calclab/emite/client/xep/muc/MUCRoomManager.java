@@ -62,8 +62,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     }
 
     @Override
-    // FIXME: quizá añadir una propiedad de "locked" al Room?
-    public Room openChat(final XmppURI roomURI) {
+    public <T> Room openChat(final XmppURI roomURI, final java.lang.Class<T> dataType, final T dataValue) {
 	Room room = rooms.get(roomURI.getJID());
 	if (room == null) {
 	    room = new Room(userURI, roomURI.getJID(), "the name of the room", emite);

@@ -72,11 +72,14 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	}
     }
 
-    public Chat openChat(final XmppURI to) {
-	Chat chat = findChat(to, null);
+    public <T> Chat openChat(final XmppURI toURI, final Class<T> extraType, final T extraData) {
+	Chat chat = findChat(toURI, null);
 	if (chat == null) {
 	    final String theThread = String.valueOf(Math.random() * 1000000);
-	    chat = new ChatDefault(userURI, to, theThread, emite);
+	    chat = new ChatDefault(userURI, toURI, theThread, emite);
+	    if (extraType != null) {
+		chat.setData(extraType, extraData);
+	    }
 	    addChat(chat);
 	}
 	return chat;

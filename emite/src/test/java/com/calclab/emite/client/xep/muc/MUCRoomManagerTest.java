@@ -42,7 +42,7 @@ public class MUCRoomManagerTest {
     @Test
     public void shouldAcceptRoomPresenceWithAvatar() {
 	manager.setUserURI("user@domain/resource");
-	final Room room = manager.openChat(uri("room1@domain/nick"));
+	final Room room = manager.openChat(uri("room1@domain/nick"), null, null);
 	emite.receives("<presence to='user@domain/resource' from='room1@domain/otherUser2'>" + "<priority>0</priority>"
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item jid='otheruserjid@domain/otherresoruce' affiliation='none' " + "role='participant'/></x>"
@@ -57,8 +57,8 @@ public class MUCRoomManagerTest {
 
     @Test
     public void shouldCloseAllActiveRoomsWhenLoggedOut() {
-	final Room room1 = manager.openChat(uri("room1@domain/nick"));
-	final Room room2 = manager.openChat(uri("room2@domain/nick"));
+	final Room room1 = manager.openChat(uri("room1@domain/nick"), null, null);
+	final Room room2 = manager.openChat(uri("room2@domain/nick"), null, null);
 	emite.receives(SessionManager.Events.onLoggedOut);
 	verify(listener).onChatClosed(room2);
 	verify(listener).onChatClosed(room1);
@@ -67,7 +67,7 @@ public class MUCRoomManagerTest {
     @Test
     public void shouldCreateInstantRoomIfNeeded() {
 	manager.setUserURI("user@localhost/resource");
-	manager.openChat(uri("newroomtest1@rooms.localhost/nick"));
+	manager.openChat(uri("newroomtest1@rooms.localhost/nick"), null, null);
 	emite.receives("<presence from='newroomtest1@rooms.localhost/nick' to='user@localhost/resource' >"
 		+ "<priority>5</priority>" + "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item affiliation='owner' role='moderator' jid='vjrj@localhost/Psi' />" + "<status code='201' />"
@@ -78,7 +78,7 @@ public class MUCRoomManagerTest {
     @Test
     public void shouldFireChatMessages() {
 	manager.setUserURI("user@domain/resource");
-	final Room chat = manager.openChat(uri("room@rooms.domain/user"));
+	final Room chat = manager.openChat(uri("room@rooms.domain/user"), null, null);
 	final RoomListener roomListener = mock(RoomListener.class);
 	chat.addListener(roomListener);
 	final String message = "<message from='room@rooms.domain/other' to='user@domain/resource' "
@@ -90,8 +90,8 @@ public class MUCRoomManagerTest {
     // FIXME: revisar si esto tiene lógica
     @Test
     public void shouldGiveSameRoomsWithSameURIS() {
-	final Room room1 = manager.openChat(uri("room@domain/nick"));
-	final Room room2 = manager.openChat(uri("room@domain/nick"));
+	final Room room1 = manager.openChat(uri("room@domain/nick"), null, null);
+	final Room room2 = manager.openChat(uri("room@domain/nick"), null, null);
 	assertSame(room1, room2);
     }
 
@@ -109,7 +109,7 @@ public class MUCRoomManagerTest {
     @Test
     public void shouldUpdateRoomPresence() {
 	manager.setUserURI("user@domain/resource");
-	final Room room = manager.openChat(uri("room1@domain/nick"));
+	final Room room = manager.openChat(uri("room1@domain/nick"), null, null);
 
 	emite.receives("<presence to='user@domain/resource' xmlns='jabber:client' from='room1@domain/otherUser'>"
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"

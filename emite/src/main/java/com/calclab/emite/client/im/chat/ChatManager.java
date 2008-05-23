@@ -33,6 +33,6 @@ public interface ChatManager {
 
     public Collection<? extends Chat> getChats();
 
-    public Chat openChat(final XmppURI xmppURI);
+    public <T> Chat openChat(final XmppURI xmppURI, Class<T> dataType, T dataValue);
 
 }

@@ -94,7 +94,7 @@ public class RosterPresenter {
 	    }
 
 	    public void onOpenChat(final XmppURI userURI) {
-		chatManager.openChat(userURI);
+		chatManager.openChat(userURI, null, null);
 	    }
 
 	    public void onRequestRemoveItem(final XmppURI userURI) {
