@@ -19,14 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.extra.muc;
+package com.calclab.emite.client.xep.muc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.im.chat.BeforeSendMessageFormatter;
+import com.calclab.emite.client.im.chat.MessageInterceptor;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
@@ -52,7 +52,7 @@ public class Room implements Chat {
 	this.listeners = new ArrayList<ChatListener>();
     }
 
-    public void addBeforeSendMessageFormatter(final BeforeSendMessageFormatter beforeSendMessageFormatter) {
+    public void addMessageInterceptor(final MessageInterceptor messageInterceptor) {
 	// FIXME Nothing (until ChatDefault/ChatState not ready)
     }
 

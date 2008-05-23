@@ -19,19 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.extra.muc;
+package com.calclab.emite.client.xep.muc;
 
-import java.util.Collection;
+import com.calclab.emite.client.im.chat.ChatManager;
 
-import com.calclab.emite.client.im.chat.ChatListener;
-
-public interface RoomListener extends ChatListener {
-
-    // FIXME: preferiría enviar el ocupante, y no el nick!
-    public void onSubjectChanged(String nick, String newSubject);
-
-    void onOccupantModified(Occupant occupant);
-
-    void onOccupantsChanged(Collection<Occupant> occupants);
-
+public interface RoomManager extends ChatManager {
 }

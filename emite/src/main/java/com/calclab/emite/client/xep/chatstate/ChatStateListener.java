@@ -19,11 +19,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.extra.muc;
+package com.calclab.emite.client.xep.chatstate;
 
-import com.calclab.emite.client.im.chat.ChatManagerListener;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+public interface ChatStateListener {
 
-public interface RoomManagerListener extends ChatManagerListener {
-    void onInvitationReceived(XmppURI invitor, XmppURI roomURI, String reason);
+    void onActive();
+
+    void onComposing();
+
+    void onGone();
+
+    void onInactive();
+
+    void onPause();
+
 }

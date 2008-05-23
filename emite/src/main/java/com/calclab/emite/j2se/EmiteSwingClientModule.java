@@ -2,11 +2,11 @@ package com.calclab.emite.j2se;
 
 import com.calclab.emite.client.EmiteModule;
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.xep.muc.MUCModule;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.swing.SwingClient;
 

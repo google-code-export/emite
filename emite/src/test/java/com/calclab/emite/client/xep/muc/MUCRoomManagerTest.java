@@ -1,4 +1,4 @@
-package com.calclab.emite.client.extra.muc;
+package com.calclab.emite.client.xep.muc;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import static com.calclab.emite.testing.MockitoEmiteHelper.packetLike;
@@ -12,8 +12,13 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.extra.muc.Occupant.Affiliation;
-import com.calclab.emite.client.extra.muc.Occupant.Role;
+import com.calclab.emite.client.xep.muc.MUCRoomManager;
+import com.calclab.emite.client.xep.muc.Occupant;
+import com.calclab.emite.client.xep.muc.Room;
+import com.calclab.emite.client.xep.muc.RoomListener;
+import com.calclab.emite.client.xep.muc.RoomManagerListener;
+import com.calclab.emite.client.xep.muc.Occupant.Affiliation;
+import com.calclab.emite.client.xep.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;

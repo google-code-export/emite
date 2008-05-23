@@ -1,8 +1,8 @@
-package com.calclab.emite.client.extra.chatstate;
+package com.calclab.emite.client.xep.chatstate;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.im.chat.BeforeSendMessageFormatter;
+import com.calclab.emite.client.im.chat.MessageInterceptor;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -11,7 +11,7 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
  * XEP-0085: Chat State Notifications
  * http://www.xmpp.org/extensions/xep-0085.html (Version: 1.2)
  */
-public class ChatState implements BeforeSendMessageFormatter, ChatListener {
+public class ChatState implements MessageInterceptor, ChatListener {
     public static enum NegotiationStatus {
         notStarted, started, rejected, accepted
     }

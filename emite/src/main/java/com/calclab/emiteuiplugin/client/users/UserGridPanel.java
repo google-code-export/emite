@@ -27,7 +27,7 @@ import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.packet.TextUtils;
-import com.calclab.emite.client.extra.muc.Occupant.Role;
+import com.calclab.emite.client.xep.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;

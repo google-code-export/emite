@@ -21,8 +21,8 @@
  */
 package com.calclab.emiteuiplugin.client.users;
 
-import com.calclab.emite.client.extra.muc.Occupant;
-import com.calclab.emite.client.extra.muc.Occupant.Role;
+import com.calclab.emite.client.xep.muc.Occupant;
+import com.calclab.emite.client.xep.muc.Occupant.Role;
 
 public class RoomUserUI extends AbstractChatUser {
 

@@ -25,9 +25,9 @@ import java.util.Date;
 
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.extra.muc.RoomManager;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
+import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatListener;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
