@@ -25,6 +25,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.extra.muc.MUCModule;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleContainer;
@@ -36,6 +37,7 @@ import com.calclab.emiteuiplugin.client.EmiteUIFactory;
 public class EmiteUIModule implements Module {
 
     public static void loadWithDependencies(final ModuleContainer container) {
+	container.add(new MUCModule());
 	container.add(new EmiteUIModule());
     }
 
