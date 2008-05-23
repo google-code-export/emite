@@ -28,6 +28,8 @@ public interface Chat {
 
     public void addListener(final ChatListener listener);
 
+    public <T> T getData(Class<T> type);
+
     public XmppURI getFromURI();
 
     public String getID();
@@ -36,10 +38,37 @@ public interface Chat {
 
     public String getThread();
 
+    /**
+     * To make this chat receive a message
+     * 
+     * @param message
+     *                the message
+     */
+    public void receive(Message message);
+
+    /**
+     * To make this chat send a message
+     * 
+     * @param message
+     *                the message
+     */
     public void send(Message message);
 
+    /**
+     * To make this chat send a message
+     * 
+     * @param body
+     *                message body
+     */
     public void send(final String body);
 
+    public <T> T setData(Class<T> type, T data);
+
+    /**
+     * Allows to modify the messages before send or receive
+     * 
+     * @param messageInterceptor
+     */
     void addMessageInterceptor(MessageInterceptor messageInterceptor);
 
 }

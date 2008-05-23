@@ -63,13 +63,13 @@ public class RoomTest {
     @Test
     public void shouldFireListenersWhenMessage() {
 	final Message message = new Message(uri("someone@domain/res"), uri("room@domain"), "message");
-	room.dispatch(message);
+	room.receive(message);
 	verify(listener).onMessageReceived((Chat) anyObject(), eq(message));
     }
 
     @Test
     public void shouldFireListenersWhenSubjectChange() {
-	room.dispatch(new Message(uri("someone@domain/res"), uri("room@domain"), null).Subject("the subject"));
+	room.receive(new Message(uri("someone@domain/res"), uri("room@domain"), null).Subject("the subject"));
 	verify(listener).onSubjectChanged(userURI.getResource(), "the subject");
 	verify(listener, never()).onMessageReceived((Chat) anyObject(), (Message) anyObject());
     }

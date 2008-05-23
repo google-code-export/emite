@@ -17,7 +17,7 @@ public class ChatTest {
     @Before
     public void beforeTests() {
 	this.emite = new EmiteTestHelper();
-	chat = new ChatDefault(uri("other@domain/otherRes"), uri("self@domain/res"), "theThread", emite);
+	chat = new ChatDefault(uri("self@domain/res"), uri("other@domain/otherRes"), "theThread", emite);
 	listener = mock(ChatListener.class);
 	chat.addListener(listener);
     }
@@ -27,7 +27,7 @@ public class ChatTest {
 	final MessageInterceptor interceptor = mock(MessageInterceptor.class);
 	chat.addMessageInterceptor(interceptor);
 	final Message message = new Message();
-	chat.fireMessageReceived(message);
+	chat.receive(message);
 	verify(interceptor).onBeforeReceive(message);
     }
 
@@ -42,7 +42,7 @@ public class ChatTest {
 
     @Test
     public void shouldSendNoThreadWhenNotSpecified() {
-	final ChatDefault noThreadChat = new ChatDefault(uri("other@domain/otherRes"), uri("self@domain/res"), null,
+	final AbstractChat noThreadChat = new ChatDefault(uri("self@domain/res"), uri("other@domain/otherRes"), null,
 		emite);
 	noThreadChat.send("the message");
 	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' "

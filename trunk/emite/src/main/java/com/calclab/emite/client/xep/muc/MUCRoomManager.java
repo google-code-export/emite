@@ -83,7 +83,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	if (message.getType() == Message.Type.groupchat) {
 	    final Room room = rooms.get(message.getFromURI().getJID());
 	    if (room != null) {
-		room.dispatch(message);
+		room.receive(message);
 	    }
 	} else if ((child = message.getFirstChild("x").getFirstChild("invite")) != NoPacket.INSTANCE) {
 	    handleRoomInvitation(message.getFromURI(), new BasicStanza(child));
