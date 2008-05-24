@@ -56,6 +56,7 @@ public class ChatUIPresenter implements ChatUI {
     private final ChatIconDescriptor unhighIcon;
     private final ChatIconDescriptor highIcon;
     private ChatStateTimer timer;
+    private boolean docked;
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
             final ChatIconDescriptor unhighIcon, final ChatIconDescriptor highIcon, final ChatUIListener listener) {
@@ -69,6 +70,7 @@ public class ChatUIPresenter implements ChatUI {
         userColors = new HashMap<String, String>();
         userColors.put(currentUserAlias, currentUserColor);
         savedChatNotification = new ChatNotification();
+        docked = false;
     }
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
@@ -136,6 +138,10 @@ public class ChatUIPresenter implements ChatUI {
         this.view = view;
         isActive = true;
         unHighLightChatTitle();
+    }
+
+    public boolean isDocked() {
+        return docked;
     }
 
     public void onClose() {
@@ -225,6 +231,10 @@ public class ChatUIPresenter implements ChatUI {
 
         });
         timer = new ChatStateTimer(this);
+    }
+
+    public void setDocked(final boolean docked) {
+        this.docked = docked;
     }
 
     public void setUserColor(final String userAlias, final String color) {
