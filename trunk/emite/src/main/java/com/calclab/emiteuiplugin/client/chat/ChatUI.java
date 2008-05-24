@@ -50,6 +50,8 @@ public interface ChatUI {
 
     void highLightChatTitle();
 
+    boolean isDocked();
+
     void onClose();
 
     void onComposing();
@@ -65,6 +67,8 @@ public interface ChatUI {
     void saveInput(String inputText);
 
     void setChatState(ChatState chatState);
+
+    void setDocked(boolean docked);
 
     void setUserColor(String userAlias, String color);
 
