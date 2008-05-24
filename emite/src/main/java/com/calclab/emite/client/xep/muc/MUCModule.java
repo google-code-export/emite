@@ -39,7 +39,7 @@ public class MUCModule implements Module {
 
     public void onLoad(final ModuleBuilder builder) {
 	builder.registerProvider(RoomManager.class, new Provider<RoomManager>() {
-	    public MUCRoomManager get() {
+	    public RoomManager get() {
 		return new MUCRoomManager(builder.getInstance(Emite.class));
 	    }
 	}, Scopes.SINGLETON_EAGER);
