@@ -386,8 +386,8 @@ public class MultiChatPresenter {
 
     protected void onCloseAllConfirmed() {
         for (final Chat chat : xmpp.getChatManager().getChats()) {
-            ChatUI chatUI = chat.getData(ChatUI.class);
-            if (chatUI.isDocked()) {
+            ChatUI chatUI = getChatUI(chat);
+            if (chatUI != null && chatUI.isDocked()) {
                 closeChatUI(chatUI);
                 view.removeChat(chatUI);
             }
@@ -405,8 +405,10 @@ public class MultiChatPresenter {
 
     protected void onUserColorChanged(final String color) {
         for (final Chat chat : xmpp.getChatManager().getChats()) {
-            ChatUI chatUI = chat.getData(ChatUI.class);
-            chatUI.setUserColor(currentUserJid.getNode(), color);
+            ChatUI chatUI = getChatUI(chat);
+            if (chatUI != null) {
+                chatUI.setUserColor(currentUserJid.getNode(), color);
+            }
         }
         userChatOptions.setColor(color);
         listener.onUserColorChanged(color);
@@ -572,7 +574,7 @@ public class MultiChatPresenter {
     }
 
     private void doAfterChatClosed(final Chat chat) {
-        ChatUI chatUI = chat.getData(ChatUI.class);
+        ChatUI chatUI = getChatUI(chat);
         if (chatUI != null) {
             openedChats--;
             chatUI.destroy();
@@ -603,9 +605,10 @@ public class MultiChatPresenter {
             view.addChat(chatUI);
             currentChat = chatUI;
             checkThereAreChats();
-        }
-        if (!isChatStartedByMe(chat)) {
-            chatUI.highLightChatTitle();
+            chatUI.setDocked(true);
+            if (!isChatStartedByMe(chat)) {
+                chatUI.highLightChatTitle();
+            }
         }
     }
 
@@ -624,8 +627,8 @@ public class MultiChatPresenter {
     }
 
     private boolean isChatStartedByMe(final Chat chat) {
-        ChatUIStartedByMe chatExtraData = chat.getData(ChatUIStartedByMe.class);
-        return chatExtraData != null && chatExtraData.isStartedByMe();
+        ChatUIStartedByMe chatUIData = chat.getData(ChatUIStartedByMe.class);
+        return chatUIData != null && chatUIData.isStartedByMe();
     }
 
     private void loginIfnecessary(final Show status, final String statusText) {
