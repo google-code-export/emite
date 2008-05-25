@@ -35,7 +35,7 @@ import com.calclab.emiteuiplugin.client.users.UserGridPanel;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 
-public class RosterPanel extends UserGridPanel {
+public class RosterPanel extends UserGridPanel implements RosterView {
 
     private final RosterPresenter presenter;
     private final I18nTranslationService i18n;

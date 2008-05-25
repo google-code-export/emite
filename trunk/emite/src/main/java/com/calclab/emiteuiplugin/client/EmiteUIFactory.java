@@ -67,8 +67,8 @@ public class EmiteUIFactory {
         final RosterPresenter roster = createRosterUI(param.getAvatarProvider());
         final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, this, param, listener, roster);
         final StatusPanel statusPanel = new StatusPanel(i18n);
-        final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), roster.getView(), statusPanel,
-                i18n, presenter);
+        final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), (RosterPanel) roster.getView(),
+                statusPanel, i18n, presenter);
         presenter.initStatusPanel(statusPanel);
         presenter.init(panel);
         return presenter;

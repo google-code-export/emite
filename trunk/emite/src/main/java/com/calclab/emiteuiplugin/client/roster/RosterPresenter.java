@@ -50,7 +50,6 @@ import com.calclab.emiteuiplugin.client.users.ChatUserUI;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItem;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItem.UserGridMenuItemListener;
-import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
 
 public class RosterPresenter {
 
@@ -68,7 +67,8 @@ public class RosterPresenter {
 
     }
 
-    private RosterPanel view;
+    private RosterView view;
+
     private final HashMap<XmppURI, ChatUserUI> rosterMap;
     private final I18nTranslationService i18n;
     private final PresenceManager presenceManager;
@@ -117,15 +117,38 @@ public class RosterPresenter {
         view.clearRoster();
     }
 
+    public String getShowText(final Type type, final Show show) {
+        String textLabel = "";
+        switch (show) {
+        case chat:
+            textLabel = i18n.t("Available to Chat");
+            break;
+        case away:
+        case xa:
+            textLabel = i18n.t("Away");
+            break;
+        case dnd:
+            textLabel = i18n.t("Don't disturb");
+            break;
+        case notSpecified:
+            if (type.equals(Type.available)) {
+                textLabel = i18n.t("Online");
+            } else if (type.equals(Type.unavailable)) {
+                textLabel = i18n.t("Offline");
+            }
+        }
+        return textLabel;
+    }
+
     public ChatUserUI getUserByJid(final XmppURI jid) {
         return rosterMap.get(jid);
     }
 
-    public RosterPanel getView() {
+    public RosterView getView() {
         return view;
     }
 
-    public void init(final RosterPanel view) {
+    public void init(final RosterView view) {
         this.view = view;
         createXmppListeners();
     }
@@ -172,7 +195,7 @@ public class RosterPresenter {
         if (presence != null) {
             final Show show = presence.getShow();
             if (statusText.equals("")) {
-                statusText += ChatUIUtils.getShowText(i18n, show);
+                statusText += getShowText(presence.getType(), show);
             }
         }
         // Only for test:
@@ -244,79 +267,22 @@ public class RosterPresenter {
 
     private UserGridMenuItemList createMenuItemList(final XmppURI userURI, final Presence presence,
             final Subscription subscription) {
-        Type statusType;
         final UserGridMenuItemList itemList = new UserGridMenuItemList();
-        if (presence == null) {
-            statusType = Presence.Type.unavailable;
-        } else {
-            statusType = presence.getType();
-        }
+        itemList.addItem(createStartChatMenuItem(userURI));
         switch (subscription) {
-        case both:
         case to:
-            switch (statusType) {
-            case available:
-                itemList.addItem(createStartChatMenuItem(userURI));
-                if (presence.getShow() != null) {
-                    switch (presence.getShow()) {
-                    case chat:
-                    case dnd:
-                    case xa:
-                    case away:
-                        itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
-                        break;
-                    }
-
-                } else {
-                    /*
-                     * 2.2.2.1. Show
-                     * 
-                     * If no <show/> element is provided, the entity is assumed
-                     * to be online and available.
-                     * 
-                     */
-                    itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
-                }
-                break;
-            case unavailable:
-                itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
-                break;
-            case subscribed:
-                itemList.addItem(createStartChatMenuItem(userURI));
-                itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
-                break;
-            case unsubscribed:
-                itemList.addItem(createStartChatMenuItem(userURI));
-                itemList.addItem(createSubscribeBuddyMenuItem(userURI));
-                break;
-            default:
-                /**
-                 * 2.2.1. Types of Presence
-                 * 
-                 * The 'type' attribute of a presence stanza is OPTIONAL. A
-                 * presence stanza that does not possess a 'type' attribute is
-                 * used to signal to the server that the sender is online and
-                 * available for communication. If included, the 'type'
-                 * attribute specifies a lack of availability, a request to
-                 * manage a subscription to another entity's presence, a request
-                 * for another entity's current presence, or an error related to
-                 * a previously-sent presence stanza.
-                 */
-                itemList.addItem(createStartChatMenuItem(userURI));
-            }
+            itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
+            break;
+        case both:
+            itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
+            itemList.addItem(createCancelSubscriptorBuddyMenuItem(userURI));
             break;
         case from:
-            itemList.addItem(createStartChatMenuItem(userURI));
+            itemList.addItem(createSubscribeBuddyMenuItem(userURI));
+            itemList.addItem(createCancelSubscriptorBuddyMenuItem(userURI));
+            break;
         case none:
             itemList.addItem(createSubscribeBuddyMenuItem(userURI));
-            break;
-        default:
-            Log.error("Code bug, subscription: " + subscription);
-        }
-        switch (subscription) {
-        case both:
-        case from:
-            itemList.addItem(createCancelSubscriptorBuddyMenuItem(userURI));
             break;
         }
         itemList.addItem(createRemoveBuddyMenuItem(userURI));
