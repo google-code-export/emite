@@ -322,17 +322,14 @@ public class MultiChatPresenter {
     }
 
     public void onComposing() {
-        Log.warn("Input composing");
         currentChat.onComposing();
     }
 
     public void onInputFocus() {
-        Log.warn("Input focus");
         currentChat.onInputFocus();
     }
 
     public void onInputUnFocus() {
-        Log.warn("Input unfocus");
         currentChat.onInputUnFocus();
     }
 

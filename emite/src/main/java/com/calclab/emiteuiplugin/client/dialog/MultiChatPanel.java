@@ -70,6 +70,7 @@ import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 import com.gwtext.client.widgets.layout.BorderLayout;
 import com.gwtext.client.widgets.layout.BorderLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
+import com.gwtext.client.widgets.layout.FormLayout;
 
 public class MultiChatPanel {
 
@@ -140,7 +141,10 @@ public class MultiChatPanel {
     }
 
     public void clearInputText() {
-        input.reset();
+        if (dialog.isRendered()) {
+            // (gwt-ext bug) if not redered the input listener are removed
+            input.reset();
+        }
     }
 
     public void click() {
@@ -337,23 +341,11 @@ public class MultiChatPanel {
         sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
     }
 
-    private FormPanel createGenericInputForm() {
-        final FormPanel form = new FormPanel();
-        form.setLayout(new FitLayout());
-        form.setHideLabels(true);
-        form.setBorder(false);
-        return form;
-    }
-
-    private Panel createInputFormWithToolBar(final FormPanel inputForm, final Toolbar topToolbar) {
-        final Panel panel = new Panel();
-        panel.setTopToolbar(topToolbar);
-        panel.add(inputForm);
-        return panel;
-    }
-
-    private Panel createInputPanel() {
-        inputForm = createGenericInputForm();
+    private FormPanel createInputPanel() {
+        inputForm = new FormPanel();
+        inputForm.setLayout(new FormLayout());
+        inputForm.setHideLabels(true);
+        inputForm.setBorder(false);
         input = new TextArea("Input", "input");
         input.setHeight(47);
         input.setEnterIsSpecial(true);
@@ -384,7 +376,10 @@ public class MultiChatPanel {
         };
         input.addListener(inputMainListener);
         inputForm.add(input);
+        return inputForm;
+    }
 
+    private Toolbar createInputToolBar() {
         final Toolbar inputToolbar = new Toolbar();
         emoticonButton = new ToolbarButton();
         emoticonButton.setIcon("images/smile.gif");
@@ -405,8 +400,7 @@ public class MultiChatPanel {
         bottomInfoMessage.setStyleName("emite-bottom-message");
         inputToolbar.addElement(bottomInfoMessage.getElement());
         bottomInfoMessage.setVisible(false);
-        final Panel southPanel = createInputFormWithToolBar(inputForm, inputToolbar);
-        return southPanel;
+        return inputToolbar;
     }
 
     private void createLayout(final StatusPanel statusPanel) {
@@ -430,21 +424,16 @@ public class MultiChatPanel {
         northPanel.setTopToolbar(statusPanel);
         northPanel.setBorder(false);
         final BorderLayoutData northData = new BorderLayoutData(RegionPosition.NORTH);
-
         dialog.add(northPanel, northData);
 
         southPanel = new Panel();
         southPanel.setHeight(75);
+        southPanel.setTopToolbar(createInputToolBar());
         southPanel.add(createInputPanel());
         southPanel.setBorder(false);
         final BorderLayoutData southData = new BorderLayoutData(RegionPosition.SOUTH);
         southData.setSplit(true);
         dialog.add(southPanel, southData);
-
-        // For test
-        // Window southWindow = new Window();
-        // southWindow.add(southPanel);
-        // southWindow.show();
 
         eastPanel = new Panel(i18n.t("My buddies"));
         eastPanel.setWidth(150);
