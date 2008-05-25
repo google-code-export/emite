@@ -100,10 +100,6 @@ public class MultiChatPanel {
     private ToolbarButton showUnavailableItems;
     private Label bottomChatNotification;
 
-    private EventCallback inputKeyPressListener;
-
-    private FieldListenerAdapter inputMainListener;
-
     public MultiChatPanel(final String chatDialogTitle, final RosterPanel rosterPanel, final StatusPanel statusPanel,
             final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.statusPanel = statusPanel;
@@ -125,10 +121,6 @@ public class MultiChatPanel {
         panelIdToChat.put(panelId, chat);
         centerPanel.activate(chatPanel.getId());
         centerPanel.scrollToTab(chatPanel, true);
-    }
-
-    public void addInputComposingListener() {
-        input.addKeyPressListener(inputKeyPressListener);
     }
 
     public void center() {
@@ -366,7 +358,13 @@ public class MultiChatPanel {
         input.setHeight(47);
         input.setEnterIsSpecial(true);
 
-        inputMainListener = new FieldListenerAdapter() {
+        EventCallback inputKeyPressListener = new EventCallback() {
+            public void execute(final EventObject e) {
+                presenter.onComposing();
+            }
+        };
+        input.addKeyPressListener(inputKeyPressListener);
+        FieldListenerAdapter inputMainListener = new FieldListenerAdapter() {
             @Override
             public void onBlur(final Field field) {
                 presenter.onInputUnFocus();
@@ -385,11 +383,6 @@ public class MultiChatPanel {
             }
         };
         input.addListener(inputMainListener);
-        inputKeyPressListener = new EventCallback() {
-            public void execute(final EventObject e) {
-                presenter.onComposing();
-            }
-        };
         inputForm.add(input);
 
         final Toolbar inputToolbar = new Toolbar();
@@ -447,6 +440,11 @@ public class MultiChatPanel {
         final BorderLayoutData southData = new BorderLayoutData(RegionPosition.SOUTH);
         southData.setSplit(true);
         dialog.add(southPanel, southData);
+
+        // For test
+        // Window southWindow = new Window();
+        // southWindow.add(southPanel);
+        // southWindow.show();
 
         eastPanel = new Panel(i18n.t("My buddies"));
         eastPanel.setWidth(150);

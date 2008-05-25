@@ -26,7 +26,7 @@ import com.google.gwt.user.client.Timer;
 public class ChatStateTimer {
     private final Timer timer;
 
-    public ChatStateTimer(final ChatUIPresenter presenter) {
+    public ChatStateTimer(final ChatStatePresenter presenter) {
         timer = new Timer() {
             @Override
             public void run() {
