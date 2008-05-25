@@ -24,7 +24,9 @@ package com.calclab.emiteuiplugin.client;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.xep.chatstate.ChatState;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emiteuiplugin.client.chat.ChatStatePresenter;
 import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPanel;
@@ -53,8 +55,9 @@ public class EmiteUIFactory {
     }
 
     public ChatUI createChatUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-            final ChatUIListener listener) {
+            final ChatState chatState, final ChatUIListener listener) {
         final ChatUIPresenter presenter = new ChatUIPresenter(otherURI, currentUserAlias, currentUserColor, listener);
+        new ChatStatePresenter(i18n, chatState, presenter);
         final ChatUIPanel panel = new ChatUIPanel(presenter);
         presenter.init(panel);
         return presenter;

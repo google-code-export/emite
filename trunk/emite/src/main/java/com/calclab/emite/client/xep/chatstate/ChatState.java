@@ -79,7 +79,11 @@ public class ChatState implements MessageInterceptor, ChatListener {
                 if (negotiationStatus.equals(NegotiationStatus.notStarted)) {
                     sendStateMessage(Type.active);
                 }
-                negotiationStatus = NegotiationStatus.accepted;
+                if (type.equals(Type.gone)) {
+                    negotiationStatus = NegotiationStatus.notStarted;
+                } else {
+                    negotiationStatus = NegotiationStatus.accepted;
+                }
                 Log.info("Receiver other chat status: " + typeSt);
                 fireOtherStateListeners(type);
             }

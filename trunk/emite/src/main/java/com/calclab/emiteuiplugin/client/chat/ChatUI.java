@@ -23,16 +23,19 @@ package com.calclab.emiteuiplugin.client.chat;
 
 import org.ourproject.kune.platf.client.View;
 
-import com.calclab.emite.client.xep.chatstate.ChatState;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public interface ChatUI {
 
     void addDelimiter(String date);
 
+    void addEventListener(ChatUIEventListener listener);
+
     void addInfoMessage(String message);
 
     void addMessage(String userAlias, String message);
+
+    void clearMessageEventInfo();
 
     void clearSavedInput();
 
@@ -41,6 +44,8 @@ public interface ChatUI {
     String getChatTitle();
 
     String getColor(String userAlias);
+
+    String getOtherAlias();
 
     ChatNotification getSavedChatNotification();
 
@@ -66,11 +71,13 @@ public interface ChatUI {
 
     void saveInput(String inputText);
 
-    void setChatState(ChatState chatState);
-
     void setDocked(boolean docked);
 
+    void setSavedChatNotification(ChatNotification savedChatNotification);
+
     void setUserColor(String userAlias, String color);
+
+    void showMessageEventInfo();
 
     void unHighLightChatTitle();
 

@@ -29,6 +29,7 @@ import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emiteuiplugin.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatListener;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
 import com.calclab.emiteuiplugin.client.params.AvatarProvider;
@@ -50,7 +51,7 @@ public class EmiteDialog {
     }
 
     public void chat(final XmppURI otherUserURI) {
-        xmpp.getChatManager().openChat(otherUserURI, null, null);
+        xmpp.getChatManager().openChat(otherUserURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 
     public void getChatDialog(final MultiChatCreationParam param) {
@@ -69,7 +70,7 @@ public class EmiteDialog {
     }
 
     public void joinRoom(final XmppURI roomURI) {
-        xmpp.getInstance(RoomManager.class).openChat(roomURI, null, null);
+        xmpp.getInstance(RoomManager.class).openChat(roomURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 
     public void refreshUserInfo(final UserChatOptions userChatOptions) {

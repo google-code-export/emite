@@ -36,7 +36,7 @@ import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
-import com.calclab.emite.client.xep.chatstate.ChatStateManager;
+import com.calclab.emite.client.xep.chatstate.ChatState;
 import com.calclab.emite.client.xep.muc.Occupant;
 import com.calclab.emite.client.xep.muc.Room;
 import com.calclab.emite.client.xep.muc.RoomListener;
@@ -115,9 +115,17 @@ public class MultiChatPresenter {
         }
     }
 
+    public void closeChatAfterConfirmed(final Chat chat) {
+        ChatUI chatUI = getChatUI(chat);
+        if (chatUI != null && chatUI.isDocked()) {
+            closeChatUI(chatUI);
+            view.removeChat(chatUI);
+        }
+    }
+
     public ChatUI createChat(final Chat chat) {
         final ChatUI chatUI = getChatUI(chat) == null ? factory.createChatUI(chat.getOtherURI(), currentUserJid
-                .getNode(), userChatOptions.getColor(), new ChatUIListener() {
+                .getNode(), userChatOptions.getColor(), chat.getData(ChatState.class), new ChatUIListener() {
 
             public void onActivate(final ChatUI chatUI) {
                 view.setInputText(chatUI.getSavedInput());
@@ -134,7 +142,6 @@ public class MultiChatPresenter {
 
             public void onClose(final ChatUI chatUI) {
                 xmpp.getChatManager().close(chat);
-                doAfterChatClosed(chat);
             }
 
             public void onCurrentUserSend(final String message) {
@@ -170,7 +177,6 @@ public class MultiChatPresenter {
                 }
             }
         }) : getChatUI(chat);
-        chatUI.setChatState(xmpp.getInstance(ChatStateManager.class).getChatState(chat));
         finishChatCreation(chat, chatUI);
         return chatUI;
     }
@@ -198,7 +204,6 @@ public class MultiChatPresenter {
 
             public void onClose(final ChatUI chatUI) {
                 xmpp.getInstance(RoomManager.class).close(chat);
-                doAfterChatClosed(chat);
             }
 
             public void onCreated(final ChatUI chatUI) {
@@ -266,8 +271,8 @@ public class MultiChatPresenter {
 
     public void init(final MultiChatPanel view) {
         this.view = view;
-        reset();
-        doAfterLogout();
+        resetWhenNoChats();
+        resetAfterLogout();
         createXmppListeners();
         setRosterItemVisibility();
     }
@@ -317,18 +322,17 @@ public class MultiChatPresenter {
     }
 
     public void onComposing() {
-        // FIXME: try to remove input listener or a way to no affect performance
-        // currently gwt-ext only have a input.removeAllListeners ... and trying
-        // to re-add focus listener don't works
+        Log.warn("Input composing");
         currentChat.onComposing();
     }
 
     public void onInputFocus() {
+        Log.warn("Input focus");
         currentChat.onInputFocus();
-        view.addInputComposingListener();
     }
 
     public void onInputUnFocus() {
+        Log.warn("Input unfocus");
         currentChat.onInputUnFocus();
     }
 
@@ -386,11 +390,10 @@ public class MultiChatPresenter {
 
     protected void onCloseAllConfirmed() {
         for (final Chat chat : xmpp.getChatManager().getChats()) {
-            ChatUI chatUI = getChatUI(chat);
-            if (chatUI != null && chatUI.isDocked()) {
-                closeChatUI(chatUI);
-                view.removeChat(chatUI);
-            }
+            closeChatAfterConfirmed(chat);
+        }
+        for (final Chat room : xmpp.getInstance(RoomManager.class).getChats()) {
+            closeChatAfterConfirmed(room);
         }
     }
 
@@ -405,10 +408,10 @@ public class MultiChatPresenter {
 
     protected void onUserColorChanged(final String color) {
         for (final Chat chat : xmpp.getChatManager().getChats()) {
-            ChatUI chatUI = getChatUI(chat);
-            if (chatUI != null) {
-                chatUI.setUserColor(currentUserJid.getNode(), color);
-            }
+            setChatColor(chat, color);
+        }
+        for (final Chat room : xmpp.getInstance(RoomManager.class).getChats()) {
+            setChatColor(room, color);
         }
         userChatOptions.setColor(color);
         listener.onUserColorChanged(color);
@@ -422,19 +425,6 @@ public class MultiChatPresenter {
 
     void closeChatUI(final ChatUI chatUI) {
         chatUI.onClose();
-    }
-
-    void doAfterLogout() {
-        view.setOfflineTitle();
-        view.setLoadingVisible(false);
-        view.setAddRosterItemButtonVisible(false);
-        view.setShowUnavailableItemsButtonVisible(false);
-        view.setJoinRoomEnabled(false);
-        view.setRosterVisible(false);
-        view.setOfflineInfo();
-        view.setInputEditable(false);
-        view.setOwnPresence(OFFLINE_OWN_PRESENCE);
-        roster.clearRoster();
     }
 
     void doConnecting() {
@@ -468,7 +458,7 @@ public class MultiChatPresenter {
 
     private void checkNoChats() {
         if (openedChats == 0) {
-            reset();
+            resetWhenNoChats();
         }
     }
 
@@ -495,7 +485,7 @@ public class MultiChatPresenter {
                     doConnecting();
                     break;
                 case disconnected:
-                    doAfterLogout();
+                    resetAfterLogout();
                     break;
                 }
             }
@@ -578,6 +568,7 @@ public class MultiChatPresenter {
         if (chatUI != null) {
             openedChats--;
             chatUI.destroy();
+            chat.setData(ChatUI.class, null);
         }
         checkNoChats();
     }
@@ -602,10 +593,10 @@ public class MultiChatPresenter {
     private void dockChatUI(final Chat chat, final ChatUI chatUI) {
         if (!chatUI.isDocked()) {
             openedChats++;
+            chatUI.setDocked(true);
             view.addChat(chatUI);
             currentChat = chatUI;
             checkThereAreChats();
-            chatUI.setDocked(true);
             if (!isChatStartedByMe(chat)) {
                 chatUI.highLightChatTitle();
             }
@@ -655,14 +646,35 @@ public class MultiChatPresenter {
         }
     }
 
-    private void reset() {
+    private void resetAfterLogout() {
+        view.setOfflineTitle();
+        view.setLoadingVisible(false);
+        view.setAddRosterItemButtonVisible(false);
+        view.setShowUnavailableItemsButtonVisible(false);
+        view.setJoinRoomEnabled(false);
+        view.setRosterVisible(false);
+        view.setOfflineInfo();
+        view.setInputEditable(false);
+        view.setOwnPresence(OFFLINE_OWN_PRESENCE);
+        roster.clearRoster();
+    }
+
+    private void resetWhenNoChats() {
         currentChat = null;
         view.setCloseAllOptionEnabled(false);
         view.setInfoPanelVisible(true);
         view.setSendEnabled(false);
         view.setInputEditable(false);
+        view.clearInputText();
         view.setEmoticonButtonEnabled(false);
         view.clearBottomChatNotification();
+    }
+
+    private void setChatColor(final Chat chat, final String color) {
+        ChatUI chatUI = getChatUI(chat);
+        if (chatUI != null) {
+            chatUI.setUserColor(currentUserJid.getNode(), color);
+        }
     }
 
     private void setInputEnabled(final boolean enabled) {

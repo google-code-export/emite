@@ -8,9 +8,6 @@ import org.mockito.Mockito;
 
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
-import com.calclab.emite.client.xep.chatstate.ChatState;
-import com.calclab.emite.client.xep.chatstate.ChatStateListener;
-import com.calclab.emite.client.xep.chatstate.ChatStateManager;
 import com.calclab.emite.client.xep.chatstate.ChatState.Type;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -152,6 +149,18 @@ public class ChatStateManagerTest {
         emite.verifySent("<message><body>message1</body><active /></message>");
         emite.verifySent("<message><body>message2</body></message>");
         emite.verifyNotSent("<message><body>message2</body><active /></message>");
+    }
+
+    @Test
+    public void shouldStopAfterGone() {
+        emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'><active /></message>");
+        emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'><gone /></message>");
+        chatState.setOwnState(ChatState.Type.composing);
+        chatState.setOwnState(ChatState.Type.pause);
+        emite.verifySent("<message><active /></message>");
+        emite.verifyNotSent("<message><composing /></message>");
+        emite.verifyNotSent("<message><pause /></message>");
+        emite.verifyNotSent("<message><gone /></message>");
     }
 
 }
