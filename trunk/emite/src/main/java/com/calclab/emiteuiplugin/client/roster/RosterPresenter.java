@@ -233,7 +233,7 @@ public class RosterPresenter {
         return new UserGridMenuItem<XmppURI>("del-icon",
                 i18n.t("Stop to show when I'm connected or not to this buddy"), new UserGridMenuItemListener() {
                     public void onAction() {
-                        listener.onRequestRemoveItem(userURI);
+                        listener.onCancelSubscriptor(userURI);
                     }
                 });
     }
