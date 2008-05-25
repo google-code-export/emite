@@ -30,11 +30,11 @@ import com.calclab.emite.client.xmpp.session.SessionComponent;
 /**
  * XEP-0085: Chat State Notifications
  * http://www.xmpp.org/extensions/xep-0085.html (Version: 1.2)
- * 
+ *
  * This implementation is limited to chat conversations. Chat state in MUC rooms
  * are not supported to avoid multicast of occupant states (in a BOSH medium can
  * be a problem).
- * 
+ *
  */
 public class ChatStateManager extends SessionComponent {
 
@@ -44,7 +44,7 @@ public class ChatStateManager extends SessionComponent {
 
 	    public void onChatClosed(final Chat chat) {
 		final ChatState chatState = chat.getData(ChatState.class);
-		if (chatState != null && !chatState.getOtherState().equals(ChatState.Type.gone)) {
+		if (chatState != null && chatState.getOtherState() != ChatState.Type.gone) {
 		    // We are closing, then we send the gone state
 		    chatState.setOwnState(ChatState.Type.gone);
 		}

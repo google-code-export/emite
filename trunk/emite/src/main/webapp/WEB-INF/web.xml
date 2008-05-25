@@ -40,7 +40,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Proxy</servlet-name>
-        <url-pattern>/proxy</url-pattern>
+        <url-pattern>/com.calclab.emiteui.EmiteUI/proxy</url-pattern>
     </servlet-mapping>
 
     <servlet>

@@ -455,6 +455,7 @@ public class MultiChatPresenter {
 
     private void checkNoChats() {
         if (openedChats == 0) {
+            Log.info("No more chats");
             resetWhenNoChats();
         }
     }
@@ -514,7 +515,7 @@ public class MultiChatPresenter {
         final RoomManager roomManager = xmpp.getInstance(RoomManager.class);
         roomManager.addListener(new RoomManagerListener() {
             public void onChatClosed(final Chat chat) {
-                doAfterChatClosed(chat);
+		doAfterChatClosed(chat);
             }
 
             public void onChatCreated(final Chat room) {
