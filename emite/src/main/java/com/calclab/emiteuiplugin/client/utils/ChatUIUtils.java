@@ -24,7 +24,6 @@ package com.calclab.emiteuiplugin.client.utils;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
 import com.calclab.emiteuiplugin.client.status.OwnPresence.OwnStatus;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
@@ -32,100 +31,80 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 public class ChatUIUtils {
 
     public static AbstractImagePrototype getIcon(final ChatIconDescriptor iconDescriptor) {
-	final ChatIcons icons = ChatIcons.App.getInstance();
-	switch (iconDescriptor) {
-	case available:
-	case chat:
-	    return icons.online();
-	case away:
-	    return icons.away();
-	case dnd:
-	    return icons.busy();
-	case newmessage:
-	    return icons.newMessage();
-	case offline:
-	    return icons.offline();
-	case unknown:
-	    return icons.question();
-	case xa:
-	    return icons.xa();
-	case chatsmall:
-	    return icons.chatSmall();
-	case chatnewmessagesmall:
-	    return icons.chatNewMessageSmall();
-	case roomsmall:
-	    return icons.roomSmall();
-	case roomnewmessagesmall:
-	    return icons.roomNewMessageSmall();
-	default:
-	    return null;
-	}
+        final ChatIcons icons = ChatIcons.App.getInstance();
+        switch (iconDescriptor) {
+        case available:
+        case chat:
+            return icons.online();
+        case away:
+            return icons.away();
+        case dnd:
+            return icons.busy();
+        case newmessage:
+            return icons.newMessage();
+        case offline:
+            return icons.offline();
+        case unknown:
+            return icons.question();
+        case xa:
+            return icons.xa();
+        case chatsmall:
+            return icons.chatSmall();
+        case chatnewmessagesmall:
+            return icons.chatNewMessageSmall();
+        case roomsmall:
+            return icons.roomSmall();
+        case roomnewmessagesmall:
+            return icons.roomNewMessageSmall();
+        default:
+            return null;
+        }
     }
 
     public static AbstractImagePrototype getOwnStatusIcon(final OwnStatus ownStatus) {
-	final ChatIcons icons = ChatIcons.App.getInstance();
-	switch (ownStatus) {
-	case online:
-	case onlinecustom:
-	    return icons.online();
-	case busy:
-	case busycustom:
-	    return icons.busy();
-	case offline:
-	    return icons.offline();
-	default:
-	    Log.error("Code error in OwnPresence getStatusIcon");
-	    return icons.offline();
-	}
+        final ChatIcons icons = ChatIcons.App.getInstance();
+        switch (ownStatus) {
+        case online:
+        case onlinecustom:
+            return icons.online();
+        case busy:
+        case busycustom:
+            return icons.busy();
+        case offline:
+            return icons.offline();
+        default:
+            Log.error("Code error in OwnPresence getStatusIcon");
+            return icons.offline();
+        }
     }
 
     public static String getOwnStatusIconAndText(final I18nTranslationService i18n, final OwnStatus ownStatus) {
-	return getOwnStatusIcon(ownStatus).getHTML() + "&nbsp;" + getOwnStatusText(i18n, ownStatus);
-    }
-
-    public static String getShowText(final I18nTranslationService i18n, final Show show) {
-	// FIXME This must be in RosterUIPresenter (with the icon switch)
-	String textLabel = "";
-
-	switch (show) {
-	// case null ---> available = Online
-	case chat:
-	    textLabel = i18n.t("Available to Chat");
-	    break;
-	case away:
-	case xa:
-	    textLabel = i18n.t("Away");
-	    break;
-	case dnd:
-	    textLabel = i18n.t("Don't disturb");
-	    break;
-	}
-	return textLabel;
+        return getOwnStatusIcon(ownStatus).getHTML() + "&nbsp;" + getOwnStatusText(i18n, ownStatus);
     }
 
     private static String getOwnStatusText(final I18nTranslationService i18n, final OwnStatus ownStatus) {
-	String textLabel;
+        String textLabel;
 
-	switch (ownStatus) {
-	case online:
-	    textLabel = i18n.t("online");
-	    break;
-	case offline:
-	    textLabel = i18n.t("offline");
-	    break;
-	case busy:
-	    textLabel = i18n.t("busy");
-	    break;
-	case busycustom:
-	    textLabel = i18n.t("busy with custom message");
-	    break;
-	case onlinecustom:
-	    textLabel = i18n.t("online with custom message");
-	    break;
-	default:
-	    return null;
-	}
-	return textLabel;
+        switch (ownStatus) {
+        case online:
+            textLabel = i18n.t("online");
+            break;
+        case offline:
+            textLabel = i18n.t("offline");
+            break;
+        case busy:
+            textLabel = i18n.t("busy");
+            break;
+        case busycustom:
+            textLabel = i18n.t("busy with custom message");
+            break;
+        case onlinecustom:
+            textLabel = i18n.t("online with custom message");
+            break;
+        default:
+            return null;
+        }
+        return textLabel;
     }
 
 }
