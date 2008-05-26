@@ -24,6 +24,11 @@ You need a running xmpp server with Http Binding connection enabled. See our [ht
   # inside the emite directory type {{{mvn gwt:gwt}}} to run emite using the GWTShell ...
   # ... or type {{{./script/server.sh}}} to compile the sources to javascript, and start a jetty server with a proxy installed, and run the example looking at: {{{http://localhost:4444/gwt/EmiteUI.html}}}
 
+== Using Eclipse ==
+
+  # run {{ mvn eclipse:eclipse }}
+  # import the project from eclipse
+
 == Use emite in your own project ==
 
 There are other ways, but the fastest is to use maven2:
