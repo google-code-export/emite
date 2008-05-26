@@ -39,6 +39,12 @@ public class ChatStateManagerTest {
     }
 
     @Test
+    public void closeChatWithoutStartConversationMustNotThrowNPE() {
+        // This was throwing a NPE:
+        chatManager.close(chat);
+    }
+
+    @Test
     public void shouldFireGone() {
         emite.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
                 + chat.getThread() + "</thread>" + "<gone xmlns='http://jabber.org/protocol/chatstates'/></message>");

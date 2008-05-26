@@ -30,38 +30,38 @@ import com.calclab.emite.client.xmpp.session.SessionComponent;
 /**
  * XEP-0085: Chat State Notifications
  * http://www.xmpp.org/extensions/xep-0085.html (Version: 1.2)
- *
+ * 
  * This implementation is limited to chat conversations. Chat state in MUC rooms
  * are not supported to avoid multicast of occupant states (in a BOSH medium can
  * be a problem).
- *
+ * 
  */
 public class ChatStateManager extends SessionComponent {
 
     public ChatStateManager(final Emite emite, final ChatManager chatManager) {
-	super(emite);
-	chatManager.addListener(new ChatManagerListener() {
+        super(emite);
+        chatManager.addListener(new ChatManagerListener() {
 
-	    public void onChatClosed(final Chat chat) {
-		final ChatState chatState = chat.getData(ChatState.class);
-		if (chatState != null && chatState.getOtherState() != ChatState.Type.gone) {
-		    // We are closing, then we send the gone state
-		    chatState.setOwnState(ChatState.Type.gone);
-		}
-		chat.setData(ChatState.class, null);
-	    }
+            public void onChatClosed(final Chat chat) {
+                final ChatState chatState = chat.getData(ChatState.class);
+                if (chatState != null && chatState.getOtherState() != ChatState.Type.gone) {
+                    // We are closing, then we send the gone state
+                    chatState.setOwnState(ChatState.Type.gone);
+                }
+                chat.setData(ChatState.class, null);
+            }
 
-	    public void onChatCreated(final Chat chat) {
-		final ChatState chatState = new ChatState(chat, emite);
-		chat.addListener(chatState);
-		chat.setData(ChatState.class, chatState);
-		chat.addMessageInterceptor(chatState);
-	    }
-	});
+            public void onChatCreated(final Chat chat) {
+                final ChatState chatState = new ChatState(chat, emite);
+                chat.addListener(chatState);
+                chat.setData(ChatState.class, chatState);
+                chat.addMessageInterceptor(chatState);
+            }
+        });
     }
 
     public ChatState getChatState(final Chat chat) {
-	return chat.getData(ChatState.class);
+        return chat.getData(ChatState.class);
     }
 
 }
