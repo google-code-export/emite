@@ -132,13 +132,16 @@ public class RosterManager extends SessionComponent {
      * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
      */
     public void requestAddItem(final XmppURI jid, final String name, final String group) {
-	final IPacket item = new Packet("item").With("jid", jid.toString()).With("name", name);
+
+	final IQ iq = new IQ(IQ.Type.set, userURI, null);
+	final IPacket item = iq.addQuery("jabber:iq:roster").addChild("item", null).With("jid", jid.toString()).With(
+		"name", name);
+
 	if (group != null) {
 	    item.addChild("group", null).setText(group);
 	}
 
 	roster.add(new RosterItem(jid, Subscription.none, name));
-	final IPacket iq = new IQ(IQ.Type.set, userURI, null).WithQuery("jabber:iq:roster", item);
 	emite.sendIQ("roster", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (IQ.isSuccess(received)) {
@@ -162,8 +165,9 @@ public class RosterManager extends SessionComponent {
      * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
      */
     public void requestRemoveItem(final XmppURI jid) {
-	final IQ iq = new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", new Packet("item").With("jid", jid.toString())
-		.With("subscription", "remove"));
+	final IQ iq = new IQ(IQ.Type.set);
+	iq.addQuery("jabber:iq:roster").addChild("item", null).With("jid", jid.toString()).With("subscription",
+		"remove");
 	emite.sendIQ("roster", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (IQ.isSuccess(received)) {
@@ -240,15 +244,14 @@ public class RosterManager extends SessionComponent {
     }
 
     private void install() {
-	emite.subscribe(when(new IQ(IQ.Type.set).WithQuery("jabber:iq:roster", null).With("xmlns", null)),
-		new PacketListener() {
-		    public void handle(final IPacket received) {
-			emite.send(new IQ(IQ.Type.result).With("id", received.getAttribute("id")));
-			final IPacket item = received.getFirstChild("query").getFirstChild("item");
-			final String jid = item.getAttribute("jid");
-			roster.changeSubscription(uri(jid), item.getAttribute("subscription"));
-		    }
-		});
+	emite.subscribe(when(new IQ(IQ.Type.set).WithQuery("jabber:iq:roster")), new PacketListener() {
+	    public void handle(final IPacket received) {
+		emite.send(new IQ(IQ.Type.result).With("id", received.getAttribute("id")));
+		final IPacket item = received.getFirstChild("query").getFirstChild("item");
+		final String jid = item.getAttribute("jid");
+		roster.changeSubscription(uri(jid), item.getAttribute("subscription"));
+	    }
+	});
 
 	emite.subscribe(when("presence"), new PacketListener() {
 	    public void handle(final IPacket received) {
@@ -276,7 +279,7 @@ public class RosterManager extends SessionComponent {
     }
 
     private void requestRoster() {
-	emite.sendIQ("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster", null), new PacketListener() {
+	emite.sendIQ("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster"), new PacketListener() {
 	    public void handle(final IPacket received) {
 		setRosterItems(roster, received);
 		emite.publish(RosterManager.Events.ready);
