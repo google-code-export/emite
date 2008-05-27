@@ -21,8 +21,6 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
-import net.sf.cglib.transform.impl.AddPropertyTransformer;
-
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 

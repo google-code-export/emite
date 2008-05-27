@@ -5,7 +5,7 @@ import com.calclab.emite.client.core.packet.IPacket;
 public class Feature {
 
     public static Feature fromPacket(final IPacket packet) {
-	return new Feature(packet.getAttribute("val"));
+	return new Feature(packet.getAttribute("var"));
     }
 
     public final String var;

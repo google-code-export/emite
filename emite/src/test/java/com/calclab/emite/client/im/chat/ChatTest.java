@@ -1,7 +1,9 @@
 package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;

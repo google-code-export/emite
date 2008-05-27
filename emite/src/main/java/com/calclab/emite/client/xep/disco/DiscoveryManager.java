@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.packet.Filters;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.PacketFilter;
-import com.calclab.emite.client.core.packet.Filters;
 import com.calclab.emite.client.core.signals.Signal;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
