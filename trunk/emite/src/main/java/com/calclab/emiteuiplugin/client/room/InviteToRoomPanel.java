@@ -26,6 +26,8 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogExtended;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogListener;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.gwtext.client.widgets.ToolTip;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextField;
@@ -63,10 +65,14 @@ public class InviteToRoomPanel {
                             jid.validate();
                             reason.validate();
                             if (formPanel.getForm().isValid()) {
-                                presenter.onInviteUserRequested(XmppURI.jid(jid.getValueAsString()), reason
-                                        .getValueAsString());
+                                DeferredCommand.addCommand(new Command() {
+                                    public void execute() {
+                                        presenter.onInviteUserRequested(XmppURI.jid(jid.getValueAsString()), reason
+                                                .getValueAsString());
+                                        reset();
+                                    }
+                                });
                                 dialog.hide();
-                                reset();
                             }
                         }
 
