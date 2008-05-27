@@ -21,9 +21,11 @@
  */
 package com.calclab.emite.client;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.EntryPoint;
 
 public class EmiteEntryPoint implements EntryPoint {
-	public void onModuleLoad() {
-	}
+    public void onModuleLoad() {
+        Log.setUncaughtExceptionHandler();
+    }
 }

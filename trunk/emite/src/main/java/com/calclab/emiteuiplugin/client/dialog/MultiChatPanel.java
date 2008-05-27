@@ -41,6 +41,8 @@ import com.calclab.emiteuiplugin.client.users.UserGridDropListener;
 import com.calclab.emiteuiplugin.client.users.UserGridPanel;
 import com.calclab.emiteuiplugin.client.utils.emoticons.EmoticonPaletteListener;
 import com.calclab.emiteuiplugin.client.utils.emoticons.EmoticonPalettePanel;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Label;
 import com.gwtext.client.core.EventCallback;
@@ -548,8 +550,12 @@ public class MultiChatPanel {
                     // Closing empty chats info
                     return true;
                 } else {
-                    presenter.closeChatUI(chatUI);
-                    panelIdToChat.remove(panelId);
+                    DeferredCommand.addCommand(new Command() {
+                        public void execute() {
+                            presenter.closeChatUI(chatUI);
+                            panelIdToChat.remove(panelId);
+                        }
+                    });
                     return true;
                 }
             }
