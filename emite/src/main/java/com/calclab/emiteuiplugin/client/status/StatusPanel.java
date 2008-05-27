@@ -26,6 +26,8 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emiteuiplugin.client.status.OwnPresence.OwnStatus;
 import com.calclab.emiteuiplugin.client.utils.ChatUIUtils;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.ColorPalette;
@@ -116,7 +118,11 @@ public class StatusPanel extends Toolbar {
                 new MessageBox.ConfirmCallback() {
                     public void execute(final String btnID) {
                         if (btnID.equals("yes")) {
-                            listeners.onCloseAllConfirmed();
+                            DeferredCommand.addCommand(new Command() {
+                                public void execute() {
+                                    listeners.onCloseAllConfirmed();
+                                }
+                            });
                         }
                     }
                 });
@@ -190,7 +196,11 @@ public class StatusPanel extends Toolbar {
         final ColorMenu colorMenu = new ColorMenu();
         colorMenu.addListener(new ColorMenuListener() {
             public void onSelect(final ColorPalette colorPalette, final String color) {
-                listeners.onUserColorChanged(color);
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        listeners.onUserColorChanged(color);
+                    }
+                });
             }
         });
 
@@ -218,7 +228,11 @@ public class StatusPanel extends Toolbar {
             checkItem.addListener(new BaseItemListenerAdapter() {
                 @Override
                 public void onClick(final BaseItem item, final EventObject e) {
-                    listeners.setOwnPresence(new OwnPresence(ownStatus));
+                    DeferredCommand.addCommand(new Command() {
+                        public void execute() {
+                            listeners.setOwnPresence(new OwnPresence(ownStatus));
+                        }
+                    });
                 }
             });
             break;
@@ -231,7 +245,11 @@ public class StatusPanel extends Toolbar {
                             .t("Set your status text (something like 'Out for dinner' or 'Working')"),
                             new PromptCallback() {
                                 public void execute(final String btnID, final String text) {
-                                    listeners.setOwnPresence(new OwnPresence(ownStatus, text));
+                                    DeferredCommand.addCommand(new Command() {
+                                        public void execute() {
+                                            listeners.setOwnPresence(new OwnPresence(ownStatus, text));
+                                        }
+                                    });
                                 }
                             });
                 }
@@ -265,7 +283,11 @@ public class StatusPanel extends Toolbar {
             @Override
             public void onCheckChange(CheckItem item, boolean checked) {
                 if (checked) {
-                    listeners.onUserSubscriptionModeChanged(mode);
+                    DeferredCommand.addCommand(new Command() {
+                        public void execute() {
+                            listeners.onUserSubscriptionModeChanged(mode);
+                        }
+                    });
                 }
             }
         };

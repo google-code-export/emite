@@ -194,7 +194,11 @@ public class MultiChatPanel {
                 + TextUtils.escape(reason), new MessageBox.ConfirmCallback() {
             public void execute(final String btnID) {
                 if (btnID.equals("yes")) {
-                    presenter.joinRoom(roomURI.getNode(), roomURI.getHost());
+                    DeferredCommand.addCommand(new Command() {
+                        public void execute() {
+                            presenter.joinRoom(roomURI.getNode(), roomURI.getHost());
+                        }
+                    });
                 }
             }
         });
@@ -331,7 +335,11 @@ public class MultiChatPanel {
         rosterPanel.confDropInPanel(centerPanel, new DropGridConfiguration(UserGridPanel.USER_GROUP_DD,
                 new UserGridDropListener() {
                     public void onDrop(final XmppURI userURI) {
-                        presenter.onUserDropped(userURI);
+                        DeferredCommand.addCommand(new Command() {
+                            public void execute() {
+                                presenter.onUserDropped(userURI);
+                            }
+                        });
                     }
                 }));
     }
@@ -354,19 +362,31 @@ public class MultiChatPanel {
 
         EventCallback inputKeyPressListener = new EventCallback() {
             public void execute(final EventObject e) {
-                presenter.onComposing();
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        presenter.onComposing();
+                    }
+                });
             }
         };
         input.addKeyPressListener(inputKeyPressListener);
         FieldListenerAdapter inputMainListener = new FieldListenerAdapter() {
             @Override
             public void onBlur(final Field field) {
-                presenter.onInputUnFocus();
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        presenter.onInputUnFocus();
+                    }
+                });
             }
 
             @Override
             public void onFocus(final Field field) {
-                presenter.onInputFocus();
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        presenter.onInputFocus();
+                    }
+                });
             }
 
             @Override
@@ -474,7 +494,11 @@ public class MultiChatPanel {
         showUnavailableItems.addListener(new ButtonListenerAdapter() {
             @Override
             public void onClick(final Button button, final EventObject e) {
-                presenter.showUnavailableRosterItems(button.isPressed());
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        presenter.showUnavailableRosterItems(button.isPressed());
+                    }
+                });
             }
         });
         eastPanel.add(rosterPanel);

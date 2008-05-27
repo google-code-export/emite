@@ -23,6 +23,8 @@ package com.calclab.emiteuiplugin.client.users;
 
 import java.util.Iterator;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.menu.BaseItem;
 import com.gwtext.client.widgets.menu.Item;
@@ -42,7 +44,11 @@ public class UserGridMenu {
         menu.addItem(menuItem);
         menuItem.addListener(new BaseItemListenerAdapter() {
             public void onClick(final BaseItem item, final EventObject e) {
-                menuOpt.getListener().onAction();
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        menuOpt.getListener().onAction();
+                    }
+                });
             }
         });
     }

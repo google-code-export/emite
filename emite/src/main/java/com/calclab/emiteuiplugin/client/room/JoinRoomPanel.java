@@ -26,6 +26,8 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogExtended;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogListener;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.ToolTip;
 import com.gwtext.client.widgets.form.Field;
@@ -113,9 +115,13 @@ public class JoinRoomPanel {
         roomName.validate();
         roomHostName.validate();
         if (formPanel.getForm().isValid()) {
-            presenter.joinRoom(roomName.getValueAsString(), roomHostName.getValueAsString());
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    presenter.joinRoom(roomName.getValueAsString(), roomHostName.getValueAsString());
+                    reset();
+                }
+            });
             dialog.hide();
-            reset();
         }
     }
 }
