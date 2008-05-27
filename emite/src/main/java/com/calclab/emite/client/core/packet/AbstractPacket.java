@@ -37,11 +37,7 @@ public abstract class AbstractPacket implements IPacket {
     }
 
     public List<? extends IPacket> getChildren(final String name) {
-	return getChildren(new PacketFilter() {
-	    public boolean isValid(final IPacket packet) {
-		return packet.getName().equals(name);
-	    }
-	});
+	return getChildren(Filters.byName(name));
     }
 
     public IPacket getFirstChild(final PacketFilter filter) {
@@ -53,12 +49,8 @@ public abstract class AbstractPacket implements IPacket {
 	return NoPacket.INSTANCE;
     }
 
-    public IPacket getFirstChild(final String childName) {
-	return getFirstChild(new PacketFilter() {
-	    public boolean isValid(final IPacket packet) {
-		return childName.equals(packet.getName());
-	    }
-	});
+    public IPacket getFirstChild(final String name) {
+	return getFirstChild(Filters.byName(name));
     }
 
     public boolean hasAttribute(final String name) {

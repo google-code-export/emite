@@ -6,6 +6,7 @@ import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.xep.disco.DiscoveryModule;
 import com.calclab.emite.client.xep.muc.MUCModule;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.swing.SwingClient;
@@ -14,7 +15,7 @@ public class EmiteSwingClientModule implements Module {
 
     public static void main(final String args[]) {
 	final ModuleBuilder container = new ModuleBuilder();
-	container.add(new J2SEServicesModule(), new EmiteModule(), new MUCModule());
+	container.add(new J2SEServicesModule(), new EmiteModule(), new MUCModule(), new DiscoveryModule());
 	container.add(new EmiteSwingClientModule());
 	container.getInstance(SwingClient.class).start();
     }

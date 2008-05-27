@@ -1,5 +1,6 @@
 package com.calclab.emite.client.xep.disco;
 
+import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
@@ -25,8 +26,8 @@ public class DiscoveryModule implements Module {
     public void onLoad(final ModuleBuilder builder) {
 	builder.registerProvider(DiscoveryManager.class, new Provider<DiscoveryManager>() {
 	    public DiscoveryManager get() {
-		return null;
+		return new DiscoveryManager(builder.getInstance(Emite.class));
 	    }
-	}, Scopes.SINGLETON);
+	}, Scopes.SINGLETON_EAGER);
     }
 }

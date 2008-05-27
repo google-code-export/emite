@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.client.xmpp.stanzas;
 
+import net.sf.cglib.transform.impl.AddPropertyTransformer;
+
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 
@@ -52,13 +54,14 @@ public class IQ extends BasicStanza {
 	super.setTo(to);
     }
 
+    public IPacket addQuery(final String xmlns) {
+	final IPacket query = addChild("query", xmlns);
+	return query;
+    }
+
     public IPacket Includes(final String name, final String xmlns) {
 	addChild(name, xmlns);
 	return this;
-    }
-
-    public IPacket setQuery(final String namespace) {
-	return addChild("query", namespace);
     }
 
     public IQ To(final XmppURI toURI) {
@@ -66,11 +69,15 @@ public class IQ extends BasicStanza {
 	return this;
     }
 
-    // FIXME: cómo plantear esto... no todos los IQ pueden ser modificables así
-    // solo los creados con new IQ();
+    public IPacket WithQuery(final String xmlns) {
+	addQuery(xmlns);
+	return this;
+    }
+
     /**
-     * 
+     * do not use it!!! see addQuery
      */
+    @Deprecated
     public IQ WithQuery(final String queryNamespace, final IPacket child) {
 	final IPacket query = addChild("query", queryNamespace);
 	if (child != null) {
