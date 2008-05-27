@@ -17,9 +17,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.xep.muc.Occupant;
-import com.calclab.emite.client.xep.muc.Room;
-import com.calclab.emite.client.xep.muc.RoomListener;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;

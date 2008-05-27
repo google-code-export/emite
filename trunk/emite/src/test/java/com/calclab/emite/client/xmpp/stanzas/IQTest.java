@@ -1,6 +1,7 @@
 package com.calclab.emite.client.xmpp.stanzas;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 import org.junit.Test;
 

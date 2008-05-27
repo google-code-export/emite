@@ -5,7 +5,6 @@ import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.xep.avatar.AvatarManager;
 import com.calclab.emite.testing.EmiteTestHelper;
 
 public class AvatarManagerTest {

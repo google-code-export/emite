@@ -31,7 +31,6 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
