@@ -53,6 +53,7 @@ public class Room extends AbstractChat implements Chat {
      */
     public void close() {
 	emite.send(new Presence(Type.unavailable, getFromURI(), getOtherURI()));
+	setState(State.locked);
     }
 
     public Occupant findOccupant(final XmppURI uri) {
