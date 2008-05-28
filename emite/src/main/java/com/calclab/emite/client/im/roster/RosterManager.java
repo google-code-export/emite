@@ -52,13 +52,14 @@ public class RosterManager extends SessionComponent {
     private final Roster roster;
 
     private SubscriptionMode subscriptionMode;
-    private final ArrayList<RosterManagerListener> listeners;
+
+    private final RosterManagerListenerCollection listeners;
 
     public RosterManager(final Emite emite, final Roster roster) {
 	super(emite);
 	this.roster = roster;
 	this.subscriptionMode = DEF_SUBSCRIPTION_MODE;
-	this.listeners = new ArrayList<RosterManagerListener>();
+	this.listeners = new RosterManagerListenerCollection();
 	install();
     }
 
@@ -209,18 +210,6 @@ public class RosterManager extends SessionComponent {
 	return new RosterItem(uri, subscription, item.getAttribute("name"));
     }
 
-    private void fireSubscriptionRequest(final Presence presence) {
-	for (final RosterManagerListener listener : listeners) {
-	    listener.onSubscriptionRequest(presence, subscriptionMode);
-	}
-    }
-
-    private void fireUnsubscribedReceived(final XmppURI userUnsubscribed) {
-	for (final RosterManagerListener listener : listeners) {
-	    listener.onUnsubscribedReceived(userUnsubscribed);
-	}
-    }
-
     private List<? extends IPacket> getItems(final IPacket iPacket) {
 	final List<? extends IPacket> items = iPacket.getFirstChild("query").getChildren();
 	return items;
@@ -235,11 +224,12 @@ public class RosterManager extends SessionComponent {
 	    denySubscription(presence);
 	    break;
 	}
-	fireSubscriptionRequest(presence);
+	listeners.onSubscriptionRequest(presence, subscriptionMode);
+
     }
 
     private void handleUnsubscribedReceived(final XmppURI userUnsubscribed) {
-	fireUnsubscribedReceived(userUnsubscribed);
+	listeners.onUnsubscribedReceived(userUnsubscribed);
     }
 
     private void install() {
