@@ -22,7 +22,6 @@
 package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -43,6 +42,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
     protected final HashSet<Chat> chats;
     protected final ChatManagerListenerCollection listeners;
     protected final Signal<Chat> onChatCreated;
+    private XmppURI lastLoggedInUser;
 
     public ChatManagerDefault(final Emite emite) {
 	super(emite);
@@ -73,12 +73,21 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
     }
 
     @Override
+    public void logIn(final XmppURI uri) {
+	super.logIn(uri);
+	if (uri.equals(lastLoggedInUser)) {
+	    for (final Chat chat : chats) {
+		((AbstractChat) chat).setState(State.ready);
+	    }
+	}
+    }
+
+    @Override
     public void logOut() {
+	this.lastLoggedInUser = userURI;
 	super.logOut();
-	final ArrayList<Chat> toBeRemoved = new ArrayList<Chat>();
-	toBeRemoved.addAll(chats);
-	for (final Chat chat : toBeRemoved) {
-	    close(chat);
+	for (final Chat chat : chats) {
+	    ((AbstractChat) chat).setState(State.locked);
 	}
     }
 

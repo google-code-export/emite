@@ -46,7 +46,7 @@ public class PresenceManager extends SessionComponent {
     public PresenceManager(final Emite emite) {
 	super(emite);
 	this.listeners = new ArrayList<PresenceListener>();
-	this.ownPresence = null;
+	this.ownPresence = new Presence(Type.unavailable, null, null);
 	this.onOwnPresenceChanged = new Signal<Presence>();
 	install();
     }
@@ -58,9 +58,21 @@ public class PresenceManager extends SessionComponent {
     /**
      * Returns the current's user presence
      * 
+     * @see getOwnPresence
      * @return The current users presence
      */
+    @Deprecated
     public Presence getCurrentPresence() {
+	return ownPresence;
+    }
+
+    /**
+     * Return the current logged in user presence or a Presence with type
+     * unavailable if logged out
+     * 
+     * @return
+     */
+    public Presence getOwnPresence() {
 	return ownPresence;
     }
 

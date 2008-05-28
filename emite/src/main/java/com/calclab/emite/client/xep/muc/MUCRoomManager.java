@@ -88,12 +88,6 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     }
 
     @Override
-    public void setUserURI(final XmppURI myself) {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
     protected void eventMessage(final Message message) {
 	IPacket child;
 	if (message.getType() == Message.Type.groupchat) {
