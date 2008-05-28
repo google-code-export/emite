@@ -39,9 +39,9 @@ import com.calclab.emite.client.xep.avatar.AvatarModule;
 import com.calclab.emite.client.xep.chatstate.ChatState;
 import com.calclab.emite.client.xep.muc.Occupant;
 import com.calclab.emite.client.xep.muc.Room;
+import com.calclab.emite.client.xep.muc.RoomInvitation;
 import com.calclab.emite.client.xep.muc.RoomListener;
 import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xep.muc.RoomManagerListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -522,7 +522,9 @@ public class MultiChatPresenter {
             }
         });
 
-        xmpp.getInstance(RoomManager.class).onChatCreated(new Listener<Chat>() {
+        final RoomManager roomManager = xmpp.getInstance(RoomManager.class);
+
+        roomManager.onChatCreated(new Listener<Chat>() {
             public void onEvent(final Chat room) {
                 final RoomUI roomUI = createRoom(room, currentUserJid.getNode());
                 dockChatUIifIsStartedByMe(room, roomUI);
@@ -559,20 +561,13 @@ public class MultiChatPresenter {
                 addStateListener(room);
             }
         });
-        final RoomManager roomManager = xmpp.getInstance(RoomManager.class);
-        roomManager.addListener(new RoomManagerListener() {
-            public void onChatClosed(final Chat chat) {
-            }
 
-            public void onChatCreated(final Chat room) {
-            }
-
-            public void onInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
+        roomManager.onInvitationReceived(new Listener<RoomInvitation>() {
+            public void onEvent(final RoomInvitation parameter) {
                 view.click();
-                view.roomJoinConfirm(invitor, roomURI, reason);
+                view.roomJoinConfirm(parameter.getInvitor(), parameter.getRoomURI(), parameter.getReason());
             }
         });
-
     }
 
     private void doAfterChatClosed(final Chat chat) {
