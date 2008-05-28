@@ -21,11 +21,9 @@
  */
 package com.calclab.emite.client.xep.chatstate;
 
-import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
-import com.calclab.emite.client.xmpp.session.SessionComponent;
 
 /**
  * XEP-0085: Chat State Notifications
@@ -36,10 +34,9 @@ import com.calclab.emite.client.xmpp.session.SessionComponent;
  * be a problem).
  * 
  */
-public class ChatStateManager extends SessionComponent {
+public class ChatStateManager {
 
-    public ChatStateManager(final Emite emite, final ChatManager chatManager) {
-        super(emite);
+    public ChatStateManager(final ChatManager chatManager) {
         chatManager.addListener(new ChatManagerListener() {
 
             public void onChatClosed(final Chat chat) {
@@ -52,7 +49,7 @@ public class ChatStateManager extends SessionComponent {
             }
 
             public void onChatCreated(final Chat chat) {
-                final ChatState chatState = new ChatState(chat, emite);
+                final ChatState chatState = new ChatState(chat);
                 chat.addListener(chatState);
                 chat.setData(ChatState.class, chatState);
                 chat.addMessageInterceptor(chatState);

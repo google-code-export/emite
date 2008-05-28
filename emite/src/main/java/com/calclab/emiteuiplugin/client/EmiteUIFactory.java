@@ -31,7 +31,6 @@ import com.calclab.emiteuiplugin.client.chat.ChatUI;
 import com.calclab.emiteuiplugin.client.chat.ChatUIListener;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPanel;
 import com.calclab.emiteuiplugin.client.chat.ChatUIPresenter;
-import com.calclab.emiteuiplugin.client.dialog.MultiChatListener;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatPanel;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
 import com.calclab.emiteuiplugin.client.params.AvatarProvider;
@@ -63,9 +62,9 @@ public class EmiteUIFactory {
         return presenter;
     }
 
-    public MultiChatPresenter createMultiChat(final MultiChatCreationParam param, final MultiChatListener listener) {
+    public MultiChatPresenter createMultiChat(final MultiChatCreationParam param) {
         final RosterPresenter roster = createRosterUI(param.getAvatarProvider());
-        final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, this, param, listener, roster);
+        final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, this, param, roster);
         final StatusPanel statusPanel = new StatusPanel(i18n);
         final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), (RosterPanel) roster.getView(),
                 statusPanel, i18n, presenter);

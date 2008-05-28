@@ -43,7 +43,6 @@ public class EmiteDialog {
     private MultiChatPresenter multiChatDialog;
     private final Xmpp xmpp;
     private final EmiteUIFactory factory;
-    private String initialWindowTitle;
 
     public EmiteDialog(final Xmpp xmpp, final EmiteUIFactory factory) {
         this.xmpp = xmpp;
@@ -91,22 +90,23 @@ public class EmiteDialog {
                 RosterManager.DEF_SUBSCRIPTION_MODE, true), httpBase, roomHost);
     }
 
-    public void start(final UserChatOptions userChatOptions, final String httpBase, final String roomHost) {
-        initialWindowTitle = Window.getTitle();
+    public void start(final String emiteDialogTitle, final UserChatOptions userChatOptions, final String httpBase,
+            final String roomHost, final AvatarProvider avatarProvider, final MultiChatListener multiChatListener) {
+        xmpp.setBoshOptions(new BoshOptions(httpBase));
+        getChatDialog(new MultiChatCreationParam(emiteDialogTitle, roomHost, avatarProvider, userChatOptions,
+                multiChatListener));
+    }
 
-        final AvatarProvider avatarProvider = new AvatarProvider() {
+    public void start(final UserChatOptions userChatOptions, final String httpBase, final String roomHost) {
+        // We define, default AvatarProvider and MultiChaListener for simple
+        // facade
+        start(EMITE_DEF_TITLE, userChatOptions, httpBase, roomHost, new AvatarProvider() {
             public String getAvatarURL(final XmppURI userURI) {
                 return "images/person-def.gif";
             }
-        };
-        xmpp.setBoshOptions(new BoshOptions(httpBase));
-        getChatDialog(new MultiChatCreationParam(EMITE_DEF_TITLE, roomHost, avatarProvider, userChatOptions));
+        }, new MultiChatListener() {
+            String initialWindowTitle = Window.getTitle();
 
-    }
-
-    private MultiChatPresenter createChatDialog(final MultiChatCreationParam param) {
-
-        final MultiChatListener listener = new MultiChatListener() {
             public void onConversationAttended(final String chatTitle) {
                 Window.setTitle(initialWindowTitle);
             }
@@ -115,14 +115,20 @@ public class EmiteDialog {
                 Window.setTitle("(* " + chatTitle + ") " + initialWindowTitle);
             }
 
+            public void onShowUnavailableRosterItems(final boolean show) {
+            }
+
             public void onUserColorChanged(final String color) {
             }
 
             public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
             }
 
-        };
-        final MultiChatPresenter dialog = factory.createMultiChat(param, listener);
+        });
+    }
+
+    private MultiChatPresenter createChatDialog(final MultiChatCreationParam param) {
+        final MultiChatPresenter dialog = factory.createMultiChat(param);
         return dialog;
     }
 
