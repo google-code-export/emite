@@ -26,7 +26,6 @@ import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.bosh.Bosh.BoshState;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherStateListener;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
@@ -37,6 +36,8 @@ import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
+import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.emite.client.core.signal.Signal;
 
 /**
  * 
@@ -62,6 +63,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 	}
     }
 
+    private final Signal<IPacket> onStanza;
     private boolean isRunning;
     private final Services services;
     private final Bosh bosh;
@@ -72,6 +74,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 	this.services = services;
 	this.emite = emite;
 	this.bosh = bosh;
+	this.onStanza = new Signal<IPacket>();
 	emite.addListener(this);
 	install();
     }
@@ -86,12 +89,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
     public void dispatchingEnds() {
 	Log.debug("<<<<<<<<<<<< DISPATCH ENDS");
 	if (isRunning()) {
-	    final BoshState state = bosh.getState(services.getCurrentTime());
-	    if (state.shouldSend()) {
-		sendResponse();
-	    } else if (state.shouldWait()) {
-		pull(state.getTime());
-	    }
+	    send();
 	} else {
 	    Log.debug("BOSH IS STOP. NO NEED TO SEND ANYTHING");
 	}
@@ -132,11 +130,15 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 	    } else if (bosh.isTerminateSent()) {
 		setRunning(false);
 	    } else if ("body".equals(response.getName())) {
-		emite.publish(response);
+		handleBody(response);
 	    } else {
 		emite.publish(Dispatcher.Events.error("bad-stanza", response.getName()));
 	    }
 	}
+    }
+
+    public void onStanza(final Listener<IPacket> listener) {
+	onStanza.add(listener);
     }
 
     public void setDomain(final String domain) {
@@ -150,6 +152,26 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
      */
     void setRunning(final boolean isRunning) {
 	this.isRunning = isRunning;
+    }
+
+    private void handleBody(final IPacket packet) {
+	// FIXME: prepare body is a source of bugs!!
+	bosh.prepareBody();
+	if (isTerminal(packet)) {
+	    emite.publish(Dispatcher.Events.error("terminal", packet.getAttribute("condition")));
+	} else {
+	    if (bosh.isFirstResponse()) {
+		final String sid = packet.getAttribute("sid");
+		final int poll = Integer.parseInt(packet.getAttribute("polling"));
+		final int requests = Integer.parseInt(packet.getAttribute("requests"));
+		bosh.setAttributes(sid, poll, requests);
+	    }
+	    final List<? extends IPacket> children = packet.getChildren();
+	    for (final IPacket stanza : children) {
+		emite.publish(stanza);
+		onStanza.fire(stanza);
+	    }
+	}
     }
 
     private void install() {
@@ -168,25 +190,6 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 	    }
 
 	});
-	emite.subscribe(when("body"), new PacketListener() {
-	    public void handle(final IPacket packet) {
-		if (isTerminal(packet)) {
-		    emite.publish(Dispatcher.Events.error("terminal", packet.getAttribute("condition")));
-		} else {
-		    if (bosh.isFirstResponse()) {
-			final String sid = packet.getAttribute("sid");
-			final int poll = Integer.parseInt(packet.getAttribute("polling"));
-			final int requests = Integer.parseInt(packet.getAttribute("requests"));
-			bosh.setAttributes(sid, poll, requests);
-		    }
-		    final List<? extends IPacket> children = packet.getChildren();
-		    for (final IPacket stanza : children) {
-			emite.publish(stanza);
-		    }
-		}
-	    }
-	});
-
 	emite.subscribe(when(Dispatcher.Events.onError), new PacketListener() {
 	    public void handle(final IPacket received) {
 		setRunning(false);
@@ -217,6 +220,15 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 		emite.publish(Events.pull);
 	    }
 	});
+    }
+
+    private void send() {
+	final BoshState state = bosh.getState(services.getCurrentTime());
+	if (state.shouldSend()) {
+	    sendResponse();
+	} else if (state.shouldWait()) {
+	    pull(state.getTime());
+	}
     }
 
     private void sendResponse() {

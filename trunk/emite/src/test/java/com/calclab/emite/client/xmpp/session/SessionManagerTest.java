@@ -1,6 +1,7 @@
 package com.calclab.emite.client.xmpp.session;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -17,22 +18,20 @@ import com.calclab.emite.testing.EmiteTestHelper;
 public class SessionManagerTest {
 
     private EmiteTestHelper emite;
-    private SessionManager manager;
     private Session session;
 
     @Before
     public void aaCreate() {
 	emite = new EmiteTestHelper();
 	session = mock(Session.class);
-	manager = new SessionManager(emite);
-	manager.setSession(session);
+	new SessionManager(session, emite);
     }
 
     @Test
     public void shouldHandleAuthorization() {
-	manager.doLogin(uri("name@domain/resource"), "password");
+	session.login(uri("name@domain/resource"), "password");
 	emite.receives(SessionManager.Events.onAuthorized);
-	verify(session).setState(State.authorized);
+	verify(session).setState(same(State.authorized));
 	emite.verifyPublished(BoshManager.Events.onRestartStream);
     }
 

@@ -21,6 +21,7 @@
  */
 package com.calclab.emite.client.xmpp;
 
+import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
@@ -59,20 +60,21 @@ public class XMPPModule implements Module {
 	    }
 	}, Scopes.SINGLETON_EAGER);
 
-	builder.registerProvider(SessionManager.class, new Provider<SessionManager>() {
-	    public SessionManager get() {
-		final SessionManager sessionManager = new SessionManager(builder.getInstance(Emite.class));
-		return sessionManager;
+	builder.registerProvider(Session.class, new Provider<Session>() {
+	    public Session get() {
+		final Emite emite = builder.getInstance(Emite.class);
+		final BoshManager boshManager = builder.getInstance(BoshManager.class);
+		final Session session = new Session(boshManager, emite);
+		return session;
 	    }
 	}, Scopes.SINGLETON_EAGER);
 
-	// FIXME: circular references
-	builder.registerProvider(Session.class, new Provider<Session>() {
-	    public Session get() {
-		final SessionManager manager = builder.getInstance(SessionManager.class);
-		final Session session = new Session(manager);
-		manager.setSession(session);
-		return session;
+	builder.registerProvider(SessionManager.class, new Provider<SessionManager>() {
+	    public SessionManager get() {
+		final Emite emite = builder.getInstance(Emite.class);
+		final Session session = builder.getInstance(Session.class);
+		final SessionManager sessionManager = new SessionManager(session, emite);
+		return sessionManager;
 	    }
 	}, Scopes.SINGLETON_EAGER);
 

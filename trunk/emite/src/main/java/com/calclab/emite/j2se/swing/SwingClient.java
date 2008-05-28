@@ -16,6 +16,7 @@ import javax.swing.JTabbedPane;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
@@ -30,7 +31,6 @@ import com.calclab.emite.client.xep.muc.Room;
 import com.calclab.emite.client.xep.muc.RoomListener;
 import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xep.muc.RoomManagerListener;
-import com.calclab.emite.client.xmpp.session.SessionListener;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -138,8 +138,8 @@ public class SwingClient {
     }
 
     private void addXmppListeners() {
-	xmpp.getSession().addListener(new SessionListener() {
-	    public void onStateChanged(final State old, final State current) {
+	xmpp.getSession().onStateChanged(new Listener<State>() {
+	    public void onEvent(final State current) {
 		print("STATE: " + current);
 		final boolean isConnected = current == State.connected;
 		loginPanel.showState("state: " + current.toString(), isConnected);
@@ -151,6 +151,7 @@ public class SwingClient {
 		}
 	    }
 	});
+
 	xmpp.getChatManager().addListener(new ChatManagerListener() {
 	    public void onChatClosed(final Chat chat) {
 		conversationsPanel.close(chat.getID());

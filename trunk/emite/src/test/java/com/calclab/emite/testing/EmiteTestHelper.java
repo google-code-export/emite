@@ -20,8 +20,8 @@ import com.calclab.emite.j2se.services.TigaseXMLService;
 
 public class EmiteTestHelper implements Emite {
 
+    public final TigaseXMLService xmler;
     private final DispatcherDefault dispatcher;
-    private final TigaseXMLService xmler;
     private PacketListener lastCallback;
     private final ArrayList<IPacket> published;
     private IPacket lastIQSent;

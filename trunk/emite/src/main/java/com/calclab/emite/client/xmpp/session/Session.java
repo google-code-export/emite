@@ -21,29 +21,62 @@
  */
 package com.calclab.emite.client.xmpp.session;
 
-import java.util.ArrayList;
-
+import com.calclab.emite.client.core.bosh.BoshManager;
+import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.emite.client.core.signal.Signal;
+import com.calclab.emite.client.xmpp.session.SessionManager.Events;
+import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class Session {
 
     public static enum State {
-	authorized, connected, connecting, disconnected, error, notAuthorized
+	authorized, connected, connecting, disconnected, error, notAuthorized, ready
     }
 
-    private final ArrayList<SessionListener> listeners;
+    private final SessionListenerCollection listeners;
     private State state;
-    private final SessionManager manager;
+    private final Emite emite;
+    private XmppURI userURI;
+    private final Signal<State> onStateChanged;
+    private final Signal<Presence> onPresence;
+    private final Signal<Message> onMessage;
 
-    public Session(final SessionManager manager) {
-	this.manager = manager;
+    public Session(final BoshManager manager, final Emite emite) {
+	this.emite = emite;
 	state = State.disconnected;
-	this.listeners = new ArrayList<SessionListener>();
+	this.listeners = new SessionListenerCollection();
+	this.onStateChanged = new Signal<State>();
+	this.onPresence = new Signal<Presence>();
+	this.onMessage = new Signal<Message>();
+
+	manager.onStanza(new Listener<IPacket>() {
+	    public void onEvent(final IPacket stanza) {
+		final String name = stanza.getName();
+		if (name.equals("message")) {
+		    onMessage.fire(new Message(stanza));
+		} else if (name.equals("presence")) {
+		    onPresence.fire(new Presence(stanza));
+		}
+	    }
+	});
     }
 
+    /**
+     * @deprecated
+     * @see onStateChanged
+     * @param listener
+     */
+    @Deprecated
     public void addListener(final SessionListener listener) {
 	listeners.add(listener);
-	// listener.onStateChanged(state, state);
+    }
+
+    public XmppURI getCurrentUser() {
+	return userURI;
     }
 
     public State getState() {
@@ -53,21 +86,37 @@ public class Session {
     public void login(final XmppURI uri, final String password) {
 	if (state == State.disconnected) {
 	    setState(State.connecting);
-	    manager.doLogin(uri, password);
+	    emite.publish(Events.login(uri, password));
+	    emite.publish(BoshManager.Events.start(uri.getHost()));
+	    userURI = uri;
 	}
     }
 
     public void logout() {
 	if (state != State.disconnected) {
-	    manager.doLogout();
+	    emite.publish(BoshManager.Events.stop);
+	    emite.publish(SessionManager.Events.onLoggedOut);
+	    userURI = null;
 	}
     }
 
-    public void setState(final State newState) {
+    public void onMessage(final Listener<Message> listener) {
+	onMessage.add(listener);
+    }
+
+    public void onPresence(final Listener<Presence> listener) {
+	onPresence.add(listener);
+    }
+
+    public void onStateChanged(final Listener<State> listener) {
+	onStateChanged.add(listener);
+    }
+
+    void setState(final State newState) {
 	final State oldState = this.state;
 	this.state = newState;
-	for (final SessionListener listener : listeners) {
-	    listener.onStateChanged(oldState, newState);
-	}
+	listeners.onStateChanged(oldState, newState);
+	onStateChanged.fire(state);
     }
+
 }

@@ -25,35 +25,6 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.packet.IPacket;
 
 public class Bosh {
-    public static class BoshState {
-	private final int time;
-
-	private BoshState(final int time) {
-	    this.time = time;
-	}
-
-	public int getTime() {
-	    return time;
-	}
-
-	public boolean shouldIgnore() {
-	    return time < 0;
-	}
-
-	public boolean shouldSend() {
-	    return time == 0;
-	}
-
-	public boolean shouldWait() {
-	    return time > 0;
-	}
-    }
-    public static final BoshState SEND = new BoshState(0);
-    public static final BoshState IGNORE = new BoshState(-1);
-
-    static BoshState shouldWait(final int time) {
-	return new BoshState(time);
-    }
     private int currentConnections;
     private boolean isTerminating;
     private long lastSendTime;
@@ -65,6 +36,7 @@ public class Bosh {
     private int requests;
 
     private BoshOptions options;
+
     private String domain;
 
     public Bosh(final Stream iStream) {
@@ -102,24 +74,24 @@ public class Bosh {
 	if (!stream.isEmpty()) {
 	    if (currentConnections < requests) {
 		Log.debug("STATE - SEND: Not empty request and current connections ok (" + currentConnections + ")");
-		state = SEND;
+		state = BoshState.SEND;
 	    } else {
 		Log.debug("STATE - NOT SEND: Not empty request, but too many connections (" + currentConnections + ")");
-		state = IGNORE;
+		state = BoshState.IGNORE;
 	    }
 	} else {
 	    if (currentConnections > 0) {
 		Log.debug("STATE - NOT SEND: Empty request and connections running (" + currentConnections + ")");
-		state = IGNORE;
+		state = BoshState.IGNORE;
 	    } else {
 		final int delay = (int) (currentTime - lastSendTime);
 		if (delay <= poll) {
 		    Log.debug("STATE - NOT SEND: Empty request, no conn but too frequent: " + delay);
-		    state = Bosh.shouldWait(poll - delay);
+		    state = BoshState.shouldWait(poll - delay);
 		} else {
 		    Log.debug("STATE - SEND: Empty request, not connections (" + currentConnections
 			    + ") and delay ok: " + delay + " with poll: " + poll);
-		    state = SEND;
+		    state = BoshState.SEND;
 		}
 	    }
 	}
