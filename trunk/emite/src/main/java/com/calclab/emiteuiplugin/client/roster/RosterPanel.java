@@ -32,6 +32,8 @@ import com.calclab.emiteuiplugin.client.users.UserGridListener;
 import com.calclab.emiteuiplugin.client.users.UserGridMenu;
 import com.calclab.emiteuiplugin.client.users.UserGridMenuItemList;
 import com.calclab.emiteuiplugin.client.users.UserGridPanel;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 
@@ -73,9 +75,17 @@ public class RosterPanel extends UserGridPanel implements RosterView {
                 presence.getFromURI().getJID().toString()), new MessageBox.ConfirmCallback() {
             public void execute(final String btnID) {
                 if (btnID.equals("yes")) {
-                    presenter.onPresenceAccepted(presence);
+                    DeferredCommand.addCommand(new Command() {
+                        public void execute() {
+                            presenter.onPresenceAccepted(presence);
+                        }
+                    });
                 } else {
-                    presenter.onPresenceNotAccepted(presence);
+                    DeferredCommand.addCommand(new Command() {
+                        public void execute() {
+                            presenter.onPresenceNotAccepted(presence);
+                        }
+                    });
                 }
             }
         });
