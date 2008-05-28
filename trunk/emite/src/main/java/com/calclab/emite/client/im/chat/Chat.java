@@ -21,10 +21,19 @@
  */
 package com.calclab.emite.client.im.chat;
 
+import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public interface Chat {
+
+    /**
+     * Possible chat states.
+     * 
+     */
+    public static enum State {
+	ready, locked
+    }
 
     public void addListener(final ChatListener listener);
 
@@ -36,7 +45,11 @@ public interface Chat {
 
     public XmppURI getOtherURI();
 
+    public State getState();
+
     public String getThread();
+
+    public void onStateChanged(Listener<State> listener);
 
     /**
      * To make this chat receive a message
@@ -51,15 +64,22 @@ public interface Chat {
      * 
      * @param message
      *                the message
+     * @throws RuntimeException
+     *                 if chat state != ready
      */
     public void send(Message message);
 
     /**
      * To make this chat send a message
      * 
+     * @deprecated
+     * @see send(Message)
      * @param body
      *                message body
+     * @throws RuntimeException
+     *                 if chat state != ready
      */
+    @Deprecated
     public void send(final String body);
 
     public <T> T setData(Class<T> type, T data);
