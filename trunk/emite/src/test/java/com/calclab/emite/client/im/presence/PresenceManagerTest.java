@@ -14,6 +14,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.MockitoEmiteHelper;
+import com.calclab.emite.testing.TestingListener;
 
 public class PresenceManagerTest {
 
@@ -92,6 +93,17 @@ public class PresenceManagerTest {
 	manager.setOwnPresence(new Presence().With(Presence.Show.dnd));
 	emite.verifySent("<presence from='myself@domain'><show>dnd</show></presence>");
 
+    }
+
+    @Test
+    public void shouldSignalOwnPresence() {
+	manager.logIn(uri("myself@domain"));
+	final TestingListener<Presence> listener = new TestingListener<Presence>();
+	manager.onOwnPresenceChanged(listener);
+	manager.setOwnPresence("status", Show.away);
+	listener.verify();
+	assertEquals("status", listener.getValue().getStatus());
+	assertEquals(Show.away, listener.getValue().getShow());
     }
 
     private Presence createPresence(final Type type) {
