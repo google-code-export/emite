@@ -43,6 +43,7 @@ public class SessionTest {
     }
 
     @Test
+    @Deprecated
     public void shouldInformAboutStateChanges() {
 	final State initialState = State.disconnected;
 	session.setState(initialState);

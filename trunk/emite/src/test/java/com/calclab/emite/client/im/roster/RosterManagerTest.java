@@ -8,7 +8,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,20 +19,19 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
+import com.calclab.emite.testing.TestingListener;
 
 public class RosterManagerTest {
     private EmiteTestHelper emite;
     private RosterManager manager;
     private Roster roster;
-    private RosterManagerListener listener;
 
     @Before
     public void aaCreate() {
 	emite = new EmiteTestHelper();
 	roster = mock(Roster.class);
 	manager = new RosterManager(emite, roster);
-	listener = mock(RosterManagerListener.class);
-	manager.addListener(listener);
+
     }
 
     @Test
@@ -61,11 +59,15 @@ public class RosterManagerTest {
     }
 
     @Test
+    @Deprecated
     public void shouldFireSubscribeEvents() {
+	final RosterManagerListener oldListener = mock(RosterManagerListener.class);
+	manager.addListener(oldListener);
 	manager.setSubscriptionMode(SubscriptionMode.manual);
 	final Presence presence = new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain"));
 	emite.receives(presence);
-	Mockito.verify(listener).onSubscriptionRequest((Presence) packetLike(presence), same(SubscriptionMode.manual));
+	Mockito.verify(oldListener).onSubscriptionRequest((Presence) packetLike(presence),
+		same(SubscriptionMode.manual));
     }
 
     @Test
@@ -106,13 +108,6 @@ public class RosterManagerTest {
     }
 
     @Test
-    public void shouldInformWhenUnsubscribed() {
-	final String presence = "<presence from='contact@example.org' to='user@example.com' type='unsubscribed'/>";
-	emite.receives(presence);
-	Mockito.verify(listener).onUnsubscribedReceived(uri("contact@example.org"));
-    }
-
-    @Test
     public void shouldRejectAutomatically() {
 	manager.setSubscriptionMode(SubscriptionMode.autoRejectAll);
 	emite.receives(new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain")));
@@ -146,11 +141,34 @@ public class RosterManagerTest {
     }
 
     @Test
+    public void shouldSignalSubscribtionRequests() {
+	final TestingListener<Presence> listener = new TestingListener<Presence>();
+	manager.onSubscriptionRequested(listener);
+	final Presence presence = new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain"));
+	emite.receives(presence);
+	listener.verify();
+    }
+
+    @Test
+    public void shouldSignalUnsibscirvedEvents() {
+	final TestingListener<XmppURI> listener = new TestingListener<XmppURI>();
+	manager.onUnsubscribedReceived(listener);
+
+	final String presence = "<presence from='contact@example.org' to='user@example.com' type='unsubscribed'/>";
+	emite.receives(presence);
+	listener.verify();
+    }
+
+    @Test
+    @Deprecated
     public void shouldUnsubscribe() {
-	manager.setSubscriptionMode(SubscriptionMode.manual);
+	final RosterManagerListener oldListener = mock(RosterManagerListener.class);
+	manager.addListener(oldListener);
+
 	final Presence presence = new Presence(Presence.Type.unsubscribed, uri("from@domain"), uri("to@domain"));
 	emite.receives(presence);
-	verify(listener).onUnsubscribedReceived(uri("from@domain"));
+	verify(oldListener).onUnsubscribedReceived(uri("from@domain"));
+
     }
 
 }

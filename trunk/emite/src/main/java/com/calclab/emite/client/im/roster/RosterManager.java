@@ -31,6 +31,8 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.emite.client.core.signal.Signal;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
@@ -55,12 +57,18 @@ public class RosterManager extends SessionComponent {
 
     private final RosterManagerListenerCollection listeners;
 
+    private final Signal<Presence> onSubscriptionRequested;
+
+    private final Signal<XmppURI> onUnsubscribedReceived;
+
     public RosterManager(final Emite emite, final Roster roster) {
 	super(emite);
 	this.roster = roster;
 	this.subscriptionMode = DEF_SUBSCRIPTION_MODE;
 	this.listeners = new RosterManagerListenerCollection();
 	install();
+	this.onSubscriptionRequested = new Signal<Presence>();
+	this.onUnsubscribedReceived = new Signal<XmppURI>();
     }
 
     /**
@@ -81,8 +89,17 @@ public class RosterManager extends SessionComponent {
 	    throw new RuntimeException("Trying to accept/deny a non subscription request");
 	}
 	requestSubscribe(presence.getFromURI());
+
     }
 
+    /**
+     * New signals system
+     * 
+     * @deprecated
+     * @see onSubscriptionRequested and on
+     * @param listener
+     */
+    @Deprecated
     public void addListener(final RosterManagerListener listener) {
 	listeners.add(listener);
     }
@@ -118,6 +135,14 @@ public class RosterManager extends SessionComponent {
     public void logIn(final XmppURI uri) {
 	super.logIn(uri);
 	requestRoster();
+    }
+
+    public void onSubscriptionRequested(final Listener<Presence> listener) {
+	onSubscriptionRequested.add(listener);
+    }
+
+    public void onUnsubscribedReceived(final Listener<XmppURI> listener) {
+	onUnsubscribedReceived.add(listener);
     }
 
     /**
@@ -225,11 +250,12 @@ public class RosterManager extends SessionComponent {
 	    break;
 	}
 	listeners.onSubscriptionRequest(presence, subscriptionMode);
-
+	onSubscriptionRequested.fire(presence);
     }
 
     private void handleUnsubscribedReceived(final XmppURI userUnsubscribed) {
 	listeners.onUnsubscribedReceived(userUnsubscribed);
+	onUnsubscribedReceived.fire(userUnsubscribed);
     }
 
     private void install() {
