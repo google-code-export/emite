@@ -42,7 +42,7 @@ import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 public class ChatManagerDefault extends SessionComponent implements ChatManager {
     protected final HashSet<Chat> chats;
     protected final ChatManagerListenerCollection listeners;
-    private final Signal<Chat> onChatCreated;
+    protected final Signal<Chat> onChatCreated;
 
     public ChatManagerDefault(final Emite emite) {
 	super(emite);
