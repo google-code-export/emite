@@ -1,5 +1,6 @@
 package com.calclab.emite.testing;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -33,6 +34,11 @@ public class TestingListener<S> implements Listener<S> {
 
     public void verify() {
 	assertTrue("listener should be called", isCalled);
+    }
+
+    public void verify(final S parameter) {
+	verify();
+	assertEquals(parameter, this.parameter);
     }
 
     public void verifyNotCalled() {
