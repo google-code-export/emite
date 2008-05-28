@@ -131,15 +131,23 @@ public class MultiChatPanel {
     }
 
     public void clearBottomChatNotification() {
-        bottomChatNotification.setText("");
-        bottomChatNotification.setVisible(false);
-        renderSouthPanelIfNeeded();
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                bottomChatNotification.setText("");
+                bottomChatNotification.setVisible(false);
+                renderSouthPanelIfNeeded();
+            }
+        });
     }
 
     public void clearBottomInfoMessage() {
-        bottomInfoMessage.setText("");
-        bottomInfoMessage.setVisible(false);
-        renderSouthPanelIfNeeded();
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                bottomInfoMessage.setText("");
+                bottomInfoMessage.setVisible(false);
+                renderSouthPanelIfNeeded();
+            }
+        });
     }
 
     public void clearInputText() {
@@ -209,16 +217,24 @@ public class MultiChatPanel {
     }
 
     public void setBottomChatNotification(final ChatNotification chatNotification) {
-        bottomChatNotification.setText(chatNotification.getNotification());
-        bottomChatNotification.setStyleName(chatNotification.getStyle());
-        bottomChatNotification.setVisible(true);
-        renderSouthPanelIfNeeded();
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                bottomChatNotification.setText(chatNotification.getNotification());
+                bottomChatNotification.setStyleName(chatNotification.getStyle());
+                bottomChatNotification.setVisible(true);
+                renderSouthPanelIfNeeded();
+            }
+        });
     }
 
     public void setBottomInfoMessage(final String message) {
-        bottomInfoMessage.setText(message);
-        bottomInfoMessage.setVisible(true);
-        renderSouthPanelIfNeeded();
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                bottomInfoMessage.setText(message);
+                bottomInfoMessage.setVisible(true);
+                renderSouthPanelIfNeeded();
+            }
+        });
     }
 
     public void setCloseAllOptionEnabled(final boolean enabled) {
@@ -304,8 +320,12 @@ public class MultiChatPanel {
     }
 
     public void setTitleConectedAs(final XmppURI currentUserJid) {
-        dialog.setTitle(chatDialogTitle + " (" + currentUserJid + ")");
-        ifRenderedDoLayout();
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                dialog.setTitle(chatDialogTitle + " (" + currentUserJid + ")");
+                ifRenderedDoLayout();
+            }
+        });
     }
 
     public void show() {
@@ -318,8 +338,12 @@ public class MultiChatPanel {
     }
 
     public void unHighLight() {
-        dialog.setIconCls("e-icon");
-        renderDialogIfNeeded();
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                dialog.setIconCls("e-icon");
+                renderDialogIfNeeded();
+            }
+        });
     }
 
     private void configureBottomInfoTimer() {
@@ -345,10 +369,14 @@ public class MultiChatPanel {
     }
 
     private void configureSound() {
-        soundController = new SoundController();
-        // soundController.setPrioritizeFlashSound(false);
-        // soundController.setDefaultVolume(0);
-        sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                soundController = new SoundController();
+                // soundController.setPrioritizeFlashSound(false);
+                // soundController.setDefaultVolume(0);
+                sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_WAV, "click.wav");
+            }
+        });
     }
 
     private FormPanel createInputPanel() {
@@ -605,15 +633,19 @@ public class MultiChatPanel {
     }
 
     private void quickTipsInit() {
-        if (!QuickTips.isEnabled()) {
-            // If not enabled before by another UI component
-            QuickTips.init();
-            final QuickTip quickTipInstance = QuickTips.getQuickTip();
-            quickTipInstance.setInterceptTitles(true);
-            quickTipInstance.setDismissDelay(7000);
-            quickTipInstance.setHideDelay(400);
-            quickTipInstance.setMinWidth(100);
-        }
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                if (!QuickTips.isEnabled()) {
+                    // If not enabled before by another UI component
+                    QuickTips.init();
+                    final QuickTip quickTipInstance = QuickTips.getQuickTip();
+                    quickTipInstance.setInterceptTitles(true);
+                    quickTipInstance.setDismissDelay(7000);
+                    quickTipInstance.setHideDelay(400);
+                    quickTipInstance.setMinWidth(100);
+                }
+            }
+        });
     }
 
     private void renderDialogIfNeeded() {
