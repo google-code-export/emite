@@ -28,9 +28,9 @@ import java.util.List;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.packet.Filters;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.NoPacket;
-import com.calclab.emite.client.core.packet.PacketFilter;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
@@ -56,7 +56,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	final Room room = rooms.remove(whatToClose.getOtherURI().getJID());
 	if (room != null) {
 	    room.close();
-	    fireChatClosed(room);
+	    listeners.onChatClosed(room);
 	}
     }
 
@@ -73,7 +73,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	    final Presence presence = new Presence(null, userURI, roomURI);
 	    presence.addChild("x", "http://jabber.org/protocol/muc");
 	    emite.send(presence);
-	    fireChatCreated(room);
+	    listeners.onChatCreated(room);
 	}
 	return room;
     }
@@ -92,19 +92,6 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 
     }
 
-    private void createInstantRoom(final Room room) {
-
-	final IQ iq = new IQ(Type.set, userURI, room.getOtherURI());
-	iq.addQuery("http://jabber.org/protocol/muc#owner").addChild("x", "jabber:x:data").With("type", "submit");
-	emite.sendIQ("rooms", iq, new PacketListener() {
-	    public void handle(final IPacket received) {
-		if (IQ.isSuccess(received)) {
-
-		}
-	    }
-	});
-    }
-
     /**
      * @see http://www.xmpp.org/extensions/xep-0045.html#createroom
      */
@@ -115,19 +102,17 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	    if (presence.hasAttribute("type", "unavailable")) {
 		room.removeOccupant(occupantURI);
 	    } else {
-		final List<? extends IPacket> children = presence.getChildren(new PacketFilter() {
-		    public boolean isValid(final IPacket packet) {
-			return packet.getName().equals("x")
-				&& packet.hasAttribute("xmlns", "http://jabber.org/protocol/muc#user");
-		    }
-		});
+		final List<? extends IPacket> children = presence.getChildren(Filters.byNameAndXMLNS("x",
+			"http://jabber.org/protocol/muc#user"));
 		for (final IPacket child : children) {
 		    final IPacket item = child.getFirstChild("item");
 		    final String affiliation = item.getAttribute("affiliation");
 		    final String role = item.getAttribute("role");
 		    room.setOccupantPresence(occupantURI, affiliation, role);
 		    if (isNewRoom(child)) {
-			createInstantRoom(room);
+			requestCreateInstantRoom(room);
+		    } else {
+			room.setState(Chat.State.ready);
 		    }
 		}
 	    }
@@ -158,6 +143,19 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     private boolean isNewRoom(final IPacket xtension) {
 	final String code = xtension.getFirstChild("status").getAttribute("code");
 	return code != null && code.equals("201");
+    }
+
+    private void requestCreateInstantRoom(final Room room) {
+
+	final IQ iq = new IQ(Type.set, userURI, room.getOtherURI());
+	iq.addQuery("http://jabber.org/protocol/muc#owner").addChild("x", "jabber:x:data").With("type", "submit");
+	emite.sendIQ("rooms", iq, new PacketListener() {
+	    public void handle(final IPacket received) {
+		if (IQ.isSuccess(received)) {
+		    room.setState(Chat.State.ready);
+		}
+	    }
+	});
     }
 
 }
