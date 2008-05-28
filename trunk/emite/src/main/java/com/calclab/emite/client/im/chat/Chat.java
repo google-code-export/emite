@@ -73,7 +73,7 @@ public interface Chat {
      * To make this chat send a message
      * 
      * @deprecated
-     * @see send(Message)
+     * @see use chat.send(new Message("body"));
      * @param body
      *                message body
      * @throws RuntimeException
