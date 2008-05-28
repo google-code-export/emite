@@ -38,5 +38,13 @@ public abstract class AbstractChatManagerTest {
 	listener.verify(State.locked);
     }
 
+    @Test
+    public void shouldSignalWhenChatCreated() {
+	final TestingListener<Chat> listener = new TestingListener<Chat>();
+	manager.onChatCreated(listener);
+	manager.openChat(uri("other@domain"), null, null);
+	listener.verify();
+    }
+
     protected abstract ChatManager createChatManager();
 }

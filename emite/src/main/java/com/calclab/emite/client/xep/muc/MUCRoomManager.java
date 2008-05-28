@@ -60,7 +60,6 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	final Room room = rooms.remove(whatToClose.getOtherURI().getJID());
 	if (room != null) {
 	    room.close();
-
 	    listeners.onChatClosed(room);
 	}
     }
@@ -83,6 +82,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	    presence.addChild("x", "http://jabber.org/protocol/muc");
 	    emite.send(presence);
 	    listeners.onChatCreated(room);
+	    onChatCreated.fire(room);
 	}
 	return room;
     }
