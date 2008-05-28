@@ -21,6 +21,7 @@
  */
 package com.calclab.emite.client.xep.chatstate;
 
+import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.chat.ChatManagerListener;
@@ -37,6 +38,16 @@ import com.calclab.emite.client.im.chat.ChatManagerListener;
 public class ChatStateManager {
 
     public ChatStateManager(final ChatManager chatManager) {
+        chatManager.onChatCreated(new Listener<Chat>() {
+
+            public void onEvent(final Chat chat) {
+                final ChatState chatState = new ChatState(chat);
+                chat.addListener(chatState);
+                chat.setData(ChatState.class, chatState);
+                chat.addMessageInterceptor(chatState);
+            }
+        });
+
         chatManager.addListener(new ChatManagerListener() {
 
             public void onChatClosed(final Chat chat) {
@@ -49,10 +60,6 @@ public class ChatStateManager {
             }
 
             public void onChatCreated(final Chat chat) {
-                final ChatState chatState = new ChatState(chat);
-                chat.addListener(chatState);
-                chat.setData(ChatState.class, chatState);
-                chat.addMessageInterceptor(chatState);
             }
         });
     }
