@@ -142,6 +142,11 @@ public class Room extends AbstractChat implements Chat {
 	return occupant;
     }
 
+    @Override
+    public void setState(final State state) {
+	super.setState(state);
+    }
+
     /**
      * http://www.xmpp.org/extensions/xep-0045.html#subject-mod
      * 

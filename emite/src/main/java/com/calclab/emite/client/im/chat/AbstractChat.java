@@ -16,8 +16,8 @@ public abstract class AbstractChat implements Chat {
     protected final XmppURI from;
     protected final XmppURI other;
     protected State state;
+    protected final Signal<State> onStateChanged;
     private final HashMap<Class<?>, Object> data;
-    private final Signal<State> onStateChanged;
 
     public AbstractChat(final XmppURI from, final XmppURI other, final Emite emite) {
 	this.emite = emite;
@@ -81,5 +81,10 @@ public abstract class AbstractChat implements Chat {
     @SuppressWarnings("unchecked")
     public <T> T setData(final Class<T> type, final T value) {
 	return (T) data.put(type, value);
+    }
+
+    protected void setState(final State state) {
+	this.state = state;
+	onStateChanged.fire(state);
     }
 }
