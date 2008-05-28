@@ -33,6 +33,9 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
+import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.emite.client.core.signal.Signal;
+import com.calclab.emite.client.im.chat.Chat.State;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -41,20 +44,29 @@ import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 public class ChatManagerDefault extends SessionComponent implements ChatManager {
     protected final HashSet<Chat> chats;
     protected final ChatManagerListenerCollection listeners;
+    private final Signal<Chat> onChatCreated;
 
     public ChatManagerDefault(final Emite emite) {
 	super(emite);
+	this.onChatCreated = new Signal<Chat>();
 	this.listeners = new ChatManagerListenerCollection();
 	this.chats = new HashSet<Chat>();
 	install();
     }
 
+    /**
+     * New signal system
+     * 
+     * @see onChatCreated
+     */
+    @Deprecated
     public void addListener(final ChatManagerListener listener) {
 	listeners.add(listener);
     }
 
     public void close(final Chat chat) {
 	chats.remove(chat);
+	((AbstractChat) chat).setState(State.locked);
 	listeners.onChatClosed(chat);
     }
 
@@ -72,10 +84,15 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	}
     }
 
+    public void onChatCreated(final Listener<Chat> listener) {
+	onChatCreated.add(listener);
+    }
+
     public <T> Chat openChat(final XmppURI toURI, final Class<T> extraType, final T extraData) {
 	Chat chat = findChat(toURI, null);
 	if (chat == null) {
-	    chat = createChat(toURI, null, extraType, extraData);
+	    final String thread = String.valueOf(Math.random() * 1000000);
+	    chat = createChat(toURI, thread, extraType, extraData);
 	}
 	return chat;
     }
@@ -97,12 +114,12 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
     }
 
     private <T> Chat createChat(final XmppURI toURI, final String thread, final Class<T> extraType, final T extraData) {
-	final String theThread = thread != null ? thread : String.valueOf(Math.random() * 1000000);
-	final ChatDefault chat = new ChatDefault(userURI, toURI, theThread, emite);
+	final ChatDefault chat = new ChatDefault(userURI, toURI, thread, emite);
 	if (extraType != null) {
 	    chat.setData(extraType, extraData);
 	}
 	chats.add(chat);
+	onChatCreated.fire(chat);
 	listeners.onChatCreated(chat);
 	chat.setState(Chat.State.ready);
 	return chat;
@@ -151,9 +168,9 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	final XmppURI from = message.getFromURI();
 	final String thread = message.getThread();
 
-	final Chat chat = findChat(from, thread);
+	Chat chat = findChat(from, thread);
 	if (chat == null) {
-	    createChat(from, thread, null, null);
+	    chat = createChat(from, thread, null, null);
 	}
 	chat.receive(message);
     }

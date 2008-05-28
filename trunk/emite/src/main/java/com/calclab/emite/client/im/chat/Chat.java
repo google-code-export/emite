@@ -32,7 +32,7 @@ public interface Chat {
      * 
      */
     public static enum State {
-	ready, locked, closed
+	ready, locked
     }
 
     public void addListener(final ChatListener listener);

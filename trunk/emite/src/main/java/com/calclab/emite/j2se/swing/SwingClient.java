@@ -164,7 +164,7 @@ public class SwingClient {
 			    }
 
 			    public void onSend(final ChatPanel source, final String text) {
-				chat.send(text);
+				chat.send(new Message(text));
 				source.clearMessage();
 			    }
 
@@ -204,7 +204,7 @@ public class SwingClient {
 			    }
 
 			    public void onSend(final ChatPanel source, final String text) {
-				room.send(text);
+				room.send(new Message(text));
 				source.clearMessage();
 			    }
 			});

@@ -3,6 +3,7 @@ package com.calclab.emite.client.im.chat;
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.same;
@@ -15,10 +16,12 @@ import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 
+import com.calclab.emite.client.im.chat.Chat.State;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
+import com.calclab.emite.testing.TestingListener;
 
 public class ChatManagerTest {
 
@@ -34,7 +37,6 @@ public class ChatManagerTest {
     }
     private static final XmppURI MYSELF = uri("self@domain");
     private ChatManagerDefault manager;
-    private ChatManagerListener listener;
 
     private EmiteTestHelper emite;
 
@@ -42,8 +44,7 @@ public class ChatManagerTest {
     public void aaCreate() {
 	emite = new EmiteTestHelper();
 	manager = new ChatManagerDefault(emite);
-	listener = Mockito.mock(ChatManagerListener.class);
-	manager.addListener(listener);
+
 	manager.setUserURI(MYSELF.toString());
     }
 
@@ -55,33 +56,35 @@ public class ChatManagerTest {
 
     @Test
     public void managerShouldCreateOneChatForSameResource() {
+	final TestingListener<Chat> listener = addListener();
 	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 1"));
+	listener.verify();
+	listener.reset();
 	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
-	verify(listener, times(1)).onChatCreated((Chat) anyObject());
+	listener.verifyNotCalled();
     }
 
     @Test
-    public void managerShouldCreateOneChatIfResourceIsNotAvailable() {
-	emite.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
-	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
-	verify(listener, times(1)).onChatCreated((Chat) anyObject());
+    public void oneToOneChatsAreAlwaysReadyWhenCreated() {
+	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
+	assertSame(Chat.State.ready, chat.getState());
+    }
+
+    @Test
+    public void shouldBlockChatWhenClosingIt() {
+	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
+	manager.close(chat);
+	assertSame(Chat.State.locked, chat.getState());
     }
 
     @Test
     public void shouldCloseChatWhenLoggedOut() {
 	final Chat chat = manager.openChat(uri("name@domain/resouce"), null, null);
+	final TestingListener<State> listener = new TestingListener<State>();
+	chat.onStateChanged(listener);
 	emite.receives(SessionManager.Events.onLoggedOut);
-	verify(listener).onChatClosed(same(chat));
-    }
-
-    @Test
-    public void shouldHandleIncommingMessages() {
-	emite.receives("<message to='" + MYSELF + "' from='otherUser@dom/res' id='theId0001'>"
-		+ "<body>This is the body</body></message>");
-	final ChatTrap trap = new ChatTrap();
-	verify(listener).onChatCreated(argThat(trap));
-	assertEquals("otherUser@dom/res", trap.chat.getOtherURI().toString());
-	assertEquals(null, trap.chat.getThread());
+	listener.verify();
+	assertEquals(State.locked, listener.getValue());
     }
 
     @Test
@@ -96,9 +99,61 @@ public class ChatManagerTest {
     }
 
     @Test
+    public void shouldReuseChatIfNotResouceSpecified() {
+	final TestingListener<Chat> listener = addListener();
+	emite.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
+	listener.verify();
+	listener.reset();
+	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
+	listener.verifyNotCalled();
+    }
+
+    @Test
     public void shouldUseSameRoomWhenAnswering() {
+	final TestingListener<Chat> listener = addListener();
 	final Chat chat = manager.openChat(uri("someone@domain"), null, null);
+	listener.verify();
+	assertSame(chat, listener.getValue());
+	listener.reset();
 	emite.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer").Thread(chat.getThread()));
-	verify(listener, times(1)).onChatCreated(chat);
+	listener.verifyNotCalled();
+    }
+
+    @Test
+    public void XXListenermanagerShouldCreateOneChatForSameResource() {
+	final ChatManagerListener listener = Mockito.mock(ChatManagerListener.class);
+	manager.addListener(listener);
+	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 1"));
+	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
+	verify(listener, times(1)).onChatCreated((Chat) anyObject());
+    }
+
+    @Deprecated
+    @Test
+    public void XXListenermanagerShouldCreateOneChatIfResourceIsNotAvailable() {
+	final ChatManagerListener listener = Mockito.mock(ChatManagerListener.class);
+	manager.addListener(listener);
+	emite.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
+	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
+	verify(listener, times(1)).onChatCreated((Chat) anyObject());
+    }
+
+    @Deprecated
+    @Test
+    public void XXListenershouldHandleIncommingMessages() {
+	final ChatManagerListener listener = Mockito.mock(ChatManagerListener.class);
+	manager.addListener(listener);
+	emite.receives("<message to='" + MYSELF + "' from='otherUser@dom/res' id='theId0001'>"
+		+ "<body>This is the body</body></message>");
+	final ChatTrap trap = new ChatTrap();
+	verify(listener).onChatCreated(argThat(trap));
+	assertEquals("otherUser@dom/res", trap.chat.getOtherURI().toString());
+	assertEquals(null, trap.chat.getThread());
+    }
+
+    private TestingListener<Chat> addListener() {
+	final TestingListener<Chat> listener = new TestingListener<Chat>();
+	manager.onChatCreated(listener);
+	return listener;
     }
 }

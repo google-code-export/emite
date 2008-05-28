@@ -21,7 +21,15 @@
  */
 package com.calclab.emite.client.im.chat;
 
+@Deprecated
 public interface ChatManagerListener {
+
+    /**
+     * See Chat.onStateChanged
+     * 
+     * @param chat
+     */
+    @Deprecated
     void onChatClosed(Chat chat);
 
     void onChatCreated(Chat chat);

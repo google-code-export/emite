@@ -46,14 +46,14 @@ public class ChatTest {
     public void shouldSendNoThreadWhenNotSpecified() {
 	final AbstractChat noThreadChat = new ChatDefault(uri("self@domain/res"), uri("other@domain/otherRes"), null,
 		emite);
-	noThreadChat.send("the message");
+	noThreadChat.send(new Message("the message"));
 	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' "
 		+ "type='chat'><body>the message</body></message>");
     }
 
     @Test
     public void shouldSendThreadWhenSpecified() {
-	chat.send("the message");
+	chat.send(new Message("the message"));
 	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>"
 		+ "<body>the message</body><thread>theThread</thread></message>");
     }
