@@ -23,8 +23,6 @@ import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterListener;
-import com.calclab.emite.client.im.roster.RosterManagerListener;
-import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xep.muc.MUCModule;
 import com.calclab.emite.client.xep.muc.Occupant;
 import com.calclab.emite.client.xep.muc.Room;
@@ -253,8 +251,8 @@ public class SwingClient {
 
 	});
 
-	xmpp.getRosterManager().addListener(new RosterManagerListener() {
-	    public void onSubscriptionRequest(final Presence presence, final SubscriptionMode mode) {
+	xmpp.getRosterManager().onSubscriptionRequested(new Listener<Presence>() {
+	    public void onEvent(final Presence presence) {
 		final Object message = presence.getFrom() + " want to add you to his/her roster. Accept?";
 		final int result = JOptionPane.showConfirmDialog(frame, message);
 		if (result == JOptionPane.OK_OPTION) {
@@ -262,10 +260,6 @@ public class SwingClient {
 		}
 		print("SUBSCRIPTION: " + presence);
 	    }
-
-	    public void onUnsubscribedReceived(final XmppURI userUnsubscribed) {
-	    };
-
 	});
 
 	xmpp.getPresenceManager().addListener(new PresenceListener() {
