@@ -3,6 +3,8 @@ package com.calclab.emite.client.im.chat;
 import java.util.HashMap;
 
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.emite.client.core.signal.Signal;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
@@ -13,7 +15,9 @@ public abstract class AbstractChat implements Chat {
     protected final Emite emite;
     protected final XmppURI from;
     protected final XmppURI other;
+    protected State state;
     private final HashMap<Class<?>, Object> data;
+    private final Signal<State> onStateChanged;
 
     public AbstractChat(final XmppURI from, final XmppURI other, final Emite emite) {
 	this.emite = emite;
@@ -22,6 +26,8 @@ public abstract class AbstractChat implements Chat {
 	this.interceptors = new MessageInterceptorCollection();
 	this.listeners = new ChatListenerCollection();
 	this.data = new HashMap<Class<?>, Object>();
+	this.state = Chat.State.locked;
+	this.onStateChanged = new Signal<State>();
     }
 
     public void addListener(final ChatListener listener) {
@@ -45,6 +51,14 @@ public abstract class AbstractChat implements Chat {
 	return other;
     }
 
+    public State getState() {
+	return state;
+    }
+
+    public void onStateChanged(final Listener<State> listener) {
+	onStateChanged.add(listener);
+    }
+
     public void receive(final Message message) {
 	interceptors.onBeforeReceive(message);
 	listeners.onMessageReceived(this, message);
@@ -58,6 +72,7 @@ public abstract class AbstractChat implements Chat {
 	listeners.onMessageSent(this, message);
     }
 
+    @Deprecated
     public void send(final String body) {
 	final Message message = new Message().Body(body);
 	send(message);
