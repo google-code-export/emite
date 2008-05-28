@@ -29,6 +29,8 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.emite.client.core.signal.Signal;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -37,13 +39,15 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 
 public class PresenceManager extends SessionComponent {
     private Presence delayedPresence;
-    private Presence currentPresence;
+    private Presence ownPresence;
     private final ArrayList<PresenceListener> listeners;
+    private final Signal<Presence> onOwnPresenceChanged;
 
     public PresenceManager(final Emite emite) {
 	super(emite);
 	this.listeners = new ArrayList<PresenceListener>();
-	this.currentPresence = null;
+	this.ownPresence = null;
+	this.onOwnPresenceChanged = new Signal<Presence>();
 	install();
     }
 
@@ -57,7 +61,7 @@ public class PresenceManager extends SessionComponent {
      * @return The current users presence
      */
     public Presence getCurrentPresence() {
-	return currentPresence;
+	return ownPresence;
     }
 
     /**
@@ -74,11 +78,14 @@ public class PresenceManager extends SessionComponent {
     public void logOut() {
 	if (isLoggedIn()) {
 	    final Presence presence = new Presence(Type.unavailable, userURI, userURI.getHostURI());
-	    emite.send(presence);
 	    delayedPresence = null;
-	    currentPresence = null;
+	    broadcastPresence(presence);
 	}
 	super.logOut();
+    }
+
+    public void onOwnPresenceChanged(final Listener<Presence> listener) {
+	onOwnPresenceChanged.add(listener);
     }
 
     /**
@@ -91,9 +98,7 @@ public class PresenceManager extends SessionComponent {
      */
     public void setOwnPresence(final Presence presence) {
 	if (isLoggedIn()) {
-	    presence.setFrom(userURI);
-	    emite.send(presence);
-	    currentPresence = presence;
+	    broadcastPresence(presence);
 	} else {
 	    delayedPresence = presence;
 	}
@@ -120,6 +125,13 @@ public class PresenceManager extends SessionComponent {
 	setOwnPresence(presence);
     }
 
+    private void broadcastPresence(final Presence presence) {
+	presence.setFrom(userURI);
+	emite.send(presence);
+	ownPresence = presence;
+	onOwnPresenceChanged.fire(ownPresence);
+    }
+
     private void firePresenceReceived(final Presence presence) {
 	for (final PresenceListener listener : listeners) {
 	    listener.onPresenceReceived(presence);
@@ -133,11 +145,11 @@ public class PresenceManager extends SessionComponent {
     private void install() {
 	emite.subscribe(when(RosterManager.Events.ready), new PacketListener() {
 	    public void handle(final IPacket received) {
-		currentPresence = new Presence(userURI).With(Presence.Show.chat);
-		emite.send(currentPresence);
+		final Presence initialPresence = new Presence(userURI).With(Presence.Show.chat);
+		broadcastPresence(initialPresence);
 		if (delayedPresence != null) {
 		    delayedPresence.setFrom(userURI);
-		    emite.send(delayedPresence);
+		    broadcastPresence(delayedPresence);
 		    delayedPresence = null;
 		}
 	    }
@@ -150,7 +162,7 @@ public class PresenceManager extends SessionComponent {
 		switch (presence.getType()) {
 
 		case probe:
-		    emite.send(currentPresence);
+		    emite.send(ownPresence);
 		    break;
 		case error:
 		    // FIXME: what should we do?
