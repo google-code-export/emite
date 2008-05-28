@@ -1,7 +1,6 @@
 package com.calclab.emite.client.xep.chatstate;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.MessageInterceptor;
@@ -25,13 +24,11 @@ public class ChatState implements MessageInterceptor, ChatListener {
     private Type ownState;
     private Type otherState;
     private final Chat chat;
-    private final Emite emite;
     private final ChatStateListenersCollection listeners;
     private NegotiationStatus negotiationStatus;
 
-    public ChatState(final Chat chat, final Emite emite) {
+    public ChatState(final Chat chat) {
         this.chat = chat;
-        this.emite = emite;
         negotiationStatus = NegotiationStatus.notStarted;
         listeners = new ChatStateListenersCollection();
     }
@@ -132,6 +129,6 @@ public class ChatState implements MessageInterceptor, ChatListener {
     private void sendStateMessage(final Type type) {
         final Message message = new Message(chat.getFromURI(), chat.getOtherURI(), null).Thread(chat.getThread());
         message.addChild(type.toString(), XMLNS);
-        emite.send(message);
+        chat.send(message);
     }
 }

@@ -21,7 +21,6 @@
  */
 package com.calclab.emite.client.xep.chatstate;
 
-import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
@@ -32,29 +31,27 @@ import com.calclab.emite.client.modular.Scopes;
 /**
  * Implements XEP-0085: Chat State Notifications
  * 
- * @see http://www.xmpp.org/extensions/xep-0085.html
+ * @see http://www.xmpp.org/extensions/xep-0085.html (Version: 1.2)
  * 
  */
 public class ChatStateModule implements Module {
     private static final Class<ChatStateManager> COMPONENTS_MANAGER = ChatStateManager.class;
 
     public static ChatStateManager getChatStateManager(final Container components) {
-	return components.getInstance(COMPONENTS_MANAGER);
+        return components.getInstance(COMPONENTS_MANAGER);
     }
 
     public Class<? extends Module> getType() {
-	return ChatStateModule.class;
+        return ChatStateModule.class;
     }
 
     public void onLoad(final ModuleBuilder builder) {
-
-	builder.registerProvider(ChatStateManager.class, new Provider<ChatStateManager>() {
-	    public ChatStateManager get() {
-		final Emite emite = builder.getInstance(Emite.class);
-		final ChatManager chatManager = builder.getInstance(ChatManager.class);
-		return new ChatStateManager(emite, chatManager);
-	    }
-	}, Scopes.SINGLETON_EAGER);
+        builder.registerProvider(ChatStateManager.class, new Provider<ChatStateManager>() {
+            public ChatStateManager get() {
+                final ChatManager chatManager = builder.getInstance(ChatManager.class);
+                return new ChatStateManager(chatManager);
+            }
+        }, Scopes.SINGLETON_EAGER);
 
     }
 }

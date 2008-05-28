@@ -30,16 +30,16 @@ public class UserChatOptions {
     private final String userJid;
     private final String userPassword;
     private final String resource;
-    private final boolean unavailableBuddiesVisible;
+    private boolean unavailableRosterItemsVisible;
 
     public UserChatOptions(final String userJid, final String userPassword, final String resource, final String color,
-            final SubscriptionMode subscriptionMode, final boolean unavailableBuddiesVisible) {
+            final SubscriptionMode subscriptionMode, final boolean unavailableRosterItemsVisible) {
         this.userJid = userJid;
         this.userPassword = userPassword;
         this.resource = resource;
         this.color = color;
         this.subscriptionMode = subscriptionMode;
-        this.unavailableBuddiesVisible = unavailableBuddiesVisible;
+        this.unavailableRosterItemsVisible = unavailableRosterItemsVisible;
     }
 
     public String getColor() {
@@ -62,8 +62,8 @@ public class UserChatOptions {
         return userPassword;
     }
 
-    public boolean isUnavailableBuddiesVisible() {
-        return unavailableBuddiesVisible;
+    public boolean isUnavailableRosterItemsVisible() {
+        return unavailableRosterItemsVisible;
     }
 
     public void setColor(final String color) {
@@ -72,6 +72,10 @@ public class UserChatOptions {
 
     public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
         this.subscriptionMode = subscriptionMode;
+    }
+
+    public void setUnavailableRosterItemsVisible(final boolean unavailableRosterItemsVisible) {
+        this.unavailableRosterItemsVisible = unavailableRosterItemsVisible;
     }
 
 }

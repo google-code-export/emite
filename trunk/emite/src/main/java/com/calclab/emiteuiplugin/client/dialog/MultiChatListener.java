@@ -25,9 +25,11 @@ import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 
 public interface MultiChatListener {
 
-    void onConversationAttended(String chatTitle);
+    void onConversationAttended(String conversationName);
 
     void onConversationUnnatended(String conversationName);
+
+    void onShowUnavailableRosterItems(boolean show);
 
     void onUserColorChanged(String color);
 
