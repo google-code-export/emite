@@ -145,7 +145,7 @@ public class MultiChatPresenter {
 	    }
 
 	    public void onCurrentUserSend(final String message) {
-		chat.send(message);
+		chat.send(new Message(message));
 	    }
 
 	    public void onDeactivate(final ChatUI chatUI) {
@@ -211,7 +211,7 @@ public class MultiChatPresenter {
 	    }
 
 	    public void onCurrentUserSend(final String message) {
-		chat.send(message);
+		chat.send(new Message(message));
 	    }
 
 	    public void onDeactivate(final ChatUI chatUI) {

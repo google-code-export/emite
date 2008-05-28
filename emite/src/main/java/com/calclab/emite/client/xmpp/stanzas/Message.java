@@ -36,6 +36,11 @@ public class Message extends BasicStanza {
 	super(iPacket);
     }
 
+    public Message(final String body) {
+	this();
+	setBody(body);
+    }
+
     /**
      * Create a chat (type) message
      * 

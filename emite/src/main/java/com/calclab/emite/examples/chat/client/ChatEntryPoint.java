@@ -119,7 +119,7 @@ public class ChatEntryPoint implements EntryPoint {
     private ChatPanel createChatPanel(final XmppURI uri, final Chat chat) {
 	final ChatPanel chatPanel = new ChatPanel(new ChatPanelListener() {
 	    public void onSend(final String text) {
-		chat.send(text);
+		chat.send(new Message(text));
 	    }
 	});
 	chat.addListener(new ChatListener() {
