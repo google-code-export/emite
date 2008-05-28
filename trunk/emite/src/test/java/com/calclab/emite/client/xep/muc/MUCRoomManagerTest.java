@@ -13,11 +13,9 @@ import org.junit.Test;
 
 import com.calclab.emite.client.im.chat.AbstractChatManagerTest;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.emite.client.im.chat.ChatManagerListener;
+import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.xep.muc.Occupant.Affiliation;
 import com.calclab.emite.client.xep.muc.Occupant.Role;
-import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
@@ -26,7 +24,6 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
 
     @Test
     public void shouldAcceptRoomPresenceWithAvatar() {
-
 	final Room room = (Room) manager.openChat(uri("room1@domain/nick"), null, null);
 	emite.receives("<presence to='user@domain/resource' from='room1@domain/otherUser2'>" + "<priority>0</priority>"
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
@@ -38,18 +35,6 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
 	assertNotNull(occupant);
 	assertEquals(Affiliation.none, occupant.getAffiliation());
 	assertEquals(Role.participant, occupant.getRole());
-    }
-
-    @Deprecated
-    @Test
-    public void shouldCloseAllActiveRoomsWhenLoggedOut() {
-	final ChatManagerListener listener = mock(ChatManagerListener.class);
-	manager.addListener(listener);
-	final Chat room1 = manager.openChat(uri("room1@domain/nick"), null, null);
-	final Chat room2 = manager.openChat(uri("room2@domain/nick"), null, null);
-	emite.receives(SessionManager.Events.onLoggedOut);
-	verify(listener).onChatClosed(room2);
-	verify(listener).onChatClosed(room1);
     }
 
     @Test
@@ -123,9 +108,8 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
     }
 
     @Override
-    protected ChatManager createChatManager() {
+    protected ChatManagerDefault createChatManager() {
 	final MUCRoomManager roomManager = new MUCRoomManager(emite);
-	roomManager.setUserURI(MYSELF);
 	return roomManager;
     }
 }

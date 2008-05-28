@@ -2,8 +2,7 @@ package com.calclab.emite.client.im.presence;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -44,9 +43,9 @@ public class PresenceManagerTest {
 
     @Test
     public void shouldDelayPresenceIfNotLoggedIn() {
-	manager.setOwnPresence("my message", Show.dnd);
+	manager.setOwnPresence("my message", Show.chat);
 	emite.verifyNothingSent();
-	assertNull(manager.getCurrentPresence());
+	assertEquals(Presence.Type.unavailable, manager.getOwnPresence().getType());
     }
 
     @Test
@@ -61,6 +60,11 @@ public class PresenceManagerTest {
 	final Presence presence = createPresence(Type.unavailable);
 	emite.receives(presence);
 	Mockito.verify(presenceListener).onPresenceReceived((Presence) MockitoEmiteHelper.packetLike(presence));
+    }
+
+    @Test
+    public void shouldHavePresenceEvenLoggedOut() {
+	assertNotNull(manager.getOwnPresence());
     }
 
     @Test

@@ -116,7 +116,6 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Override
     protected ChatManagerDefault createChatManager() {
 	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(emite);
-	chatManagerDefault.setUserURI(MYSELF);
 	return chatManagerDefault;
     }
 

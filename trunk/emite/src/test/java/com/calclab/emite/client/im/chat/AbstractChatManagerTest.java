@@ -1,6 +1,7 @@
 package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
@@ -15,12 +16,13 @@ import com.calclab.emite.testing.TestingListener;
 public abstract class AbstractChatManagerTest {
     protected static final XmppURI MYSELF = uri("self@domain");
     protected EmiteTestHelper emite;
-    protected ChatManager manager;
+    protected ChatManagerDefault manager;
 
     @Before
     public void aaCreate() {
 	emite = new EmiteTestHelper();
 	manager = createChatManager();
+	manager.setUserURI(MYSELF);
     }
 
     @Test
@@ -46,5 +48,14 @@ public abstract class AbstractChatManagerTest {
 	listener.verify();
     }
 
-    protected abstract ChatManager createChatManager();
+    @Test
+    public void shouldUnlockChatsIfLoggedWithSameUser() {
+	final Chat chat = manager.openChat(uri("other@domain"), null, null);
+	manager.logOut();
+	assertEquals(Chat.State.locked, chat.getState());
+	manager.logIn(MYSELF);
+	assertEquals(Chat.State.ready, chat.getState());
+    }
+
+    protected abstract ChatManagerDefault createChatManager();
 }
