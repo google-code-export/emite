@@ -33,7 +33,6 @@ import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
-import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
@@ -131,7 +130,7 @@ public class MultiChatPresenter {
                 view.setInputText(chatUI.getSavedInput());
                 view.setBottomChatNotification(chatUI.getSavedChatNotification());
                 currentChat = chatUI;
-                view.focusInput();
+                updateViewWithChatStatus(chat);
             }
 
             public void onChatNotificationClear(final ChatUI chatUI) {
@@ -142,6 +141,7 @@ public class MultiChatPresenter {
 
             public void onClose(final ChatUI chatUI) {
                 xmpp.getChatManager().close(chat);
+                doAfterChatClosed(chat);
             }
 
             public void onCurrentUserSend(final String message) {
@@ -193,7 +193,7 @@ public class MultiChatPresenter {
                 view.setInputText(roomUI.getSavedInput());
                 view.setBottomChatNotification(chatUI.getSavedChatNotification());
                 currentChat = chatUI;
-                view.focusInput();
+                updateViewWithChatStatus(chat);
             }
 
             public void onChatNotificationClear(final ChatUI chatUI) {
@@ -204,6 +204,7 @@ public class MultiChatPresenter {
 
             public void onClose(final ChatUI chatUI) {
                 xmpp.getInstance(RoomManager.class).close(chat);
+                doAfterChatClosed(chat);
             }
 
             public void onCreated(final ChatUI chatUI) {
@@ -455,6 +456,17 @@ public class MultiChatPresenter {
         }
     }
 
+    private void addStateListener(final Chat chat) {
+        chat.onStateChanged(new Listener<com.calclab.emite.client.im.chat.Chat.State>() {
+            public void onEvent(final com.calclab.emite.client.im.chat.Chat.State parameter) {
+                ChatUI chatUI = getChatUI(chat);
+                if (chatUI.equals(currentChat)) {
+                    updateViewWithChatStatus(chat);
+                }
+            }
+        });
+    }
+
     private void checkNoChats() {
         if (openedChats == 0) {
             Log.info("No more chats");
@@ -490,12 +502,8 @@ public class MultiChatPresenter {
             }
         });
 
-        xmpp.getChatManager().addListener(new ChatManagerListener() {
-            public void onChatClosed(final Chat chat) {
-                doAfterChatClosed(chat);
-            }
-
-            public void onChatCreated(final Chat chat) {
+        xmpp.getChatManager().onChatCreated(new Listener<Chat>() {
+            public void onEvent(final Chat chat) {
                 final ChatUI chatUI = createChat(chat);
                 dockChatUIifIsStartedByMe(chat, chatUI);
                 chat.addListener(new ChatListener() {
@@ -510,16 +518,12 @@ public class MultiChatPresenter {
                         messageReceived(chat, message);
                     }
                 });
+                addStateListener(chat);
             }
         });
 
-        final RoomManager roomManager = xmpp.getInstance(RoomManager.class);
-        roomManager.addListener(new RoomManagerListener() {
-            public void onChatClosed(final Chat chat) {
-                doAfterChatClosed(chat);
-            }
-
-            public void onChatCreated(final Chat room) {
+        xmpp.getInstance(RoomManager.class).onChatCreated(new Listener<Chat>() {
+            public void onEvent(final Chat room) {
                 final RoomUI roomUI = createRoom(room, currentUserJid.getNode());
                 dockChatUIifIsStartedByMe(room, roomUI);
                 room.addListener(new RoomListener() {
@@ -552,6 +556,15 @@ public class MultiChatPresenter {
                         }
                     }
                 });
+                addStateListener(room);
+            }
+        });
+        final RoomManager roomManager = xmpp.getInstance(RoomManager.class);
+        roomManager.addListener(new RoomManagerListener() {
+            public void onChatClosed(final Chat chat) {
+            }
+
+            public void onChatCreated(final Chat room) {
             }
 
             public void onInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
@@ -686,6 +699,20 @@ public class MultiChatPresenter {
         // during init
         roster.showUnavailableRosterItems(this.getUserChatOptions().isUnavailableRosterItemsVisible());
         view.setShowUnavailableItemsButtonPressed(this.getUserChatOptions().isUnavailableRosterItemsVisible());
+    }
+
+    private void updateViewWithChatStatus(final Chat chat) {
+        switch (chat.getState()) {
+        case locked:
+            view.setSendEnabled(false);
+            view.setInputEditable(false);
+            break;
+        case ready:
+            view.setSendEnabled(true);
+            view.setInputEditable(true);
+            view.focusInput();
+            break;
+        }
     }
 
 }
