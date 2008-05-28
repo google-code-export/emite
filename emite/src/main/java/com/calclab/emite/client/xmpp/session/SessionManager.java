@@ -71,29 +71,28 @@ public class SessionManager {
 	}
     }
 
-    private Session session;
+    private final Session session;
     private final Emite emite;
     private XmppURI userURI;
 
-    public SessionManager(final Emite emite) {
+    public SessionManager(final Session session, final Emite emite) {
+	this.session = session;
 	this.emite = emite;
 	install();
     }
 
+    @Deprecated
     public void doLogin(final XmppURI uri, final String password) {
 	emite.publish(Events.login(uri, password));
 	emite.publish(BoshManager.Events.start(uri.getHost()));
 	userURI = uri;
     }
 
+    @Deprecated
     public void doLogout() {
 	emite.publish(BoshManager.Events.stop);
 	emite.publish(SessionManager.Events.onLoggedOut);
 	userURI = null;
-    }
-
-    public void setSession(final Session session) {
-	this.session = session;
     }
 
     private void install() {

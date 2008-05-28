@@ -95,8 +95,8 @@ public class SASLManager {
 
 	emite.subscribe(when(SessionManager.Events.onDoAuthorization), new PacketListener() {
 	    public void handle(final IPacket received) {
-		startAuthorizationRequest();
-		waitingForAuthorization = true;
+		sendAuthorizationRequest();
+
 	    }
 	});
 
@@ -117,8 +117,9 @@ public class SASLManager {
 
     }
 
-    private void startAuthorizationRequest() {
+    private void sendAuthorizationRequest() {
 	final IPacket response = uri.hasNode() ? createPlainAuthorization() : createAnonymousAuthorization();
 	emite.send(response);
+	waitingForAuthorization = true;
     }
 }

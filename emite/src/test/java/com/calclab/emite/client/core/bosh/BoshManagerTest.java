@@ -6,10 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
-import static org.mockito.Mockito.verify;
-
+import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,7 +40,6 @@ public class BoshManagerTest {
 	stub(services.toXML("<body />")).toReturn(new Packet("body"));
 	manager.onResponseReceived(200, "<body />");
 	verify(bosh).requestCountDecreases();
-	emite.verifyPublished("<body />");
     }
 
     @Test
@@ -74,7 +70,7 @@ public class BoshManagerTest {
 
     @Test
     public void shouldPublishAnyBodyChild() {
-	emite.receives("<body polling='5'><one/><two/></body>");
+	managerReceives("<body polling='5'><one/><two/></body>");
 	emite.verifyPublished(new Packet("two"));
 	emite.verifyPublished(new Packet("one"));
     }
@@ -82,7 +78,7 @@ public class BoshManagerTest {
     @Test
     public void shouldPublishErrorIfServicesFails() throws ConnectorException {
 	manager.setRunning(true);
-	stub(bosh.getState(anyLong())).toReturn(Bosh.SEND);
+	stub(bosh.getState(anyLong())).toReturn(BoshState.SEND);
 	stub(services.toString((IPacket) anyObject())).toThrow(new RuntimeException("the message"));
 	manager.dispatchingEnds();
 	emite.verifyPublished(Dispatcher.Events.onError);
@@ -91,7 +87,7 @@ public class BoshManagerTest {
     @Test
     public void shouldPullAfterDispatching() {
 	manager.setRunning(true);
-	stub(bosh.getState(anyLong())).toReturn(Bosh.shouldWait(10000));
+	stub(bosh.getState(anyLong())).toReturn(BoshState.shouldWait(10000));
 	manager.dispatchingEnds();
 
 	verify(services).schedule(eq(10000), (ScheduledAction) anyObject());
@@ -100,7 +96,7 @@ public class BoshManagerTest {
     @Test
     public void shouldSendResponseAfterDispatching() throws ConnectorException {
 	manager.setRunning(true);
-	stub(bosh.getState(anyLong())).toReturn(Bosh.SEND);
+	stub(bosh.getState(anyLong())).toReturn(BoshState.SEND);
 	stub(bosh.getHttpBase()).toReturn("the http-base");
 	stub(services.toString((IPacket) anyObject())).toReturn("the response");
 
@@ -117,7 +113,7 @@ public class BoshManagerTest {
     @Test
     public void shouldSetSIDWhenFirstBody() {
 	stub(bosh.isFirstResponse()).toReturn(true);
-	emite.receives("<body xmlns='http://jabber.org/protocol/httpbind' "
+	managerReceives("<body xmlns='http://jabber.org/protocol/httpbind' "
 		+ "xmlns:stream='http://etherx.jabber.org/streams' "
 		+ "authid='505ea252' sid='theSid' secure='true' requests='2' inactivity='30' "
 		+ "polling='5' wait='60' ver='1.6'></body>");
@@ -141,9 +137,15 @@ public class BoshManagerTest {
 
     @Test
     public void shouldStopWhenBodyTerminate() {
-	emite.receives("<body xmlns='http://jabber.org/protocol/httpbind' type='terminal' "
+	managerReceives("<body xmlns='http://jabber.org/protocol/httpbind' type='terminal' "
 		+ "condition='policy-violation'></body>");
-	assertFalse(manager.isRunning());
 	emite.verifyPublished(Events.error("terminal", "policy-violation"));
+    }
+
+    private void managerReceives(final String content) {
+	stub(services.toXML(anyString())).toReturn(emite.xmler.toXML(content));
+	manager.setRunning(true);
+	manager.dispatchingBegins();
+	manager.onResponseReceived(200, "");
     }
 }
