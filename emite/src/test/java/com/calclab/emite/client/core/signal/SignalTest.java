@@ -1,9 +1,22 @@
 package com.calclab.emite.client.core.signal;
 
 import org.junit.Test;
+
+import com.calclab.emite.testing.TestingListener;
+
 import static org.mockito.Mockito.*;
 
 public class SignalTest {
+
+    @Test
+    public void shouldRemoveListener() {
+	final Signal<Object> signal = new Signal<Object>();
+	final TestingListener<Object> listener = new TestingListener<Object>();
+	signal.add(listener);
+	signal.remove(listener);
+	signal.fire(new Object());
+	listener.verifyNotCalled();
+    }
 
     @SuppressWarnings("unchecked")
     @Test

@@ -23,15 +23,19 @@ package com.calclab.emite.client.im.chat;
 
 import java.util.Collection;
 
+import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public interface ChatManager {
 
+    @Deprecated
     public void addListener(final ChatManagerListener listener);
 
     public void close(Chat chat);
 
     public Collection<? extends Chat> getChats();
+
+    public void onChatCreated(Listener<Chat> listener);
 
     public <T> Chat openChat(final XmppURI xmppURI, Class<T> dataType, T dataValue);
 

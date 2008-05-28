@@ -22,8 +22,6 @@
 package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -97,8 +95,8 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	return chat;
     }
 
-    public void setUserURI(final String uri) {
-	this.userURI = uri(uri);
+    public void setUserURI(final XmppURI uri) {
+	this.userURI = uri;
     }
 
     protected void eventMessage(final Message message) {

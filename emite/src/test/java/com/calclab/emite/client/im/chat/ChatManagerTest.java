@@ -2,57 +2,22 @@ package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 
 import com.calclab.emite.client.im.chat.Chat.State;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.TestingListener;
 
-public class ChatManagerTest {
-
-    public static class ChatTrap extends ArgumentMatcher<Chat> {
-	public Chat chat;
-
-	@Override
-	public boolean matches(final Object argument) {
-	    this.chat = (Chat) argument;
-	    return true;
-	}
-
-    }
-    private static final XmppURI MYSELF = uri("self@domain");
-    private ChatManagerDefault manager;
-
-    private EmiteTestHelper emite;
-
-    @Before
-    public void aaCreate() {
-	emite = new EmiteTestHelper();
-	manager = new ChatManagerDefault(emite);
-
-	manager.setUserURI(MYSELF.toString());
-    }
-
-    @Test
-    public void everyChatOpenedByUserShouldHaveThread() {
-	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
-	assertNotNull(chat.getThread());
-    }
+public class ChatManagerTest extends AbstractChatManagerTest {
 
     @Test
     public void managerShouldCreateOneChatForSameResource() {
@@ -145,10 +110,14 @@ public class ChatManagerTest {
 	manager.addListener(listener);
 	emite.receives("<message to='" + MYSELF + "' from='otherUser@dom/res' id='theId0001'>"
 		+ "<body>This is the body</body></message>");
-	final ChatTrap trap = new ChatTrap();
-	verify(listener).onChatCreated(argThat(trap));
-	assertEquals("otherUser@dom/res", trap.chat.getOtherURI().toString());
-	assertEquals(null, trap.chat.getThread());
+	verify(listener).onChatCreated((Chat) anyObject());
+    }
+
+    @Override
+    protected ChatManagerDefault createChatManager() {
+	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(emite);
+	chatManagerDefault.setUserURI(MYSELF);
+	return chatManagerDefault;
     }
 
     private TestingListener<Chat> addListener() {
