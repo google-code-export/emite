@@ -79,12 +79,12 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
     @Override
     public void logIn(final XmppURI uri) {
 	super.logIn(uri);
-	this.lastLoggedInUser = userURI;
-	if (uri.equals(lastLoggedInUser)) {
+	if (uri.equalsNoResource(lastLoggedInUser)) {
 	    for (final Chat chat : chats) {
 		((AbstractChat) chat).setState(Status.ready);
 	    }
 	}
+	this.lastLoggedInUser = userURI;
     }
 
     @Override
@@ -110,10 +110,6 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	    chat = createChat(toURI, thread, extraType, extraData);
 	}
 	return chat;
-    }
-
-    public void setUserURI(final XmppURI uri) {
-	this.userURI = uri;
     }
 
     protected void eventMessage(final Message message) {
