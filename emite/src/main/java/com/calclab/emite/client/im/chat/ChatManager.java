@@ -35,6 +35,8 @@ public interface ChatManager {
 
     public Collection<? extends Chat> getChats();
 
+    public void onChatClosed(Listener<Chat> listener);
+
     public void onChatCreated(Listener<Chat> listener);
 
     public <T> Chat openChat(final XmppURI xmppURI, Class<T> dataType, T dataValue);

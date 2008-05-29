@@ -42,11 +42,13 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
     protected final HashSet<Chat> chats;
     protected final ChatManagerListenerCollection listeners;
     protected final Signal<Chat> onChatCreated;
+    protected Signal<Chat> onChatClosed;
     private XmppURI lastLoggedInUser;
 
     public ChatManagerDefault(final Emite emite) {
 	super(emite);
 	this.onChatCreated = new Signal<Chat>();
+	this.onChatClosed = new Signal<Chat>();
 	this.listeners = new ChatManagerListenerCollection();
 	this.chats = new HashSet<Chat>();
 	install();
@@ -66,6 +68,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	chats.remove(chat);
 	((AbstractChat) chat).setState(State.locked);
 	listeners.onChatClosed(chat);
+	onChatClosed.fire(chat);
     }
 
     public Collection<? extends Chat> getChats() {
@@ -89,6 +92,10 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	for (final Chat chat : chats) {
 	    ((AbstractChat) chat).setState(State.locked);
 	}
+    }
+
+    public void onChatClosed(final Listener<Chat> listener) {
+	onChatClosed.add(listener);
     }
 
     public void onChatCreated(final Listener<Chat> listener) {

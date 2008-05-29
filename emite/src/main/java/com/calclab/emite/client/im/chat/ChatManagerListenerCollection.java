@@ -2,7 +2,6 @@ package com.calclab.emite.client.im.chat;
 
 import java.util.ArrayList;
 
-@Deprecated
 public class ChatManagerListenerCollection extends ArrayList<ChatManagerListener> implements ChatManagerListener {
     private static final long serialVersionUID = 1L;
 

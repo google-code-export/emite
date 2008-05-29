@@ -41,6 +41,15 @@ public abstract class AbstractChatManagerTest {
     }
 
     @Test
+    public void shouldSignalWhenAChatIsClosed() {
+	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
+	final TestingListener<Chat> listener = new TestingListener<Chat>();
+	manager.onChatClosed(listener);
+	manager.close(chat);
+	listener.verify();
+    }
+
+    @Test
     public void shouldSignalWhenChatCreated() {
 	final TestingListener<Chat> listener = new TestingListener<Chat>();
 	manager.onChatCreated(listener);
