@@ -65,7 +65,6 @@ import com.calclab.emiteuiplugin.client.status.OwnPresence.OwnStatus;
 
 public class MultiChatPresenter {
     private static final OwnPresence OFFLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.offline);
-    private static final OwnPresence ONLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.online);
 
     private ChatUI currentChat;
     private XmppURI currentUserJid;
@@ -502,6 +501,13 @@ public class MultiChatPresenter {
             }
         });
 
+        // FIXME: This in StatusPresenter
+        xmpp.getPresenceManager().onOwnPresenceChanged(new Listener<Presence>() {
+            public void onEvent(final Presence presence) {
+                view.setOwnPresence(new OwnPresence(presence));
+            }
+        });
+
         xmpp.getChatManager().onChatCreated(new Listener<Chat>() {
             public void onEvent(final Chat chat) {
                 final ChatUI chatUI = createChat(chat);
@@ -593,8 +599,6 @@ public class MultiChatPresenter {
         } else {
             view.setInputEditable(false);
         }
-        final Presence currentPresence = presenceManager.getCurrentPresence();
-        view.setOwnPresence(currentPresence != null ? new OwnPresence(currentPresence) : ONLINE_OWN_PRESENCE);
     }
 
     private void dockChatUI(final Chat chat, final ChatUI chatUI) {
@@ -699,10 +703,12 @@ public class MultiChatPresenter {
     private void updateViewWithChatStatus(final Chat chat) {
         switch (chat.getState()) {
         case locked:
+            Log.info("Chat locked:" + chat.getID());
             view.setSendEnabled(false);
             view.setInputEditable(false);
             break;
         case ready:
+            Log.info("Chat unlocked:" + chat.getID());
             view.setSendEnabled(true);
             view.setInputEditable(true);
             view.focusInput();
