@@ -60,7 +60,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	final Room room = rooms.remove(whatToClose.getOtherURI().getJID());
 	if (room != null) {
 	    room.close();
-	    listeners.onChatClosed(room);
+	    super.close(room);
 	}
     }
 
