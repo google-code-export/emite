@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.core.bosh.BoshManager;
-import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.dispatcher.Dispatcher.Events;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
@@ -50,16 +49,24 @@ public class SessionManagerTest {
 	emite.verifyIQSent(new IQ(Type.set));
 	emite.answerSuccess();
 	emite.verifyPublished(SessionManager.Events.loggedIn("name@domain/resource"));
-	verify(session).setState(State.connected);
+	verify(session).setState(State.loggedIn);
 
     }
 
     @Test
     public void shouldSendReadyWhenLoggedIn() {
-	emite.receives(SessionManager.Events.onBinded);
-	final PacketListener listener = emite.verifyIQSent(new IQ(Type.set));
-	verify(session).setState(State.connected);
-	emite.verifySent(SessionManager.Events.ready);
+	emite.receives(SessionManager.Events.binded("me@domain"));
+	emite.verifyIQSent(new IQ(Type.set));
+	emite.answerSuccess();
+	verify(session).setState(State.loggedIn);
+	emite.verifyPublished(SessionManager.Events.onLoggedIn);
+	emite.verifyPublished(SessionManager.Events.ready);
+    }
+
+    @Test
+    public void shouldSetSessionReadyWhenEvent() {
+	emite.receives(SessionManager.Events.ready);
+	verify(session).setState(State.ready);
     }
 
     @Test

@@ -33,7 +33,7 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.core.signal.Signal;
-import com.calclab.emite.client.im.chat.Chat.State;
+import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -67,7 +67,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 
     public void close(final Chat chat) {
 	chats.remove(chat);
-	((AbstractChat) chat).setState(State.locked);
+	((AbstractChat) chat).setState(Status.locked);
 	listeners.onChatClosed(chat);
 	onChatClosed.fire(chat);
     }
@@ -82,7 +82,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	this.lastLoggedInUser = userURI;
 	if (uri.equals(lastLoggedInUser)) {
 	    for (final Chat chat : chats) {
-		((AbstractChat) chat).setState(State.ready);
+		((AbstractChat) chat).setState(Status.ready);
 	    }
 	}
     }
@@ -91,7 +91,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
     public void logOut() {
 	super.logOut();
 	for (final Chat chat : chats) {
-	    ((AbstractChat) chat).setState(State.locked);
+	    ((AbstractChat) chat).setState(Status.locked);
 	}
     }
 
@@ -136,7 +136,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	chats.add(chat);
 	onChatCreated.fire(chat);
 	listeners.onChatCreated(chat);
-	chat.setState(Chat.State.ready);
+	chat.setState(Chat.Status.ready);
 	return chat;
     }
 

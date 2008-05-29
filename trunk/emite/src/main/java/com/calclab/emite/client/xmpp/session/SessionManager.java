@@ -82,20 +82,6 @@ public class SessionManager {
 	install();
     }
 
-    @Deprecated
-    public void doLogin(final XmppURI uri, final String password) {
-	emite.publish(Events.login(uri, password));
-	emite.publish(BoshManager.Events.start(uri.getHost()));
-	userURI = uri;
-    }
-
-    @Deprecated
-    public void doLogout() {
-	emite.publish(BoshManager.Events.stop);
-	emite.publish(SessionManager.Events.onLoggedOut);
-	userURI = null;
-    }
-
     private void install() {
 	emite.subscribe(when(Events.onAuthorizationFailed), new PacketListener() {
 	    public void handle(final IPacket received) {
@@ -157,8 +143,9 @@ public class SessionManager {
 	emite.sendIQ("session", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (IQ.isSuccess(received)) {
-		    session.setState(Session.State.connected);
+		    session.setState(Session.State.loggedIn);
 		    emite.publish(Events.loggedIn(uri));
+		    emite.publish(Events.ready);
 		}
 	    }
 	});

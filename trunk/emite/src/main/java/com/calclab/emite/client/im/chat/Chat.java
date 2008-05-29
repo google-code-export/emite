@@ -31,7 +31,7 @@ public interface Chat {
      * Possible chat states.
      * 
      */
-    public static enum State {
+    public static enum Status {
 	ready, locked
     }
 
@@ -45,11 +45,11 @@ public interface Chat {
 
     public XmppURI getOtherURI();
 
-    public State getState();
+    public Status getState();
 
     public String getThread();
 
-    public void onStateChanged(Listener<State> listener);
+    public void onStateChanged(Listener<Status> listener);
 
     /**
      * To make this chat receive a message

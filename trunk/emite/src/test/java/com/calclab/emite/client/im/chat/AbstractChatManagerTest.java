@@ -9,7 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.im.chat.Chat.State;
+import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
@@ -36,10 +36,10 @@ public abstract class AbstractChatManagerTest {
     @Test
     public void shouldLockChatsWhenLoggedOut() {
 	final Chat chat = manager.openChat(uri("other@domain"), null, null);
-	final ListenerTester<State> listener = new ListenerTester<State>();
+	final ListenerTester<Status> listener = new ListenerTester<Status>();
 	chat.onStateChanged(listener);
 	emite.receives(SessionManager.Events.onLoggedOut);
-	verifyCalledWith(listener, State.locked);
+	verifyCalledWith(listener, Status.locked);
     }
 
     @Test
@@ -63,9 +63,9 @@ public abstract class AbstractChatManagerTest {
     public void shouldUnlockChatsIfLoggedWithSameUserEvenWithDifferentResource() {
 	final Chat chat = manager.openChat(uri("other@domain"), null, null);
 	manager.logOut();
-	assertEquals(Chat.State.locked, chat.getState());
+	assertEquals(Chat.Status.locked, chat.getState());
 	manager.logIn(new XmppURI(MYSELF.getNode(), MYSELF.getHost(), "other-resource"));
-	assertEquals(Chat.State.ready, chat.getState());
+	assertEquals(Chat.Status.ready, chat.getState());
     }
 
     protected abstract ChatManagerDefault createChatManager();
