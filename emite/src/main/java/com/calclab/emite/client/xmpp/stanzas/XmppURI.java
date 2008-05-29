@@ -37,8 +37,9 @@ public class XmppURI {
     }
 
     public static XmppURI uri(final String xmppUri) {
-	if (xmppUri == null)
+	if (xmppUri == null) {
 	    return null;
+	}
 
 	String node = null;
 	String domain = null;

@@ -42,8 +42,9 @@ public class SessionManager {
 	public static final Event onBinded = new Event("session:on:binded");
 	public static final Event onLoggedOut = new Event("session:on:logout");
 	public static final Event onXDoLogin = new Event("session:do:login");
-	public static final IPacket onDoAuthorization = new Event("session:do:authorization");
+	public static final Event onDoAuthorization = new Event("session:do:authorization");
 	public static final Event onLoggedIn = new Event("session:on:login");
+	public static final Event ready = new Event("session:ready");
 
 	public static Event binded(final String jid) {
 	    return SessionManager.Events.onBinded.Params("uri", jid);
@@ -122,6 +123,12 @@ public class SessionManager {
 	    public void handle(final IPacket received) {
 		emite.publish(BoshManager.Events.stop);
 		session.setState(Session.State.disconnected);
+	    }
+	});
+
+	emite.subscribe(when(SessionManager.Events.ready), new PacketListener() {
+	    public void handle(final IPacket received) {
+		session.setState(State.ready);
 	    }
 	});
 
