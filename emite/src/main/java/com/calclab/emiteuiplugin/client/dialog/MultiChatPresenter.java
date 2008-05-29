@@ -667,6 +667,7 @@ public class MultiChatPresenter {
         setInputEnabled(false);
         view.setOwnPresence(OFFLINE_OWN_PRESENCE);
         roster.clearRoster();
+        view.clearBottomChatNotification();
     }
 
     private void resetWhenNoChats() {

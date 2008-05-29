@@ -23,6 +23,7 @@ package com.calclab.emiteuiplugin.client.room;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
+import com.calclab.emite.client.core.packet.TextUtils;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogExtended;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogListener;
@@ -97,6 +98,8 @@ public class InviteToRoomPanel {
 
         jid = new TextField(i18n.t("Invite to (some Jabber Id)"), "jid", 150);
         jid.setAllowBlank(false);
+        jid.setRegex(TextUtils.EMAIL_REGEXP);
+        jid.setRegexText(i18n.t("A Jabber Id is something like 'someone@example.com'"));
         // jid.setVtype(VType.EMAIL);
         jid.setValidationEvent(false);
         final ToolTip fieldToolTip = new ToolTip(i18n.t("Note that the 'Jabber Id' sometimes is the same as the email "

@@ -24,6 +24,7 @@ package com.calclab.emiteuiplugin.client.roster;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
+import com.calclab.emite.client.core.packet.TextUtils;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogExtended;
 import com.calclab.emiteuiplugin.client.dialog.BasicDialogListener;
 import com.calclab.emiteuiplugin.client.dialog.MultiChatPresenter;
@@ -114,6 +115,8 @@ public class RosterItemPanel {
         jid = new TextField(i18n.t("Buddy Jabber Id"), "jid", 150);
         jid.setAllowBlank(false);
         jid.setValidationEvent(false);
+        jid.setRegex(TextUtils.EMAIL_REGEXP);
+        jid.setRegexText(i18n.t("A Jabber Id is something like 'someone@example.com'"));
         // jid.setVtype(VType.EMAIL);
         final ToolTip fieldToolTip = new ToolTip(i18n.t("Note that the 'Jabber Id' sometimes is the same as the email "
                 + "(in gmail accounts for instance)."));
