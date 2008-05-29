@@ -5,28 +5,33 @@ import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
+import com.calclab.emite.testing.ListenerTester;
+import static com.calclab.emite.testing.ListenerTester.*;
 
 public class ResourceBindingManagerTest {
 
     private EmiteTestHelper emite;
+    private ResourceBindingManager manager;
 
     @Before
     public void aaCreate() {
 	emite = new EmiteTestHelper();
-	final ResourceBindingManager manager = new ResourceBindingManager(emite);
-	manager.install();
+	manager = new ResourceBindingManager(emite);
     }
 
     @Test
-    public void shouldPerfomrBinding() {
-	emite.receives(SessionManager.Events.login(uri("name@domain/someresource"), "password"));
-	emite.receives(SessionManager.Events.onAuthorized);
+    public void shouldPerformBinding() {
+	final ListenerTester<XmppURI> listener = new ListenerTester<XmppURI>();
+	manager.onBinded(listener);
+	manager.bindResource("resource");
+
 	emite.verifyIQSent(new IQ(IQ.Type.set).Includes("bind", "urn:ietf:params:xml:ns:xmpp-bind"));
 	emite.answer("<iq type=\"result\" id=\"bind_2\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\">"
 		+ "<jid>somenode@example.com/someresource</jid></bind></iq>");
-	emite.verifyPublished(SessionManager.Events.onBinded.Params("uri", "somenode@example.com/someresource"));
+
+	verifyCalledWith(listener, uri("somenode@example.com/someresource"));
     }
 }

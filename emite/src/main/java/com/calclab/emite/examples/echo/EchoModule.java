@@ -23,24 +23,28 @@ package com.calclab.emite.examples.echo;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Container;
+import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
 
-public class EchoModule {
+public class EchoModule implements Module {
     private static final Class<Echo> COMPONENT_ECHO = Echo.class;
 
     public static Echo getEcho(final Container container) {
 	return container.getInstance(COMPONENT_ECHO);
     }
 
-    public static void install(final Container container) {
+    public Class<?> getType() {
+	return EchoModule.class;
+    }
 
-	container.registerProvider(Echo.class, new Provider<Echo>() {
+    public void onLoad(final ModuleBuilder builder) {
+	builder.registerProvider(Echo.class, new Provider<Echo>() {
 	    public Echo get() {
-		return new Echo(container.getInstance(Emite.class));
+		return new Echo(builder.getInstance(Emite.class));
 	    }
 
 	}, Scopes.SINGLETON_EAGER);
-
     }
 }

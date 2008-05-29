@@ -52,13 +52,13 @@ public class XMPPModule implements Module {
 	    public ResourceBindingManager get() {
 		return new ResourceBindingManager(builder.getInstance(Emite.class));
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, Scopes.SINGLETON);
 
 	builder.registerProvider(SASLManager.class, new Provider<SASLManager>() {
 	    public SASLManager get() {
 		return new SASLManager(builder.getInstance(Emite.class));
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, Scopes.SINGLETON);
 
 	builder.registerProvider(Session.class, new Provider<Session>() {
 	    public Session get() {
@@ -67,13 +67,15 @@ public class XMPPModule implements Module {
 		final Session session = new Session(boshManager, emite);
 		return session;
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, Scopes.SINGLETON);
 
 	builder.registerProvider(SessionManager.class, new Provider<SessionManager>() {
 	    public SessionManager get() {
 		final Emite emite = builder.getInstance(Emite.class);
 		final Session session = builder.getInstance(Session.class);
-		final SessionManager sessionManager = new SessionManager(session, emite);
+		final SASLManager saslManager = builder.getInstance(SASLManager.class);
+		final ResourceBindingManager bindingManager = builder.getInstance(ResourceBindingManager.class);
+		final SessionManager sessionManager = new SessionManager(session, emite, saslManager, bindingManager);
 		return sessionManager;
 	    }
 	}, Scopes.SINGLETON_EAGER);

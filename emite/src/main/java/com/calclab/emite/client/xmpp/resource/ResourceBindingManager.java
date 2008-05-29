@@ -21,49 +21,37 @@
  */
 package com.calclab.emite.client.xmpp.resource;
 
-import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.xmpp.session.SessionManager;
+import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.emite.client.core.signal.Signal;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class ResourceBindingManager {
-    private String resource;
     private final Emite emite;
+    private final Signal<XmppURI> onBinded;
 
     public ResourceBindingManager(final Emite emite) {
 	this.emite = emite;
-	resource = null;
-	install();
+	this.onBinded = new Signal<XmppURI>();
     }
 
-    protected void install() {
-	SessionManager.Signals.onDoLogin(emite, new PacketListener() {
-	    public void handle(final IPacket received) {
-		resource = uri(received.getAttribute("uri")).getResource();
-	    }
-	});
-	emite.subscribe(when(SessionManager.Events.onAuthorized), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventAuthorized();
-	    }
-
-	});
-    }
-
-    void eventAuthorized() {
+    public void bindResource(final String resource) {
 	final IQ iq = new IQ(IQ.Type.set);
 	iq.addChild("bind", "urn:ietf:params:xml:ns:xmpp-bind").addChild("resource", null).setText(resource);
 
 	emite.sendIQ("bind", iq, new PacketListener() {
 	    public void handle(final IPacket received) {
 		final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
-		emite.publish(SessionManager.Events.binded(jid));
+		onBinded.fire(XmppURI.uri(jid));
 	    }
 	});
+    }
+
+    public void onBinded(final Listener<XmppURI> listener) {
+	onBinded.add(listener);
     }
 
 }

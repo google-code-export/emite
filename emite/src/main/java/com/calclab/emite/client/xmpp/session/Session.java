@@ -26,7 +26,8 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.core.signal.Signal;
-import com.calclab.emite.client.xmpp.session.SessionManager.Events;
+import com.calclab.emite.client.modular.Context;
+import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -40,6 +41,8 @@ public class Session {
 	connected
     }
 
+    public static final Context<SessionLifecycle> CONTEXT = new Context<SessionLifecycle>(SessionLifecycle.class);
+
     private final SessionListenerCollection listeners;
     private State state;
     private final Emite emite;
@@ -47,6 +50,7 @@ public class Session {
     private final Signal<State> onStateChanged;
     private final Signal<Presence> onPresence;
     private final Signal<Message> onMessage;
+    private final Signal<AuthorizationTicket> onLogin;
 
     public Session(final BoshManager manager, final Emite emite) {
 	this.emite = emite;
@@ -55,6 +59,7 @@ public class Session {
 	this.onStateChanged = new Signal<State>();
 	this.onPresence = new Signal<Presence>();
 	this.onMessage = new Signal<Message>();
+	this.onLogin = new Signal<AuthorizationTicket>();
 
 	manager.onStanza(new Listener<IPacket>() {
 	    public void onEvent(final IPacket stanza) {
@@ -89,7 +94,7 @@ public class Session {
     public void login(final XmppURI uri, final String password) {
 	if (state == State.disconnected) {
 	    setState(State.connecting);
-	    emite.publish(Events.login(uri, password));
+	    onLogin.fire(new AuthorizationTicket(uri, password));
 	    emite.publish(BoshManager.Events.start(uri.getHost()));
 	    userURI = uri;
 	}
@@ -101,6 +106,10 @@ public class Session {
 	    emite.publish(SessionManager.Events.onLoggedOut);
 	    userURI = null;
 	}
+    }
+
+    public void onLogin(final Listener<AuthorizationTicket> listener) {
+	onLogin.add(listener);
     }
 
     public void onMessage(final Listener<Message> listener) {

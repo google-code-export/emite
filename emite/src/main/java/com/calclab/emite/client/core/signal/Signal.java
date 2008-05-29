@@ -2,6 +2,8 @@ package com.calclab.emite.client.core.signal;
 
 import java.util.ArrayList;
 
+import com.allen_sauer.gwt.log.client.Log;
+
 public class Signal<T> {
     private ArrayList<Listener<T>> listeners;
 
@@ -17,6 +19,7 @@ public class Signal<T> {
     }
 
     public void fire(final T event) {
+	Log.debug("Signal fired: " + event);
 	if (listeners != null) {
 	    for (final Listener<T> listener : listeners) {
 		listener.onEvent(event);
