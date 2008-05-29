@@ -28,7 +28,7 @@ public class ChatStateManagerTest {
 
 	emite = new EmiteTestHelper();
 	chatManager = new ChatManagerDefault(emite);
-	chatManager.setUserURI(MYSELF);
+	chatManager.logIn(MYSELF);
 	final ChatStateManager chatStateManager = new ChatStateManager(chatManager);
 	stateListener = Mockito.mock(ChatStateListener.class);
 	chat = chatManager.openChat(OTHER, null, null);

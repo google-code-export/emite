@@ -24,7 +24,7 @@ public abstract class AbstractChatManagerTest {
     public void aaCreate() {
 	emite = new EmiteTestHelper();
 	manager = createChatManager();
-	manager.setUserURI(MYSELF);
+	manager.logIn(MYSELF);
     }
 
     @Test
