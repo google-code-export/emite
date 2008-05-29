@@ -11,7 +11,8 @@ import com.calclab.emite.client.im.chat.Chat.State;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.TestingListener;
+import com.calclab.emite.testing.ListenerTester;
+import static com.calclab.emite.testing.ListenerTester.*;
 
 public abstract class AbstractChatManagerTest {
     protected static final XmppURI MYSELF = uri("self@domain");
@@ -34,27 +35,27 @@ public abstract class AbstractChatManagerTest {
     @Test
     public void shouldLockChatsWhenLoggedOut() {
 	final Chat chat = manager.openChat(uri("other@domain"), null, null);
-	final TestingListener<State> listener = new TestingListener<State>();
+	final ListenerTester<State> listener = new ListenerTester<State>();
 	chat.onStateChanged(listener);
 	emite.receives(SessionManager.Events.onLoggedOut);
-	listener.verify(State.locked);
+	verifyCalledWith(listener, State.locked);
     }
 
     @Test
     public void shouldSignalWhenAChatIsClosed() {
 	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
-	final TestingListener<Chat> listener = new TestingListener<Chat>();
+	final ListenerTester<Chat> listener = new ListenerTester<Chat>();
 	manager.onChatClosed(listener);
 	manager.close(chat);
-	listener.verify();
+	verifyCalled(listener);
     }
 
     @Test
     public void shouldSignalWhenChatCreated() {
-	final TestingListener<Chat> listener = new TestingListener<Chat>();
+	final ListenerTester<Chat> listener = new ListenerTester<Chat>();
 	manager.onChatCreated(listener);
 	manager.openChat(uri("other@domain"), null, null);
-	listener.verify();
+	verifyCalled(listener);
     }
 
     @Test

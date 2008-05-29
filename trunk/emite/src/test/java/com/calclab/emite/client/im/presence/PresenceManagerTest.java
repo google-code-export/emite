@@ -13,7 +13,8 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.MockitoEmiteHelper;
-import com.calclab.emite.testing.TestingListener;
+import com.calclab.emite.testing.ListenerTester;
+import static com.calclab.emite.testing.ListenerTester.*;
 
 public class PresenceManagerTest {
 
@@ -36,7 +37,7 @@ public class PresenceManagerTest {
 	manager.setOwnPresence("this is my new status", Show.away);
 	emite.verifySent("<presence from='myself@domain'><show>away</show>"
 		+ "<status>this is my new status</status></presence>");
-	final Presence current = manager.getCurrentPresence();
+	final Presence current = manager.getOwnPresence();
 	assertEquals(Show.away, current.getShow());
 	assertEquals("this is my new status", current.getStatus());
     }
@@ -102,12 +103,12 @@ public class PresenceManagerTest {
     @Test
     public void shouldSignalOwnPresence() {
 	manager.logIn(uri("myself@domain"));
-	final TestingListener<Presence> listener = new TestingListener<Presence>();
+	final ListenerTester<Presence> listener = new ListenerTester<Presence>();
 	manager.onOwnPresenceChanged(listener);
 	manager.setOwnPresence("status", Show.away);
-	listener.verify();
-	assertEquals("status", listener.getValue().getStatus());
-	assertEquals(Show.away, listener.getValue().getShow());
+	verifyCalled(listener);
+	assertEquals("status", listener.getValue(0).getStatus());
+	assertEquals(Show.away, listener.getValue(0).getShow());
     }
 
     private Presence createPresence(final Type type) {

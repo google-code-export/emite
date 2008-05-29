@@ -5,7 +5,7 @@ import org.hamcrest.Description;
 
 import com.calclab.emite.client.core.signal.Listener;
 
-public class TestSignal<T> extends BaseMatcher<Listener<T>> {
+public class SignalTester<T> extends BaseMatcher<Listener<T>> {
 
     private Listener<T> listener;
 

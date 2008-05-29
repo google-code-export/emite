@@ -19,7 +19,8 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.TestingListener;
+import com.calclab.emite.testing.ListenerTester;
+import static com.calclab.emite.testing.ListenerTester.*;
 
 public class RosterManagerTest {
     private EmiteTestHelper emite;
@@ -142,21 +143,21 @@ public class RosterManagerTest {
 
     @Test
     public void shouldSignalSubscribtionRequests() {
-	final TestingListener<Presence> listener = new TestingListener<Presence>();
+	final ListenerTester<Presence> listener = new ListenerTester<Presence>();
 	manager.onSubscriptionRequested(listener);
 	final Presence presence = new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain"));
 	emite.receives(presence);
-	listener.verify();
+	verifyCalled(listener);
     }
 
     @Test
     public void shouldSignalUnsibscirvedEvents() {
-	final TestingListener<XmppURI> listener = new TestingListener<XmppURI>();
+	final ListenerTester<XmppURI> listener = new ListenerTester<XmppURI>();
 	manager.onUnsubscribedReceived(listener);
 
 	final String presence = "<presence from='contact@example.org' to='user@example.com' type='unsubscribed'/>";
 	emite.receives(presence);
-	listener.verify();
+	verifyCalled(listener);
     }
 
     @Test

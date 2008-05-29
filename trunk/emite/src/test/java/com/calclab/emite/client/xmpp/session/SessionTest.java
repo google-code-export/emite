@@ -5,6 +5,7 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static com.calclab.emite.testing.ListenerTester.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +19,8 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.TestSignal;
-import com.calclab.emite.testing.TestingListener;
+import com.calclab.emite.testing.SignalTester;
+import com.calclab.emite.testing.ListenerTester;
 
 public class SessionTest {
 
@@ -62,24 +63,24 @@ public class SessionTest {
 
     @Test
     public void shouldSignalMessages() {
-	final TestingListener<Message> listener = new TestingListener<Message>();
+	final ListenerTester<Message> listener = new ListenerTester<Message>();
 	session.onMessage(listener);
 
-	final TestSignal<IPacket> onStanza = new TestSignal<IPacket>();
+	final SignalTester<IPacket> onStanza = new SignalTester<IPacket>();
 	verify(boshManager).onStanza(argThat(onStanza));
 	onStanza.fire(new Packet("message"));
-	listener.verify();
+	verifyCalled(listener);
     }
 
     @Test
     public void shouldSignalPresences() {
-	final TestingListener<Presence> listener = new TestingListener<Presence>();
+	final ListenerTester<Presence> listener = new ListenerTester<Presence>();
 	session.onPresence(listener);
 
-	final TestSignal<IPacket> onStanza = new TestSignal<IPacket>();
+	final SignalTester<IPacket> onStanza = new SignalTester<IPacket>();
 	verify(boshManager).onStanza(argThat(onStanza));
 	onStanza.fire(new Packet("presence"));
-	listener.verify();
+	verifyCalled(listener);
     }
 
     @SuppressWarnings("unchecked")
