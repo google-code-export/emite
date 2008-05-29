@@ -1,6 +1,8 @@
 package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.testing.ListenerTester.verifyCalled;
+import static com.calclab.emite.testing.ListenerTester.verifyCalledWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -12,7 +14,6 @@ import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.ListenerTester;
-import static com.calclab.emite.testing.ListenerTester.*;
 
 public abstract class AbstractChatManagerTest {
     protected static final XmppURI MYSELF = uri("self@domain");
@@ -21,50 +22,50 @@ public abstract class AbstractChatManagerTest {
 
     @Before
     public void aaCreate() {
-	emite = new EmiteTestHelper();
-	manager = createChatManager();
-	manager.setUserURI(MYSELF);
+        emite = new EmiteTestHelper();
+        manager = createChatManager();
+        manager.setUserURI(MYSELF);
     }
 
     @Test
     public void everyChatOpenedByUserShouldHaveThread() {
-	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
-	assertNotNull(chat.getThread());
+        final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
+        assertNotNull(chat.getThread());
     }
 
     @Test
     public void shouldLockChatsWhenLoggedOut() {
-	final Chat chat = manager.openChat(uri("other@domain"), null, null);
-	final ListenerTester<State> listener = new ListenerTester<State>();
-	chat.onStateChanged(listener);
-	emite.receives(SessionManager.Events.onLoggedOut);
-	verifyCalledWith(listener, State.locked);
+        final Chat chat = manager.openChat(uri("other@domain"), null, null);
+        final ListenerTester<State> listener = new ListenerTester<State>();
+        chat.onStateChanged(listener);
+        emite.receives(SessionManager.Events.onLoggedOut);
+        verifyCalledWith(listener, State.locked);
     }
 
     @Test
     public void shouldSignalWhenAChatIsClosed() {
-	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
-	final ListenerTester<Chat> listener = new ListenerTester<Chat>();
-	manager.onChatClosed(listener);
-	manager.close(chat);
-	verifyCalled(listener);
+        final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
+        final ListenerTester<Chat> listener = new ListenerTester<Chat>();
+        manager.onChatClosed(listener);
+        manager.close(chat);
+        verifyCalled(listener);
     }
 
     @Test
     public void shouldSignalWhenChatCreated() {
-	final ListenerTester<Chat> listener = new ListenerTester<Chat>();
-	manager.onChatCreated(listener);
-	manager.openChat(uri("other@domain"), null, null);
-	verifyCalled(listener);
+        final ListenerTester<Chat> listener = new ListenerTester<Chat>();
+        manager.onChatCreated(listener);
+        manager.openChat(uri("other@domain"), null, null);
+        verifyCalled(listener);
     }
 
     @Test
     public void shouldUnlockChatsIfLoggedWithSameUser() {
-	final Chat chat = manager.openChat(uri("other@domain"), null, null);
-	manager.logOut();
-	assertEquals(Chat.State.locked, chat.getState());
-	manager.logIn(MYSELF);
-	assertEquals(Chat.State.ready, chat.getState());
+        final Chat chat = manager.openChat(uri("other@domain"), null, null);
+        manager.logOut();
+        assertEquals(Chat.State.locked, chat.getState());
+        manager.logIn(uri(MYSELF.toString()));
+        assertEquals(Chat.State.ready, chat.getState());
     }
 
     protected abstract ChatManagerDefault createChatManager();
