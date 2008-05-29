@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import com.calclab.emite.client.im.chat.Chat.State;
+import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.testing.ListenerTester;
@@ -29,23 +29,23 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Test
     public void oneToOneChatsAreAlwaysReadyWhenCreated() {
 	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
-	assertSame(Chat.State.ready, chat.getState());
+	assertSame(Chat.Status.ready, chat.getState());
     }
 
     @Test
     public void shouldBlockChatWhenClosingIt() {
 	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
 	manager.close(chat);
-	assertSame(Chat.State.locked, chat.getState());
+	assertSame(Chat.Status.locked, chat.getState());
     }
 
     @Test
     public void shouldCloseChatWhenLoggedOut() {
 	final Chat chat = manager.openChat(uri("name@domain/resouce"), null, null);
-	final ListenerTester<State> listener = new ListenerTester<State>();
+	final ListenerTester<Status> listener = new ListenerTester<Status>();
 	chat.onStateChanged(listener);
 	emite.receives(SessionManager.Events.onLoggedOut);
-	verifyCalledWith(listener, State.locked);
+	verifyCalledWith(listener, Status.locked);
     }
 
     @Test

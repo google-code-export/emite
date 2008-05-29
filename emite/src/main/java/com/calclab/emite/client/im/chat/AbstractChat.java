@@ -15,8 +15,8 @@ public abstract class AbstractChat implements Chat {
     protected final Emite emite;
     protected final XmppURI from;
     protected final XmppURI other;
-    protected State state;
-    protected final Signal<State> onStateChanged;
+    protected Status status;
+    protected final Signal<Status> onStateChanged;
     private final HashMap<Class<?>, Object> data;
 
     public AbstractChat(final XmppURI from, final XmppURI other, final Emite emite) {
@@ -26,8 +26,8 @@ public abstract class AbstractChat implements Chat {
 	this.interceptors = new MessageInterceptorCollection();
 	this.listeners = new ChatListenerCollection();
 	this.data = new HashMap<Class<?>, Object>();
-	this.state = Chat.State.locked;
-	this.onStateChanged = new Signal<State>();
+	this.status = Chat.Status.locked;
+	this.onStateChanged = new Signal<Status>();
     }
 
     public void addListener(final ChatListener listener) {
@@ -51,11 +51,11 @@ public abstract class AbstractChat implements Chat {
 	return other;
     }
 
-    public State getState() {
-	return state;
+    public Status getState() {
+	return status;
     }
 
-    public void onStateChanged(final Listener<State> listener) {
+    public void onStateChanged(final Listener<Status> listener) {
 	onStateChanged.add(listener);
     }
 
@@ -83,8 +83,8 @@ public abstract class AbstractChat implements Chat {
 	return (T) data.put(type, value);
     }
 
-    protected void setState(final State state) {
-	this.state = state;
-	onStateChanged.fire(state);
+    protected void setState(final Status status) {
+	this.status = status;
+	onStateChanged.fire(status);
     }
 }

@@ -34,7 +34,10 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 public class Session {
 
     public static enum State {
-	authorized, connected, connecting, disconnected, error, notAuthorized, ready
+	authorized, loggedIn, connecting, disconnected, error, notAuthorized, ready,
+	/** USE ready!!! * */
+	@Deprecated
+	connected
     }
 
     private final SessionListenerCollection listeners;

@@ -44,24 +44,6 @@ public class SessionTest {
     }
 
     @Test
-    @Deprecated
-    public void shouldInformAboutStateChanges() {
-	final State initialState = State.disconnected;
-	session.setState(initialState);
-	final SessionListener listener1 = mock(SessionListener.class);
-	final SessionListener listener2 = mock(SessionListener.class);
-	session.addListener(listener2);
-	session.addListener(listener1);
-	// verify(listener1).onStateChanged(initialState, initialState);
-	// verify(listener2).onStateChanged(initialState, initialState);
-	final State newState = State.connected;
-	session.setState(newState);
-	verify(listener1).onStateChanged(initialState, newState);
-	verify(listener2).onStateChanged(initialState, newState);
-
-    }
-
-    @Test
     public void shouldSignalMessages() {
 	final ListenerTester<Message> listener = new ListenerTester<Message>();
 	session.onMessage(listener);
@@ -90,5 +72,23 @@ public class SessionTest {
 	session.onStateChanged(listener);
 	session.setState(State.ready);
 	verify(listener).onEvent(same(State.ready));
+    }
+
+    @Test
+    @Deprecated
+    public void XXshouldInformAboutStateChanges() {
+	final State initialState = State.disconnected;
+	session.setState(initialState);
+	final SessionListener listener1 = mock(SessionListener.class);
+	final SessionListener listener2 = mock(SessionListener.class);
+	session.addListener(listener2);
+	session.addListener(listener1);
+	// verify(listener1).onStateChanged(initialState, initialState);
+	// verify(listener2).onStateChanged(initialState, initialState);
+	final State newState = State.loggedIn;
+	session.setState(newState);
+	verify(listener1).onStateChanged(initialState, newState);
+	verify(listener2).onStateChanged(initialState, newState);
+
     }
 }

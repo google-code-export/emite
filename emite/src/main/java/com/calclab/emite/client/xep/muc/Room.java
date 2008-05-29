@@ -53,7 +53,7 @@ public class Room extends AbstractChat implements Chat {
      */
     public void close() {
 	emite.send(new Presence(Type.unavailable, getFromURI(), getOtherURI()));
-	setState(State.locked);
+	setState(Status.locked);
     }
 
     public Occupant findOccupant(final XmppURI uri) {
@@ -144,8 +144,8 @@ public class Room extends AbstractChat implements Chat {
     }
 
     @Override
-    public void setState(final State state) {
-	super.setState(state);
+    public void setState(final Status status) {
+	super.setState(status);
     }
 
     /**

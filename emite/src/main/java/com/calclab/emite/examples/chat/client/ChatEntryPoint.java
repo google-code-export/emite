@@ -146,7 +146,7 @@ public class ChatEntryPoint implements EntryPoint {
 		loginPanel.setStatus(theStatus);
 		conversationsPanel.setStatus(theStatus);
 		switch (current) {
-		case connected:
+		case ready:
 		    dialogBox.hide();
 		    break;
 		case notAuthorized:
