@@ -23,6 +23,7 @@ package com.calclab.emiteuiplugin.client.utils;
 
 import org.ourproject.kune.platf.client.ui.KuneStringUtils;
 
+import com.calclab.emite.client.core.packet.TextUtils;
 import com.calclab.emiteuiplugin.client.utils.emoticons.Emoticons;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
@@ -77,12 +78,7 @@ public class ChatTextFormatter {
     }
 
     static String formatUrls(String message) {
-        // Original regexp from http://snippets.dzone.com/posts/show/452
-        return message = message.replaceAll(
-                // Bug with $0
-                // http://code.google.com/p/google-web-toolkit/issues/detail?id=1826&q=replaceAll
-                "((ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-\\/]))?)",
-                "<a href=\"$1\" target=\"_blank\">$1</a>");
+        return message = message.replaceAll(TextUtils.URL_REGEXP, "<a href=\"$1\" target=\"_blank\">$1</a>");
     }
 
     static String preFormatEmoticons(String message) {

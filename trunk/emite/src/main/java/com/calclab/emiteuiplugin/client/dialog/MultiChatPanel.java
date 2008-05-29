@@ -294,12 +294,12 @@ public class MultiChatPanel {
     public void setRosterVisible(final boolean visible) {
         rosterPanel.setVisible(visible);
         if (visible) {
-            if (eastPanel.isRendered()) {
-                eastPanel.doLayout();
-            }
-            eastPanel.expand();
+        	eastPanel.expand();
         } else {
             eastPanel.collapse();
+        }
+        if (eastPanel.isRendered()) {
+        	eastPanel.doLayout(false);
         }
     }
 
@@ -531,7 +531,6 @@ public class MultiChatPanel {
         });
         eastPanel.add(rosterPanel);
         final BorderLayoutData eastData = new BorderLayoutData(RegionPosition.EAST);
-
         // This set the min and max width of the east panel (roster panel) when
         // resizing
         eastData.setMinSize(100);

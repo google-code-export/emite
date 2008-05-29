@@ -22,6 +22,15 @@
 package com.calclab.emite.client.core.packet;
 
 public class TextUtils {
+
+    // FIXME this utils are commont to kune, emiteui and emitelib
+
+    // Original regexp from http://snippets.dzone.com/posts/show/452
+    public static final String URL_REGEXP = "((ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-\\/]))?)";
+
+    // Original regexp from http://www.regular-expressions.info/email.html
+    public static final String EMAIL_REGEXP = "[-!#$%&\'*+/=?_`{|}~a-z0-9^]+(\\.[-!#$%&\'*+/=?_`{|}~a-z0-9^]+)*@(localhost|([a-z0-9]([-a-z0-9]*[a-z0-9])?\\.)+[a-z0-9]([-a-z0-9]*[a-z0-9]))?";
+
     /*
      * This method escape only some dangerous html chars
      */
