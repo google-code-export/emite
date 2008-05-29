@@ -50,6 +50,20 @@ public class ModuleBuilder extends DelegatedContainer {
 	}
     }
 
+    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider, final Scope scope) {
+	return registerProvider(componentKey, provider, scope, null);
+    }
+
+    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider, final Scope scope,
+	    final Context<?> context) {
+	final Provider<T> scoped = scope.scope(componentKey, provider);
+	super.registerProvider(componentKey, scoped);
+	if (context != null) {
+	    context.register(this, provider);
+	}
+	return scoped;
+    }
+
     private void loadIfNeeded(final Module m) {
 	final Class<?> type = m.getType();
 	final Module oldModule = modules.get(type);

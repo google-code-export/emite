@@ -22,7 +22,7 @@ public class DelegatedContainerTest {
     @Test
     public void testRegister() {
 	final Provider<Object> provider = mock(Provider.class);
-	container.registerProvider(Object.class, provider, Scopes.SINGLETON);
-	verify(delegate).registerProvider(same(Object.class), same(provider), same(Scopes.SINGLETON));
+	container.registerProvider(Object.class, provider);
+	verify(delegate).registerProvider(same(Object.class), same(provider));
     }
 }

@@ -47,8 +47,12 @@ public class DelegatedContainer implements Container {
 	return delegate.getProvider(componentKey);
     }
 
-    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider, final Scope scope) {
-	return delegate.registerProvider(componentKey, provider, scope);
+    public boolean hasProvider(final Class<?> componentKey) {
+	return delegate.hasProvider(componentKey);
+    }
+
+    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider) {
+	return delegate.registerProvider(componentKey, provider);
     }
 
 }

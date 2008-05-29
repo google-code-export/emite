@@ -14,6 +14,7 @@ import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -37,10 +38,20 @@ public class SessionTest {
 
     @Test
     public void shouldHandleAuthorization() {
+	final ListenerTester<AuthorizationTicket> listener = new ListenerTester<AuthorizationTicket>();
+	session.onLogin(listener);
 	final XmppURI uri = uri("name@domain/resource");
 	session.login(uri, "password");
 	emite.verifyPublished(BoshManager.Events.start("domain"));
-	emite.verifyPublished(SessionManager.Events.login(uri, "password"));
+	verifyCalled(listener);
+    }
+
+    @Test
+    public void shouldSignalLogin() {
+	final ListenerTester<AuthorizationTicket> listener = new ListenerTester<AuthorizationTicket>();
+	session.onLogin(listener);
+	session.login(uri("name@domain/resource"), "password");
+	verifyCalled(listener);
     }
 
     @Test

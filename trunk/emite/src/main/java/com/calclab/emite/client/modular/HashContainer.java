@@ -48,10 +48,13 @@ public class HashContainer implements Container {
 	return provider;
     }
 
-    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider, final Scope scope) {
-	final Provider<T> scoped = scope.scope(componentKey, provider);
-	providers.put(componentKey, scoped);
-	return scoped;
+    public boolean hasProvider(final Class<?> componentKey) {
+	return providers.containsKey(componentKey);
+    }
+
+    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider) {
+	providers.put(componentKey, provider);
+	return provider;
     }
 
     public <T> T registerSingletonInstance(final Class<T> componentType, final T component) {

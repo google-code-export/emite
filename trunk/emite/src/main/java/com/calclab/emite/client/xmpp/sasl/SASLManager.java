@@ -22,43 +22,38 @@
 package com.calclab.emite.client.xmpp.sasl;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.xmpp.session.SessionManager;
-import com.calclab.emite.client.xmpp.session.SessionManager.Events;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.emite.client.core.signal.Signal;
+import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket.State;
 
 public class SASLManager {
     private static final String SEP = new String(new char[] { 0 });
-
     private static final String XMLNS = "urn:ietf:params:xml:ns:xmpp-sasl";
 
-    protected String password;
-    protected XmppURI uri;
-
-    private boolean waitingForAuthorization;
-
     private final Emite emite;
+    private final Signal<AuthorizationTicket> onAuthorized;
+    private AuthorizationTicket inProgressTicket;
 
     public SASLManager(final Emite emite) {
 	this.emite = emite;
+	this.onAuthorized = new Signal<AuthorizationTicket>();
 	install();
-	clearState();
     }
 
-    protected String encode(final String domain, final String userName, final String password) {
-	final String auth = userName + "@" + domain + SEP + userName + SEP + password;
-	return Base64Coder.encodeString(auth);
+    public void onAuthorized(final Listener<AuthorizationTicket> listener) {
+	onAuthorized.add(listener);
     }
 
-    private void clearState() {
-	uri = null;
-	password = null;
-	waitingForAuthorization = false;
+    public void sendAuthorizationRequest(final AuthorizationTicket authorizationTicket) {
+	this.inProgressTicket = authorizationTicket;
+	final IPacket response = authorizationTicket.uri.hasNode() ? createPlainAuthorization(authorizationTicket)
+		: createAnonymousAuthorization();
+	emite.send(response);
+	inProgressTicket.setState(State.waitingForAuthorization);
     }
 
     private IPacket createAnonymousAuthorization() {
@@ -66,60 +61,34 @@ public class SASLManager {
 	return auth;
     }
 
-    private IPacket createPlainAuthorization() {
+    private IPacket createPlainAuthorization(final AuthorizationTicket authorizationTicket) {
 	final IPacket auth = new Packet("auth", XMLNS).With("mechanism", "PLAIN");
-	final String encoded = encode(uri.getHost(), uri.getNode(), password);
+	final String encoded = encode(authorizationTicket.uri.getHost(), authorizationTicket.uri.getNode(),
+		authorizationTicket.getPassword());
 	auth.setText(encoded);
 	return auth;
     }
 
+    private String encode(final String domain, final String userName, final String password) {
+	final String auth = userName + "@" + domain + SEP + userName + SEP + password;
+	return Base64Coder.encodeString(auth);
+    }
+
     private void install() {
-	SessionManager.Signals.onDoLogin(emite, new PacketListener() {
-	    public void handle(final IPacket received) {
-		uri = uri(received.getAttribute("uri"));
-		password = received.getAttribute("password");
-	    }
-	});
-
-	SessionManager.Signals.onLoggedOut(emite, new PacketListener() {
-	    public void handle(final IPacket received) {
-		clearState();
-	    }
-	});
-
-	emite.subscribe(when(SessionManager.Events.onLoggedOut), new PacketListener() {
-	    public void handle(final IPacket received) {
-		clearState();
-	    }
-	});
-
-	emite.subscribe(when(SessionManager.Events.onDoAuthorization), new PacketListener() {
-	    public void handle(final IPacket received) {
-		sendAuthorizationRequest();
-
-	    }
-	});
-
 	emite.subscribe(when(new Packet("failure", XMLNS)), new PacketListener() {
 	    public void handle(final IPacket received) {
-		emite.publish(SessionManager.Events.onAuthorizationFailed);
+		inProgressTicket.setState(State.failed);
+		onAuthorized.fire(inProgressTicket);
+		inProgressTicket = null;
 	    }
 	});
 
 	emite.subscribe(when(new Packet("success")), new PacketListener() {
 	    public void handle(final IPacket received) {
-		if (waitingForAuthorization == true) {
-		    clearState();
-		    emite.publish(Events.onAuthorized);
-		}
+		inProgressTicket.setState(State.succeed);
+		onAuthorized.fire(inProgressTicket);
+		inProgressTicket = null;
 	    }
 	});
-
-    }
-
-    private void sendAuthorizationRequest() {
-	final IPacket response = uri.hasNode() ? createPlainAuthorization() : createAnonymousAuthorization();
-	emite.send(response);
-	waitingForAuthorization = true;
     }
 }

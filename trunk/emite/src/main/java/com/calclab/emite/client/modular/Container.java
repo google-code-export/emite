@@ -28,13 +28,15 @@ package com.calclab.emite.client.modular;
  */
 public interface Container {
 
+    public boolean hasProvider(Class<?> componentKey);
+
     /**
      * Obtain a component registered with the given key from the container
      * 
      * @param <T>
      * @param componentType
      * @return The component, throw RuntimeException if the given component
-     *         doesnt exist
+     *         doesn't exists
      */
     <T> T getInstance(Class<T> componentKey);
 
@@ -43,9 +45,10 @@ public interface Container {
      * 
      * @param <T>
      * @param componentType
-     * @return
+     * @return The provider, throw RuntimeException if the given provider
+     *         doesn't exists
      */
     <T> Provider<T> getProvider(Class<T> componentKey);
 
-    <T> Provider<T> registerProvider(Class<T> componentKey, Provider<T> provider, Scope scope);
+    <T> Provider<T> registerProvider(Class<T> componentKey, Provider<T> provider);
 }

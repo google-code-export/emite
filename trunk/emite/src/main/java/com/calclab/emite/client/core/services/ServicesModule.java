@@ -23,6 +23,7 @@ package com.calclab.emite.client.core.services;
 
 import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
+import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
 
@@ -33,8 +34,8 @@ public abstract class ServicesModule implements Module {
 	return container.getInstance(COMPONENT_SERVICES);
     }
 
-    public static void setServices(final Container container, final Services services) {
-	container.registerProvider(Services.class, new Provider<Services>() {
+    public static void setServices(final ModuleBuilder builder, final Services services) {
+	builder.registerProvider(Services.class, new Provider<Services>() {
 	    public Services get() {
 		return services;
 	    }

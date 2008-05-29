@@ -36,7 +36,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
  * @author dani
  * 
  */
-public class SessionComponent {
+public class SessionComponent implements SessionLifecycle {
     protected final Emite emite;
     protected XmppURI userURI;
 
