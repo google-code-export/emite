@@ -1,7 +1,6 @@
 package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.same;
@@ -11,22 +10,20 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-
 import com.calclab.emite.client.im.chat.Chat.State;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.testing.TestingListener;
+import com.calclab.emite.testing.ListenerTester;
+import static com.calclab.emite.testing.ListenerTester.*;
 
 public class ChatManagerTest extends AbstractChatManagerTest {
 
     @Test
     public void managerShouldCreateOneChatForSameResource() {
-	final TestingListener<Chat> listener = addListener();
+	final ListenerTester<Chat> listener = addListener();
 	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 1"));
-	listener.verify();
-	listener.reset();
 	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
-	listener.verifyNotCalled();
+	verifyCalled(listener, 1);
     }
 
     @Test
@@ -45,11 +42,10 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldCloseChatWhenLoggedOut() {
 	final Chat chat = manager.openChat(uri("name@domain/resouce"), null, null);
-	final TestingListener<State> listener = new TestingListener<State>();
+	final ListenerTester<State> listener = new ListenerTester<State>();
 	chat.onStateChanged(listener);
 	emite.receives(SessionManager.Events.onLoggedOut);
-	listener.verify();
-	assertEquals(State.locked, listener.getValue());
+	verifyCalledWith(listener, State.locked);
     }
 
     @Test
@@ -65,23 +61,19 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 
     @Test
     public void shouldReuseChatIfNotResouceSpecified() {
-	final TestingListener<Chat> listener = addListener();
+	final ListenerTester<Chat> listener = addListener();
 	emite.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
-	listener.verify();
-	listener.reset();
 	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
-	listener.verifyNotCalled();
+	verifyCalled(listener, 1);
     }
 
     @Test
     public void shouldUseSameRoomWhenAnswering() {
-	final TestingListener<Chat> listener = addListener();
+	final ListenerTester<Chat> listener = addListener();
 	final Chat chat = manager.openChat(uri("someone@domain"), null, null);
-	listener.verify();
-	assertSame(chat, listener.getValue());
-	listener.reset();
+	verifyCalledWithSame(listener, chat);
 	emite.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer").Thread(chat.getThread()));
-	listener.verifyNotCalled();
+	verifyCalled(listener, 1);
     }
 
     @Test
@@ -119,8 +111,8 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	return chatManagerDefault;
     }
 
-    private TestingListener<Chat> addListener() {
-	final TestingListener<Chat> listener = new TestingListener<Chat>();
+    private ListenerTester<Chat> addListener() {
+	final ListenerTester<Chat> listener = new ListenerTester<Chat>();
 	manager.onChatCreated(listener);
 	return listener;
     }

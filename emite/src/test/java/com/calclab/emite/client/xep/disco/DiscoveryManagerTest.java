@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.TestingListener;
+import com.calclab.emite.testing.ListenerTester;
 
 public class DiscoveryManagerTest {
 
@@ -19,7 +19,7 @@ public class DiscoveryManagerTest {
 
     @Test
     public void shouldInformListeners() {
-	final TestingListener<DiscoveryManager> listener = new TestingListener<DiscoveryManager>();
+	final ListenerTester<DiscoveryManager> listener = new ListenerTester<DiscoveryManager>();
 	manager.onReady(listener);
 
     }
