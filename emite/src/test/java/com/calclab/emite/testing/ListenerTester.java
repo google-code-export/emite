@@ -12,12 +12,12 @@ public class ListenerTester<S> implements Listener<S> {
     }
 
     public static void verifyCalled(final ListenerTester<?> listener, final int times) {
-	assertEquals("listener should be called " + times + " times", 1, times);
+	assertEquals("listener should be called " + times + " times", times, listener.calledTimes);
     }
 
     public static <T> void verifyCalledWith(final ListenerTester<T> listener, final T expected) {
 	verifyCalled(listener);
-	assertEquals(expected, listener.getValue(1));
+	assertEquals(expected, listener.getValue(0));
     }
 
     public static <T> void verifyCalledWithSame(final ListenerTester<T> listener, final T... expected) {
