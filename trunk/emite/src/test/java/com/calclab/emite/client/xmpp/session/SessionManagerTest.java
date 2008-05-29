@@ -19,67 +19,66 @@ public class SessionManagerTest {
 
     private EmiteTestHelper emite;
     private Session session;
-    private SessionManager manager;
 
     @Before
     public void aaCreate() {
-	emite = new EmiteTestHelper();
-	session = mock(Session.class);
-	manager = new SessionManager(session, emite);
+        emite = new EmiteTestHelper();
+        session = mock(Session.class);
+        new SessionManager(session, emite);
     }
 
     @Test
     public void shouldHandleAuthorization() {
-	session.login(uri("name@domain/resource"), "password");
-	emite.receives(SessionManager.Events.onAuthorized);
-	verify(session).setState(same(State.authorized));
-	emite.verifyPublished(BoshManager.Events.onRestartStream);
+        session.login(uri("name@domain/resource"), "password");
+        emite.receives(SessionManager.Events.onAuthorized);
+        verify(session).setState(same(State.authorized));
+        emite.verifyPublished(BoshManager.Events.onRestartStream);
     }
 
     @Test
     public void shouldInformAboutBadAuthentication() {
-	emite.receives(SessionManager.Events.onAuthorizationFailed);
-	verify(session).setState(State.notAuthorized);
-	emite.verifyPublished(Events.error("not-authorized", ""));
+        emite.receives(SessionManager.Events.onAuthorizationFailed);
+        verify(session).setState(State.notAuthorized);
+        emite.verifyPublished(Events.error("not-authorized", ""));
     }
 
     @Test
     public void shouldRequestSessionWhenBinded() {
-	emite.receives(SessionManager.Events.binded("name@domain/resource"));
-	emite.verifyIQSent(new IQ(Type.set));
-	emite.answerSuccess();
-	emite.verifyPublished(SessionManager.Events.loggedIn("name@domain/resource"));
-	verify(session).setState(State.loggedIn);
+        emite.receives(SessionManager.Events.binded("name@domain/resource"));
+        emite.verifyIQSent(new IQ(Type.set));
+        emite.answerSuccess();
+        emite.verifyPublished(SessionManager.Events.loggedIn("name@domain/resource"));
+        verify(session).setState(State.loggedIn);
 
     }
 
     @Test
     public void shouldSendReadyWhenLoggedIn() {
-	emite.receives(SessionManager.Events.binded("me@domain"));
-	emite.verifyIQSent(new IQ(Type.set));
-	emite.answerSuccess();
-	verify(session).setState(State.loggedIn);
-	emite.verifyPublished(SessionManager.Events.onLoggedIn);
-	emite.verifyPublished(SessionManager.Events.ready);
+        emite.receives(SessionManager.Events.binded("me@domain"));
+        emite.verifyIQSent(new IQ(Type.set));
+        emite.answerSuccess();
+        verify(session).setState(State.loggedIn);
+        emite.verifyPublished(SessionManager.Events.onLoggedIn);
+        emite.verifyPublished(SessionManager.Events.ready);
     }
 
     @Test
     public void shouldSetSessionReadyWhenEvent() {
-	emite.receives(SessionManager.Events.ready);
-	verify(session).setState(State.ready);
+        emite.receives(SessionManager.Events.ready);
+        verify(session).setState(State.ready);
     }
 
     @Test
     public void shouldSetStatesWhenError() {
-	emite.receives(Events.error("cause", "info"));
-	verify(session).setState(State.error);
-	verify(session).setState(State.disconnected);
+        emite.receives(Events.error("cause", "info"));
+        verify(session).setState(State.error);
+        verify(session).setState(State.disconnected);
     }
 
     @Test
     public void shouldStopAndDisconnectWhenLoggedOut() {
-	emite.receives(SessionManager.Events.onLoggedOut);
-	verify(session).setState(State.disconnected);
-	emite.verifyPublished(BoshManager.Events.stop);
+        emite.receives(SessionManager.Events.onLoggedOut);
+        verify(session).setState(State.disconnected);
+        emite.verifyPublished(BoshManager.Events.stop);
     }
 }

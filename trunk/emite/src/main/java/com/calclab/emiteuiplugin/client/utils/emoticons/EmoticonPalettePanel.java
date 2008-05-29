@@ -78,18 +78,15 @@ public class EmoticonPalettePanel extends Composite {
         addNextIcon(createEmoticon(img.w00t(), "(woot)", listener));
         addNextIcon(createEmoticon(img.wink(), ";-)", listener));
         addNextIcon(createEmoticon(img.wondering(), ":?", listener));
-        // addNextIcon(createEmoticon(
-        // img.bulletStar(),
-        // "ONLY FOR DEVELOPMENT AND TESTS: >:) O:) o:) o:-) O:-) 0:) 0:-) ^_^
-        // ^-^ ^^ :)) :-)) (police) (cop) {):) =:) (alien) o_O o_0 O_O o_o O_o
-        // 0_o o0 0o oO Oo 0_0 >:o >:-o >:O >:-O X( X-( x( x-( :@ <_< (bandit)
-        // :(> :\"> :*> :-$ :$ B) B-) 8) :'( ='( :-d :d :-D :D :d =D =-D =) =-)
-        // (L) (h) (H) :-* :* (LOL) lol :-X :-xX :x (wubya) (wubyou) (wub) (:)
-        // (ph33r) (ph34r) >_< :| =| :-| :( =( =-( :-( :& :-& =] (-.-) |) |-)
-        // I-) I-| :-O :O :-o :o :-0 =-O =-o =o =O :P =P =p :-P :p :-p :b :-\\
-        // :-/ :/ :\\ :s :-S :-s :S (woot) (w00t) (wOOt) :-\" ;) ;-) ;> (wizard)
-        // :? :-) :)",
-        // listener));
+        addNextIcon(createEmoticon(img.bulletStar(),
+                "ONLY FOR DEVELOPMENT AND TESTS: >:) O:) o:) o:-) O:-) 0:) 0:-) ^_^ "
+                        + "^-^ ^^ :)) :-)) (police) (cop) {):) =:) (alien) o_O o_0 O_O o_o O_o "
+                        + "0_o o0 0o oO Oo 0_0 >:o >:-o >:O >:-O X( X-( x( x-( :@ <_< (bandit) "
+                        + ":(> :\"> :*> :-$ :$ B) B-) 8) :'( ='( :-d :d :-D :D :d =D =-D =) =-) "
+                        + "(L) (h) (H) :-* :* (LOL) lol :-X :-xX :x (wubya) (wubyou) (wub) (:) "
+                        + "(ph33r) (ph34r) >_< :| =| :-| :( =( =-( :-( :& :-& =] (-.-) |) |-) "
+                        + "I-) I-| :-O :O :-o :o :-0 =-O =-o =o =O :P =P =p :-P :p :-p :b :-\\ "
+                        + ":-/ :/ :\\ :s :-S :-s :S (woot) (w00t) (wOOt) :-\" ;) ;-) ;> (wizard) :? :-) :)", listener));
     }
 
     private void addNextIcon(final Image img) {

@@ -59,7 +59,7 @@ public class ChatUIPresenter implements ChatUI {
         this.chatTitle = getOtherAlias();
         userColors = new HashMap<String, String>();
         userColors.put(currentUserAlias, currentUserColor);
-        savedChatNotification = new ChatNotification();
+        clearSavedChatNotification();
         docked = false;
     }
 
@@ -94,6 +94,10 @@ public class ChatUIPresenter implements ChatUI {
 
     public void clearMessageEventInfo() {
         listener.onChatNotificationClear(this);
+    }
+
+    public void clearSavedChatNotification() {
+        savedChatNotification = new ChatNotification();
     }
 
     public void clearSavedInput() {

@@ -4,7 +4,7 @@
   <groupId>com.calclab</groupId>
   <artifactId>emite</artifactId>
   <packaging>jar</packaging>
-  <version>0.2.6</version>
+  <version>0.2.7</version>
   <description>emite: a pure gwt xmpp (jabber) library</description>
   <name>emite xmpp</name>
   <url>http://emite.googlecode.com</url>
@@ -223,12 +223,12 @@
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
-      <version>0.0.2415</version>
+      <version>1.5.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-servlet</artifactId>
-      <version>0.0.2415</version>
+      <version>1.5.0</version>
       <scope>provided</scope>
     </dependency>
 

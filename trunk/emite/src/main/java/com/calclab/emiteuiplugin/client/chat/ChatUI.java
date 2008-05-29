@@ -37,6 +37,8 @@ public interface ChatUI {
 
     void clearMessageEventInfo();
 
+    void clearSavedChatNotification();
+
     void clearSavedInput();
 
     void destroy();
