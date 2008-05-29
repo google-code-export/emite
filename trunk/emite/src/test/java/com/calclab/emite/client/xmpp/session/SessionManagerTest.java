@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.core.bosh.BoshManager;
+import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.dispatcher.Dispatcher.Events;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
@@ -19,12 +20,13 @@ public class SessionManagerTest {
 
     private EmiteTestHelper emite;
     private Session session;
+    private SessionManager manager;
 
     @Before
     public void aaCreate() {
 	emite = new EmiteTestHelper();
 	session = mock(Session.class);
-	new SessionManager(session, emite);
+	manager = new SessionManager(session, emite);
     }
 
     @Test
@@ -50,6 +52,14 @@ public class SessionManagerTest {
 	emite.verifyPublished(SessionManager.Events.loggedIn("name@domain/resource"));
 	verify(session).setState(State.connected);
 
+    }
+
+    @Test
+    public void shouldSendReadyWhenLoggedIn() {
+	emite.receives(SessionManager.Events.onBinded);
+	final PacketListener listener = emite.verifyIQSent(new IQ(Type.set));
+	verify(session).setState(State.connected);
+	emite.verifySent(SessionManager.Events.ready);
     }
 
     @Test
