@@ -58,7 +58,15 @@ public class ChatState implements MessageInterceptor, ChatListener {
         case notStarted:
             negotiationStatus = NegotiationStatus.started;
         case accepted:
-            message.addChild(Type.active.toString(), XMLNS);
+            boolean alreadyWithState = false;
+            for (int i = 0; i < Type.values().length; i++) {
+                if (message.hasChild(Type.values()[i].toString())) {
+                    alreadyWithState = true;
+                }
+            }
+            if (!alreadyWithState) {
+                message.addChild(Type.active.toString(), XMLNS);
+            }
             break;
         case rejected:
         case started:

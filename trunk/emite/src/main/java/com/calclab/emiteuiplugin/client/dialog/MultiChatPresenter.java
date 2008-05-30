@@ -25,6 +25,7 @@ import static com.calclab.emite.client.xmpp.stanzas.XmppURI.jid;
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
@@ -110,14 +111,6 @@ public class MultiChatPresenter {
             view.confirmCloseAll();
         } else {
             onCloseAllConfirmed();
-        }
-    }
-
-    public void closeChatAfterConfirmed(final Chat chat) {
-        final ChatUI chatUI = getChatUI(chat);
-        if (chatUI != null && chatUI.isDocked()) {
-            closeChatUI(chatUI);
-            view.removeChat(chatUI);
         }
     }
 
@@ -324,11 +317,19 @@ public class MultiChatPresenter {
     }
 
     public void onInputFocus() {
-        currentChat.onInputFocus();
+        if (currentChat != null) {
+            currentChat.onInputFocus();
+        }
     }
 
     public void onInputUnFocus() {
-        currentChat.onInputUnFocus();
+        if (currentChat != null) {
+            if (view.isEmoticonDialogVisible()) {
+                // Do nothing because we are selecting a emoticon
+            } else {
+                currentChat.onInputUnFocus();
+            }
+        }
     }
 
     public void onModifySubjectRequested(final String newSubject) {
@@ -386,11 +387,16 @@ public class MultiChatPresenter {
     }
 
     protected void onCloseAllConfirmed() {
-        for (final Chat chat : xmpp.getChatManager().getChats()) {
-            closeChatAfterConfirmed(chat);
-        }
-        for (final Chat room : xmpp.getInstance(RoomManager.class).getChats()) {
-            closeChatAfterConfirmed(room);
+        Collection<Chat> chatsToClose = new HashSet<Chat>();
+        chatsToClose.addAll(xmpp.getChatManager().getChats());
+        chatsToClose.addAll(xmpp.getInstance(RoomManager.class).getChats());
+        Log.info("Trying to close " + chatsToClose.size() + " chats");
+        for (final Chat chat : chatsToClose) {
+            final ChatUI chatUI = getChatUI(chat);
+            if (chatUI != null && chatUI.isDocked()) {
+                closeChatUI(chatUI);
+                view.removeChat(chatUI);
+            }
         }
     }
 

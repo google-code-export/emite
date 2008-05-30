@@ -102,6 +102,7 @@ public class MultiChatPanel {
     private BasicDialog emoticonDialog;
     private ToolbarButton showUnavailableItems;
     private Label bottomChatNotification;
+    private boolean inputFocused;
 
     public MultiChatPanel(final String chatDialogTitle, final RosterPanel rosterPanel, final StatusPanel statusPanel,
             final I18nTranslationService i18n, final MultiChatPresenter presenter) {
@@ -112,6 +113,7 @@ public class MultiChatPanel {
         this.i18n = i18n;
         this.presenter = presenter;
         panelIdToChat = new HashMap<String, ChatUI>();
+        this.inputFocused = false;
         createLayout(statusPanel);
         configureSound();
         configureBottomInfoTimer();
@@ -186,6 +188,13 @@ public class MultiChatPanel {
         dialog.setIconCls("e-icon-a");
         renderDialogIfNeeded();
         click();
+    }
+
+    public boolean isEmoticonDialogVisible() {
+        if (emoticonDialog == null) {
+            return false;
+        }
+        return emoticonDialog.isVisible();
     }
 
     public boolean isVisible() {
@@ -398,22 +407,36 @@ public class MultiChatPanel {
         };
         input.addKeyPressListener(inputKeyPressListener);
         FieldListenerAdapter inputMainListener = new FieldListenerAdapter() {
-            @Override
-            public void onBlur(final Field field) {
-                DeferredCommand.addCommand(new Command() {
-                    public void execute() {
+            private Timer stillFocusedTimer = new Timer() {
+                @Override
+                public void run() {
+                    if (inputFocused) {
+                        presenter.onInputFocus();
+                    }
+                }
+            };
+
+            private Timer stillUnfocusedTimer = new Timer() {
+                @Override
+                public void run() {
+                    if (!inputFocused) {
                         presenter.onInputUnFocus();
                     }
-                });
+                }
+            };
+
+            @Override
+            public void onBlur(final Field field) {
+                inputFocused = false;
+                stillFocusedTimer.cancel();
+                stillUnfocusedTimer.schedule(1000);
             }
 
             @Override
             public void onFocus(final Field field) {
-                DeferredCommand.addCommand(new Command() {
-                    public void execute() {
-                        presenter.onInputFocus();
-                    }
-                });
+                inputFocused = true;
+                stillUnfocusedTimer.cancel();
+                stillFocusedTimer.schedule(1000);
             }
 
             @Override
@@ -674,4 +697,5 @@ public class MultiChatPanel {
         emoticonDialog.show();
         emoticonDialog.setPosition(x - 10, y - 150);
     }
+
 }
