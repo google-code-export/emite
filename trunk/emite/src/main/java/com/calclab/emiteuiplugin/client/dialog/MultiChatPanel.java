@@ -294,12 +294,12 @@ public class MultiChatPanel {
     public void setRosterVisible(final boolean visible) {
         rosterPanel.setVisible(visible);
         if (visible) {
-        	eastPanel.expand();
+            eastPanel.expand();
         } else {
             eastPanel.collapse();
         }
         if (eastPanel.isRendered()) {
-        	eastPanel.doLayout(false);
+            eastPanel.doLayout(false);
         }
     }
 
@@ -486,11 +486,11 @@ public class MultiChatPanel {
         dialog.add(southPanel, southData);
 
         eastPanel = new Panel(i18n.t("My buddies"));
-        eastPanel.setWidth(150);
-        eastPanel.setCollapsible(true);
-        eastPanel.setBorder(true);
         eastPanel.setLayout(new FitLayout());
+        eastPanel.setBorder(true);
         eastPanel.setAutoScroll(true);
+        eastPanel.setCollapsible(true);
+        eastPanel.setWidth(150);
         eastPanel.setIconCls("userf-icon");
         addRosterItem = new ToolbarButton();
         addRosterItem.setIcon("images/user_add.gif");
