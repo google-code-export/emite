@@ -597,6 +597,9 @@ public class MultiChatPresenter {
         final ChatUI chatUI = getChatUI(chat);
         if (chatUI != null) {
             openedChats--;
+            if (openedChats == 0) {
+                view.setInfoPanelVisible(true);
+            }
             chatUI.destroy();
             chat.setData(ChatUI.class, null);
         }
@@ -691,7 +694,6 @@ public class MultiChatPresenter {
     private void resetWhenNoChats() {
         currentChat = null;
         view.setCloseAllOptionEnabled(false);
-        view.setInfoPanelVisible(true);
         view.clearInputText();
         setInputEnabled(false);
         view.clearBottomChatNotification();
