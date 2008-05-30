@@ -115,7 +115,9 @@ public class MultiChatPresenter {
     }
 
     public ChatUI createChat(final Chat chat) {
-        final ChatUI chatUI = getChatUI(chat) == null ? factory.createChatUI(chat.getOtherURI(), currentUserJid
+        final ChatUI chatUIalreadyOpened = getChatUI(chat);
+        logIfChatAlreadyOpened(chatUIalreadyOpened);
+        final ChatUI chatUI = chatUIalreadyOpened == null ? factory.createChatUI(chat.getOtherURI(), currentUserJid
                 .getNode(), userChatOptions.getColor(), chat.getData(ChatState.class), new ChatUIListener() {
 
             public void onActivate(final ChatUI chatUI) {
@@ -167,81 +169,82 @@ public class MultiChatPresenter {
                     joinChat(userURI);
                 }
             }
-        }) : getChatUI(chat);
+        }) : chatUIalreadyOpened;
         finishChatCreation(chat, chatUI);
         return chatUI;
     }
 
     public RoomUI createRoom(final Chat chat, final String userAlias) {
-        final ChatUI chatUI = getChatUI(chat);
-        final RoomUI roomUI = (RoomUI) (chatUI == null ? factory.createRoomUI(chat.getOtherURI(), currentUserJid
-                .getNode(), userChatOptions.getColor(), i18n, new RoomUIListener() {
-            // FIXME: some code are duplicated with ChatUI Listener
-            // (make an
-            // abstract listener)
-            public void onActivate(final ChatUI chatUI) {
-                final RoomUI roomUI = (RoomUI) chatUI;
-                view.setInputText(roomUI.getSavedInput());
-                currentChat = chatUI;
-                updateViewWithChatStatus(chat, chatUI);
-                view.setBottomChatNotification(chatUI.getSavedChatNotification());
-            }
+        final ChatUI chatUIalreadyOpened = getChatUI(chat);
+        logIfChatAlreadyOpened(chatUIalreadyOpened);
+        final RoomUI roomUI = (RoomUI) (chatUIalreadyOpened == null ? factory.createRoomUI(chat.getOtherURI(),
+                currentUserJid.getNode(), userChatOptions.getColor(), i18n, new RoomUIListener() {
+                    // FIXME: some code are duplicated with ChatUI Listener
+                    // (make an
+                    // abstract listener)
+                    public void onActivate(final ChatUI chatUI) {
+                        final RoomUI roomUI = (RoomUI) chatUI;
+                        view.setInputText(roomUI.getSavedInput());
+                        currentChat = chatUI;
+                        updateViewWithChatStatus(chat, chatUI);
+                        view.setBottomChatNotification(chatUI.getSavedChatNotification());
+                    }
 
-            public void onChatNotificationClear(final ChatUI chatUI) {
-                if (chatUI.equals(currentChat)) {
-                    view.clearBottomChatNotification();
-                }
-            }
+                    public void onChatNotificationClear(final ChatUI chatUI) {
+                        if (chatUI.equals(currentChat)) {
+                            view.clearBottomChatNotification();
+                        }
+                    }
 
-            public void onClose(final ChatUI chatUI) {
-                xmpp.getInstance(RoomManager.class).close(chat);
-            }
+                    public void onClose(final ChatUI chatUI) {
+                        xmpp.getInstance(RoomManager.class).close(chat);
+                    }
 
-            public void onCreated(final ChatUI chatUI) {
+                    public void onCreated(final ChatUI chatUI) {
 
-            }
+                    }
 
-            public void onCurrentUserSend(final String message) {
-                chat.send(new Message(message));
-            }
+                    public void onCurrentUserSend(final String message) {
+                        chat.send(new Message(message));
+                    }
 
-            public void onDeactivate(final ChatUI chatUI) {
-                chatUI.saveInput(view.getInputText());
-            }
+                    public void onDeactivate(final ChatUI chatUI) {
+                        chatUI.saveInput(view.getInputText());
+                    }
 
-            public void onHighLight(final ChatUI chatUI) {
-                view.highLight();
-                listener.onConversationUnnatended(chatUI.getChatTitle());
-            }
+                    public void onHighLight(final ChatUI chatUI) {
+                        view.highLight();
+                        listener.onConversationUnnatended(chatUI.getChatTitle());
+                    }
 
-            public void onInviteUserRequested(final XmppURI userJid, final String reasonText) {
-                ((Room) chat).sendInvitationTo(userJid.toString(), reasonText);
-                view.setBottomInfoMessage(i18n.t("Invitation sended"));
-            }
+                    public void onInviteUserRequested(final XmppURI userJid, final String reasonText) {
+                        ((Room) chat).sendInvitationTo(userJid.toString(), reasonText);
+                        view.setBottomInfoMessage(i18n.t("Invitation sended"));
+                    }
 
-            public void onMessageAdded(final ChatUI chatUI) {
-            }
+                    public void onMessageAdded(final ChatUI chatUI) {
+                    }
 
-            public void onModifySubjectRequested(final String newSubject) {
-                ((Room) chat).setSubject(newSubject);
-            }
+                    public void onModifySubjectRequested(final String newSubject) {
+                        ((Room) chat).setSubject(newSubject);
+                    }
 
-            public void onNewChatNotification(final ChatUI chatUI, final ChatNotification chatNotification) {
-                if (chatUI.equals(currentChat)) {
-                    view.setBottomChatNotification(chatNotification);
-                }
-            }
+                    public void onNewChatNotification(final ChatUI chatUI, final ChatNotification chatNotification) {
+                        if (chatUI.equals(currentChat)) {
+                            view.setBottomChatNotification(chatNotification);
+                        }
+                    }
 
-            public void onUnHighLight(final ChatUI chatUI) {
-                view.unHighLight();
-                listener.onConversationAttended(chatUI.getChatTitle());
-            }
+                    public void onUnHighLight(final ChatUI chatUI) {
+                        view.unHighLight();
+                        listener.onConversationAttended(chatUI.getChatTitle());
+                    }
 
-            public void onUserDrop(final ChatUI chatUI, final XmppURI userURI) {
-                ((RoomUI) chatUI).askInvitation(userURI);
-            }
+                    public void onUserDrop(final ChatUI chatUI, final XmppURI userURI) {
+                        ((RoomUI) chatUI).askInvitation(userURI);
+                    }
 
-        }) : chatUI);
+                }) : chatUIalreadyOpened);
 
         finishChatCreation(chat, roomUI);
 
@@ -400,13 +403,15 @@ public class MultiChatPresenter {
         }
     }
 
-    protected void onCurrentUserSendWithButton(final String message) {
-        onCurrentUserSend(message);
-        view.focusInput();
-    }
-
-    protected void onCurrentUserSendWithEnter(final String message) {
-        onCurrentUserSend(message);
+    protected void onCurrentUserSend(final String message, final boolean withEnter) {
+        final boolean isEmpty = message == null || message.equals("");
+        if (!isEmpty) {
+            view.clearInputText();
+            currentChat.onCurrentUserSend(message);
+        }
+        if (!withEnter) {
+            view.focusInput();
+        }
     }
 
     protected void onUserColorChanged(final String color) {
@@ -631,8 +636,8 @@ public class MultiChatPresenter {
         if (!chatUI.isDocked()) {
             openedChats++;
             chatUI.setDocked(true);
-            view.addChat(chatUI);
             currentChat = chatUI;
+            view.addChat(chatUI);
             checkThereAreChats();
             if (!isChatStartedByMe(chat)) {
                 chatUI.highLightChatTitle();
@@ -659,6 +664,12 @@ public class MultiChatPresenter {
         return chatUIData != null && chatUIData.isStartedByMe();
     }
 
+    private void logIfChatAlreadyOpened(final ChatUI chatUIalreadyOpened) {
+        if (chatUIalreadyOpened != null) {
+            Log.debug("This conversation is already opened");
+        }
+    }
+
     private void loginIfnecessary(final Show status, final String statusText) {
         switch (xmpp.getSession().getState()) {
         case disconnected:
@@ -672,14 +683,6 @@ public class MultiChatPresenter {
             break;
         case error:
             Log.error("Trying to set status and whe have a internal error");
-        }
-    }
-
-    private void onCurrentUserSend(final String message) {
-        final boolean isEmpty = message == null || message.equals("");
-        if (!isEmpty) {
-            view.clearInputText();
-            currentChat.onCurrentUserSend(message);
         }
     }
 

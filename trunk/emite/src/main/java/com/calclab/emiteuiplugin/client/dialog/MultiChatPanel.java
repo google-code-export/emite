@@ -442,7 +442,7 @@ public class MultiChatPanel {
             @Override
             public void onSpecialKey(final Field field, final EventObject e) {
                 if (e.getKey() == 13) {
-                    doSendWithEnter(e);
+                    doSend(e, true);
                 }
             }
         };
@@ -485,7 +485,7 @@ public class MultiChatPanel {
         sendBtn.addListener(new ButtonListenerAdapter() {
             @Override
             public void onClick(final Button button, final EventObject e) {
-                doSendWithButton(e);
+                doSend(e, false);
             }
         });
         dialog.addButton(sendBtn);
@@ -635,16 +635,14 @@ public class MultiChatPanel {
         });
     }
 
-    private void doSendWithButton(final EventObject e) {
+    private void doSend(final EventObject e, final boolean withEnter) {
         final String inputText = getInputText();
         e.stopEvent();
-        presenter.onCurrentUserSendWithButton(inputText);
-    }
-
-    private void doSendWithEnter(final EventObject e) {
-        final String inputText = getInputText();
-        e.stopEvent();
-        presenter.onCurrentUserSendWithEnter(inputText);
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                presenter.onCurrentUserSend(inputText, withEnter);
+            }
+        });
     }
 
     private void ifRenderedDoLayout() {
