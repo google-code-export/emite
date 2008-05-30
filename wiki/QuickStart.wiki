@@ -14,8 +14,8 @@ You need a running xmpp server with Http Binding connection enabled. See our [ht
 == Environment setup ==
 
   # install maven2 version 2.0.7 or over (http://maven.apache.org)
-  # download GWT *version 1.5*. Currently, our version 0.2.0 is compatible with gwt-1.5M1 (due a gwt-ext issue). Our 0.2.1 version supports gwt-1.5M2 (using a [http://www.gwt-ext.com/builds/gwt-ext/2008-04-17/ development version] of gwt-ext).
-  # create or modify the maven {{{~/.m2/settings.xml}}} file to use the 1.5M1 distribution of gwt (see Appendix A)
+  # download GWT *version 1.5*. Currently, our version 0.2.0 is compatible with gwt-1.5M1 (due a gwt-ext issue). Our 0.2.1 version supports gwt-1.5M2 (using a [http://www.gwt-ext.com/builds/gwt-ext/2008-04-17/ development version] of gwt-ext) and in version >= 0.2.7 we are using gwt-1.5rc.
+  # create or modify the maven {{{~/.m2/settings.xml}}} file to use the proper distribution of gwt (see Appendix A)
   # configure your server Http Binding Service to listen at {{{http://localhost:8383/http-bind/}}} or tweak the web.xml file of emite to change this values
 
 == Run the example from the sources ==
@@ -91,9 +91,18 @@ Example of maven .m2/settings.xml to work with gwt-maven plugin:
         <google.webtoolkit.extrajvmargs>-Xmx256M</google.webtoolkit.extrajvmargs>
       </properties>
      </profile>
+     <profile>
+       <id>gwt-1.5.0</id>
+       <properties>
+         <google.webtoolkit.home>/usr/local/lib/gwt/gwt-linux-1.5.0</google.webtoolkit.home>
+         <!-- <google.webtoolkit.devjar>gwt-dev-linux</google.webtoolkit.devjar> -->
+         <!-- you only need this is you are on a mac -->
+        <google.webtoolkit.extrajvmargs>-Xmx256M</google.webtoolkit.extrajvmargs>
+      </properties>
+     </profile>
    </profiles>
    <activeProfiles>
-     <activeProfile>gwt-0.0.2030</activeProfile>
+     <activeProfile>gwt-1.5.0</activeProfile>
    </activeProfiles>
 </settings>
 }}}
