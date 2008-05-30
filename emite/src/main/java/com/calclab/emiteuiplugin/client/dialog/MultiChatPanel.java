@@ -320,12 +320,11 @@ public class MultiChatPanel {
     }
 
     public void setTitleConectedAs(final XmppURI currentUserJid) {
-        DeferredCommand.addCommand(new Command() {
-            public void execute() {
-                dialog.setTitle(chatDialogTitle + " (" + currentUserJid + ")");
-                ifRenderedDoLayout();
-            }
-        });
+        // If we do this with a deferred command, east/roster panel start to
+        // give collapse/expand problems ... a gwt-ext "extravangaza"
+        // (issue #89)
+        dialog.setTitle(chatDialogTitle + " (" + currentUserJid + ")");
+        ifRenderedDoLayout();
     }
 
     public void show() {
