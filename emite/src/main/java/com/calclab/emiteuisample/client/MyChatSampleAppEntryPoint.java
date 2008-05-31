@@ -23,9 +23,9 @@ package com.calclab.emiteuisample.client;
 
 import com.calclab.emite.client.EmiteModule;
 import com.calclab.emite.client.modular.ModuleBuilder;
-import com.calclab.emiteuiplugin.client.EmiteDialog;
-import com.calclab.emiteuiplugin.client.EmiteUIModule;
-import com.calclab.emiteuiplugin.client.status.OwnPresence;
+import com.calclab.emiteuimodule.client.EmiteUIDialog;
+import com.calclab.emiteuimodule.client.EmiteUIModule;
+import com.calclab.emiteuimodule.client.status.OwnPresence;
 import com.google.gwt.core.client.EntryPoint;
 
 public class MyChatSampleAppEntryPoint implements EntryPoint {
@@ -33,8 +33,8 @@ public class MyChatSampleAppEntryPoint implements EntryPoint {
     public void onModuleLoad() {
 	final ModuleBuilder container = new ModuleBuilder();
 	container.add(new EmiteModule(), new EmiteUIModule());
-	final EmiteDialog emiteDialog = container.getInstance(EmiteDialog.class);
-	emiteDialog.start("admin@localhost", "easyeasy", "/proxy", "rooms.localhost");
-	emiteDialog.show(OwnPresence.OwnStatus.online);
+	final EmiteUIDialog emiteUIDialog = container.getInstance(EmiteUIDialog.class);
+	emiteUIDialog.start("admin@localhost", "easyeasy", "/proxy", "rooms.localhost");
+	emiteUIDialog.show(OwnPresence.OwnStatus.online);
     }
 }
