@@ -1,9 +1,11 @@
-package com.calclab.emiteuiplugin.client.utils;
+package com.calclab.emiteuimodule.client.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import com.calclab.emiteuimodule.client.utils.ChatTextFormatter;
 
 public class ChatTextFormatterTest {
 
