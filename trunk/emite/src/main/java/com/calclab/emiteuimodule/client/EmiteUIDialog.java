@@ -25,12 +25,12 @@ import java.util.Date;
 
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshOptions;
+import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
-import com.calclab.emiteuimodule.client.dialog.MultiChatListener;
 import com.calclab.emiteuimodule.client.dialog.MultiChatPresenter;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.params.MultiChatCreationParam;
@@ -53,6 +53,10 @@ public class EmiteUIDialog {
         xmpp.getChatManager().openChat(otherUserURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 
+    public void closeAllChats(final boolean withConfirmation) {
+        multiChatDialog.closeAllChats(withConfirmation);
+    }
+
     public void getChatDialog(final MultiChatCreationParam param) {
         if (multiChatDialog == null) {
             multiChatDialog = createChatDialog(param);
@@ -72,8 +76,32 @@ public class EmiteUIDialog {
         xmpp.getInstance(RoomManager.class).openChat(roomURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 
+    public void onConversationAttended(final Listener<String> listener) {
+        multiChatDialog.onConversationAttended(listener);
+    }
+
+    public void onConversationUnattended(final Listener<String> listener) {
+        multiChatDialog.onConversationUnattended(listener);
+    }
+
+    public void onShowUnavailableRosterItemsChanged(final Listener<Boolean> listener) {
+        multiChatDialog.onShowUnavailableRosterItemsChanged(listener);
+    }
+
+    public void onUserColorChanged(final Listener<String> listener) {
+        multiChatDialog.onUserColorChanged(listener);
+    }
+
+    public void onUserSubscriptionModeChanged(final Listener<SubscriptionMode> listener) {
+        multiChatDialog.onUserSubscriptionModeChanged(listener);
+    }
+
     public void refreshUserInfo(final UserChatOptions userChatOptions) {
         multiChatDialog.setUserChatOptions(userChatOptions);
+    }
+
+    public void setOwnPresence(final OwnStatus status) {
+        multiChatDialog.setOwnPresence(new OwnPresence(status));
     }
 
     public void show() {
@@ -82,7 +110,7 @@ public class EmiteUIDialog {
 
     public void show(final OwnStatus status) {
         show();
-        multiChatDialog.setOwnPresence(new OwnPresence(status));
+        setOwnPresence(status);
     }
 
     public void start(final String userJid, final String userPasswd, final String httpBase, final String roomHost) {
@@ -91,10 +119,9 @@ public class EmiteUIDialog {
     }
 
     public void start(final String emiteDialogTitle, final UserChatOptions userChatOptions, final String httpBase,
-            final String roomHost, final AvatarProvider avatarProvider, final MultiChatListener multiChatListener) {
+            final String roomHost, final AvatarProvider avatarProvider) {
         xmpp.setBoshOptions(new BoshOptions(httpBase));
-        getChatDialog(new MultiChatCreationParam(emiteDialogTitle, roomHost, avatarProvider, userChatOptions,
-                multiChatListener));
+        getChatDialog(new MultiChatCreationParam(emiteDialogTitle, roomHost, avatarProvider, userChatOptions));
     }
 
     public void start(final UserChatOptions userChatOptions, final String httpBase, final String roomHost) {
@@ -104,26 +131,17 @@ public class EmiteUIDialog {
             public String getAvatarURL(final XmppURI userURI) {
                 return "images/person-def.gif";
             }
-        }, new MultiChatListener() {
-            String initialWindowTitle = Window.getTitle();
-
-            public void onConversationAttended(final String chatTitle) {
+        });
+        final String initialWindowTitle = Window.getTitle();
+        onConversationAttended(new Listener<String>() {
+            public void onEvent(final String parameter) {
                 Window.setTitle(initialWindowTitle);
             }
-
-            public void onConversationUnnatended(final String chatTitle) {
+        });
+        onConversationUnattended(new Listener<String>() {
+            public void onEvent(final String chatTitle) {
                 Window.setTitle("(* " + chatTitle + ") " + initialWindowTitle);
             }
-
-            public void onShowUnavailableRosterItems(final boolean show) {
-            }
-
-            public void onUserColorChanged(final String color) {
-            }
-
-            public void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
-            }
-
         });
     }
 

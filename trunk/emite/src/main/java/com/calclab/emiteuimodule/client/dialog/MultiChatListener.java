@@ -23,6 +23,7 @@ package com.calclab.emiteuimodule.client.dialog;
 
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 
+@Deprecated
 public interface MultiChatListener {
 
     void onConversationAttended(String conversationName);
