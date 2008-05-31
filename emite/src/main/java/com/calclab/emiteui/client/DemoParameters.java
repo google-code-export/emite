@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emiteuidemo.client;
+package com.calclab.emiteui.client;
 
 import com.google.gwt.user.client.DOM;
 

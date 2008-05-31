@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emiteuidemo.client.demo;
+package com.calclab.emiteui.client.demo;
 
 import com.calclab.emite.client.core.packet.TextUtils;
-import com.calclab.emiteuidemo.client.DemoParameters;
-import com.calclab.emiteuidemo.client.demo.EmiteDemoLoginPanel.LoginPanelListener;
+import com.calclab.emiteui.client.DemoParameters;
+import com.calclab.emiteui.client.demo.EmiteDemoLoginPanel.LoginPanelListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PushButton;
