@@ -23,8 +23,8 @@ package com.calclab.emiteuisample.client;
 
 import com.calclab.emite.client.EmiteModule;
 import com.calclab.emite.client.modular.ModuleBuilder;
-import com.calclab.emiteui.client.EmiteUIModule;
 import com.calclab.emiteuiplugin.client.EmiteDialog;
+import com.calclab.emiteuiplugin.client.EmiteUIModule;
 import com.calclab.emiteuiplugin.client.status.OwnPresence;
 import com.google.gwt.core.client.EntryPoint;
 

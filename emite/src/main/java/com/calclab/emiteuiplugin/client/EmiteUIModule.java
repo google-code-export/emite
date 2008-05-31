@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emiteui.client;
+package com.calclab.emiteuiplugin.client;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
@@ -34,8 +34,6 @@ import com.calclab.emite.client.modular.Scopes;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
 import com.calclab.emite.client.xep.chatstate.ChatStateModule;
 import com.calclab.emite.client.xep.muc.MUCModule;
-import com.calclab.emiteuiplugin.client.EmiteDialog;
-import com.calclab.emiteuiplugin.client.EmiteUIFactory;
 
 public class EmiteUIModule implements Module {
 
