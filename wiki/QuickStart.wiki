@@ -57,7 +57,7 @@ See Appendix C for more pom.xml configuration options. You can also take a look 
 <!-- library: required -->
 <inherits name="com.calclab.emite.Emite" />
 <!-- if you want to include the emite ui in your application -->
-<inherits name="com.calclab.emiteuiplugin.EmiteUIPlugin" />
+<inherits name="com.calclab.emiteuimodule.EmiteUIModule" />
 <!-- to make GWTShell use the java proxy -->
 <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
 }}}
