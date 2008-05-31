@@ -29,6 +29,7 @@ import com.calclab.emiteui.client.demo.EmiteDemoUI;
 import com.calclab.emiteui.client.demo.EmiteDemoLoginPanel.LoginPanelListener;
 import com.calclab.emiteui.client.demo.EmiteDemoUI.EmiteDemoChatIconListener;
 import com.calclab.emiteuiplugin.client.EmiteDialog;
+import com.calclab.emiteuiplugin.client.EmiteUIModule;
 import com.calclab.emiteuiplugin.client.UserChatOptions;
 import com.calclab.emiteuiplugin.client.status.OwnPresence.OwnStatus;
 import com.google.gwt.core.client.EntryPoint;
