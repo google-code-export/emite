@@ -1,0 +1,7 @@
+<module>
+  <inherits name="com.calclab.emite.Emite" />
+  <inherits name="com.calclab.emiteuiplugin.EmiteUIModule" />
+  <inherits name="com.google.gwt.junit.JUnit"/>
+  <entry-point class="com.calclab.emiteui.client.EmiteUIDemoEntryPoint" />
+  <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
+</module>
