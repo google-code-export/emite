@@ -1,4 +1,4 @@
-package com.calclab.emiteui.client;
+package com.calclab.emiteuimodule.client;
 
 import static org.mockito.Mockito.mock;
 

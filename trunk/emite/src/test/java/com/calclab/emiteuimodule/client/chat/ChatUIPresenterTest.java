@@ -1,11 +1,14 @@
-package com.calclab.emiteuiplugin.client.chat;
+package com.calclab.emiteuimodule.client.chat;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emiteuiplugin.client.roster.ChatIconDescriptor;
+import com.calclab.emiteuimodule.client.chat.ChatUIListener;
+import com.calclab.emiteuimodule.client.chat.ChatUIPresenter;
+import com.calclab.emiteuimodule.client.chat.ChatUIView;
+import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
 
 public class ChatUIPresenterTest {
 
