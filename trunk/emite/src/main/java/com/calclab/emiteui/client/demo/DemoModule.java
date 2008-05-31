@@ -19,13 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emiteuidemo.client.demo;
+package com.calclab.emiteui.client.demo;
 
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
 import com.calclab.emite.client.modular.Scopes;
-import com.calclab.emiteuidemo.client.DemoParameters;
+import com.calclab.emiteui.client.DemoParameters;
 
 public class DemoModule implements Module {
 

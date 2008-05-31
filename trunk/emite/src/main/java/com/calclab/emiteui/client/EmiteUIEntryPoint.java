@@ -19,15 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emiteuidemo.client;
+package com.calclab.emiteui.client;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.modular.ModuleBuilder;
-import com.calclab.emiteuidemo.client.demo.DemoModule;
-import com.calclab.emiteuidemo.client.demo.EmiteDemoLoginPanel;
-import com.calclab.emiteuidemo.client.demo.EmiteDemoUI;
-import com.calclab.emiteuidemo.client.demo.EmiteDemoLoginPanel.LoginPanelListener;
-import com.calclab.emiteuidemo.client.demo.EmiteDemoUI.EmiteDemoChatIconListener;
+import com.calclab.emiteui.client.demo.DemoModule;
+import com.calclab.emiteui.client.demo.EmiteDemoLoginPanel;
+import com.calclab.emiteui.client.demo.EmiteDemoUI;
+import com.calclab.emiteui.client.demo.EmiteDemoLoginPanel.LoginPanelListener;
+import com.calclab.emiteui.client.demo.EmiteDemoUI.EmiteDemoChatIconListener;
 import com.calclab.emiteuimodule.client.EmiteUIDialog;
 import com.calclab.emiteuimodule.client.EmiteUIModule;
 import com.calclab.emiteuimodule.client.UserChatOptions;
@@ -36,7 +36,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 
-public class EmiteUIDemoEntryPoint implements EntryPoint {
+public class EmiteUIEntryPoint implements EntryPoint {
 
     public void onModuleLoad() {
         Log.setUncaughtExceptionHandler();

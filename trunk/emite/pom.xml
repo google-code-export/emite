@@ -275,11 +275,13 @@
       <artifactId>kune-core</artifactId>
       <version>0.0.4</version>
     </dependency>
+    <!--
     <dependency>
       <groupId>com.extjs</groupId>
       <artifactId>gxt</artifactId>
       <version>1.0-beta2</version>
     </dependency>
+     -->
 
     <!--  TESTING -->
     <dependency>
