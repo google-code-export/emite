@@ -1,7 +1,6 @@
 <module>
   <inherits name="com.calclab.emite.Emite" />
-  <inherits name="com.calclab.emiteuiplugin.EmiteUIPlugin" />
-  <inherits name="com.calclab.emiteui.EmiteUI" />
+  <inherits name="com.calclab.emiteuiplugin.EmiteUIModule" />
   <entry-point class="com.calclab.emiteuisample.client.MyChatSampleAppEntryPoint" />
   <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
 </module>
