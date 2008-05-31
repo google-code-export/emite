@@ -32,6 +32,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.emite.client.core.signal.Signal;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.presence.PresenceManager;
@@ -72,7 +73,6 @@ public class MultiChatPresenter {
     private String currentUserPasswd;
     private final EmiteUIFactory factory;
     private final I18nTranslationService i18n;
-    private final MultiChatListener listener;
     private final PresenceManager presenceManager;
     private UserChatOptions userChatOptions;
     private MultiChatPanel view;
@@ -80,18 +80,27 @@ public class MultiChatPresenter {
     private final String roomHost;
     private final RosterPresenter roster;
     private int openedChats;
+    private final Signal<String> onConversationAttended;
+    private final Signal<String> onConversationUnattended;
+    private final Signal<Boolean> onShowUnavailableRosterItemsChanged;
+    private final Signal<String> onUserColorChanged;
+    private final Signal<SubscriptionMode> onUserSubscriptionModeChanged;
 
     public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final EmiteUIFactory factory,
             final MultiChatCreationParam param, final RosterPresenter roster) {
         this.xmpp = xmpp;
         this.i18n = i18n;
         this.factory = factory;
-        this.listener = param.getMultiChatListener();
         this.roster = roster;
         setUserChatOptions(param.getUserChatOptions());
         roomHost = param.getRoomHost();
         presenceManager = xmpp.getPresenceManager();
         openedChats = 0;
+        onConversationAttended = new Signal<String>();
+        onConversationUnattended = new Signal<String>();
+        onShowUnavailableRosterItemsChanged = new Signal<Boolean>();
+        onUserColorChanged = new Signal<String>();
+        onUserSubscriptionModeChanged = new Signal<SubscriptionMode>();
     }
 
     public void addBuddy(final String shortName, final String longName) {
@@ -147,7 +156,7 @@ public class MultiChatPresenter {
 
             public void onHighLight(final ChatUI chatUI) {
                 view.highLight();
-                listener.onConversationUnnatended(chatUI.getChatTitle());
+                onConversationUnattended.fire(chatUI.getChatTitle());
             }
 
             public void onMessageAdded(final ChatUI chatUI) {
@@ -161,7 +170,7 @@ public class MultiChatPresenter {
 
             public void onUnHighLight(final ChatUI chatUI) {
                 view.unHighLight();
-                listener.onConversationAttended(chatUI.getChatTitle());
+                onConversationAttended.fire(chatUI.getChatTitle());
             }
 
             public void onUserDrop(final ChatUI chatUI, final XmppURI userURI) {
@@ -214,7 +223,7 @@ public class MultiChatPresenter {
 
                     public void onHighLight(final ChatUI chatUI) {
                         view.highLight();
-                        listener.onConversationUnnatended(chatUI.getChatTitle());
+                        onConversationUnattended.fire(chatUI.getChatTitle());
                     }
 
                     public void onInviteUserRequested(final XmppURI userJid, final String reasonText) {
@@ -237,7 +246,7 @@ public class MultiChatPresenter {
 
                     public void onUnHighLight(final ChatUI chatUI) {
                         view.unHighLight();
-                        listener.onConversationAttended(chatUI.getChatTitle());
+                        onConversationAttended.fire(chatUI.getChatTitle());
                     }
 
                     public void onUserDrop(final ChatUI chatUI, final XmppURI userURI) {
@@ -319,6 +328,14 @@ public class MultiChatPresenter {
         currentChat.onComposing();
     }
 
+    public void onConversationAttended(final Listener<String> listener) {
+        onConversationAttended.add(listener);
+    }
+
+    public void onConversationUnattended(final Listener<String> listener) {
+        onConversationUnattended.add(listener);
+    }
+
     public void onInputFocus() {
         if (currentChat != null) {
             currentChat.onInputFocus();
@@ -340,12 +357,24 @@ public class MultiChatPresenter {
         roomUI.onModifySubjectRequested(newSubject);
     }
 
+    public void onShowUnavailableRosterItemsChanged(final Listener<Boolean> listener) {
+        onShowUnavailableRosterItemsChanged.add(listener);
+    }
+
+    public void onUserColorChanged(final Listener<String> listener) {
+        onUserColorChanged.add(listener);
+    }
+
     public void onUserDropped(final XmppURI userURI) {
         if (currentChat != null) {
             currentChat.onUserDrop(userURI);
         } else {
             joinChat(userURI);
         }
+    }
+
+    public void onUserSubscriptionModeChanged(final Listener<SubscriptionMode> listener) {
+        onUserSubscriptionModeChanged.add(listener);
     }
 
     public void setOwnPresence(final OwnPresence ownPresence) {
@@ -385,7 +414,7 @@ public class MultiChatPresenter {
 
     public void showUnavailableRosterItems(final boolean show) {
         roster.showUnavailableRosterItems(show);
-        listener.onShowUnavailableRosterItems(show);
+        onShowUnavailableRosterItemsChanged.fire(show);
         userChatOptions.setUnavailableRosterItemsVisible(show);
     }
 
@@ -422,13 +451,13 @@ public class MultiChatPresenter {
             setChatColor(room, color);
         }
         userChatOptions.setColor(color);
-        listener.onUserColorChanged(color);
+        onUserColorChanged.fire(color);
     }
 
     protected void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
         xmpp.getRosterManager().setSubscriptionMode(subscriptionMode);
         userChatOptions.setSubscriptionMode(subscriptionMode);
-        listener.onUserSubscriptionModeChanged(subscriptionMode);
+        onUserSubscriptionModeChanged.fire(subscriptionMode);
     }
 
     void closeChatUI(final ChatUI chatUI) {

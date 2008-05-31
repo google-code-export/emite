@@ -1,6 +1,7 @@
 <module>
   <inherits name="com.google.gwt.user.User" />
   <inherits name="com.calclab.emite.Emite" />
+  <inherits name="com.calclab.emitemodule.EmiteModule" />
   <inherits name="com.allen_sauer.gwt.log.gwt-log" />
 
   <entry-point
