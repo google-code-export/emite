@@ -21,11 +21,13 @@
  */
 package com.calclab.emiteuimodule.client;
 
+import java.util.Collection;
 import java.util.Date;
 
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xep.muc.RoomManager;
@@ -54,21 +56,21 @@ public class EmiteUIDialog {
     }
 
     public void closeAllChats(final boolean withConfirmation) {
+        checkIfDialogIsStarted();
         multiChatDialog.closeAllChats(withConfirmation);
     }
 
-    public void getChatDialog(final MultiChatCreationParam param) {
-        if (multiChatDialog == null) {
-            multiChatDialog = createChatDialog(param);
-            ImagesHelper.preFetchImages();
-        }
-    }
-
     public void hide() {
+        checkIfDialogIsStarted();
         multiChatDialog.hide();
     }
 
+    public boolean isDialogNotStarted() {
+        return multiChatDialog == null;
+    }
+
     public boolean isVisible() {
+        checkIfDialogIsStarted();
         return multiChatDialog.isVisible();
     }
 
@@ -76,39 +78,56 @@ public class EmiteUIDialog {
         xmpp.getInstance(RoomManager.class).openChat(roomURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 
-    public void onConversationAttended(final Listener<String> listener) {
-        multiChatDialog.onConversationAttended(listener);
+    public void onChatAttended(final Listener<String> listener) {
+        checkIfDialogIsStarted();
+        multiChatDialog.onChatAttended(listener);
     }
 
-    public void onConversationUnattended(final Listener<String> listener) {
-        multiChatDialog.onConversationUnattended(listener);
+    public void onChatUnattendedWithActivity(final Listener<String> listener) {
+        checkIfDialogIsStarted();
+        multiChatDialog.onChatUnattendedWithActivity(listener);
+    }
+
+    public void onRosterChanged(final Listener<Collection<RosterItem>> listener) {
+        xmpp.getRoster().onRosterChanged(listener);
+    }
+
+    public void onRosterItemChanged(final Listener<RosterItem> listener) {
+        xmpp.getRoster().onItemChanged(listener);
     }
 
     public void onShowUnavailableRosterItemsChanged(final Listener<Boolean> listener) {
+        checkIfDialogIsStarted();
         multiChatDialog.onShowUnavailableRosterItemsChanged(listener);
     }
 
     public void onUserColorChanged(final Listener<String> listener) {
+        checkIfDialogIsStarted();
         multiChatDialog.onUserColorChanged(listener);
     }
 
     public void onUserSubscriptionModeChanged(final Listener<SubscriptionMode> listener) {
+        checkIfDialogIsStarted();
         multiChatDialog.onUserSubscriptionModeChanged(listener);
     }
 
     public void refreshUserInfo(final UserChatOptions userChatOptions) {
+        checkIfDialogIsStarted();
         multiChatDialog.setUserChatOptions(userChatOptions);
     }
 
     public void setOwnPresence(final OwnStatus status) {
+        checkIfDialogIsStarted();
         multiChatDialog.setOwnPresence(new OwnPresence(status));
     }
 
     public void show() {
+        checkIfDialogIsStarted();
         multiChatDialog.show();
     }
 
     public void show(final OwnStatus status) {
+        checkIfDialogIsStarted();
         show();
         setOwnPresence(status);
     }
@@ -118,31 +137,39 @@ public class EmiteUIDialog {
                 RosterManager.DEF_SUBSCRIPTION_MODE, true), httpBase, roomHost);
     }
 
-    public void start(final String emiteDialogTitle, final UserChatOptions userChatOptions, final String httpBase,
-            final String roomHost, final AvatarProvider avatarProvider) {
-        xmpp.setBoshOptions(new BoshOptions(httpBase));
-        getChatDialog(new MultiChatCreationParam(emiteDialogTitle, roomHost, avatarProvider, userChatOptions));
-    }
-
     public void start(final UserChatOptions userChatOptions, final String httpBase, final String roomHost) {
         // We define, default AvatarProvider and MultiChaListener for simple
         // facade
-        start(EMITE_DEF_TITLE, userChatOptions, httpBase, roomHost, new AvatarProvider() {
+        start(userChatOptions, httpBase, roomHost, new AvatarProvider() {
             public String getAvatarURL(final XmppURI userURI) {
                 return "images/person-def.gif";
             }
-        });
+        }, EMITE_DEF_TITLE);
         final String initialWindowTitle = Window.getTitle();
-        onConversationAttended(new Listener<String>() {
+        onChatAttended(new Listener<String>() {
             public void onEvent(final String parameter) {
                 Window.setTitle(initialWindowTitle);
             }
         });
-        onConversationUnattended(new Listener<String>() {
+        onChatUnattendedWithActivity(new Listener<String>() {
             public void onEvent(final String chatTitle) {
                 Window.setTitle("(* " + chatTitle + ") " + initialWindowTitle);
             }
         });
+    }
+
+    public void start(final UserChatOptions userChatOptions, final String httpBase, final String roomHost,
+            final AvatarProvider avatarProvider, final String emiteDialogTitle) {
+        xmpp.setBoshOptions(new BoshOptions(httpBase));
+        multiChatDialog = createChatDialog(new MultiChatCreationParam(emiteDialogTitle, roomHost, avatarProvider,
+                userChatOptions));
+        ImagesHelper.preFetchImages();
+    }
+
+    protected void checkIfDialogIsStarted() {
+        if (isDialogNotStarted()) {
+            new RuntimeException("Emite UI dialog is not created (use 'start' method before)");
+        }
     }
 
     private MultiChatPresenter createChatDialog(final MultiChatCreationParam param) {
