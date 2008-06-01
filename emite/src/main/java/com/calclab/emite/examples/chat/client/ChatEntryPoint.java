@@ -31,7 +31,6 @@ import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emite.client.im.roster.RosterListener;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -169,11 +168,9 @@ public class ChatEntryPoint implements EntryPoint {
         });
 
         xmpp.getRosterManager().setSubscriptionMode(SubscriptionMode.autoAcceptAll);
-        xmpp.getRoster().addListener(new RosterListener() {
-            public void onItemChanged(final RosterItem item) {
-            }
 
-            public void onRosterChanged(final Collection<RosterItem> items) {
+        xmpp.getRoster().onRosterChanged(new Listener<Collection<RosterItem>>() {
+            public void onEvent(final Collection<RosterItem> items) {
                 conversationsPanel.setRoster(items);
             }
         });

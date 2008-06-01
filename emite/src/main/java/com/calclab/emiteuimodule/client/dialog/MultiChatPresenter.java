@@ -80,8 +80,8 @@ public class MultiChatPresenter {
     private final String roomHost;
     private final RosterPresenter roster;
     private int openedChats;
-    private final Signal<String> onConversationAttended;
-    private final Signal<String> onConversationUnattended;
+    private final Signal<String> onChatAttended;
+    private final Signal<String> onChatUnattendedWithActivity;
     private final Signal<Boolean> onShowUnavailableRosterItemsChanged;
     private final Signal<String> onUserColorChanged;
     private final Signal<SubscriptionMode> onUserSubscriptionModeChanged;
@@ -96,8 +96,8 @@ public class MultiChatPresenter {
         roomHost = param.getRoomHost();
         presenceManager = xmpp.getPresenceManager();
         openedChats = 0;
-        onConversationAttended = new Signal<String>();
-        onConversationUnattended = new Signal<String>();
+        onChatAttended = new Signal<String>();
+        onChatUnattendedWithActivity = new Signal<String>();
         onShowUnavailableRosterItemsChanged = new Signal<Boolean>();
         onUserColorChanged = new Signal<String>();
         onUserSubscriptionModeChanged = new Signal<SubscriptionMode>();
@@ -156,7 +156,7 @@ public class MultiChatPresenter {
 
             public void onHighLight(final ChatUI chatUI) {
                 view.highLight();
-                onConversationUnattended.fire(chatUI.getChatTitle());
+                onChatUnattendedWithActivity.fire(chatUI.getChatTitle());
             }
 
             public void onMessageAdded(final ChatUI chatUI) {
@@ -170,7 +170,7 @@ public class MultiChatPresenter {
 
             public void onUnHighLight(final ChatUI chatUI) {
                 view.unHighLight();
-                onConversationAttended.fire(chatUI.getChatTitle());
+                onChatAttended.fire(chatUI.getChatTitle());
             }
 
             public void onUserDrop(final ChatUI chatUI, final XmppURI userURI) {
@@ -223,7 +223,7 @@ public class MultiChatPresenter {
 
                     public void onHighLight(final ChatUI chatUI) {
                         view.highLight();
-                        onConversationUnattended.fire(chatUI.getChatTitle());
+                        onChatUnattendedWithActivity.fire(chatUI.getChatTitle());
                     }
 
                     public void onInviteUserRequested(final XmppURI userJid, final String reasonText) {
@@ -246,7 +246,7 @@ public class MultiChatPresenter {
 
                     public void onUnHighLight(final ChatUI chatUI) {
                         view.unHighLight();
-                        onConversationAttended.fire(chatUI.getChatTitle());
+                        onChatAttended.fire(chatUI.getChatTitle());
                     }
 
                     public void onUserDrop(final ChatUI chatUI, final XmppURI userURI) {
@@ -324,16 +324,16 @@ public class MultiChatPresenter {
         xmpp.getInstance(RoomManager.class).openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 
+    public void onChatAttended(final Listener<String> listener) {
+        onChatAttended.add(listener);
+    }
+
     public void onComposing() {
         currentChat.onComposing();
     }
 
-    public void onConversationAttended(final Listener<String> listener) {
-        onConversationAttended.add(listener);
-    }
-
-    public void onConversationUnattended(final Listener<String> listener) {
-        onConversationUnattended.add(listener);
+    public void onChatUnattendedWithActivity(final Listener<String> listener) {
+        onChatUnattendedWithActivity.add(listener);
     }
 
     public void onInputFocus() {
