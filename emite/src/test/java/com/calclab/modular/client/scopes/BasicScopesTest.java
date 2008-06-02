@@ -7,9 +7,6 @@ import static org.junit.Assert.assertSame;
 import org.junit.Test;
 
 import com.calclab.modular.client.container.Provider;
-import com.calclab.modular.client.scopes.NoScope;
-import com.calclab.modular.client.scopes.Scope;
-import com.calclab.modular.client.scopes.SingletonScope;
 
 public class BasicScopesTest {
 

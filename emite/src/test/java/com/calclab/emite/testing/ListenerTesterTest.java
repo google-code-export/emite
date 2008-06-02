@@ -1,7 +1,8 @@
 package com.calclab.emite.testing;
 
+import static com.calclab.emite.testing.SlotTester.verifyCalledWith;
+
 import org.junit.Test;
-import static com.calclab.emite.testing.SlotTester.*;
 
 public class ListenerTesterTest {
 

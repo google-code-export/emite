@@ -1,6 +1,8 @@
 package com.calclab.emite.client.xmpp.sasl;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.testing.SlotTester.verifyCalled;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,8 +10,6 @@ import org.junit.Test;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.SlotTester;
-import static com.calclab.emite.testing.SlotTester.*;
-import static org.junit.Assert.assertSame;
 
 public class SASLManagerTest {
 

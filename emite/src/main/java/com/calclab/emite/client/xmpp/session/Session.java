@@ -28,8 +28,8 @@ import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
+import com.calclab.modular.client.signal.Slot;
 
 public class Session {
 

@@ -22,10 +22,10 @@
 package com.calclab.emite.client.im.chat;
 
 /**
+ * DEPRECATED
+ * 
  * @see ChatManagerListenerAdapter
- * @deprecated
  */
-@Deprecated
 public interface ChatManagerListener {
 
     void onChatClosed(Chat chat);

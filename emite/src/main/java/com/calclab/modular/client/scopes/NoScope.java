@@ -1,7 +1,6 @@
 package com.calclab.modular.client.scopes;
 
 import com.calclab.modular.client.container.Provider;
-import com.calclab.modular.client.scopes.Scope;
 
 /**
  * The NoScope scope creates a provider that creates a new instance each request

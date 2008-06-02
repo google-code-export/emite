@@ -6,8 +6,6 @@ import static com.calclab.emite.testing.SlotTester.verifyCalledWith;
 import static com.calclab.emite.testing.SlotTester.verifyCalledWithSame;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -18,7 +16,6 @@ import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.testing.SlotTester;
-import com.calclab.modular.client.signal.Slot;
 
 public class ChatManagerTest extends AbstractChatManagerTest {
 

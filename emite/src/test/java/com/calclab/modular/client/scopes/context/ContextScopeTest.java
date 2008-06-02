@@ -4,15 +4,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.modular.client.container.Provider;
 import com.calclab.modular.client.scopes.BasicScopesTest;
-import com.calclab.modular.client.scopes.context.ContextedScope;
-
-import static org.mockito.Mockito.*;
 
 public class ContextScopeTest {
 

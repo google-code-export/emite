@@ -65,8 +65,8 @@ import com.calclab.emiteuimodule.client.status.OwnPresence;
 import com.calclab.emiteuimodule.client.status.StatusPanel;
 import com.calclab.emiteuimodule.client.status.StatusPanelListener;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
-import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
+import com.calclab.modular.client.signal.Slot;
 
 public class MultiChatPresenter {
     private static final OwnPresence OFFLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.offline);

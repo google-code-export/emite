@@ -1,6 +1,7 @@
 package com.calclab.emite.client.xmpp.resource;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.testing.SlotTester.verifyCalledWith;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +10,6 @@ import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.SlotTester;
-import static com.calclab.emite.testing.SlotTester.*;
 
 public class ResourceBindingManagerTest {
 

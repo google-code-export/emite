@@ -33,8 +33,8 @@ import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
+import com.calclab.modular.client.signal.Slot;
 
 public class DiscoveryManager extends SessionComponent {
     private final Signal<DiscoveryManager> onReady;

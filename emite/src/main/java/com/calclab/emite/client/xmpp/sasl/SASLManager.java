@@ -22,13 +22,14 @@
 package com.calclab.emite.client.xmpp.sasl;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket.State;
-import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
+import com.calclab.modular.client.signal.Slot;
 
 public class SASLManager {
     private static final String SEP = new String(new char[] { 0 });

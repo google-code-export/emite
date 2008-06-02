@@ -8,10 +8,6 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.modular.client.container.Container;
-import com.calclab.modular.client.container.HashContainer;
-import com.calclab.modular.client.container.Provider;
-
 public class HashContainerTest {
 
     private Container container;

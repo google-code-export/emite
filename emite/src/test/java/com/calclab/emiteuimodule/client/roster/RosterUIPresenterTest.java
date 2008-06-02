@@ -19,9 +19,6 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emiteuimodule.client.MockitoXmpp;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
-import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
-import com.calclab.emiteuimodule.client.roster.RosterPresenter;
-import com.calclab.emiteuimodule.client.roster.RosterView;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 

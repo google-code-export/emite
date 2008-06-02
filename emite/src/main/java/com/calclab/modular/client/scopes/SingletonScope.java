@@ -2,7 +2,6 @@ package com.calclab.modular.client.scopes;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.modular.client.container.Provider;
-import com.calclab.modular.client.scopes.Scope;
 
 /**
  * A singleton scope creates a provider that always returns same instance

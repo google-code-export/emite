@@ -26,8 +26,8 @@ import java.util.HashMap;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
+import com.calclab.modular.client.signal.Slot;
 
 public abstract class AbstractChat implements Chat {
 

@@ -22,6 +22,7 @@
 package com.calclab.emite.client.xmpp.session;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
+
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
