@@ -27,14 +27,14 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import com.calclab.emite.client.EmiteModule;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
-import com.calclab.emite.client.modular.Module;
-import com.calclab.emite.client.modular.ModuleBuilder;
-import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.scopes.NoScope;
-import com.calclab.emite.client.modular.scopes.SingletonScope;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
 import com.calclab.emite.client.xep.chatstate.ChatStateModule;
 import com.calclab.emite.client.xep.muc.MUCModule;
+import com.calclab.modular.client.container.Provider;
+import com.calclab.modular.client.modules.Module;
+import com.calclab.modular.client.modules.ModuleBuilder;
+import com.calclab.modular.client.scopes.NoScope;
+import com.calclab.modular.client.scopes.SingletonScope;
 
 public class EmiteUIModule implements Module {
 

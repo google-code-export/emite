@@ -26,7 +26,6 @@ import java.util.Date;
 
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
@@ -38,6 +37,7 @@ import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.params.MultiChatCreationParam;
 import com.calclab.emiteuimodule.client.status.OwnPresence;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
+import com.calclab.modular.client.signal.Listener;
 import com.google.gwt.user.client.Window;
 
 public class EmiteUIDialog {

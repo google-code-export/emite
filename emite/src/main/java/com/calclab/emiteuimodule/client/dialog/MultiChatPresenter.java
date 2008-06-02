@@ -31,8 +31,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.signal.Listener;
-import com.calclab.emite.client.core.signal.Signal;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.presence.PresenceManager;
@@ -64,6 +62,8 @@ import com.calclab.emiteuimodule.client.status.OwnPresence;
 import com.calclab.emiteuimodule.client.status.StatusPanel;
 import com.calclab.emiteuimodule.client.status.StatusPanelListener;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
+import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Signal;
 
 public class MultiChatPresenter {
     private static final OwnPresence OFFLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.offline);

@@ -1,0 +1,4 @@
+<module>
+  <entry-point class="com.calclab.modular.client.ModularEntryPoint" />
+  <inherits name="com.allen_sauer.gwt.log.gwt-log" />
+</module>

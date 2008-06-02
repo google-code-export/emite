@@ -22,7 +22,6 @@
 package com.calclab.emiteui.client;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emiteui.client.demo.DemoModule;
 import com.calclab.emiteui.client.demo.EmiteDemoLoginPanel;
 import com.calclab.emiteui.client.demo.EmiteDemoUI;
@@ -32,6 +31,7 @@ import com.calclab.emiteuimodule.client.EmiteUIDialog;
 import com.calclab.emiteuimodule.client.EmiteUIModule;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
+import com.calclab.modular.client.modules.ModuleBuilder;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;

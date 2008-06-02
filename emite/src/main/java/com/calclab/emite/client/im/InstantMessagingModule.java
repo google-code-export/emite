@@ -27,11 +27,11 @@ import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.modular.Module;
-import com.calclab.emite.client.modular.ModuleBuilder;
-import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.scopes.SingletonScope;
 import com.calclab.emite.client.xmpp.session.SessionScope;
+import com.calclab.modular.client.container.Provider;
+import com.calclab.modular.client.modules.Module;
+import com.calclab.modular.client.modules.ModuleBuilder;
+import com.calclab.modular.client.scopes.SingletonScope;
 
 public class InstantMessagingModule implements Module {
     public Class<? extends Module> getType() {

@@ -22,10 +22,10 @@
 package com.calclab.emiteuisample.client;
 
 import com.calclab.emite.client.EmiteModule;
-import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emiteuimodule.client.EmiteUIDialog;
 import com.calclab.emiteuimodule.client.EmiteUIModule;
 import com.calclab.emiteuimodule.client.status.OwnPresence;
+import com.calclab.modular.client.modules.ModuleBuilder;
 import com.google.gwt.core.client.EntryPoint;
 
 public class MyChatSampleAppEntryPoint implements EntryPoint {

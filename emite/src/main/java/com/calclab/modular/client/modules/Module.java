@@ -19,10 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.modular.scopes;
+package com.calclab.modular.client.modules;
 
-import com.calclab.emite.client.modular.Provider;
+/**
+ * A module is a simple object that installs components inside a container
+ * 
+ * @author dani
+ */
+public interface Module {
+    public Class<?> getType();
 
-public interface Scope {
-    <T> Provider<T> scope(Class<T> type, Provider<T> unscoped);
+    /**
+     * Install the components into the given container
+     * 
+     * @param builder
+     *                TODO
+     */
+    public void onLoad(ModuleBuilder builder);
 }

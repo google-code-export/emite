@@ -21,9 +21,9 @@
  */
 package com.calclab.emite.client.xep.chatstate;
 
-import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManager;
+import com.calclab.modular.client.signal.Listener;
 
 /**
  * XEP-0085: Chat State Notifications

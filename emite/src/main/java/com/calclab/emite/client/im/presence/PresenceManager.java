@@ -29,13 +29,13 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.core.signal.Listener;
-import com.calclab.emite.client.core.signal.Signal;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
+import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Signal;
 
 public class PresenceManager extends SessionComponent {
     private Presence delayedPresence;

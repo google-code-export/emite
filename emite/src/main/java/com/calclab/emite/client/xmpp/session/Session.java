@@ -24,12 +24,12 @@ package com.calclab.emite.client.xmpp.session;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.core.signal.Listener;
-import com.calclab.emite.client.core.signal.Signal;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Signal;
 
 public class Session {
 

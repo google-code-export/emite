@@ -1,11 +1,11 @@
 /**
  *
  */
-package com.calclab.emite.client.modular.scopes;
+package com.calclab.modular.client.scopes;
 
 import java.util.HashMap;
 
-import com.calclab.emite.client.modular.Provider;
+import com.calclab.modular.client.container.Provider;
 
 class ContextedProvider<T, C> implements Provider<T> {
     private C context;

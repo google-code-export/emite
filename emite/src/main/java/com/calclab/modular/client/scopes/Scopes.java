@@ -19,40 +19,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.modular;
+package com.calclab.modular.client.scopes;
 
-/**
- * Implements a container ussing the Delegate pattern
- * 
- * @pattern delegate
- * @author dani
- */
-public class DelegatedContainer implements Container {
-    private final Container delegate;
+import com.calclab.modular.client.container.Container;
+import com.calclab.modular.client.container.HashContainer;
+
+public class Scopes {
 
     /**
-     * Creates a delegated container with the given delegate
+     * use SingletonScope.class directly instead
      * 
-     * @param delegate
+     * @deprecated
+     * 
      */
-    public DelegatedContainer(final Container delegate) {
-	this.delegate = delegate;
+    @Deprecated
+    public static Class<SingletonScope> SINGLETON = SingletonScope.class;
+
+    private static final HashContainer container;
+
+    static {
+	container = new HashContainer();
+
+	container.registerSingletonInstance(SingletonScope.class, new SingletonScope());
+	container.registerSingletonInstance(NoScope.class, new NoScope());
     }
 
-    public <T> T getInstance(final Class<T> componentType) {
-	return delegate.getInstance(componentType);
+    public static <S> S addScope(final Class<S> scopeType, final S scope) {
+	return container.registerSingletonInstance(scopeType, scope);
     }
 
-    public <T> Provider<T> getProvider(final Class<T> componentKey) {
-	return delegate.getProvider(componentKey);
+    public static Container get() {
+	return container;
     }
 
-    public boolean hasProvider(final Class<?> componentKey) {
-	return delegate.hasProvider(componentKey);
-    }
-
-    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider) {
-	return delegate.registerProvider(componentKey, provider);
+    public static <T> T get(final Class<T> scopeType) {
+	return container.getInstance(scopeType);
     }
 
 }

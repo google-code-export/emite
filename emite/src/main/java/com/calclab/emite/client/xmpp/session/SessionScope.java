@@ -1,6 +1,6 @@
 package com.calclab.emite.client.xmpp.session;
 
-import com.calclab.emite.client.modular.scopes.ContextedScope;
+import com.calclab.modular.client.scopes.ContextedScope;
 
 public class SessionScope extends ContextedScope<Session> {
 

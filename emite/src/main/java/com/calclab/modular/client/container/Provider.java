@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.core.signal;
+package com.calclab.modular.client.container;
 
-public interface Listener<T> {
-    public void onEvent(T parameter);
+public interface Provider<T> {
+    public T get();
 }

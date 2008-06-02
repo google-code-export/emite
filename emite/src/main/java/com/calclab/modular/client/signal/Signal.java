@@ -19,12 +19,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.xep.muc;
+package com.calclab.modular.client.signal;
 
-import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.modular.client.signal.Listener;
+import java.util.ArrayList;
 
-public interface RoomManager extends ChatManager {
+import com.allen_sauer.gwt.log.client.Log;
 
-    void onInvitationReceived(Listener<RoomInvitation> listener);
+public class Signal<T> {
+    private ArrayList<Listener<T>> listeners;
+
+    public Signal() {
+	listeners = null;
+    }
+
+    public void add(final Listener<T> listener) {
+	if (listeners == null) {
+	    this.listeners = new ArrayList<Listener<T>>();
+	}
+	listeners.add(listener);
+    }
+
+    public void fire(final T event) {
+	Log.debug("Signal fired: " + event);
+	if (listeners != null) {
+	    for (final Listener<T> listener : listeners) {
+		listener.onEvent(event);
+	    }
+	}
+    }
+
+    public void remove(final Listener<T> listener) {
+	if (listeners != null) {
+	    listeners.remove(listener);
+	}
+    }
+
 }

@@ -24,10 +24,10 @@ package com.calclab.emite.client.im.chat;
 import java.util.HashMap;
 
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.signal.Listener;
-import com.calclab.emite.client.core.signal.Signal;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Signal;
 
 public abstract class AbstractChat implements Chat {
 

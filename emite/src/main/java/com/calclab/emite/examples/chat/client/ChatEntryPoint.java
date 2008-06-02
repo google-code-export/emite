@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.roster.RosterItem;
@@ -39,6 +38,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.examples.chat.client.ChatPanel.ChatPanelListener;
 import com.calclab.emite.examples.chat.client.ConversationsPanel.ConversationsListener;
 import com.calclab.emite.examples.chat.client.LoginPanel.LoginPanelListener;
+import com.calclab.modular.client.signal.Listener;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
