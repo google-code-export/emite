@@ -59,6 +59,13 @@ public class ContextScopeTest {
     }
 
     @Test
+    public void shouldSetContextOnNewProviders() {
+	contextedScope.setContext("context1");
+	final Provider<Object> provider2 = BasicScopesTest.getScopedProvider(contextedScope);
+	assertNotNull(provider2.get());
+    }
+
+    @Test
     public void shouldSingletonInSameContext() {
 	contextedScope.setContext("context1");
 	assertNotNull(provider.get());

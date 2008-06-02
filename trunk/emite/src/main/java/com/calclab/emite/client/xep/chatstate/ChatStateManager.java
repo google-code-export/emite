@@ -21,6 +21,7 @@
  */
 package com.calclab.emite.client.xep.chatstate;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.modular.client.signal.Slot;
@@ -40,15 +41,13 @@ public class ChatStateManager {
 
 	chatManager.onChatCreated(new Slot<Chat>() {
 	    public void onEvent(final Chat chat) {
-		final ChatState chatState = new ChatState(chat);
-		chat.addListener(chatState);
-		chat.setData(ChatState.class, chatState);
-		chat.addMessageInterceptor(chatState);
+		getChatState(chat);
 	    }
 	});
 
 	chatManager.onChatClosed(new Slot<Chat>() {
 	    public void onEvent(final Chat chat) {
+		Log.debug("Removing chat state to chat: " + chat.getID());
 		final ChatState chatState = chat.getData(ChatState.class);
 		if (chatState != null && chatState.getOtherState() != ChatState.Type.gone) {
 		    // We are closing, then we send the gone state
@@ -60,7 +59,20 @@ public class ChatStateManager {
     }
 
     public ChatState getChatState(final Chat chat) {
-	return chat.getData(ChatState.class);
+	ChatState chatState = chat.getData(ChatState.class);
+	if (chatState == null) {
+	    chatState = createChatState(chat);
+	}
+	return chatState;
+    }
+
+    private ChatState createChatState(final Chat chat) {
+	Log.debug("Adding chat state to chat: " + chat.getID());
+	final ChatState chatState = new ChatState(chat);
+	chat.addListener(chatState);
+	chat.setData(ChatState.class, chatState);
+	chat.addMessageInterceptor(chatState);
+	return chatState;
     }
 
 }

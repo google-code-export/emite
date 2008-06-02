@@ -74,7 +74,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 	this.services = services;
 	this.emite = emite;
 	this.bosh = bosh;
-	this.onStanza = new Signal<IPacket>();
+	this.onStanza = new Signal<IPacket>("onStanza");
 	emite.addListener(this);
 	install();
     }

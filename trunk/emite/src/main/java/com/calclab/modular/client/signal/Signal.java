@@ -27,8 +27,10 @@ import com.allen_sauer.gwt.log.client.Log;
 
 public class Signal<T> {
     private ArrayList<Slot<T>> slots;
+    private final String id;
 
-    public Signal() {
+    public Signal(final String id) {
+	this.id = id;
 	slots = null;
     }
 
@@ -40,7 +42,7 @@ public class Signal<T> {
     }
 
     public void fire(final T event) {
-	Log.debug("Signal fired: " + event);
+	Log.debug("Signal " + id.toUpperCase() + ": " + event);
 	if (slots != null) {
 	    for (final Slot<T> listener : slots) {
 		listener.onEvent(event);

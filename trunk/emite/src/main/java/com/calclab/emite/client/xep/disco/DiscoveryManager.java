@@ -44,7 +44,7 @@ public class DiscoveryManager extends SessionComponent {
 
     public DiscoveryManager(final Emite emite) {
 	super(emite);
-	this.onReady = new Signal<DiscoveryManager>();
+	this.onReady = new Signal<DiscoveryManager>("onReady");
 	this.filterQuery = Filters.byNameAndXMLNS("query", "http://jabber.org/protocol/disco#info");
     }
 

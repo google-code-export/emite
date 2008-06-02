@@ -24,13 +24,16 @@ public class ContextedScope<O> implements Scope, Context<O> {
     private final Class<O> contextType;
 
     public ContextedScope(final Class<O> contextType) {
+	Log.debug("Contexted scope for: " + contextType);
 	this.contextType = contextType;
 	currentContext = null;
 	this.providers = new ArrayList<ContextedProvider<?, O>>();
     }
 
     public void createAll() {
+	Log.debug("CREATE ALL in context " + contextType);
 	for (final ContextedProvider<?, O> provider : providers) {
+	    Log.debug("CREATED BY CONTEXT: " + provider.type);
 	    provider.get();
 	}
     }
@@ -41,7 +44,11 @@ public class ContextedScope<O> implements Scope, Context<O> {
 
     public <T> Provider<T> scope(final Class<T> type, final Provider<T> unscoped) {
 	final ContextedProvider<T, O> provider = new ContextedProvider<T, O>(type, unscoped);
+	Log.debug("Contexted provider: " + type);
 	providers.add(provider);
+	if (currentContext != null) {
+	    provider.setContext(currentContext);
+	}
 	return provider;
     }
 

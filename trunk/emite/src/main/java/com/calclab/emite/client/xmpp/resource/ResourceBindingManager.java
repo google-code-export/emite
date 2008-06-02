@@ -35,7 +35,7 @@ public class ResourceBindingManager {
 
     public ResourceBindingManager(final Emite emite) {
 	this.emite = emite;
-	this.onBinded = new Signal<XmppURI>();
+	this.onBinded = new Signal<XmppURI>("onBinded");
     }
 
     public void bindResource(final String resource) {

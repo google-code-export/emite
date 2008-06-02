@@ -28,7 +28,6 @@ import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.xmpp.XMPPModule;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -63,24 +62,26 @@ public class Xmpp extends DelegatedContainer {
 	return container.getInstance(Xmpp.class);
     }
 
-    private final Session session;
+    private Session session;
     private final boolean isStarted;
 
     protected Xmpp(final Container container) {
 	super(container);
 	this.isStarted = false;
-	this.session = XMPPModule.getSession(this);
     }
 
     public ChatManager getChatManager() {
+	getSession();
 	return this.getInstance(ChatManager.class);
     }
 
     public PresenceManager getPresenceManager() {
+	getSession();
 	return getInstance(PresenceManager.class);
     }
 
     public Roster getRoster() {
+	getSession();
 	return getInstance(Roster.class);
     }
 
@@ -89,6 +90,9 @@ public class Xmpp extends DelegatedContainer {
     }
 
     public Session getSession() {
+	if (this.session == null) {
+	    this.session = getInstance(Session.class);
+	}
 	return session;
     }
 
@@ -111,6 +115,7 @@ public class Xmpp extends DelegatedContainer {
     }
 
     public void start() {
+	getSession();
     }
 
     public void stop() {

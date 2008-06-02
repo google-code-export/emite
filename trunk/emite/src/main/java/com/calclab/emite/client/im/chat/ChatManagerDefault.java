@@ -48,8 +48,8 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 
     public ChatManagerDefault(final Emite emite) {
 	super(emite);
-	this.onChatCreated = new Signal<Chat>();
-	this.onChatClosed = new Signal<Chat>();
+	this.onChatCreated = new Signal<Chat>("onChatCreated");
+	this.onChatClosed = new Signal<Chat>("onChatClosed");
 	this.listeners = new ChatManagerListenerCollection();
 	this.chats = new HashSet<Chat>();
 	install();

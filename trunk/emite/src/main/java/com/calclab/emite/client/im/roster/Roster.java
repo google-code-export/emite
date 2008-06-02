@@ -43,77 +43,77 @@ public class Roster {
     private final Signal<Collection<RosterItem>> onRosterChanged;
 
     public Roster() {
-        listeners = new ArrayList<RosterListener>();
-        items = new HashMap<XmppURI, RosterItem>();
-        this.onItemChanged = new Signal<RosterItem>();
-        this.onRosterChanged = new Signal<Collection<RosterItem>>();
+	listeners = new ArrayList<RosterListener>();
+	items = new HashMap<XmppURI, RosterItem>();
+	this.onItemChanged = new Signal<RosterItem>("onItemChanged");
+	this.onRosterChanged = new Signal<Collection<RosterItem>>("onRosterChanged");
     }
 
     @Deprecated
     public void addListener(final RosterListener listener) {
-        listeners.add(listener);
+	listeners.add(listener);
     }
 
     public void changePresence(final XmppURI uri, final Presence presence) {
-        final RosterItem item = findItemByJID(uri);
-        if (item != null) {
-            item.setPresence(presence);
-            fireItemChanged(item);
-        }
+	final RosterItem item = findItemByJID(uri);
+	if (item != null) {
+	    item.setPresence(presence);
+	    fireItemChanged(item);
+	}
     }
 
     public void changeSubscription(final XmppURI jid, final String subscription) {
-        final RosterItem item = findItemByJID(jid);
-        if (item != null) {
-            item.setSubscription(subscription);
-            fireItemChanged(item);
-        }
+	final RosterItem item = findItemByJID(jid);
+	if (item != null) {
+	    item.setSubscription(subscription);
+	    fireItemChanged(item);
+	}
     }
 
     public RosterItem findItemByJID(final XmppURI jid) {
-        return items.get(jid.getJID());
+	return items.get(jid.getJID());
     }
 
     public void onItemChanged(final Slot<RosterItem> listener) {
-        onItemChanged.add(listener);
+	onItemChanged.add(listener);
     }
 
     public void onRosterChanged(final Slot<Collection<RosterItem>> listener) {
-        onRosterChanged.add(listener);
+	onRosterChanged.add(listener);
     }
 
     public void removeItem(final XmppURI jid) {
-        final RosterItem removed = items.remove(jid.getJID());
-        if (removed != null) {
-            fireRosterChanged();
-        }
+	final RosterItem removed = items.remove(jid.getJID());
+	if (removed != null) {
+	    fireRosterChanged();
+	}
     }
 
     void add(final RosterItem item) {
-        items.put(item.getJID(), item);
-        fireRosterChanged();
+	items.put(item.getJID(), item);
+	fireRosterChanged();
     }
 
     void setItems(final List<RosterItem> itemCollection) {
-        items.clear();
-        for (final RosterItem item : itemCollection) {
-            items.put(item.getJID(), item);
-        }
-        fireRosterChanged();
+	items.clear();
+	for (final RosterItem item : itemCollection) {
+	    items.put(item.getJID(), item);
+	}
+	fireRosterChanged();
     }
 
     private void fireItemChanged(final RosterItem item) {
-        for (final RosterListener listener : listeners) {
-            listener.onItemChanged(item);
-        }
-        onItemChanged.fire(item);
+	for (final RosterListener listener : listeners) {
+	    listener.onItemChanged(item);
+	}
+	onItemChanged.fire(item);
     }
 
     private void fireRosterChanged() {
-        for (final RosterListener listener : listeners) {
-            listener.onRosterChanged(items.values());
-        }
-        onRosterChanged.fire(items.values());
+	for (final RosterListener listener : listeners) {
+	    listener.onRosterChanged(items.values());
+	}
+	onRosterChanged.fire(items.values());
     }
 
 }
