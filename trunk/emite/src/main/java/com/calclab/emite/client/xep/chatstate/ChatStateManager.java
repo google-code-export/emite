@@ -69,7 +69,6 @@ public class ChatStateManager {
     private ChatState createChatState(final Chat chat) {
 	Log.debug("Adding chat state to chat: " + chat.getID());
 	final ChatState chatState = new ChatState(chat);
-	chat.addListener(chatState);
 	chat.setData(ChatState.class, chatState);
 	chat.addMessageInterceptor(chatState);
 	return chatState;

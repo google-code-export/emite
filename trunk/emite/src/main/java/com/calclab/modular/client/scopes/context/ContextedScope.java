@@ -33,13 +33,19 @@ public class ContextedScope<O> implements Scope, Context<O> {
     public void createAll() {
 	Log.debug("CREATE ALL in context " + contextType);
 	for (final ContextedProvider<?, O> provider : providers) {
-	    Log.debug("CREATED BY CONTEXT: " + provider.type);
-	    provider.get();
+	    if (!provider.isCreated()) {
+		Log.debug("CREATED BY CONTEXT: " + provider.type);
+		provider.get();
+	    }
 	}
     }
 
     public O getContext() {
 	return currentContext;
+    }
+
+    public void removeContext(final O contextObject) {
+
     }
 
     public <T> Provider<T> scope(final Class<T> type, final Provider<T> unscoped) {

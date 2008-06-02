@@ -21,6 +21,7 @@
  */
 package com.calclab.emite.client.xep.muc;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import com.calclab.emite.client.core.bosh.Emite;
@@ -33,15 +34,23 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
+import com.calclab.modular.client.signal.Signal;
+import com.calclab.modular.client.signal.Signal2;
 
 public class Room extends AbstractChat implements Chat {
     private final HashMap<XmppURI, Occupant> occupants;
     private final String name;
+    private final Signal<Occupant> onOccupantModified;
+    private final Signal<Collection<Occupant>> onOccupantsChanged;
+    private final Signal2<Occupant, String> onSubjectChanged;
 
     public Room(final XmppURI userURI, final XmppURI roomURI, final String name, final Emite emite) {
 	super(userURI, roomURI, emite);
 	this.name = name;
 	this.occupants = new HashMap<XmppURI, Occupant>();
+	this.onOccupantModified = new Signal<Occupant>("onOccupantModified");
+	this.onOccupantsChanged = new Signal<Collection<Occupant>>("onOccupantsChanged");
+	this.onSubjectChanged = new Signal2<Occupant, String>("onSubjectChanged");
     }
 
     /**
@@ -86,9 +95,7 @@ public class Room extends AbstractChat implements Chat {
 	final String subject = message.getSubject();
 	if (subject != null) {
 	    interceptors.onBeforeReceive(message);
-	    for (final ChatListener listener : listeners) {
-		((RoomListener) listener).onSubjectChanged(message.getFromURI().getResource(), subject);
-	    }
+	    fireSubjectChanged(message, subject);
 	}
 	if (message.getBody() != null) {
 	    super.receive(message);
@@ -169,6 +176,7 @@ public class Room extends AbstractChat implements Chat {
     }
 
     private void fireOccupantModified(final Occupant occupant) {
+	onOccupantModified.fire(occupant);
 	for (final ChatListener listener : listeners) {
 	    try {
 		((RoomListener) listener).onOccupantModified(occupant);
@@ -178,11 +186,20 @@ public class Room extends AbstractChat implements Chat {
     }
 
     private void fireOccupantsChanged() {
+	final Collection<Occupant> values = occupants.values();
+	onOccupantsChanged.fire(values);
 	for (final ChatListener listener : listeners) {
 	    try {
-		((RoomListener) listener).onOccupantsChanged(occupants.values());
+		((RoomListener) listener).onOccupantsChanged(values);
 	    } catch (final ClassCastException e) {
 	    }
+	}
+    }
+
+    private void fireSubjectChanged(final Message message, final String subject) {
+	onSubjectChanged.fire(occupants.get(message.getFromURI()), subject);
+	for (final ChatListener listener : listeners) {
+	    ((RoomListener) listener).onSubjectChanged(message.getFromURI().getResource(), subject);
 	}
     }
 

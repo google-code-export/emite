@@ -1,4 +1,4 @@
-package com.calclab.modular.client.scopes;
+package com.calclab.modular.client.scopes.context;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.modular.client.container.Provider;
+import com.calclab.modular.client.scopes.BasicScopesTest;
 import com.calclab.modular.client.scopes.context.ContextedScope;
 
 import static org.mockito.Mockito.*;
@@ -26,17 +27,19 @@ public class ContextScopeTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void shouldCreateAllInstances() {
+    public void shouldCreateAllNotPreviouslyCreatedInstances() {
 	final ContextedScope<String> scope = new ContextedScope<String>(String.class);
-	final Provider<Long> p1 = mock(Provider.class);
-	scope.scope(Long.class, p1);
-	final Provider<Integer> p2 = mock(Provider.class);
-	scope.scope(Integer.class, p2);
+	final Provider<Long> provider1 = mock(Provider.class);
+	stub(provider1.get()).toReturn(new Long(1));
+	final Provider<Long> scoped1 = scope.scope(Long.class, provider1);
+	final Provider<Integer> provider2 = mock(Provider.class);
+	scope.scope(Integer.class, provider2);
 
 	scope.setContext("context1");
+	scoped1.get();
 	scope.createAll();
-	verify(p1).get();
-	verify(p2).get();
+	verify(provider1, times(1)).get();
+	verify(provider2, times(1)).get();
     }
 
     @Test

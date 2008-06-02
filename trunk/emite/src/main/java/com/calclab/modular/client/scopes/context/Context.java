@@ -5,5 +5,7 @@ public interface Context<O> {
 
     public O getContext();
 
+    public void removeContext(O contextObject);
+
     public void setContext(O newContext);
 }
