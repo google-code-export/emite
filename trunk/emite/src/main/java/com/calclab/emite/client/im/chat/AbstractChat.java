@@ -26,7 +26,7 @@ import java.util.HashMap;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
 
 public abstract class AbstractChat implements Chat {
@@ -76,7 +76,7 @@ public abstract class AbstractChat implements Chat {
 	return status;
     }
 
-    public void onStateChanged(final Listener<Status> listener) {
+    public void onStateChanged(final Slot<Status> listener) {
 	onStateChanged.add(listener);
     }
 

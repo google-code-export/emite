@@ -29,7 +29,7 @@ import java.util.List;
 
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
 
 public class Roster {
@@ -74,11 +74,11 @@ public class Roster {
         return items.get(jid.getJID());
     }
 
-    public void onItemChanged(final Listener<RosterItem> listener) {
+    public void onItemChanged(final Slot<RosterItem> listener) {
         onItemChanged.add(listener);
     }
 
-    public void onRosterChanged(final Listener<Collection<RosterItem>> listener) {
+    public void onRosterChanged(final Slot<Collection<RosterItem>> listener) {
         onRosterChanged.add(listener);
     }
 

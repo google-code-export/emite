@@ -36,7 +36,7 @@ import com.calclab.emite.client.core.services.ConnectorCallback;
 import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
 
 /**
@@ -137,7 +137,7 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 	}
     }
 
-    public void onStanza(final Listener<IPacket> listener) {
+    public void onStanza(final Slot<IPacket> listener) {
 	onStanza.add(listener);
     }
 

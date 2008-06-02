@@ -34,7 +34,7 @@ import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
 
 public class PresenceManager extends SessionComponent {
@@ -96,7 +96,7 @@ public class PresenceManager extends SessionComponent {
 	super.logOut();
     }
 
-    public void onOwnPresenceChanged(final Listener<Presence> listener) {
+    public void onOwnPresenceChanged(final Slot<Presence> listener) {
 	onOwnPresenceChanged.add(listener);
     }
 

@@ -56,7 +56,7 @@ import com.calclab.emite.j2se.swing.ChatPanel.ChatPanelListener;
 import com.calclab.emite.j2se.swing.LoginPanel.LoginPanelListener;
 import com.calclab.emite.j2se.swing.RoomPanel.RoomPanelListener;
 import com.calclab.emite.j2se.swing.RosterPanel.RosterPanelListener;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 
 public class SwingClient {
 
@@ -156,7 +156,7 @@ public class SwingClient {
     }
 
     private void addXmppListeners() {
-        xmpp.getSession().onStateChanged(new Listener<State>() {
+        xmpp.getSession().onStateChanged(new Slot<State>() {
             public void onEvent(final State current) {
                 print("STATE: " + current);
                 final boolean isConnected = current == State.ready;
@@ -170,7 +170,7 @@ public class SwingClient {
             }
         });
 
-        xmpp.getChatManager().onChatCreated(new Listener<Chat>() {
+        xmpp.getChatManager().onChatCreated(new Slot<Chat>() {
             public void onEvent(final Chat chat) {
                 final ChatPanel chatPanel = conversationsPanel.createChat(chat.getOtherURI().toString(), chat.getID(),
                         new ChatPanelListener() {
@@ -198,7 +198,7 @@ public class SwingClient {
             }
         });
 
-        xmpp.getChatManager().onChatClosed(new Listener<Chat>() {
+        xmpp.getChatManager().onChatClosed(new Slot<Chat>() {
             public void onEvent(final Chat chat) {
                 conversationsPanel.close(chat.getID());
             }
@@ -206,7 +206,7 @@ public class SwingClient {
 
         final RoomManager roomManager = MUCModule.getRoomManager(xmpp);
 
-        roomManager.onChatCreated(new Listener<Chat>() {
+        roomManager.onChatCreated(new Slot<Chat>() {
             public void onEvent(final Chat room) {
                 final RoomPanel roomPanel = conversationsPanel.createRoom(room.getOtherURI(), room.getID(),
                         new RoomPanelListener() {
@@ -250,26 +250,26 @@ public class SwingClient {
             }
         });
 
-        roomManager.onChatClosed(new Listener<Chat>() {
+        roomManager.onChatClosed(new Slot<Chat>() {
             public void onEvent(final Chat chat) {
                 conversationsPanel.close(chat.getID());
             }
         });
 
-        roomManager.onInvitationReceived(new Listener<RoomInvitation>() {
+        roomManager.onInvitationReceived(new Slot<RoomInvitation>() {
             public void onEvent(final RoomInvitation invitation) {
                 roomManager.openChat(invitation.getRoomURI(), null, null);
             }
         });
 
         Roster roster = xmpp.getRoster();
-        roster.onItemChanged(new Listener<RosterItem>() {
+        roster.onItemChanged(new Slot<RosterItem>() {
             public void onEvent(final RosterItem item) {
                 print("ROSTER ITEM PRESENCE CHANGED");
                 rosterPanel.refresh();
             }
         });
-        roster.onRosterChanged(new Listener<Collection<RosterItem>>() {
+        roster.onRosterChanged(new Slot<Collection<RosterItem>>() {
 
             public void onEvent(final Collection<RosterItem> items) {
                 print("ROSTER INITIALIZED");
@@ -280,7 +280,7 @@ public class SwingClient {
             }
         });
 
-        xmpp.getRosterManager().onSubscriptionRequested(new Listener<Presence>() {
+        xmpp.getRosterManager().onSubscriptionRequested(new Slot<Presence>() {
             public void onEvent(final Presence presence) {
                 final Object message = presence.getFrom() + " want to add you to his/her roster. Accept?";
                 final int result = JOptionPane.showConfirmDialog(frame, message);

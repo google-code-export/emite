@@ -21,8 +21,10 @@ public class ContextedScope<O> implements Scope {
     private final ArrayList<ContextedProvider<?, O>> providers;
 
     private O currentContext;
+    private final Class<O> contextType;
 
-    public ContextedScope() {
+    public ContextedScope(final Class<O> contextType) {
+	this.contextType = contextType;
 	currentContext = null;
 	this.providers = new ArrayList<ContextedProvider<?, O>>();
     }
@@ -49,5 +51,11 @@ public class ContextedScope<O> implements Scope {
 	for (final ContextedProvider<?, O> provider : providers) {
 	    provider.setContext(context);
 	}
+    }
+
+    @Override
+    public String toString() {
+	final String repr = currentContext != null ? currentContext.toString() : "none";
+	return "[" + contextType + " context. Current: " + repr + "]";
     }
 }

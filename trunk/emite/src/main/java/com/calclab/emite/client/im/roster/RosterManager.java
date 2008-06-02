@@ -37,7 +37,7 @@ import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
 
 public class RosterManager extends SessionComponent {
@@ -137,11 +137,11 @@ public class RosterManager extends SessionComponent {
 	requestRoster();
     }
 
-    public void onSubscriptionRequested(final Listener<Presence> listener) {
+    public void onSubscriptionRequested(final Slot<Presence> listener) {
 	onSubscriptionRequested.add(listener);
     }
 
-    public void onUnsubscribedReceived(final Listener<XmppURI> listener) {
+    public void onUnsubscribedReceived(final Slot<XmppURI> listener) {
 	onUnsubscribedReceived.add(listener);
     }
 

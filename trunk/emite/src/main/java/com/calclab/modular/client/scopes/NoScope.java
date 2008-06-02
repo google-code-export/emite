@@ -9,6 +9,12 @@ import com.calclab.modular.client.scopes.Scope;
  */
 public class NoScope implements Scope {
 
+    /**
+     * Use Scopes class
+     */
+    NoScope() {
+    }
+
     public <T> Provider<T> scope(final Class<T> type, final Provider<T> unscoped) {
 	return unscoped;
     }

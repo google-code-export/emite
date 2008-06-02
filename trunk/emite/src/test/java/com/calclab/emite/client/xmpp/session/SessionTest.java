@@ -21,7 +21,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.SignalTester;
 import com.calclab.emite.testing.ListenerTester;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 
 public class SessionTest {
 
@@ -80,7 +80,7 @@ public class SessionTest {
     @SuppressWarnings("unchecked")
     @Test
     public void shouldSignalStateChanges() {
-	final Listener<State> listener = mock(Listener.class);
+	final Slot<State> listener = mock(Slot.class);
 	session.onStateChanged(listener);
 	session.setState(State.ready);
 	verify(listener).onEvent(same(State.ready));

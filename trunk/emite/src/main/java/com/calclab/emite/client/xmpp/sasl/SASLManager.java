@@ -27,7 +27,7 @@ import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket.State;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
 
 public class SASLManager {
@@ -44,7 +44,7 @@ public class SASLManager {
 	install();
     }
 
-    public void onAuthorized(final Listener<AuthorizationTicket> listener) {
+    public void onAuthorized(final Slot<AuthorizationTicket> listener) {
 	onAuthorized.add(listener);
     }
 

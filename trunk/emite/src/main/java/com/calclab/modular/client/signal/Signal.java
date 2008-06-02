@@ -26,31 +26,31 @@ import java.util.ArrayList;
 import com.allen_sauer.gwt.log.client.Log;
 
 public class Signal<T> {
-    private ArrayList<Listener<T>> listeners;
+    private ArrayList<Slot<T>> slots;
 
     public Signal() {
-	listeners = null;
+	slots = null;
     }
 
-    public void add(final Listener<T> listener) {
-	if (listeners == null) {
-	    this.listeners = new ArrayList<Listener<T>>();
+    public void add(final Slot<T> listener) {
+	if (slots == null) {
+	    this.slots = new ArrayList<Slot<T>>();
 	}
-	listeners.add(listener);
+	slots.add(listener);
     }
 
     public void fire(final T event) {
 	Log.debug("Signal fired: " + event);
-	if (listeners != null) {
-	    for (final Listener<T> listener : listeners) {
+	if (slots != null) {
+	    for (final Slot<T> listener : slots) {
 		listener.onEvent(event);
 	    }
 	}
     }
 
-    public void remove(final Listener<T> listener) {
-	if (listeners != null) {
-	    listeners.remove(listener);
+    public void remove(final Slot<T> listener) {
+	if (slots != null) {
+	    slots.remove(listener);
 	}
     }
 

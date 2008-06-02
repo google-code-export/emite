@@ -38,7 +38,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.examples.chat.client.ChatPanel.ChatPanelListener;
 import com.calclab.emite.examples.chat.client.ConversationsPanel.ConversationsListener;
 import com.calclab.emite.examples.chat.client.LoginPanel.LoginPanelListener;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
@@ -138,7 +138,7 @@ public class ChatEntryPoint implements EntryPoint {
         xmpp = Xmpp.create();
         xmpp.setHttpBase(bind);
 
-        xmpp.getSession().onStateChanged(new Listener<State>() {
+        xmpp.getSession().onStateChanged(new Slot<State>() {
             public void onEvent(final State current) {
                 final String theStatus = current.toString();
                 loginPanel.setStatus(theStatus);
@@ -154,13 +154,13 @@ public class ChatEntryPoint implements EntryPoint {
             }
         });
 
-        xmpp.getChatManager().onChatCreated(new Listener<Chat>() {
+        xmpp.getChatManager().onChatCreated(new Slot<Chat>() {
             public void onEvent(final Chat chat) {
                 createChatPanel(chat.getOtherURI(), chat);
             }
         });
 
-        xmpp.getChatManager().onChatClosed(new Listener<Chat>() {
+        xmpp.getChatManager().onChatClosed(new Slot<Chat>() {
             public void onEvent(final Chat chat) {
                 final ChatPanel panel = chats.remove(chat.getOtherURI());
                 conversationsPanel.removeChat(chat.getOtherURI().toString(), panel);
@@ -169,7 +169,7 @@ public class ChatEntryPoint implements EntryPoint {
 
         xmpp.getRosterManager().setSubscriptionMode(SubscriptionMode.autoAcceptAll);
 
-        xmpp.getRoster().onRosterChanged(new Listener<Collection<RosterItem>>() {
+        xmpp.getRoster().onRosterChanged(new Slot<Collection<RosterItem>>() {
             public void onEvent(final Collection<RosterItem> items) {
                 conversationsPanel.setRoster(items);
             }

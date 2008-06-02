@@ -26,7 +26,7 @@ import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
 
 public class ResourceBindingManager {
@@ -50,7 +50,7 @@ public class ResourceBindingManager {
 	});
     }
 
-    public void onBinded(final Listener<XmppURI> listener) {
+    public void onBinded(final Slot<XmppURI> listener) {
 	onBinded.add(listener);
     }
 
