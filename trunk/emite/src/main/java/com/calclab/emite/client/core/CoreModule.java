@@ -33,7 +33,6 @@ import com.calclab.modular.client.container.Container;
 import com.calclab.modular.client.container.Provider;
 import com.calclab.modular.client.modules.Module;
 import com.calclab.modular.client.modules.ModuleBuilder;
-import com.calclab.modular.client.scopes.Scopes;
 import com.calclab.modular.client.scopes.SingletonScope;
 
 public class CoreModule implements Module {

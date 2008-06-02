@@ -5,9 +5,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emiteuimodule.client.chat.ChatUIListener;
-import com.calclab.emiteuimodule.client.chat.ChatUIPresenter;
-import com.calclab.emiteuimodule.client.chat.ChatUIView;
 import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
 
 public class ChatUIPresenterTest {

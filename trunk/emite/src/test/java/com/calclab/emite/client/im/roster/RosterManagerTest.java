@@ -3,11 +3,13 @@ package com.calclab.emite.client.im.roster;
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import static com.calclab.emite.testing.MockitoEmiteHelper.isListOfSize;
 import static com.calclab.emite.testing.MockitoEmiteHelper.packetLike;
+import static com.calclab.emite.testing.SlotTester.verifyCalled;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,7 +22,6 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.SlotTester;
-import static com.calclab.emite.testing.SlotTester.*;
 
 public class RosterManagerTest {
     private EmiteTestHelper emite;

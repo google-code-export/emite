@@ -9,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.modular.client.container.Provider;
-import com.calclab.modular.client.modules.Module;
-import com.calclab.modular.client.modules.ModuleBuilder;
 import com.calclab.modular.client.scopes.Scope;
 import com.calclab.modular.client.scopes.Scopes;
 

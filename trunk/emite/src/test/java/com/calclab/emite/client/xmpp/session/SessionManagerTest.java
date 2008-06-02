@@ -28,7 +28,6 @@ public class SessionManagerTest {
     private Session session;
     private SASLManager saslManager;
     private ResourceBindingManager bindingManager;
-    private SessionManager manager;
 
     @Before
     public void aaCreate() {
@@ -36,7 +35,7 @@ public class SessionManagerTest {
 	session = mock(Session.class);
 	saslManager = mock(SASLManager.class);
 	bindingManager = mock(ResourceBindingManager.class);
-	manager = new SessionManager(session, emite, saslManager, bindingManager);
+	new SessionManager(session, emite, saslManager, bindingManager);
     }
 
     @Test

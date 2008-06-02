@@ -1,11 +1,11 @@
 package com.calclab.emite.client.xmpp.session;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.testing.SlotTester.verifyCalled;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static com.calclab.emite.testing.SlotTester.*;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -7,10 +7,6 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.modular.client.container.Container;
-import com.calclab.modular.client.container.DelegatedContainer;
-import com.calclab.modular.client.container.Provider;
-
 public class DelegatedContainerTest {
 
     private Container delegate;

@@ -1,22 +1,19 @@
 package com.calclab.emite.client.im.presence;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.testing.SlotTester.verifyCalled;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.MockitoEmiteHelper;
 import com.calclab.emite.testing.SlotTester;
-import com.calclab.modular.client.signal.Slot;
-
-import static com.calclab.emite.testing.SlotTester.*;
 
 public class PresenceManagerTest {
 

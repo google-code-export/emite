@@ -1,11 +1,12 @@
 package com.calclab.module.client.signal;
 
+import static com.calclab.emite.testing.SlotTester.verifyCalledWith;
+import static com.calclab.emite.testing.SlotTester.verifyNoCalled;
+
 import org.junit.Test;
 
 import com.calclab.emite.testing.SlotTester;
 import com.calclab.modular.client.signal.Signal;
-
-import static com.calclab.emite.testing.SlotTester.*;
 
 public class SignalTest {
 
