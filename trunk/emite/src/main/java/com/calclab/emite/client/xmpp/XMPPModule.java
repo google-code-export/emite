@@ -51,7 +51,9 @@ public class XMPPModule implements Module {
     public void onLoad(final ModuleBuilder builder) {
 
 	Scopes.addScope(SessionScope.class, new SessionScope());
-	builder.registerProvider(SessionScope.class, Scopes.get().getProvider(SessionScope.class));
+	builder
+		.registerProvider(SessionScope.class, Scopes.get().getProvider(SessionScope.class),
+			SingletonScope.class);
 
 	builder.registerProvider(ResourceBindingManager.class, new Provider<ResourceBindingManager>() {
 	    public ResourceBindingManager get() {
@@ -71,6 +73,7 @@ public class XMPPModule implements Module {
 		final BoshManager boshManager = builder.getInstance(BoshManager.class);
 		final SessionScope scope = builder.getInstance(SessionScope.class);
 		final Session session = new Session(boshManager, emite, scope);
+		scope.setContext(session);
 		return session;
 	    }
 	}, SingletonScope.class);

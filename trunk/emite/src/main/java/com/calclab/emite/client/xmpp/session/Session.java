@@ -94,7 +94,7 @@ public class Session {
     public void login(final XmppURI uri, final String password) {
 	if (state == State.disconnected) {
 	    setState(State.connecting);
-	    scope.newContext(this);
+	    scope.createAll();
 	    onLogin.fire(new AuthorizationTicket(uri, password));
 	    emite.publish(BoshManager.Events.start(uri.getHost()));
 	    userURI = uri;

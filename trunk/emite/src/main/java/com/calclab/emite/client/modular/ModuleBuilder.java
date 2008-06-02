@@ -23,6 +23,7 @@ package com.calclab.emite.client.modular;
 
 import java.util.HashMap;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.modular.scopes.Scope;
 import com.calclab.emite.client.modular.scopes.Scopes;
 
@@ -51,6 +52,12 @@ public class ModuleBuilder extends DelegatedContainer {
 	for (final Module m : toAddModules) {
 	    loadIfNeeded(m);
 	}
+    }
+
+    @Override
+    public <T> T getInstance(final Class<T> componentType) {
+	Log.debug("Getting dependency: " + componentType);
+	return super.getInstance(componentType);
     }
 
     public <C> Provider<C> registerProvider(final Class<C> type, final Provider<C> provider,
