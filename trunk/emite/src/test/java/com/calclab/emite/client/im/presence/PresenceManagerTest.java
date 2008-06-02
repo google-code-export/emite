@@ -14,12 +14,13 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.MockitoEmiteHelper;
 import com.calclab.emite.testing.SlotTester;
+import com.calclab.modular.client.signal.Slot;
+
 import static com.calclab.emite.testing.SlotTester.*;
 
 public class PresenceManagerTest {
 
     private PresenceManager manager;
-    private PresenceListener presenceListener;
     private EmiteTestHelper emite;
 
     @Before
@@ -27,8 +28,6 @@ public class PresenceManagerTest {
 	emite = new EmiteTestHelper();
 	manager = new PresenceManager(emite);
 
-	presenceListener = Mockito.mock(PresenceListener.class);
-	manager.addListener(presenceListener);
     }
 
     @Test
@@ -47,20 +46,6 @@ public class PresenceManagerTest {
 	manager.setOwnPresence("my message", Show.chat);
 	emite.verifyNothingSent();
 	assertEquals(Presence.Type.unavailable, manager.getOwnPresence().getType());
-    }
-
-    @Test
-    public void shouldFireAvailablePresence() {
-	final Presence presence = createPresence(Type.available);
-	emite.receives(presence);
-	Mockito.verify(presenceListener).onPresenceReceived((Presence) MockitoEmiteHelper.packetLike(presence));
-    }
-
-    @Test
-    public void shouldFireUnavailablePresence() {
-	final Presence presence = createPresence(Type.unavailable);
-	emite.receives(presence);
-	Mockito.verify(presenceListener).onPresenceReceived((Presence) MockitoEmiteHelper.packetLike(presence));
     }
 
     @Test
@@ -98,6 +83,15 @@ public class PresenceManagerTest {
 	manager.setOwnPresence(new Presence().With(Presence.Show.dnd));
 	emite.verifySent("<presence from='myself@domain'><show>dnd</show></presence>");
 
+    }
+
+    @Test
+    public void shouldSignalIncommingPresence() {
+	final SlotTester<Presence> slot = new SlotTester<Presence>();
+	manager.onPresenceReceived(slot);
+	emite.receives(createPresence(Type.available));
+	emite.receives(createPresence(Type.unavailable));
+	verifyCalled(slot, 2);
     }
 
     @Test

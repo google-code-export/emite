@@ -23,8 +23,6 @@ package com.calclab.emite.client.im.presence;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 
-import java.util.ArrayList;
-
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
@@ -34,25 +32,21 @@ import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
-import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
+import com.calclab.modular.client.signal.Slot;
 
 public class PresenceManager extends SessionComponent {
     private Presence delayedPresence;
     private Presence ownPresence;
-    private final ArrayList<PresenceListener> listeners;
     private final Signal<Presence> onOwnPresenceChanged;
+    private final Signal<Presence> onPresenceReceived;
 
     public PresenceManager(final Emite emite) {
 	super(emite);
-	this.listeners = new ArrayList<PresenceListener>();
 	this.ownPresence = new Presence(Type.unavailable, null, null);
+	this.onPresenceReceived = new Signal<Presence>("onPresenceReceived");
 	this.onOwnPresenceChanged = new Signal<Presence>("onOwnPresenceChanged");
 	install();
-    }
-
-    public void addListener(final PresenceListener presenceListener) {
-	this.listeners.add(presenceListener);
     }
 
     /**
@@ -100,6 +94,10 @@ public class PresenceManager extends SessionComponent {
 	onOwnPresenceChanged.add(listener);
     }
 
+    public void onPresenceReceived(final Slot<Presence> slot) {
+	onPresenceReceived.add(slot);
+    }
+
     /**
      * Set the logged in user's presence. If the user is not logged in, the
      * presence is sent just after the initial presence
@@ -144,12 +142,6 @@ public class PresenceManager extends SessionComponent {
 	onOwnPresenceChanged.fire(ownPresence);
     }
 
-    private void firePresenceReceived(final Presence presence) {
-	for (final PresenceListener listener : listeners) {
-	    listener.onPresenceReceived(presence);
-	}
-    };
-
     /**
      * Upon connecting to the server and becoming an active resource, a client
      * SHOULD request the roster before sending initial presence
@@ -181,7 +173,7 @@ public class PresenceManager extends SessionComponent {
 		    Log.warn("Error presence!!!");
 		    break;
 		default:
-		    firePresenceReceived(presence);
+		    onPresenceReceived.fire(presence);
 		    break;
 		}
 	    }

@@ -84,7 +84,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Test
     public void XXListenermanagerShouldCreateOneChatForSameResource() {
 	final ChatManagerListener listener = Mockito.mock(ChatManagerListener.class);
-	manager.addListener(listener);
+	new ChatManagerListenerAdapter(manager, listener);
 	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 1"));
 	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
 	verify(listener, times(1)).onChatCreated((Chat) anyObject());
@@ -94,7 +94,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Test
     public void XXListenermanagerShouldCreateOneChatIfResourceIsNotAvailable() {
 	final ChatManagerListener listener = Mockito.mock(ChatManagerListener.class);
-	manager.addListener(listener);
+	new ChatManagerListenerAdapter(manager, listener);
 	emite.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
 	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
 	verify(listener, times(1)).onChatCreated((Chat) anyObject());
@@ -104,7 +104,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Test
     public void XXListenershouldHandleIncommingMessages() {
 	final ChatManagerListener listener = Mockito.mock(ChatManagerListener.class);
-	manager.addListener(listener);
+	new ChatManagerListenerAdapter(manager, listener);
 	emite.receives("<message to='" + MYSELF + "' from='otherUser@dom/res' id='theId0001'>"
 		+ "<body>This is the body</body></message>");
 	verify(listener).onChatCreated((Chat) anyObject());

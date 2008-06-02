@@ -40,6 +40,7 @@ import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.presence.PresenceListener;
+import com.calclab.emite.client.im.presence.PresenceManagerListenerAdapter;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.xep.muc.MUCModule;
@@ -47,8 +48,8 @@ import com.calclab.emite.client.xep.muc.Occupant;
 import com.calclab.emite.client.xep.muc.Room;
 import com.calclab.emite.client.xep.muc.RoomInvitation;
 import com.calclab.emite.client.xep.muc.RoomListener;
+import com.calclab.emite.client.xep.muc.RoomListenerAdaptor;
 import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xep.mucç.RoomListenerAdaptor;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -236,7 +237,7 @@ public class SwingClient {
 			});
 		addChatListener(room, roomPanel);
 
-		new RoomListenerAdaptor((Room) room, new RoomListener() {
+		new RoomListenerAdaptor(room, new RoomListener() {
 		    public void onMessageReceived(final Chat chat, final Message message) {
 			roomPanel.showIcomingMessage(message.getFrom(), message.getBody());
 		    }
@@ -300,7 +301,7 @@ public class SwingClient {
 	    }
 	});
 
-	xmpp.getPresenceManager().addListener(new PresenceListener() {
+	new PresenceManagerListenerAdapter(xmpp.getPresenceManager(), new PresenceListener() {
 	    public void onPresenceReceived(final Presence presence) {
 		print("PRESENCE!!: " + presence);
 	    }

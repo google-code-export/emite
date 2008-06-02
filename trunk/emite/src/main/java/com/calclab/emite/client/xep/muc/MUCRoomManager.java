@@ -33,7 +33,6 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.NoPacket;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
-import com.calclab.emite.client.im.chat.ChatManagerListener;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -81,7 +80,6 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 	    final Presence presence = new Presence(null, userURI, roomURI);
 	    presence.addChild("x", "http://jabber.org/protocol/muc");
 	    emite.send(presence);
-	    listeners.onChatCreated(room);
 	    onChatCreated.fire(room);
 	}
 	return room;
@@ -129,13 +127,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     }
 
     private void fireInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
-	for (final ChatManagerListener listener : listeners) {
-	    try {
-		((RoomManagerListener) listener).onInvitationReceived(invitor, roomURI, reason);
-		onInvitationReceived.fire(new RoomInvitation(invitor, roomURI, reason));
-	    } catch (final ClassCastException e) {
-	    }
-	}
+	onInvitationReceived.fire(new RoomInvitation(invitor, roomURI, reason));
     }
 
     private void handleRoomInvitation(final XmppURI roomURI, final Stanza invitation) {
