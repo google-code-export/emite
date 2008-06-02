@@ -26,7 +26,7 @@ import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.xmpp.session.SessionScope;
 
 public class MUCModule implements Module {
     public static RoomManager getRoomManager(final Container components) {
@@ -42,7 +42,7 @@ public class MUCModule implements Module {
 	    public RoomManager get() {
 		return new MUCRoomManager(builder.getInstance(Emite.class));
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, SessionScope.class);
 
     }
 }

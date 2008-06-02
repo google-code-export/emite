@@ -19,32 +19,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.examples.echo;
+package com.calclab.emite.client.modular.scopes;
 
-import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Container;
-import com.calclab.emite.client.modular.Module;
-import com.calclab.emite.client.modular.ModuleBuilder;
-import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.xmpp.session.SessionScope;
+import com.calclab.emite.client.modular.HashContainer;
 
-public class EchoModule implements Module {
-    private static final Class<Echo> COMPONENT_ECHO = Echo.class;
+public class Scopes {
 
-    public static Echo getEcho(final Container container) {
-	return container.getInstance(COMPONENT_ECHO);
+    /**
+     * use SingletonScope.class directly instead
+     * 
+     * @deprecated
+     * 
+     */
+    @Deprecated
+    public static Class<SingletonScope> SINGLETON = SingletonScope.class;
+
+    private static final HashContainer container;
+
+    static {
+	container = new HashContainer();
+
+	container.registerSingletonInstance(SingletonScope.class, new SingletonScope());
+	container.registerSingletonInstance(NoScope.class, new NoScope());
     }
 
-    public Class<?> getType() {
-	return EchoModule.class;
+    public static <S> S addScope(final Class<S> scopeType, final S scope) {
+	return container.registerSingletonInstance(scopeType, scope);
     }
 
-    public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(Echo.class, new Provider<Echo>() {
-	    public Echo get() {
-		return new Echo(builder.getInstance(Emite.class));
-	    }
-
-	}, SessionScope.class);
+    public static Container get() {
+	return container;
     }
+
+    public static <T> T get(final Class<T> scopeType) {
+	return container.getInstance(scopeType);
+    }
+
 }

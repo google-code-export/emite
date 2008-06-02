@@ -26,7 +26,7 @@ import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.xmpp.session.SessionScope;
 
 public class AvatarModule implements Module {
     private static final Class<AvatarManager> COMPONENTS_MANAGER = AvatarManager.class;
@@ -45,6 +45,6 @@ public class AvatarModule implements Module {
 		final Emite emite = builder.getInstance(Emite.class);
 		return new AvatarManager(emite);
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, SessionScope.class);
     }
 }

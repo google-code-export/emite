@@ -26,7 +26,6 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.core.signal.Signal;
-import com.calclab.emite.client.modular.Context;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -41,8 +40,6 @@ public class Session {
 	connected
     }
 
-    public static final Context<SessionLifecycle> CONTEXT = new Context<SessionLifecycle>(SessionLifecycle.class);
-
     private final SessionListenerCollection listeners;
     private State state;
     private final Emite emite;
@@ -51,10 +48,13 @@ public class Session {
     private final Signal<Presence> onPresence;
     private final Signal<Message> onMessage;
     private final Signal<AuthorizationTicket> onLogin;
+    private final SessionScope scope;
 
-    public Session(final BoshManager manager, final Emite emite) {
+    public Session(final BoshManager manager, final Emite emite, final SessionScope scope) {
 	this.emite = emite;
+	this.scope = scope;
 	state = State.disconnected;
+
 	this.listeners = new SessionListenerCollection();
 	this.onStateChanged = new Signal<State>();
 	this.onPresence = new Signal<Presence>();
@@ -94,6 +94,7 @@ public class Session {
     public void login(final XmppURI uri, final String password) {
 	if (state == State.disconnected) {
 	    setState(State.connecting);
+	    scope.newContext(this);
 	    onLogin.fire(new AuthorizationTicket(uri, password));
 	    emite.publish(BoshManager.Events.start(uri.getHost()));
 	    userURI = uri;

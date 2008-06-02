@@ -27,7 +27,7 @@ import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.modular.scopes.SingletonScope;
 import com.calclab.emite.client.xmpp.XMPPModule;
 
 public class EmiteModule implements Module {
@@ -47,7 +47,7 @@ public class EmiteModule implements Module {
 		return new Xmpp(builder);
 	    }
 
-	}, Scopes.SINGLETON);
+	}, SingletonScope.class);
     }
 
 }

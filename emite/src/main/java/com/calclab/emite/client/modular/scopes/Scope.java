@@ -19,7 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.modular;
+package com.calclab.emite.client.modular.scopes;
+
+import com.calclab.emite.client.modular.Provider;
 
 public interface Scope {
     <T> Provider<T> scope(Class<T> type, Provider<T> unscoped);

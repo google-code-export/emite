@@ -33,7 +33,8 @@ import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.modular.scopes.Scopes;
+import com.calclab.emite.client.modular.scopes.SingletonScope;
 
 public class CoreModule implements Module {
     public static Bosh getBosh(final Container container) {
@@ -57,25 +58,25 @@ public class CoreModule implements Module {
 	    public Dispatcher get() {
 		return new DispatcherDefault();
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, Scopes.get(SingletonScope.class));
 
 	builder.registerProvider(Stream.class, new Provider<Stream>() {
 	    public Stream get() {
 		return new Stream();
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, SingletonScope.class);
 
 	builder.registerProvider(Emite.class, new Provider<Emite>() {
 	    public Emite get() {
 		return new EmiteBosh(builder.getInstance(Dispatcher.class), builder.getInstance(Stream.class));
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, SingletonScope.class);
 
 	builder.registerProvider(Bosh.class, new Provider<Bosh>() {
 	    public Bosh get() {
 		return new Bosh(builder.getInstance(Stream.class));
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, SingletonScope.class);
 
 	builder.registerProvider(BoshManager.class, new Provider<BoshManager>() {
 	    public BoshManager get() {
@@ -84,7 +85,7 @@ public class CoreModule implements Module {
 		final Bosh bosh = builder.getInstance(Bosh.class);
 		return new BoshManager(services, emite, bosh);
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, SingletonScope.class);
 
     }
 

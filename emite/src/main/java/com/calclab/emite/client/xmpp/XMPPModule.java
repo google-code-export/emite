@@ -27,11 +27,13 @@ import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.modular.scopes.Scopes;
+import com.calclab.emite.client.modular.scopes.SingletonScope;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionManager;
+import com.calclab.emite.client.xmpp.session.SessionScope;
 
 public class XMPPModule implements Module {
 
@@ -48,26 +50,30 @@ public class XMPPModule implements Module {
 
     public void onLoad(final ModuleBuilder builder) {
 
+	Scopes.addScope(SessionScope.class, new SessionScope());
+	builder.registerProvider(SessionScope.class, Scopes.get().getProvider(SessionScope.class));
+
 	builder.registerProvider(ResourceBindingManager.class, new Provider<ResourceBindingManager>() {
 	    public ResourceBindingManager get() {
 		return new ResourceBindingManager(builder.getInstance(Emite.class));
 	    }
-	}, Scopes.SINGLETON);
+	}, SingletonScope.class);
 
 	builder.registerProvider(SASLManager.class, new Provider<SASLManager>() {
 	    public SASLManager get() {
 		return new SASLManager(builder.getInstance(Emite.class));
 	    }
-	}, Scopes.SINGLETON);
+	}, SingletonScope.class);
 
 	builder.registerProvider(Session.class, new Provider<Session>() {
 	    public Session get() {
 		final Emite emite = builder.getInstance(Emite.class);
 		final BoshManager boshManager = builder.getInstance(BoshManager.class);
-		final Session session = new Session(boshManager, emite);
+		final SessionScope scope = builder.getInstance(SessionScope.class);
+		final Session session = new Session(boshManager, emite, scope);
 		return session;
 	    }
-	}, Scopes.SINGLETON);
+	}, SingletonScope.class);
 
 	builder.registerProvider(SessionManager.class, new Provider<SessionManager>() {
 	    public SessionManager get() {
@@ -78,7 +84,7 @@ public class XMPPModule implements Module {
 		final SessionManager sessionManager = new SessionManager(session, emite, saslManager, bindingManager);
 		return sessionManager;
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, SessionScope.class);
 
     }
 

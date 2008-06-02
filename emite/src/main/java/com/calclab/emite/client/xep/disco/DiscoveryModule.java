@@ -25,7 +25,7 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.xmpp.session.SessionScope;
 
 /**
  * Implements XEP-0030: Service Discovery
@@ -49,6 +49,6 @@ public class DiscoveryModule implements Module {
 	    public DiscoveryManager get() {
 		return new DiscoveryManager(builder.getInstance(Emite.class));
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, SessionScope.class);
     }
 }

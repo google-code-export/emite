@@ -8,6 +8,8 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.calclab.emite.client.modular.scopes.Scope;
+
 public class ModuleBuilderTest {
 
     public class FakeModule implements Module {

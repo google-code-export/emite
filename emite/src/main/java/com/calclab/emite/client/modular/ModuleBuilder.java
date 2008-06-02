@@ -23,6 +23,9 @@ package com.calclab.emite.client.modular;
 
 import java.util.HashMap;
 
+import com.calclab.emite.client.modular.scopes.Scope;
+import com.calclab.emite.client.modular.scopes.Scopes;
+
 /**
  * A container with module installation support
  */
@@ -50,17 +53,14 @@ public class ModuleBuilder extends DelegatedContainer {
 	}
     }
 
-    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider, final Scope scope) {
-	return registerProvider(componentKey, provider, scope, null);
+    public <C> Provider<C> registerProvider(final Class<C> type, final Provider<C> provider,
+	    final Class<? extends Scope> scopeType) {
+	return registerProvider(type, provider, Scopes.get(scopeType));
     }
 
-    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider, final Scope scope,
-	    final Context<?> context) {
+    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider, final Scope scope) {
 	final Provider<T> scoped = scope.scope(componentKey, provider);
 	super.registerProvider(componentKey, scoped);
-	if (context != null) {
-	    context.register(this, provider);
-	}
 	return scoped;
     }
 
