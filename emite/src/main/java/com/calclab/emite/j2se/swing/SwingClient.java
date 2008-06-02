@@ -48,6 +48,7 @@ import com.calclab.emite.client.xep.muc.Room;
 import com.calclab.emite.client.xep.muc.RoomInvitation;
 import com.calclab.emite.client.xep.muc.RoomListener;
 import com.calclab.emite.client.xep.muc.RoomManager;
+import com.calclab.emite.client.xep.mucç.RoomListenerAdaptor;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -235,7 +236,7 @@ public class SwingClient {
 			});
 		addChatListener(room, roomPanel);
 
-		room.addListener(new RoomListener() {
+		new RoomListenerAdaptor((Room) room, new RoomListener() {
 		    public void onMessageReceived(final Chat chat, final Message message) {
 			roomPanel.showIcomingMessage(message.getFrom(), message.getBody());
 		    }

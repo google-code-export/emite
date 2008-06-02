@@ -8,8 +8,8 @@ import org.junit.Test;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.ListenerTester;
-import static com.calclab.emite.testing.ListenerTester.*;
+import com.calclab.emite.testing.SlotTester;
+import static com.calclab.emite.testing.SlotTester.*;
 
 public class ResourceBindingManagerTest {
 
@@ -24,7 +24,7 @@ public class ResourceBindingManagerTest {
 
     @Test
     public void shouldPerformBinding() {
-	final ListenerTester<XmppURI> listener = new ListenerTester<XmppURI>();
+	final SlotTester<XmppURI> listener = new SlotTester<XmppURI>();
 	manager.onBinded(listener);
 	manager.bindResource("resource");
 

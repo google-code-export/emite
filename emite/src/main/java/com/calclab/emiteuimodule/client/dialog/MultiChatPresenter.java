@@ -33,6 +33,7 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
+import com.calclab.emite.client.im.chat.ChatListenerAdaptor;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
@@ -43,6 +44,7 @@ import com.calclab.emite.client.xep.muc.Room;
 import com.calclab.emite.client.xep.muc.RoomInvitation;
 import com.calclab.emite.client.xep.muc.RoomListener;
 import com.calclab.emite.client.xep.muc.RoomManager;
+import com.calclab.emite.client.xep.mucç.RoomListenerAdaptor;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -560,7 +562,7 @@ public class MultiChatPresenter {
 	    public void onEvent(final Chat chat) {
 		final ChatUI chatUI = createChat(chat);
 		dockChatUIifIsStartedByMe(chat, chatUI);
-		chat.addListener(new ChatListener() {
+		new ChatListenerAdaptor(chat, new ChatListener() {
 		    public void onMessageReceived(final Chat chat, final Message message) {
 			if (message.getBody() != null) {
 			    dockChatUI(chat, chatUI);
@@ -588,7 +590,8 @@ public class MultiChatPresenter {
 	    public void onEvent(final Chat room) {
 		final RoomUI roomUI = createRoom(room, currentUserJid.getNode());
 		dockChatUIifIsStartedByMe(room, roomUI);
-		room.addListener(new RoomListener() {
+
+		new RoomListenerAdaptor(room, new RoomListener() {
 		    public void onMessageReceived(final Chat chat, final Message message) {
 			if (message.getBody() != null) {
 			    dockChatUI(room, roomUI);

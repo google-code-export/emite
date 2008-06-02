@@ -2,17 +2,17 @@ package com.calclab.module.client.signal;
 
 import org.junit.Test;
 
-import com.calclab.emite.testing.ListenerTester;
+import com.calclab.emite.testing.SlotTester;
 import com.calclab.modular.client.signal.Signal;
 
-import static com.calclab.emite.testing.ListenerTester.*;
+import static com.calclab.emite.testing.SlotTester.*;
 
 public class SignalTest {
 
     @Test
     public void shouldRemoveListener() {
 	final Signal<Object> signal = new Signal<Object>("aSignal");
-	final ListenerTester<Object> listener = new ListenerTester<Object>();
+	final SlotTester<Object> listener = new SlotTester<Object>();
 	signal.add(listener);
 	signal.remove(listener);
 	signal.fire(new Object());
@@ -22,9 +22,9 @@ public class SignalTest {
     @Test
     public void shouldSignal() {
 	final Signal<Object> signal = new Signal<Object>("aSignal");
-	final ListenerTester<Object> listener1 = new ListenerTester<Object>();
+	final SlotTester<Object> listener1 = new SlotTester<Object>();
 	signal.add(listener1);
-	final ListenerTester<Object> listener2 = new ListenerTester<Object>();
+	final SlotTester<Object> listener2 = new SlotTester<Object>();
 	signal.add(listener2);
 	final Object event = new Object();
 	signal.fire(event);

@@ -7,21 +7,21 @@ import org.junit.Test;
 
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.ListenerTester;
-import static com.calclab.emite.testing.ListenerTester.*;
+import com.calclab.emite.testing.SlotTester;
+import static com.calclab.emite.testing.SlotTester.*;
 import static org.junit.Assert.assertSame;
 
 public class SASLManagerTest {
 
     private EmiteTestHelper emite;
     private SASLManager manager;
-    private ListenerTester<AuthorizationTicket> listener;
+    private SlotTester<AuthorizationTicket> listener;
 
     @Before
     public void aaCreate() {
 	emite = new EmiteTestHelper();
 	manager = new SASLManager(emite);
-	listener = new ListenerTester<AuthorizationTicket>();
+	listener = new SlotTester<AuthorizationTicket>();
 	manager.onAuthorized(listener);
     }
 

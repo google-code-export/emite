@@ -29,6 +29,7 @@ import java.util.HashMap;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
+import com.calclab.emite.client.im.chat.ChatListenerAdaptor;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.session.Session.State;
@@ -57,122 +58,122 @@ public class ChatEntryPoint implements EntryPoint {
 
     public void onModuleLoad() {
 
-        Window.addWindowCloseListener(new WindowCloseListener() {
-            public void onWindowClosed() {
-                if (xmpp != null) {
-                    xmpp.stop();
-                }
-            }
+	Window.addWindowCloseListener(new WindowCloseListener() {
+	    public void onWindowClosed() {
+		if (xmpp != null) {
+		    xmpp.stop();
+		}
+	    }
 
-            public String onWindowClosing() {
-                return null;
-            }
-        });
+	    public String onWindowClosing() {
+		return null;
+	    }
+	});
 
-        chats = new HashMap<XmppURI, ChatPanel>();
+	chats = new HashMap<XmppURI, ChatPanel>();
 
-        conversationsPanel = new ConversationsPanel(new ConversationsListener() {
-            public void onBeginChat(final String jid) {
-                final Chat chat = xmpp.getChatManager().openChat(uri(jid), null, null);
-                // we allways will have a chatPanel in chats because if its a
-                // new conversations
-                // the onChatcreated method in ChatManagerListener will be
-                // called before
-                // openChat returns
-                final ChatPanel chatPanel = chats.get(chat.getOtherURI());
-                conversationsPanel.show(jid, chatPanel);
-            }
+	conversationsPanel = new ConversationsPanel(new ConversationsListener() {
+	    public void onBeginChat(final String jid) {
+		final Chat chat = xmpp.getChatManager().openChat(uri(jid), null, null);
+		// we allways will have a chatPanel in chats because if its a
+		// new conversations
+		// the onChatcreated method in ChatManagerListener will be
+		// called before
+		// openChat returns
+		final ChatPanel chatPanel = chats.get(chat.getOtherURI());
+		conversationsPanel.show(jid, chatPanel);
+	    }
 
-            public void onLogout() {
-                xmpp.logout();
-                conversationsPanel.clearRoster();
-                dialogBox.show();
-            }
-        });
+	    public void onLogout() {
+		xmpp.logout();
+		conversationsPanel.clearRoster();
+		dialogBox.show();
+	    }
+	});
 
-        dialogBox = new DialogBox();
-        loginPanel = new LoginPanel(new LoginPanelListener() {
-            public void onLogin(final String bind, final String domain, final String name, final String password) {
-                loginPanel.setStatus("preparing...");
-                createXMPP(bind);
-                xmpp.login(new XmppURI(name, domain, "emite"), password, Show.notSpecified, null);
-            }
-        });
-        dialogBox.setText("Login");
-        dialogBox.setWidget(loginPanel);
+	dialogBox = new DialogBox();
+	loginPanel = new LoginPanel(new LoginPanelListener() {
+	    public void onLogin(final String bind, final String domain, final String name, final String password) {
+		loginPanel.setStatus("preparing...");
+		createXMPP(bind);
+		xmpp.login(new XmppURI(name, domain, "emite"), password, Show.notSpecified, null);
+	    }
+	});
+	dialogBox.setText("Login");
+	dialogBox.setWidget(loginPanel);
 
-        RootPanel.get().add(conversationsPanel);
+	RootPanel.get().add(conversationsPanel);
 
-        dialogBox.center();
-        dialogBox.show();
+	dialogBox.center();
+	dialogBox.show();
     }
 
     protected void showMessageDialog(final String message) {
-        final PopupPanel popupPanel = new PopupPanel(true, true);
-        popupPanel.add(new Label(message));
-        popupPanel.center();
-        popupPanel.show();
+	final PopupPanel popupPanel = new PopupPanel(true, true);
+	popupPanel.add(new Label(message));
+	popupPanel.center();
+	popupPanel.show();
     }
 
     private ChatPanel createChatPanel(final XmppURI uri, final Chat chat) {
-        final ChatPanel chatPanel = new ChatPanel(new ChatPanelListener() {
-            public void onSend(final String text) {
-                chat.send(new Message(text));
-            }
-        });
-        chat.addListener(new ChatListener() {
-            public void onMessageReceived(final Chat chat, final Message message) {
-                chatPanel.showIncomingMessage(message.getFromURI(), message.getBody());
-            }
+	final ChatPanel chatPanel = new ChatPanel(new ChatPanelListener() {
+	    public void onSend(final String text) {
+		chat.send(new Message(text));
+	    }
+	});
+	new ChatListenerAdaptor(chat, new ChatListener() {
+	    public void onMessageReceived(final Chat chat, final Message message) {
+		chatPanel.showIncomingMessage(message.getFromURI(), message.getBody());
+	    }
 
-            public void onMessageSent(final Chat chat, final Message message) {
-                chatPanel.showOutcomingMessage(message.getBody());
-            }
-        });
-        chats.put(uri, chatPanel);
-        conversationsPanel.addChat(uri.toString(), chatPanel);
-        return chatPanel;
+	    public void onMessageSent(final Chat chat, final Message message) {
+		chatPanel.showOutcomingMessage(message.getBody());
+	    }
+	});
+	chats.put(uri, chatPanel);
+	conversationsPanel.addChat(uri.toString(), chatPanel);
+	return chatPanel;
     }
 
     private void createXMPP(final String bind) {
-        xmpp = Xmpp.create();
-        xmpp.setHttpBase(bind);
+	xmpp = Xmpp.create();
+	xmpp.setHttpBase(bind);
 
-        xmpp.getSession().onStateChanged(new Slot<State>() {
-            public void onEvent(final State current) {
-                final String theStatus = current.toString();
-                loginPanel.setStatus(theStatus);
-                conversationsPanel.setStatus(theStatus);
-                switch (current) {
-                case ready:
-                    dialogBox.hide();
-                    break;
-                case notAuthorized:
-                    showMessageDialog("not authorized!");
-                    break;
-                }
-            }
-        });
+	xmpp.getSession().onStateChanged(new Slot<State>() {
+	    public void onEvent(final State current) {
+		final String theStatus = current.toString();
+		loginPanel.setStatus(theStatus);
+		conversationsPanel.setStatus(theStatus);
+		switch (current) {
+		case ready:
+		    dialogBox.hide();
+		    break;
+		case notAuthorized:
+		    showMessageDialog("not authorized!");
+		    break;
+		}
+	    }
+	});
 
-        xmpp.getChatManager().onChatCreated(new Slot<Chat>() {
-            public void onEvent(final Chat chat) {
-                createChatPanel(chat.getOtherURI(), chat);
-            }
-        });
+	xmpp.getChatManager().onChatCreated(new Slot<Chat>() {
+	    public void onEvent(final Chat chat) {
+		createChatPanel(chat.getOtherURI(), chat);
+	    }
+	});
 
-        xmpp.getChatManager().onChatClosed(new Slot<Chat>() {
-            public void onEvent(final Chat chat) {
-                final ChatPanel panel = chats.remove(chat.getOtherURI());
-                conversationsPanel.removeChat(chat.getOtherURI().toString(), panel);
-            }
-        });
+	xmpp.getChatManager().onChatClosed(new Slot<Chat>() {
+	    public void onEvent(final Chat chat) {
+		final ChatPanel panel = chats.remove(chat.getOtherURI());
+		conversationsPanel.removeChat(chat.getOtherURI().toString(), panel);
+	    }
+	});
 
-        xmpp.getRosterManager().setSubscriptionMode(SubscriptionMode.autoAcceptAll);
+	xmpp.getRosterManager().setSubscriptionMode(SubscriptionMode.autoAcceptAll);
 
-        xmpp.getRoster().onRosterChanged(new Slot<Collection<RosterItem>>() {
-            public void onEvent(final Collection<RosterItem> items) {
-                conversationsPanel.setRoster(items);
-            }
-        });
+	xmpp.getRoster().onRosterChanged(new Slot<Collection<RosterItem>>() {
+	    public void onEvent(final Collection<RosterItem> items) {
+		conversationsPanel.setRoster(items);
+	    }
+	});
     }
 }
