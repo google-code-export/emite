@@ -1,5 +1,6 @@
 package com.calclab.modular.client.scopes;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
@@ -18,6 +19,12 @@ public class BasicScopesTest {
 		return new Object();
 	    }
 	});
+    }
+
+    @Test
+    public void scopesShouldHaveBasicScopes() {
+	assertNotNull(Scopes.get().getInstance(NoScope.class));
+	assertNotNull(Scopes.get().getInstance(SingletonScope.class));
     }
 
     @Test

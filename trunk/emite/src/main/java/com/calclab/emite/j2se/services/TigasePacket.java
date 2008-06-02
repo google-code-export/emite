@@ -30,6 +30,7 @@ import tigase.xml.Element;
 
 import com.calclab.emite.client.core.packet.AbstractPacket;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.PacketRenderer;
 import com.calclab.emite.client.core.packet.TextUtils;
 
 public class TigasePacket extends AbstractPacket {
@@ -44,16 +45,16 @@ public class TigasePacket extends AbstractPacket {
 	this(new Element(name));
     }
 
+    public void addChild(final IPacket child) {
+	final TigasePacket tigaseChild = (TigasePacket) child;
+	delegate.addChild(tigaseChild.delegate);
+    }
+
     public IPacket addChild(final String nodeName, final String xmlns) {
 	final TigasePacket child = new TigasePacket(nodeName);
 	child.setAttribute("xmlns", xmlns);
 	addChild(child);
 	return child;
-    }
-
-    public void addChild(final IPacket child) {
-	final TigasePacket tigaseChild = (TigasePacket) child;
-	delegate.addChild(tigaseChild.delegate);
     }
 
     public String getAttribute(final String name) {
@@ -105,7 +106,7 @@ public class TigasePacket extends AbstractPacket {
 
     @Override
     public String toString() {
-	return delegate.toString();
+	return PacketRenderer.toString(this);
     }
 
     private List<IPacket> wrap(final List<Element> children) {

@@ -102,6 +102,7 @@ public final class PacketTestSuite {
 	shouldRenderAttributes(helper);
 	shouldRenderChilds(helper);
 	shouldRenderTextChildren(helper);
+	shouldScapeText(helper);
     }
 
     private static void shouldGetChildren(final HelperExtended helper) {
@@ -157,6 +158,12 @@ public final class PacketTestSuite {
 	helper.assertNotNull(child);
 	helper.assertSame(NoPacket.INSTANCE, child);
 	helper.log("- test ends");
+    }
+
+    private static void shouldScapeText(final HelperExtended helper) {
+	final IPacket packet = helper.createPacket("body");
+	packet.setText("&");
+	helper.assertEquals("<body>&amp;</body>", packet.toString());
     }
 
     private static void shouldSetAndClearTheAttributes(final HelperExtended helper) {

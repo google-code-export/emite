@@ -63,13 +63,13 @@ public class Xmpp extends DelegatedContainer {
 	return container.getInstance(Xmpp.class);
     }
 
-    private Session session;
+    private final Session session;
     private final boolean isStarted;
 
     protected Xmpp(final Container container) {
 	super(container);
 	this.isStarted = false;
-	this.session = null;
+	this.session = XMPPModule.getSession(this);
     }
 
     public ChatManager getChatManager() {
@@ -89,9 +89,6 @@ public class Xmpp extends DelegatedContainer {
     }
 
     public Session getSession() {
-	if (session == null) {
-	    session = XMPPModule.getSession(this);
-	}
 	return session;
     }
 

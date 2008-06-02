@@ -1,4 +1,4 @@
-package com.calclab.modular.client.scopes;
+package com.calclab.modular.client.scopes.context;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import com.calclab.modular.client.scopes.Scope;
  * @param <O>
  *                The context type
  */
-public class ContextedScope<O> implements Scope {
+public class ContextedScope<O> implements Scope, Context<O> {
     public HashMap<Class<?>, Container> contexts;
     private final ArrayList<ContextedProvider<?, O>> providers;
 

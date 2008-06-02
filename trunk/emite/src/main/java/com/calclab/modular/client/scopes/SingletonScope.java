@@ -22,7 +22,7 @@ public class SingletonScope implements Scope {
 
 	    public T get() {
 		if (instance == null) {
-		    Log.debug("Creating: " + type.toString());
+		    Log.debug("Creating singleton instance: " + type.toString());
 		    this.instance = unscoped.get();
 		}
 		return instance;
