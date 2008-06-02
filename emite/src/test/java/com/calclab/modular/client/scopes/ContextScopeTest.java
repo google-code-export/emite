@@ -1,5 +1,6 @@
 package com.calclab.modular.client.scopes;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
@@ -8,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.modular.client.container.Provider;
-import com.calclab.modular.client.scopes.ContextedScope;
+import com.calclab.modular.client.scopes.context.ContextedScope;
 
 import static org.mockito.Mockito.*;
 
@@ -36,6 +37,12 @@ public class ContextScopeTest {
 	scope.createAll();
 	verify(p1).get();
 	verify(p2).get();
+    }
+
+    @Test
+    public void shouldGetContext() {
+	contextedScope.setContext("context1");
+	assertEquals("context1", contextedScope.getContext());
     }
 
     @Test

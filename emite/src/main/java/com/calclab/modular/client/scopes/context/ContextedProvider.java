@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.calclab.modular.client.scopes;
+package com.calclab.modular.client.scopes.context;
 
 import java.util.HashMap;
 

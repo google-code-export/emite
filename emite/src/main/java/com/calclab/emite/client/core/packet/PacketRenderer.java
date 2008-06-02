@@ -43,9 +43,10 @@ public class PacketRenderer {
 	    }
 	}
 
-	if (root.getText() != null) {
+	final String rootText = root.getText();
+	if (rootText != null) {
 	    buffer.append(">");
-	    buffer.append(root.getText());
+	    buffer.append(TextUtils.escape(rootText));
 	    buffer.append("</").append(name).append(">");
 	} else {
 	    final List<? extends IPacket> children = root.getChildren();
