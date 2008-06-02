@@ -30,7 +30,8 @@ import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.modular.scopes.SingletonScope;
+import com.calclab.emite.client.xmpp.session.SessionScope;
 
 public class InstantMessagingModule implements Module {
     public Class<? extends Module> getType() {
@@ -38,30 +39,29 @@ public class InstantMessagingModule implements Module {
     }
 
     public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(ChatManager.class, new Provider<ChatManager>() {
-	    public ChatManagerDefault get() {
-		return new ChatManagerDefault(builder.getInstance(Emite.class));
-	    }
-	}, Scopes.SINGLETON_EAGER);
-
 	builder.registerProvider(Roster.class, new Provider<Roster>() {
 	    public Roster get() {
 		return new Roster();
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, SingletonScope.class);
+
+	builder.registerProvider(ChatManager.class, new Provider<ChatManager>() {
+	    public ChatManagerDefault get() {
+		return new ChatManagerDefault(builder.getInstance(Emite.class));
+	    }
+	}, SessionScope.class);
 
 	builder.registerProvider(RosterManager.class, new Provider<RosterManager>() {
 	    public RosterManager get() {
 		return new RosterManager(builder.getInstance(Emite.class), builder.getInstance(Roster.class));
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, SessionScope.class);
 
 	builder.registerProvider(PresenceManager.class, new Provider<PresenceManager>() {
 	    public PresenceManager get() {
 		return new PresenceManager(builder.getInstance(Emite.class));
 	    }
-	}, Scopes.SINGLETON_EAGER);
+	}, SessionScope.class);
 
     }
-
 }

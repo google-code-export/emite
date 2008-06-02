@@ -25,7 +25,7 @@ import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.modular.scopes.SingletonScope;
 
 public abstract class ServicesModule implements Module {
     private static final Class<Services> COMPONENT_SERVICES = Services.class;
@@ -39,7 +39,7 @@ public abstract class ServicesModule implements Module {
 	    public Services get() {
 		return services;
 	    }
-	}, Scopes.SINGLETON);
+	}, SingletonScope.class);
     }
 
     public Class<? extends Module> getType() {

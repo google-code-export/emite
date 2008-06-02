@@ -4,6 +4,9 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
+import com.calclab.emite.client.modular.scopes.Scopes;
+import com.calclab.emite.client.modular.scopes.SingletonScope;
+
 public class ScopesTest {
 
     @Test
@@ -14,7 +17,7 @@ public class ScopesTest {
 	    }
 	};
 
-	final Provider<Object> scoped = Scopes.SINGLETON.scope(Object.class, factory);
+	final Provider<Object> scoped = Scopes.get(SingletonScope.class).scope(Object.class, factory);
 	final Object singleton = scoped.get();
 	assertSame(singleton, scoped.get());
 	assertSame(singleton, scoped.get());

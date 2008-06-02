@@ -30,7 +30,8 @@ import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.modular.scopes.NoScope;
+import com.calclab.emite.client.modular.scopes.SingletonScope;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
 import com.calclab.emite.client.xep.chatstate.ChatStateModule;
 import com.calclab.emite.client.xep.muc.MUCModule;
@@ -49,14 +50,14 @@ public class EmiteUIModule implements Module {
 	    public I18nTranslationService get() {
 		return new I18nTranslationServiceMocked();
 	    }
-	}, Scopes.SINGLETON);
+	}, SingletonScope.class);
 
 	builder.registerProvider(EmiteUIFactory.class, new Provider<EmiteUIFactory>() {
 	    public EmiteUIFactory get() {
 		return new EmiteUIFactory(builder.getInstance(Xmpp.class), builder
 			.getInstance(I18nTranslationService.class));
 	    }
-	}, Scopes.SINGLETON);
+	}, SingletonScope.class);
 
 	builder.registerProvider(EmiteUIDialog.class, new Provider<EmiteUIDialog>() {
 	    public EmiteUIDialog get() {
@@ -65,6 +66,6 @@ public class EmiteUIModule implements Module {
 		return new EmiteUIDialog(xmpp, factory);
 	    }
 
-	}, Scopes.UNSCOPED);
+	}, NoScope.class);
     }
 }

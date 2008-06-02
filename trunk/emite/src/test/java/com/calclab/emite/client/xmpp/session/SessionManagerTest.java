@@ -1,7 +1,6 @@
 package com.calclab.emite.client.xmpp.session;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -21,7 +20,6 @@ import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.ListenerTester;
 import com.calclab.emite.testing.SignalTester;
 
 public class SessionManagerTest {
@@ -30,6 +28,7 @@ public class SessionManagerTest {
     private Session session;
     private SASLManager saslManager;
     private ResourceBindingManager bindingManager;
+    private SessionManager manager;
 
     @Before
     public void aaCreate() {
@@ -37,7 +36,7 @@ public class SessionManagerTest {
 	session = mock(Session.class);
 	saslManager = mock(SASLManager.class);
 	bindingManager = mock(ResourceBindingManager.class);
-	new SessionManager(session, emite, saslManager, bindingManager);
+	manager = new SessionManager(session, emite, saslManager, bindingManager);
     }
 
     @Test
@@ -86,14 +85,6 @@ public class SessionManagerTest {
 	emite.receives(Events.error("cause", "info"));
 	verify(session).setState(State.error);
 	verify(session).setState(State.disconnected);
-    }
-
-    @Test
-    public void shouldStartAuthorization() {
-	final ListenerTester<AuthorizationTicket> listener = new ListenerTester<AuthorizationTicket>();
-	session.onLogin(listener);
-	session.login(uri("name@domain/resource"), "password");
-	verify(saslManager).sendAuthorizationRequest((AuthorizationTicket) anyObject());
     }
 
     @Test

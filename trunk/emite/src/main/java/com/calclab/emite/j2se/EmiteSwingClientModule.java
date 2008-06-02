@@ -26,7 +26,7 @@ import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.modular.scopes.SingletonScope;
 import com.calclab.emite.client.xep.disco.DiscoveryModule;
 import com.calclab.emite.client.xep.muc.MUCModule;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
@@ -52,6 +52,6 @@ public class EmiteSwingClientModule implements Module {
 	    public SwingClient get() {
 		return new SwingClient(xmpp);
 	    }
-	}, Scopes.SINGLETON);
+	}, SingletonScope.class);
     }
 }

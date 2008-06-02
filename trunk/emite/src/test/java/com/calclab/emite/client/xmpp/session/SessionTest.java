@@ -33,7 +33,8 @@ public class SessionTest {
     public void beforeTest() {
 	emite = new EmiteTestHelper();
 	boshManager = mock(BoshManager.class);
-	session = new Session(boshManager, emite);
+	final SessionScope scope = mock(SessionScope.class);
+	session = new Session(boshManager, emite, scope);
     }
 
     @Test

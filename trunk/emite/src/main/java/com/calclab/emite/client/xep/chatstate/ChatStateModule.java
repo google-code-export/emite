@@ -26,7 +26,7 @@ import com.calclab.emite.client.modular.Container;
 import com.calclab.emite.client.modular.Module;
 import com.calclab.emite.client.modular.ModuleBuilder;
 import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.Scopes;
+import com.calclab.emite.client.xmpp.session.SessionScope;
 
 /**
  * Implements XEP-0085: Chat State Notifications
@@ -38,20 +38,20 @@ public class ChatStateModule implements Module {
     private static final Class<ChatStateManager> COMPONENTS_MANAGER = ChatStateManager.class;
 
     public static ChatStateManager getChatStateManager(final Container components) {
-        return components.getInstance(COMPONENTS_MANAGER);
+	return components.getInstance(COMPONENTS_MANAGER);
     }
 
     public Class<? extends Module> getType() {
-        return ChatStateModule.class;
+	return ChatStateModule.class;
     }
 
     public void onLoad(final ModuleBuilder builder) {
-        builder.registerProvider(ChatStateManager.class, new Provider<ChatStateManager>() {
-            public ChatStateManager get() {
-                final ChatManager chatManager = builder.getInstance(ChatManager.class);
-                return new ChatStateManager(chatManager);
-            }
-        }, Scopes.SINGLETON_EAGER);
+	builder.registerProvider(ChatStateManager.class, new Provider<ChatStateManager>() {
+	    public ChatStateManager get() {
+		final ChatManager chatManager = builder.getInstance(ChatManager.class);
+		return new ChatStateManager(chatManager);
+	    }
+	}, SessionScope.class);
 
     }
 }

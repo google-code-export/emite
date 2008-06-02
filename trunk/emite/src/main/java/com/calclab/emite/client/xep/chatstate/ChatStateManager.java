@@ -38,29 +38,29 @@ public class ChatStateManager {
 
     public ChatStateManager(final ChatManager chatManager) {
 
-        chatManager.onChatCreated(new Listener<Chat>() {
-            public void onEvent(final Chat chat) {
-                final ChatState chatState = new ChatState(chat);
-                chat.addListener(chatState);
-                chat.setData(ChatState.class, chatState);
-                chat.addMessageInterceptor(chatState);
-            }
-        });
+	chatManager.onChatCreated(new Listener<Chat>() {
+	    public void onEvent(final Chat chat) {
+		final ChatState chatState = new ChatState(chat);
+		chat.addListener(chatState);
+		chat.setData(ChatState.class, chatState);
+		chat.addMessageInterceptor(chatState);
+	    }
+	});
 
-        chatManager.onChatClosed(new Listener<Chat>() {
-            public void onEvent(final Chat chat) {
-                final ChatState chatState = chat.getData(ChatState.class);
-                if (chatState != null && chatState.getOtherState() != ChatState.Type.gone) {
-                    // We are closing, then we send the gone state
-                    chatState.setOwnState(ChatState.Type.gone);
-                }
-                chat.setData(ChatState.class, null);
-            }
-        });
+	chatManager.onChatClosed(new Listener<Chat>() {
+	    public void onEvent(final Chat chat) {
+		final ChatState chatState = chat.getData(ChatState.class);
+		if (chatState != null && chatState.getOtherState() != ChatState.Type.gone) {
+		    // We are closing, then we send the gone state
+		    chatState.setOwnState(ChatState.Type.gone);
+		}
+		chat.setData(ChatState.class, null);
+	    }
+	});
     }
 
     public ChatState getChatState(final Chat chat) {
-        return chat.getData(ChatState.class);
+	return chat.getData(ChatState.class);
     }
 
 }
