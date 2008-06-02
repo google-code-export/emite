@@ -87,5 +87,4 @@ public class XMPPModule implements Module {
 	}, SessionScope.class);
 
     }
-
 }
