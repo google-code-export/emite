@@ -35,9 +35,6 @@ public interface Chat {
 	ready, locked
     }
 
-    @Deprecated
-    public void addListener(final ChatListener listener);
-
     public <T> T getData(Class<T> type);
 
     public XmppURI getFromURI();

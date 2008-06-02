@@ -47,6 +47,10 @@ public class Occupant {
 	return affiliation;
     }
 
+    public String getNick() {
+	return uri.getResource();
+    }
+
     public Role getRole() {
 	return role;
     }

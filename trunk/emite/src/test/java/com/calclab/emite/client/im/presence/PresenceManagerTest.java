@@ -13,8 +13,8 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.MockitoEmiteHelper;
-import com.calclab.emite.testing.ListenerTester;
-import static com.calclab.emite.testing.ListenerTester.*;
+import com.calclab.emite.testing.SlotTester;
+import static com.calclab.emite.testing.SlotTester.*;
 
 public class PresenceManagerTest {
 
@@ -103,7 +103,7 @@ public class PresenceManagerTest {
     @Test
     public void shouldSignalOwnPresence() {
 	manager.logIn(uri("myself@domain"));
-	final ListenerTester<Presence> listener = new ListenerTester<Presence>();
+	final SlotTester<Presence> listener = new SlotTester<Presence>();
 	manager.onOwnPresenceChanged(listener);
 	manager.setOwnPresence("status", Show.away);
 	verifyCalled(listener);

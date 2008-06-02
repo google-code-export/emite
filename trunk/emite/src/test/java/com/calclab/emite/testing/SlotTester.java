@@ -6,29 +6,29 @@ import java.util.ArrayList;
 
 import com.calclab.modular.client.signal.Slot;
 
-public class ListenerTester<S> implements Slot<S> {
+public class SlotTester<S> implements Slot<S> {
 
-    public static void verifyCalled(final ListenerTester<?> listener) {
+    public static void verifyCalled(final SlotTester<?> listener) {
 	verifyCalled(listener, 1);
     }
 
-    public static void verifyCalled(final ListenerTester<?> listener, final int times) {
+    public static void verifyCalled(final SlotTester<?> listener, final int times) {
 	assertEquals("listener should be called " + times + " times", times, listener.calledTimes);
     }
 
-    public static <T> void verifyCalledWith(final ListenerTester<T> listener, final T expected) {
+    public static <T> void verifyCalledWith(final SlotTester<T> listener, final T expected) {
 	verifyCalled(listener);
 	assertEquals(expected, listener.getValue(0));
     }
 
-    public static <T> void verifyCalledWithSame(final ListenerTester<T> listener, final T... expected) {
+    public static <T> void verifyCalledWithSame(final SlotTester<T> listener, final T... expected) {
 	verifyCalled(listener);
 	for (int index = 0; index < expected.length; index++) {
 	    assertSame(expected[index], listener.getValue(index));
 	}
     }
 
-    public static void verifyNoCalled(final ListenerTester<?> listener) {
+    public static void verifyNoCalled(final SlotTester<?> listener) {
 	verifyCalled(listener, 0);
     }
 
@@ -36,7 +36,7 @@ public class ListenerTester<S> implements Slot<S> {
 
     private final ArrayList<S> parameters;
 
-    public ListenerTester() {
+    public SlotTester() {
 	calledTimes = 0;
 	parameters = new ArrayList<S>();
     }

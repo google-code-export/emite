@@ -1,8 +1,8 @@
 package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.ListenerTester.verifyCalled;
-import static com.calclab.emite.testing.ListenerTester.verifyCalledWith;
+import static com.calclab.emite.testing.SlotTester.verifyCalled;
+import static com.calclab.emite.testing.SlotTester.verifyCalledWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -13,7 +13,7 @@ import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.ListenerTester;
+import com.calclab.emite.testing.SlotTester;
 
 public abstract class AbstractChatManagerTest {
     protected static final XmppURI MYSELF = uri("self@domain");
@@ -36,7 +36,7 @@ public abstract class AbstractChatManagerTest {
     @Test
     public void shouldLockChatsWhenLoggedOut() {
 	final Chat chat = manager.openChat(uri("other@domain"), null, null);
-	final ListenerTester<Status> listener = new ListenerTester<Status>();
+	final SlotTester<Status> listener = new SlotTester<Status>();
 	chat.onStateChanged(listener);
 	emite.receives(SessionManager.Events.onLoggedOut);
 	verifyCalledWith(listener, Status.locked);
@@ -45,7 +45,7 @@ public abstract class AbstractChatManagerTest {
     @Test
     public void shouldSignalWhenAChatIsClosed() {
 	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
-	final ListenerTester<Chat> listener = new ListenerTester<Chat>();
+	final SlotTester<Chat> listener = new SlotTester<Chat>();
 	manager.onChatClosed(listener);
 	manager.close(chat);
 	verifyCalled(listener);
@@ -53,7 +53,7 @@ public abstract class AbstractChatManagerTest {
 
     @Test
     public void shouldSignalWhenChatCreated() {
-	final ListenerTester<Chat> listener = new ListenerTester<Chat>();
+	final SlotTester<Chat> listener = new SlotTester<Chat>();
 	manager.onChatCreated(listener);
 	manager.openChat(uri("other@domain"), null, null);
 	verifyCalled(listener);

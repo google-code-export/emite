@@ -5,7 +5,7 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static com.calclab.emite.testing.ListenerTester.*;
+import static com.calclab.emite.testing.SlotTester.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.SignalTester;
-import com.calclab.emite.testing.ListenerTester;
+import com.calclab.emite.testing.SlotTester;
 import com.calclab.modular.client.signal.Slot;
 
 public class SessionTest {
@@ -39,7 +39,7 @@ public class SessionTest {
 
     @Test
     public void shouldHandleAuthorization() {
-	final ListenerTester<AuthorizationTicket> listener = new ListenerTester<AuthorizationTicket>();
+	final SlotTester<AuthorizationTicket> listener = new SlotTester<AuthorizationTicket>();
 	session.onLogin(listener);
 	final XmppURI uri = uri("name@domain/resource");
 	session.login(uri, "password");
@@ -49,7 +49,7 @@ public class SessionTest {
 
     @Test
     public void shouldSignalLogin() {
-	final ListenerTester<AuthorizationTicket> listener = new ListenerTester<AuthorizationTicket>();
+	final SlotTester<AuthorizationTicket> listener = new SlotTester<AuthorizationTicket>();
 	session.onLogin(listener);
 	session.login(uri("name@domain/resource"), "password");
 	verifyCalled(listener);
@@ -57,7 +57,7 @@ public class SessionTest {
 
     @Test
     public void shouldSignalMessages() {
-	final ListenerTester<Message> listener = new ListenerTester<Message>();
+	final SlotTester<Message> listener = new SlotTester<Message>();
 	session.onMessage(listener);
 
 	final SignalTester<IPacket> onStanza = new SignalTester<IPacket>();
@@ -68,7 +68,7 @@ public class SessionTest {
 
     @Test
     public void shouldSignalPresences() {
-	final ListenerTester<Presence> listener = new ListenerTester<Presence>();
+	final SlotTester<Presence> listener = new SlotTester<Presence>();
 	session.onPresence(listener);
 
 	final SignalTester<IPacket> onStanza = new SignalTester<IPacket>();

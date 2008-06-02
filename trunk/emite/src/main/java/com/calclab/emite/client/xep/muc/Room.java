@@ -36,6 +36,8 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.modular.client.signal.Signal;
 import com.calclab.modular.client.signal.Signal2;
+import com.calclab.modular.client.signal.Slot;
+import com.calclab.modular.client.signal.Slot2;
 
 public class Room extends AbstractChat implements Chat {
     private final HashMap<XmppURI, Occupant> occupants;
@@ -88,6 +90,18 @@ public class Room extends AbstractChat implements Chat {
 
     public String getThread() {
 	return other.getNode();
+    }
+
+    public void onOccupantModified(final Slot<Occupant> slot) {
+	onOccupantModified.add(slot);
+    }
+
+    public void onOccupantsChanged(final Slot<Collection<Occupant>> slot) {
+	onOccupantsChanged.add(slot);
+    }
+
+    public void onSubjectChanged(final Slot2<Occupant, String> slot) {
+	onSubjectChanged.add(slot);
     }
 
     @Override
