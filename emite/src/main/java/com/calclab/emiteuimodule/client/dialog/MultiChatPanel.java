@@ -638,11 +638,7 @@ public class MultiChatPanel {
     private void doSend(final EventObject e, final boolean withEnter) {
         final String inputText = getInputText();
         e.stopEvent();
-        DeferredCommand.addCommand(new Command() {
-            public void execute() {
-                presenter.onCurrentUserSend(inputText, withEnter);
-            }
-        });
+        presenter.onCurrentUserSend(inputText, withEnter);
     }
 
     private void ifRenderedDoLayout() {

@@ -30,8 +30,6 @@ import com.calclab.emite.client.core.packet.TextUtils;
 import com.calclab.emite.client.xep.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.utils.ChatUIUtils;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;
 import com.gwtext.client.core.EventObject;
@@ -123,14 +121,10 @@ public class UserGridPanel extends Panel {
                 if (dragData instanceof GridDragData) {
                     final GridDragData gridDragData = (GridDragData) dragData;
                     final Record[] records = gridDragData.getSelections();
-                    DeferredCommand.addCommand(new Command() {
-                        public void execute() {
                     for (int i = 0; i < records.length; i++) {
                         dropGridConfiguration.getListener().onDrop(
                                 XmppURI.jid(records[i].getAsString(UserGridPanel.JID)));
-                            }
                     }
-                    });
                 }
                 return true;
             }
@@ -220,13 +214,9 @@ public class UserGridPanel extends Panel {
                 if (dragData instanceof GridDragData) {
                     final GridDragData gridDragData = (GridDragData) dragData;
                     final Record[] records = gridDragData.getSelections();
-                    DeferredCommand.addCommand(new Command() {
-                        public void execute() {
                     for (int i = 0; i < records.length; i++) {
                         dropGridConfiguration.getListener().onDrop(XmppURI.jid(records[i].getAsString(JID)));
                     }
-                        }
-                    });
                 }
                 return true;
             }
