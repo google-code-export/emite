@@ -63,7 +63,7 @@ public class RosterManagerTest {
     @Deprecated
     public void shouldFireSubscribeEvents() {
 	final RosterManagerListener oldListener = mock(RosterManagerListener.class);
-	manager.addListener(oldListener);
+	new RosterManagerListenerAdapter(manager, oldListener);
 	manager.setSubscriptionMode(SubscriptionMode.manual);
 	final Presence presence = new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain"));
 	emite.receives(presence);
@@ -164,7 +164,7 @@ public class RosterManagerTest {
     @Deprecated
     public void shouldUnsubscribe() {
 	final RosterManagerListener oldListener = mock(RosterManagerListener.class);
-	manager.addListener(oldListener);
+	new RosterManagerListenerAdapter(manager, oldListener);
 
 	final Presence presence = new Presence(Presence.Type.unsubscribed, uri("from@domain"), uri("to@domain"));
 	emite.receives(presence);
