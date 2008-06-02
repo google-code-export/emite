@@ -34,11 +34,11 @@ public class Signal<T> {
 	slots = null;
     }
 
-    public void add(final Slot<T> listener) {
+    public void add(final Slot<T> slot) {
 	if (slots == null) {
 	    this.slots = new ArrayList<Slot<T>>();
 	}
-	slots.add(listener);
+	slots.add(slot);
     }
 
     public void fire(final T event) {

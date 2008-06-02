@@ -35,6 +35,7 @@ public interface Chat {
 	ready, locked
     }
 
+    @Deprecated
     public void addListener(final ChatListener listener);
 
     public <T> T getData(Class<T> type);
@@ -49,7 +50,11 @@ public interface Chat {
 
     public String getThread();
 
-    public void onStateChanged(Slot<Status> listener);
+    public void onMessageReceived(Slot<Message> slot);
+
+    public void onMessageSent(Slot<Message> slot);
+
+    public void onStateChanged(Slot<Status> slot);
 
     /**
      * To make this chat receive a message
