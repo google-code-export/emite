@@ -11,7 +11,7 @@ public class SignalTest {
 
     @Test
     public void shouldRemoveListener() {
-	final Signal<Object> signal = new Signal<Object>();
+	final Signal<Object> signal = new Signal<Object>("aSignal");
 	final ListenerTester<Object> listener = new ListenerTester<Object>();
 	signal.add(listener);
 	signal.remove(listener);
@@ -21,7 +21,7 @@ public class SignalTest {
 
     @Test
     public void shouldSignal() {
-	final Signal<Object> signal = new Signal<Object>();
+	final Signal<Object> signal = new Signal<Object>("aSignal");
 	final ListenerTester<Object> listener1 = new ListenerTester<Object>();
 	signal.add(listener1);
 	final ListenerTester<Object> listener2 = new ListenerTester<Object>();

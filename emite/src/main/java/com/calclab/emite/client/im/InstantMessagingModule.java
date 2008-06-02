@@ -27,6 +27,7 @@ import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.modular.client.container.Provider;
 import com.calclab.modular.client.modules.Module;

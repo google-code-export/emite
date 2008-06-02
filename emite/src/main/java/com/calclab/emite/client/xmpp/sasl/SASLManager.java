@@ -40,7 +40,7 @@ public class SASLManager {
 
     public SASLManager(final Emite emite) {
 	this.emite = emite;
-	this.onAuthorized = new Signal<AuthorizationTicket>();
+	this.onAuthorized = new Signal<AuthorizationTicket>("onAuthorized");
 	install();
     }
 

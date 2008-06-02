@@ -56,10 +56,10 @@ public class Session {
 	state = State.disconnected;
 
 	this.listeners = new SessionListenerCollection();
-	this.onStateChanged = new Signal<State>();
-	this.onPresence = new Signal<Presence>();
-	this.onMessage = new Signal<Message>();
-	this.onLogin = new Signal<AuthorizationTicket>();
+	this.onStateChanged = new Signal<State>("onStateChanged");
+	this.onPresence = new Signal<Presence>("onPresence");
+	this.onMessage = new Signal<Message>("onMessage");
+	this.onLogin = new Signal<AuthorizationTicket>("onLogin");
 
 	manager.onStanza(new Slot<IPacket>() {
 	    public void onEvent(final IPacket stanza) {

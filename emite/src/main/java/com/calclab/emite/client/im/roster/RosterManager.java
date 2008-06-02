@@ -67,8 +67,8 @@ public class RosterManager extends SessionComponent {
 	this.subscriptionMode = DEF_SUBSCRIPTION_MODE;
 	this.listeners = new RosterManagerListenerCollection();
 	install();
-	this.onSubscriptionRequested = new Signal<Presence>();
-	this.onUnsubscribedReceived = new Signal<XmppURI>();
+	this.onSubscriptionRequested = new Signal<Presence>("onSubscriptionRequested");
+	this.onUnsubscribedReceived = new Signal<XmppURI>("onUnsubscribedReceived");
     }
 
     /**

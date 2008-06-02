@@ -21,6 +21,7 @@
  */
 package com.calclab.emite.client.xmpp;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
@@ -89,5 +90,7 @@ public class XMPPModule implements Module {
 	    }
 	}, SessionScope.class);
 
+	Log.debug("Creating session");
+	builder.getInstance(Session.class);
     }
 }

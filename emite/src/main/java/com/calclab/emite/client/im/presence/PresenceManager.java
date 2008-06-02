@@ -47,7 +47,7 @@ public class PresenceManager extends SessionComponent {
 	super(emite);
 	this.listeners = new ArrayList<PresenceListener>();
 	this.ownPresence = new Presence(Type.unavailable, null, null);
-	this.onOwnPresenceChanged = new Signal<Presence>();
+	this.onOwnPresenceChanged = new Signal<Presence>("onOwnPresenceChanged");
 	install();
     }
 
