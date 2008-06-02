@@ -19,50 +19,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.modular;
-
-import java.util.HashMap;
+package com.calclab.modular.client.container;
 
 /**
- * A class that implements the Container interface using a HashMap
+ * Implements a container ussing the Delegate pattern
  * 
+ * @pattern delegate
  * @author dani
  */
-public class HashContainer implements Container {
-    private final HashMap<Class<?>, Provider<?>> providers;
+public class DelegatedContainer implements Container {
+    private final Container delegate;
 
-    public HashContainer() {
-	this.providers = new HashMap<Class<?>, Provider<?>>();
+    /**
+     * Creates a delegated container with the given delegate
+     * 
+     * @param delegate
+     */
+    public DelegatedContainer(final Container delegate) {
+	this.delegate = delegate;
     }
 
-    public <T> T getInstance(final Class<T> componentKey) {
-	return getProvider(componentKey).get();
+    public <T> T getInstance(final Class<T> componentType) {
+	return delegate.getInstance(componentType);
     }
 
-    @SuppressWarnings("unchecked")
     public <T> Provider<T> getProvider(final Class<T> componentKey) {
-	final Provider<T> provider = (Provider<T>) providers.get(componentKey);
-	if (provider == null) {
-	    throw new RuntimeException("component not registered: " + componentKey);
-	}
-	return provider;
+	return delegate.getProvider(componentKey);
     }
 
     public boolean hasProvider(final Class<?> componentKey) {
-	return providers.containsKey(componentKey);
+	return delegate.hasProvider(componentKey);
     }
 
     public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider) {
-	providers.put(componentKey, provider);
-	return provider;
+	return delegate.registerProvider(componentKey, provider);
     }
 
-    public <T> T registerSingletonInstance(final Class<T> componentType, final T component) {
-	providers.put(componentType, new Provider<T>() {
-	    public T get() {
-		return component;
-	    }
-	});
-	return component;
-    }
 }

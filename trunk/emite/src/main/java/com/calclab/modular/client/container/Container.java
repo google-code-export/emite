@@ -19,21 +19,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.modular;
+package com.calclab.modular.client.container;
 
 /**
- * A module is a simple object that installs components inside a container
+ * A component container
  * 
  * @author dani
  */
-public interface Module {
-    public Class<?> getType();
+public interface Container {
+
+    public boolean hasProvider(Class<?> componentKey);
 
     /**
-     * Install the components into the given container
+     * Obtain a component registered with the given key from the container
      * 
-     * @param builder
-     *                TODO
+     * @param <T>
+     * @param componentType
+     * @return The component, throw RuntimeException if the given component
+     *         doesn't exists
      */
-    public void onLoad(ModuleBuilder builder);
+    <T> T getInstance(Class<T> componentKey);
+
+    /**
+     * Obtain a provider of the component type from the container
+     * 
+     * @param <T>
+     * @param componentType
+     * @return The provider, throw RuntimeException if the given provider
+     *         doesn't exists
+     */
+    <T> Provider<T> getProvider(Class<T> componentKey);
+
+    <T> Provider<T> registerProvider(Class<T> componentKey, Provider<T> provider);
 }

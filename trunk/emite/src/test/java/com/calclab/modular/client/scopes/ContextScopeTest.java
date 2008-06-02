@@ -1,4 +1,4 @@
-package com.calclab.emite.client.modular.scopes;
+package com.calclab.modular.client.scopes;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
@@ -7,7 +7,9 @@ import static org.junit.Assert.assertSame;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.modular.Provider;
+import com.calclab.modular.client.container.Provider;
+import com.calclab.modular.client.scopes.ContextedScope;
+
 import static org.mockito.Mockito.*;
 
 public class ContextScopeTest {

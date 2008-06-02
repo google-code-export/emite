@@ -27,10 +27,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import com.calclab.emite.client.core.signal.Listener;
-import com.calclab.emite.client.core.signal.Signal;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Signal;
 
 public class Roster {
 

@@ -1,4 +1,4 @@
-package com.calclab.emite.client.modular;
+package com.calclab.modular.client.modules;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.same;
@@ -8,7 +8,11 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.modular.scopes.Scope;
+import com.calclab.modular.client.container.Provider;
+import com.calclab.modular.client.modules.Module;
+import com.calclab.modular.client.modules.ModuleBuilder;
+import com.calclab.modular.client.scopes.Scope;
+import com.calclab.modular.client.scopes.Scopes;
 
 public class ModuleBuilderTest {
 
@@ -62,8 +66,9 @@ public class ModuleBuilderTest {
     @Test
     public void shouldUseScopes() {
 	final Scope scope = mock(Scope.class);
+	Scopes.addScope(Scope.class, scope);
 	final Provider<Object> provider = mock(Provider.class);
-	builder.registerProvider(Object.class, provider, scope);
+	builder.registerProvider(Object.class, provider, Scope.class);
 	verify(scope).scope(same(Object.class), same(provider));
     }
 }

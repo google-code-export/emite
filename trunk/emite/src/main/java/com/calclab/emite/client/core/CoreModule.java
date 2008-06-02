@@ -29,12 +29,12 @@ import com.calclab.emite.client.core.bosh.Stream;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.core.services.Services;
-import com.calclab.emite.client.modular.Container;
-import com.calclab.emite.client.modular.Module;
-import com.calclab.emite.client.modular.ModuleBuilder;
-import com.calclab.emite.client.modular.Provider;
-import com.calclab.emite.client.modular.scopes.Scopes;
-import com.calclab.emite.client.modular.scopes.SingletonScope;
+import com.calclab.modular.client.container.Container;
+import com.calclab.modular.client.container.Provider;
+import com.calclab.modular.client.modules.Module;
+import com.calclab.modular.client.modules.ModuleBuilder;
+import com.calclab.modular.client.scopes.Scopes;
+import com.calclab.modular.client.scopes.SingletonScope;
 
 public class CoreModule implements Module {
     public static Bosh getBosh(final Container container) {
@@ -58,7 +58,7 @@ public class CoreModule implements Module {
 	    public Dispatcher get() {
 		return new DispatcherDefault();
 	    }
-	}, Scopes.get(SingletonScope.class));
+	}, SingletonScope.class);
 
 	builder.registerProvider(Stream.class, new Provider<Stream>() {
 	    public Stream get() {

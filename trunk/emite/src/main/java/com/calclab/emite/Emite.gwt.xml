@@ -1,7 +1,8 @@
 <module>
   <inherits name="com.google.gwt.xml.XML" />
   <inherits name="com.google.gwt.http.HTTP" />
-  <inherits name="com.google.gwt.junit.JUnit"/>
+  <inherits name="com.google.gwt.junit.JUnit" />
+  <inherits name="com.calclab.modular.Modular" />
   <entry-point class="com.calclab.emite.client.EmiteEntryPoint" />
   <inherits name="com.allen_sauer.gwt.log.gwt-log" />
 

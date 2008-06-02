@@ -3,7 +3,7 @@ package com.calclab.emite.testing;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-import com.calclab.emite.client.core.signal.Listener;
+import com.calclab.modular.client.signal.Listener;
 
 public class SignalTester<T> extends BaseMatcher<Listener<T>> {
 

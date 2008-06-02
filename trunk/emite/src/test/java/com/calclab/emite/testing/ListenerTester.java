@@ -3,7 +3,8 @@ package com.calclab.emite.testing;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import com.calclab.emite.client.core.signal.Listener;
+
+import com.calclab.modular.client.signal.Listener;
 
 public class ListenerTester<S> implements Listener<S> {
 

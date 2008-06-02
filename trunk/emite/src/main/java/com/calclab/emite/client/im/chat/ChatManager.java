@@ -23,8 +23,8 @@ package com.calclab.emite.client.im.chat;
 
 import java.util.Collection;
 
-import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.modular.client.signal.Listener;
 
 public interface ChatManager {
 

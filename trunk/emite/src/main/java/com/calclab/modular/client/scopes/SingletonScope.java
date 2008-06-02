@@ -1,8 +1,13 @@
-package com.calclab.emite.client.modular.scopes;
+package com.calclab.modular.client.scopes;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.modular.Provider;
+import com.calclab.modular.client.container.Provider;
+import com.calclab.modular.client.scopes.Scope;
 
+/**
+ * A singleton scope creates a provider that always returns same instance
+ * 
+ */
 public class SingletonScope implements Scope {
 
     public <T> Provider<T> scope(final Class<T> type, final Provider<T> unscoped) {

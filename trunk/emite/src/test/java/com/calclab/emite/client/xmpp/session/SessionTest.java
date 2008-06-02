@@ -13,7 +13,6 @@ import org.junit.Test;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -22,6 +21,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.SignalTester;
 import com.calclab.emite.testing.ListenerTester;
+import com.calclab.modular.client.signal.Listener;
 
 public class SessionTest {
 

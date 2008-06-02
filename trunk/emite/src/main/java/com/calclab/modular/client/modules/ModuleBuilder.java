@@ -19,13 +19,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.client.modular;
+package com.calclab.modular.client.modules;
 
 import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.modular.scopes.Scope;
-import com.calclab.emite.client.modular.scopes.Scopes;
+import com.calclab.modular.client.container.Container;
+import com.calclab.modular.client.container.DelegatedContainer;
+import com.calclab.modular.client.container.HashContainer;
+import com.calclab.modular.client.container.Provider;
+import com.calclab.modular.client.scopes.Scope;
+import com.calclab.modular.client.scopes.Scopes;
 
 /**
  * A container with module installation support
@@ -62,12 +66,8 @@ public class ModuleBuilder extends DelegatedContainer {
 
     public <C> Provider<C> registerProvider(final Class<C> type, final Provider<C> provider,
 	    final Class<? extends Scope> scopeType) {
-	return registerProvider(type, provider, Scopes.get(scopeType));
-    }
-
-    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider, final Scope scope) {
-	final Provider<T> scoped = scope.scope(componentKey, provider);
-	super.registerProvider(componentKey, scoped);
+	final Provider<C> scoped = Scopes.get(scopeType).scope(type, provider);
+	super.registerProvider(type, scoped);
 	return scoped;
     }
 

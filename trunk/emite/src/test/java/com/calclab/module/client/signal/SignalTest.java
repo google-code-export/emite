@@ -1,8 +1,9 @@
-package com.calclab.emite.client.core.signal;
+package com.calclab.module.client.signal;
 
 import org.junit.Test;
 
 import com.calclab.emite.testing.ListenerTester;
+import com.calclab.modular.client.signal.Signal;
 
 import static com.calclab.emite.testing.ListenerTester.*;
 

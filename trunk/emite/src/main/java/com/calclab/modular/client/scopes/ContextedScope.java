@@ -1,12 +1,21 @@
-package com.calclab.emite.client.modular.scopes;
+package com.calclab.modular.client.scopes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.modular.Container;
-import com.calclab.emite.client.modular.Provider;
+import com.calclab.modular.client.container.Container;
+import com.calclab.modular.client.container.Provider;
+import com.calclab.modular.client.scopes.Scope;
 
+/**
+ * A contexted scope is a kind of generic scope controlled by context: a
+ * singleton instance for each context. A Context is just a POJO (that
+ * implements equals contract)
+ * 
+ * @param <O>
+ *                The context type
+ */
 public class ContextedScope<O> implements Scope {
     public HashMap<Class<?>, Container> contexts;
     private final ArrayList<ContextedProvider<?, O>> providers;

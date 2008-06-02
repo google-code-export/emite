@@ -37,7 +37,6 @@ import javax.swing.JTabbedPane;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.signal.Listener;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.presence.PresenceListener;
@@ -57,6 +56,7 @@ import com.calclab.emite.j2se.swing.ChatPanel.ChatPanelListener;
 import com.calclab.emite.j2se.swing.LoginPanel.LoginPanelListener;
 import com.calclab.emite.j2se.swing.RoomPanel.RoomPanelListener;
 import com.calclab.emite.j2se.swing.RosterPanel.RosterPanelListener;
+import com.calclab.modular.client.signal.Listener;
 
 public class SwingClient {
 
