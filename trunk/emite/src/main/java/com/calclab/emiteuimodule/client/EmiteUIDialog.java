@@ -29,6 +29,7 @@ import com.calclab.emite.client.core.bosh.BoshOptions;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
+import com.calclab.emite.client.xep.avatar.AvatarManager;
 import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
@@ -119,6 +120,10 @@ public class EmiteUIDialog {
     public void setOwnPresence(final OwnStatus status) {
         checkIfDialogIsStarted();
         multiChatDialog.setOwnPresence(new OwnPresence(status));
+    }
+
+    public void setOwnVCardAvatar(final String photoBinary) {
+        xmpp.getInstance(AvatarManager.class).setVCardAvatar(photoBinary);
     }
 
     public void show() {
