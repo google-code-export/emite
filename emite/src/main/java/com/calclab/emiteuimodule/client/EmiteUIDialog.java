@@ -37,7 +37,7 @@ import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.params.MultiChatCreationParam;
 import com.calclab.emiteuimodule.client.status.OwnPresence;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.google.gwt.user.client.Window;
 
 public class EmiteUIDialog {
@@ -78,35 +78,35 @@ public class EmiteUIDialog {
         xmpp.getInstance(RoomManager.class).openChat(roomURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 
-    public void onChatAttended(final Listener<String> listener) {
+    public void onChatAttended(final Slot<String> listener) {
         checkIfDialogIsStarted();
         multiChatDialog.onChatAttended(listener);
     }
 
-    public void onChatUnattendedWithActivity(final Listener<String> listener) {
+    public void onChatUnattendedWithActivity(final Slot<String> listener) {
         checkIfDialogIsStarted();
         multiChatDialog.onChatUnattendedWithActivity(listener);
     }
 
-    public void onRosterChanged(final Listener<Collection<RosterItem>> listener) {
+    public void onRosterChanged(final Slot<Collection<RosterItem>> listener) {
         xmpp.getRoster().onRosterChanged(listener);
     }
 
-    public void onRosterItemChanged(final Listener<RosterItem> listener) {
+    public void onRosterItemChanged(final Slot<RosterItem> listener) {
         xmpp.getRoster().onItemChanged(listener);
     }
 
-    public void onShowUnavailableRosterItemsChanged(final Listener<Boolean> listener) {
+    public void onShowUnavailableRosterItemsChanged(final Slot<Boolean> listener) {
         checkIfDialogIsStarted();
         multiChatDialog.onShowUnavailableRosterItemsChanged(listener);
     }
 
-    public void onUserColorChanged(final Listener<String> listener) {
+    public void onUserColorChanged(final Slot<String> listener) {
         checkIfDialogIsStarted();
         multiChatDialog.onUserColorChanged(listener);
     }
 
-    public void onUserSubscriptionModeChanged(final Listener<SubscriptionMode> listener) {
+    public void onUserSubscriptionModeChanged(final Slot<SubscriptionMode> listener) {
         checkIfDialogIsStarted();
         multiChatDialog.onUserSubscriptionModeChanged(listener);
     }
@@ -146,12 +146,12 @@ public class EmiteUIDialog {
             }
         }, EMITE_DEF_TITLE);
         final String initialWindowTitle = Window.getTitle();
-        onChatAttended(new Listener<String>() {
+        onChatAttended(new Slot<String>() {
             public void onEvent(final String parameter) {
                 Window.setTitle(initialWindowTitle);
             }
         });
-        onChatUnattendedWithActivity(new Listener<String>() {
+        onChatUnattendedWithActivity(new Slot<String>() {
             public void onEvent(final String chatTitle) {
                 Window.setTitle("(* " + chatTitle + ") " + initialWindowTitle);
             }

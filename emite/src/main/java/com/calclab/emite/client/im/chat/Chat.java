@@ -23,7 +23,7 @@ package com.calclab.emite.client.im.chat;
 
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 
 public interface Chat {
 
@@ -49,7 +49,7 @@ public interface Chat {
 
     public String getThread();
 
-    public void onStateChanged(Listener<Status> listener);
+    public void onStateChanged(Slot<Status> listener);
 
     /**
      * To make this chat receive a message

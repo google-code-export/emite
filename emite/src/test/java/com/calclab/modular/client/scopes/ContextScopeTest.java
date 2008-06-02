@@ -19,14 +19,14 @@ public class ContextScopeTest {
 
     @Before
     public void beforeTest() {
-	contextedScope = new ContextedScope<String>();
+	contextedScope = new ContextedScope<String>(String.class);
 	provider = BasicScopesTest.getScopedProvider(contextedScope);
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void shouldCreateAllInstances() {
-	final ContextedScope<String> scope = new ContextedScope<String>();
+	final ContextedScope<String> scope = new ContextedScope<String>(String.class);
 	final Provider<Long> p1 = mock(Provider.class);
 	scope.scope(Long.class, p1);
 	final Provider<Integer> p2 = mock(Provider.class);

@@ -10,6 +10,12 @@ import com.calclab.modular.client.scopes.Scope;
  */
 public class SingletonScope implements Scope {
 
+    /**
+     * Use Scopes class
+     */
+    SingletonScope() {
+    }
+
     public <T> Provider<T> scope(final Class<T> type, final Provider<T> unscoped) {
 	return new Provider<T>() {
 	    private T instance;

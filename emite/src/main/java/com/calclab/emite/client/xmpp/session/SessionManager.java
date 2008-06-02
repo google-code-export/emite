@@ -35,7 +35,7 @@ import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 
 public class SessionManager {
     public static class Events {
@@ -73,13 +73,13 @@ public class SessionManager {
     }
 
     private void install() {
-	session.onLogin(new Listener<AuthorizationTicket>() {
+	session.onLogin(new Slot<AuthorizationTicket>() {
 	    public void onEvent(final AuthorizationTicket parameter) {
 		authorizationTicket = parameter;
 	    }
 	});
 
-	saslManager.onAuthorized(new Listener<AuthorizationTicket>() {
+	saslManager.onAuthorized(new Slot<AuthorizationTicket>() {
 	    public void onEvent(final AuthorizationTicket ticket) {
 		if (ticket.getState() == AuthorizationTicket.State.succeed) {
 		    session.setState(Session.State.authorized);
@@ -123,7 +123,7 @@ public class SessionManager {
 
 	});
 
-	bindingManager.onBinded(new Listener<XmppURI>() {
+	bindingManager.onBinded(new Slot<XmppURI>() {
 	    public void onEvent(final XmppURI uri) {
 		sendSessionRequest(uri);
 	    }

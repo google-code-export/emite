@@ -28,7 +28,7 @@ import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
 
 public class Session {
@@ -61,7 +61,7 @@ public class Session {
 	this.onMessage = new Signal<Message>();
 	this.onLogin = new Signal<AuthorizationTicket>();
 
-	manager.onStanza(new Listener<IPacket>() {
+	manager.onStanza(new Slot<IPacket>() {
 	    public void onEvent(final IPacket stanza) {
 		final String name = stanza.getName();
 		if (name.equals("message")) {
@@ -109,19 +109,19 @@ public class Session {
 	}
     }
 
-    public void onLogin(final Listener<AuthorizationTicket> listener) {
+    public void onLogin(final Slot<AuthorizationTicket> listener) {
 	onLogin.add(listener);
     }
 
-    public void onMessage(final Listener<Message> listener) {
+    public void onMessage(final Slot<Message> listener) {
 	onMessage.add(listener);
     }
 
-    public void onPresence(final Listener<Presence> listener) {
+    public void onPresence(final Slot<Presence> listener) {
 	onPresence.add(listener);
     }
 
-    public void onStateChanged(final Listener<State> listener) {
+    public void onStateChanged(final Slot<State> listener) {
 	onStateChanged.add(listener);
     }
 

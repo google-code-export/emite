@@ -21,6 +21,6 @@
  */
 package com.calclab.modular.client.signal;
 
-public interface Listener<T> {
+public interface Slot<T> {
     public void onEvent(T parameter);
 }

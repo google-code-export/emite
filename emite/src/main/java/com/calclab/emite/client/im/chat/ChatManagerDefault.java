@@ -36,7 +36,7 @@ import com.calclab.emite.client.xmpp.session.SessionComponent;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.Type;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
 
 public class ChatManagerDefault extends SessionComponent implements ChatManager {
@@ -95,11 +95,11 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	}
     }
 
-    public void onChatClosed(final Listener<Chat> listener) {
+    public void onChatClosed(final Slot<Chat> listener) {
 	onChatClosed.add(listener);
     }
 
-    public void onChatCreated(final Listener<Chat> listener) {
+    public void onChatCreated(final Slot<Chat> listener) {
 	onChatCreated.add(listener);
     }
 

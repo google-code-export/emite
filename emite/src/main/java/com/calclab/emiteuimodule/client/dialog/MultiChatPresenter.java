@@ -62,7 +62,7 @@ import com.calclab.emiteuimodule.client.status.OwnPresence;
 import com.calclab.emiteuimodule.client.status.StatusPanel;
 import com.calclab.emiteuimodule.client.status.StatusPanelListener;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
 
 public class MultiChatPresenter {
@@ -324,7 +324,7 @@ public class MultiChatPresenter {
         xmpp.getInstance(RoomManager.class).openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 
-    public void onChatAttended(final Listener<String> listener) {
+    public void onChatAttended(final Slot<String> listener) {
         onChatAttended.add(listener);
     }
 
@@ -332,7 +332,7 @@ public class MultiChatPresenter {
         currentChat.onComposing();
     }
 
-    public void onChatUnattendedWithActivity(final Listener<String> listener) {
+    public void onChatUnattendedWithActivity(final Slot<String> listener) {
         onChatUnattendedWithActivity.add(listener);
     }
 
@@ -357,11 +357,11 @@ public class MultiChatPresenter {
         roomUI.onModifySubjectRequested(newSubject);
     }
 
-    public void onShowUnavailableRosterItemsChanged(final Listener<Boolean> listener) {
+    public void onShowUnavailableRosterItemsChanged(final Slot<Boolean> listener) {
         onShowUnavailableRosterItemsChanged.add(listener);
     }
 
-    public void onUserColorChanged(final Listener<String> listener) {
+    public void onUserColorChanged(final Slot<String> listener) {
         onUserColorChanged.add(listener);
     }
 
@@ -373,7 +373,7 @@ public class MultiChatPresenter {
         }
     }
 
-    public void onUserSubscriptionModeChanged(final Listener<SubscriptionMode> listener) {
+    public void onUserSubscriptionModeChanged(final Slot<SubscriptionMode> listener) {
         onUserSubscriptionModeChanged.add(listener);
     }
 
@@ -502,7 +502,7 @@ public class MultiChatPresenter {
     }
 
     private void addStateListener(final Chat chat) {
-        chat.onStateChanged(new Listener<com.calclab.emite.client.im.chat.Chat.Status>() {
+        chat.onStateChanged(new Slot<com.calclab.emite.client.im.chat.Chat.Status>() {
             public void onEvent(final com.calclab.emite.client.im.chat.Chat.Status parameter) {
                 final ChatUI chatUI = getChatUI(chat);
                 if (chatUI != null && chatUI.equals(currentChat)) {
@@ -527,7 +527,7 @@ public class MultiChatPresenter {
     }
 
     private void createXmppListeners() {
-        xmpp.getSession().onStateChanged(new Listener<State>() {
+        xmpp.getSession().onStateChanged(new Slot<State>() {
             public void onEvent(final State current) {
                 switch (current) {
                 case notAuthorized:
@@ -547,13 +547,13 @@ public class MultiChatPresenter {
         });
 
         // FIXME: This in StatusPresenter
-        xmpp.getPresenceManager().onOwnPresenceChanged(new Listener<Presence>() {
+        xmpp.getPresenceManager().onOwnPresenceChanged(new Slot<Presence>() {
             public void onEvent(final Presence presence) {
                 view.setOwnPresence(new OwnPresence(presence));
             }
         });
 
-        xmpp.getChatManager().onChatCreated(new Listener<Chat>() {
+        xmpp.getChatManager().onChatCreated(new Slot<Chat>() {
             public void onEvent(final Chat chat) {
                 final ChatUI chatUI = createChat(chat);
                 dockChatUIifIsStartedByMe(chat, chatUI);
@@ -573,7 +573,7 @@ public class MultiChatPresenter {
             }
         });
 
-        xmpp.getChatManager().onChatClosed(new Listener<Chat>() {
+        xmpp.getChatManager().onChatClosed(new Slot<Chat>() {
             public void onEvent(final Chat chat) {
                 doAfterChatClosed(chat);
             }
@@ -581,7 +581,7 @@ public class MultiChatPresenter {
 
         final RoomManager roomManager = xmpp.getInstance(RoomManager.class);
 
-        roomManager.onChatCreated(new Listener<Chat>() {
+        roomManager.onChatCreated(new Slot<Chat>() {
             public void onEvent(final Chat room) {
                 final RoomUI roomUI = createRoom(room, currentUserJid.getNode());
                 dockChatUIifIsStartedByMe(room, roomUI);
@@ -619,13 +619,13 @@ public class MultiChatPresenter {
             }
         });
 
-        roomManager.onChatClosed(new Listener<Chat>() {
+        roomManager.onChatClosed(new Slot<Chat>() {
             public void onEvent(final Chat chat) {
                 doAfterChatClosed(chat);
             }
         });
 
-        roomManager.onInvitationReceived(new Listener<RoomInvitation>() {
+        roomManager.onInvitationReceived(new Slot<RoomInvitation>() {
             public void onEvent(final RoomInvitation parameter) {
                 view.click();
                 view.roomJoinConfirm(parameter.getInvitor(), parameter.getRoomURI(), parameter.getReason());

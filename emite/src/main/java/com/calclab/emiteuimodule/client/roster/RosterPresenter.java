@@ -47,7 +47,7 @@ import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem.UserGridMenuItemListener;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 
 public class RosterPresenter {
 
@@ -324,7 +324,7 @@ public class RosterPresenter {
     }
 
     private void createXmppListeners() {
-        roster.onItemChanged(new Listener<RosterItem>() {
+        roster.onItemChanged(new Slot<RosterItem>() {
             public void onEvent(final RosterItem item) {
                 final ChatUserUI user = rosterMap.get(item.getJID());
                 if (user == null) {
@@ -339,7 +339,7 @@ public class RosterPresenter {
             }
         });
 
-        roster.onRosterChanged(new Listener<Collection<RosterItem>>() {
+        roster.onRosterChanged(new Slot<Collection<RosterItem>>() {
             public void onEvent(final Collection<RosterItem> roster) {
                 rosterMap.clear();
                 view.clearRoster();
@@ -358,7 +358,7 @@ public class RosterPresenter {
             }
         });
 
-        rosterManager.onSubscriptionRequested(new Listener<Presence>() {
+        rosterManager.onSubscriptionRequested(new Slot<Presence>() {
             public void onEvent(final Presence presence) {
                 switch (rosterManager.getSubscriptionMode()) {
                 case autoAcceptAll:
@@ -377,7 +377,7 @@ public class RosterPresenter {
             }
         });
 
-        rosterManager.onUnsubscribedReceived(new Listener<XmppURI>() {
+        rosterManager.onUnsubscribedReceived(new Slot<XmppURI>() {
             public void onEvent(final XmppURI userUnsubscribed) {
                 Log.info("UNSUBS RECEIVED");
                 view.showMessageAboutUnsuscription(userUnsubscribed);

@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 
-public class ListenerTester<S> implements Listener<S> {
+public class ListenerTester<S> implements Slot<S> {
 
     public static void verifyCalled(final ListenerTester<?> listener) {
 	verifyCalled(listener, 1);

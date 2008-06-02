@@ -41,7 +41,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Stanza;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Signal;
 
 public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
@@ -64,7 +64,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
         }
     }
 
-    public void onInvitationReceived(final Listener<RoomInvitation> listener) {
+    public void onInvitationReceived(final Slot<RoomInvitation> listener) {
         onInvitationReceived.add(listener);
     }
 

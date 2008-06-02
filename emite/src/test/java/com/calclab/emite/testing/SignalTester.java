@@ -3,24 +3,24 @@ package com.calclab.emite.testing;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 
-public class SignalTester<T> extends BaseMatcher<Listener<T>> {
+public class SignalTester<T> extends BaseMatcher<Slot<T>> {
 
-    private Listener<T> listener;
+    private Slot<T> slot;
 
     public void describeTo(final Description description) {
 	description.appendText("signal");
     }
 
     public void fire(final T parameter) {
-	listener.onEvent(parameter);
+	slot.onEvent(parameter);
     }
 
     @SuppressWarnings("unchecked")
     public boolean matches(final Object arg0) {
 	try {
-	    this.listener = (Listener<T>) arg0;
+	    this.slot = (Slot<T>) arg0;
 	} catch (final ClassCastException e) {
 	    return false;
 	}

@@ -23,7 +23,7 @@ package com.calclab.emite.client.xep.chatstate;
 
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.modular.client.signal.Listener;
+import com.calclab.modular.client.signal.Slot;
 
 /**
  * XEP-0085: Chat State Notifications
@@ -38,7 +38,7 @@ public class ChatStateManager {
 
     public ChatStateManager(final ChatManager chatManager) {
 
-	chatManager.onChatCreated(new Listener<Chat>() {
+	chatManager.onChatCreated(new Slot<Chat>() {
 	    public void onEvent(final Chat chat) {
 		final ChatState chatState = new ChatState(chat);
 		chat.addListener(chatState);
@@ -47,7 +47,7 @@ public class ChatStateManager {
 	    }
 	});
 
-	chatManager.onChatClosed(new Listener<Chat>() {
+	chatManager.onChatClosed(new Slot<Chat>() {
 	    public void onEvent(final Chat chat) {
 		final ChatState chatState = chat.getData(ChatState.class);
 		if (chatState != null && chatState.getOtherState() != ChatState.Type.gone) {
