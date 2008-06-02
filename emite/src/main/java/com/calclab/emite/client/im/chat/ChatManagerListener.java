@@ -21,6 +21,10 @@
  */
 package com.calclab.emite.client.im.chat;
 
+/**
+ * @see ChatManagerListenerAdapter
+ * @deprecated
+ */
 @Deprecated
 public interface ChatManagerListener {
 

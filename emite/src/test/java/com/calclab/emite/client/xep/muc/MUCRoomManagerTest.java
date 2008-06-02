@@ -16,7 +16,6 @@ import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.xep.muc.Occupant.Affiliation;
 import com.calclab.emite.client.xep.muc.Occupant.Role;
-import com.calclab.emite.client.xep.mucç.RoomListenerAdaptor;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
@@ -59,7 +58,7 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldHandleRoomInvitations() {
 	final RoomManagerListener listener = mock(RoomManagerListener.class);
-	manager.addListener(listener);
+	new RoomManagerListenerAdapter(manager, listener);
 	final String message = "<message to='user@domain/resource' from='room@conference.domain'>"
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'><invite from='otherUser@domain/resource'>"
 		+ "<reason>The reason here</reason></invite></x></message>";

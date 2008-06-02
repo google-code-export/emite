@@ -1,11 +1,8 @@
-package com.calclab.emite.client.xep.mucç;
+package com.calclab.emite.client.xep.muc;
 
 import java.util.Collection;
 
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.xep.muc.Occupant;
-import com.calclab.emite.client.xep.muc.Room;
-import com.calclab.emite.client.xep.muc.RoomListener;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Slot2;

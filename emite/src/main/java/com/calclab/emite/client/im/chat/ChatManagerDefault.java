@@ -41,7 +41,6 @@ import com.calclab.modular.client.signal.Signal;
 
 public class ChatManagerDefault extends SessionComponent implements ChatManager {
     protected final HashSet<Chat> chats;
-    protected final ChatManagerListenerCollection listeners;
     protected final Signal<Chat> onChatCreated;
     protected Signal<Chat> onChatClosed;
     private XmppURI lastLoggedInUser;
@@ -50,25 +49,13 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	super(emite);
 	this.onChatCreated = new Signal<Chat>("onChatCreated");
 	this.onChatClosed = new Signal<Chat>("onChatClosed");
-	this.listeners = new ChatManagerListenerCollection();
 	this.chats = new HashSet<Chat>();
 	install();
-    }
-
-    /**
-     * New signal system
-     * 
-     * @see onChatCreated
-     */
-    @Deprecated
-    public void addListener(final ChatManagerListener listener) {
-	listeners.add(listener);
     }
 
     public void close(final Chat chat) {
 	chats.remove(chat);
 	((AbstractChat) chat).setState(Status.locked);
-	listeners.onChatClosed(chat);
 	onChatClosed.fire(chat);
     }
 
@@ -131,7 +118,6 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 	}
 	chats.add(chat);
 	onChatCreated.fire(chat);
-	listeners.onChatCreated(chat);
 	chat.setState(Chat.Status.ready);
 	return chat;
     }

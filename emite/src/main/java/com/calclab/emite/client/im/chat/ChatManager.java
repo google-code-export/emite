@@ -26,10 +26,10 @@ import java.util.Collection;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.modular.client.signal.Slot;
 
+/**
+ * @see ChatManagerListenerAdapter
+ */
 public interface ChatManager {
-
-    @Deprecated
-    public void addListener(final ChatManagerListener listener);
 
     public void close(Chat chat);
 
