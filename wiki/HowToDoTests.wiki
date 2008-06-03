@@ -1,5 +1,5 @@
 #summary How to make TTD with emite, and how to do some specific tests
-#Phase-Deploy
+#labels Phase-Implementation
 
 _*This is only a draft!*_
 
@@ -33,6 +33,7 @@ class B {
 }}}
 
 Things to test:
+
 1. The signal is fired when myAction is called (very easy):
 
 {{{
