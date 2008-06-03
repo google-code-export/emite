@@ -1,4 +1,4 @@
-package com.calclab.module.client.signal;
+package com.calclab.modular.client.signal;
 
 import static com.calclab.emite.testing.SlotTester.verifyCalledWith;
 import static com.calclab.emite.testing.SlotTester.verifyNoCalled;
