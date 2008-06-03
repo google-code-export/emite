@@ -21,7 +21,7 @@ public class Signal2<A, B> {
     }
 
     public void fire(final A param1, final B param2) {
-	Log.debug("Signal " + id.toUpperCase() + ": " + param1 + ", " + param2);
+	Log.debug("Signal " + id + ": " + param1 + ", " + param2);
 	if (slots != null) {
 	    for (final Slot2<A, B> listener : slots) {
 		listener.onEvent(param1, param2);

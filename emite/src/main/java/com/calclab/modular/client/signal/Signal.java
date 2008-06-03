@@ -42,7 +42,7 @@ public class Signal<T> {
     }
 
     public void fire(final T event) {
-	Log.debug("Signal " + id.toUpperCase() + ": " + event);
+	Log.debug("Signal " + id + ": " + event);
 	if (slots != null) {
 	    for (final Slot<T> listener : slots) {
 		listener.onEvent(event);
