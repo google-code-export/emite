@@ -26,7 +26,7 @@ Class B to a slot that listen to Class A events:
 {{{
 class B {
   public B(A a) {
-    a.onEvent(new Slot() { // codigo del slot ... } }
+    a.onEvent(new Slot() { // slot code ... } }
  }
  ...
 }
