@@ -1,4 +1,4 @@
-#summary How to make TTD with emite, and how to do some specific tests
+#summary How to make TDD with emite, and how to do some specific tests
 #labels Phase-Implementation
 
 _*This is only a draft!*_
@@ -64,4 +64,3 @@ signal.onEvent(...);
 }}}
 
 and test the slot code in B.
-
