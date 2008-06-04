@@ -8,20 +8,6 @@ import java.util.List;
 
 public class Code {
 
-    public static interface CodeWalker {
-
-	void onBegin();
-
-	void onBeginFolder(Folder folder);
-
-	void onEnd();
-
-	void onEndFolder();
-
-	void onSource(SourceFile sourceFile);
-
-    }
-
     private final HashMap<String, Folder> foldersByQualifiedName;
     private final ArrayList<SourceFile> sources;
     private final ArrayList<Folder> roots;
@@ -45,20 +31,22 @@ public class Code {
 	return foldersByQualifiedName.values();
     }
 
+    public Folder getRootFolder(final String name) {
+	Folder folder = null;
+	for (final Folder root : roots) {
+	    if (name.equals(root.getName())) {
+		folder = root;
+	    }
+	}
+	return folder;
+    }
+
     public List<Folder> getRootFolders() {
 	return roots;
     }
 
     public List<SourceFile> getSources() {
 	return sources;
-    }
-
-    public void walk(final CodeWalker walker) {
-	walker.onBegin();
-	for (final Folder root : roots) {
-	    walk(root, walker);
-	}
-	walker.onEnd();
     }
 
     private SourceFile addSourceFile(final String[] splitted) {
@@ -89,17 +77,6 @@ public class Code {
 	    parent = child;
 	}
 	return parent;
-    }
-
-    private void walk(final Folder folder, final CodeWalker walker) {
-	walker.onBeginFolder(folder);
-	for (final SourceFile file : folder.getSources()) {
-	    walker.onSource(file);
-	}
-	for (final Folder child : folder.getChildren()) {
-	    walk(child, walker);
-	}
-	walker.onEndFolder();
     }
 
 }

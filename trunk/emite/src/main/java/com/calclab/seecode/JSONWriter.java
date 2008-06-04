@@ -1,67 +1,56 @@
 package com.calclab.seecode;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 
 public class JSONWriter {
-    public static final String INDENT = "                                                                                               ";
     private static final String X = "\"";
 
-    private final PrintStream out;
-    private int indent;
+    private final PrintWriter out;
     private int id;
 
-    public JSONWriter(final PrintStream out) {
+    public JSONWriter(final PrintWriter out) {
 	this.out = out;
-	this.indent = 0;
 	this.id = 0;
     }
 
-    public void print(final String text) {
+    public JSONWriter childsClose() {
+	return print("]");
+    }
+
+    public JSONWriter childsOpen() {
+	return print("children:[");
+    }
+
+    public JSONWriter data() {
+	return print(X + "data" + X + ":[]");
+    }
+
+    public JSONWriter hashClose() {
+	return print("}");
+    }
+
+    public JSONWriter hashOpen() {
+	return print("{");
+    }
+
+    public JSONWriter id() {
+	return pair("id", id++);
+    }
+
+    public JSONWriter pair(final String name, final Object value) {
+	return print(X + name + X + ":" + X + value + X);
+    };
+
+    public JSONWriter sep() {
+	return print(",");
+    }
+
+    public JSONWriter write(final String text) {
+	return print(text);
+    }
+
+    private JSONWriter print(final String text) {
 	out.print(text);
-    }
-
-    public JSONWriter println(final String text) {
-	out.println(text);
-	return this;
-    }
-
-    JSONWriter data() {
-	indent();
-	out.print(X + "data" + X + ": [ ]");
-	return this;
-    }
-
-    JSONWriter indent() {
-	out.print(INDENT.substring(0, indent * 2));
-	return this;
-    }
-
-    JSONWriter openH() {
-	indent();
-	out.println("{");
-	indent++;
-	pair("id", id++).sep();
-	return this;
-    }
-
-    JSONWriter pair(final String name, final Object value) {
-	indent();
-	out.print(X + name + X + ": " + X + value + X);
-	return this;
-    }
-
-    JSONWriter sep() {
-	out.println(", ");
-	return this;
-    }
-
-    void startChilds() {
-	indent();
-	out.print("children: [");
-    }
-
-    JSONWriter unindent() {
-	indent--;
 	return this;
     }
 
