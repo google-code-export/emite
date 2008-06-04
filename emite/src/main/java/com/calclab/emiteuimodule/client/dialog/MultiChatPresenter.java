@@ -34,7 +34,9 @@ import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatListenerAdaptor;
+import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
+import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
 import com.calclab.emite.client.xep.chatstate.ChatState;
@@ -75,7 +77,6 @@ public class MultiChatPresenter {
     private String currentUserPasswd;
     private final EmiteUIFactory factory;
     private final I18nTranslationService i18n;
-    private final PresenceManager presenceManager;
     private UserChatOptions userChatOptions;
     private MultiChatPanel view;
     private final Xmpp xmpp;
@@ -87,6 +88,12 @@ public class MultiChatPresenter {
     private final Signal<Boolean> onShowUnavailableRosterItemsChanged;
     private final Signal<String> onUserColorChanged;
     private final Signal<SubscriptionMode> onUserSubscriptionModeChanged;
+    private final ChatManager chatManager;
+    private final RoomManager roomManager;
+    private final PresenceManager presenceManager;
+    private final ChatStateManager stateManager;
+
+    private final RosterManager rosterManager;
 
     public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final EmiteUIFactory factory,
 	    final MultiChatCreationParam param, final RosterPresenter roster) {
@@ -96,13 +103,22 @@ public class MultiChatPresenter {
 	this.roster = roster;
 	setUserChatOptions(param.getUserChatOptions());
 	roomHost = param.getRoomHost();
+	chatManager = xmpp.getChatManager();
+	roomManager = xmpp.getInstance(RoomManager.class);
 	presenceManager = xmpp.getPresenceManager();
+	rosterManager = xmpp.getRosterManager();
+	stateManager = xmpp.getInstance(ChatStateManager.class);
 	openedChats = 0;
 	onChatAttended = new Signal<String>("onChatAttended");
 	onChatUnattendedWithActivity = new Signal<String>("onChatUnattendedWithActivity");
 	onShowUnavailableRosterItemsChanged = new Signal<Boolean>("onShowUnavailableRosterItemsChanged");
 	onUserColorChanged = new Signal<String>("onUserColorChanged");
 	onUserSubscriptionModeChanged = new Signal<SubscriptionMode>("onUserSubscriptionModeChanged");
+	roster.onOpenChat(new Slot<XmppURI>() {
+	    public void onEvent(final XmppURI userURI) {
+		joinChat(userURI);
+	    }
+	});
     }
 
     public void addBuddy(final String shortName, final String longName) {
@@ -110,7 +126,7 @@ public class MultiChatPresenter {
 
     public void addRosterItem(final String name, final String jid) {
 	Log.info("Adding " + name + "(" + jid + ") to your roster.");
-	xmpp.getRosterManager().requestAddItem(uri(jid), name, null);
+	rosterManager.requestAddItem(uri(jid), name, null);
     }
 
     public void center() {
@@ -128,16 +144,14 @@ public class MultiChatPresenter {
     public ChatUI createChat(final Chat chat) {
 	final ChatUI chatUIalreadyOpened = getChatUI(chat);
 	logIfChatAlreadyOpened(chatUIalreadyOpened);
-	final ChatStateManager stateManager = xmpp.getInstance(ChatStateManager.class);
 	final ChatState chatState = stateManager.getChatState(chat);
 	final ChatUI chatUI = chatUIalreadyOpened == null ? factory.createChatUI(chat.getOtherURI(), currentUserJid
 		.getNode(), userChatOptions.getColor(), chatState) : chatUIalreadyOpened;
-
 	if (chatUIalreadyOpened == null) {
 	    addCommonChatSignals(chat, chatUI);
 	    chatUI.onClose(new Slot<ChatUI>() {
 		public void onEvent(final ChatUI parameter) {
-		    xmpp.getChatManager().close(chat);
+		    chatManager.close(chat);
 		}
 	    });
 	    chatUI.onUserDrop(new Slot<XmppURI>() {
@@ -161,7 +175,7 @@ public class MultiChatPresenter {
 	    addCommonChatSignals(chat, roomUI);
 	    roomUI.onClose(new Slot<ChatUI>() {
 		public void onEvent(final ChatUI parameter) {
-		    xmpp.getInstance(RoomManager.class).close(chat);
+		    roomManager.close(chat);
 		}
 	    });
 	    roomUI.onUserDrop(new Slot<XmppURI>() {
@@ -241,12 +255,18 @@ public class MultiChatPresenter {
     }
 
     public void joinChat(final XmppURI userURI) {
-	xmpp.getChatManager().openChat(userURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	final Chat chat = chatManager.openChat(userURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	final ChatUI chatUI = getChatUI(chat);
+	if (chatUI != null && !chatUI.isDocked()) {
+	    // Bug 94
+	    Log.debug("Already opened chat with no body, but not docked");
+	    dockChatUI(chat, chatUI);
+	}
     }
 
     public void joinRoom(final String roomName, final String serverName) {
 	final XmppURI uri = new XmppURI(roomName, serverName, currentUserJid.getNode());
-	xmpp.getInstance(RoomManager.class).openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	roomManager.openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 
     public void onChatAttended(final Slot<String> listener) {
@@ -345,8 +365,8 @@ public class MultiChatPresenter {
 
     protected void onCloseAllConfirmed() {
 	final Collection<Chat> chatsToClose = new HashSet<Chat>();
-	chatsToClose.addAll(xmpp.getChatManager().getChats());
-	chatsToClose.addAll(xmpp.getInstance(RoomManager.class).getChats());
+	chatsToClose.addAll(chatManager.getChats());
+	chatsToClose.addAll(roomManager.getChats());
 	Log.info("Trying to close " + chatsToClose.size() + " chats");
 	for (final Chat chat : chatsToClose) {
 	    final ChatUI chatUI = getChatUI(chat);
@@ -369,10 +389,10 @@ public class MultiChatPresenter {
     }
 
     protected void onUserColorChanged(final String color) {
-	for (final Chat chat : xmpp.getChatManager().getChats()) {
+	for (final Chat chat : chatManager.getChats()) {
 	    setChatColor(chat, color);
 	}
-	for (final Chat room : xmpp.getInstance(RoomManager.class).getChats()) {
+	for (final Chat room : roomManager.getChats()) {
 	    setChatColor(room, color);
 	}
 	userChatOptions.setColor(color);
@@ -380,7 +400,7 @@ public class MultiChatPresenter {
     }
 
     protected void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
-	xmpp.getRosterManager().setSubscriptionMode(subscriptionMode);
+	rosterManager.setSubscriptionMode(subscriptionMode);
 	userChatOptions.setSubscriptionMode(subscriptionMode);
 	onUserSubscriptionModeChanged.fire(subscriptionMode);
     }
@@ -519,13 +539,13 @@ public class MultiChatPresenter {
 	});
 
 	// FIXME: This in StatusPresenter
-	xmpp.getPresenceManager().onOwnPresenceChanged(new Slot<Presence>() {
+	presenceManager.onOwnPresenceChanged(new Slot<Presence>() {
 	    public void onEvent(final Presence presence) {
 		view.setOwnPresence(new OwnPresence(presence));
 	    }
 	});
 
-	xmpp.getChatManager().onChatCreated(new Slot<Chat>() {
+	chatManager.onChatCreated(new Slot<Chat>() {
 	    public void onEvent(final Chat chat) {
 		final ChatUI chatUI = createChat(chat);
 		dockChatUIifIsStartedByMe(chat, chatUI);
@@ -545,13 +565,11 @@ public class MultiChatPresenter {
 	    }
 	});
 
-	xmpp.getChatManager().onChatClosed(new Slot<Chat>() {
+	chatManager.onChatClosed(new Slot<Chat>() {
 	    public void onEvent(final Chat chat) {
 		doAfterChatClosed(chat);
 	    }
 	});
-
-	final RoomManager roomManager = xmpp.getInstance(RoomManager.class);
 
 	roomManager.onChatCreated(new Slot<Chat>() {
 	    public void onEvent(final Chat room) {
