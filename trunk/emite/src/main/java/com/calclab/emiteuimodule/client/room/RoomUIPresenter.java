@@ -98,7 +98,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 
     public void onInviteUserRequested(final XmppURI userJid, final String reasonText) {
 	this.lastInvitationReasonText = reasonText;
-	onInviteUserRequested(userJid, reasonText);
+	onInviteUserRequested.fire(userJid, reasonText);
     }
 
     public void onModifySubjectRequested(final Slot<String> slot) {
