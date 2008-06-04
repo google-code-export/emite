@@ -1,15 +1,12 @@
 package com.calclab.seecode;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.calclab.seecode.Code.CodeWalker;
-
-import static org.mockito.Mockito.*;
 
 public class CodeTest {
 
@@ -60,11 +57,10 @@ public class CodeTest {
 
     @Test
     public void shouldWalk() {
-	code.addSource("com/calclab/A.java");
-	code.addSource("com/calclab/B.java");
-	final CodeWalker walker = mock(CodeWalker.class);
-	code.walk(walker);
-	verify(walker, times(2)).onBeginFolder((Folder) anyObject());
+	code.addSource("a/A.java");
+	code.addSource("b/B.java");
+	assertEquals(2, code.getRootFolders().size());
+	assertNotNull(code.getRootFolder("a"));
     }
 
 }
