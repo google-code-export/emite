@@ -27,18 +27,29 @@ import org.ourproject.kune.platf.client.View;
 
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
+import com.calclab.modular.client.signal.Signal;
+import com.calclab.modular.client.signal.Slot;
 
 public class ChatUIPresenter implements ChatUI {
 
     // FIXME: this in Chat or new ChatState module, here only a listener
 
     private static final String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
-            "purple", "fuchsia", "maroon", "red" };
+	    "purple", "fuchsia", "maroon", "red" };
+    final Signal<String> onCurrentUserSend;
+    final Signal<ChatNotification> onNewChatNotification;
+    final Signal<XmppURI> onUserDrop;
+    final Signal<ChatUI> onActivate;
+    final Signal<ChatUI> onDeactivate;
+    final Signal<ChatUI> onUnHighLight;
+    final Signal<ChatUI> onChatNotificationClear;
+    final Signal<ChatUI> onClose;
+    final Signal<ChatUI> onHighLight;
     private ChatUIView view;
     private String savedInput;
     private ChatNotification savedChatNotification;
-    private final ChatUIListener listener;
     private int oldColor;
+
     private final HashMap<String, String> userColors;
     private final String chatTitle;
     private final XmppURI otherURI;
@@ -50,200 +61,242 @@ public class ChatUIPresenter implements ChatUI {
     private boolean docked;
     private ChatUIEventListenerCollection eventListenerCollection;
 
-    public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-            final ChatIconDescriptor unhighIcon, final ChatIconDescriptor highIcon, final ChatUIListener listener) {
-        this.otherURI = otherURI;
-        this.unhighIcon = unhighIcon;
-        this.highIcon = highIcon;
-        this.listener = listener;
-        this.chatTitle = getOtherAlias();
-        userColors = new HashMap<String, String>();
-        userColors.put(currentUserAlias, currentUserColor);
-        clearSavedChatNotification();
-        docked = false;
+    public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor) {
+	// Def Constructor for chats
+	this(otherURI, currentUserAlias, currentUserColor, ChatIconDescriptor.chatsmall,
+		ChatIconDescriptor.chatnewmessagesmall);
     }
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-            final ChatUIListener listener) {
-        // Def Constructor for chats
-        this(otherURI, currentUserAlias, currentUserColor, ChatIconDescriptor.chatsmall,
-                ChatIconDescriptor.chatnewmessagesmall, listener);
+	    final ChatIconDescriptor unhighIcon, final ChatIconDescriptor highIcon) {
+	this.otherURI = otherURI;
+	this.unhighIcon = unhighIcon;
+	this.highIcon = highIcon;
+	this.chatTitle = getOtherAlias();
+	userColors = new HashMap<String, String>();
+	userColors.put(currentUserAlias, currentUserColor);
+	clearSavedChatNotification();
+	docked = false;
+	this.onDeactivate = new Signal<ChatUI>("onDeactivate");
+	this.onActivate = new Signal<ChatUI>("onActivate");
+	this.onChatNotificationClear = new Signal<ChatUI>("onChatNotificationClear");
+	this.onClose = new Signal<ChatUI>("onClose");
+	this.onCurrentUserSend = new Signal<String>("onCurrentUserSend");
+	this.onHighLight = new Signal<ChatUI>("onHighLight");
+	this.onNewChatNotification = new Signal<ChatNotification>("onNewChatNotification");
+	this.onUnHighLight = new Signal<ChatUI>("onUnHighLight");
+	this.onUserDrop = new Signal<XmppURI>("onUserDrop");
     }
 
     public void addDelimiter(final String date) {
-        view.addDelimiter(date);
+	view.addDelimiter(date);
     }
 
     public void addEventListener(final ChatUIEventListener listener) {
-        if (eventListenerCollection == null) {
-            eventListenerCollection = new ChatUIEventListenerCollection();
-        }
-        eventListenerCollection.add(listener);
+	if (eventListenerCollection == null) {
+	    eventListenerCollection = new ChatUIEventListenerCollection();
+	}
+	eventListenerCollection.add(listener);
     }
 
     public void addInfoMessage(final String message) {
-        checkIfHighlightNeeded();
-        view.addInfoMessage(message);
+	checkIfHighlightNeeded();
+	view.addInfoMessage(message);
     }
 
     public void addMessage(final String userAlias, final String message) {
-        checkIfHighlightNeeded();
-        view.addMessage(userAlias, getColor(userAlias), message);
-        listener.onMessageAdded(this);
+	checkIfHighlightNeeded();
+	view.addMessage(userAlias, getColor(userAlias), message);
     }
 
     public void clearMessageEventInfo() {
-        listener.onChatNotificationClear(this);
+	onChatNotificationClear.fire(this);
     }
 
     public void clearSavedChatNotification() {
-        savedChatNotification = new ChatNotification();
+	savedChatNotification = new ChatNotification();
     }
 
     public void clearSavedInput() {
-        saveInput(null);
+	saveInput(null);
     }
 
     public void destroy() {
-        view.destroy();
+	view.destroy();
     }
 
     public String getChatTitle() {
-        return chatTitle;
+	return chatTitle;
     }
 
     public String getColor(final String userAlias) {
-        String color = userColors.get(userAlias);
-        if (color == null) {
-            color = getNextColor();
-            setUserColor(userAlias, color);
-        }
-        return color;
+	String color = userColors.get(userAlias);
+	if (color == null) {
+	    color = getNextColor();
+	    setUserColor(userAlias, color);
+	}
+	return color;
     }
 
     public String getOtherAlias() {
-        // Messages from server has no node
-        return otherURI.getNode() != null ? otherURI.getNode() : otherURI.getHost();
+	// Messages from server has no node
+	return otherURI.getNode() != null ? otherURI.getNode() : otherURI.getHost();
     }
 
     public ChatNotification getSavedChatNotification() {
-        return savedChatNotification;
+	return savedChatNotification;
     }
 
     public String getSavedInput() {
-        return savedInput;
+	return savedInput;
     }
 
     public View getView() {
-        return view;
+	return view;
     }
 
     public void highLightChatTitle() {
-        view.setChatTitle(chatTitle, otherURI.toString(), highIcon);
-        alreadyHightlighted = true;
-        listener.onHighLight(this);
+	view.setChatTitle(chatTitle, otherURI.toString(), highIcon);
+	alreadyHightlighted = true;
+	onHighLight.fire(this);
     }
 
     public void init(final ChatUIView view) {
-        this.view = view;
-        isActive = true;
-        unHighLightChatTitle();
+	this.view = view;
+	isActive = true;
+	unHighLightChatTitle();
     }
 
     public boolean isDocked() {
-        return docked;
+	return docked;
+    }
+
+    public void onActivate(final Slot<ChatUI> slot) {
+	onActivate.add(slot);
+    }
+
+    public void onChatNotificationClear(final Slot<ChatUI> slot) {
+	onChatNotificationClear.add(slot);
     }
 
     public void onClose() {
-        unHightAndActive();
-        if (eventListenerCollection != null) {
-            eventListenerCollection.onClose();
-        }
-        listener.onClose(this);
+	unHightAndActive();
+	if (eventListenerCollection != null) {
+	    eventListenerCollection.onClose();
+	}
+	onClose.fire(this);
+    }
+
+    public void onClose(final Slot<ChatUI> slot) {
+	onClose.add(slot);
     }
 
     public void onComposing() {
-        if (eventListenerCollection != null) {
-            eventListenerCollection.onComposing();
-        }
+	if (eventListenerCollection != null) {
+	    eventListenerCollection.onComposing();
+	}
+    }
+
+    public void onCurrentUserSend(final Slot<String> slot) {
+	onCurrentUserSend.add(slot);
     }
 
     public void onCurrentUserSend(final String message) {
-        listener.onCurrentUserSend(message);
+	onCurrentUserSend.fire(message);
+    }
+
+    public void onDeactivate(final Slot<ChatUI> slot) {
+	onDeactivate.add(slot);
+    }
+
+    public void onHighLight(final Slot<ChatUI> slot) {
+	onHighLight.add(slot);
     }
 
     public void onInputFocus() {
-        unHightAndActive();
-        if (eventListenerCollection != null) {
-            eventListenerCollection.onInputFocus();
-        }
+	unHightAndActive();
+	if (eventListenerCollection != null) {
+	    eventListenerCollection.onInputFocus();
+	}
     }
 
     public void onInputUnFocus() {
-        isActive = false;
-        if (eventListenerCollection != null) {
-            eventListenerCollection.onInputUnFocus();
-        }
+	isActive = false;
+	if (eventListenerCollection != null) {
+	    eventListenerCollection.onInputUnFocus();
+	}
+    }
+
+    public void onNewChatNotification(final Slot<ChatNotification> slot) {
+	onNewChatNotification.add(slot);
+    }
+
+    public void onUnHighLight(final Slot<ChatUI> slot) {
+	onUnHighLight.add(slot);
+    }
+
+    public void onUserDrop(final Slot<XmppURI> slot) {
+	onUserDrop.add(slot);
     }
 
     public void onUserDrop(final XmppURI userURI) {
-        listener.onUserDrop(this, userURI);
+	onUserDrop.fire(userURI);
     }
 
     public void saveInput(final String inputText) {
-        savedInput = inputText;
+	savedInput = inputText;
     }
 
     public void setDocked(final boolean docked) {
-        this.docked = docked;
+	this.docked = docked;
     }
 
     public void setSavedChatNotification(final ChatNotification savedChatNotification) {
-        this.savedChatNotification = savedChatNotification;
+	this.savedChatNotification = savedChatNotification;
     }
 
     public void setUserColor(final String userAlias, final String color) {
-        userColors.put(userAlias, color);
+	userColors.put(userAlias, color);
     }
 
     public void showMessageEventInfo() {
-        listener.onNewChatNotification(this, savedChatNotification);
+	onNewChatNotification.fire(savedChatNotification);
     }
 
     public void unHighLightChatTitle() {
-        view.setChatTitle(chatTitle, otherURI.toString(), unhighIcon);
-        alreadyHightlighted = false;
-        listener.onUnHighLight(this);
+	view.setChatTitle(chatTitle, otherURI.toString(), unhighIcon);
+	alreadyHightlighted = false;
+	onUnHighLight.fire(this);
     }
 
     protected void onActivated() {
-        unHightAndActive();
-        listener.onActivate(this);
+	unHightAndActive();
+	onActivate.fire(this);
     }
 
     protected void onDeactivated() {
-        isActive = false;
-        listener.onDeactivate(this);
+	isActive = false;
+	onDeactivate.fire(this);
     }
 
     private void checkIfHighlightNeeded() {
-        if (!isActive && !alreadyHightlighted) {
-            highLightChatTitle();
-        }
+	if (!isActive && !alreadyHightlighted) {
+	    highLightChatTitle();
+	}
     }
 
     private String getNextColor() {
-        final String color = USERCOLORS[oldColor++];
-        if (oldColor >= USERCOLORS.length) {
-            oldColor = 0;
-        }
-        return color;
+	final String color = USERCOLORS[oldColor++];
+	if (oldColor >= USERCOLORS.length) {
+	    oldColor = 0;
+	}
+	return color;
     }
 
     private void unHightAndActive() {
-        if (alreadyHightlighted) {
-            unHighLightChatTitle();
-        }
-        isActive = true;
+	if (alreadyHightlighted) {
+	    unHighLightChatTitle();
+	}
+	isActive = true;
     }
 }
