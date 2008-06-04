@@ -6,8 +6,8 @@ PARAMS=$#
 
 if [ $PARAMS -lt 1 ]
 then
-  echo "Use: $0 signalName1 signalName2 ... signalNameN"
-  echo "$0 onEvent1 onEvent2 onEvent3"
+  echo "Use: $0 signalName1.ParamType signalName2.ParamType ... signalNameN.ParamType"
+  echo "$0 onEvent1.String onEvent2.Long onEvent3.String"
   exit
 fi
 
@@ -15,10 +15,12 @@ echo ""
 
 for NAME in $NAMES
 do
-  echo "private final Signal<Message> $NAME"
-  echo "this.$NAME = new Signal<Message>(\"$NAME\")"
-  echo "public void $NAME(final Slot<Message> slot) {
-  	$NAME.add(slot);
+  SIGNALNAME=${NAME/%\.*/}
+  SIGNALPARAM=${NAME/#*./}
+  echo "private final Signal<$SIGNALPARAM> $SIGNALNAME;"
+  echo "this.$SIGNALNAME = new Signal<$SIGNALPARAM>(\"$SIGNALNAME\");"
+  echo "public void $SIGNALNAME(final Slot<$SIGNALPARAM> slot) {
+  	$SIGNALNAME.add(slot);
       }"
   echo ""
 done

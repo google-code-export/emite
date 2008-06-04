@@ -25,6 +25,11 @@ public class ChatTest {
     }
 
     @Test
+    public void setDataEmptyMustNotFail() {
+	chat.setData(null, null);
+    }
+
+    @Test
     public void shouldInterceptIncomingMessages() {
 	final MessageInterceptor interceptor = mock(MessageInterceptor.class);
 	chat.addMessageInterceptor(interceptor);
@@ -72,4 +77,5 @@ public class ChatTest {
 	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>"
 		+ "<body>&amp;</body><thread>theThread</thread></message>");
     }
+
 }
