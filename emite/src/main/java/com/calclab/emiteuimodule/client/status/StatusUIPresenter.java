@@ -79,12 +79,20 @@ public class StatusUIPresenter implements StatusUI {
 	onUserSubscriptionModeChanged = new Signal<SubscriptionMode>("onUserSubscriptionModeChanged");
     }
 
+    public void addChatMenuItem(final View item) {
+	view.addChatMenuItem(item);
+    }
+
     public void addMenuButtonItem(final View item) {
 	view.addMenuButtonItem(item);
     }
 
     public void addMenuItem(final View item) {
 	view.addMenuItem(item);
+    }
+
+    public void addOptionsSubMenuItem(final View item) {
+	view.addOptionsSubMenuItem(item);
     }
 
     public void confirmCloseAll() {

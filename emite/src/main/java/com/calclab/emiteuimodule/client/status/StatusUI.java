@@ -8,9 +8,13 @@ import com.calclab.modular.client.signal.Slot;
 
 public interface StatusUI {
 
+    void addChatMenuItem(View item);
+
     void addMenuButtonItem(View item);
 
     void addMenuItem(View item);
+
+    void addOptionsSubMenuItem(View item);
 
     void confirmCloseAll();
 

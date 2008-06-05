@@ -6,9 +6,13 @@ import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 
 public interface StatusUIView extends View {
 
+    void addChatMenuItem(View item);
+
     void addMenuButtonItem(View item);
 
     void addMenuItem(View item);
+
+    void addOptionsSubMenuItem(View item);
 
     void confirmCloseAll();
 
