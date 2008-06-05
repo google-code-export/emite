@@ -65,12 +65,14 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
     private CheckItem autoAcceptSubsItem;
 
     private final StatusUIPresenter presenter;
+    private final Menu chatMenu;
+    private Menu optionsSubMenu;
 
     public StatusUIPanel(final StatusUIPresenter presenter, final I18nTranslationService i18n) {
 	this.presenter = presenter;
 	this.i18n = i18n;
 
-	final Menu chatMenu = new Menu();
+	chatMenu = new Menu();
 	chatMenu.setShadow(true);
 
 	closeAllOption = createCloseAllMenuItem(i18n);
@@ -99,14 +101,20 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 	this.addFill();
     }
 
+    public void addChatMenuItem(final View item) {
+	chatMenu.addItem((BaseItem) item);
+    }
+
     public void addMenuButtonItem(final View item) {
 	super.addButton((ToolbarButton) item);
-	// maybe we need a doLayout in parent :-/
     }
 
     public void addMenuItem(final View item) {
 	super.addItem((ToolbarItem) item);
-	// maybe we need a doLayout in parent :-/
+    }
+
+    public void addOptionsSubMenuItem(final View item) {
+	optionsSubMenu.addItem((BaseItem) item);
     }
 
     public void confirmCloseAll() {
@@ -187,8 +195,7 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
     }
 
     private Menu createOptionsMenu() {
-	final Menu submenu = new Menu();
-
+	optionsSubMenu = new Menu();
 	final ColorMenu colorMenu = new ColorMenu();
 	colorMenu.addListener(new ColorMenuListener() {
 	    public void onSelect(final ColorPalette colorPalette, final String color) {
@@ -206,10 +213,10 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 
 	final MenuItem subsItem = new MenuItem(i18n.t("New buddies options"), createUserSubscriptionMenu());
 
-	submenu.addItem(colorMenuItem);
-	submenu.addItem(subsItem);
+	optionsSubMenu.addItem(colorMenuItem);
+	optionsSubMenu.addItem(subsItem);
 
-	return submenu;
+	return optionsSubMenu;
     }
 
     private CheckItem createStatusCheckItem(final OwnStatus ownStatus) {
