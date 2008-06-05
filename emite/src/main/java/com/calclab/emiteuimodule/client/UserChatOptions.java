@@ -22,60 +22,61 @@
 package com.calclab.emiteuimodule.client;
 
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
 public class UserChatOptions {
 
     private String color;
     private SubscriptionMode subscriptionMode;
-    private final String userJid;
+    private final XmppURI userJid;
     private final String userPassword;
     private final String resource;
     private boolean unavailableRosterItemsVisible;
 
     public UserChatOptions(final String userJid, final String userPassword, final String resource, final String color,
-            final SubscriptionMode subscriptionMode, final boolean unavailableRosterItemsVisible) {
-        this.userJid = userJid;
-        this.userPassword = userPassword;
-        this.resource = resource;
-        this.color = color;
-        this.subscriptionMode = subscriptionMode;
-        this.unavailableRosterItemsVisible = unavailableRosterItemsVisible;
+	    final SubscriptionMode subscriptionMode, final boolean unavailableRosterItemsVisible) {
+	this.userJid = XmppURI.uri(userJid);
+	this.userPassword = userPassword;
+	this.resource = resource;
+	this.color = color;
+	this.subscriptionMode = subscriptionMode;
+	this.unavailableRosterItemsVisible = unavailableRosterItemsVisible;
     }
 
     public String getColor() {
-        return color;
+	return color;
     }
 
     public String getResource() {
-        return resource;
+	return resource;
     }
 
     public SubscriptionMode getSubscriptionMode() {
-        return subscriptionMode;
+	return subscriptionMode;
     }
 
-    public String getUserJid() {
-        return userJid;
+    public XmppURI getUserJid() {
+	return userJid;
     }
 
     public String getUserPassword() {
-        return userPassword;
+	return userPassword;
     }
 
     public boolean isUnavailableRosterItemsVisible() {
-        return unavailableRosterItemsVisible;
+	return unavailableRosterItemsVisible;
     }
 
     public void setColor(final String color) {
-        this.color = color;
+	this.color = color;
     }
 
     public void setSubscriptionMode(final SubscriptionMode subscriptionMode) {
-        this.subscriptionMode = subscriptionMode;
+	this.subscriptionMode = subscriptionMode;
     }
 
     public void setUnavailableRosterItemsVisible(final boolean unavailableRosterItemsVisible) {
-        this.unavailableRosterItemsVisible = unavailableRosterItemsVisible;
+	this.unavailableRosterItemsVisible = unavailableRosterItemsVisible;
     }
 
 }

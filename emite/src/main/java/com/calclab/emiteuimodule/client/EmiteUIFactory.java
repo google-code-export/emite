@@ -40,15 +40,17 @@ import com.calclab.emiteuimodule.client.room.RoomUIPresenter;
 import com.calclab.emiteuimodule.client.room.RoomUserListUIPanel;
 import com.calclab.emiteuimodule.client.roster.RosterPanel;
 import com.calclab.emiteuimodule.client.roster.RosterPresenter;
-import com.calclab.emiteuimodule.client.status.StatusPanel;
+import com.calclab.emiteuimodule.client.status.StatusUI;
 
 public class EmiteUIFactory {
     private final I18nTranslationService i18n;
     private final Xmpp xmpp;
+    private final StatusUI statusUI;
 
-    public EmiteUIFactory(final Xmpp xmpp, final I18nTranslationService i18n) {
+    public EmiteUIFactory(final Xmpp xmpp, final I18nTranslationService i18n, final StatusUI statusUI) {
 	this.xmpp = xmpp;
 	this.i18n = i18n;
+	this.statusUI = statusUI;
     }
 
     public ChatUI createChatUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
@@ -62,11 +64,9 @@ public class EmiteUIFactory {
 
     public MultiChatPresenter createMultiChat(final MultiChatCreationParam param) {
 	final RosterPresenter roster = createRosterUI(param.getAvatarProvider());
-	final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, this, param, roster);
-	final StatusPanel statusPanel = new StatusPanel(i18n);
+	final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, this, param, roster, statusUI);
 	final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), (RosterPanel) roster.getView(),
-		statusPanel, i18n, presenter);
-	presenter.initStatusPanel(statusPanel);
+		statusUI, i18n, presenter);
 	presenter.init(panel);
 	return presenter;
     }
