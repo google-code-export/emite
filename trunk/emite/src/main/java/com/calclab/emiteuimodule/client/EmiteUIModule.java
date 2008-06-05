@@ -30,6 +30,9 @@ import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
 import com.calclab.emite.client.xep.chatstate.ChatStateModule;
 import com.calclab.emite.client.xep.muc.MUCModule;
+import com.calclab.emiteuimodule.client.room.RoomUIModule;
+import com.calclab.emiteuimodule.client.status.StatusUI;
+import com.calclab.emiteuimodule.client.status.StatusUIModule;
 import com.calclab.modular.client.container.Provider;
 import com.calclab.modular.client.modules.Module;
 import com.calclab.modular.client.modules.ModuleBuilder;
@@ -52,20 +55,25 @@ public class EmiteUIModule implements Module {
 	    }
 	}, SingletonScope.class);
 
+	builder.add(new StatusUIModule(), new RoomUIModule());
+
 	builder.registerProvider(EmiteUIFactory.class, new Provider<EmiteUIFactory>() {
 	    public EmiteUIFactory get() {
+		final StatusUI statusUI = builder.getInstance(StatusUI.class);
 		return new EmiteUIFactory(builder.getInstance(Xmpp.class), builder
-			.getInstance(I18nTranslationService.class));
+			.getInstance(I18nTranslationService.class), statusUI);
 	    }
 	}, SingletonScope.class);
 
 	builder.registerProvider(EmiteUIDialog.class, new Provider<EmiteUIDialog>() {
 	    public EmiteUIDialog get() {
 		final Xmpp xmpp = builder.getInstance(Xmpp.class);
+		final StatusUI statusUI = builder.getInstance(StatusUI.class);
 		final EmiteUIFactory factory = builder.getInstance(EmiteUIFactory.class);
-		return new EmiteUIDialog(xmpp, factory);
+		return new EmiteUIDialog(xmpp, factory, statusUI);
 	    }
 
 	}, NoScope.class);
+
     }
 }

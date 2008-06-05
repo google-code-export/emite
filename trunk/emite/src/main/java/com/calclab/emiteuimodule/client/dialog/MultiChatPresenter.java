@@ -21,7 +21,6 @@
  */
 package com.calclab.emiteuimodule.client.dialog;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.jid;
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 
 import java.util.Collection;
@@ -35,46 +34,33 @@ import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatListenerAdaptor;
 import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
 import com.calclab.emite.client.xep.chatstate.ChatState;
 import com.calclab.emite.client.xep.chatstate.ChatStateManager;
 import com.calclab.emite.client.xep.muc.Occupant;
 import com.calclab.emite.client.xep.muc.Room;
-import com.calclab.emite.client.xep.muc.RoomInvitation;
 import com.calclab.emite.client.xep.muc.RoomListener;
 import com.calclab.emite.client.xep.muc.RoomListenerAdaptor;
 import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emiteuimodule.client.EmiteUIFactory;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.chat.ChatNotification;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.params.MultiChatCreationParam;
-import com.calclab.emiteuimodule.client.room.JoinRoomPanel;
 import com.calclab.emiteuimodule.client.room.RoomUI;
 import com.calclab.emiteuimodule.client.roster.RosterPresenter;
-import com.calclab.emiteuimodule.client.status.OwnPresence;
-import com.calclab.emiteuimodule.client.status.StatusPanel;
-import com.calclab.emiteuimodule.client.status.StatusPanelListener;
-import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
+import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.modular.client.signal.Signal;
 import com.calclab.modular.client.signal.Slot;
 import com.calclab.modular.client.signal.Slot2;
 
 public class MultiChatPresenter {
-    private static final OwnPresence OFFLINE_OWN_PRESENCE = new OwnPresence(OwnStatus.offline);
 
     private ChatUI currentChat;
-    private XmppURI currentUserJid;
-    private String currentUserPasswd;
     private final EmiteUIFactory factory;
     private final I18nTranslationService i18n;
     private UserChatOptions userChatOptions;
@@ -86,42 +72,34 @@ public class MultiChatPresenter {
     private final Signal<String> onChatAttended;
     private final Signal<String> onChatUnattendedWithActivity;
     private final Signal<Boolean> onShowUnavailableRosterItemsChanged;
-    private final Signal<String> onUserColorChanged;
-    private final Signal<SubscriptionMode> onUserSubscriptionModeChanged;
     private final ChatManager chatManager;
     private final RoomManager roomManager;
-    private final PresenceManager presenceManager;
     private final ChatStateManager stateManager;
-
     private final RosterManager rosterManager;
+    private final StatusUI statusUI;
 
     public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final EmiteUIFactory factory,
-	    final MultiChatCreationParam param, final RosterPresenter roster) {
+	    final MultiChatCreationParam param, final RosterPresenter roster, final StatusUI statusUI) {
 	this.xmpp = xmpp;
 	this.i18n = i18n;
 	this.factory = factory;
 	this.roster = roster;
+	this.statusUI = statusUI;
 	setUserChatOptions(param.getUserChatOptions());
 	roomHost = param.getRoomHost();
 	chatManager = xmpp.getChatManager();
 	roomManager = xmpp.getInstance(RoomManager.class);
-	presenceManager = xmpp.getPresenceManager();
 	rosterManager = xmpp.getRosterManager();
 	stateManager = xmpp.getInstance(ChatStateManager.class);
 	openedChats = 0;
 	onChatAttended = new Signal<String>("onChatAttended");
 	onChatUnattendedWithActivity = new Signal<String>("onChatUnattendedWithActivity");
 	onShowUnavailableRosterItemsChanged = new Signal<Boolean>("onShowUnavailableRosterItemsChanged");
-	onUserColorChanged = new Signal<String>("onUserColorChanged");
-	onUserSubscriptionModeChanged = new Signal<SubscriptionMode>("onUserSubscriptionModeChanged");
 	roster.onOpenChat(new Slot<XmppURI>() {
 	    public void onEvent(final XmppURI userURI) {
 		joinChat(userURI);
 	    }
 	});
-    }
-
-    public void addBuddy(final String shortName, final String longName) {
     }
 
     public void addRosterItem(final String name, final String jid) {
@@ -135,7 +113,7 @@ public class MultiChatPresenter {
 
     public void closeAllChats(final boolean withConfirmation) {
 	if (withConfirmation) {
-	    view.confirmCloseAll();
+	    statusUI.confirmCloseAll();
 	} else {
 	    onCloseAllConfirmed();
 	}
@@ -145,8 +123,8 @@ public class MultiChatPresenter {
 	final ChatUI chatUIalreadyOpened = getChatUI(chat);
 	logIfChatAlreadyOpened(chatUIalreadyOpened);
 	final ChatState chatState = stateManager.getChatState(chat);
-	final ChatUI chatUI = chatUIalreadyOpened == null ? factory.createChatUI(chat.getOtherURI(), currentUserJid
-		.getNode(), userChatOptions.getColor(), chatState) : chatUIalreadyOpened;
+	final ChatUI chatUI = chatUIalreadyOpened == null ? factory.createChatUI(chat.getOtherURI(), userChatOptions
+		.getUserJid().getNode(), userChatOptions.getColor(), chatState) : chatUIalreadyOpened;
 	if (chatUIalreadyOpened == null) {
 	    addCommonChatSignals(chat, chatUI);
 	    chatUI.onClose(new Slot<ChatUI>() {
@@ -169,8 +147,9 @@ public class MultiChatPresenter {
     public RoomUI createRoom(final Chat chat, final String userAlias) {
 	final ChatUI chatUIalreadyOpened = getChatUI(chat);
 	logIfChatAlreadyOpened(chatUIalreadyOpened);
+	// FIXME userCO.getUserJid ... etc
 	final RoomUI roomUI = (RoomUI) (chatUIalreadyOpened == null ? factory.createRoomUI(chat.getOtherURI(),
-		currentUserJid.getNode(), userChatOptions.getColor(), i18n) : chatUIalreadyOpened);
+		userChatOptions.getUserJid().getNode(), userChatOptions.getColor(), i18n) : chatUIalreadyOpened);
 	if (chatUIalreadyOpened == null) {
 	    addCommonChatSignals(chat, roomUI);
 	    roomUI.onClose(new Slot<ChatUI>() {
@@ -217,37 +196,21 @@ public class MultiChatPresenter {
 	resetAfterLogout();
 	createXmppListeners();
 	setUnavailableRosterItemVisibility();
-    }
-
-    public void initStatusPanel(final StatusPanel status) {
-	status.addListener(new StatusPanelListener() {
-	    private JoinRoomPanel joinRoomPanel;
-
-	    public void onCloseAllConfirmed() {
-		MultiChatPresenter.this.onCloseAllConfirmed();
-	    }
-
-	    public void onJoinRoom() {
-		if (joinRoomPanel == null) {
-		    joinRoomPanel = new JoinRoomPanel(i18n, MultiChatPresenter.this);
-		}
-		joinRoomPanel.show();
-
-	    }
-
-	    public void onUserColorChanged(final String color) {
-		MultiChatPresenter.this.onUserColorChanged(color);
-	    }
-
-	    public void onUserSubscriptionModeChanged(final SubscriptionMode mode) {
-		MultiChatPresenter.this.onUserSubscriptionModeChanged(mode);
-	    }
-
-	    public void setOwnPresence(final OwnPresence ownPresence) {
-		MultiChatPresenter.this.setOwnPresence(ownPresence);
+	statusUI.onAfterLogin(new Slot<StatusUI>() {
+	    public void onEvent(final StatusUI parameter) {
+		doAfterLogin();
 	    }
 	});
-	status.setSubscritionMode(getUserChatOptions().getSubscriptionMode());
+	statusUI.onAfterLogout(new Slot<StatusUI>() {
+	    public void onEvent(final StatusUI parameter) {
+		resetAfterLogout();
+	    }
+	});
+	statusUI.onCloseAllConfirmed(new Slot<StatusUI>() {
+	    public void onEvent(final StatusUI parameter) {
+		onCloseAllConfirmed();
+	    }
+	});
     }
 
     public boolean isVisible() {
@@ -262,11 +225,6 @@ public class MultiChatPresenter {
 	    Log.debug("Already opened chat with no body, but not docked");
 	    dockChatUI(chat, chatUI);
 	}
-    }
-
-    public void joinRoom(final String roomName, final String serverName) {
-	final XmppURI uri = new XmppURI(roomName, serverName, currentUserJid.getNode());
-	roomManager.openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 
     public void onChatAttended(final Slot<String> listener) {
@@ -306,10 +264,6 @@ public class MultiChatPresenter {
 	onShowUnavailableRosterItemsChanged.add(listener);
     }
 
-    public void onUserColorChanged(final Slot<String> listener) {
-	onUserColorChanged.add(listener);
-    }
-
     public void onUserDropped(final XmppURI userURI) {
 	if (currentChat != null) {
 	    currentChat.onUserDrop(userURI);
@@ -318,35 +272,8 @@ public class MultiChatPresenter {
 	}
     }
 
-    public void onUserSubscriptionModeChanged(final Slot<SubscriptionMode> listener) {
-	onUserSubscriptionModeChanged.add(listener);
-    }
-
-    public void setOwnPresence(final OwnPresence ownPresence) {
-	Show show;
-	switch (ownPresence.getStatus()) {
-	case online:
-	case onlinecustom:
-	    // Show notSpecified, with/without statusText is like "online"
-	    show = Show.notSpecified;
-	    loginIfnecessary(show, ownPresence.getStatusText());
-	    break;
-	case busy:
-	case busycustom:
-	    show = Show.dnd;
-	    loginIfnecessary(show, ownPresence.getStatusText());
-	    break;
-	case offline:
-	    xmpp.logout();
-	    break;
-	}
-	view.setOwnPresence(ownPresence);
-    }
-
     public void setUserChatOptions(final UserChatOptions userChatOptions) {
 	this.userChatOptions = userChatOptions;
-	this.currentUserJid = jid(userChatOptions.getUserJid());
-	this.currentUserPasswd = userChatOptions.getUserPassword();
     }
 
     public void setVCardAvatar(final String photoBinary) {
@@ -388,29 +315,8 @@ public class MultiChatPresenter {
 	}
     }
 
-    protected void onUserColorChanged(final String color) {
-	for (final Chat chat : chatManager.getChats()) {
-	    setChatColor(chat, color);
-	}
-	for (final Chat room : roomManager.getChats()) {
-	    setChatColor(room, color);
-	}
-	userChatOptions.setColor(color);
-	onUserColorChanged.fire(color);
-    }
-
-    protected void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
-	rosterManager.setSubscriptionMode(subscriptionMode);
-	userChatOptions.setSubscriptionMode(subscriptionMode);
-	onUserSubscriptionModeChanged.fire(subscriptionMode);
-    }
-
     void closeChatUI(final ChatUI chatUI) {
 	chatUI.onClose();
-    }
-
-    void doConnecting() {
-	view.setLoadingVisible(true);
     }
 
     UserChatOptions getUserChatOptions() {
@@ -512,38 +418,13 @@ public class MultiChatPresenter {
 
     private void checkThereAreChats() {
 	if (openedChats >= 1) {
-	    view.setCloseAllOptionEnabled(true);
+	    statusUI.setCloseAllOptionEnabled(true);
 	    setInputEnabled(true);
 	    view.setInfoPanelVisible(false);
 	}
     }
 
     private void createXmppListeners() {
-	xmpp.getSession().onStateChanged(new Slot<State>() {
-	    public void onEvent(final State current) {
-		switch (current) {
-		case notAuthorized:
-		    view.showAlert(i18n.t("Error in authentication. Wrong user jabber id or password."));
-		    break;
-		case loggedIn:
-		    doAfterLogin();
-		    break;
-		case connecting:
-		    doConnecting();
-		    break;
-		case disconnected:
-		    resetAfterLogout();
-		    break;
-		}
-	    }
-	});
-
-	// FIXME: This in StatusPresenter
-	presenceManager.onOwnPresenceChanged(new Slot<Presence>() {
-	    public void onEvent(final Presence presence) {
-		view.setOwnPresence(new OwnPresence(presence));
-	    }
-	});
 
 	chatManager.onChatCreated(new Slot<Chat>() {
 	    public void onEvent(final Chat chat) {
@@ -573,7 +454,7 @@ public class MultiChatPresenter {
 
 	roomManager.onChatCreated(new Slot<Chat>() {
 	    public void onEvent(final Chat room) {
-		final RoomUI roomUI = createRoom(room, currentUserJid.getNode());
+		final RoomUI roomUI = createRoom(room, userChatOptions.getUserJid().getNode());
 		dockChatUIifIsStartedByMe(room, roomUI);
 
 		new RoomListenerAdaptor(room, new RoomListener() {
@@ -615,13 +496,6 @@ public class MultiChatPresenter {
 		doAfterChatClosed(chat);
 	    }
 	});
-
-	roomManager.onInvitationReceived(new Slot<RoomInvitation>() {
-	    public void onEvent(final RoomInvitation parameter) {
-		view.click();
-		view.roomJoinConfirm(parameter.getInvitor(), parameter.getRoomURI(), parameter.getReason());
-	    }
-	});
     }
 
     private void doAfterChatClosed(final Chat chat) {
@@ -638,11 +512,9 @@ public class MultiChatPresenter {
     }
 
     private void doAfterLogin() {
-	view.setTitleConectedAs(currentUserJid);
-	view.setLoadingVisible(false);
+	view.setTitleConectedAs(userChatOptions.getUserJid());
 	view.setAddRosterItemButtonVisible(true);
 	view.setShowUnavailableItemsButtonVisible(true);
-	view.setJoinRoomEnabled(true);
 	view.setOnlineInfo();
 	view.setRosterVisible(true);
 	if (openedChats > 0) {
@@ -686,49 +558,23 @@ public class MultiChatPresenter {
 	}
     }
 
-    private void loginIfnecessary(final Show status, final String statusText) {
-	switch (xmpp.getSession().getState()) {
-	case disconnected:
-	    xmpp.login(new XmppURI(currentUserJid.getNode(), currentUserJid.getHost(), userChatOptions.getResource()),
-		    currentUserPasswd, status, statusText);
-	    break;
-	case authorized:
-	case connecting:
-	case ready:
-	    presenceManager.setOwnPresence(statusText, status);
-	    break;
-	case error:
-	    Log.error("Trying to set status and whe have a internal error");
-	}
-    }
-
     private void resetAfterLogout() {
 	view.setOfflineTitle();
-	view.setLoadingVisible(false);
 	view.setAddRosterItemButtonVisible(false);
 	view.setShowUnavailableItemsButtonVisible(false);
-	view.setJoinRoomEnabled(false);
 	view.setRosterVisible(false);
 	view.setOfflineInfo();
 	setInputEnabled(false);
-	view.setOwnPresence(OFFLINE_OWN_PRESENCE);
 	roster.clearRoster();
 	view.clearBottomChatNotification();
     }
 
     private void resetWhenNoChats() {
 	currentChat = null;
-	view.setCloseAllOptionEnabled(false);
+	statusUI.setCloseAllOptionEnabled(false);
 	view.clearInputText();
 	setInputEnabled(false);
 	view.clearBottomChatNotification();
-    }
-
-    private void setChatColor(final Chat chat, final String color) {
-	final ChatUI chatUI = getChatUI(chat);
-	if (chatUI != null) {
-	    chatUI.setUserColor(currentUserJid.getNode(), color);
-	}
     }
 
     private void setInputEnabled(final boolean enabled) {

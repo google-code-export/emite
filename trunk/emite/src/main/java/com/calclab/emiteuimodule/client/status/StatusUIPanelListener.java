@@ -26,7 +26,8 @@ package com.calclab.emiteuimodule.client.status;
 
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 
-public interface StatusPanelListener {
+@Deprecated
+public interface StatusUIPanelListener {
 
     void onCloseAllConfirmed();
 

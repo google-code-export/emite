@@ -25,7 +25,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emiteuimodule.client.dialog.BasicDialogExtended;
 import com.calclab.emiteuimodule.client.dialog.BasicDialogListener;
-import com.calclab.emiteuimodule.client.dialog.MultiChatPresenter;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.gwtext.client.core.EventObject;
@@ -38,90 +37,92 @@ import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 public class JoinRoomPanel {
 
     private final I18nTranslationService i18n;
-    private final MultiChatPresenter presenter;
+    private final RoomUIManager presenter;
     private BasicDialogExtended dialog;
     private FormPanel formPanel;
     private TextField roomName;
     private TextField roomHostName;
+    private final String roomHost;
 
-    public JoinRoomPanel(final I18nTranslationService i18n, final MultiChatPresenter presenter) {
-        this.i18n = i18n;
-        this.presenter = presenter;
+    public JoinRoomPanel(final I18nTranslationService i18n, final RoomUIManager roomUIManager, final String roomHost) {
+	this.i18n = i18n;
+	this.presenter = roomUIManager;
+	this.roomHost = roomHost;
     }
 
     public void reset() {
-        formPanel.getForm().reset();
+	formPanel.getForm().reset();
     }
 
     public void show() {
-        if (dialog == null) {
-            dialog = new BasicDialogExtended(i18n.t("Join a chat room"), false, false, 330, 160, "chat-icon", i18n
-                    .tWithNT("Join", "used in button"), i18n.tWithNT("Cancel", "used in button"),
-                    new BasicDialogListener() {
-                        public void onCancelButtonClick() {
-                            dialog.hide();
-                            reset();
-                        }
+	if (dialog == null) {
+	    dialog = new BasicDialogExtended(i18n.t("Join a chat room"), false, false, 330, 160, "chat-icon", i18n
+		    .tWithNT("Join", "used in button"), i18n.tWithNT("Cancel", "used in button"),
+		    new BasicDialogListener() {
+			public void onCancelButtonClick() {
+			    dialog.hide();
+			    reset();
+			}
 
-                        public void onFirstButtonClick() {
-                            doJoin();
-                        }
-                    });
-            dialog.setResizable(false);
-            createForm();
+			public void onFirstButtonClick() {
+			    doJoin();
+			}
+		    });
+	    dialog.setResizable(false);
+	    createForm();
 
-            // TODO define a UI Extension Point here
-        }
-        dialog.show();
-        roomName.focus();
+	    // TODO define a UI Extension Point here
+	}
+	dialog.show();
+	roomName.focus();
     }
 
     private void createForm() {
-        formPanel = new FormPanel();
-        formPanel.setFrame(true);
-        formPanel.setAutoScroll(false);
+	formPanel = new FormPanel();
+	formPanel.setFrame(true);
+	formPanel.setAutoScroll(false);
 
-        formPanel.setWidth(333);
-        formPanel.setLabelWidth(100);
-        formPanel.setPaddings(10);
+	formPanel.setWidth(333);
+	formPanel.setLabelWidth(100);
+	formPanel.setPaddings(10);
 
-        roomName = new TextField(i18n.t("Room Name"), "name", 150);
-        roomName.setAllowBlank(false);
-        roomName.setValidationEvent(false);
-        roomName.setRegex("^[a-z0-9_\\-]+$");
-        roomName.setRegexText(i18n.t("Can only contain characters, numbers, and dashes"));
-        formPanel.add(roomName);
+	roomName = new TextField(i18n.t("Room Name"), "name", 150);
+	roomName.setAllowBlank(false);
+	roomName.setValidationEvent(false);
+	roomName.setRegex("^[a-z0-9_\\-]+$");
+	roomName.setRegexText(i18n.t("Can only contain characters, numbers, and dashes"));
+	formPanel.add(roomName);
 
-        roomHostName = new TextField(i18n.t("Room Server Name"), "jid", 150);
-        roomHostName.setAllowBlank(false);
-        roomHostName.setValidationEvent(false);
-        // FIXME (get from options)
-        roomHostName.setValue(presenter.getRoomHost());
-        final ToolTip fieldToolTip = new ToolTip(i18n.t("Something like 'conference.jabber.org'."));
-        fieldToolTip.applyTo(roomHostName);
-        formPanel.add(roomHostName);
+	roomHostName = new TextField(i18n.t("Room Server Name"), "jid", 150);
+	roomHostName.setAllowBlank(false);
+	roomHostName.setValidationEvent(false);
+	// FIXME (get from options)
+	roomHostName.setValue(roomHost);
+	final ToolTip fieldToolTip = new ToolTip(i18n.t("Something like 'conference.jabber.org'."));
+	fieldToolTip.applyTo(roomHostName);
+	formPanel.add(roomHostName);
 
-        dialog.add(formPanel);
-        roomName.addListener(new FieldListenerAdapter() {
-            public void onSpecialKey(final Field field, final EventObject e) {
-                if (e.getKey() == 13) {
-                    doJoin();
-                }
-            }
-        });
+	dialog.add(formPanel);
+	roomName.addListener(new FieldListenerAdapter() {
+	    public void onSpecialKey(final Field field, final EventObject e) {
+		if (e.getKey() == 13) {
+		    doJoin();
+		}
+	    }
+	});
     }
 
     private void doJoin() {
-        roomName.validate();
-        roomHostName.validate();
-        if (formPanel.getForm().isValid()) {
-            DeferredCommand.addCommand(new Command() {
-                public void execute() {
-                    presenter.joinRoom(roomName.getValueAsString(), roomHostName.getValueAsString());
-                    reset();
-                }
-            });
-            dialog.hide();
-        }
+	roomName.validate();
+	roomHostName.validate();
+	if (formPanel.getForm().isValid()) {
+	    DeferredCommand.addCommand(new Command() {
+		public void execute() {
+		    presenter.joinRoom(roomName.getValueAsString(), roomHostName.getValueAsString());
+		    reset();
+		}
+	    });
+	    dialog.hide();
+	}
     }
 }
