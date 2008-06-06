@@ -190,3 +190,40 @@ We usually use [http://code.google.com/p/gwt-maven/ gwt-maven] plugin to compile
 
 
 }}}
+
+== Appendix D: Apache configuration ==
+
+First, copy the emite compilation output into your web server. 
+Some orientative apache configuration for emite (using a proxy for both html/js and bosh). Work in progress:
+
+{{{
+<VirtualHost YOURIP>
+  ServerAdmin ADMINEMAIL
+  ServerName YOUREMITEDOMAIN
+
+  ExpiresActive on
+  ExpiresDefault "now plus 2 hours"
+  # No working in apache (debian- sarge), try to uncomment in other apache versions
+  # Header append Cache-Control public
+  # SetOutputFilter DEFLATE
+
+  <Files *.cache.*>
+   ExpiresDefault "now plus 1 year"
+  </Files>
+
+  <Files *.nocache.*>
+   ExpiresDefault "now plus 2 minutes"
+  </Files>
+
+<IfModule mod_proxy.c>
+  ProxyPass /com.calclab.emiteui.EmiteUI/proxy http://YOURXMPPSERVER:8383/http-bind/
+  ProxyPassReverse /com.calclab.emiteui.EmiteUI/proxy http://YOURXMPPSERVER:8383/http-bind/
+  ProxyPass / http://YOUREMITEINNERINSTALLATION/
+  ProxyPassReverse / http://YOUREMITEINNERINSTALLATION/
+</IfModule>
+
+</VirtualHost>
+}}}
+
+You can change the 8383 port to your server xmpp bosh port.
+
