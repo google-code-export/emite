@@ -26,7 +26,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 
-public interface RosterView {
+public interface RosterUIView {
 
     public void addRosterItem(final ChatUserUI user, final UserGridMenuItemList menuItemList);
 

@@ -37,12 +37,12 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 
-public class RosterPanel extends UserGridPanel implements RosterView {
+public class RosterUIPanel extends UserGridPanel implements RosterUIView {
 
-    private final RosterPresenter presenter;
+    private final RosterUIPresenter presenter;
     private final I18nTranslationService i18n;
 
-    public RosterPanel(final I18nTranslationService i18n, final RosterPresenter presenter) {
+    public RosterUIPanel(final I18nTranslationService i18n, final RosterUIPresenter presenter) {
         super(i18n.t("No buddies at this moment"), new DragGridConfiguration(USER_GROUP_DD, i18n
                 .t("Drop in the chat area to start a chat.")
                 + "<br/>" + i18n.t("Drop into a room to invite the user to join the chat room")),

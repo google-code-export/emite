@@ -26,12 +26,12 @@ public class RosterUIPresenterTest {
 
     private PresenceManager presenceManager;
     private PresenceListener presenceListener;
-    private RosterPresenter rosterUI;
+    private RosterUIPresenter rosterUI;
     private RosterItem rosterItem;
     private XmppURI otherUri;
     private XmppURI meUri;
     private I18nTranslationServiceMocked i18n;
-    private RosterView rosterUIView;
+    private RosterUIView rosterUIView;
 
     @Test
     public void availablePresenceMustReturnOnline() {
@@ -62,7 +62,7 @@ public class RosterUIPresenterTest {
 	presenceManager = xmpp.getPresenceManager();
 	presenceListener = Mockito.mock(PresenceListener.class);
 	new PresenceManagerListenerAdapter(presenceManager, presenceListener);
-	rosterUIView = Mockito.mock(RosterView.class);
+	rosterUIView = Mockito.mock(RosterUIView.class);
 	i18n = new I18nTranslationServiceMocked();
 	final AvatarProvider avatarProvider = new AvatarProvider() {
 	    public String getAvatarURL(XmppURI userURI) {
@@ -70,7 +70,7 @@ public class RosterUIPresenterTest {
 	    }
 	};
 
-	rosterUI = new RosterPresenter(xmpp, i18n, avatarProvider);
+	rosterUI = new RosterUIPresenter(xmpp, i18n, avatarProvider);
 	rosterUI.init(rosterUIView);
 
 	// Stubs

@@ -30,7 +30,7 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.chat.ChatNotification;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.roster.RosterItemPanel;
-import com.calclab.emiteuimodule.client.roster.RosterPanel;
+import com.calclab.emiteuimodule.client.roster.RosterUIPanel;
 import com.calclab.emiteuimodule.client.status.OwnPresence;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.emiteuimodule.client.users.DropGridConfiguration;
@@ -74,7 +74,7 @@ public class MultiChatPanel {
 
     private static final int TIMEVISIBLE = 3000;
 
-    private final RosterPanel rosterPanel;
+    private final RosterUIPanel rosterUIPanel;
     private Window dialog;
     private Button sendBtn;
     private final MultiChatPresenter presenter;
@@ -98,12 +98,12 @@ public class MultiChatPanel {
     private Label bottomChatNotification;
     private boolean inputFocused;
 
-    public MultiChatPanel(final String chatDialogTitle, final RosterPanel rosterPanel, final StatusUI statusUI,
+    public MultiChatPanel(final String chatDialogTitle, final RosterUIPanel rosterUIPanel, final StatusUI statusUI,
             final I18nTranslationService i18n, final MultiChatPresenter presenter) {
         this.statusUI = statusUI;
         quickTipsInit();
         this.chatDialogTitle = chatDialogTitle;
-        this.rosterPanel = rosterPanel;
+        this.rosterUIPanel = rosterUIPanel;
         this.i18n = i18n;
         this.presenter = presenter;
         panelIdToChat = new HashMap<String, ChatUI>();
@@ -256,7 +256,7 @@ public class MultiChatPanel {
     }
 
     public void setRosterVisible(final boolean visible) {
-        rosterPanel.setVisible(visible);
+        rosterUIPanel.setVisible(visible);
         if (visible) {
             eastPanel.expand();
         } else {
@@ -319,7 +319,7 @@ public class MultiChatPanel {
     }
 
     private void configureDrop() {
-        rosterPanel.confDropInPanel(centerPanel, new DropGridConfiguration(UserGridPanel.USER_GROUP_DD,
+        rosterUIPanel.confDropInPanel(centerPanel, new DropGridConfiguration(UserGridPanel.USER_GROUP_DD,
                 new UserGridDropListener() {
                     public void onDrop(final XmppURI userURI) {
                         DeferredCommand.addCommand(new Command() {
@@ -495,7 +495,7 @@ public class MultiChatPanel {
                 });
             }
         });
-        eastPanel.add(rosterPanel);
+        eastPanel.add(rosterUIPanel);
         final BorderLayoutData eastData = new BorderLayoutData(RegionPosition.EAST);
         // This set the min and max width of the east panel (roster panel) when
         // resizing
