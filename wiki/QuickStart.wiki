@@ -225,5 +225,4 @@ Some orientative apache configuration for emite (using a proxy for both html/js 
 </VirtualHost>
 }}}
 
-You can change the 8383 port to your server xmpp bosh port.
-
+You can change also the 8383 port with your xmpp server bosh port.
