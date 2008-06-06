@@ -3,7 +3,7 @@ package com.calclab.emiteuimodule.client.sound;
 import com.allen_sauer.gwt.voices.client.Sound;
 import com.allen_sauer.gwt.voices.client.SoundController;
 import com.calclab.emiteuimodule.client.room.RoomUIManager;
-import com.calclab.emiteuimodule.client.roster.RosterPresenter;
+import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.modular.client.signal.Slot;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -15,7 +15,7 @@ public class SoundManager {
     private boolean soundEnabled;
     private SoundPanel soundPanel;
 
-    public SoundManager(final RosterPresenter rosterPresenter, final RoomUIManager roomUIManager) {
+    public SoundManager(final RosterUIPresenter rosterUIPresenter, final RoomUIManager roomUIManager) {
         configureSound();
         if (roomUIManager != null) {
             roomUIManager.onUserAlert(new Slot<String>() {
@@ -24,8 +24,8 @@ public class SoundManager {
                 }
             });
         }
-        if (rosterPresenter != null) {
-            rosterPresenter.onUserAlert(new Slot<String>() {
+        if (rosterUIPresenter != null) {
+            rosterUIPresenter.onUserAlert(new Slot<String>() {
                 public void onEvent(final String parameter) {
                     click();
                 }

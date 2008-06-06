@@ -38,8 +38,8 @@ import com.calclab.emiteuimodule.client.room.RoomUI;
 import com.calclab.emiteuimodule.client.room.RoomUIPanel;
 import com.calclab.emiteuimodule.client.room.RoomUIPresenter;
 import com.calclab.emiteuimodule.client.room.RoomUserListUIPanel;
-import com.calclab.emiteuimodule.client.roster.RosterPanel;
-import com.calclab.emiteuimodule.client.roster.RosterPresenter;
+import com.calclab.emiteuimodule.client.roster.RosterUIPanel;
+import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 
@@ -67,10 +67,10 @@ public class EmiteUIFactory {
     }
 
     public MultiChatPresenter createMultiChat(final MultiChatCreationParam param) {
-        final RosterPresenter roster = createRosterUI(param.getAvatarProvider());
+        final RosterUIPresenter roster = createRosterUI(param.getAvatarProvider());
         final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, this, param, roster, statusUI,
                 soundManager);
-        final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), (RosterPanel) roster.getView(),
+        final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), (RosterUIPanel) roster.getView(),
                 statusUI, i18n, presenter);
         presenter.init(panel);
         return presenter;
@@ -86,10 +86,10 @@ public class EmiteUIFactory {
         return presenter;
     }
 
-    public RosterPresenter createRosterUI(final AvatarProvider provider) {
-        final RosterPresenter roster = new RosterPresenter(xmpp, i18n, provider);
-        final RosterPanel rosterPanel = new RosterPanel(i18n, roster);
-        roster.init(rosterPanel);
+    public RosterUIPresenter createRosterUI(final AvatarProvider provider) {
+        final RosterUIPresenter roster = new RosterUIPresenter(xmpp, i18n, provider);
+        final RosterUIPanel rosterUIPanel = new RosterUIPanel(i18n, roster);
+        roster.init(rosterUIPanel);
         return roster;
     }
 

@@ -52,7 +52,7 @@ import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.params.MultiChatCreationParam;
 import com.calclab.emiteuimodule.client.room.RoomUI;
-import com.calclab.emiteuimodule.client.roster.RosterPresenter;
+import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.modular.client.signal.Signal;
@@ -68,7 +68,7 @@ public class MultiChatPresenter {
     private MultiChatPanel view;
     private final Xmpp xmpp;
     private final String roomHost;
-    private final RosterPresenter roster;
+    private final RosterUIPresenter roster;
     private int openedChats;
     private final Signal<String> onChatAttended;
     private final Signal<String> onChatUnattendedWithActivity;
@@ -81,7 +81,7 @@ public class MultiChatPresenter {
     private final SoundManager soundManager;
 
     public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final EmiteUIFactory factory,
-            final MultiChatCreationParam param, final RosterPresenter roster, final StatusUI statusUI,
+            final MultiChatCreationParam param, final RosterUIPresenter roster, final StatusUI statusUI,
             final SoundManager soundManager) {
         this.xmpp = xmpp;
         this.i18n = i18n;

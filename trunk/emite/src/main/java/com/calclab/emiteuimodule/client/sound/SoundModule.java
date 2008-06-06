@@ -3,7 +3,7 @@ package com.calclab.emiteuimodule.client.sound;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emiteuimodule.client.room.RoomUIManager;
-import com.calclab.emiteuimodule.client.roster.RosterPresenter;
+import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.modular.client.container.Provider;
 import com.calclab.modular.client.modules.Module;
@@ -20,10 +20,10 @@ public class SoundModule implements Module {
             public SoundManager get() {
                 I18nTranslationService i18n = builder.getInstance(I18nTranslationService.class);
                 // Waiting for RosterUIModule:
-                RosterPresenter rosterPresenter = null;
+                RosterUIPresenter rosterUIPresenter = null;
                 RoomUIManager roomUIManager = builder.getInstance(RoomUIManager.class);
                 StatusUI statusUI = builder.getInstance(StatusUI.class);
-                SoundManager soundManager = new SoundManager(rosterPresenter, roomUIManager);
+                SoundManager soundManager = new SoundManager(rosterUIPresenter, roomUIManager);
                 SoundPanel panel = new SoundPanel(soundManager, i18n, statusUI);
                 soundManager.init(panel);
                 return soundManager;

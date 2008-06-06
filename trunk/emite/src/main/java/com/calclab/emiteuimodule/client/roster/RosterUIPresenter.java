@@ -47,7 +47,7 @@ import com.calclab.emiteuimodule.client.users.UserGridMenuItem.UserGridMenuItemL
 import com.calclab.modular.client.signal.Signal;
 import com.calclab.modular.client.signal.Slot;
 
-public class RosterPresenter {
+public class RosterUIPresenter {
 
     public static interface RosterPresenceListener {
 
@@ -63,8 +63,7 @@ public class RosterPresenter {
 
     }
 
-    private RosterView view;
-
+    private RosterUIView view;
     private final HashMap<XmppURI, ChatUserUI> rosterMap;
     private final I18nTranslationService i18n;
     private final PresenceManager presenceManager;
@@ -76,7 +75,7 @@ public class RosterPresenter {
     private final Signal<XmppURI> onOpenChat;
     private final Signal<String> onUserAlert;
 
-    public RosterPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final AvatarProvider avatarProvider) {
+    public RosterUIPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final AvatarProvider avatarProvider) {
         this.i18n = i18n;
         this.avatarProvider = avatarProvider;
         rosterMap = new HashMap<XmppURI, ChatUserUI>();
@@ -142,11 +141,11 @@ public class RosterPresenter {
         return rosterMap.get(jid);
     }
 
-    public RosterView getView() {
+    public RosterUIView getView() {
         return view;
     }
 
-    public void init(final RosterView view) {
+    public void init(final RosterUIView view) {
         this.view = view;
         createXmppListeners();
     }
