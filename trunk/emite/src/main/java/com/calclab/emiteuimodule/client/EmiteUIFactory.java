@@ -40,52 +40,57 @@ import com.calclab.emiteuimodule.client.room.RoomUIPresenter;
 import com.calclab.emiteuimodule.client.room.RoomUserListUIPanel;
 import com.calclab.emiteuimodule.client.roster.RosterPanel;
 import com.calclab.emiteuimodule.client.roster.RosterPresenter;
+import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 
 public class EmiteUIFactory {
     private final I18nTranslationService i18n;
     private final Xmpp xmpp;
     private final StatusUI statusUI;
+    private final SoundManager soundManager;
 
-    public EmiteUIFactory(final Xmpp xmpp, final I18nTranslationService i18n, final StatusUI statusUI) {
-	this.xmpp = xmpp;
-	this.i18n = i18n;
-	this.statusUI = statusUI;
+    public EmiteUIFactory(final Xmpp xmpp, final I18nTranslationService i18n, final StatusUI statusUI,
+            final SoundManager soundManager) {
+        this.xmpp = xmpp;
+        this.i18n = i18n;
+        this.statusUI = statusUI;
+        this.soundManager = soundManager;
     }
 
     public ChatUI createChatUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-	    final ChatState chatState) {
-	final ChatUIPresenter presenter = new ChatUIPresenter(otherURI, currentUserAlias, currentUserColor);
-	new ChatStatePresenter(i18n, chatState, presenter);
-	final ChatUIPanel panel = new ChatUIPanel(presenter);
-	presenter.init(panel);
-	return presenter;
+            final ChatState chatState) {
+        final ChatUIPresenter presenter = new ChatUIPresenter(otherURI, currentUserAlias, currentUserColor);
+        new ChatStatePresenter(i18n, chatState, presenter);
+        final ChatUIPanel panel = new ChatUIPanel(presenter);
+        presenter.init(panel);
+        return presenter;
     }
 
     public MultiChatPresenter createMultiChat(final MultiChatCreationParam param) {
-	final RosterPresenter roster = createRosterUI(param.getAvatarProvider());
-	final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, this, param, roster, statusUI);
-	final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), (RosterPanel) roster.getView(),
-		statusUI, i18n, presenter);
-	presenter.init(panel);
-	return presenter;
+        final RosterPresenter roster = createRosterUI(param.getAvatarProvider());
+        final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, this, param, roster, statusUI,
+                soundManager);
+        final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), (RosterPanel) roster.getView(),
+                statusUI, i18n, presenter);
+        presenter.init(panel);
+        return presenter;
     }
 
     public RoomUI createRoomUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-	    final I18nTranslationService i18n) {
-	final RoomUIPresenter presenter = new RoomUIPresenter(i18n, otherURI, currentUserAlias, currentUserColor);
-	// FIXME: create list presenter
-	final RoomUserListUIPanel roomUserListUIPanel = new RoomUserListUIPanel(i18n, presenter);
-	final RoomUIPanel panel = new RoomUIPanel(i18n, roomUserListUIPanel, presenter);
-	presenter.init(panel, roomUserListUIPanel);
-	return presenter;
+            final I18nTranslationService i18n) {
+        final RoomUIPresenter presenter = new RoomUIPresenter(i18n, otherURI, currentUserAlias, currentUserColor);
+        // FIXME: create list presenter
+        final RoomUserListUIPanel roomUserListUIPanel = new RoomUserListUIPanel(i18n, presenter);
+        final RoomUIPanel panel = new RoomUIPanel(i18n, roomUserListUIPanel, presenter);
+        presenter.init(panel, roomUserListUIPanel);
+        return presenter;
     }
 
     public RosterPresenter createRosterUI(final AvatarProvider provider) {
-	final RosterPresenter roster = new RosterPresenter(xmpp, i18n, provider);
-	final RosterPanel rosterPanel = new RosterPanel(i18n, roster);
-	roster.init(rosterPanel);
-	return roster;
+        final RosterPresenter roster = new RosterPresenter(xmpp, i18n, provider);
+        final RosterPanel rosterPanel = new RosterPanel(i18n, roster);
+        roster.init(rosterPanel);
+        return roster;
     }
 
 }

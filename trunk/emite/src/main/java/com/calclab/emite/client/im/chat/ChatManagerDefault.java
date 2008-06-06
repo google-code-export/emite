@@ -46,80 +46,82 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
     private XmppURI lastLoggedInUser;
 
     public ChatManagerDefault(final Emite emite) {
-	super(emite);
-	this.onChatCreated = new Signal<Chat>("onChatCreated");
-	this.onChatClosed = new Signal<Chat>("onChatClosed");
-	this.chats = new HashSet<Chat>();
-	install();
+        super(emite);
+        this.onChatCreated = new Signal<Chat>("onChatCreated");
+        this.onChatClosed = new Signal<Chat>("onChatClosed");
+        this.chats = new HashSet<Chat>();
+        install();
     }
 
     public void close(final Chat chat) {
-	chats.remove(chat);
-	((AbstractChat) chat).setState(Status.locked);
-	onChatClosed.fire(chat);
+        chats.remove(chat);
+        ((AbstractChat) chat).setState(Status.locked);
+        onChatClosed.fire(chat);
     }
 
     public Collection<? extends Chat> getChats() {
-	return chats;
+        return chats;
     }
 
     @Override
     public void logIn(final XmppURI uri) {
-	super.logIn(uri);
-	if (uri.equalsNoResource(lastLoggedInUser)) {
-	    for (final Chat chat : chats) {
-		((AbstractChat) chat).setState(Status.ready);
-	    }
-	}
-	this.lastLoggedInUser = userURI;
+        super.logIn(uri);
+        if (uri.equalsNoResource(lastLoggedInUser)) {
+            for (final Chat chat : chats) {
+                ((AbstractChat) chat).setState(Status.ready);
+            }
+        }
+        this.lastLoggedInUser = userURI;
     }
 
     @Override
     public void logOut() {
-	super.logOut();
-	for (final Chat chat : chats) {
-	    ((AbstractChat) chat).setState(Status.locked);
-	}
+        super.logOut();
+        for (final Chat chat : chats) {
+            ((AbstractChat) chat).setState(Status.locked);
+        }
     }
 
     public void onChatClosed(final Slot<Chat> listener) {
-	onChatClosed.add(listener);
+        onChatClosed.add(listener);
     }
 
     public void onChatCreated(final Slot<Chat> listener) {
-	onChatCreated.add(listener);
+        onChatCreated.add(listener);
     }
 
     public <T> Chat openChat(final XmppURI toURI, final Class<T> extraType, final T extraData) {
-	Chat chat = findChat(toURI, null);
-	if (chat == null) {
-	    final String thread = String.valueOf(Math.random() * 1000000);
-	    chat = createChat(toURI, thread, extraType, extraData);
-	}
-	return chat;
+        Chat chat = findChat(toURI, null);
+        if (chat == null) {
+            final String thread = String.valueOf(Math.random() * 1000000);
+            chat = createChat(toURI, thread, extraType, extraData);
+        } else {
+            chat.setData(extraType, extraData);
+        }
+        return chat;
     }
 
     protected void eventMessage(final Message message) {
-	final Type type = message.getType();
-	switch (type) {
-	case chat:
-	case normal:
-	    onChatMessageReceived(message);
-	    break;
-	case error:
-	    Log.warn("Error message received: " + message.toString());
-	}
+        final Type type = message.getType();
+        switch (type) {
+        case chat:
+        case normal:
+            onChatMessageReceived(message);
+            break;
+        case error:
+            Log.warn("Error message received: " + message.toString());
+        }
     }
 
     private <T> Chat createChat(final XmppURI toURI, final String thread, final Class<T> extraType, final T extraData) {
-	final ChatDefault chat = new ChatDefault(userURI, toURI, thread, emite);
-	if (extraType != null) {
-	    chat.setData(extraType, extraData);
-	}
-	chats.add(chat);
-	onChatCreated.fire(chat);
-	chat.setState(Chat.Status.ready);
-	return chat;
+        final ChatDefault chat = new ChatDefault(userURI, toURI, thread, emite);
+        if (extraType != null) {
+            chat.setData(extraType, extraData);
+        }
+        chats.add(chat);
+        onChatCreated.fire(chat);
+        chat.setState(Chat.Status.ready);
+        return chat;
     }
 
     /**
@@ -133,43 +135,43 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
      */
 
     private Chat findChat(final XmppURI from, final String thread) {
-	Chat selected = null;
+        Chat selected = null;
 
-	for (final Chat chat : chats) {
-	    if (thread != null) {
-		if (thread.equals(chat.getThread())) {
-		    return chat;
-		}
-	    } else {
-		final XmppURI chatTargetURI = chat.getOtherURI();
-		if (from.hasResource() && from.equals(chatTargetURI)) {
-		    selected = chat;
-		} else if (from.equalsNoResource(chatTargetURI)) {
-		    selected = chat;
-		}
-	    }
-	}
+        for (final Chat chat : chats) {
+            if (thread != null) {
+                if (thread.equals(chat.getThread())) {
+                    return chat;
+                }
+            } else {
+                final XmppURI chatTargetURI = chat.getOtherURI();
+                if (from.hasResource() && from.equals(chatTargetURI)) {
+                    selected = chat;
+                } else if (from.equalsNoResource(chatTargetURI)) {
+                    selected = chat;
+                }
+            }
+        }
 
-	return selected;
+        return selected;
     }
 
     private void install() {
-	emite.subscribe(when(new Packet("message", null)), new PacketListener() {
-	    public void handle(final IPacket received) {
-		eventMessage(new Message(received));
-	    }
-	});
+        emite.subscribe(when(new Packet("message", null)), new PacketListener() {
+            public void handle(final IPacket received) {
+                eventMessage(new Message(received));
+            }
+        });
     }
 
     private void onChatMessageReceived(final Message message) {
-	final XmppURI from = message.getFromURI();
-	final String thread = message.getThread();
+        final XmppURI from = message.getFromURI();
+        final String thread = message.getThread();
 
-	Chat chat = findChat(from, thread);
-	if (chat == null) {
-	    chat = createChat(from, thread, null, null);
-	}
-	chat.receive(message);
+        Chat chat = findChat(from, thread);
+        if (chat == null) {
+            chat = createChat(from, thread, null, null);
+        }
+        chat.receive(message);
     }
 
 }
