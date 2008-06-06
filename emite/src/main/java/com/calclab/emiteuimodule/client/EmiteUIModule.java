@@ -31,6 +31,8 @@ import com.calclab.emite.client.xep.avatar.AvatarModule;
 import com.calclab.emite.client.xep.chatstate.ChatStateModule;
 import com.calclab.emite.client.xep.muc.MUCModule;
 import com.calclab.emiteuimodule.client.room.RoomUIModule;
+import com.calclab.emiteuimodule.client.sound.SoundManager;
+import com.calclab.emiteuimodule.client.sound.SoundModule;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.emiteuimodule.client.status.StatusUIModule;
 import com.calclab.modular.client.container.Provider;
@@ -42,38 +44,39 @@ import com.calclab.modular.client.scopes.SingletonScope;
 public class EmiteUIModule implements Module {
 
     public Class<? extends Module> getType() {
-	return EmiteUIModule.class;
+        return EmiteUIModule.class;
     }
 
     public void onLoad(final ModuleBuilder builder) {
-	builder.add(new GWTServicesModule());
-	builder.add(new EmiteModule(), new MUCModule(), new ChatStateModule(), new AvatarModule());
+        builder.add(new GWTServicesModule());
+        builder.add(new EmiteModule(), new MUCModule(), new ChatStateModule(), new AvatarModule());
 
-	builder.registerProvider(I18nTranslationService.class, new Provider<I18nTranslationService>() {
-	    public I18nTranslationService get() {
-		return new I18nTranslationServiceMocked();
-	    }
-	}, SingletonScope.class);
+        builder.registerProvider(I18nTranslationService.class, new Provider<I18nTranslationService>() {
+            public I18nTranslationService get() {
+                return new I18nTranslationServiceMocked();
+            }
+        }, SingletonScope.class);
 
-	builder.add(new StatusUIModule(), new RoomUIModule());
+        builder.add(new StatusUIModule(), new SoundModule(), new RoomUIModule());
 
-	builder.registerProvider(EmiteUIFactory.class, new Provider<EmiteUIFactory>() {
-	    public EmiteUIFactory get() {
-		final StatusUI statusUI = builder.getInstance(StatusUI.class);
-		return new EmiteUIFactory(builder.getInstance(Xmpp.class), builder
-			.getInstance(I18nTranslationService.class), statusUI);
-	    }
-	}, SingletonScope.class);
+        builder.registerProvider(EmiteUIFactory.class, new Provider<EmiteUIFactory>() {
+            public EmiteUIFactory get() {
+                final StatusUI statusUI = builder.getInstance(StatusUI.class);
+                SoundManager soundManager = builder.getInstance(SoundManager.class);
+                return new EmiteUIFactory(builder.getInstance(Xmpp.class), builder
+                        .getInstance(I18nTranslationService.class), statusUI, soundManager);
+            }
+        }, SingletonScope.class);
 
-	builder.registerProvider(EmiteUIDialog.class, new Provider<EmiteUIDialog>() {
-	    public EmiteUIDialog get() {
-		final Xmpp xmpp = builder.getInstance(Xmpp.class);
-		final StatusUI statusUI = builder.getInstance(StatusUI.class);
-		final EmiteUIFactory factory = builder.getInstance(EmiteUIFactory.class);
-		return new EmiteUIDialog(xmpp, factory, statusUI);
-	    }
+        builder.registerProvider(EmiteUIDialog.class, new Provider<EmiteUIDialog>() {
+            public EmiteUIDialog get() {
+                final Xmpp xmpp = builder.getInstance(Xmpp.class);
+                final StatusUI statusUI = builder.getInstance(StatusUI.class);
+                final EmiteUIFactory factory = builder.getInstance(EmiteUIFactory.class);
+                return new EmiteUIDialog(xmpp, factory, statusUI);
+            }
 
-	}, NoScope.class);
+        }, NoScope.class);
 
     }
 }
