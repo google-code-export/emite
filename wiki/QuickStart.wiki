@@ -218,6 +218,7 @@ Some orientative apache configuration for emite (using a proxy for both html/js 
 <IfModule mod_proxy.c>
   ProxyPass /com.calclab.emiteui.EmiteUI/proxy http://YOURXMPPSERVER:8383/http-bind/
   ProxyPassReverse /com.calclab.emiteui.EmiteUI/proxy http://YOURXMPPSERVER:8383/http-bind/
+  # This part is optional (only if you are using a internal web server por emite pages):
   ProxyPass / http://YOUREMITEINNERINSTALLATION/
   ProxyPassReverse / http://YOUREMITEINNERINSTALLATION/
 </IfModule>
@@ -226,3 +227,6 @@ Some orientative apache configuration for emite (using a proxy for both html/js 
 }}}
 
 You can change also the 8383 port with your xmpp server bosh port.
+
+Take into account that you need an Apache version >= 2.2.8 if you are using mod_proxy in this way. See [http://forums.java.net/jive/thread.jspa?threadID=41377&tstart=2 this thread].
+

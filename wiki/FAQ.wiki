@@ -22,15 +22,6 @@ You can change the default settings in the web.xml included in the sources of em
 
 Bundled is also a java servlet that implements HttpBind [http://zeank.in-berlin.de/jhb/ JabberHTTPBind] (thanks Stefan) that you can use (at your own risk)
 
-== How can I configure Apache as proxy ==
-
-{{{
-<IfModule mod_proxy.c>
-  ProxyPass /proxy http://yourboshserver:port/http-bind/
-  ProxyPassReverse /proxy http://yourboshserver:port/http-bind/
-</IfModule>
-}}}
-
 == How can I integrate the emite xmpp library in my GWT application? ==
 
 Just include the emite.jar in your app and one inherits in your gwt.xml. See the [http://code.google.com/p/emite/wiki/QuickStart QuickStart] for more details.
@@ -66,10 +57,6 @@ This is why we are using the Affero GPL v3:
 Related: [http://www.gnu.org/licenses/why-not-lgpl.html Why you shouldn't use the Lesser GPL for your next library].
 
 We are thinking/talking about use a dual-licensing in the future, but we have to study more the implications.
-
-== I'm using firefox in debian/ubuntu and I can't hear sounds when a message arrives to emiteui, what can I do? ==
-
-apt-get install mozilla-mplayer # it works for us...
 
 == Do you will support in the future XEP-XXXX or _foo_ feature? ==
 

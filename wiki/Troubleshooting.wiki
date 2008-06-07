@@ -1,0 +1,15 @@
+#summary Troubleshooting information for emite
+#labels 
+
+= Emite Troubleshooting =
+
+== I'm using firefox in debian/ubuntu and I can't hear sounds when a message arrives to emiteui, what can I do? ==
+
+apt-get install mozilla-mplayer # it works for us...
+
+== I get a 502 error using emite with Apache and mod_proxy == 
+
+TODO
+
+[Related thread http://forums.java.net/jive/thread.jspa?threadID=41377&tstart=2].
+
