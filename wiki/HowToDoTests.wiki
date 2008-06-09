@@ -60,7 +60,7 @@ With this, we are verifying that
     # Catch the slot: after the verification is made when can do something like:
 
 {{{
-signal.onEvent(...);
+signal.fire(...);
 }}}
 
 and test the slot code in B.
