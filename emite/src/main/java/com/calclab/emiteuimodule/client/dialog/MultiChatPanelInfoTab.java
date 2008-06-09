@@ -31,7 +31,7 @@ public class MultiChatPanelInfoTab extends Panel {
 	setAttribute("enableDragDrop", true, true);
 	setAttribute("enableDrop", true, true);
 	setTitle(title, "info-icon");
-	setBorder(false);
+	setBorder(true);
 	setHeader(false);
 	setClosable(false);
 	infoLabel = new Label();
