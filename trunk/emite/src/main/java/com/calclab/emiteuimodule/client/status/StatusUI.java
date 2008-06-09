@@ -10,9 +10,9 @@ public interface StatusUI {
 
     void addChatMenuItem(View item);
 
-    void addMenuButtonItem(View item);
+    void addButtonItem(View item);
 
-    void addMenuItem(View item);
+    void addToolbarItem(View item);
 
     void addOptionsSubMenuItem(View item);
 

@@ -22,53 +22,52 @@ public class RoomUIManager {
     private final Signal<String> onUserAlert;
 
     public RoomUIManager(final Session session, final RoomManager roomManager, final StatusUI statusUI,
-            final I18nTranslationService i18n) {
-        this.session = session;
-        this.roomManager = roomManager;
-        this.statusUI = statusUI;
-        this.i18n = i18n;
-        this.roomHostDefault = "";
-        this.onUserAlert = new Signal<String>("onUserAlert");
+	    final I18nTranslationService i18n) {
+	this.session = session;
+	this.roomManager = roomManager;
+	this.statusUI = statusUI;
+	this.i18n = i18n;
+	this.roomHostDefault = "";
+	this.onUserAlert = new Signal<String>("onUserAlert");
     }
 
     public void init(final RoomUICommonPanelView view) {
-        view.setJoinRoomEnabled(false);
-        statusUI.addMenuButtonItem(view.getJoinButton());
-        statusUI.onAfterLogin(new Slot<StatusUI>() {
-            public void onEvent(final StatusUI parameter) {
-                view.setJoinRoomEnabled(true);
-            }
-        });
-        statusUI.onAfterLogout(new Slot<StatusUI>() {
-            public void onEvent(final StatusUI parameter) {
-                view.setJoinRoomEnabled(false);
-            }
-        });
-        roomManager.onInvitationReceived(new Slot<RoomInvitation>() {
-            public void onEvent(final RoomInvitation parameter) {
-                onUserAlert.fire("");
-                view.roomJoinConfirm(parameter.getInvitor(), parameter.getRoomURI(), parameter.getReason());
-            }
-        });
+	view.setJoinRoomEnabled(false);
+	statusUI.onAfterLogin(new Slot<StatusUI>() {
+	    public void onEvent(final StatusUI parameter) {
+		view.setJoinRoomEnabled(true);
+	    }
+	});
+	statusUI.onAfterLogout(new Slot<StatusUI>() {
+	    public void onEvent(final StatusUI parameter) {
+		view.setJoinRoomEnabled(false);
+	    }
+	});
+	roomManager.onInvitationReceived(new Slot<RoomInvitation>() {
+	    public void onEvent(final RoomInvitation parameter) {
+		onUserAlert.fire("");
+		view.roomJoinConfirm(parameter.getInvitor(), parameter.getRoomURI(), parameter.getReason());
+	    }
+	});
     }
 
     public void joinRoom(final String roomName, final String serverName) {
-        final XmppURI uri = new XmppURI(roomName, serverName, session.getCurrentUser().getNode());
-        roomManager.openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	final XmppURI uri = new XmppURI(roomName, serverName, session.getCurrentUser().getNode());
+	roomManager.openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 
     public void onJoinRoom() {
-        if (joinRoomPanel == null) {
-            joinRoomPanel = new JoinRoomPanel(i18n, this, roomHostDefault);
-        }
-        joinRoomPanel.show();
+	if (joinRoomPanel == null) {
+	    joinRoomPanel = new JoinRoomPanel(i18n, this, roomHostDefault);
+	}
+	joinRoomPanel.show();
     }
 
     public void onUserAlert(final Slot<String> slot) {
-        onUserAlert.add(slot);
+	onUserAlert.add(slot);
     }
 
     public void setRoomHostDefault(final String roomHostDefault) {
-        this.roomHostDefault = roomHostDefault;
+	this.roomHostDefault = roomHostDefault;
     }
 }

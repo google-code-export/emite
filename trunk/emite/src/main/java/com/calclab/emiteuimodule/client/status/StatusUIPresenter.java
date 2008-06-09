@@ -63,191 +63,191 @@ public class StatusUIPresenter implements StatusUI {
     private final RoomManager roomManager;
 
     public StatusUIPresenter(final Xmpp xmpp, final Session session, final PresenceManager presenceManager,
-            final RosterManager rosterManager, final ChatManager chatManager, final RoomManager roomManager,
-            final I18nTranslationService i18n) {
-        this.xmpp = xmpp;
-        this.session = session;
-        this.presenceManager = presenceManager;
-        this.rosterManager = rosterManager;
-        this.chatManager = chatManager;
-        this.roomManager = roomManager;
-        this.i18n = i18n;
-        this.onAfterLogin = new Signal<StatusUI>("onAfterLogin");
-        this.onAfterLogout = new Signal<StatusUI>("onAfterLogout");
-        this.onCloseAllConfirmed = new Signal<StatusUI>("onCloseAllConfirmed");
-        onUserColorChanged = new Signal<String>("onUserColorChanged");
-        onUserSubscriptionModeChanged = new Signal<SubscriptionMode>("onUserSubscriptionModeChanged");
+	    final RosterManager rosterManager, final ChatManager chatManager, final RoomManager roomManager,
+	    final I18nTranslationService i18n) {
+	this.xmpp = xmpp;
+	this.session = session;
+	this.presenceManager = presenceManager;
+	this.rosterManager = rosterManager;
+	this.chatManager = chatManager;
+	this.roomManager = roomManager;
+	this.i18n = i18n;
+	this.onAfterLogin = new Signal<StatusUI>("onAfterLogin");
+	this.onAfterLogout = new Signal<StatusUI>("onAfterLogout");
+	this.onCloseAllConfirmed = new Signal<StatusUI>("onCloseAllConfirmed");
+	onUserColorChanged = new Signal<String>("onUserColorChanged");
+	onUserSubscriptionModeChanged = new Signal<SubscriptionMode>("onUserSubscriptionModeChanged");
     }
 
     public void addChatMenuItem(final View item) {
-        view.addChatMenuItem(item);
+	view.addChatMenuItem(item);
     }
 
-    public void addMenuButtonItem(final View item) {
-        view.addMenuButtonItem(item);
-    }
-
-    public void addMenuItem(final View item) {
-        view.addMenuItem(item);
+    public void addButtonItem(final View item) {
+	view.addButtonItem(item);
     }
 
     public void addOptionsSubMenuItem(final View item) {
-        view.addOptionsSubMenuItem(item);
+	view.addOptionsSubMenuItem(item);
+    }
+
+    public void addToolbarItem(final View item) {
+	view.addToolbarItem(item);
     }
 
     public void confirmCloseAll() {
-        view.confirmCloseAll();
+	view.confirmCloseAll();
     }
 
     public void createListeners() {
-        presenceManager.onOwnPresenceChanged(new Slot<Presence>() {
-            public void onEvent(final Presence presence) {
-                view.setOwnPresence(new OwnPresence(presence));
-            }
-        });
-        session.onStateChanged(new Slot<State>() {
-            public void onEvent(final State current) {
-                switch (current) {
-                case notAuthorized:
-                    view.showAlert(i18n.t("Error in authentication. Wrong user jabber id or password."));
-                    break;
-                case loggedIn:
-                    view.setLoadingVisible(false);
-                    onAfterLogin();
-                    break;
-                case connecting:
-                    onConnecting();
-                    break;
-                case disconnected:
-                    onAfterLogout();
-                    break;
-                }
-            }
-        });
+	presenceManager.onOwnPresenceChanged(new Slot<Presence>() {
+	    public void onEvent(final Presence presence) {
+		view.setOwnPresence(new OwnPresence(presence));
+	    }
+	});
+	session.onStateChanged(new Slot<State>() {
+	    public void onEvent(final State current) {
+		switch (current) {
+		case notAuthorized:
+		    view.showAlert(i18n.t("Error in authentication. Wrong user jabber id or password."));
+		    break;
+		case loggedIn:
+		    view.setLoadingVisible(false);
+		    onAfterLogin();
+		    break;
+		case connecting:
+		    onConnecting();
+		    break;
+		case disconnected:
+		    onAfterLogout();
+		    break;
+		}
+	    }
+	});
     }
 
     public View getView() {
-        return view;
+	return view;
     }
 
     public void init(final StatusUIView view) {
-        this.view = view;
-        createListeners();
+	this.view = view;
+	createListeners();
     }
 
     public void onAfterLogin(final Slot<StatusUI> slot) {
-        onAfterLogin.add(slot);
+	onAfterLogin.add(slot);
     }
 
     public void onAfterLogout(final Slot<StatusUI> slot) {
-        onAfterLogout.add(slot);
+	onAfterLogout.add(slot);
     }
 
     public void onCloseAllConfirmed() {
-        onCloseAllConfirmed.fire(this);
+	onCloseAllConfirmed.fire(this);
     }
 
     public void onCloseAllConfirmed(final Slot<StatusUI> slot) {
-        onCloseAllConfirmed.add(slot);
+	onCloseAllConfirmed.add(slot);
     }
 
     public void onUserColorChanged(final Slot<String> slot) {
-        onUserColorChanged.add(slot);
+	onUserColorChanged.add(slot);
     }
 
     public void onUserSubscriptionModeChanged(final Slot<SubscriptionMode> slot) {
-        onUserSubscriptionModeChanged.add(slot);
+	onUserSubscriptionModeChanged.add(slot);
     }
 
     public void setCloseAllOptionEnabled(final boolean enabled) {
-        view.setCloseAllOptionEnabled(enabled);
+	view.setCloseAllOptionEnabled(enabled);
     }
 
     public void setCurrentUserChatOptions(final UserChatOptions userChatOptions) {
-        this.userChatOptions = userChatOptions;
-        final SubscriptionMode subscriptionMode = userChatOptions.getSubscriptionMode();
-        rosterManager.setSubscriptionMode(subscriptionMode);
-        view.setSubscriptionMode(subscriptionMode);
+	this.userChatOptions = userChatOptions;
+	final SubscriptionMode subscriptionMode = userChatOptions.getSubscriptionMode();
+	rosterManager.setSubscriptionMode(subscriptionMode);
+	view.setSubscriptionMode(subscriptionMode);
     }
 
     public void setOwnPresence(final OwnPresence ownPresence) {
-        Show show;
-        switch (ownPresence.getStatus()) {
-        case online:
-        case onlinecustom:
-            // Show notSpecified, with/without statusText is like "online"
-            show = Show.notSpecified;
-            loginIfnecessary(show, ownPresence.getStatusText());
-            break;
-        case busy:
-        case busycustom:
-            show = Show.dnd;
-            loginIfnecessary(show, ownPresence.getStatusText());
-            break;
-        case offline:
-            xmpp.logout();
-            break;
-        }
-        view.setOwnPresence(ownPresence);
+	Show show;
+	switch (ownPresence.getStatus()) {
+	case online:
+	case onlinecustom:
+	    // Show notSpecified, with/without statusText is like "online"
+	    show = Show.notSpecified;
+	    loginIfnecessary(show, ownPresence.getStatusText());
+	    break;
+	case busy:
+	case busycustom:
+	    show = Show.dnd;
+	    loginIfnecessary(show, ownPresence.getStatusText());
+	    break;
+	case offline:
+	    xmpp.logout();
+	    break;
+	}
+	view.setOwnPresence(ownPresence);
     }
 
     protected void onUserColorChanged(final String color) {
-        assert userChatOptions != null;
-        for (final Chat chat : chatManager.getChats()) {
-            setChatColor(chat, color);
-        }
-        for (final Chat room : roomManager.getChats()) {
-            setChatColor(room, color);
-        }
-        userChatOptions.setColor(color);
-        onUserColorChanged.fire(color);
+	assert userChatOptions != null;
+	for (final Chat chat : chatManager.getChats()) {
+	    setChatColor(chat, color);
+	}
+	for (final Chat room : roomManager.getChats()) {
+	    setChatColor(room, color);
+	}
+	userChatOptions.setColor(color);
+	onUserColorChanged.fire(color);
     }
 
     void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
-        assert userChatOptions != null;
-        rosterManager.setSubscriptionMode(subscriptionMode);
-        userChatOptions.setSubscriptionMode(subscriptionMode);
-        onUserSubscriptionModeChanged.fire(subscriptionMode);
+	assert userChatOptions != null;
+	rosterManager.setSubscriptionMode(subscriptionMode);
+	userChatOptions.setSubscriptionMode(subscriptionMode);
+	onUserSubscriptionModeChanged.fire(subscriptionMode);
     }
 
     private void loginIfnecessary(final Show status, final String statusText) {
-        assert userChatOptions != null;
-        final XmppURI userJid = userChatOptions.getUserJid();
-        switch (xmpp.getSession().getState()) {
-        case disconnected:
-            xmpp.login(new XmppURI(userJid.getNode(), userJid.getHost(), userChatOptions.getResource()),
-                    userChatOptions.getUserPassword(), status, statusText);
-            break;
-        case authorized:
-        case connecting:
-        case ready:
-            presenceManager.setOwnPresence(statusText, status);
-            break;
-        case error:
-            Log.error("Trying to set status and whe have a internal error");
-        }
+	assert userChatOptions != null;
+	final XmppURI userJid = userChatOptions.getUserJid();
+	switch (xmpp.getSession().getState()) {
+	case disconnected:
+	    xmpp.login(new XmppURI(userJid.getNode(), userJid.getHost(), userChatOptions.getResource()),
+		    userChatOptions.getUserPassword(), status, statusText);
+	    break;
+	case authorized:
+	case connecting:
+	case ready:
+	    presenceManager.setOwnPresence(statusText, status);
+	    break;
+	case error:
+	    Log.error("Trying to set status and whe have a internal error");
+	}
     }
 
     private void onAfterLogin() {
-        view.setLoadingVisible(false);
-        onAfterLogin.fire(this);
+	view.setLoadingVisible(false);
+	onAfterLogin.fire(this);
     }
 
     private void onAfterLogout() {
-        view.setLoadingVisible(false);
-        view.setOwnPresence(OFFLINE_OWN_PRESENCE);
-        onAfterLogout.fire(this);
+	view.setLoadingVisible(false);
+	view.setOwnPresence(OFFLINE_OWN_PRESENCE);
+	onAfterLogout.fire(this);
     }
 
     private void onConnecting() {
-        view.setLoadingVisible(true);
+	view.setLoadingVisible(true);
     }
 
     private void setChatColor(final Chat chat, final String color) {
-        final ChatUI chatUI = chat.getData(ChatUI.class);
-        if (chatUI != null) {
-            chatUI.setUserColor(userChatOptions.getUserJid().getNode(), color);
-        }
+	final ChatUI chatUI = chat.getData(ChatUI.class);
+	if (chatUI != null) {
+	    chatUI.setUserColor(userChatOptions.getUserJid().getNode(), color);
+	}
     }
 
 }

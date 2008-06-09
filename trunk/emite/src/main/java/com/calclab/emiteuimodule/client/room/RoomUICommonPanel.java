@@ -5,6 +5,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.core.packet.TextUtils;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.gwtext.client.core.EventObject;
@@ -24,7 +25,7 @@ public class RoomUICommonPanel implements RoomUICommonPanelView {
     private final I18nTranslationService i18n;
     private final RoomUIManager presenter;
 
-    public RoomUICommonPanel(final RoomUIManager presenter, final I18nTranslationService i18n) {
+    public RoomUICommonPanel(final RoomUIManager presenter, StatusUI statusUI, final I18nTranslationService i18n) {
 	this.presenter = presenter;
 	this.i18n = i18n;
 	joinRoomButton = new JoinRoomToolbarButton(i18n.t("Join a chat room"));
@@ -35,10 +36,7 @@ public class RoomUICommonPanel implements RoomUICommonPanelView {
 		presenter.onJoinRoom();
 	    }
 	});
-    }
-
-    public View getJoinButton() {
-	return joinRoomButton;
+	statusUI.addButtonItem(joinRoomButton);
     }
 
     public void roomJoinConfirm(final XmppURI invitor, final XmppURI roomURI, final String reason) {

@@ -23,7 +23,7 @@ public class RoomUIModule implements Module {
 		final StatusUI statusUI = builder.getInstance(StatusUI.class);
 		final Session session = builder.getInstance(Session.class);
 		final RoomUIManager manager = new RoomUIManager(session, roomManager, statusUI, i18n);
-		final RoomUICommonPanel roomUICommonPanel = new RoomUICommonPanel(manager, i18n);
+		final RoomUICommonPanel roomUICommonPanel = new RoomUICommonPanel(manager, statusUI, i18n);
 		manager.init(roomUICommonPanel);
 		return manager;
 	    }
