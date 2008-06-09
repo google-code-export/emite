@@ -43,10 +43,10 @@ import com.calclab.modular.client.signal.Slot;
 public class AvatarManager extends SessionComponent {
 
     private static final String VCARD = "vCard";
-    private static final String BINVAL = "BINVAL";
+    private static final String XMLNS = "vcard-temp";
     private static final String PHOTO = "PHOTO";
     private static final String TYPE = "TYPE";
-    private static final String XMLNS = "vcard-temp";
+    private static final String BINVAL = "BINVAL";
     private final Signal<Presence> onAvatarHashPresenceReceived;
     private final Signal<AvatarVCard> onAvatarVCardReceived;
     private final PresenceManager presenceManager;
