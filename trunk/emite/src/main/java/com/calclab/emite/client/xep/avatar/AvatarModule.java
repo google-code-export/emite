@@ -22,6 +22,7 @@
 package com.calclab.emite.client.xep.avatar;
 
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.modular.client.container.Container;
 import com.calclab.modular.client.container.Provider;
@@ -32,19 +33,20 @@ public class AvatarModule implements Module {
     private static final Class<AvatarManager> COMPONENTS_MANAGER = AvatarManager.class;
 
     public static AvatarManager getAvatarManager(final Container components) {
-	return components.getInstance(COMPONENTS_MANAGER);
+    return components.getInstance(COMPONENTS_MANAGER);
     }
 
     public Class<? extends Module> getType() {
-	return AvatarModule.class;
+    return AvatarModule.class;
     }
 
     public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(AvatarManager.class, new Provider<AvatarManager>() {
-	    public AvatarManager get() {
-		final Emite emite = builder.getInstance(Emite.class);
-		return new AvatarManager(emite);
-	    }
-	}, SessionScope.class);
+    builder.registerProvider(AvatarManager.class, new Provider<AvatarManager>() {
+        public AvatarManager get() {
+        final Emite emite = builder.getInstance(Emite.class);
+        final PresenceManager presenceManager = builder.getInstance(PresenceManager.class);
+        return new AvatarManager(emite, presenceManager);
+        }
+    }, SessionScope.class);
     }
 }
