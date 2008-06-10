@@ -41,6 +41,7 @@ public class BoshManagerTest {
     @Test
     public void shouldDispatchIncommingStanzas() {
 	manager.setRunning(true);
+	stub(bosh.getState(anyLong())).toReturn(BoshState.SEND);
 	stub(services.toXML("<body />")).toReturn(new Packet("body"));
 	manager.onResponseReceived(200, "<body />");
 	verify(bosh).requestCountDecreases();
