@@ -51,6 +51,8 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 	public static final Event stop = new Event("bosh-manager:do:stop");
 	protected final static Event pull = new Event("bosh-manager:do:pull");
 	static final Event onDoXStart = new Event("bosh-manager:do:start");
+	// FIXME: to solve issue#6... remove when we decide to remove dispatcher
+	private static final Event emptyBody = new Event("bosh-manager:do:start");
 
 	public static IPacket start(final String domain) {
 	    return BoshManager.Events.onDoXStart.Params("domain", domain);
@@ -168,8 +170,15 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 	    }
 	    final List<? extends IPacket> children = packet.getChildren();
 	    for (final IPacket stanza : children) {
-		emite.publish(stanza);
 		onStanza.fire(stanza);
+		emite.publish(stanza);
+	    }
+	    // TODO: this solves issue#6... but we should remove the
+	    // dispatcher!!
+	    if (children.size() == 0) {
+		// nothing dispatched, so call send directly!
+		// emite.publish(Events.emptyBody);
+		send();
 	    }
 	}
     }
