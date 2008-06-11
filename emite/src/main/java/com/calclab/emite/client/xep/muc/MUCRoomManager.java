@@ -40,8 +40,8 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Stanza;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.modular.client.signal.Signal;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Signal;
+import com.calclab.suco.client.signal.Slot;
 
 public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     private final HashMap<XmppURI, Room> rooms;

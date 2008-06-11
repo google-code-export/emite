@@ -3,7 +3,7 @@ package com.calclab.emite.testing;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot;
 
 public class SignalTester<T> extends BaseMatcher<Slot<T>> {
 

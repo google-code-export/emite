@@ -8,8 +8,8 @@ import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.modular.client.signal.Signal;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Signal;
+import com.calclab.suco.client.signal.Slot;
 
 public class RoomUIManager {
 

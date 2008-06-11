@@ -4,7 +4,7 @@ import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot;
 
 public class OpenChatTestingPresenter {
     private final ChatManager chatManager;

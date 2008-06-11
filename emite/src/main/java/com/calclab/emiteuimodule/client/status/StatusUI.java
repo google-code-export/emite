@@ -4,7 +4,7 @@ import org.ourproject.kune.platf.client.View;
 
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emiteuimodule.client.UserChatOptions;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot;
 
 public interface StatusUI {
 

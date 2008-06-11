@@ -5,7 +5,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.ArrayList;
 
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot;
 
 public class SlotTester<S> implements Slot<S> {
 

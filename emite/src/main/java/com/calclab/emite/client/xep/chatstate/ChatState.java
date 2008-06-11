@@ -25,7 +25,7 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.MessageInterceptor;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot;
 
 /**
  * XEP-0085: Chat State Notifications

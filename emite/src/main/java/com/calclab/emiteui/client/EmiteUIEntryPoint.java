@@ -33,7 +33,7 @@ import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.room.RoomUIManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
-import com.calclab.modular.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.ModuleBuilder;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;

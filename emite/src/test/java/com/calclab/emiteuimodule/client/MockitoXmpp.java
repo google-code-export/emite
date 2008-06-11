@@ -10,7 +10,7 @@ import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
-import com.calclab.modular.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.ModuleBuilder;
 
 public class MockitoXmpp extends Xmpp {
 

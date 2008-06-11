@@ -23,7 +23,7 @@ package com.calclab.emite.client.im.chat;
 
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot;
 
 public interface Chat {
 

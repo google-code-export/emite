@@ -23,9 +23,9 @@ package com.calclab.emite.client.xep.disco;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.session.SessionScope;
-import com.calclab.modular.client.container.Provider;
-import com.calclab.modular.client.modules.Module;
-import com.calclab.modular.client.modules.ModuleBuilder;
+import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.ModuleBuilder;
 
 /**
  * Implements XEP-0030: Service Discovery

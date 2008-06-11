@@ -39,7 +39,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.examples.chat.client.ChatPanel.ChatPanelListener;
 import com.calclab.emite.examples.chat.client.ConversationsPanel.ConversationsListener;
 import com.calclab.emite.examples.chat.client.LoginPanel.LoginPanelListener;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
