@@ -163,15 +163,15 @@
             </configuration>
           </execution>
           <execution>
-            <id>modular</id>
+            <id>suco</id>
             <phase>package</phase>
             <goals>
               <goal>jar</goal>
             </goals>
             <configuration>
-              <classifier>modular</classifier>
+              <classifier>suco</classifier>
               <includes>
-                <include>**/modular/**</include>
+                <include>**/suco/**</include>
               </includes>
             </configuration>
           </execution>
@@ -268,7 +268,7 @@
     <dependency>
       <groupId>com.gwtext</groupId>
       <artifactId>gwtext</artifactId>
-      <version>2.0.4-beta2</version>
+      <version>2.0.4</version>
     </dependency>
     <dependency>
       <groupId>org.ourproject.kune</groupId>

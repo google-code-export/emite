@@ -5,9 +5,9 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.calclab.emiteuimodule.client.room.RoomUIManager;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.modular.client.container.Provider;
-import com.calclab.modular.client.modules.Module;
-import com.calclab.modular.client.modules.ModuleBuilder;
+import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.ModuleBuilder;
 
 public class SoundModule implements Module {
 

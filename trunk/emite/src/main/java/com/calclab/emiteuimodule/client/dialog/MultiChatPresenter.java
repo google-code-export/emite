@@ -55,9 +55,9 @@ import com.calclab.emiteuimodule.client.room.RoomUI;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.modular.client.signal.Signal;
-import com.calclab.modular.client.signal.Slot;
-import com.calclab.modular.client.signal.Slot2;
+import com.calclab.suco.client.signal.Signal;
+import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot2;
 
 public class MultiChatPresenter {
 

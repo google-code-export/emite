@@ -27,7 +27,7 @@ import com.calclab.emite.client.core.services.ConnectorException;
 import com.calclab.emite.client.core.services.ScheduledAction;
 import com.calclab.emite.client.core.services.Services;
 import com.calclab.emite.client.core.services.ServicesModule;
-import com.calclab.modular.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.ModuleBuilder;
 
 public class J2SEServicesModule extends ServicesModule implements Services {
     private final HttpConnector connector;

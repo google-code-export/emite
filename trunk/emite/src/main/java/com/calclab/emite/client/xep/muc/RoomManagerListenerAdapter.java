@@ -2,7 +2,7 @@ package com.calclab.emite.client.xep.muc;
 
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.chat.ChatManagerListenerAdapter;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot;
 
 public class RoomManagerListenerAdapter extends ChatManagerListenerAdapter {
 

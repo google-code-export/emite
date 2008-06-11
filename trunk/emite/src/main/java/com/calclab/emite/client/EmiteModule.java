@@ -24,11 +24,11 @@ package com.calclab.emite.client;
 import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.im.InstantMessagingModule;
 import com.calclab.emite.client.xmpp.XMPPModule;
-import com.calclab.modular.client.container.Container;
-import com.calclab.modular.client.container.Provider;
-import com.calclab.modular.client.modules.Module;
-import com.calclab.modular.client.modules.ModuleBuilder;
-import com.calclab.modular.client.scopes.SingletonScope;
+import com.calclab.suco.client.container.Container;
+import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.scopes.SingletonScope;
 
 public class EmiteModule implements Module {
 

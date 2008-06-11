@@ -36,10 +36,10 @@ import com.calclab.emiteuimodule.client.users.RoomUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem.UserGridMenuItemListener;
-import com.calclab.modular.client.signal.Signal;
-import com.calclab.modular.client.signal.Signal2;
-import com.calclab.modular.client.signal.Slot;
-import com.calclab.modular.client.signal.Slot2;
+import com.calclab.suco.client.signal.Signal;
+import com.calclab.suco.client.signal.Signal2;
+import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot2;
 
 public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 

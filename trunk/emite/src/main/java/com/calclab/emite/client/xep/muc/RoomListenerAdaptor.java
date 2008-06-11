@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.modular.client.signal.Slot;
-import com.calclab.modular.client.signal.Slot2;
+import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot2;
 
 public class RoomListenerAdaptor {
 

@@ -28,8 +28,8 @@ import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket.State;
-import com.calclab.modular.client.signal.Signal;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Signal;
+import com.calclab.suco.client.signal.Slot;
 
 public class SASLManager {
     private static final String SEP = new String(new char[] { 0 });

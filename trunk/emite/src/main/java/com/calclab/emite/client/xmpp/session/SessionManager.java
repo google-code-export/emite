@@ -36,7 +36,7 @@ import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot;
 
 public class SessionManager {
     public static class Events {

@@ -1,7 +1,7 @@
 package com.calclab.emite.client.im.presence;
 
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot;
 
 public class PresenceManagerListenerAdapter {
 

@@ -44,8 +44,8 @@ import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem.UserGridMenuItemListener;
-import com.calclab.modular.client.signal.Signal;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Signal;
+import com.calclab.suco.client.signal.Slot;
 
 public class RosterUIPresenter {
 

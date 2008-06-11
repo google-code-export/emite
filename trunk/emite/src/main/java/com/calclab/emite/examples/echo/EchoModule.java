@@ -23,10 +23,10 @@ package com.calclab.emite.examples.echo;
 
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.xmpp.session.SessionScope;
-import com.calclab.modular.client.container.Container;
-import com.calclab.modular.client.container.Provider;
-import com.calclab.modular.client.modules.Module;
-import com.calclab.modular.client.modules.ModuleBuilder;
+import com.calclab.suco.client.container.Container;
+import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.ModuleBuilder;
 
 public class EchoModule implements Module {
     private static final Class<Echo> COMPONENT_ECHO = Echo.class;

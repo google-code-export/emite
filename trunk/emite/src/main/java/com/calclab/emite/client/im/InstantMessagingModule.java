@@ -28,10 +28,10 @@ import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.SessionScope;
-import com.calclab.modular.client.container.Provider;
-import com.calclab.modular.client.modules.Module;
-import com.calclab.modular.client.modules.ModuleBuilder;
-import com.calclab.modular.client.scopes.SingletonScope;
+import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.scopes.SingletonScope;
 
 public class InstantMessagingModule implements Module {
     public Class<? extends Module> getType() {

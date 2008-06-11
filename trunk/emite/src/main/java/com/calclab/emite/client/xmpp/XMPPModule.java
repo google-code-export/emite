@@ -29,12 +29,12 @@ import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.session.SessionScope;
-import com.calclab.modular.client.container.Container;
-import com.calclab.modular.client.container.Provider;
-import com.calclab.modular.client.modules.Module;
-import com.calclab.modular.client.modules.ModuleBuilder;
-import com.calclab.modular.client.scopes.Scopes;
-import com.calclab.modular.client.scopes.SingletonScope;
+import com.calclab.suco.client.container.Container;
+import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.scopes.Scopes;
+import com.calclab.suco.client.scopes.SingletonScope;
 
 public class XMPPModule implements Module {
 

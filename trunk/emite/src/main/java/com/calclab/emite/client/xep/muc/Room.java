@@ -34,10 +34,10 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
-import com.calclab.modular.client.signal.Signal;
-import com.calclab.modular.client.signal.Signal2;
-import com.calclab.modular.client.signal.Slot;
-import com.calclab.modular.client.signal.Slot2;
+import com.calclab.suco.client.signal.Signal;
+import com.calclab.suco.client.signal.Signal2;
+import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot2;
 
 public class Room extends AbstractChat implements Chat {
     private final HashMap<XmppURI, Occupant> occupants;

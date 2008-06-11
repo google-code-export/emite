@@ -41,6 +41,7 @@ public class BoshManagerTest {
     @Test
     public void shouldDispatchIncommingStanzas() {
 	manager.setRunning(true);
+	// FIXME: Dani: check this stub
 	stub(bosh.getState(anyLong())).toReturn(BoshState.SEND);
 	stub(services.toXML("<body />")).toReturn(new Packet("body"));
 	manager.onResponseReceived(200, "<body />");
@@ -118,6 +119,8 @@ public class BoshManagerTest {
     @Test
     public void shouldSetSIDWhenFirstBody() {
 	stub(bosh.isFirstResponse()).toReturn(true);
+	// FIXME: Dani: check this stub
+	stub(bosh.getState(anyLong())).toReturn(BoshState.SEND);
 	managerReceives("<body xmlns='http://jabber.org/protocol/httpbind' "
 		+ "xmlns:stream='http://etherx.jabber.org/streams' "
 		+ "authid='505ea252' sid='theSid' secure='true' requests='2' inactivity='30' "

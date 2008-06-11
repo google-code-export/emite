@@ -31,10 +31,10 @@ import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.container.Container;
-import com.calclab.modular.client.container.DelegatedContainer;
-import com.calclab.modular.client.modules.Module;
-import com.calclab.modular.client.modules.ModuleBuilder;
+import com.calclab.suco.client.container.Container;
+import com.calclab.suco.client.container.DelegatedContainer;
+import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.ModuleBuilder;
 
 public class Xmpp extends DelegatedContainer {
 

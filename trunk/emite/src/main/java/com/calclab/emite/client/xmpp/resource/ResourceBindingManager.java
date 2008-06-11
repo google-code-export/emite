@@ -26,8 +26,8 @@ import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.modular.client.signal.Signal;
-import com.calclab.modular.client.signal.Slot;
+import com.calclab.suco.client.signal.Signal;
+import com.calclab.suco.client.signal.Slot;
 
 public class ResourceBindingManager {
     private final Emite emite;
