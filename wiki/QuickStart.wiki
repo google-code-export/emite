@@ -6,7 +6,6 @@ Emite its a pure gwt library, so no server code is involved.
 You may ask yourself "[FAQ why do you I need to install a proxy?]"
 
 
-
 == Prerequisites ==
 
 You need a running xmpp server with Http Binding connection enabled. See our [http://code.google.com/p/emite/wiki/ServerAndClientsCompatibility Server and Client Compatibility Matrix]
@@ -228,5 +227,5 @@ Some orientative apache configuration for emite (using a proxy for both html/js 
 
 You can change also the 8383 port with your xmpp server bosh port.
 
-Take into account that you need an Apache version >= 2.2.8 if you are using mod_proxy in this way. See [http://forums.java.net/jive/thread.jspa?threadID=41377&tstart=2 this thread].
+Apache applies its {{{Timeout}}} directive to BOSH/http-bind connections made through mod_proxy and kills such connections after the Timeout expires. In order to prevent this please remove the Timeout directive from your httpd.conf file, or use a higger value.
 

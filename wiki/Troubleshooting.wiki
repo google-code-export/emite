@@ -9,7 +9,5 @@ apt-get install mozilla-mplayer # it works for us...
 
 == I get a 502 error using emite with Apache and mod_proxy == 
 
-TODO
-
-[Related thread http://forums.java.net/jive/thread.jspa?threadID=41377&tstart=2].
+Apache applies its {{{Timeout}}} directive to BOSH/http-bind connections made through mod_proxy and kills such connections after the Timeout expires. In order to prevent this please remove the Timeout directive from your httpd.conf file, or use a higger value.
 
