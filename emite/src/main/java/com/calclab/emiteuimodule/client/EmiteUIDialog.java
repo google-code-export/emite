@@ -36,6 +36,7 @@ import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.dialog.MultiChatPresenter;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.params.MultiChatCreationParam;
+import com.calclab.emiteuimodule.client.room.RoomUIManager;
 import com.calclab.emiteuimodule.client.status.OwnPresence;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
@@ -170,6 +171,8 @@ public class EmiteUIDialog {
     public void start(final UserChatOptions userChatOptions, final String httpBase, final String roomHost,
 	    final AvatarProvider avatarProvider, final String emiteDialogTitle) {
 	xmpp.setBoshOptions(new BoshOptions(httpBase));
+	xmpp.getInstance(StatusUI.class).setCurrentUserChatOptions(userChatOptions);
+	xmpp.getInstance(RoomUIManager.class).setRoomHostDefault(roomHost);
 	multiChatDialog = createChatDialog(new MultiChatCreationParam(emiteDialogTitle, roomHost, avatarProvider,
 		userChatOptions));
 	ImagesHelper.preFetchImages();

@@ -30,8 +30,6 @@ import com.calclab.emiteui.client.demo.EmiteDemoUI.EmiteDemoChatIconListener;
 import com.calclab.emiteuimodule.client.EmiteUIDialog;
 import com.calclab.emiteuimodule.client.EmiteUIModule;
 import com.calclab.emiteuimodule.client.UserChatOptions;
-import com.calclab.emiteuimodule.client.room.RoomUIManager;
-import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
 import com.calclab.suco.client.modules.ModuleBuilder;
 import com.google.gwt.core.client.EntryPoint;
@@ -85,8 +83,6 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
 	final DemoParameters params = app.getInstance(DemoParameters.class);
 	final UserChatOptions userChatOptions = emiteDemoLoginPanel.getUserChatOptions();
-	app.getInstance(StatusUI.class).setCurrentUserChatOptions(userChatOptions);
-	app.getInstance(RoomUIManager.class).setRoomHostDefault(params.getRoomHost());
 	emiteUIDialog.start(userChatOptions, params.getHttpBase(), params.getRoomHost());
 	emiteUIDialog.show(OwnStatus.offline);
     }
