@@ -5,30 +5,18 @@ TODO-list for kune
 
 SHORT-TERM (URGENT):
 --------------------------------------------------------------------------------
-<vjrj> highlight only once!
---> vjrj
-<vjrj> accounts explanation in demo html
---> vjrj
-<vjrj> preserve meta html changes in demo
-<vjrj> ExmiteUIProxy is necessary in web.xml? --> cleanup
-<vjrj> make demo infraestructure starts automatically
---> vjrj
 
 MID-TERM
 --------------------------------------------------------------------------------
 <vjrj> sort buddies by presence, and secondly by name
 <vjrj> parse your jid/nick and *bold*
-<vjrj> experiment with gwt-snd and other sound libraries
 <vjrj> Get rid of room locks
 <vjrj> Translate: 
 This room is locked from entry until configuration is confirmed.
 This room is now unlocked.
-<vjrj> activity notifications (images/text in panel/tabs titles to hightlight 
-chat activity)
 <vjrj> Room nicks conflict support XEP-0045, 7.1.10
 <dani> Support XEP-0030
 <vjrj> group support in roster
-
 
 LONG-TERM:
 --------------------------------------------------------------------------------
@@ -36,6 +24,7 @@ LONG-TERM:
 <dani> Remove Bosh connection bugs
 <dani> Hot remove of plugins
 <dani> Add MD5 SASL mechanism
+
 --------------------------------------------------------------------------------
 
 IDEAS:
