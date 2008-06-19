@@ -65,6 +65,16 @@ public class EmiteUIDialog {
 	multiChatDialog.closeAllChats(withConfirmation);
     }
 
+    public void collapse() {
+	checkIfDialogIsStarted();
+	multiChatDialog.collapse();
+    }
+
+    public void expand() {
+	checkIfDialogIsStarted();
+	multiChatDialog.expand();
+    }
+
     public void hide() {
 	checkIfDialogIsStarted();
 	multiChatDialog.hide();
@@ -137,7 +147,6 @@ public class EmiteUIDialog {
     }
 
     public void show(final OwnStatus status) {
-	checkIfDialogIsStarted();
 	show();
 	setOwnPresence(status);
     }

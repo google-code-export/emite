@@ -26,6 +26,7 @@ import java.util.HashMap;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.chat.ChatNotification;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
@@ -152,8 +153,16 @@ public class MultiChatPanel {
 	}
     }
 
+    public void collapse() {
+	dialog.collapse();
+    }
+
     public void destroy() {
 	dialog.destroy();
+    }
+
+    public void expand() {
+	dialog.expand();
     }
 
     public void focusInput() {
@@ -257,13 +266,15 @@ public class MultiChatPanel {
 
     public void setRosterVisible(final boolean visible) {
 	rosterUIPanel.setVisible(visible);
-	if (visible) {
-	    eastPanel.expand();
-	} else {
-	    eastPanel.collapse();
-	}
-	if (eastPanel.isRendered()) {
-	    eastPanel.doLayout(false);
+	if (!dialog.isCollapsed()) {
+	    if (visible) {
+		eastPanel.expand();
+	    } else {
+		eastPanel.collapse();
+	    }
+	    if (eastPanel.isRendered()) {
+		eastPanel.doLayout(false);
+	    }
 	}
     }
 
@@ -293,7 +304,6 @@ public class MultiChatPanel {
 
     public void show() {
 	dialog.show();
-	dialog.expand();
     }
 
     public void showAlert(final String message) {
@@ -524,6 +534,10 @@ public class MultiChatPanel {
 
     private void createListeners() {
 	dialog.addListener(new WindowListenerAdapter() {
+	    public void onMaximize(final Window source) {
+		Log.info("onMax");
+	    }
+
 	    @Override
 	    public void onShow(final Component component) {
 		focusInput();
@@ -549,11 +563,24 @@ public class MultiChatPanel {
 	    }
 	});
 
+	eastPanel.addListener(new PanelListenerAdapter() {
+	    public void onExpand(final Panel panel) {
+		Log.debug("Expand roster");
+		if (eastPanel.isRendered()) {
+		    eastPanel.doLayout(false);
+		}
+	    }
+	});
+
 	eastPanel.addListener(new ContainerListenerAdapter() {
 	    @Override
 	    public void onResize(final BoxComponent component, final int adjWidth, final int adjHeight,
 		    final int rawWidth, final int rawHeight) {
+		Log.debug("Resize roster");
 		rosterUIPanel.setWidth(adjWidth);
+		if (eastPanel.isRendered() && rosterUIPanel.isRendered()) {
+		    eastPanel.doLayout(false);
+		}
 	    }
 	});
 
