@@ -104,12 +104,14 @@ public class XmppURI {
 	return representation.equals(((XmppURI) obj).representation);
     }
 
-    // FIXME: node puede ser null
     public boolean equalsNoResource(final XmppURI other) {
 	if (other == null) {
 	    return false;
 	}
-	return host.equals(other.host) && node.equals(other.node);
+	if (node == null && other.node != null) {
+	    return false;
+	}
+	return host.equals(other.host) && (node == null || node.equals(other.node));
     }
 
     public String getHost() {
