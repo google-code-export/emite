@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -16,6 +17,34 @@ public class XmppURITest {
 	final XmppURI uri2 = uri("xmpp:test@example/res");
 	assertEquals(uri1, uri2);
 	assertEquals(uri1.hashCode(), uri2.hashCode());
+    }
+
+    @Test
+    public void checkUriEqualsNoResourceOtherWithoutNode() {
+	final XmppURI uri = uri("test@localhost/resource1");
+	final XmppURI uri2 = uri("localhost/resource2");
+	assertFalse(uri.equalsNoResource(uri2));
+    }
+
+    @Test
+    public void checkUriEqualsNoResourceWithoutNode() {
+	final XmppURI uri = uri("localhost/resource1");
+	final XmppURI uri2 = uri("localhost/resource2");
+	assertTrue(uri.equalsNoResource(uri2));
+    }
+
+    @Test
+    public void checkUriEqualsNoResourceWithoutNodeOtherWithNode() {
+	final XmppURI uri = uri("localhost/resource1");
+	final XmppURI uri2 = uri("test@localhost/resource2");
+	assertFalse(uri.equalsNoResource(uri2));
+    }
+
+    @Test
+    public void checkUriEqualsNoResourceWithoutResource() {
+	final XmppURI uri = uri("localhost");
+	final XmppURI uri2 = uri("localhost");
+	assertTrue(uri.equalsNoResource(uri2));
     }
 
     @Test
