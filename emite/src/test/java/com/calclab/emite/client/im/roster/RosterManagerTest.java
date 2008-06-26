@@ -3,7 +3,7 @@ package com.calclab.emite.client.im.roster;
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
 import static com.calclab.emite.testing.MockitoEmiteHelper.isListOfSize;
 import static com.calclab.emite.testing.MockitoEmiteHelper.packetLike;
-import static com.calclab.emite.testing.SlotTester.verifyCalled;
+import static com.calclab.emite.testing.MockSlot.verifyCalled;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
@@ -21,7 +21,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.SlotTester;
+import com.calclab.emite.testing.MockSlot;
 
 public class RosterManagerTest {
     private EmiteTestHelper emite;
@@ -144,7 +144,7 @@ public class RosterManagerTest {
 
     @Test
     public void shouldSignalSubscribtionRequests() {
-	final SlotTester<Presence> listener = new SlotTester<Presence>();
+	final MockSlot<Presence> listener = new MockSlot<Presence>();
 	manager.onSubscriptionRequested(listener);
 	final Presence presence = new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain"));
 	emite.receives(presence);
@@ -153,7 +153,7 @@ public class RosterManagerTest {
 
     @Test
     public void shouldSignalUnsibscirvedEvents() {
-	final SlotTester<XmppURI> listener = new SlotTester<XmppURI>();
+	final MockSlot<XmppURI> listener = new MockSlot<XmppURI>();
 	manager.onUnsubscribedReceived(listener);
 
 	final String presence = "<presence from='contact@example.org' to='user@example.com' type='unsubscribed'/>";

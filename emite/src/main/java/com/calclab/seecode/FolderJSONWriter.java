@@ -1,6 +1,5 @@
 package com.calclab.seecode;
 
-import java.io.PrintStream;
 import java.io.PrintWriter;
 
 public class FolderJSONWriter {
@@ -46,12 +45,6 @@ public class FolderJSONWriter {
 	    out.sep();
 	}
 	return true;
-    }
-
-    private void printData(final Folder root) {
-	out.hashOpen().id().sep();
-	out.pair("name", root.getName()).sep().data().sep();
-	out.childsOpen().childsClose().hashClose();
     }
 
 }
