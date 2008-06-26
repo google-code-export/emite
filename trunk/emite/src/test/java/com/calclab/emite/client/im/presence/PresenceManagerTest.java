@@ -1,7 +1,7 @@
 package com.calclab.emite.client.im.presence;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.SlotTester.verifyCalled;
+import static com.calclab.emite.testing.MockSlot.verifyCalled;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -13,7 +13,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.SlotTester;
+import com.calclab.emite.testing.MockSlot;
 
 public class PresenceManagerTest {
 
@@ -84,7 +84,7 @@ public class PresenceManagerTest {
 
     @Test
     public void shouldSignalIncommingPresence() {
-	final SlotTester<Presence> slot = new SlotTester<Presence>();
+	final MockSlot<Presence> slot = new MockSlot<Presence>();
 	manager.onPresenceReceived(slot);
 	emite.receives(createPresence(Type.available));
 	emite.receives(createPresence(Type.unavailable));
@@ -94,7 +94,7 @@ public class PresenceManagerTest {
     @Test
     public void shouldSignalOwnPresence() {
 	manager.logIn(uri("myself@domain"));
-	final SlotTester<Presence> listener = new SlotTester<Presence>();
+	final MockSlot<Presence> listener = new MockSlot<Presence>();
 	manager.onOwnPresenceChanged(listener);
 	manager.setOwnPresence("status", Show.away);
 	verifyCalled(listener);

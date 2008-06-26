@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.SlotTester;
+import com.calclab.emite.testing.MockSlot;
 
 public class DiscoveryManagerTest {
 
@@ -19,7 +19,7 @@ public class DiscoveryManagerTest {
 
     @Test
     public void shouldInformListeners() {
-	final SlotTester<DiscoveryManager> listener = new SlotTester<DiscoveryManager>();
+	final MockSlot<DiscoveryManager> listener = new MockSlot<DiscoveryManager>();
 	manager.onReady(listener);
 
     }

@@ -51,8 +51,6 @@ public class BoshManager implements ConnectorCallback, DispatcherStateListener {
 	public static final Event stop = new Event("bosh-manager:do:stop");
 	protected final static Event pull = new Event("bosh-manager:do:pull");
 	static final Event onDoXStart = new Event("bosh-manager:do:start");
-	// FIXME: to solve issue#6... remove when we decide to remove dispatcher
-	private static final Event emptyBody = new Event("bosh-manager:do:start");
 
 	public static IPacket start(final String domain) {
 	    return BoshManager.Events.onDoXStart.Params("domain", domain);

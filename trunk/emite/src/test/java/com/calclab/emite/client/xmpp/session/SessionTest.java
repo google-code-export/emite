@@ -1,7 +1,7 @@
 package com.calclab.emite.client.xmpp.session;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.SlotTester.verifyCalled;
+import static com.calclab.emite.testing.MockSlot.verifyCalled;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
@@ -20,7 +20,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.SignalTester;
-import com.calclab.emite.testing.SlotTester;
+import com.calclab.emite.testing.MockSlot;
 import com.calclab.suco.client.signal.Slot;
 
 public class SessionTest {
@@ -39,7 +39,7 @@ public class SessionTest {
 
     @Test
     public void shouldHandleAuthorization() {
-	final SlotTester<AuthorizationTicket> listener = new SlotTester<AuthorizationTicket>();
+	final MockSlot<AuthorizationTicket> listener = new MockSlot<AuthorizationTicket>();
 	session.onLogin(listener);
 	final XmppURI uri = uri("name@domain/resource");
 	session.login(uri, "password");
@@ -49,7 +49,7 @@ public class SessionTest {
 
     @Test
     public void shouldSignalLogin() {
-	final SlotTester<AuthorizationTicket> listener = new SlotTester<AuthorizationTicket>();
+	final MockSlot<AuthorizationTicket> listener = new MockSlot<AuthorizationTicket>();
 	session.onLogin(listener);
 	session.login(uri("name@domain/resource"), "password");
 	verifyCalled(listener);
@@ -57,7 +57,7 @@ public class SessionTest {
 
     @Test
     public void shouldSignalMessages() {
-	final SlotTester<Message> listener = new SlotTester<Message>();
+	final MockSlot<Message> listener = new MockSlot<Message>();
 	session.onMessage(listener);
 
 	final SignalTester<IPacket> onStanza = new SignalTester<IPacket>();
@@ -68,7 +68,7 @@ public class SessionTest {
 
     @Test
     public void shouldSignalPresences() {
-	final SlotTester<Presence> listener = new SlotTester<Presence>();
+	final MockSlot<Presence> listener = new MockSlot<Presence>();
 	session.onPresence(listener);
 
 	final SignalTester<IPacket> onStanza = new SignalTester<IPacket>();
