@@ -51,8 +51,8 @@ public class SASLManager {
 
     public void sendAuthorizationRequest(final AuthorizationTransaction authorizationTransaction) {
 	this.currentTransaction = authorizationTransaction;
-	final IPacket response = authorizationTransaction.uri.hasNode() ? createPlainAuthorization(authorizationTransaction)
-		: createAnonymousAuthorization();
+	final IPacket response = isAnonymous(authorizationTransaction) ? createAnonymousAuthorization()
+		: createPlainAuthorization(authorizationTransaction);
 	emite.send(response);
 	currentTransaction.setState(State.waitingForAuthorization);
     }
@@ -91,5 +91,9 @@ public class SASLManager {
 		currentTransaction = null;
 	    }
 	});
+    }
+
+    private boolean isAnonymous(final AuthorizationTransaction authorizationTransaction) {
+	return "anonymous".equals(authorizationTransaction.uri.toString());
     }
 }

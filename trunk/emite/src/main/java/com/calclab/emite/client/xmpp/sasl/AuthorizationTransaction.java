@@ -33,6 +33,8 @@ public class AuthorizationTransaction {
     private State state;
 
     public AuthorizationTransaction(final XmppURI uri, final String password) {
+	if (uri == null)
+	    throw new NullPointerException("uri can't be null in AuthorizationTransaction");
 	this.uri = uri;
 	this.password = password;
 	this.state = State.notStarted;
