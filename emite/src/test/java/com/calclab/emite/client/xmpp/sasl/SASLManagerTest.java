@@ -42,14 +42,20 @@ public class SASLManagerTest {
     }
 
     @Test
-    public void shouldSendAnonymousIfNoUserProvided() {
-	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("domain/resource"), null));
+    public void shouldSendAnonymousIfAnonymousProvided() {
+	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("anonymous"), null));
 	emite.verifySent(new Packet("auth", "urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism", "ANONYMOUS"));
     }
 
     @Test
-    public void shouldSendPlainAuthorization() {
+    public void shouldSendPlainAuthorizationUnlessAnonymous() {
 	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("node@domain/resource"), "password"));
+	emite.verifySent(new Packet("auth", "urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism", "PLAIN"));
+    }
+
+    @Test
+    public void shouldSendPlainAuthorizationWithoutNode() {
+	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("domain/resource"), null));
 	emite.verifySent(new Packet("auth", "urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism", "PLAIN"));
     }
 }
