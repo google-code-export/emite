@@ -28,9 +28,14 @@ import com.calclab.emiteuimodule.client.chat.ChatUIView;
 
 public interface RoomUIView extends ChatUIView, View {
 
+    public static final String DEFAULT_INITIAL_MESSAGE = "Welcome to this room";
+
     void askInvitation(XmppURI userURI, String invitationReason);
+
+    String getSubject();
 
     void setSubject(String newSubject);
 
     void setSubjectEditable(boolean editable);
+
 }

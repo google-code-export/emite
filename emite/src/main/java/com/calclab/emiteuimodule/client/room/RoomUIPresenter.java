@@ -44,19 +44,14 @@ import com.calclab.suco.client.signal.Slot2;
 public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 
     private RoomUIView view;
-
     private boolean isSubjectEditable;
-
     private RoomUserListUIPanel roomUserListUI;
-
     private final String currentUserAlias;
-
     private final I18nTranslationService i18n;
-
     private String lastInvitationReasonText;
-
     private final Signal2<XmppURI, String> onInviteUserRequested;
     private final Signal<String> onModifySubjectRequested;
+    private boolean changeSubjectMessageDisplayed;
 
     public RoomUIPresenter(final I18nTranslationService i18n, final XmppURI otherURI, final String currentUserAlias,
 	    final String currentUserColor) {
@@ -67,6 +62,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 	this.lastInvitationReasonText = i18n.t("Join to our conversation");
 	this.onInviteUserRequested = new Signal2<XmppURI, String>("onInviteUserRequested");
 	this.onModifySubjectRequested = new Signal<String>("onModifySubjectRequested");
+	changeSubjectMessageDisplayed = false;
     }
 
     public void askInvitation(final XmppURI userURI) {
@@ -124,6 +120,11 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 		if (occupant.getRole().equals(Role.moderator)) {
 		    view.setSubjectEditable(true);
 		    isSubjectEditable = true;
+		    if (!changeSubjectMessageDisplayed
+			    && view.getSubject().equals(i18n.t(RoomUIView.DEFAULT_INITIAL_MESSAGE))) {
+			view.addInfoMessage(i18n.t("To change the room subject just click on it"));
+			changeSubjectMessageDisplayed = true;
+		    }
 		} else {
 		    view.setSubjectEditable(false);
 		    isSubjectEditable = false;

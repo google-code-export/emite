@@ -106,6 +106,10 @@ public class RoomUIPanel extends ChatUIPanel implements RoomUIView {
 	});
     }
 
+    public String getSubject() {
+	return subject.getText();
+    }
+
     public void setSubject(final String newSubject) {
 	subject.setText(newSubject);
     }
