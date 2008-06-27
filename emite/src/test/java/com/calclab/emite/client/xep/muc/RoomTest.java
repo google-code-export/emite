@@ -16,29 +16,36 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.calclab.emite.client.im.chat.AbstractChat;
+import com.calclab.emite.client.im.chat.AbstractChatTest;
 import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.MockitoEmiteHelper;
 
 @SuppressWarnings("unchecked")
-public class RoomTest {
+public class RoomTest extends AbstractChatTest {
 
     private RoomListener listener;
     private Room room;
-    private EmiteTestHelper emite;
     private XmppURI userURI;
     private XmppURI roomURI;
 
     @Before
-    public void aaCreate() {
+    public void beforeTests() {
 	userURI = uri("user@domain/res");
 	roomURI = uri("room@domain/nick");
-	emite = new EmiteTestHelper();
 	room = new Room(userURI, roomURI, "roomName", emite);
+	room.setStatus(Status.ready);
 	listener = mock(RoomListener.class);
 	room.addListener(listener);
+    }
+
+    @Override
+    public AbstractChat getChat() {
+	return room;
     }
 
     @Test
@@ -80,7 +87,6 @@ public class RoomTest {
 	assertEquals(0, room.getOccupantsCount());
 	verify(listener, times(2)).onOccupantsChanged((Collection<Occupant>) anyObject());
 	assertNull(room.findOccupant(uri));
-
     }
 
     @Test

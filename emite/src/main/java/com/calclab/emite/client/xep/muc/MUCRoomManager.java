@@ -121,7 +121,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
                     if (isNewRoom(child)) {
                         requestCreateInstantRoom(room);
                     } else {
-                        room.setState(Chat.Status.ready);
+                        room.setStatus(Chat.Status.ready);
                     }
                 }
             }
@@ -156,7 +156,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
         emite.sendIQ("rooms", iq, new PacketListener() {
             public void handle(final IPacket received) {
                 if (IQ.isSuccess(received)) {
-                    room.setState(Chat.Status.ready);
+                    room.setStatus(Chat.Status.ready);
                 }
             }
         });

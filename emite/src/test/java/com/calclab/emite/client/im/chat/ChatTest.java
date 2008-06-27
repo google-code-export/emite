@@ -6,50 +6,31 @@ import static org.mockito.Mockito.mock;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.MockSlot;
 
-public class ChatTest {
-    private EmiteTestHelper emite;
+public class ChatTest extends AbstractChatTest {
     private ChatDefault chat;
     private ChatListener listener;
 
     @Before
     public void beforeTests() {
-	this.emite = new EmiteTestHelper();
 	chat = new ChatDefault(uri("self@domain/res"), uri("other@domain/otherRes"), "theThread", emite);
+	chat.setStatus(Status.ready);
 	listener = mock(ChatListener.class);
 	chat.addListener(listener);
     }
 
-    @Test
-    public void setDataEmptyMustNotFail() {
-	chat.setData(null, null);
-    }
-
-    @Test
-    public void shouldInterceptIncomingMessages() {
-	final MockSlot<Message> interceptor = new MockSlot<Message>();
-	chat.onBeforeReceive(interceptor);
-	final Message message = new Message();
-	chat.receive(message);
-	MockSlot.verifyCalledWithSame(interceptor, message);
-    }
-
-    @Test
-    public void shouldInterceptOutcomingMessages() {
-	final MockSlot<Message> interceptor = new MockSlot<Message>();
-	chat.onBeforeSend(interceptor);
-	final Message message = new Message();
-	chat.send(message);
-	MockSlot.verifyCalledWithSame(interceptor, message);
+    @Override
+    public AbstractChat getChat() {
+	return chat;
     }
 
     @Test
     public void shouldSendNoThreadWhenNotSpecified() {
 	final AbstractChat noThreadChat = new ChatDefault(uri("self@domain/res"), uri("other@domain/otherRes"), null,
 		emite);
+	noThreadChat.setStatus(Status.ready);
 	noThreadChat.send(new Message("the message"));
 	emite.verifySent("<message from='self@domain/res' to='other@domain/otherRes' "
 		+ "type='chat'><body>the message</body></message>");
