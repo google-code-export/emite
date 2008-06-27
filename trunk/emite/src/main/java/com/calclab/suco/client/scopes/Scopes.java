@@ -21,20 +21,10 @@
  */
 package com.calclab.suco.client.scopes;
 
-import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.HashContainer;
+import com.calclab.suco.client.container.Provider;
 
 public class Scopes {
-
-    /**
-     * use SingletonScope.class directly instead
-     * 
-     * @deprecated
-     * 
-     */
-    @Deprecated
-    public static Class<SingletonScope> SINGLETON = SingletonScope.class;
-
     private static final HashContainer container;
 
     static {
@@ -48,12 +38,12 @@ public class Scopes {
 	return container.registerSingletonInstance(scopeType, scope);
     }
 
-    public static Container get() {
-	return container;
+    public static <T extends Scope> T get(final Class<T> scopeType) {
+	return container.getInstance(scopeType);
     }
 
-    public static <T> T get(final Class<T> scopeType) {
-	return container.getInstance(scopeType);
+    public static <T extends Scope> Provider<T> getProvider(final Class<T> componentKey) {
+	return container.getProvider(componentKey);
     }
 
 }

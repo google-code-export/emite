@@ -32,10 +32,6 @@ class ContextedProvider<T, C> implements Provider<T> {
 	return instance;
     }
 
-    public boolean isCreated() {
-	return instances.get(context) != null;
-    }
-
     public void setContext(final C context) {
 	Log.debug("Setting context in provider: " + type);
 	this.context = context;

@@ -24,7 +24,6 @@ package com.calclab.emite.client.im.chat;
 import java.util.HashMap;
 
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.xep.chatstate.ChatStateManager.ChatState;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Signal;

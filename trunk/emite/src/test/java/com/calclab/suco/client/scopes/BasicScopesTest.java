@@ -20,8 +20,8 @@ public class BasicScopesTest {
 
     @Test
     public void scopesShouldHaveBasicScopes() {
-	assertNotNull(Scopes.get().getInstance(NoScope.class));
-	assertNotNull(Scopes.get().getInstance(SingletonScope.class));
+	assertNotNull(Scopes.get(NoScope.class));
+	assertNotNull(Scopes.get(SingletonScope.class));
     }
 
     @Test

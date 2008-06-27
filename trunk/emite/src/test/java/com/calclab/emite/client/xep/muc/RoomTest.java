@@ -22,7 +22,6 @@ import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.MockitoEmiteHelper;
 
 @SuppressWarnings("unchecked")
