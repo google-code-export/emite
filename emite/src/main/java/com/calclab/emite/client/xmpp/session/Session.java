@@ -21,10 +21,11 @@
  */
 package com.calclab.emite.client.xmpp.session;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket;
+import com.calclab.emite.client.xmpp.sasl.AuthorizationTransaction;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -47,7 +48,7 @@ public class Session {
     private final Signal<State> onStateChanged;
     private final Signal<Presence> onPresence;
     private final Signal<Message> onMessage;
-    private final Signal<AuthorizationTicket> onLogin;
+    private final Signal<AuthorizationTransaction> onLogin;
     private final SessionScope scope;
 
     public Session(final BoshManager manager, final Emite emite, final SessionScope scope) {
@@ -59,7 +60,7 @@ public class Session {
 	this.onStateChanged = new Signal<State>("onStateChanged");
 	this.onPresence = new Signal<Presence>("onPresence");
 	this.onMessage = new Signal<Message>("onMessage");
-	this.onLogin = new Signal<AuthorizationTicket>("onLogin");
+	this.onLogin = new Signal<AuthorizationTransaction>("onLogin");
 
 	manager.onStanza(new Slot<IPacket>() {
 	    public void onEvent(final IPacket stanza) {
@@ -95,7 +96,9 @@ public class Session {
 	if (state == State.disconnected) {
 	    setState(State.connecting);
 	    scope.createAll();
-	    onLogin.fire(new AuthorizationTicket(uri, password));
+	    final AuthorizationTransaction transaction = new AuthorizationTransaction(uri, password);
+	    Log.debug("Sending auth transaction: " + transaction);
+	    onLogin.fire(transaction);
 	    emite.publish(BoshManager.Events.start(uri.getHost()));
 	    userURI = uri;
 	}
@@ -109,7 +112,7 @@ public class Session {
 	}
     }
 
-    public void onLogin(final Slot<AuthorizationTicket> listener) {
+    public void onLogin(final Slot<AuthorizationTransaction> listener) {
 	onLogin.add(listener);
     }
 

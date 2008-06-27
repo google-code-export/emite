@@ -23,7 +23,7 @@ package com.calclab.emite.client.xmpp.sasl;
 
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 
-public class AuthorizationTicket {
+public class AuthorizationTransaction {
     public static enum State {
 	succeed, failed, notStarted, waitingForAuthorization
     }
@@ -32,7 +32,7 @@ public class AuthorizationTicket {
     private String password;
     private State state;
 
-    public AuthorizationTicket(final XmppURI uri, final String password) {
+    public AuthorizationTransaction(final XmppURI uri, final String password) {
 	this.uri = uri;
 	this.password = password;
 	this.state = State.notStarted;
@@ -41,7 +41,7 @@ public class AuthorizationTicket {
     /**
      * Testing purposes only! Not state logic!
      */
-    public AuthorizationTicket(final XmppURI uri, final String password, final State state) {
+    public AuthorizationTransaction(final XmppURI uri, final String password, final State state) {
 	this(uri, password);
 	this.state = state;
     }
@@ -57,6 +57,12 @@ public class AuthorizationTicket {
     public void setState(final State state) {
 	this.state = state;
 	this.password = null;
+    }
+
+    // FIXME: remove this!!!
+    @Override
+    public String toString() {
+	return "Ticket: " + uri + ", " + password + ", " + state;
     }
 
 }

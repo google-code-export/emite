@@ -27,7 +27,7 @@ import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket.State;
+import com.calclab.emite.client.xmpp.sasl.AuthorizationTransaction.State;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
@@ -36,25 +36,25 @@ public class SASLManager {
     private static final String XMLNS = "urn:ietf:params:xml:ns:xmpp-sasl";
 
     private final Emite emite;
-    private final Signal<AuthorizationTicket> onAuthorized;
-    private AuthorizationTicket inProgressTicket;
+    private final Signal<AuthorizationTransaction> onAuthorized;
+    private AuthorizationTransaction currentTransaction;
 
     public SASLManager(final Emite emite) {
 	this.emite = emite;
-	this.onAuthorized = new Signal<AuthorizationTicket>("onAuthorized");
+	this.onAuthorized = new Signal<AuthorizationTransaction>("onAuthorized");
 	install();
     }
 
-    public void onAuthorized(final Slot<AuthorizationTicket> listener) {
+    public void onAuthorized(final Slot<AuthorizationTransaction> listener) {
 	onAuthorized.add(listener);
     }
 
-    public void sendAuthorizationRequest(final AuthorizationTicket authorizationTicket) {
-	this.inProgressTicket = authorizationTicket;
-	final IPacket response = authorizationTicket.uri.hasNode() ? createPlainAuthorization(authorizationTicket)
+    public void sendAuthorizationRequest(final AuthorizationTransaction authorizationTransaction) {
+	this.currentTransaction = authorizationTransaction;
+	final IPacket response = authorizationTransaction.uri.hasNode() ? createPlainAuthorization(authorizationTransaction)
 		: createAnonymousAuthorization();
 	emite.send(response);
-	inProgressTicket.setState(State.waitingForAuthorization);
+	currentTransaction.setState(State.waitingForAuthorization);
     }
 
     private IPacket createAnonymousAuthorization() {
@@ -62,10 +62,10 @@ public class SASLManager {
 	return auth;
     }
 
-    private IPacket createPlainAuthorization(final AuthorizationTicket authorizationTicket) {
+    private IPacket createPlainAuthorization(final AuthorizationTransaction authorizationTransaction) {
 	final IPacket auth = new Packet("auth", XMLNS).With("mechanism", "PLAIN");
-	final String encoded = encode(authorizationTicket.uri.getHost(), authorizationTicket.uri.getNode(),
-		authorizationTicket.getPassword());
+	final String encoded = encode(authorizationTransaction.uri.getHost(), authorizationTransaction.uri.getNode(),
+		authorizationTransaction.getPassword());
 	auth.setText(encoded);
 	return auth;
     }
@@ -78,17 +78,17 @@ public class SASLManager {
     private void install() {
 	emite.subscribe(when(new Packet("failure", XMLNS)), new PacketListener() {
 	    public void handle(final IPacket received) {
-		inProgressTicket.setState(State.failed);
-		onAuthorized.fire(inProgressTicket);
-		inProgressTicket = null;
+		currentTransaction.setState(State.failed);
+		onAuthorized.fire(currentTransaction);
+		currentTransaction = null;
 	    }
 	});
 
 	emite.subscribe(when(new Packet("success")), new PacketListener() {
 	    public void handle(final IPacket received) {
-		inProgressTicket.setState(State.succeed);
-		onAuthorized.fire(inProgressTicket);
-		inProgressTicket = null;
+		currentTransaction.setState(State.succeed);
+		onAuthorized.fire(currentTransaction);
+		currentTransaction = null;
 	    }
 	});
     }

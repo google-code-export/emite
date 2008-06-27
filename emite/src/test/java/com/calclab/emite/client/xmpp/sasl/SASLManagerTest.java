@@ -15,41 +15,41 @@ public class SASLManagerTest {
 
     private EmiteTestHelper emite;
     private SASLManager manager;
-    private MockSlot<AuthorizationTicket> listener;
+    private MockSlot<AuthorizationTransaction> listener;
 
     @Before
     public void aaCreate() {
 	emite = new EmiteTestHelper();
 	manager = new SASLManager(emite);
-	listener = new MockSlot<AuthorizationTicket>();
+	listener = new MockSlot<AuthorizationTransaction>();
 	manager.onAuthorized(listener);
     }
 
     @Test
     public void shouldHandleFailure() {
-	manager.sendAuthorizationRequest(new AuthorizationTicket(uri("node@domain"), "password"));
+	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("node@domain"), "password"));
 	emite.receives("<failure xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><not-authorized/></failure>");
 	verifyCalled(listener);
-	assertSame(AuthorizationTicket.State.failed, listener.getValue(0).getState());
+	assertSame(AuthorizationTransaction.State.failed, listener.getValue(0).getState());
     }
 
     @Test
     public void shouldHandleSuccessWhenAuthorizationSent() {
-	manager.sendAuthorizationRequest(new AuthorizationTicket(uri("me@domain"), "password"));
+	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("me@domain"), "password"));
 	emite.receives("<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"/>");
 	verifyCalled(listener);
-	assertSame(AuthorizationTicket.State.succeed, listener.getValue(0).getState());
+	assertSame(AuthorizationTransaction.State.succeed, listener.getValue(0).getState());
     }
 
     @Test
     public void shouldSendAnonymousIfNoUserProvided() {
-	manager.sendAuthorizationRequest(new AuthorizationTicket(uri("domain/resource"), null));
+	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("domain/resource"), null));
 	emite.verifySent(new Packet("auth", "urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism", "ANONYMOUS"));
     }
 
     @Test
     public void shouldSendPlainAuthorization() {
-	manager.sendAuthorizationRequest(new AuthorizationTicket(uri("node@domain/resource"), "password"));
+	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("node@domain/resource"), "password"));
 	emite.verifySent(new Packet("auth", "urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism", "PLAIN"));
     }
 }
