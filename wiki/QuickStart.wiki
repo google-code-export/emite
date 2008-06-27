@@ -206,6 +206,14 @@ Some orientative apache configuration for emite (using a proxy for both html/js 
   # Header append Cache-Control public
   # SetOutputFilter DEFLATE
 
+  <Files ext-*.js>
+   ExpiresDefault "now plus 1 year"
+  </Files>
+
+  <Files ext-*.css>
+   ExpiresDefault "now plus 1 year"
+  </Files>
+
   <Files *.cache.*>
    ExpiresDefault "now plus 1 year"
   </Files>
