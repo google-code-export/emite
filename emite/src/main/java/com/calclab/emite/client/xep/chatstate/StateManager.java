@@ -70,7 +70,7 @@ public class StateManager {
 	Log.debug("Adding chat state to chat: " + chat.getID());
 	final ChatStateManager chatStateManager = new ChatStateManager(chat);
 	chat.setData(ChatStateManager.class, chatStateManager);
-	chat.addMessageInterceptor(chatStateManager);
+	chat.onBeforeSend(chatStateManager.doBeforeSend);
 	return chatStateManager;
     }
 

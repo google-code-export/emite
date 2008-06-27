@@ -47,6 +47,20 @@ public interface Chat {
 
     public String getThread();
 
+    public void onBeforeReceive(Slot<Message> slot);
+
+    /**
+     * Allows to modify the message just before send it
+     * 
+     * @param messageInterceptor
+     */
+    public void onBeforeSend(Slot<Message> slot);
+
+    /**
+     * Allows to modify the message just before inform about the reception
+     * 
+     * @param messageInterceptor
+     */
     public void onMessageReceived(Slot<Message> slot);
 
     public void onMessageSent(Slot<Message> slot);
@@ -57,7 +71,7 @@ public interface Chat {
      * To make this chat receive a message
      * 
      * @param message
-     *                the message
+     *            the message
      */
     public void receive(Message message);
 
@@ -65,9 +79,9 @@ public interface Chat {
      * To make this chat send a message
      * 
      * @param message
-     *                the message
+     *            the message
      * @throws RuntimeException
-     *                 if chat state != ready
+     *             if chat state != ready
      */
     public void send(Message message);
 
@@ -77,20 +91,13 @@ public interface Chat {
      * @deprecated
      * @see use chat.send(new Message("body"));
      * @param body
-     *                message body
+     *            message body
      * @throws RuntimeException
-     *                 if chat state != ready
+     *             if chat state != ready
      */
     @Deprecated
     public void send(final String body);
 
     public <T> T setData(Class<T> type, T data);
-
-    /**
-     * Allows to modify the messages before send or receive
-     * 
-     * @param messageInterceptor
-     */
-    void addMessageInterceptor(MessageInterceptor messageInterceptor);
 
 }

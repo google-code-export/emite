@@ -73,7 +73,7 @@ public class Stream {
     }
 
     public void start(final String domain) {
-	this.requestID = (int) (Math.random() * 1245234);
+	this.requestID = (int) (Math.random() * 1245234) + 5000;
 	body = createInitialBody(domain);
     }
 
