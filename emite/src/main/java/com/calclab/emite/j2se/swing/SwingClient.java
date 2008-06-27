@@ -95,7 +95,7 @@ public class SwingClient {
 
 	loginPanel.addConfiguration(new ConnectionConfiguration("empty", "", "", "", ""));
 	loginPanel.addConfiguration(new ConnectionConfiguration("admin @ local openfire",
-		"http://localhost:8383/http-bind/", "localhost", "admin", "easyeasy"));
+		"http://localhost:5280/http-bind/", "localhost", "admin", "easyeasy"));
 	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ local ejabberd",
 		"http://localhost:5280/http-bind/", "mandarine", "dani", "dani"));
 	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ emite demo",

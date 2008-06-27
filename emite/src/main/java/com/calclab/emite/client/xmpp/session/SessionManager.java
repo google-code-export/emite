@@ -93,8 +93,10 @@ public class SessionManager {
 	emite.subscribe(when(new Packet("stream:features")), new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (received.hasChild("mechanisms")) {
-		    saslManager.sendAuthorizationRequest(authorizationTransaction);
-		    authorizationTransaction = null;
+		    if (authorizationTransaction != null) {
+			saslManager.sendAuthorizationRequest(authorizationTransaction);
+			authorizationTransaction = null;
+		    }
 		}
 	    }
 	});
