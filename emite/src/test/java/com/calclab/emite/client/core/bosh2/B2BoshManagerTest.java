@@ -11,15 +11,16 @@ import com.calclab.emite.testing.SignalTester;
 
 public class B2BoshManagerTest {
 
-    private B2Stream stream;
+    // private B2Stream stream;
     private B2Bosh bosh;
-    private B2BoshManager manager;
+
+    // private B2BoshManager manager;
 
     @Before
     public void beforeTests() {
 	bosh = mock(B2Bosh.class);
-	stream = mock(B2Stream.class);
-	manager = new B2BoshManager(bosh, stream);
+	// stream = mock(B2Stream.class);
+	// manager = new B2BoshManager(bosh, stream);
     }
 
     @Test

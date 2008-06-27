@@ -7,55 +7,56 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.calclab.emite.client.im.chat.ChatDefault;
+import com.calclab.emite.client.xep.chatstate.ChatStateManager.ChatState;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.testing.MockSlot;
 
 public class ChatStateTest {
     private static final XmppURI MYSELF = uri("self@domain/res");
     private static final XmppURI OTHER = uri("other@domain/otherRes");
-    private ChatStateListener stateListener;
+    private MockSlot<ChatState> stateListener;
     private ChatDefault chat;
-    private ChatState chatState;
+    private ChatStateManager chatStateManager;
 
     @Before
     public void aaCreate() {
-        chat = Mockito.mock(ChatDefault.class);
-        stateListener = Mockito.mock(ChatStateListener.class);
-        chatState = new ChatState(chat);
-        chatState.addOtherStateListener(stateListener);
+	chat = Mockito.mock(ChatDefault.class);
+	chatStateManager = new ChatStateManager(chat);
+	stateListener = new MockSlot<ChatState>();
+	chatStateManager.onChatStateChanged(stateListener);
     }
 
     @Test
     public void shouldFireGone() {
-        Message message = new Message(MYSELF, OTHER, null);
-        message.addChild("gone", ChatState.XMLNS);
-        chatState.onMessageReceived(chat, message);
-        Mockito.verify(stateListener).onGone();
+	final Message message = new Message(MYSELF, OTHER, null);
+	message.addChild("gone", ChatStateManager.XMLNS);
+	chatStateManager.onMessageReceived(chat, message);
+	MockSlot.verifyCalledWith(stateListener, ChatState.gone);
     }
 
     @Test
     public void shouldFireOtherCompossing() {
-        Message message = new Message(MYSELF, OTHER, null);
-        message.addChild("composing", ChatState.XMLNS);
-        chatState.onMessageReceived(chat, message);
-        Mockito.verify(stateListener).onComposing();
+	final Message message = new Message(MYSELF, OTHER, null);
+	message.addChild("composing", ChatStateManager.XMLNS);
+	chatStateManager.onMessageReceived(chat, message);
+	MockSlot.verifyCalledWith(stateListener, ChatState.composing);
     }
 
     @Test
     public void shouldFireOtherCompossingAsGmailDo() {
-        Message message = new Message(MYSELF, OTHER, null);
-        message.addChild("cha:composing", ChatState.XMLNS);
-        chatState.onMessageReceived(chat, message);
-        Mockito.verify(stateListener).onComposing();
-        Mockito.verify(stateListener).onComposing();
+	final Message message = new Message(MYSELF, OTHER, null);
+	message.addChild("cha:composing", ChatStateManager.XMLNS);
+	chatStateManager.onMessageReceived(chat, message);
+	MockSlot.verifyCalledWith(stateListener, ChatState.composing);
     }
 
     @Test
     public void shouldFireOtherCompossingToWithoutResource() {
-        Message message = new Message(MYSELF, OTHER.getJID(), null);
-        message.addChild("cha:composing", ChatState.XMLNS);
-        chatState.onMessageReceived(chat, message);
-        Mockito.verify(stateListener).onComposing();
+	final Message message = new Message(MYSELF, OTHER.getJID(), null);
+	message.addChild("cha:composing", ChatStateManager.XMLNS);
+	chatStateManager.onMessageReceived(chat, message);
+	MockSlot.verifyCalledWith(stateListener, ChatState.composing);
     }
 
 }

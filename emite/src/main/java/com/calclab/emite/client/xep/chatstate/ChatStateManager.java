@@ -23,55 +23,123 @@ package com.calclab.emite.client.xep.chatstate;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatManager;
+import com.calclab.emite.client.im.chat.MessageInterceptor;
+import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
 /**
  * XEP-0085: Chat State Notifications
  * http://www.xmpp.org/extensions/xep-0085.html (Version: 1.2)
- * 
- * This implementation is limited to chat conversations. Chat state in MUC rooms
- * are not supported to avoid multicast of occupant states (in a BOSH medium can
- * be a problem).
- * 
  */
-public class ChatStateManager {
+public class ChatStateManager implements MessageInterceptor {
+    public static enum ChatState {
+	active, composing, pause, inactive, gone
+    }
 
-    public ChatStateManager(final ChatManager chatManager) {
+    public static enum NegotiationStatus {
+	notStarted, started, rejected, accepted
+    }
 
-	chatManager.onChatCreated(new Slot<Chat>() {
-	    public void onEvent(final Chat chat) {
-		getChatState(chat);
+    public static final String XMLNS = "http://jabber.org/protocol/chatstates";
+
+    private ChatState ownState;
+    private ChatState otherState;
+    private final Chat chat;
+    private NegotiationStatus negotiationStatus;
+    private final Signal<ChatState> onChatStateChanged;
+
+    public ChatStateManager(final Chat chat) {
+	this.chat = chat;
+	this.onChatStateChanged = new Signal<ChatState>("chatStateManager:onChatStateChanged");
+	negotiationStatus = NegotiationStatus.notStarted;
+	chat.onMessageReceived(new Slot<Message>() {
+	    public void onEvent(final Message message) {
+		onMessageReceived(chat, message);
 	    }
 	});
+    }
 
-	chatManager.onChatClosed(new Slot<Chat>() {
-	    public void onEvent(final Chat chat) {
-		Log.debug("Removing chat state to chat: " + chat.getID());
-		final ChatState chatState = chat.getData(ChatState.class);
-		if (chatState != null && chatState.getOtherState() != ChatState.Type.gone) {
-		    // We are closing, then we send the gone state
-		    chatState.setOwnState(ChatState.Type.gone);
+    public NegotiationStatus getNegotiationStatus() {
+	return negotiationStatus;
+    }
+
+    public ChatState getOtherState() {
+	return otherState;
+    }
+
+    public ChatState getOwnState() {
+	return ownState;
+    }
+
+    public void onBeforeReceive(final Message message) {
+	// do nothing
+    }
+
+    public void onBeforeSend(final Message message) {
+	switch (negotiationStatus) {
+	case notStarted:
+	    negotiationStatus = NegotiationStatus.started;
+	case accepted:
+	    boolean alreadyWithState = false;
+	    for (int i = 0; i < ChatState.values().length; i++) {
+		if (message.hasChild(ChatState.values()[i].toString())) {
+		    alreadyWithState = true;
 		}
-		chat.setData(ChatState.class, null);
 	    }
-	});
-    }
-
-    public ChatState getChatState(final Chat chat) {
-	ChatState chatState = chat.getData(ChatState.class);
-	if (chatState == null) {
-	    chatState = createChatState(chat);
+	    if (!alreadyWithState) {
+		message.addChild(ChatState.active.toString(), XMLNS);
+	    }
+	    break;
+	case rejected:
+	case started:
+	    // do nothing
+	    break;
 	}
-	return chatState;
     }
 
-    private ChatState createChatState(final Chat chat) {
-	Log.debug("Adding chat state to chat: " + chat.getID());
-	final ChatState chatState = new ChatState(chat);
-	chat.setData(ChatState.class, chatState);
-	chat.addMessageInterceptor(chatState);
-	return chatState;
+    public void onChatStateChanged(final Slot<ChatState> slot) {
+	onChatStateChanged.add(slot);
     }
 
+    public void setOwnState(final ChatState chatState) {
+	// From XEP: a client MUST NOT send a second instance of any given
+	// standalone notification (i.e., a standalone notification MUST be
+	// followed by a different state, not repetition of the same state).
+	// However, every content message SHOULD contain an <active/>
+	// notification.
+	if (negotiationStatus.equals(NegotiationStatus.accepted)) {
+	    if (ownState == null || !ownState.equals(chatState)) {
+		this.ownState = chatState;
+		Log.info("Setting own status to: " + chatState.toString());
+		sendStateMessage(chatState);
+	    }
+	}
+    }
+
+    protected void onMessageReceived(final Chat chat, final Message message) {
+	for (int i = 0; i < ChatState.values().length; i++) {
+	    final ChatState chatState = ChatState.values()[i];
+	    final String typeSt = chatState.toString();
+	    if (message.hasChild(typeSt) || message.hasChild("cha:" + typeSt)) {
+		otherState = chatState;
+		if (negotiationStatus.equals(NegotiationStatus.notStarted)) {
+		    sendStateMessage(ChatState.active);
+		}
+		if (chatState.equals(ChatState.gone)) {
+		    negotiationStatus = NegotiationStatus.notStarted;
+		} else {
+		    negotiationStatus = NegotiationStatus.accepted;
+		}
+		Log.info("Receiver other chat status: " + typeSt);
+		onChatStateChanged.fire(chatState);
+	    }
+	}
+    }
+
+    private void sendStateMessage(final ChatState chatState) {
+	final Message message = new Message(chat.getFromURI(), chat.getOtherURI(), null).Thread(chat.getThread());
+	message.addChild(chatState.toString(), XMLNS);
+	chat.send(message);
+    }
 }
