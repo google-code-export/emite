@@ -42,7 +42,8 @@ public class SessionManagerTest {
     public void shouldHandleFailedAuthorizationResult() {
 	final SignalTester<AuthorizationTransaction> onAuthorized = new SignalTester<AuthorizationTransaction>();
 	verify(saslManager).onAuthorized(argThat(onAuthorized));
-	onAuthorized.fire(new AuthorizationTransaction(uri("node@domain"), "password", AuthorizationTransaction.State.failed));
+	onAuthorized.fire(new AuthorizationTransaction(uri("node@domain"), "password",
+		AuthorizationTransaction.State.failed));
 	emite.verifyPublished(Dispatcher.Events.onError);
 	verify(session).setState(State.notAuthorized);
     }
@@ -70,13 +71,6 @@ public class SessionManagerTest {
 	emite.verifyPublished(SessionManager.Events.loggedIn("name@domain/resource"));
 	verify(session).setState(State.loggedIn);
 	emite.verifyPublished(SessionManager.Events.onLoggedIn);
-	emite.verifyPublished(SessionManager.Events.ready);
-    }
-
-    @Test
-    public void shouldSetSessionReadyWhenEvent() {
-	emite.receives(SessionManager.Events.ready);
-	verify(session).setState(State.ready);
     }
 
     @Test

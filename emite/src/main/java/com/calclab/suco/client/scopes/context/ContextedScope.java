@@ -14,7 +14,7 @@ import com.calclab.suco.client.scopes.Scope;
  * implements equals contract)
  * 
  * @param <O>
- *                The context type
+ *            The context type
  */
 public class ContextedScope<O> implements Scope, Context<O> {
     public HashMap<Class<?>, Container> contexts;
@@ -31,12 +31,8 @@ public class ContextedScope<O> implements Scope, Context<O> {
     }
 
     public void createAll() {
-	Log.debug("CREATE ALL in context " + contextType);
 	for (final ContextedProvider<?, O> provider : providers) {
-	    if (!provider.isCreated()) {
-		Log.debug("CREATED BY CONTEXT: " + provider.type);
-		provider.get();
-	    }
+	    provider.get();
 	}
     }
 

@@ -52,9 +52,7 @@ public class XMPPModule implements Module {
     public void onLoad(final ModuleBuilder builder) {
 
 	Scopes.addScope(SessionScope.class, new SessionScope());
-	builder
-		.registerProvider(SessionScope.class, Scopes.get().getProvider(SessionScope.class),
-			SingletonScope.class);
+	builder.registerProvider(SessionScope.class, Scopes.getProvider(SessionScope.class), SingletonScope.class);
 
 	builder.registerProvider(ResourceBindingManager.class, new Provider<ResourceBindingManager>() {
 	    public ResourceBindingManager get() {

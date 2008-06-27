@@ -43,7 +43,6 @@ public class SessionManager {
     public static class Events {
 	public static final Event onLoggedOut = new Event("session:on:logout");
 	public static final Event onLoggedIn = new Event("session:on:login");
-	public static final Event ready = new Event("session:ready");
 
 	public static Event loggedIn(final String uri) {
 	    return SessionManager.Events.onLoggedIn.Params("uri", uri);
@@ -108,12 +107,6 @@ public class SessionManager {
 	    }
 	});
 
-	emite.subscribe(when(SessionManager.Events.ready), new PacketListener() {
-	    public void handle(final IPacket received) {
-		session.setState(State.ready);
-	    }
-	});
-
 	emite.subscribe(when(Dispatcher.Events.onError), new PacketListener() {
 	    public void handle(final IPacket received) {
 		session.setState(Session.State.error);
@@ -141,7 +134,7 @@ public class SessionManager {
 		if (IQ.isSuccess(received)) {
 		    session.setState(Session.State.loggedIn);
 		    emite.publish(Events.loggedIn(uri.toString()));
-		    emite.publish(Events.ready);
+		    session.setState(Session.State.ready);
 		}
 	    }
 	});
