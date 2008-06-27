@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket;
+import com.calclab.emite.client.xmpp.sasl.AuthorizationTransaction;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -39,7 +39,7 @@ public class SessionTest {
 
     @Test
     public void shouldHandleAuthorization() {
-	final MockSlot<AuthorizationTicket> listener = new MockSlot<AuthorizationTicket>();
+	final MockSlot<AuthorizationTransaction> listener = new MockSlot<AuthorizationTransaction>();
 	session.onLogin(listener);
 	final XmppURI uri = uri("name@domain/resource");
 	session.login(uri, "password");
@@ -49,7 +49,7 @@ public class SessionTest {
 
     @Test
     public void shouldSignalLogin() {
-	final MockSlot<AuthorizationTicket> listener = new MockSlot<AuthorizationTicket>();
+	final MockSlot<AuthorizationTransaction> listener = new MockSlot<AuthorizationTransaction>();
 	session.onLogin(listener);
 	session.login(uri("name@domain/resource"), "password");
 	verifyCalled(listener);

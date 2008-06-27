@@ -23,6 +23,7 @@ package com.calclab.emite.client.xmpp.session;
 
 import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
@@ -31,7 +32,7 @@ import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
-import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket;
+import com.calclab.emite.client.xmpp.sasl.AuthorizationTransaction;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
@@ -54,7 +55,7 @@ public class SessionManager {
     private final Emite emite;
     private XmppURI userURI;
     private final SASLManager saslManager;
-    private AuthorizationTicket authorizationTicket;
+    private AuthorizationTransaction authorizationTransaction;
     private final ResourceBindingManager bindingManager;
 
     public SessionManager(final Session session, final Emite emite, final SASLManager saslManager,
@@ -63,20 +64,21 @@ public class SessionManager {
 	this.emite = emite;
 	this.saslManager = saslManager;
 	this.bindingManager = bindingManager;
-	this.authorizationTicket = null;
+	this.authorizationTransaction = null;
 	install();
     }
 
     private void install() {
-	session.onLogin(new Slot<AuthorizationTicket>() {
-	    public void onEvent(final AuthorizationTicket parameter) {
-		authorizationTicket = parameter;
+	session.onLogin(new Slot<AuthorizationTransaction>() {
+	    public void onEvent(final AuthorizationTransaction transaction) {
+		Log.debug("SessionManager:onLogin, transaction: " + transaction);
+		authorizationTransaction = transaction;
 	    }
 	});
 
-	saslManager.onAuthorized(new Slot<AuthorizationTicket>() {
-	    public void onEvent(final AuthorizationTicket ticket) {
-		if (ticket.getState() == AuthorizationTicket.State.succeed) {
+	saslManager.onAuthorized(new Slot<AuthorizationTransaction>() {
+	    public void onEvent(final AuthorizationTransaction ticket) {
+		if (ticket.getState() == AuthorizationTransaction.State.succeed) {
 		    session.setState(Session.State.authorized);
 		    emite.publish(BoshManager.Events.onRestartStream);
 		    bindingManager.bindResource(ticket.uri.getResource());
@@ -91,8 +93,8 @@ public class SessionManager {
 	emite.subscribe(when(new Packet("stream:features")), new PacketListener() {
 	    public void handle(final IPacket received) {
 		if (received.hasChild("mechanisms")) {
-		    saslManager.sendAuthorizationRequest(authorizationTicket);
-		    authorizationTicket = null;
+		    saslManager.sendAuthorizationRequest(authorizationTransaction);
+		    authorizationTransaction = null;
 		}
 	    }
 	});

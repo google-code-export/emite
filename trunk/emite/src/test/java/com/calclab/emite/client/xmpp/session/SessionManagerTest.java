@@ -13,7 +13,7 @@ import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.Dispatcher.Events;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
-import com.calclab.emite.client.xmpp.sasl.AuthorizationTicket;
+import com.calclab.emite.client.xmpp.sasl.AuthorizationTransaction;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
@@ -40,19 +40,19 @@ public class SessionManagerTest {
 
     @Test
     public void shouldHandleFailedAuthorizationResult() {
-	final SignalTester<AuthorizationTicket> onAuthorized = new SignalTester<AuthorizationTicket>();
+	final SignalTester<AuthorizationTransaction> onAuthorized = new SignalTester<AuthorizationTransaction>();
 	verify(saslManager).onAuthorized(argThat(onAuthorized));
-	onAuthorized.fire(new AuthorizationTicket(uri("node@domain"), "password", AuthorizationTicket.State.failed));
+	onAuthorized.fire(new AuthorizationTransaction(uri("node@domain"), "password", AuthorizationTransaction.State.failed));
 	emite.verifyPublished(Dispatcher.Events.onError);
 	verify(session).setState(State.notAuthorized);
     }
 
     @Test
     public void shouldHandleSucceedAuthorizationResult() {
-	final SignalTester<AuthorizationTicket> onAuthorized = new SignalTester<AuthorizationTicket>();
+	final SignalTester<AuthorizationTransaction> onAuthorized = new SignalTester<AuthorizationTransaction>();
 	verify(saslManager).onAuthorized(argThat(onAuthorized));
-	onAuthorized.fire(new AuthorizationTicket(uri("node@domain/resource"), "password",
-		AuthorizationTicket.State.succeed));
+	onAuthorized.fire(new AuthorizationTransaction(uri("node@domain/resource"), "password",
+		AuthorizationTransaction.State.succeed));
 
 	emite.verifyPublished(BoshManager.Events.onRestartStream);
 	verify(bindingManager).bindResource(anyString());
