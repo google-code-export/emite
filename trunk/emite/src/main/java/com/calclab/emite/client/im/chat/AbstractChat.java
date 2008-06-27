@@ -24,6 +24,7 @@ package com.calclab.emite.client.im.chat;
 import java.util.HashMap;
 
 import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.xep.chatstate.ChatStateManager.ChatState;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Signal;
@@ -105,12 +106,14 @@ public abstract class AbstractChat implements Chat {
     }
 
     public void send(final Message message) {
-	message.setFrom(from);
-	message.setTo(other);
-	onBeforeSend.fire(message);
-	emite.send(message);
-	onMessageSent.fire(message);
-	listeners.onMessageSent(this, message);
+	if (status == Status.ready) {
+	    message.setFrom(from);
+	    message.setTo(other);
+	    onBeforeSend.fire(message);
+	    emite.send(message);
+	    onMessageSent.fire(message);
+	    listeners.onMessageSent(this, message);
+	}
     }
 
     @Deprecated
@@ -124,7 +127,7 @@ public abstract class AbstractChat implements Chat {
 	return (T) data.put(type, value);
     }
 
-    protected void setState(final Status status) {
+    protected void setStatus(final Status status) {
 	this.status = status;
 	onStateChanged.fire(status);
     }

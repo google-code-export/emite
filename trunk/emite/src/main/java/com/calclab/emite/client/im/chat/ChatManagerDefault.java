@@ -55,7 +55,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
 
     public void close(final Chat chat) {
         chats.remove(chat);
-        ((AbstractChat) chat).setState(Status.locked);
+        ((AbstractChat) chat).setStatus(Status.locked);
         onChatClosed.fire(chat);
     }
 
@@ -68,7 +68,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
         super.logIn(uri);
         if (uri.equalsNoResource(lastLoggedInUser)) {
             for (final Chat chat : chats) {
-                ((AbstractChat) chat).setState(Status.ready);
+                ((AbstractChat) chat).setStatus(Status.ready);
             }
         }
         this.lastLoggedInUser = userURI;
@@ -78,7 +78,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
     public void logOut() {
         super.logOut();
         for (final Chat chat : chats) {
-            ((AbstractChat) chat).setState(Status.locked);
+            ((AbstractChat) chat).setStatus(Status.locked);
         }
     }
 
@@ -120,7 +120,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
         }
         chats.add(chat);
         onChatCreated.fire(chat);
-        chat.setState(Chat.Status.ready);
+        chat.setStatus(Chat.Status.ready);
         return chat;
     }
 
