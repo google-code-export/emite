@@ -50,12 +50,6 @@ public class SessionManager {
 
     }
 
-    public static class Signals {
-	public static void onLoggedOut(final Dispatcher dispatcher, final PacketListener listener) {
-	    dispatcher.subscribe(when(Events.onLoggedOut), listener);
-	}
-    }
-
     private final Session session;
     private final Emite emite;
     private XmppURI userURI;
