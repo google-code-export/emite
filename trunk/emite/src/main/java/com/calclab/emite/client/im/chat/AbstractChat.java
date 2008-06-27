@@ -31,7 +31,6 @@ import com.calclab.suco.client.signal.Slot;
 
 public abstract class AbstractChat implements Chat {
 
-    protected final MessageInterceptorCollection interceptors;
     protected final ChatListenerCollection listeners;
     protected final Emite emite;
     protected final XmppURI from;
@@ -41,26 +40,25 @@ public abstract class AbstractChat implements Chat {
     private final HashMap<Class<?>, Object> data;
     private final Signal<Message> onMessageSent;
     private final Signal<Message> onMessageReceived;
+    private final Signal<Message> onBeforeSend;
+    protected final Signal<Message> onBeforeReceive;
 
     public AbstractChat(final XmppURI from, final XmppURI other, final Emite emite) {
 	this.emite = emite;
 	this.from = from;
 	this.other = other;
-	this.interceptors = new MessageInterceptorCollection();
 	this.listeners = new ChatListenerCollection();
 	this.data = new HashMap<Class<?>, Object>();
 	this.status = Chat.Status.locked;
 	this.onStateChanged = new Signal<Status>("onStateChanged");
 	this.onMessageSent = new Signal<Message>("onMessageSent");
 	this.onMessageReceived = new Signal<Message>("onMessageReceived");
+	this.onBeforeSend = new Signal<Message>("Chat:onBeforeSend");
+	this.onBeforeReceive = new Signal<Message>("Chat:onBeforeReceive");
     }
 
     public void addListener(final ChatListener listener) {
 	listeners.add(listener);
-    }
-
-    public void addMessageInterceptor(final MessageInterceptor messageInterceptor) {
-	interceptors.add(messageInterceptor);
     }
 
     @SuppressWarnings("unchecked")
@@ -80,6 +78,14 @@ public abstract class AbstractChat implements Chat {
 	return status;
     }
 
+    public void onBeforeReceive(final Slot<Message> slot) {
+	onBeforeReceive.add(slot);
+    }
+
+    public void onBeforeSend(final Slot<Message> slot) {
+	onBeforeSend.add(slot);
+    }
+
     public void onMessageReceived(final Slot<Message> slot) {
 	onMessageReceived.add(slot);
     }
@@ -93,7 +99,7 @@ public abstract class AbstractChat implements Chat {
     }
 
     public void receive(final Message message) {
-	interceptors.onBeforeReceive(message);
+	onBeforeReceive.fire(message);
 	onMessageReceived.fire(message);
 	listeners.onMessageReceived(this, message);
     }
@@ -101,7 +107,7 @@ public abstract class AbstractChat implements Chat {
     public void send(final Message message) {
 	message.setFrom(from);
 	message.setTo(other);
-	interceptors.onBeforeSend(message);
+	onBeforeSend.fire(message);
 	emite.send(message);
 	onMessageSent.fire(message);
 	listeners.onMessageSent(this, message);

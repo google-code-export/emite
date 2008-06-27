@@ -108,7 +108,7 @@ public class Room extends AbstractChat implements Chat {
     public void receive(final Message message) {
 	final String subject = message.getSubject();
 	if (subject != null) {
-	    interceptors.onBeforeReceive(message);
+	    onBeforeReceive.fire(message);
 	    fireSubjectChanged(message, subject);
 	}
 	if (message.getBody() != null) {
@@ -134,9 +134,9 @@ public class Room extends AbstractChat implements Chat {
      * http://www.xmpp.org/extensions/xep-0045.html#invite
      * 
      * @param userJid
-     *                user to invite
+     *            user to invite
      * @param reasonText
-     *                reason for the invitation
+     *            reason for the invitation
      */
     public void sendInvitationTo(final String userJid, final String reasonText) {
 	final BasicStanza message = new BasicStanza("message", null);

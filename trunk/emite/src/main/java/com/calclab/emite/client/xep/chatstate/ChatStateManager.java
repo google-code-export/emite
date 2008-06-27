@@ -23,7 +23,6 @@ package com.calclab.emite.client.xep.chatstate;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.MessageInterceptor;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
@@ -32,7 +31,7 @@ import com.calclab.suco.client.signal.Slot;
  * XEP-0085: Chat State Notifications
  * http://www.xmpp.org/extensions/xep-0085.html (Version: 1.2)
  */
-public class ChatStateManager implements MessageInterceptor {
+public class ChatStateManager {
     public static enum ChatState {
 	active, composing, pause, inactive, gone
     }
@@ -48,6 +47,30 @@ public class ChatStateManager implements MessageInterceptor {
     private final Chat chat;
     private NegotiationStatus negotiationStatus;
     private final Signal<ChatState> onChatStateChanged;
+
+    final Slot<Message> doBeforeSend = new Slot<Message>() {
+	public void onEvent(final Message message) {
+	    switch (negotiationStatus) {
+	    case notStarted:
+		negotiationStatus = NegotiationStatus.started;
+	    case accepted:
+		boolean alreadyWithState = false;
+		for (int i = 0; i < ChatState.values().length; i++) {
+		    if (message.hasChild(ChatState.values()[i].toString())) {
+			alreadyWithState = true;
+		    }
+		}
+		if (!alreadyWithState) {
+		    message.addChild(ChatState.active.toString(), XMLNS);
+		}
+		break;
+	    case rejected:
+	    case started:
+		// do nothing
+		break;
+	    }
+	}
+    };
 
     public ChatStateManager(final Chat chat) {
 	this.chat = chat;
@@ -70,32 +93,6 @@ public class ChatStateManager implements MessageInterceptor {
 
     public ChatState getOwnState() {
 	return ownState;
-    }
-
-    public void onBeforeReceive(final Message message) {
-	// do nothing
-    }
-
-    public void onBeforeSend(final Message message) {
-	switch (negotiationStatus) {
-	case notStarted:
-	    negotiationStatus = NegotiationStatus.started;
-	case accepted:
-	    boolean alreadyWithState = false;
-	    for (int i = 0; i < ChatState.values().length; i++) {
-		if (message.hasChild(ChatState.values()[i].toString())) {
-		    alreadyWithState = true;
-		}
-	    }
-	    if (!alreadyWithState) {
-		message.addChild(ChatState.active.toString(), XMLNS);
-	    }
-	    break;
-	case rejected:
-	case started:
-	    // do nothing
-	    break;
-	}
     }
 
     public void onChatStateChanged(final Slot<ChatState> slot) {
