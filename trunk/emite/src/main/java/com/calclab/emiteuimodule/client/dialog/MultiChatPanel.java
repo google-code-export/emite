@@ -417,6 +417,7 @@ public class MultiChatPanel {
 		showEmoticonPalette(e.getXY()[0], e.getXY()[1]);
 	    }
 	});
+
 	inputToolbar.addButton(emoticonButton);
 	inputToolbar.addSeparator();
 	bottomChatNotification = new Label();

@@ -48,7 +48,7 @@ public class ProxyServlet extends HttpServlet {
      */
     public final static String CRLF = "\r\n";
     public final static String DEFAULT_PATH = "/http-bind/";
-    public final static int DEFAULT_PORT = 5280;
+    public final static int DEFAULT_PORT = 8383;
     public final static String DEFAULT_SERVER = "localhost";
     public final static String LF = "\n";
 
