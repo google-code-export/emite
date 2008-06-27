@@ -18,9 +18,12 @@ public class MockSlot<S> implements Slot<S> {
 	assertTrue("slot should be called " + times + " times", slot.isCalled(times));
     }
 
-    public static <T> void verifyCalledWith(final MockSlot<T> slot, final T expected) {
-	verifyCalled(slot);
-	assertEquals(expected, slot.getValue(0));
+    public static <T> void verifyCalledWith(final MockSlot<T> slot, final T... expectedOrderedValues) {
+	verifyCalled(slot, expectedOrderedValues.length);
+	for (int index = 0; index < expectedOrderedValues.length; index++) {
+	    final T expected = expectedOrderedValues[index];
+	    assertEquals(expected, slot.getValue(index));
+	}
     }
 
     public static <T> void verifyCalledWithSame(final MockSlot<T> slot, final T... expected) {

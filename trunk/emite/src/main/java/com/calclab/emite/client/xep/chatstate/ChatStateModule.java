@@ -35,9 +35,9 @@ import com.calclab.suco.client.modules.ModuleBuilder;
  * 
  */
 public class ChatStateModule implements Module {
-    private static final Class<ChatStateManager> COMPONENTS_MANAGER = ChatStateManager.class;
+    private static final Class<StateManager> COMPONENTS_MANAGER = StateManager.class;
 
-    public static ChatStateManager getChatStateManager(final Container components) {
+    public static StateManager getChatStateManager(final Container components) {
 	return components.getInstance(COMPONENTS_MANAGER);
     }
 
@@ -46,10 +46,10 @@ public class ChatStateModule implements Module {
     }
 
     public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(ChatStateManager.class, new Provider<ChatStateManager>() {
-	    public ChatStateManager get() {
+	builder.registerProvider(StateManager.class, new Provider<StateManager>() {
+	    public StateManager get() {
 		final ChatManager chatManager = builder.getInstance(ChatManager.class);
-		return new ChatStateManager(chatManager);
+		return new StateManager(chatManager);
 	    }
 	}, SessionScope.class);
 

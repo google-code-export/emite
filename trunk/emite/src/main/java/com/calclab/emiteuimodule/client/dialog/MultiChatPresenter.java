@@ -36,8 +36,8 @@ import com.calclab.emite.client.im.chat.ChatListenerAdaptor;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
-import com.calclab.emite.client.xep.chatstate.ChatState;
 import com.calclab.emite.client.xep.chatstate.ChatStateManager;
+import com.calclab.emite.client.xep.chatstate.StateManager;
 import com.calclab.emite.client.xep.muc.Occupant;
 import com.calclab.emite.client.xep.muc.Room;
 import com.calclab.emite.client.xep.muc.RoomListener;
@@ -75,7 +75,7 @@ public class MultiChatPresenter {
     private final Signal<Boolean> onShowUnavailableRosterItemsChanged;
     private final ChatManager chatManager;
     private final RoomManager roomManager;
-    private final ChatStateManager stateManager;
+    private final StateManager stateManager;
     private final RosterManager rosterManager;
     private final StatusUI statusUI;
     private final SoundManager soundManager;
@@ -94,7 +94,7 @@ public class MultiChatPresenter {
 	chatManager = xmpp.getChatManager();
 	roomManager = xmpp.getInstance(RoomManager.class);
 	rosterManager = xmpp.getRosterManager();
-	stateManager = xmpp.getInstance(ChatStateManager.class);
+	stateManager = xmpp.getInstance(StateManager.class);
 	openedChats = 0;
 	onChatAttended = new Signal<String>("onChatAttended");
 	onChatUnattendedWithActivity = new Signal<String>("onChatUnattendedWithActivity");
@@ -130,9 +130,9 @@ public class MultiChatPresenter {
     public ChatUI createChat(final Chat chat) {
 	final ChatUI chatUIalreadyOpened = getChatUI(chat);
 	logIfChatAlreadyOpened(chatUIalreadyOpened);
-	final ChatState chatState = stateManager.getChatState(chat);
+	final ChatStateManager chatStateManager = stateManager.getChatState(chat);
 	final ChatUI chatUI = chatUIalreadyOpened == null ? factory.createChatUI(chat.getOtherURI(), userChatOptions
-		.getUserJid().getNode(), userChatOptions.getColor(), chatState) : chatUIalreadyOpened;
+		.getUserJid().getNode(), userChatOptions.getColor(), chatStateManager) : chatUIalreadyOpened;
 	if (chatUIalreadyOpened == null) {
 	    addCommonChatSignals(chat, chatUI);
 	    chatUI.onClose(new Slot<ChatUI>() {
