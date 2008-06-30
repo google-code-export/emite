@@ -26,10 +26,10 @@ import org.ourproject.kune.platf.client.ui.HorizontalLine;
 import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
 import com.calclab.emiteuimodule.client.utils.ChatTextFormatter;
 import com.calclab.emiteuimodule.client.utils.ChatUIUtils;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -64,6 +64,7 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 
     private final Panel childPanel;
     private final Panel conversationPanel;
+    private Element scrollableElement;
 
     public ChatUIPanel(final ChatUIPresenter presenter) {
 	setLayout(new BorderLayout());
@@ -141,7 +142,11 @@ public class ChatUIPanel extends Panel implements ChatUIView {
     }
 
     private Element getScrollableElement() {
-	return DOM.getParent(childPanel.getElement());
+	if (scrollableElement == null) {
+	    scrollableElement = DOM.getElementById(childPanel.getElement().getId()).getParentElement();
+	}
+	// Log.info("Parent: " + scrollableElement.getId());
+	return scrollableElement;
     }
 
     private void postChatTitle() {
@@ -151,7 +156,10 @@ public class ChatUIPanel extends Panel implements ChatUIView {
     }
 
     private void scrollDown() {
-	DOM.setElementPropertyInt(getScrollableElement(), "scrollTop", childPanel.getOffsetHeight());
+	if (childPanel.isRendered()) {
+	    getScrollableElement().setScrollTop(childPanel.getOffsetHeight());
+	    // Log.info("Offset: " + childPanel.getOffsetHeight());
+	}
     }
 
 }
