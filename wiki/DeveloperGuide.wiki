@@ -1,5 +1,4 @@
 #labels Featured,Phase-Design
-
 _work in progress_
 
 ==how it works==
@@ -7,13 +6,49 @@ _work in progress_
 This is a document to describe the internals of emite and to get used quickier with 
 the source code. It's not about how to use the library: for this see UserManual
 
-*All this complexity is hidden under the Xmpp facade class.*
-
 === modules, container, providers and components ===
 
-everything in emite belongs to a module. the module's task is register components in a component container. a component is a instance of any class.
+everything in emite belongs to a module. the module's task is register components in a component container. a component is a instance of any class. this allows to create a highly extensible environment.
+
+the container design is heavily inspired (copied, as far as we can inside gwt envirorment: no reflection) by guice design.
+ 
+the module register the components using a Provider interface. That allows to lazy-creating the components and the ability to create scopes (singleton, unscoped and session are the built-in scopes. more can be added). Here is an example: 
+{{{
+public class EchoModule implements Module {
+
+    public Class<?> getType() {
+	return EchoModule.class;
+    }
+
+    public void onLoad(final ModuleBuilder builder) {
+	builder.registerProvider(Echo.class, new Provider<Echo>() {
+	    public Echo get() {
+		return new Echo(builder.getInstance(Emite.class));
+	    }
+
+	}, SessionScope.class);
+    }
+}
+}}}
+
+The EchoModule is a module (implements Module) that register a Echo(.class) component using a Provider<Echo> interface. Inside the provider we can use the ModuleBuilder to resolve the component dependencies. In this case, Echo component *depends* on Emite(.class) component.
+
+=== current modules ===
+
+*emite library*
+  * ServicesModule!: implements HttpConnections. Two implementations provided: a GWT implementation to use inside browsers and a J2SE module to use emite in desktop (i.e. swing) applications. Currently the J2SE module is for testing purposes only. 
+  * CoreModule!: implements BOSH and xmpp stanzas specification
+  * InstantMessagingModule!: implements instant messaging xmpp specification (sessions, presence, roster)
+
+*library extensions*
+  * MUCModule: implements XEP-0045: Multi-User Chat
+  * ChatStateModule!: implements XEP-0085: Chat State Notifications
+  * AvatorModule! and DiscoveryModule!: in development
+
+*emite user interfaces*
+  * EmiteUIModule!: implements a full featured chat/rooms using gwt-ext
+  * SwingModule!: implements a basic featured swing client for testing purposes only
 
   
 
 === slot/signals ===
-
