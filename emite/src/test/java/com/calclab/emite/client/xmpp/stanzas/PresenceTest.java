@@ -13,12 +13,6 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 public class PresenceTest {
 
     @Test
-    public void shouldCreateAStringRepresentation() {
-	final Presence presence = new Presence();
-	assertEquals("[Presence: type: available, from: null, show: notSpecified, status: null]", presence.toString());
-    }
-
-    @Test
     public void shouldGetPriority() {
 	Presence presence = new Presence();
 	assertSame(0, presence.getPriority());
