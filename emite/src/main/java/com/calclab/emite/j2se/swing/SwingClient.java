@@ -159,7 +159,7 @@ public class SwingClient {
     protected void addChatListener(final Chat chat, final ChatPanel chatPanel) {
 	chat.onMessageReceived(new Slot<Message>() {
 	    public void onEvent(final Message message) {
-		chatPanel.showIcomingMessage(message.getFrom(), message.getBody());
+		chatPanel.showIcomingMessage(message.getFromURI().toString(), message.getBody());
 	    }
 	});
 	chat.onMessageSent(new Slot<Message>() {
@@ -238,7 +238,7 @@ public class SwingClient {
 
 		new RoomListenerAdaptor(room, new RoomListener() {
 		    public void onMessageReceived(final Chat chat, final Message message) {
-			roomPanel.showIcomingMessage(message.getFrom(), message.getBody());
+			roomPanel.showIcomingMessage(message.getFromURI().toString(), message.getBody());
 		    }
 
 		    public void onMessageSent(final Chat chat, final Message message) {
@@ -291,7 +291,7 @@ public class SwingClient {
 
 	xmpp.getRosterManager().onSubscriptionRequested(new Slot<Presence>() {
 	    public void onEvent(final Presence presence) {
-		final Object message = presence.getFrom() + " want to add you to his/her roster. Accept?";
+		final Object message = presence.getFromURI().toString() + " want to add you to his/her roster. Accept?";
 		final int result = JOptionPane.showConfirmDialog(frame, message);
 		if (result == JOptionPane.OK_OPTION) {
 		    xmpp.getRosterManager().acceptSubscription(presence);

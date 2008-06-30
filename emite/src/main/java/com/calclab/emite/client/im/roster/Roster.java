@@ -22,7 +22,6 @@
 
 package com.calclab.emite.client.im.roster;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -37,28 +36,20 @@ public class Roster {
     // Only JIDs
     private final HashMap<XmppURI, RosterItem> items;
 
-    private final ArrayList<RosterListener> listeners;
-
     private final Signal<RosterItem> onItemChanged;
     private final Signal<Collection<RosterItem>> onRosterChanged;
 
     public Roster() {
-	listeners = new ArrayList<RosterListener>();
 	items = new HashMap<XmppURI, RosterItem>();
 	this.onItemChanged = new Signal<RosterItem>("onItemChanged");
 	this.onRosterChanged = new Signal<Collection<RosterItem>>("onRosterChanged");
-    }
-
-    @Deprecated
-    public void addListener(final RosterListener listener) {
-	listeners.add(listener);
     }
 
     public void changePresence(final XmppURI uri, final Presence presence) {
 	final RosterItem item = findItemByJID(uri);
 	if (item != null) {
 	    item.setPresence(presence);
-	    fireItemChanged(item);
+	    onItemChanged.fire(item);
 	}
     }
 
@@ -66,7 +57,7 @@ public class Roster {
 	final RosterItem item = findItemByJID(jid);
 	if (item != null) {
 	    item.setSubscription(subscription);
-	    fireItemChanged(item);
+	    onItemChanged.fire(item);
 	}
     }
 
@@ -85,33 +76,19 @@ public class Roster {
     public void removeItem(final XmppURI jid) {
 	final RosterItem removed = items.remove(jid.getJID());
 	if (removed != null) {
-	    fireRosterChanged();
+	    onRosterChanged.fire(items.values());
 	}
     }
 
     void add(final RosterItem item) {
 	items.put(item.getJID(), item);
-	fireRosterChanged();
+	onRosterChanged.fire(items.values());
     }
 
     void setItems(final List<RosterItem> itemCollection) {
 	items.clear();
 	for (final RosterItem item : itemCollection) {
 	    items.put(item.getJID(), item);
-	}
-	fireRosterChanged();
-    }
-
-    private void fireItemChanged(final RosterItem item) {
-	for (final RosterListener listener : listeners) {
-	    listener.onItemChanged(item);
-	}
-	onItemChanged.fire(item);
-    }
-
-    private void fireRosterChanged() {
-	for (final RosterListener listener : listeners) {
-	    listener.onRosterChanged(items.values());
 	}
 	onRosterChanged.fire(items.values());
     }

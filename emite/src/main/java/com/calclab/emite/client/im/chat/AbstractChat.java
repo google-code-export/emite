@@ -115,12 +115,6 @@ public abstract class AbstractChat implements Chat {
 	}
     }
 
-    @Deprecated
-    public void send(final String body) {
-	final Message message = new Message().Body(body);
-	send(message);
-    }
-
     @SuppressWarnings("unchecked")
     public <T> T setData(final Class<T> type, final T value) {
 	return (T) data.put(type, value);

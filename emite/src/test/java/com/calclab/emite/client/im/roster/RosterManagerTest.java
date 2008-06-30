@@ -1,9 +1,9 @@
 package com.calclab.emite.client.im.roster;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.testing.MockSlot.verifyCalled;
 import static com.calclab.emite.testing.MockitoEmiteHelper.isListOfSize;
 import static com.calclab.emite.testing.MockitoEmiteHelper.packetLike;
-import static com.calclab.emite.testing.MockSlot.verifyCalled;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
