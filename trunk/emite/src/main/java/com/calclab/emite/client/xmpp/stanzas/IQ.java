@@ -22,7 +22,6 @@
 package com.calclab.emite.client.xmpp.stanzas;
 
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.core.packet.Packet;
 
 public class IQ extends BasicStanza {
     public static enum Type {
@@ -72,16 +71,4 @@ public class IQ extends BasicStanza {
 	return this;
     }
 
-    /**
-     * do not use it!!! see addQuery
-     */
-    @Deprecated
-    public IQ WithQuery(final String queryNamespace, final IPacket child) {
-	final IPacket query = addChild("query", queryNamespace);
-	if (child != null) {
-	    final Packet danger = (Packet) query;
-	    danger.addChild(child);
-	}
-	return this;
-    }
 }

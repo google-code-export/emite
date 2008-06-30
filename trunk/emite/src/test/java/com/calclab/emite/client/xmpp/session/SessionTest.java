@@ -19,8 +19,8 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.EmiteTestHelper;
-import com.calclab.emite.testing.SignalTester;
 import com.calclab.emite.testing.MockSlot;
+import com.calclab.emite.testing.SignalTester;
 import com.calclab.suco.client.signal.Slot;
 
 public class SessionTest {
@@ -86,21 +86,4 @@ public class SessionTest {
 	verify(listener).onEvent(same(State.ready));
     }
 
-    @Test
-    @Deprecated
-    public void XXshouldInformAboutStateChanges() {
-	final State initialState = State.disconnected;
-	session.setState(initialState);
-	final SessionListener listener1 = mock(SessionListener.class);
-	final SessionListener listener2 = mock(SessionListener.class);
-	session.addListener(listener2);
-	session.addListener(listener1);
-	// verify(listener1).onStateChanged(initialState, initialState);
-	// verify(listener2).onStateChanged(initialState, initialState);
-	final State newState = State.loggedIn;
-	session.setState(newState);
-	verify(listener1).onStateChanged(initialState, newState);
-	verify(listener2).onStateChanged(initialState, newState);
-
-    }
 }

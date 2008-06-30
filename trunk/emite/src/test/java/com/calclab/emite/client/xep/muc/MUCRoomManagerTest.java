@@ -54,19 +54,6 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
 	assertSame(room1, room2);
     }
 
-    @Deprecated
-    @Test
-    public void shouldHandleRoomInvitations() {
-	final RoomManagerListener listener = mock(RoomManagerListener.class);
-	new RoomManagerListenerAdapter(manager, listener);
-	final String message = "<message to='user@domain/resource' from='room@conference.domain'>"
-		+ "<x xmlns='http://jabber.org/protocol/muc#user'><invite from='otherUser@domain/resource'>"
-		+ "<reason>The reason here</reason></invite></x></message>";
-	emite.receives(message);
-	verify(listener).onInvitationReceived(uri("otherUser@domain/resource"), uri("room@conference.domain"),
-		"The reason here");
-    }
-
     @Test
     public void shouldUpdateRoomPresence() {
 	final Room room = (Room) manager.openChat(uri("room1@domain/nick"), null, null);

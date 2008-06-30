@@ -36,12 +36,8 @@ public class Session {
 
     public static enum State {
 	authorized, loggedIn, connecting, disconnected, error, notAuthorized, ready,
-	/** USE ready!!! * */
-	@Deprecated
-	connected
     }
 
-    private final SessionListenerCollection listeners;
     private State state;
     private final Emite emite;
     private XmppURI userURI;
@@ -56,7 +52,6 @@ public class Session {
 	this.scope = scope;
 	state = State.disconnected;
 
-	this.listeners = new SessionListenerCollection();
 	this.onStateChanged = new Signal<State>("onStateChanged");
 	this.onPresence = new Signal<Presence>("onPresence");
 	this.onMessage = new Signal<Message>("onMessage");
@@ -72,16 +67,6 @@ public class Session {
 		}
 	    }
 	});
-    }
-
-    /**
-     * @deprecated
-     * @see onStateChanged
-     * @param listener
-     */
-    @Deprecated
-    public void addListener(final SessionListener listener) {
-	listeners.add(listener);
     }
 
     public XmppURI getCurrentUser() {
@@ -129,9 +114,7 @@ public class Session {
     }
 
     void setState(final State newState) {
-	final State oldState = this.state;
 	this.state = newState;
-	listeners.onStateChanged(oldState, newState);
 	onStateChanged.fire(state);
     }
 

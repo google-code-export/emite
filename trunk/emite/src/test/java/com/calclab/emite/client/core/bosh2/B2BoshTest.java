@@ -1,9 +1,11 @@
 package com.calclab.emite.client.core.bosh2;
 
-import static com.calclab.emite.testing.MockSlot.*;
+import static com.calclab.emite.testing.MockSlot.verifyCalled;
+import static com.calclab.emite.testing.MockSlot.verifyCalledWithSame;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.verify;

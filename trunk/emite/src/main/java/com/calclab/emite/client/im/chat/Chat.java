@@ -85,19 +85,6 @@ public interface Chat {
      */
     public void send(Message message);
 
-    /**
-     * To make this chat send a message
-     * 
-     * @deprecated
-     * @see use chat.send(new Message("body"));
-     * @param body
-     *            message body
-     * @throws RuntimeException
-     *             if chat state != ready
-     */
-    @Deprecated
-    public void send(final String body);
-
     public <T> T setData(Class<T> type, T data);
 
 }

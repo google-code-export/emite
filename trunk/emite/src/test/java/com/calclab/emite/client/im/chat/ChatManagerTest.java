@@ -5,12 +5,8 @@ import static com.calclab.emite.testing.MockSlot.verifyCalled;
 import static com.calclab.emite.testing.MockSlot.verifyCalledWith;
 import static com.calclab.emite.testing.MockSlot.verifyCalledWithSame;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.session.SessionManager;
@@ -75,36 +71,6 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	verifyCalledWithSame(listener, chat);
 	emite.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer").Thread(chat.getThread()));
 	verifyCalled(listener, 1);
-    }
-
-    @Deprecated
-    @Test
-    public void XXListenermanagerShouldCreateOneChatForSameResource() {
-	final ChatManagerListener listener = Mockito.mock(ChatManagerListener.class);
-	new ChatManagerListenerAdapter(manager, listener);
-	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 1"));
-	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
-	verify(listener, times(1)).onChatCreated((Chat) anyObject());
-    }
-
-    @Deprecated
-    @Test
-    public void XXListenermanagerShouldCreateOneChatIfResourceIsNotAvailable() {
-	final ChatManagerListener listener = Mockito.mock(ChatManagerListener.class);
-	new ChatManagerListenerAdapter(manager, listener);
-	emite.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
-	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
-	verify(listener, times(1)).onChatCreated((Chat) anyObject());
-    }
-
-    @Deprecated
-    @Test
-    public void XXListenershouldHandleIncommingMessages() {
-	final ChatManagerListener listener = Mockito.mock(ChatManagerListener.class);
-	new ChatManagerListenerAdapter(manager, listener);
-	emite.receives("<message to='" + MYSELF + "' from='otherUser@dom/res' id='theId0001'>"
-		+ "<body>This is the body</body></message>");
-	verify(listener).onChatCreated((Chat) anyObject());
     }
 
     @Override

@@ -42,12 +42,8 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
 	super(new Packet(name, xmlns));
     }
 
-    public String getFrom() {
-	return getAttribute(FROM);
-    }
-
     public XmppURI getFromURI() {
-	return uri(getFrom());
+	return uri(getAttribute(FROM));
     }
 
     public String getId() {
@@ -62,35 +58,20 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
 	return uri(getTo());
     }
 
-    @Deprecated
-    public void setFrom(final String from) {
-	setAttribute(FROM, from);
-    }
-
     public void setFrom(final XmppURI from) {
-	setFrom(from != null ? from.toString() : null);
+	setAttribute(FROM, (from != null ? from.toString() : null));
     }
 
     public void setId(final String id) {
 	setAttribute(ID, id);
     }
 
-    @Deprecated
-    public void setTo(final String to) {
-	setAttribute(TO, to);
-    }
-
     public void setTo(final XmppURI to) {
-	setTo(to != null ? to.toString() : null);
+	setAttribute(TO, (to != null ? to.toString() : null));
     }
 
     public void setType(final String type) {
 	setAttribute(TYPE, type);
-    }
-
-    public Stanza To(final String to) {
-	setTo(to);
-	return this;
     }
 
     /**

@@ -50,17 +50,6 @@ public class PresenceManager extends SessionComponent {
     }
 
     /**
-     * Returns the current's user presence
-     * 
-     * @see getOwnPresence
-     * @return The current users presence
-     */
-    @Deprecated
-    public Presence getCurrentPresence() {
-	return ownPresence;
-    }
-
-    /**
      * Return the current logged in user presence or a Presence with type
      * unavailable if logged out
      * 
