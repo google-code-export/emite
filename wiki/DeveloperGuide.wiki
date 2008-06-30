@@ -1,0 +1,19 @@
+#labels Featured,Phase-Design
+
+_work in progress_
+
+==how it works==
+
+This is a document to describe the internals of emite and to get used quickier with 
+the source code. It's not about how to use the library: for this see UserManual
+
+*All this complexity is hidden under the Xmpp facade class.*
+
+=== modules, container, providers and components ===
+
+everything in emite belongs to a module. the module's task is register components in a component container. a component is a instance of any class.
+
+  
+
+=== slot/signals ===
+
