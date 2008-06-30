@@ -566,7 +566,7 @@ public class MultiChatPanel {
 
 	eastPanel.addListener(new PanelListenerAdapter() {
 	    public void onExpand(final Panel panel) {
-		Log.debug("Expand roster");
+		// Log.debug("Expand roster");
 		if (eastPanel.isRendered()) {
 		    eastPanel.doLayout(false);
 		}
@@ -577,7 +577,7 @@ public class MultiChatPanel {
 	    @Override
 	    public void onResize(final BoxComponent component, final int adjWidth, final int adjHeight,
 		    final int rawWidth, final int rawHeight) {
-		Log.debug("Resize roster");
+		// Log.debug("Resize roster");
 		rosterUIPanel.setWidth(adjWidth);
 		if (eastPanel.isRendered() && rosterUIPanel.isRendered()) {
 		    eastPanel.doLayout(false);
