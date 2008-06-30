@@ -74,7 +74,7 @@ public class RosterManager extends SessionComponent {
      */
     public void acceptSubscription(final Presence presence) {
 	if (presence.getType() == Presence.Type.subscribe) {
-	    final XmppURI from = presence.getFromURI();
+	    final XmppURI from = presence.getFrom();
 	    if (roster.findItemByJID(from.getJID()) == null) {
 		final RosterItem item = new RosterItem(from, Subscription.none, from.getNode());
 		roster.add(item);
@@ -85,7 +85,7 @@ public class RosterManager extends SessionComponent {
 	    // throw exception: its a programming error
 	    throw new RuntimeException("Trying to accept/deny a non subscription request");
 	}
-	requestSubscribe(presence.getFromURI());
+	requestSubscribe(presence.getFrom());
 
     }
 
@@ -104,7 +104,7 @@ public class RosterManager extends SessionComponent {
      */
     public void denySubscription(final Presence presence) {
 	if (presence.getType() == Presence.Type.subscribe) {
-	    final Presence response = new Presence(Presence.Type.unsubscribed, userURI, presence.getFromURI());
+	    final Presence response = new Presence(Presence.Type.unsubscribed, userURI, presence.getFrom());
 	    emite.send(response);
 	} else {
 	    // throw exception: its a programming error
@@ -261,14 +261,14 @@ public class RosterManager extends SessionComponent {
 		case unsubscribed:
 		    // Inform to user but not update roster (only iq set update
 		    // roster)
-		    handleUnsubscribedReceived(presence.getFromURI());
+		    handleUnsubscribedReceived(presence.getFrom());
 		    break;
 		case subscribed:
 		    // Fine, but do nothing (only iq set update roster)
 		    break;
 		case available:
 		case unavailable:
-		    roster.changePresence(presence.getFromURI(), presence);
+		    roster.changePresence(presence.getFrom(), presence);
 		    break;
 		}
 	    }

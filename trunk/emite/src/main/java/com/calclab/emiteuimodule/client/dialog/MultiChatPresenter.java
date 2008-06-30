@@ -343,15 +343,15 @@ public class MultiChatPresenter {
 	    if (chatUI == null) {
 		Log.warn("Message received in a inexistent chatUI");
 	    } else {
-		final String node = message.getFromURI().getNode();
-		chatUI.addMessage(node != null ? node : message.getFromURI().toString(), body);
+		final String node = message.getFrom().getNode();
+		chatUI.addMessage(node != null ? node : message.getFromAsString(), body);
 	    }
 	}
     }
 
     void messageReceivedInRoom(final Chat chat, final Message message) {
 	final RoomUI roomUI = (RoomUI) getChatUI(chat);
-	final XmppURI fromURI = message.getFromURI();
+	final XmppURI fromURI = message.getFrom();
 	if (roomUI == null) {
 	    Log.warn("Message received in a inexistent roomUI");
 	} else {

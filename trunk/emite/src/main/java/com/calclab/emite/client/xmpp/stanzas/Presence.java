@@ -28,18 +28,18 @@ public class Presence extends BasicStanza {
     /**
      * @see http://www.xmpp.org/rfcs/rfc3921.html#stanzas
      * 
-     * 2.2.2.1. Show
+     *      2.2.2.1. Show
      * 
-     * <p>
-     * If no 'show' element is provided, the entity is assumed to be online and
-     * available.
-     * </p>
+     *      <p>
+     *      If no 'show' element is provided, the entity is assumed to be online
+     *      and available.
+     *      </p>
      * 
-     * <p>
-     * If provided, the XML character data value MUST be one of the following
-     * (additional availability types could be defined through a
-     * properly-namespaced child element of the presence stanza):
-     * </p>
+     *      <p>
+     *      If provided, the XML character data value MUST be one of the
+     *      following (additional availability types could be defined through a
+     *      properly-namespaced child element of the presence stanza):
+     *      </p>
      */
     public static enum Show {
 	away, chat, dnd, xa, notSpecified, unknown
@@ -193,5 +193,4 @@ public class Presence extends BasicStanza {
 	setShow(value);
 	return this;
     }
-
 }

@@ -164,7 +164,7 @@ public class ChatManagerDefault extends SessionComponent implements ChatManager 
     }
 
     private void onChatMessageReceived(final Message message) {
-        final XmppURI from = message.getFromURI();
+        final XmppURI from = message.getFrom();
         final String thread = message.getThread();
 
         Chat chat = findChat(from, thread);

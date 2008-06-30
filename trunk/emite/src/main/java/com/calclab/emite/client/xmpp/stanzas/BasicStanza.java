@@ -42,20 +42,24 @@ public class BasicStanza extends DelegatedPacket implements Stanza {
 	super(new Packet(name, xmlns));
     }
 
-    public XmppURI getFromURI() {
+    public XmppURI getFrom() {
 	return uri(getAttribute(FROM));
+    }
+
+    public String getFromAsString() {
+	return getAttribute(FROM);
     }
 
     public String getId() {
 	return getAttribute(ID);
     }
 
-    public String getTo() {
-	return getAttribute(TO);
+    public XmppURI getTo() {
+	return uri(getToAsString());
     }
 
-    public XmppURI getToURI() {
-	return uri(getTo());
+    public String getToAsString() {
+	return getAttribute(TO);
     }
 
     public void setFrom(final XmppURI from) {

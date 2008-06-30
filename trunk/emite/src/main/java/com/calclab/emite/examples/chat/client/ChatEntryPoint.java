@@ -123,7 +123,7 @@ public class ChatEntryPoint implements EntryPoint {
 	});
 	new ChatListenerAdaptor(chat, new ChatListener() {
 	    public void onMessageReceived(final Chat chat, final Message message) {
-		chatPanel.showIncomingMessage(message.getFromURI(), message.getBody());
+		chatPanel.showIncomingMessage(message.getFrom(), message.getBody());
 	    }
 
 	    public void onMessageSent(final Chat chat, final Message message) {
