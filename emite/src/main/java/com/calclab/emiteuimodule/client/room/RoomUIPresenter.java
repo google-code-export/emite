@@ -122,7 +122,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 		    isSubjectEditable = true;
 		    if (!changeSubjectMessageDisplayed
 			    && view.getSubject().equals(i18n.t(RoomUIView.DEFAULT_INITIAL_MESSAGE))) {
-			view.addInfoMessage(i18n.t("To change the room subject just click on it"));
+			view.addInfoMessage(i18n.t("To change the room subject just click on it."));
 			changeSubjectMessageDisplayed = true;
 		    }
 		} else {

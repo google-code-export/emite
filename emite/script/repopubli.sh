@@ -12,7 +12,7 @@ USER=$5
 if [ $PARAMS -lt 4 ]
 then
   echo "Use: $0 <jar> <group> <artifact> <version> <username>"
-  echo "$0 target/emite-0.2.8-emiteuimodule.jar com.calclab.emite emiteuimodule 0.2.8 luther"
+  echo "$0 target/emite-0.3.0-emiteuimodule.jar com.calclab.emite emiteuimodule 0.3.0 luther"
   exit
 fi
 
