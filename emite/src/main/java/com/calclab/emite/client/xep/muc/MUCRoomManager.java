@@ -91,12 +91,12 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     protected void eventMessage(final Message message) {
         IPacket child;
         if (message.getType() == Message.Type.groupchat) {
-            final Room room = rooms.get(message.getFromURI().getJID());
+            final Room room = rooms.get(message.getFrom().getJID());
             if (room != null) {
                 room.receive(message);
             }
         } else if ((child = message.getFirstChild("x").getFirstChild("invite")) != NoPacket.INSTANCE) {
-            handleRoomInvitation(message.getFromURI(), new BasicStanza(child));
+            handleRoomInvitation(message.getFrom(), new BasicStanza(child));
         }
 
     }
@@ -105,7 +105,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
      * @see http://www.xmpp.org/extensions/xep-0045.html#createroom
      */
     private void eventPresence(final Presence presence) {
-        final XmppURI occupantURI = presence.getFromURI();
+        final XmppURI occupantURI = presence.getFrom();
         final Room room = rooms.get(occupantURI.getJID());
         if (room != null) {
             if (presence.hasAttribute("type", "unavailable")) {
@@ -133,7 +133,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     }
 
     private void handleRoomInvitation(final XmppURI roomURI, final Stanza invitation) {
-        fireInvitationReceived(invitation.getFromURI(), roomURI, invitation.getFirstChild("reason").getText());
+        fireInvitationReceived(invitation.getFrom(), roomURI, invitation.getFirstChild("reason").getText());
     }
 
     private void install() {

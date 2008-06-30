@@ -211,9 +211,9 @@ public class Room extends AbstractChat implements Chat {
     }
 
     private void fireSubjectChanged(final Message message, final String subject) {
-	onSubjectChanged.fire(occupants.get(message.getFromURI()), subject);
+	onSubjectChanged.fire(occupants.get(message.getFrom()), subject);
 	for (final ChatListener listener : listeners) {
-	    ((RoomListener) listener).onSubjectChanged(message.getFromURI().getResource(), subject);
+	    ((RoomListener) listener).onSubjectChanged(message.getFrom().getResource(), subject);
 	}
     }
 

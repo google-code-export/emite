@@ -430,7 +430,7 @@ public class RosterUIPresenter {
     }
 
     private void logPresence(final Presence presence, final String subTitle) {
-	Log.info("Presence: type: " + presence.getType() + ", from: " + presence.getFromURI().toString() + ", show: "
+	Log.info("Presence: type: " + presence.getType() + ", from: " + presence.getFromAsString() + ", show: "
 		+ presence.getShow().toString() + ", status: " + presence.getStatus() + " (" + subTitle + ")");
     }
 

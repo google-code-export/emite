@@ -24,8 +24,8 @@ public class BasicStanzaTest {
 	final BasicStanza stanza = new BasicStanza("name", "xmlns");
 
 	stanza.setTo(uri("name@domain/resource"));
-	assertEquals("name@domain/resource", stanza.getTo());
+	assertEquals("name@domain/resource", stanza.getToAsString());
 	stanza.setTo((XmppURI) null);
-	assertNull(stanza.getTo());
+	assertNull(stanza.getToAsString());
     }
 }

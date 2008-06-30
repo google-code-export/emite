@@ -46,7 +46,7 @@ public class Echo {
 
     private void echo(final Message message) {
 	// exchange the from and to...
-	final Message response = new Message(message.getToURI(), message.getFromURI(), message.getBody());
+	final Message response = new Message(message.getTo(), message.getFrom(), message.getBody());
 	emite.send(response);
     }
 }
