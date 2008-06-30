@@ -31,24 +31,58 @@ public class EchoModule implements Module {
 }
 }}}
 
-The EchoModule is a module (implements Module) that register a Echo(.class) component using a Provider<Echo> interface. Inside the provider we can use the ModuleBuilder to resolve the component dependencies. In this case, Echo component *depends* on Emite(.class) component.
+The !EchoModule is a module (implements Module) that register a Echo(.class) component using a Provider<Echo> interface. Inside the provider we can use the !ModuleBuilder to resolve the component dependencies. In this case, Echo component *depends* on Emite(.class) component.
 
 === current modules ===
 
 *emite library*
-  * ServicesModule!: implements HttpConnections. Two implementations provided: a GWT implementation to use inside browsers and a J2SE module to use emite in desktop (i.e. swing) applications. Currently the J2SE module is for testing purposes only. 
-  * CoreModule!: implements BOSH and xmpp stanzas specification
-  * InstantMessagingModule!: implements instant messaging xmpp specification (sessions, presence, roster)
+  * !ServicesModule: implements !HttpConnections. Two implementations provided: a GWT implementation to use inside browsers and a J2SE module to use emite in desktop (i.e. swing) applications. Currently the J2SE module is for testing purposes only. 
+  * !CoreModule: implements BOSH and xmpp stanzas specification
+  * !InstantMessagingModule: implements instant messaging xmpp specification (sessions, presence, roster)
 
 *library extensions*
   * MUCModule: implements XEP-0045: Multi-User Chat
-  * ChatStateModule!: implements XEP-0085: Chat State Notifications
-  * AvatorModule! and DiscoveryModule!: in development
+  * !ChatStateModule: implements XEP-0085: Chat State Notifications
+  * !AvatarModule and !DiscoveryModule: in development
 
 *emite user interfaces*
-  * EmiteUIModule!: implements a full featured chat/rooms using gwt-ext
-  * SwingModule!: implements a basic featured swing client for testing purposes only
+  * !EmiteUIModule: implements a full featured chat/rooms using gwt-ext
+  * !SwingModule: implements a basic featured swing client for testing purposes only
 
   
-
 === slot/signals ===
+
+instead of listeners, emite uses a slot/signal to implement the publisher/observer pattern. using slots, objects can receive notifications from other objects. 
+
+every observable object have some onXXXX methods that allows add receive signals from them. For example, Session objects have the following onXXX methods:
+{{{
+class Session {
+  ...
+  public void onStateChanged(...) {...}
+  public void onPresence(...) {...}
+  public void onMessage(...) {...}
+  public void onLogin(...) {...}
+}
+}}}
+
+if we want to write a component that knows when a message arrives we will do the following:
+{{{
+class MyComponent {
+  public MyComponent(Session session) {
+    session.onMessage(new Slot<Message>() {
+       public void event(Message message) {
+          System.out.println ("A message arrived: " + message);
+       }
+    }
+  }
+}
+}}}
+
+=== scopes ===
+
+if you look carefully to the !EchoModule example you can see the way we _inject_ the session object in the Echo component's constructor.
+Also, we use !SessionScope scope. This has a very important implication: the Echo module is created when the Session is created so it will receive the session signals.
+
+=== sending messages ===
+TODO (see Emite.class)
+
