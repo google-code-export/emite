@@ -49,8 +49,7 @@ import com.calclab.emite.client.xep.muc.RoomInvitation;
 import com.calclab.emite.client.xep.muc.RoomListener;
 import com.calclab.emite.client.xep.muc.RoomListenerAdaptor;
 import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.session.ISession;
-import com.calclab.emite.client.xmpp.session.ISession.State;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -171,15 +170,15 @@ public class SwingClient {
     }
 
     private void addXmppListeners() {
-	xmpp.getSession().onStateChanged(new Slot<ISession.State>() {
-	    public void onEvent(final ISession.State current) {
+	xmpp.getSession().onStateChanged(new Slot<Session.State>() {
+	    public void onEvent(final Session.State current) {
 		print("STATE: " + current);
-		final boolean isConnected = current == ISession.State.ready;
+		final boolean isConnected = current == Session.State.ready;
 		loginPanel.showState("state: " + current.toString(), isConnected);
 		tabs.setEnabled(isConnected);
-		if (current == ISession.State.disconnected) {
+		if (current == Session.State.disconnected) {
 		    rosterPanel.clear();
-		} else if (current == ISession.State.notAuthorized) {
+		} else if (current == Session.State.notAuthorized) {
 		    JOptionPane.showMessageDialog(frame, "lo siento, tienes mal la contraseña -o el usuario ;)-");
 		}
 	    }

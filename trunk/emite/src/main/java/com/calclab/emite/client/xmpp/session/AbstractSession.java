@@ -7,22 +7,22 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
-public abstract class AbstractSession implements ISession {
+public abstract class AbstractSession implements Session {
 
-    protected final Signal<ISession.State> onStateChanged;
+    protected final Signal<Session.State> onStateChanged;
     protected final Signal<Presence> onPresence;
     protected final Signal<Message> onMessage;
     protected final Signal<IQ> onIQ;
-    protected final Signal<ISession> onLoggedOut;
+    protected final Signal<Session> onLoggedOut;
     protected final Signal<XmppURI> onLoggedIn;
 
     public AbstractSession() {
-	this.onStateChanged = new Signal<ISession.State>("session:onStateChanged");
+	this.onStateChanged = new Signal<Session.State>("session:onStateChanged");
 	this.onPresence = new Signal<Presence>("session:onPresence");
 	this.onMessage = new Signal<Message>("session:onMessage");
 	this.onIQ = new Signal<IQ>("session:onIQ");
 	this.onLoggedIn = new Signal<XmppURI>("session:onLoggedIn");
-	this.onLoggedOut = new Signal<ISession>("session:onLoggedOut");
+	this.onLoggedOut = new Signal<Session>("session:onLoggedOut");
     }
 
     public void onIQ(final Slot<IQ> slot) {
@@ -33,7 +33,7 @@ public abstract class AbstractSession implements ISession {
 	onLoggedIn.add(slot);
     }
 
-    public void onLoggedOut(final Slot<ISession> slot) {
+    public void onLoggedOut(final Slot<Session> slot) {
 	onLoggedOut.add(slot);
     }
 
@@ -45,7 +45,7 @@ public abstract class AbstractSession implements ISession {
 	onPresence.add(listener);
     }
 
-    public void onStateChanged(final Slot<ISession.State> listener) {
+    public void onStateChanged(final Slot<Session.State> listener) {
 	onStateChanged.add(listener);
     }
 

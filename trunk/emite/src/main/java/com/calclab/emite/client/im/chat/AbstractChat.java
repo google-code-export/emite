@@ -23,7 +23,7 @@ package com.calclab.emite.client.im.chat;
 
 import java.util.HashMap;
 
-import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Signal;
@@ -35,15 +35,15 @@ public abstract class AbstractChat implements Chat {
     protected final XmppURI other;
     protected Status status;
     protected final Signal<Status> onStateChanged;
+    protected final Signal<Message> onBeforeReceive;
+    protected final Session session;
     private final HashMap<Class<?>, Object> data;
     private final Signal<Message> onMessageSent;
     private final Signal<Message> onMessageReceived;
     private final Signal<Message> onBeforeSend;
-    protected final Signal<Message> onBeforeReceive;
-    protected final ISession session;
 
-    public AbstractChat(final ISession sessionImpl, final XmppURI other) {
-	this.session = sessionImpl;
+    public AbstractChat(final Session session, final XmppURI other) {
+	this.session = session;
 	this.other = other;
 	this.listeners = new ChatListenerCollection();
 	this.data = new HashMap<Class<?>, Object>();

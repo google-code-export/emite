@@ -37,7 +37,7 @@ public abstract class AbstractModule implements Module {
 	}
     }
 
-    public <T> void register(final AbstractFactory<T> provider, final Class<? extends Scope> scope) {
+    public <T> void register(final AbstractFactory<T> provider) {
 	builder.registerProvider(provider.getType(), provider.getProvider());
     }
 

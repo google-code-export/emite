@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import com.calclab.emite.client.core.bosh3.Bosh3Settings;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.AbstractSession;
-import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -21,7 +21,7 @@ import com.calclab.suco.client.signal.Slot;
 
 public class MockedSession extends AbstractSession {
     private XmppURI currentUser;
-    private ISession.State state;
+    private Session.State state;
     private final TigaseXMLService xmler;
     private final ArrayList<IPacket> sent;
     private IPacket lastIQSent;
@@ -59,7 +59,7 @@ public class MockedSession extends AbstractSession {
 	return currentUser;
     }
 
-    public ISession.State getState() {
+    public Session.State getState() {
 	return state;
     }
 
@@ -80,7 +80,7 @@ public class MockedSession extends AbstractSession {
     }
 
     @Override
-    public void onLoggedOut(final Slot<ISession> slot) {
+    public void onLoggedOut(final Slot<Session> slot) {
 	onLoggedOut.add(slot);
     }
 
@@ -95,7 +95,7 @@ public class MockedSession extends AbstractSession {
     }
 
     @Override
-    public void onStateChanged(final Slot<ISession.State> slot) {
+    public void onStateChanged(final Slot<Session.State> slot) {
 	onStateChanged.add(slot);
     }
 
@@ -144,7 +144,7 @@ public class MockedSession extends AbstractSession {
 	onLoggedIn.fire(userURI);
     }
 
-    public void setState(final ISession.State state) {
+    public void setState(final Session.State state) {
 	this.state = state;
     }
 

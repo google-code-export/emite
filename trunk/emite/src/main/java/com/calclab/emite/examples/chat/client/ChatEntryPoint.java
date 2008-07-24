@@ -32,7 +32,7 @@ import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatListenerAdaptor;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
-import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
@@ -139,8 +139,8 @@ public class ChatEntryPoint implements EntryPoint {
 	xmpp = Xmpp.create();
 	xmpp.setBoshSettings(httpBase, hostName);
 
-	xmpp.getSession().onStateChanged(new Slot<ISession.State>() {
-	    public void onEvent(final ISession.State current) {
+	xmpp.getSession().onStateChanged(new Slot<Session.State>() {
+	    public void onEvent(final Session.State current) {
 		final String theStatus = current.toString();
 		loginPanel.setStatus(theStatus);
 		conversationsPanel.setStatus(theStatus);

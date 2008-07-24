@@ -7,8 +7,7 @@ import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.session.ISession;
-import com.calclab.emite.client.xmpp.session.SessionImpl;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.suco.client.container.Provider;
 import com.calclab.suco.client.modules.Module;
 import com.calclab.suco.client.modules.ModuleBuilder;
@@ -28,9 +27,9 @@ public class StatusUIModule implements Module {
 		final RosterManager rosterManager = builder.getInstance(RosterManager.class);
 		final ChatManager chatManager = builder.getInstance(ChatManager.class);
 		final RoomManager roomManager = builder.getInstance(RoomManager.class);
-		final ISession sessionImpl = builder.getInstance(SessionImpl.class);
+		final Session session = builder.getInstance(Session.class);
 		final Xmpp xmpp = builder.getInstance(Xmpp.class);
-		final StatusUIPresenter presenter = new StatusUIPresenter(xmpp, sessionImpl, presenceManager,
+		final StatusUIPresenter presenter = new StatusUIPresenter(xmpp, session, presenceManager,
 			rosterManager, chatManager, roomManager, i18n);
 		final StatusUIPanel panel = new StatusUIPanel(presenter, i18n);
 		presenter.init(panel);

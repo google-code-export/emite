@@ -22,8 +22,7 @@
 package com.calclab.emite.client.xep.avatar;
 
 import com.calclab.emite.client.im.presence.PresenceManager;
-import com.calclab.emite.client.xmpp.session.ISession;
-import com.calclab.emite.client.xmpp.session.SessionImpl;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.Provider;
@@ -45,7 +44,7 @@ public class AvatarModule implements Module {
 	builder.registerProvider(AvatarManager.class, new Provider<AvatarManager>() {
 	    public AvatarManager get() {
 		final PresenceManager presenceManager = builder.getInstance(PresenceManager.class);
-		return new AvatarManager(builder.getInstance(ISession.class), presenceManager);
+		return new AvatarManager(builder.getInstance(Session.class), presenceManager);
 	    }
 	}, SessionScope.class);
     }

@@ -27,8 +27,7 @@ import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.services.gwt.GWTServicesModule;
-import com.calclab.emite.client.xmpp.session.ISession;
-import com.calclab.emite.client.xmpp.session.SessionImpl;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.container.Container;
@@ -62,7 +61,7 @@ public class Xmpp extends DelegatedContainer {
 	return container.getInstance(Xmpp.class);
     }
 
-    private ISession sessionImpl;
+    private Session session;
     private final boolean isStarted;
     private Bosh3Settings settings;
 
@@ -90,21 +89,21 @@ public class Xmpp extends DelegatedContainer {
 	return getInstance(RosterManager.class);
     }
 
-    public ISession getSession() {
-	if (this.sessionImpl == null) {
-	    this.sessionImpl = getInstance(SessionImpl.class);
+    public Session getSession() {
+	if (this.session == null) {
+	    this.session = getInstance(Session.class);
 	}
-	return sessionImpl;
+	return session;
     }
 
     public void login(final XmppURI uri, final String password, final Presence.Show show, final String status) {
 	start();
-	sessionImpl.login(uri, password, settings);
+	session.login(uri, password, settings);
 	getPresenceManager().setOwnPresence(status, show);
     }
 
     public void logout() {
-	sessionImpl.logout();
+	session.logout();
     }
 
     public void setBoshSettings(final Bosh3Settings settings) {

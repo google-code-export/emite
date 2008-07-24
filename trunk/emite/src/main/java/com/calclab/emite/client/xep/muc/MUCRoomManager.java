@@ -29,7 +29,7 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.NoPacket;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
-import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -44,8 +44,8 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     private final HashMap<XmppURI, Room> rooms;
     private final Signal<RoomInvitation> onInvitationReceived;
 
-    public MUCRoomManager(final ISession sessionImpl) {
-	super(sessionImpl);
+    public MUCRoomManager(final Session session) {
+	super(session);
 	this.onInvitationReceived = new Signal<RoomInvitation>("onInvitationReceived");
 	this.rooms = new HashMap<XmppURI, Room>();
 	install();
@@ -68,15 +68,15 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     public <T> Room openChat(final XmppURI roomURI, final java.lang.Class<T> dataType, final T dataValue) {
 	Room room = rooms.get(roomURI.getJID());
 	if (room == null) {
-	    room = new Room(sessionImpl, roomURI.getJID(), "the name of the room");
+	    room = new Room(session, roomURI.getJID(), "the name of the room");
 	    if (dataType != null) {
 		room.setData(dataType, dataValue);
 	    }
 	    rooms.put(roomURI.getJID(), room);
 	    chats.add(room);
-	    final Presence presence = new Presence(null, sessionImpl.getCurrentUser(), roomURI);
+	    final Presence presence = new Presence(null, session.getCurrentUser(), roomURI);
 	    presence.addChild("x", "http://jabber.org/protocol/muc");
-	    sessionImpl.send(presence);
+	    session.send(presence);
 	    onChatCreated.fire(room);
 	} else {
 	    room.setData(dataType, dataValue);
@@ -134,7 +134,7 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
     }
 
     private void install() {
-	sessionImpl.onPresence(new Slot<Presence>() {
+	session.onPresence(new Slot<Presence>() {
 	    public void onEvent(final Presence presence) {
 		eventPresence(presence);
 	    }
@@ -149,9 +149,9 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 
     private void requestCreateInstantRoom(final Room room) {
 
-	final IQ iq = new IQ(Type.set, sessionImpl.getCurrentUser(), room.getOtherURI());
+	final IQ iq = new IQ(Type.set, session.getCurrentUser(), room.getOtherURI());
 	iq.addQuery("http://jabber.org/protocol/muc#owner").addChild("x", "jabber:x:data").With("type", "submit");
-	sessionImpl.sendIQ("rooms", iq, new Slot<IPacket>() {
+	session.sendIQ("rooms", iq, new Slot<IPacket>() {
 	    public void onEvent(final IPacket received) {
 		if (IQ.isSuccess(received)) {
 		    room.setStatus(Chat.Status.ready);
