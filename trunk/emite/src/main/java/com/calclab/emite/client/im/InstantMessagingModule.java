@@ -21,12 +21,12 @@
  */
 package com.calclab.emite.client.im;
 
-import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
+import com.calclab.emite.client.xmpp.session.ISession;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.suco.client.container.Provider;
 import com.calclab.suco.client.modules.Module;
@@ -47,19 +47,19 @@ public class InstantMessagingModule implements Module {
 
 	builder.registerProvider(ChatManager.class, new Provider<ChatManager>() {
 	    public ChatManagerDefault get() {
-		return new ChatManagerDefault(builder.getInstance(Emite.class));
+		return new ChatManagerDefault(builder.getInstance(ISession.class));
 	    }
 	}, SessionScope.class);
 
 	builder.registerProvider(RosterManager.class, new Provider<RosterManager>() {
 	    public RosterManager get() {
-		return new RosterManager(builder.getInstance(Emite.class), builder.getInstance(Roster.class));
+		return new RosterManager(builder.getInstance(ISession.class), builder.getInstance(Roster.class));
 	    }
 	}, SessionScope.class);
 
 	builder.registerProvider(PresenceManager.class, new Provider<PresenceManager>() {
 	    public PresenceManager get() {
-		return new PresenceManager(builder.getInstance(Emite.class));
+		return new PresenceManager(builder.getInstance(ISession.class), builder.getInstance(Roster.class));
 	    }
 	}, SessionScope.class);
 

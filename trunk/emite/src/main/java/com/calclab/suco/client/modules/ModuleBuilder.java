@@ -50,7 +50,7 @@ public class ModuleBuilder extends DelegatedContainer {
      * load the modules list into the container
      * 
      * @param module
-     *                list
+     *            list
      */
     public void add(final Module... toAddModules) {
 	for (final Module m : toAddModules) {

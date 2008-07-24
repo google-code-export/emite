@@ -23,7 +23,7 @@ package com.calclab.emite.client.im.chat;
 
 import java.util.HashMap;
 
-import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.xmpp.session.ISession;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Signal;
@@ -32,8 +32,6 @@ import com.calclab.suco.client.signal.Slot;
 public abstract class AbstractChat implements Chat {
 
     protected final ChatListenerCollection listeners;
-    protected final Emite emite;
-    protected final XmppURI from;
     protected final XmppURI other;
     protected Status status;
     protected final Signal<Status> onStateChanged;
@@ -42,10 +40,10 @@ public abstract class AbstractChat implements Chat {
     private final Signal<Message> onMessageReceived;
     private final Signal<Message> onBeforeSend;
     protected final Signal<Message> onBeforeReceive;
+    protected final ISession session;
 
-    public AbstractChat(final XmppURI from, final XmppURI other, final Emite emite) {
-	this.emite = emite;
-	this.from = from;
+    public AbstractChat(final ISession sessionImpl, final XmppURI other) {
+	this.session = sessionImpl;
 	this.other = other;
 	this.listeners = new ChatListenerCollection();
 	this.data = new HashMap<Class<?>, Object>();
@@ -67,7 +65,7 @@ public abstract class AbstractChat implements Chat {
     }
 
     public XmppURI getFromURI() {
-	return from;
+	return session.getCurrentUser();
     }
 
     public XmppURI getOtherURI() {
@@ -106,10 +104,10 @@ public abstract class AbstractChat implements Chat {
 
     public void send(final Message message) {
 	if (status == Status.ready) {
-	    message.setFrom(from);
+	    message.setFrom(session.getCurrentUser());
 	    message.setTo(other);
 	    onBeforeSend.fire(message);
-	    emite.send(message);
+	    session.send(message);
 	    onMessageSent.fire(message);
 	    listeners.onMessageSent(this, message);
 	}

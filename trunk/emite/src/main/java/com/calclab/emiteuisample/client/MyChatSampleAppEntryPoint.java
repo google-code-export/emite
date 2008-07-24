@@ -34,7 +34,7 @@ public class MyChatSampleAppEntryPoint implements EntryPoint {
 	final ModuleBuilder container = new ModuleBuilder();
 	container.add(new EmiteModule(), new EmiteUIModule());
 	final EmiteUIDialog emiteUIDialog = container.getInstance(EmiteUIDialog.class);
-	emiteUIDialog.start("admin@localhost", "easyeasy", "/proxy", "rooms.localhost");
+	emiteUIDialog.start("admin@localhost", "easyeasy", "/proxy", "localhost", "rooms.localhost");
 	emiteUIDialog.show(OwnPresence.OwnStatus.online);
     }
 }

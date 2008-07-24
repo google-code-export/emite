@@ -21,14 +21,14 @@
  */
 package com.calclab.emite.client;
 
-import com.calclab.emite.client.core.CoreModule;
-import com.calclab.emite.client.core.bosh.BoshOptions;
-import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
+import com.calclab.emite.client.core.bosh3.Bosh3Settings;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.xmpp.session.Session;
+import com.calclab.emite.client.services.gwt.GWTServicesModule;
+import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.SessionImpl;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.container.Container;
@@ -62,8 +62,9 @@ public class Xmpp extends DelegatedContainer {
 	return container.getInstance(Xmpp.class);
     }
 
-    private Session session;
+    private ISession sessionImpl;
     private final boolean isStarted;
+    private Bosh3Settings settings;
 
     protected Xmpp(final Container container) {
 	super(container);
@@ -89,29 +90,29 @@ public class Xmpp extends DelegatedContainer {
 	return getInstance(RosterManager.class);
     }
 
-    public Session getSession() {
-	if (this.session == null) {
-	    this.session = getInstance(Session.class);
+    public ISession getSession() {
+	if (this.sessionImpl == null) {
+	    this.sessionImpl = getInstance(SessionImpl.class);
 	}
-	return session;
+	return sessionImpl;
     }
 
     public void login(final XmppURI uri, final String password, final Presence.Show show, final String status) {
 	start();
-	session.login(uri, password);
+	sessionImpl.login(uri, password, settings);
 	getPresenceManager().setOwnPresence(status, show);
     }
 
     public void logout() {
-	session.logout();
+	sessionImpl.logout();
     }
 
-    public void setBoshOptions(final BoshOptions boshOptions) {
-	CoreModule.getBosh(this).setOptions(boshOptions);
+    public void setBoshSettings(final Bosh3Settings settings) {
+	this.settings = settings;
     }
 
-    public void setHttpBase(final String httpBase) {
-	CoreModule.getBosh(this).getOptions().httpBase = httpBase;
+    public void setBoshSettings(final String httpBase, final String hostName) {
+	this.settings = new Bosh3Settings(httpBase, hostName);
     }
 
     public void start() {

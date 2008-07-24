@@ -21,32 +21,36 @@
  */
 package com.calclab.emite.client.im.presence;
 
-import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
-
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.dispatcher.PacketListener;
-import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.xmpp.session.SessionComponent;
+import com.calclab.emite.client.im.roster.Roster;
+import com.calclab.emite.client.xmpp.session.ISession;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
-public class PresenceManager extends SessionComponent {
+public class PresenceManager {
     private Presence delayedPresence;
     private Presence ownPresence;
     private final Signal<Presence> onOwnPresenceChanged;
     private final Signal<Presence> onPresenceReceived;
+    private final ISession session;
+    private final Roster roster;
 
-    public PresenceManager(final Emite emite) {
-	super(emite);
+    public PresenceManager(final ISession sessionImpl, final Roster roster) {
+	this.session = sessionImpl;
+	this.roster = roster;
 	this.ownPresence = new Presence(Type.unavailable, null, null);
 	this.onPresenceReceived = new Signal<Presence>("onPresenceReceived");
 	this.onOwnPresenceChanged = new Signal<Presence>("onOwnPresenceChanged");
 	install();
+	sessionImpl.onLoggedOut(new Slot<ISession>() {
+	    public void onEvent(final ISession parameter) {
+		logOut();
+	    }
+	});
     }
 
     /**
@@ -57,26 +61,6 @@ public class PresenceManager extends SessionComponent {
      */
     public Presence getOwnPresence() {
 	return ownPresence;
-    }
-
-    /**
-     * 5.1.5. Unavailable Presence (rfc 3921)
-     * 
-     * Before ending its session with a server, a client SHOULD gracefully
-     * become unavailable by sending a final presence stanza that possesses no
-     * 'to' attribute and that possesses a 'type' attribute whose value is
-     * "unavailable" (optionally, the final presence stanza MAY contain one or
-     * more <status/> elements specifying the reason why the user is no longer
-     * available).
-     */
-    @Override
-    public void logOut() {
-	if (isLoggedIn()) {
-	    final Presence presence = new Presence(Type.unavailable, userURI, userURI.getHostURI());
-	    delayedPresence = null;
-	    broadcastPresence(presence);
-	}
-	super.logOut();
     }
 
     public void onOwnPresenceChanged(final Slot<Presence> listener) {
@@ -96,7 +80,7 @@ public class PresenceManager extends SessionComponent {
      * @param presence
      */
     public void setOwnPresence(final Presence presence) {
-	if (isLoggedIn()) {
+	if (session.isLoggedIn()) {
 	    broadcastPresence(presence);
 	} else {
 	    delayedPresence = presence;
@@ -125,8 +109,8 @@ public class PresenceManager extends SessionComponent {
     }
 
     private void broadcastPresence(final Presence presence) {
-	presence.setFrom(userURI);
-	emite.send(presence);
+	presence.setFrom(session.getCurrentUser());
+	session.send(presence);
 	ownPresence = presence;
 	onOwnPresenceChanged.fire(ownPresence);
     }
@@ -136,26 +120,23 @@ public class PresenceManager extends SessionComponent {
      * SHOULD request the roster before sending initial presence
      */
     private void install() {
-	emite.subscribe(when(RosterManager.Events.ready), new PacketListener() {
-	    public void handle(final IPacket received) {
-		final Presence initialPresence = new Presence(userURI).With(Presence.Show.chat);
+	roster.onReady(new Slot<Roster>() {
+	    public void onEvent(final Roster parameter) {
+		final Presence initialPresence = new Presence(session.getCurrentUser()).With(Presence.Show.chat);
 		broadcastPresence(initialPresence);
 		if (delayedPresence != null) {
-		    delayedPresence.setFrom(userURI);
+		    delayedPresence.setFrom(session.getCurrentUser());
 		    broadcastPresence(delayedPresence);
 		    delayedPresence = null;
 		}
 	    }
 	});
 
-	emite.subscribe(when("presence"), new PacketListener() {
-	    public void handle(final IPacket received) {
-
-		final Presence presence = new Presence(received);
+	session.onPresence(new Slot<Presence>() {
+	    public void onEvent(final Presence presence) {
 		switch (presence.getType()) {
-
 		case probe:
-		    emite.send(ownPresence);
+		    session.send(ownPresence);
 		    break;
 		case error:
 		    // FIXME: what should we do?
@@ -168,6 +149,23 @@ public class PresenceManager extends SessionComponent {
 	    }
 	});
 
+    }
+
+    /**
+     * 5.1.5. Unavailable Presence (rfc 3921)
+     * 
+     * Before ending its session with a server, a client SHOULD gracefully
+     * become unavailable by sending a final presence stanza that possesses no
+     * 'to' attribute and that possesses a 'type' attribute whose value is
+     * "unavailable" (optionally, the final presence stanza MAY contain one or
+     * more <status/> elements specifying the reason why the user is no longer
+     * available).
+     */
+    private void logOut() {
+	final XmppURI userURI = session.getCurrentUser();
+	final Presence presence = new Presence(Type.unavailable, userURI, userURI.getHostURI());
+	delayedPresence = null;
+	broadcastPresence(presence);
     }
 
 }

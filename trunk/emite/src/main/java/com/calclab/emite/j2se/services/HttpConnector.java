@@ -31,8 +31,8 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpClientParams;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.services.ConnectorCallback;
-import com.calclab.emite.client.core.services.ConnectorException;
+import com.calclab.emite.client.services.ConnectorCallback;
+import com.calclab.emite.client.services.ConnectorException;
 
 public class HttpConnector {
 

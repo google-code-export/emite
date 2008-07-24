@@ -32,7 +32,7 @@ import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatListenerAdaptor;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
-import com.calclab.emite.client.xmpp.session.Session.State;
+import com.calclab.emite.client.xmpp.session.ISession;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
@@ -93,9 +93,9 @@ public class ChatEntryPoint implements EntryPoint {
 
 	dialogBox = new DialogBox();
 	loginPanel = new LoginPanel(new LoginPanelListener() {
-	    public void onLogin(final String bind, final String domain, final String name, final String password) {
+	    public void onLogin(final String base, final String domain, final String name, final String password) {
 		loginPanel.setStatus("preparing...");
-		createXMPP(bind);
+		createXMPP(base, domain);
 		xmpp.login(new XmppURI(name, domain, "emite"), password, Show.notSpecified, null);
 	    }
 	});
@@ -135,12 +135,12 @@ public class ChatEntryPoint implements EntryPoint {
 	return chatPanel;
     }
 
-    private void createXMPP(final String bind) {
+    private void createXMPP(final String httpBase, final String hostName) {
 	xmpp = Xmpp.create();
-	xmpp.setHttpBase(bind);
+	xmpp.setBoshSettings(httpBase, hostName);
 
-	xmpp.getSession().onStateChanged(new Slot<State>() {
-	    public void onEvent(final State current) {
+	xmpp.getSession().onStateChanged(new Slot<ISession.State>() {
+	    public void onEvent(final ISession.State current) {
 		final String theStatus = current.toString();
 		loginPanel.setStatus(theStatus);
 		conversationsPanel.setStatus(theStatus);

@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.bosh.BoshOptions;
+import com.calclab.emite.client.core.bosh3.Bosh3Settings;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
@@ -151,15 +151,17 @@ public class EmiteUIDialog {
 	setOwnPresence(status);
     }
 
-    public void start(final String userJid, final String userPasswd, final String httpBase, final String roomHost) {
+    public void start(final String userJid, final String userPasswd, final String httpBase, final String host,
+	    final String roomHost) {
 	start(new UserChatOptions(userJid, userPasswd, ("emiteui-" + new Date().getTime()), "blue",
-		RosterManager.DEF_SUBSCRIPTION_MODE, true), httpBase, roomHost);
+		RosterManager.DEF_SUBSCRIPTION_MODE, true), httpBase, host, roomHost);
     }
 
-    public void start(final UserChatOptions userChatOptions, final String httpBase, final String roomHost) {
+    public void start(final UserChatOptions userChatOptions, final String httpBase, final String host,
+	    final String roomHost) {
 	// We define, default AvatarProvider and MultiChaListener for simple
 	// facade
-	start(userChatOptions, httpBase, roomHost, new AvatarProvider() {
+	start(userChatOptions, httpBase, host, roomHost, new AvatarProvider() {
 	    public String getAvatarURL(final XmppURI userURI) {
 		return "images/person-def.gif";
 	    }
@@ -177,9 +179,9 @@ public class EmiteUIDialog {
 	});
     }
 
-    public void start(final UserChatOptions userChatOptions, final String httpBase, final String roomHost,
-	    final AvatarProvider avatarProvider, final String emiteDialogTitle) {
-	xmpp.setBoshOptions(new BoshOptions(httpBase));
+    public void start(final UserChatOptions userChatOptions, final String httpBase, final String host,
+	    final String roomHost, final AvatarProvider avatarProvider, final String emiteDialogTitle) {
+	xmpp.setBoshSettings(new Bosh3Settings(httpBase, host));
 	xmpp.getInstance(StatusUI.class).setCurrentUserChatOptions(userChatOptions);
 	xmpp.getInstance(RoomUIManager.class).setRoomHostDefault(roomHost);
 	multiChatDialog = createChatDialog(new MultiChatCreationParam(emiteDialogTitle, roomHost, avatarProvider,
