@@ -29,10 +29,10 @@ public class EmiteTestHelper implements Emite {
 
     public EmiteTestHelper() {
 	xmler = new TigaseXMLService();
+	sent = new ArrayList<IPacket>();
 	dispatcher = new DispatcherDefault();
 	published = new ArrayList<IPacket>();
 	lastIQSent = null;
-	sent = new ArrayList<IPacket>();
     }
 
     public void addListener(final DispatcherStateListener listener) {
@@ -99,6 +99,10 @@ public class EmiteTestHelper implements Emite {
 	assertNotContains(packet, published);
     }
 
+    public void verifyNotSent(final IPacket packet) {
+	assertNotContains(packet, sent);
+    }
+
     public void verifyNotSent(final String xml) {
 	verifyNotSent(xmler.toXML(xml));
     }
@@ -144,10 +148,6 @@ public class EmiteTestHelper implements Emite {
 	    isContained = isContained ? isContained : matcher.matches(packet, System.out);
 	}
 	return isContained;
-    }
-
-    private void verifyNotSent(final IPacket packet) {
-	assertNotContains(packet, sent);
     }
 
 }

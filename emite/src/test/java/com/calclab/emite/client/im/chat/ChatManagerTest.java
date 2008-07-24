@@ -9,7 +9,6 @@ import static org.junit.Assert.assertSame;
 import org.junit.Test;
 
 import com.calclab.emite.client.im.chat.Chat.Status;
-import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.testing.MockSlot;
 
@@ -18,8 +17,8 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Test
     public void managerShouldCreateOneChatForSameResource() {
 	final MockSlot<Chat> listener = addOnChatCreatedSlot();
-	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 1"));
-	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
+	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 1"));
+	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
 	verifyCalled(listener, 1);
     }
 
@@ -41,15 +40,15 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	final Chat chat = manager.openChat(uri("name@domain/resouce"), null, null);
 	final MockSlot<Status> listener = new MockSlot<Status>();
 	chat.onStateChanged(listener);
-	emite.receives(SessionManager.Events.onLoggedOut);
+	session.logout();
 	verifyCalledWith(listener, Status.locked);
     }
 
     @Test
     public void shouldReuseChatIfNotResouceSpecified() {
 	final MockSlot<Chat> listener = addOnChatCreatedSlot();
-	emite.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
-	emite.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
+	session.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
+	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
 	verifyCalled(listener, 1);
     }
 
@@ -58,7 +57,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	final Chat chat = manager.openChat(uri("someone@domain"), null, null);
 	final MockSlot<Message> slot = new MockSlot<Message>();
 	chat.onMessageReceived(slot);
-	emite.receives("<message type='chat' id='purplee8b92642' to='user@domain' "
+	session.receives("<message type='chat' id='purplee8b92642' to='user@domain' "
 		+ "from='someone@domain'><x xmlns='jabber:x:event'/><active"
 		+ "xmlns='http://jabber.org/protocol/chatstates'/></message>");
 	verifyCalled(slot);
@@ -69,13 +68,13 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	final MockSlot<Chat> listener = addOnChatCreatedSlot();
 	final Chat chat = manager.openChat(uri("someone@domain"), null, null);
 	verifyCalledWithSame(listener, chat);
-	emite.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer").Thread(chat.getThread()));
+	session.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer").Thread(chat.getThread()));
 	verifyCalled(listener, 1);
     }
 
     @Override
     protected ChatManagerDefault createChatManager() {
-	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(emite);
+	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(session);
 	return chatManagerDefault;
     }
 

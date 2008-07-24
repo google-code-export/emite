@@ -3,18 +3,18 @@ package com.calclab.emite.client.xep.disco;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.MockSlot;
+import com.calclab.emite.testing.MockedSession;
 
 public class DiscoveryManagerTest {
 
-    private EmiteTestHelper emite;
     private DiscoveryManager manager;
+    private MockedSession session;
 
     @Before
     public void beforeTests() {
-	emite = new EmiteTestHelper();
-	manager = new DiscoveryManager(emite);
+	session = new MockedSession();
+	manager = new DiscoveryManager(session);
     }
 
     @Test
