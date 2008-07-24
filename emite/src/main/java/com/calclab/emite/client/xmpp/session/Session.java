@@ -8,7 +8,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Slot;
 
-public interface ISession {
+public interface Session {
 
     public static enum State {
         authorized, loggedIn, connecting, disconnected, error, notAuthorized, ready
@@ -16,7 +16,7 @@ public interface ISession {
 
     public abstract XmppURI getCurrentUser();
 
-    public abstract ISession.State getState();
+    public abstract Session.State getState();
 
     public abstract boolean isLoggedIn();
 
@@ -26,13 +26,13 @@ public interface ISession {
 
     public abstract void onLoggedIn(final Slot<XmppURI> slot);
 
-    public abstract void onLoggedOut(final Slot<ISession> slot);
+    public abstract void onLoggedOut(final Slot<Session> slot);
 
     public abstract void onMessage(final Slot<Message> listener);
 
     public abstract void onPresence(final Slot<Presence> listener);
 
-    public abstract void onStateChanged(final Slot<ISession.State> listener);
+    public abstract void onStateChanged(final Slot<Session.State> listener);
 
     public abstract void send(final IPacket packet);
 

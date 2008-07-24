@@ -7,8 +7,7 @@ import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.xmpp.session.ISession;
-import com.calclab.emite.client.xmpp.session.SessionImpl;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.suco.client.modules.ModuleBuilder;
@@ -19,7 +18,7 @@ public class MockitoXmpp extends Xmpp {
     private final PresenceManager presenceManager;
     private final Roster roster;
     private final RosterManager rosterManager;
-    private final ISession sessionImpl;
+    private final Session session;
 
     public MockitoXmpp() {
 	super(new ModuleBuilder());
@@ -27,7 +26,7 @@ public class MockitoXmpp extends Xmpp {
 	presenceManager = mock(PresenceManager.class);
 	roster = mock(Roster.class);
 	rosterManager = mock(RosterManager.class);
-	sessionImpl = mock(SessionImpl.class);
+	session = mock(Session.class);
     }
 
     @Override
@@ -51,8 +50,8 @@ public class MockitoXmpp extends Xmpp {
     }
 
     @Override
-    public ISession getSession() {
-	return sessionImpl;
+    public Session getSession() {
+	return session;
     }
 
     @Override

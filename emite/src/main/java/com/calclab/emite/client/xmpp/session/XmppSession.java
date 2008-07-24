@@ -34,7 +34,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Slot;
 
-public class SessionImpl extends AbstractSession {
+public class XmppSession extends AbstractSession {
     private State state;
     private XmppURI userURI;
     private final SessionScope scope;
@@ -42,7 +42,7 @@ public class SessionImpl extends AbstractSession {
     private AuthorizationTransaction transaction;
     private final IQManager iqManager;
 
-    public SessionImpl(final Bosh3Connection connection, final SessionScope scope, final SASLManager saslManager,
+    public XmppSession(final Bosh3Connection connection, final SessionScope scope, final SASLManager saslManager,
 	    final ResourceBindingManager bindingManager) {
 	this.connection = connection;
 	this.scope = scope;
@@ -73,11 +73,11 @@ public class SessionImpl extends AbstractSession {
 	saslManager.onAuthorized(new Slot<AuthorizationTransaction>() {
 	    public void onEvent(final AuthorizationTransaction ticket) {
 		if (ticket.getState() == AuthorizationTransaction.State.succeed) {
-		    setState(ISession.State.authorized);
+		    setState(Session.State.authorized);
 		    connection.restartStream();
 		    bindingManager.bindResource(ticket.uri.getResource());
 		} else {
-		    setState(ISession.State.notAuthorized);
+		    setState(Session.State.notAuthorized);
 		    connection.disconnect();
 		}
 	    }
@@ -117,7 +117,7 @@ public class SessionImpl extends AbstractSession {
      * 
      * @see com.calclab.emite.client.xmpp.session.Session#getState()
      */
-    public ISession.State getState() {
+    public Session.State getState() {
 	return state;
     }
 
@@ -133,14 +133,13 @@ public class SessionImpl extends AbstractSession {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.calclab.emite.client.xmpp.session.Session#login(com.calclab.emite
-     * .client.xmpp.stanzas.XmppURI, java.lang.String,
-     * com.calclab.emite.client.core.bosh3.Bosh3Settings)
+     * @see com.calclab.emite.client.xmpp.session.Session#login(com.calclab.emite
+     *      .client.xmpp.stanzas.XmppURI, java.lang.String,
+     *      com.calclab.emite.client.core.bosh3.Bosh3Settings)
      */
     public void login(final XmppURI uri, final String password, final Bosh3Settings settings) {
-	if (state == ISession.State.disconnected) {
-	    setState(ISession.State.connecting);
+	if (state == Session.State.disconnected) {
+	    setState(Session.State.connecting);
 	    connection.connect(settings);
 	    scope.createAll();
 	    transaction = new AuthorizationTransaction(uri, password);
@@ -155,7 +154,7 @@ public class SessionImpl extends AbstractSession {
      * @see com.calclab.emite.client.xmpp.session.Session#logout()
      */
     public void logout() {
-	if (state != ISession.State.disconnected) {
+	if (state != Session.State.disconnected) {
 	    connection.disconnect();
 	    userURI = null;
 	    onLoggedOut.fire(this);
@@ -174,12 +173,12 @@ public class SessionImpl extends AbstractSession {
 
     public void setLoggedIn(final XmppURI userURI) {
 	this.userURI = userURI;
-	setState(ISession.State.loggedIn);
+	setState(Session.State.loggedIn);
 	onLoggedIn.fire(userURI);
-	setState(ISession.State.ready);
+	setState(Session.State.ready);
     }
 
-    void setState(final ISession.State newState) {
+    void setState(final Session.State newState) {
 	this.state = newState;
 	onStateChanged.fire(state);
     }

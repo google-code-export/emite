@@ -29,7 +29,7 @@ import java.util.List;
 import com.calclab.emite.client.core.packet.Event;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
-import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -56,9 +56,9 @@ public class RosterManager {
 
     private final Signal<XmppURI> onUnsubscribedReceived;
 
-    private final ISession session;
+    private final Session session;
 
-    public RosterManager(final ISession session, final Roster roster) {
+    public RosterManager(final Session session, final Roster roster) {
 	this.session = session;
 	this.roster = roster;
 	this.subscriptionMode = DEF_SUBSCRIPTION_MODE;

@@ -25,7 +25,7 @@ import java.util.List;
 
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.im.presence.PresenceManager;
-import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -46,10 +46,10 @@ public class AvatarManager {
     private final Signal<Presence> onAvatarHashPresenceReceived;
     private final Signal<AvatarVCard> onAvatarVCardReceived;
     private final PresenceManager presenceManager;
-    private final ISession session;
+    private final Session session;
 
-    public AvatarManager(final ISession sessionImpl, final PresenceManager presenceManager) {
-	this.session = sessionImpl;
+    public AvatarManager(final Session session, final PresenceManager presenceManager) {
+	this.session = session;
 	this.presenceManager = presenceManager;
 	this.onAvatarHashPresenceReceived = new Signal<Presence>("onAvatarHashPresenceReceived");
 	this.onAvatarVCardReceived = new Signal<AvatarVCard>("onAvatarVCardReceived");

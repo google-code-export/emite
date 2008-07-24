@@ -32,8 +32,7 @@ import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.session.ISession;
-import com.calclab.emite.client.xmpp.session.ISession.State;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
@@ -49,7 +48,7 @@ public class StatusUIPresenter implements StatusUI {
 
     private StatusUIView view;
     private final PresenceManager presenceManager;
-    private final ISession sessionImpl;
+    private final Session session;
     private final Xmpp xmpp;
     private UserChatOptions userChatOptions;
     private final I18nTranslationService i18n;
@@ -62,11 +61,11 @@ public class StatusUIPresenter implements StatusUI {
     private final ChatManager chatManager;
     private final RoomManager roomManager;
 
-    public StatusUIPresenter(final Xmpp xmpp, final ISession sessionImpl, final PresenceManager presenceManager,
+    public StatusUIPresenter(final Xmpp xmpp, final Session session, final PresenceManager presenceManager,
 	    final RosterManager rosterManager, final ChatManager chatManager, final RoomManager roomManager,
 	    final I18nTranslationService i18n) {
 	this.xmpp = xmpp;
-	this.sessionImpl = sessionImpl;
+	this.session = session;
 	this.presenceManager = presenceManager;
 	this.rosterManager = rosterManager;
 	this.chatManager = chatManager;
@@ -105,8 +104,8 @@ public class StatusUIPresenter implements StatusUI {
 		view.setOwnPresence(new OwnPresence(presence));
 	    }
 	});
-	sessionImpl.onStateChanged(new Slot<ISession.State>() {
-	    public void onEvent(final ISession.State current) {
+	session.onStateChanged(new Slot<Session.State>() {
+	    public void onEvent(final Session.State current) {
 		switch (current) {
 		case notAuthorized:
 		    view.showAlert(i18n.t("Error in authentication. Wrong user jabber id or password."));

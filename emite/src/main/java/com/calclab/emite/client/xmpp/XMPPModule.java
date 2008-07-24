@@ -24,8 +24,8 @@ package com.calclab.emite.client.xmpp;
 import com.calclab.emite.client.core.bosh3.Bosh3Connection;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
-import com.calclab.emite.client.xmpp.session.ISession;
-import com.calclab.emite.client.xmpp.session.SessionImpl;
+import com.calclab.emite.client.xmpp.session.Session;
+import com.calclab.emite.client.xmpp.session.XmppSession;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.suco.client.modules.AbstractModule;
 import com.calclab.suco.client.provider.SingletonFactory;
@@ -53,9 +53,9 @@ public class XMPPModule extends AbstractModule {
 	    public SASLManager create() {
 		return new SASLManager($(Bosh3Connection.class));
 	    }
-	}, new SingletonFactory<ISession>(ISession.class) {
-	    public ISession create() {
-		final SessionImpl session = new SessionImpl($(Bosh3Connection.class), $(SessionScope.class),
+	}, new SingletonFactory<Session>(Session.class) {
+	    public Session create() {
+		final XmppSession session = new XmppSession($(Bosh3Connection.class), $(SessionScope.class),
 			$(SASLManager.class), $(ResourceBindingManager.class));
 		$(SessionScope.class).setContext(session);
 		return session;

@@ -27,7 +27,7 @@ import java.util.List;
 import com.calclab.emite.client.core.packet.Filters;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.PacketFilter;
-import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
@@ -39,13 +39,13 @@ public class DiscoveryManager {
     private final PacketFilter filterQuery;
     private ArrayList<Feature> features;
     private ArrayList<Identity> identities;
-    private final ISession sessionImpl;
+    private final Session session;
 
-    public DiscoveryManager(final ISession sessionImpl) {
-	this.sessionImpl = sessionImpl;
+    public DiscoveryManager(final Session session) {
+	this.session = session;
 	this.onReady = new Signal<DiscoveryManager>("onReady");
 	this.filterQuery = Filters.byNameAndXMLNS("query", "http://jabber.org/protocol/disco#info");
-	sessionImpl.onLoggedIn(new Slot<XmppURI>() {
+	session.onLoggedIn(new Slot<XmppURI>() {
 	    public void onEvent(final XmppURI uri) {
 		sendDiscoQuery(uri);
 	    }
@@ -60,7 +60,7 @@ public class DiscoveryManager {
     public void sendDiscoQuery(final XmppURI uri) {
 	final IQ iq = new IQ(Type.get, uri, uri.getHostURI());
 	iq.addQuery("http://jabber.org/protocol/disco#info");
-	sessionImpl.sendIQ("disco", iq, new Slot<IPacket>() {
+	session.sendIQ("disco", iq, new Slot<IPacket>() {
 	    public void onEvent(final IPacket response) {
 		final IPacket query = response.getFirstChild(filterQuery);
 		processIdentity(query.getChildren(Filters.byName("identity")));

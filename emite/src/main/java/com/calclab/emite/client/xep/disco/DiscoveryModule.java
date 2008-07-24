@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.xep.disco;
 
-import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.suco.client.container.Provider;
 import com.calclab.suco.client.modules.Module;
@@ -47,7 +47,7 @@ public class DiscoveryModule implements Module {
     public void onLoad(final ModuleBuilder builder) {
 	builder.registerProvider(DiscoveryManager.class, new Provider<DiscoveryManager>() {
 	    public DiscoveryManager get() {
-		return new DiscoveryManager(builder.getInstance(ISession.class));
+		return new DiscoveryManager(builder.getInstance(Session.class));
 	    }
 	}, SessionScope.class);
     }

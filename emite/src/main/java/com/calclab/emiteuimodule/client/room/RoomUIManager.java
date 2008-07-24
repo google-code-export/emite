@@ -4,7 +4,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.xep.muc.RoomInvitation;
 import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.status.StatusUI;
@@ -17,13 +17,13 @@ public class RoomUIManager {
     private final I18nTranslationService i18n;
     private JoinRoomPanel joinRoomPanel;
     private final StatusUI statusUI;
-    private final ISession sessionImpl;
+    private final Session session;
     private String roomHostDefault;
     private final Signal<String> onUserAlert;
 
-    public RoomUIManager(final ISession sessionImpl, final RoomManager roomManager, final StatusUI statusUI,
+    public RoomUIManager(final Session session, final RoomManager roomManager, final StatusUI statusUI,
 	    final I18nTranslationService i18n) {
-	this.sessionImpl = sessionImpl;
+	this.session = session;
 	this.roomManager = roomManager;
 	this.statusUI = statusUI;
 	this.i18n = i18n;
@@ -52,7 +52,7 @@ public class RoomUIManager {
     }
 
     public void joinRoom(final String roomName, final String serverName) {
-	final XmppURI uri = new XmppURI(roomName, serverName, sessionImpl.getCurrentUser().getNode());
+	final XmppURI uri = new XmppURI(roomName, serverName, session.getCurrentUser().getNode());
 	roomManager.openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 

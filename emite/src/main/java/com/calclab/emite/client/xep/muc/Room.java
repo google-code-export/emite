@@ -28,7 +28,7 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.im.chat.AbstractChat;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
-import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -46,8 +46,8 @@ public class Room extends AbstractChat implements Chat {
     private final Signal<Collection<Occupant>> onOccupantsChanged;
     private final Signal2<Occupant, String> onSubjectChanged;
 
-    public Room(final ISession sessionImpl, final XmppURI roomURI, final String name) {
-	super(sessionImpl, roomURI);
+    public Room(final Session session, final XmppURI roomURI, final String name) {
+	super(session, roomURI);
 	this.name = name;
 	this.occupants = new HashMap<XmppURI, Occupant>();
 	this.onOccupantModified = new Signal<Occupant>("onOccupantModified");

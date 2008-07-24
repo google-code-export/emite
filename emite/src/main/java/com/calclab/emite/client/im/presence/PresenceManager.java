@@ -23,7 +23,7 @@ package com.calclab.emite.client.im.presence;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.roster.Roster;
-import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
@@ -36,18 +36,18 @@ public class PresenceManager {
     private Presence ownPresence;
     private final Signal<Presence> onOwnPresenceChanged;
     private final Signal<Presence> onPresenceReceived;
-    private final ISession session;
+    private final Session session;
     private final Roster roster;
 
-    public PresenceManager(final ISession sessionImpl, final Roster roster) {
-	this.session = sessionImpl;
+    public PresenceManager(final Session session, final Roster roster) {
+	this.session = session;
 	this.roster = roster;
 	this.ownPresence = new Presence(Type.unavailable, null, null);
 	this.onPresenceReceived = new Signal<Presence>("onPresenceReceived");
 	this.onOwnPresenceChanged = new Signal<Presence>("onOwnPresenceChanged");
 	install();
-	sessionImpl.onLoggedOut(new Slot<ISession>() {
-	    public void onEvent(final ISession parameter) {
+	session.onLoggedOut(new Slot<Session>() {
+	    public void onEvent(final Session parameter) {
 		logOut();
 	    }
 	});

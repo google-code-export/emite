@@ -19,7 +19,7 @@ import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTransaction;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
-import com.calclab.emite.client.xmpp.session.ISession.State;
+import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -31,7 +31,7 @@ import com.calclab.suco.client.signal.Slot;
 
 public class SessionTest {
 
-    private SessionImpl session;
+    private XmppSession session;
     private SessionScope scope;
     private SASLManager saslManager;
     private ResourceBindingManager bindingManager;
@@ -47,7 +47,7 @@ public class SessionTest {
 
 	bindingManager = mock(ResourceBindingManager.class);
 
-	session = new SessionImpl(helper.connection, scope, saslManager, bindingManager);
+	session = new XmppSession(helper.connection, scope, saslManager, bindingManager);
 
 	bindSignal = new SignalTester<XmppURI>();
 	bindSignal.attachTo(bindingManager).onBinded(bindSignal.asSlot());
@@ -77,7 +77,7 @@ public class SessionTest {
 	onAuthorized.fire(new AuthorizationTransaction(uri("node@domain/resource"), "password",
 		AuthorizationTransaction.State.succeed));
 
-	assertEquals(ISession.State.authorized, session.getState());
+	assertEquals(Session.State.authorized, session.getState());
 	verify(helper.connection).restartStream();
 	verify(bindingManager).bindResource(anyString());
     }
@@ -116,10 +116,10 @@ public class SessionTest {
     @SuppressWarnings("unchecked")
     @Test
     public void shouldSignalStateChanges() {
-	final Slot<ISession.State> listener = mock(Slot.class);
+	final Slot<Session.State> listener = mock(Slot.class);
 	session.onStateChanged(listener);
-	session.setState(ISession.State.ready);
-	verify(listener).onEvent(same(ISession.State.ready));
+	session.setState(Session.State.ready);
+	verify(listener).onEvent(same(Session.State.ready));
     }
 
     @Test

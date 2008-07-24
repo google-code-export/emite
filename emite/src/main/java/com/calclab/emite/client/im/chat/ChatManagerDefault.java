@@ -26,8 +26,7 @@ import java.util.HashSet;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.chat.Chat.Status;
-import com.calclab.emite.client.xmpp.session.ISession;
-import com.calclab.emite.client.xmpp.session.SessionImpl;
+import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.Type;
@@ -38,29 +37,29 @@ public class ChatManagerDefault implements ChatManager {
     protected final HashSet<Chat> chats;
     protected final Signal<Chat> onChatCreated;
     protected Signal<Chat> onChatClosed;
-    protected final ISession sessionImpl;
+    protected final Session session;
     private XmppURI lastLoggedInUser;
 
-    public ChatManagerDefault(final ISession sessionImpl) {
-	this.sessionImpl = sessionImpl;
+    public ChatManagerDefault(final Session session) {
+	this.session = session;
 	this.onChatCreated = new Signal<Chat>("onChatCreated");
 	this.onChatClosed = new Signal<Chat>("onChatClosed");
 	this.chats = new HashSet<Chat>();
 
-	sessionImpl.onMessage(new Slot<Message>() {
+	session.onMessage(new Slot<Message>() {
 	    public void onEvent(final Message message) {
 		eventMessage(message);
 	    }
 	});
 
-	sessionImpl.onLoggedIn(new Slot<XmppURI>() {
+	session.onLoggedIn(new Slot<XmppURI>() {
 	    public void onEvent(final XmppURI uri) {
 		logIn(uri);
 	    }
 	});
 
-	sessionImpl.onLoggedOut(new Slot<ISession>() {
-	    public void onEvent(final ISession parameter) {
+	session.onLoggedOut(new Slot<Session>() {
+	    public void onEvent(final Session parameter) {
 		logOut();
 	    }
 	});
@@ -123,7 +122,7 @@ public class ChatManagerDefault implements ChatManager {
     }
 
     private <T> Chat createChat(final XmppURI toURI, final String thread, final Class<T> extraType, final T extraData) {
-	final ChatDefault chat = new ChatDefault(sessionImpl, toURI, thread);
+	final ChatDefault chat = new ChatDefault(session, toURI, thread);
 	if (extraType != null) {
 	    chat.setData(extraType, extraData);
 	}
@@ -135,7 +134,8 @@ public class ChatManagerDefault implements ChatManager {
 
     /**
      * We choose a chat by the thread, if no thread specified we look for the
-     * same XmppURI, and if no resource specified we look for the same node@domain
+     * same XmppURI, and if no resource specified we look for the same
+     * node@domain
      * 
      * @param from
      * @param thread
