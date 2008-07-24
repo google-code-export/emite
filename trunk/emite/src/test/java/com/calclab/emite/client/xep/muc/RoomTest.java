@@ -22,6 +22,7 @@ import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.testing.MockedSession;
 import com.calclab.emite.testing.MockitoEmiteHelper;
 
 @SuppressWarnings("unchecked")
@@ -31,12 +32,14 @@ public class RoomTest extends AbstractChatTest {
     private Room room;
     private XmppURI userURI;
     private XmppURI roomURI;
+    private MockedSession session;
 
     @Before
     public void beforeTests() {
 	userURI = uri("user@domain/res");
 	roomURI = uri("room@domain/nick");
-	room = new Room(userURI, roomURI, "roomName", emite);
+	session = new MockedSession(userURI);
+	room = new Room(session, roomURI, "roomName");
 	room.setStatus(Status.ready);
 	listener = mock(RoomListener.class);
 	room.addListener(listener);
@@ -59,7 +62,7 @@ public class RoomTest extends AbstractChatTest {
     @Test
     public void shouldChangeSubject() {
 	room.setSubject("Some subject");
-	emite.verifySent("<message type=\"groupchat\" from=\"" + userURI + "\" to=\"" + room.getOtherURI()
+	session.verifySent("<message type=\"groupchat\" from=\"" + userURI + "\" to=\"" + room.getOtherURI()
 		+ "\"><subject>Some subject</subject></message></body>");
     }
 
@@ -91,7 +94,7 @@ public class RoomTest extends AbstractChatTest {
     @Test
     public void shouldSendRoomInvitation() {
 	room.sendInvitationTo("otherUser@domain/resource", "this is the reason");
-	emite.verifySent("<message from='" + userURI + "' to='" + roomURI
+	session.verifySent("<message from='" + userURI + "' to='" + roomURI
 		+ "'><x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<invite to='otherUser@domain/resource'><reason>this is the reason</reason></invite></x></message>");
     }

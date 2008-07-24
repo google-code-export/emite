@@ -6,13 +6,13 @@ import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.MockSlot;
+import com.calclab.emite.testing.MockedSession;
 
 public abstract class AbstractChatTest {
-
-    protected final EmiteTestHelper emite;
+    protected final MockedSession session;
 
     public AbstractChatTest() {
-	this.emite = new EmiteTestHelper();
+	session = new MockedSession();
     }
 
     public abstract AbstractChat getChat();
@@ -42,7 +42,7 @@ public abstract class AbstractChatTest {
 	final AbstractChat chat = getChat();
 	chat.setStatus(Status.locked);
 	chat.send(new Message("a message"));
-	emite.verifyNotSent("<message />");
+	session.verifyNotSent("<message />");
     }
 
     @Test

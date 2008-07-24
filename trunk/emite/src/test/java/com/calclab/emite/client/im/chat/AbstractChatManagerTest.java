@@ -10,19 +10,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.im.chat.Chat.Status;
-import com.calclab.emite.client.xmpp.session.SessionManager;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.EmiteTestHelper;
 import com.calclab.emite.testing.MockSlot;
+import com.calclab.emite.testing.MockedSession;
 
 public abstract class AbstractChatManagerTest {
     protected static final XmppURI MYSELF = uri("self@domain");
-    protected EmiteTestHelper emite;
     protected ChatManagerDefault manager;
+    protected MockedSession session;
 
     @Before
-    public void aaCreate() {
-	emite = new EmiteTestHelper();
+    public void beforeTests() {
+	session = new MockedSession();
 	manager = createChatManager();
 	manager.logIn(MYSELF);
     }
@@ -38,7 +37,7 @@ public abstract class AbstractChatManagerTest {
 	final Chat chat = manager.openChat(uri("other@domain"), null, null);
 	final MockSlot<Status> listener = new MockSlot<Status>();
 	chat.onStateChanged(listener);
-	emite.receives(SessionManager.Events.onLoggedOut);
+	session.logout();
 	verifyCalledWith(listener, Status.locked);
     }
 

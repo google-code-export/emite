@@ -25,8 +25,8 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldAcceptRoomPresenceWithAvatar() {
 	final Room room = (Room) manager.openChat(uri("room1@domain/nick"), null, null);
-	emite.receives("<presence to='user@domain/resource' from='room1@domain/otherUser2'>" + "<priority>0</priority>"
-		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
+	session.receives("<presence to='user@domain/resource' from='room1@domain/otherUser2'>"
+		+ "<priority>0</priority>" + "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item jid='otheruserjid@domain/otherresoruce' affiliation='none' " + "role='participant'/></x>"
 		+ "<x xmlns='vcard-temp:x:update'><photo>af70fe6519d6a27a910c427c3bc551dcd36073e7</photo></x>"
 		+ "</presence>");
@@ -40,11 +40,11 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldCreateInstantRoomIfNeeded() {
 	manager.openChat(uri("newroomtest1@rooms.localhost/nick"), null, null);
-	emite.receives("<presence from='newroomtest1@rooms.localhost/nick' to='user@localhost/resource' >"
+	session.receives("<presence from='newroomtest1@rooms.localhost/nick' to='user@localhost/resource' >"
 		+ "<priority>5</priority>" + "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item affiliation='owner' role='moderator' jid='vjrj@localhost/Psi' />" + "<status code='201' />"
 		+ "</x>" + "</presence>");
-	emite.verifyIQSent(new IQ(Type.set));
+	session.verifyIQSent(new IQ(Type.set));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
     public void shouldUpdateRoomPresence() {
 	final Room room = (Room) manager.openChat(uri("room1@domain/nick"), null, null);
 
-	emite.receives("<presence to='user@domain/resource' xmlns='jabber:client' from='room1@domain/otherUser'>"
+	session.receives("<presence to='user@domain/resource' xmlns='jabber:client' from='room1@domain/otherUser'>"
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item role='moderator' affiliation='owner' /></x></presence>");
 	assertEquals(1, room.getOccupantsCount());
@@ -67,7 +67,7 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
 	assertEquals(Affiliation.owner, user.getAffiliation());
 	assertEquals(Role.moderator, user.getRole());
 
-	emite.receives("<presence to='user@domain/resource' xmlns='jabber:client' from='room1@domain/otherUser'>"
+	session.receives("<presence to='user@domain/resource' xmlns='jabber:client' from='room1@domain/otherUser'>"
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item role='participant' affiliation='member' /></x></presence>");
 	assertEquals(1, room.getOccupantsCount());
@@ -76,10 +76,10 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
 	assertEquals(Affiliation.member, user.getAffiliation());
 	assertEquals(Role.participant, user.getRole());
 
-	emite
-		.receives("<presence to='user@domain/res1' type='unavailable' xmlns='jabber:client' from='room1@domain/otherUser'>"
-			+ "<status>custom message</status><x xmlns='http://jabber.org/protocol/muc#user'>"
-			+ "<item role='none' affiliation='member' /></x></presence>");
+	session.receives("<presence to='user@domain/res1' type='unavailable' "
+		+ "xmlns='jabber:client' from='room1@domain/otherUser'>"
+		+ "<status>custom message</status><x xmlns='http://jabber.org/protocol/muc#user'>"
+		+ "<item role='none' affiliation='member' /></x></presence>");
 	assertEquals(0, room.getOccupantsCount());
 
     }
@@ -91,13 +91,13 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
 	new RoomListenerAdaptor(chat, roomListener);
 	final String message = "<message from='room@rooms.domain/other' to='user@domain/resource' "
 		+ "type='groupchat'><body>the message body</body></message>";
-	emite.receives(message);
+	session.receives(message);
 	verify(roomListener).onMessageReceived(eq(chat), (Message) packetLike(message));
     }
 
     @Override
     protected ChatManagerDefault createChatManager() {
-	final MUCRoomManager roomManager = new MUCRoomManager(emite);
+	final MUCRoomManager roomManager = new MUCRoomManager(session);
 	return roomManager;
     }
 }
