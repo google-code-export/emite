@@ -26,33 +26,29 @@ import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.bosh.EmiteBosh;
 import com.calclab.emite.client.core.bosh.Stream;
+import com.calclab.emite.client.core.bosh3.Bosh3Connection;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
-import com.calclab.emite.client.core.services.Services;
-import com.calclab.suco.client.container.Container;
+import com.calclab.emite.client.services.Services;
 import com.calclab.suco.client.container.Provider;
 import com.calclab.suco.client.modules.Module;
 import com.calclab.suco.client.modules.ModuleBuilder;
 import com.calclab.suco.client.scopes.SingletonScope;
 
 public class CoreModule implements Module {
-    public static Bosh getBosh(final Container container) {
-	return container.getInstance(Bosh.class);
-    }
-
-    public static Dispatcher getDispatcher(final Container container) {
-	return container.getInstance(Dispatcher.class);
-    }
-
-    public static Emite getEmite(final Container container) {
-	return container.getInstance(Emite.class);
-    }
-
     public Class<? extends Module> getType() {
 	return CoreModule.class;
     }
 
     public void onLoad(final ModuleBuilder builder) {
+	builder.registerProvider(Bosh3Connection.class, new Provider<Bosh3Connection>() {
+	    public Bosh3Connection get() {
+		return new Bosh3Connection(builder.getInstance(Services.class));
+	    }
+	}, SingletonScope.class);
+    }
+
+    public void onLoadOLD(final ModuleBuilder builder) {
 	builder.registerProvider(Dispatcher.class, new Provider<Dispatcher>() {
 	    public Dispatcher get() {
 		return new DispatcherDefault();

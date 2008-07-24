@@ -24,11 +24,11 @@ package com.calclab.emite.client.xep.muc;
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.calclab.emite.client.core.bosh.Emite;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.im.chat.AbstractChat;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
+import com.calclab.emite.client.xmpp.session.ISession;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -46,8 +46,8 @@ public class Room extends AbstractChat implements Chat {
     private final Signal<Collection<Occupant>> onOccupantsChanged;
     private final Signal2<Occupant, String> onSubjectChanged;
 
-    public Room(final XmppURI userURI, final XmppURI roomURI, final String name, final Emite emite) {
-	super(userURI, roomURI, emite);
+    public Room(final ISession sessionImpl, final XmppURI roomURI, final String name) {
+	super(sessionImpl, roomURI);
 	this.name = name;
 	this.occupants = new HashMap<XmppURI, Occupant>();
 	this.onOccupantModified = new Signal<Occupant>("onOccupantModified");
@@ -63,7 +63,7 @@ public class Room extends AbstractChat implements Chat {
      * @see http://www.xmpp.org/extensions/xep-0045.html#exit
      */
     public void close() {
-	emite.send(new Presence(Type.unavailable, getFromURI(), getOtherURI()));
+	session.send(new Presence(Type.unavailable, getFromURI(), getOtherURI()));
 	setStatus(Status.locked);
     }
 
@@ -140,14 +140,14 @@ public class Room extends AbstractChat implements Chat {
      */
     public void sendInvitationTo(final String userJid, final String reasonText) {
 	final BasicStanza message = new BasicStanza("message", null);
-	message.setFrom(from);
+	message.setFrom(session.getCurrentUser());
 	message.setTo(other);
 	final IPacket x = message.addChild("x", "http://jabber.org/protocol/muc#user");
 	final IPacket invite = x.addChild("invite", null);
 	invite.setAttribute("to", userJid);
 	final IPacket reason = invite.addChild("reason", null);
 	reason.WithText(reasonText);
-	emite.send(message);
+	session.send(message);
     }
 
     public Occupant setOccupantPresence(final XmppURI uri, final String affiliation, final String role) {
@@ -176,12 +176,12 @@ public class Room extends AbstractChat implements Chat {
      */
     public void setSubject(final String subjectText) {
 	final BasicStanza message = new BasicStanza("message", null);
-	message.setFrom(from);
+	message.setFrom(session.getCurrentUser());
 	message.setTo(other);
 	message.setType(Message.Type.groupchat.toString());
 	final IPacket subject = message.addChild("subject", null);
 	subject.setText(subjectText);
-	emite.send(message);
+	session.send(message);
     }
 
     @Override

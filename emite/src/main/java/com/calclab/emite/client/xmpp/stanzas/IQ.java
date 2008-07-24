@@ -66,7 +66,7 @@ public class IQ extends BasicStanza {
 	return this;
     }
 
-    public IPacket WithQuery(final String xmlns) {
+    public IQ WithQuery(final String xmlns) {
 	addQuery(xmlns);
 	return this;
     }

@@ -22,11 +22,11 @@
 package com.calclab.emite.j2se.services;
 
 import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.core.services.ConnectorCallback;
-import com.calclab.emite.client.core.services.ConnectorException;
-import com.calclab.emite.client.core.services.ScheduledAction;
-import com.calclab.emite.client.core.services.Services;
-import com.calclab.emite.client.core.services.ServicesModule;
+import com.calclab.emite.client.services.ConnectorCallback;
+import com.calclab.emite.client.services.ConnectorException;
+import com.calclab.emite.client.services.ScheduledAction;
+import com.calclab.emite.client.services.Services;
+import com.calclab.emite.client.services.ServicesModule;
 import com.calclab.suco.client.modules.ModuleBuilder;
 
 public class J2SEServicesModule extends ServicesModule implements Services {

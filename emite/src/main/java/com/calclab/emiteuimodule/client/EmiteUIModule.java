@@ -26,7 +26,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.emite.client.EmiteModule;
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.services.gwt.GWTServicesModule;
+import com.calclab.emite.client.services.gwt.GWTServicesModule;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
 import com.calclab.emite.client.xep.chatstate.ChatStateModule;
 import com.calclab.emite.client.xep.muc.MUCModule;

@@ -83,7 +83,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
 
 	final DemoParameters params = app.getInstance(DemoParameters.class);
 	final UserChatOptions userChatOptions = emiteDemoLoginPanel.getUserChatOptions();
-	emiteUIDialog.start(userChatOptions, params.getHttpBase(), params.getRoomHost());
+	emiteUIDialog.start(userChatOptions, params.getHttpBase(), params.getHost(), params.getRoomHost());
 	emiteUIDialog.show(OwnStatus.offline);
 	// here you can do:
 	// emiteUIDialog.hide();

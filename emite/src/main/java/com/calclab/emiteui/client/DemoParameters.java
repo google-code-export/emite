@@ -30,6 +30,11 @@ public class DemoParameters {
     private static final String GWT_PROPERTY_ROOMHOST = "gwt_property_roomhost";
     private static final String GWT_PROPERTY_INFOHTML = "gwt_property_infohtml";
     private static final String GWT_PROPERTY_RELEASE = "gwt_property_release";
+    private static final String GWT_PROPERTY_HOST = "gwt_property_host";
+
+    public String getHost() {
+	return getGwtMetaProperty(GWT_PROPERTY_HOST, null);
+    }
 
     public String getHttpBase() {
 	return getGwtMetaProperty(GWT_PROPERTY_HTTPBASE, null);

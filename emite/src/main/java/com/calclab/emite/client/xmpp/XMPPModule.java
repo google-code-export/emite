@@ -21,74 +21,45 @@
  */
 package com.calclab.emite.client.xmpp;
 
-import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.bosh.BoshManager;
-import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.core.bosh3.Bosh3Connection;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
-import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.session.SessionManager;
+import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.SessionImpl;
 import com.calclab.emite.client.xmpp.session.SessionScope;
-import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleBuilder;
-import com.calclab.suco.client.scopes.Scopes;
-import com.calclab.suco.client.scopes.SingletonScope;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.SingletonFactory;
 
-public class XMPPModule implements Module {
+public class XMPPModule extends AbstractModule {
 
-    public static final Class<SessionManager> COMPONENT_SESSION_MANAGER = SessionManager.class;
-    private static final Class<Session> COMPONENT_SESSION = Session.class;
-
-    public static Session getSession(final Container container) {
-	return container.getInstance(XMPPModule.COMPONENT_SESSION);
+    public XMPPModule() {
+	super(XMPPModule.class);
     }
 
-    public Class<? extends Module> getType() {
-	return XMPPModule.class;
-    }
+    @Override
+    public void onLoad() {
 
-    public void onLoad(final ModuleBuilder builder) {
+	registerScope(SessionScope.class, new SessionScope());
 
-	Scopes.addScope(SessionScope.class, new SessionScope());
-	builder.registerProvider(SessionScope.class, Scopes.getProvider(SessionScope.class), SingletonScope.class);
-
-	builder.registerProvider(ResourceBindingManager.class, new Provider<ResourceBindingManager>() {
-	    public ResourceBindingManager get() {
-		return new ResourceBindingManager(builder.getInstance(Emite.class));
+	register(new SingletonFactory<ResourceBindingManager>(ResourceBindingManager.class) {
+	    public ResourceBindingManager create() {
+		return new ResourceBindingManager($(Bosh3Connection.class));
 	    }
-	}, SingletonScope.class);
-
-	builder.registerProvider(SASLManager.class, new Provider<SASLManager>() {
-	    public SASLManager get() {
-		return new SASLManager(builder.getInstance(Emite.class));
+	}, new SingletonFactory<ResourceBindingManager>(ResourceBindingManager.class) {
+	    public ResourceBindingManager create() {
+		return new ResourceBindingManager($(Bosh3Connection.class));
 	    }
-	}, SingletonScope.class);
-
-	builder.registerProvider(Session.class, new Provider<Session>() {
-	    public Session get() {
-		final Emite emite = builder.getInstance(Emite.class);
-		final BoshManager boshManager = builder.getInstance(BoshManager.class);
-		final SessionScope scope = builder.getInstance(SessionScope.class);
-		final Session session = new Session(boshManager, emite, scope);
-		scope.setContext(session);
+	}, new SingletonFactory<SASLManager>(SASLManager.class) {
+	    public SASLManager create() {
+		return new SASLManager($(Bosh3Connection.class));
+	    }
+	}, new SingletonFactory<ISession>(ISession.class) {
+	    public ISession create() {
+		final SessionImpl session = new SessionImpl($(Bosh3Connection.class), $(SessionScope.class),
+			$(SASLManager.class), $(ResourceBindingManager.class));
+		$(SessionScope.class).setContext(session);
 		return session;
 	    }
-	}, SingletonScope.class);
-
-	builder.registerProvider(SessionManager.class, new Provider<SessionManager>() {
-	    public SessionManager get() {
-		final Emite emite = builder.getInstance(Emite.class);
-		final Session session = builder.getInstance(Session.class);
-		final SASLManager saslManager = builder.getInstance(SASLManager.class);
-		final ResourceBindingManager bindingManager = builder.getInstance(ResourceBindingManager.class);
-		final SessionManager sessionManager = new SessionManager(session, emite, saslManager, bindingManager);
-		return sessionManager;
-	    }
-	}, SessionScope.class);
-
-	Log.debug("Creating session");
-	builder.getInstance(Session.class);
+	});
     }
 }

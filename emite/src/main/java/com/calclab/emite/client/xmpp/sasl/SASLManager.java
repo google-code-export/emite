@@ -21,10 +21,7 @@
  */
 package com.calclab.emite.client.xmpp.sasl;
 
-import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
-
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.bosh3.Bosh3Connection;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTransaction.State;
@@ -35,12 +32,12 @@ public class SASLManager {
     private static final String SEP = new String(new char[] { 0 });
     private static final String XMLNS = "urn:ietf:params:xml:ns:xmpp-sasl";
 
-    private final Emite emite;
     private final Signal<AuthorizationTransaction> onAuthorized;
     private AuthorizationTransaction currentTransaction;
+    private final Bosh3Connection connection;
 
-    public SASLManager(final Emite emite) {
-	this.emite = emite;
+    public SASLManager(final Bosh3Connection connection) {
+	this.connection = connection;
 	this.onAuthorized = new Signal<AuthorizationTransaction>("onAuthorized");
 	install();
     }
@@ -53,7 +50,7 @@ public class SASLManager {
 	this.currentTransaction = authorizationTransaction;
 	final IPacket response = isAnonymous(authorizationTransaction) ? createAnonymousAuthorization()
 		: createPlainAuthorization(authorizationTransaction);
-	emite.send(response);
+	connection.send(response);
 	currentTransaction.setState(State.waitingForAuthorization);
     }
 
@@ -76,21 +73,22 @@ public class SASLManager {
     }
 
     private void install() {
-	emite.subscribe(when(new Packet("failure", XMLNS)), new PacketListener() {
-	    public void handle(final IPacket received) {
-		currentTransaction.setState(State.failed);
-		onAuthorized.fire(currentTransaction);
-		currentTransaction = null;
+	connection.onStanzaReceived(new Slot<IPacket>() {
+	    public void onEvent(final IPacket stanza) {
+		final String name = stanza.getName();
+		if ("failure".equals(name)) { // & XMLNS
+		    currentTransaction.setState(State.failed);
+		    onAuthorized.fire(currentTransaction);
+		    currentTransaction = null;
+		} else if ("success".equals(name)) {
+		    currentTransaction.setState(State.succeed);
+		    onAuthorized.fire(currentTransaction);
+		    currentTransaction = null;
+
+		}
 	    }
 	});
 
-	emite.subscribe(when(new Packet("success")), new PacketListener() {
-	    public void handle(final IPacket received) {
-		currentTransaction.setState(State.succeed);
-		onAuthorized.fire(currentTransaction);
-		currentTransaction = null;
-	    }
-	});
     }
 
     private boolean isAnonymous(final AuthorizationTransaction authorizationTransaction) {

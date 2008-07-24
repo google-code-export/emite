@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.im.chat;
 
-import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.xmpp.session.ISession;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.Type;
@@ -37,8 +37,8 @@ public class ChatDefault extends AbstractChat {
     protected final String thread;
     private final String id;
 
-    ChatDefault(final XmppURI myself, final XmppURI other, final String thread, final Emite emite) {
-	super(myself, other, emite);
+    ChatDefault(final ISession sessionImpl, final XmppURI other, final String thread) {
+	super(sessionImpl, other);
 	this.thread = thread;
 	this.id = generateChatID();
     }

@@ -49,7 +49,8 @@ import com.calclab.emite.client.xep.muc.RoomInvitation;
 import com.calclab.emite.client.xep.muc.RoomListener;
 import com.calclab.emite.client.xep.muc.RoomListenerAdaptor;
 import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.session.Session.State;
+import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.ISession.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -82,7 +83,6 @@ public class SwingClient {
 	loginPanel = new LoginPanel(new LoginPanelListener() {
 	    public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
 		final String resource = "emite-swing";
-		xmpp.setHttpBase(httpBase);
 		xmpp.login(new XmppURI(userName, domain, resource), password, Presence.Show.dnd, "do not disturb at: "
 			+ new Date().toString());
 	    }
@@ -97,7 +97,7 @@ public class SwingClient {
 	loginPanel.addConfiguration(new ConnectionConfiguration("admin @ local openfire",
 		"http://localhost:5280/http-bind/", "localhost", "admin", "easyeasy"));
 	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ local ejabberd",
-		"http://localhost:5280/http-bind/", "mandarine", "dani", "dani"));
+		"http://localhost:5280/http-bind/", "localhost", "dani", "dani"));
 	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ emite demo",
 		"http://emite.ourproject.org/proxy", "emitedemo.ourproject.org", "dani", "dani"));
 	loginPanel.addConfiguration(new ConnectionConfiguration("test1 @ jetty proxy",
@@ -171,15 +171,15 @@ public class SwingClient {
     }
 
     private void addXmppListeners() {
-	xmpp.getSession().onStateChanged(new Slot<State>() {
-	    public void onEvent(final State current) {
+	xmpp.getSession().onStateChanged(new Slot<ISession.State>() {
+	    public void onEvent(final ISession.State current) {
 		print("STATE: " + current);
-		final boolean isConnected = current == State.ready;
+		final boolean isConnected = current == ISession.State.ready;
 		loginPanel.showState("state: " + current.toString(), isConnected);
 		tabs.setEnabled(isConnected);
-		if (current == State.disconnected) {
+		if (current == ISession.State.disconnected) {
 		    rosterPanel.clear();
-		} else if (current == State.notAuthorized) {
+		} else if (current == ISession.State.notAuthorized) {
 		    JOptionPane.showMessageDialog(frame, "lo siento, tienes mal la contraseña -o el usuario ;)-");
 		}
 	    }

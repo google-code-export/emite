@@ -21,15 +21,11 @@
  */
 package com.calclab.emite.client.xep.avatar;
 
-import static com.calclab.emite.client.core.dispatcher.matcher.Matchers.when;
-
 import java.util.List;
 
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.dispatcher.PacketListener;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.im.presence.PresenceManager;
-import com.calclab.emite.client.xmpp.session.SessionComponent;
+import com.calclab.emite.client.xmpp.session.ISession;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -40,7 +36,7 @@ import com.calclab.suco.client.signal.Slot;
 /**
  * XEP-0153: vCard-Based Avatars (Version 1.0)
  */
-public class AvatarManager extends SessionComponent {
+public class AvatarManager {
 
     private static final String VCARD = "vCard";
     private static final String XMLNS = "vcard-temp";
@@ -50,11 +46,10 @@ public class AvatarManager extends SessionComponent {
     private final Signal<Presence> onAvatarHashPresenceReceived;
     private final Signal<AvatarVCard> onAvatarVCardReceived;
     private final PresenceManager presenceManager;
-    private final Emite emite;
+    private final ISession session;
 
-    public AvatarManager(final Emite emite, PresenceManager presenceManager) {
-	super(emite);
-	this.emite = emite;
+    public AvatarManager(final ISession sessionImpl, final PresenceManager presenceManager) {
+	this.session = sessionImpl;
 	this.presenceManager = presenceManager;
 	this.onAvatarHashPresenceReceived = new Signal<Presence>("onAvatarHashPresenceReceived");
 	this.onAvatarVCardReceived = new Signal<AvatarVCard>("onAvatarVCardReceived");
@@ -78,23 +73,35 @@ public class AvatarManager extends SessionComponent {
      * 
      * @param otherJID
      */
-    public void requestVCard(XmppURI otherJID) {
-	final IQ iq = new IQ(Type.get, userURI, otherJID);
-	iq.setAttribute("id", "vc2");
+    public void requestVCard(final XmppURI otherJID) {
+	final IQ iq = new IQ(Type.get, session.getCurrentUser(), otherJID);
 	iq.addChild(VCARD, XMLNS);
-	emite.send(iq);
+	session.sendIQ("avatar", iq, new Slot<IPacket>() {
+	    public void onEvent(final IPacket received) {
+		if (received.hasAttribute("type", "result") && received.hasChild(VCARD)
+			&& received.hasAttribute("to", session.getCurrentUser().toString())) {
+		    final XmppURI from = XmppURI.jid(received.getAttribute("from"));
+		    final IPacket photo = received.getFirstChild(VCARD).getFirstChild(PHOTO);
+		    final String photoType = photo.getFirstChild(TYPE).getText();
+		    final String photoBinval = photo.getFirstChild(BINVAL).getText();
+		    final AvatarVCard avatar = new AvatarVCard(from, null, photoType, photoBinval);
+		    onAvatarVCardReceived.fire(avatar);
+		}
+
+	    }
+	});
     }
 
     public void setVCardAvatar(final String photoBinary) {
-	final IQ iq = new IQ(Type.set, userURI, null);
+	final IQ iq = new IQ(Type.set, session.getCurrentUser(), null);
 	final IPacket vcard = iq.addChild(VCARD, XMLNS);
 	vcard.With("xdbns", XMLNS).With("prodid", "-//HandGen//NONSGML vGen v1.0//EN");
 	vcard.setAttribute("xdbns", XMLNS);
 	vcard.setAttribute("prodid", "-//HandGen//NONSGML vGen v1.0//EN");
 	vcard.setAttribute("version", "2.0");
 	vcard.addChild(PHOTO, null).addChild(BINVAL, null).setText(photoBinary);
-	emite.sendIQ("avatar", iq, new PacketListener() {
-	    public void handle(final IPacket received) {
+	session.sendIQ("avatar", iq, new Slot<IPacket>() {
+	    public void onEvent(final IPacket received) {
 		if (IQ.isSuccess(received)) {
 
 		}
@@ -104,25 +111,12 @@ public class AvatarManager extends SessionComponent {
 
     private void install() {
 	presenceManager.onPresenceReceived(new Slot<Presence>() {
-	    public void onEvent(Presence presence) {
-		List<? extends IPacket> children = presence.getChildren("x");
-		for (IPacket child : children) {
+	    public void onEvent(final Presence presence) {
+		final List<? extends IPacket> children = presence.getChildren("x");
+		for (final IPacket child : children) {
 		    if (child.hasAttribute("xmlns", XMLNS + ":x:update")) {
 			onAvatarHashPresenceReceived.fire(presence);
 		    }
-		}
-	    }
-	});
-	emite.subscribe(when("iq"), new PacketListener() {
-	    public void handle(IPacket received) {
-		if (received.hasAttribute("type", "result") && received.hasAttribute("id", "vc2")
-			&& received.hasChild(VCARD) && received.hasAttribute("to", userURI.toString())) {
-		    XmppURI from = XmppURI.jid(received.getAttribute("from"));
-		    IPacket photo = received.getFirstChild(VCARD).getFirstChild(PHOTO);
-		    String photoType = photo.getFirstChild(TYPE).getText();
-		    String photoBinval = photo.getFirstChild(BINVAL).getText();
-		    AvatarVCard avatar = new AvatarVCard(from, null, photoType, photoBinval);
-		    onAvatarVCardReceived.fire(avatar);
 		}
 	    }
 	});

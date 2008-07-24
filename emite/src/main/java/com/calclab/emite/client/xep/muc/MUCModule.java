@@ -21,7 +21,8 @@
  */
 package com.calclab.emite.client.xep.muc;
 
-import com.calclab.emite.client.core.bosh.Emite;
+import com.calclab.emite.client.xmpp.session.ISession;
+import com.calclab.emite.client.xmpp.session.SessionImpl;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.Provider;
@@ -40,7 +41,7 @@ public class MUCModule implements Module {
     public void onLoad(final ModuleBuilder builder) {
 	builder.registerProvider(RoomManager.class, new Provider<RoomManager>() {
 	    public RoomManager get() {
-		return new MUCRoomManager(builder.getInstance(Emite.class));
+		return new MUCRoomManager(builder.getInstance(ISession.class));
 	    }
 	}, SessionScope.class);
 

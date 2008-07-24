@@ -23,7 +23,7 @@ package com.calclab.emite.client;
 
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.PacketTestSuite;
-import com.calclab.emite.client.core.services.gwt.GWTXMLService;
+import com.calclab.emite.client.services.gwt.GWTXMLService;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 

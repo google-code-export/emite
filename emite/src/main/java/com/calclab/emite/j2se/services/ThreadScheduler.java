@@ -22,7 +22,7 @@
 package com.calclab.emite.j2se.services;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.services.ScheduledAction;
+import com.calclab.emite.client.services.ScheduledAction;
 
 public class ThreadScheduler {
 

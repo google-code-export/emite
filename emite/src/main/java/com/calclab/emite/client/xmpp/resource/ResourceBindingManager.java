@@ -21,8 +21,7 @@
  */
 package com.calclab.emite.client.xmpp.resource;
 
-import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.dispatcher.PacketListener;
+import com.calclab.emite.client.core.bosh3.Bosh3Connection;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -30,24 +29,29 @@ import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
 public class ResourceBindingManager {
-    private final Emite emite;
     private final Signal<XmppURI> onBinded;
+    private final Bosh3Connection connection;
 
-    public ResourceBindingManager(final Emite emite) {
-	this.emite = emite;
+    public ResourceBindingManager(final Bosh3Connection connection) {
+	this.connection = connection;
 	this.onBinded = new Signal<XmppURI>("onBinded");
+
+	connection.onStanzaReceived(new Slot<IPacket>() {
+	    public void onEvent(final IPacket received) {
+		if ("bind-resource".equals(received.getAttribute("id"))) {
+		    final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
+		    onBinded.fire(XmppURI.uri(jid));
+		}
+	    }
+	});
     }
 
     public void bindResource(final String resource) {
 	final IQ iq = new IQ(IQ.Type.set);
+	iq.setId("bind-resource");
 	iq.addChild("bind", "urn:ietf:params:xml:ns:xmpp-bind").addChild("resource", null).setText(resource);
 
-	emite.sendIQ("bind", iq, new PacketListener() {
-	    public void handle(final IPacket received) {
-		final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
-		onBinded.fire(XmppURI.uri(jid));
-	    }
-	});
+	connection.send(iq);
     }
 
     public void onBinded(final Slot<XmppURI> listener) {
