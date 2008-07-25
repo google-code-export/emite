@@ -13,12 +13,15 @@ public class OpenChatTestingModule implements Module {
 	return OpenChatTestingModule.class;
     }
 
-    public void onLoad(ModuleBuilder builder) {
-	ChatManager chatManager = builder.getInstance(ChatManager.class);
-	StatusUI statusUI = builder.getInstance(StatusUI.class);
-	I18nTranslationService i18n = builder.getInstance(I18nTranslationService.class);
-	OpenChatTestingPresenter presenter = new OpenChatTestingPresenter(chatManager, statusUI);
-	OpenChatTestingPanel panel = new OpenChatTestingPanel(presenter, statusUI, i18n);
+    public void onLoad(final ModuleBuilder builder) {
+	// FIXME: this is an error
+	// ChatManager is in SessionContext: that means tou can only retrieve
+	// the instance if the session is created... not this case!!!
+	final ChatManager chatManager = builder.getInstance(ChatManager.class);
+	final StatusUI statusUI = builder.getInstance(StatusUI.class);
+	final I18nTranslationService i18n = builder.getInstance(I18nTranslationService.class);
+	final OpenChatTestingPresenter presenter = new OpenChatTestingPresenter(chatManager, statusUI);
+	final OpenChatTestingPanel panel = new OpenChatTestingPanel(presenter, statusUI, i18n);
 	presenter.init(panel);
     }
 

@@ -61,12 +61,12 @@ public class EmiteUIModule implements Module {
 	builder.add(new StatusUIModule(), new SoundModule(), new RoomUIModule());
 
 	// Only for UI test (comment during release):
-	builder.add(new OpenChatTestingModule());
+	// builder.add(new OpenChatTestingModule());
 
 	builder.registerProvider(EmiteUIFactory.class, new Provider<EmiteUIFactory>() {
 	    public EmiteUIFactory get() {
 		final StatusUI statusUI = builder.getInstance(StatusUI.class);
-		SoundManager soundManager = builder.getInstance(SoundManager.class);
+		final SoundManager soundManager = builder.getInstance(SoundManager.class);
 		return new EmiteUIFactory(builder.getInstance(Xmpp.class), builder
 			.getInstance(I18nTranslationService.class), statusUI, soundManager);
 	    }
