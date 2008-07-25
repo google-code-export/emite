@@ -12,7 +12,7 @@ USER=$5
 if [ $PARAMS -lt 4 ]
 then
   echo "Use: $0 <jar> <group> <artifact> <version> <username>"
-  echo "$0 target/emite-0.3.0-emiteuimodule.jar com.calclab.emite emiteuimodule 0.3.0 luther"
+  echo "$0 target/emite-0.3.1-emiteuimodule.jar com.calclab.emite emiteuimodule 0.3.0 luther"
   exit
 fi
 
@@ -22,7 +22,7 @@ then
 fi
 
 DESTHOST=${EXTRA}ourproject.org
-DESTREPO=/home/groups/kune/htdocs/mavenrepo 
+DESTREPO=/home/groups/kune/htdocs/mavenrepo
 
 DIRDESTREL=`echo $GROUP| sed 's/\./\//g'`
 
@@ -31,7 +31,7 @@ DIRDEST=$DESTREPO/$DIRDESTREL/$ARTIFACT/$VER/
 ssh $DESTHOST "mkdir -p $DIRDEST"
 NAME=$ARTIFACT-$VER
 DESTJAR=$DIRDEST/$NAME.jar
-scp $JAR $DESTHOST:$DESTJAR 
+scp $JAR $DESTHOST:$DESTJAR
 ssh $DESTHOST "md5sum $DESTJAR > $DESTJAR.md5"
 
 POM=$DIRDEST/$NAME.pom
