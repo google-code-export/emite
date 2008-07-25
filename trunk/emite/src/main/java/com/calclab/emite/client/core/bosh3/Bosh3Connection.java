@@ -72,11 +72,19 @@ public class Bosh3Connection {
     }
 
     public void disconnect() {
-
+	createBody();
+	body.setAttribute("type", "terminate");
+	sendBody();
+	running = false;
+	onDisconnected.fire("logged out");
     }
 
     public boolean isConnected() {
 	return stream != null;
+    }
+
+    public void onError(final Slot<String> slot) {
+	onError.add(slot);
     }
 
     public void onStanzaReceived(final Slot<IPacket> slot) {

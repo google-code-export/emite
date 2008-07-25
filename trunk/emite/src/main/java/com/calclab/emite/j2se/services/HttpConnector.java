@@ -72,7 +72,7 @@ public class HttpConnector {
 		    listener.onSend(id, xml);
 		    status = client.executeMethod(post);
 		    response = post.getResponseBodyAsString();
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 		    listener.onError(id, "exception " + e);
 		    callback.onError(e);
 		    e.printStackTrace();

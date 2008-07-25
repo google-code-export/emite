@@ -70,6 +70,14 @@ public class XmppSession extends AbstractSession {
 	    }
 	});
 
+	connection.onError(new Slot<String>() {
+	    public void onEvent(final String msg) {
+		Log.debug("ERROR: " + msg);
+		setState(State.error);
+		setState(State.disconnected);
+	    }
+	});
+
 	saslManager.onAuthorized(new Slot<AuthorizationTransaction>() {
 	    public void onEvent(final AuthorizationTransaction ticket) {
 		if (ticket.getState() == AuthorizationTransaction.State.succeed) {
@@ -154,11 +162,11 @@ public class XmppSession extends AbstractSession {
      * @see com.calclab.emite.client.xmpp.session.Session#logout()
      */
     public void logout() {
-	if (state != Session.State.disconnected) {
-	    connection.disconnect();
-	    final XmppURI lastUser = userURI;
+	if (state != State.disconnected && userURI != null) {
+	    onLoggedOut.fire(userURI);
 	    userURI = null;
-	    onLoggedOut.fire(lastUser);
+	    connection.disconnect();
+	    setState(State.disconnected);
 	}
     }
 
