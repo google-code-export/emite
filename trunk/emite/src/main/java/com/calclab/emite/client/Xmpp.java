@@ -22,6 +22,7 @@
 package com.calclab.emite.client;
 
 import com.calclab.emite.client.core.bosh3.Bosh3Settings;
+import com.calclab.emite.client.core.bosh3.Connection;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
@@ -30,10 +31,10 @@ import com.calclab.emite.client.services.gwt.GWTServicesModule;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.DelegatedContainer;
 import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleBuilder;
 
 public class Xmpp extends DelegatedContainer {
 
@@ -55,15 +56,13 @@ public class Xmpp extends DelegatedContainer {
      * @return
      */
     public static Xmpp create(final Module... modules) {
-	final ModuleBuilder container = new ModuleBuilder();
-	container.add(modules);
-	container.add(new EmiteModule());
+	final Container container = Suco.create(modules);
+	Suco.add(container, new EmiteModule());
 	return container.getInstance(Xmpp.class);
     }
 
     private Session session;
     private final boolean isStarted;
-    private Bosh3Settings settings;
 
     protected Xmpp(final Container container) {
 	super(container);
@@ -98,7 +97,7 @@ public class Xmpp extends DelegatedContainer {
 
     public void login(final XmppURI uri, final String password, final Presence.Show show, final String status) {
 	start();
-	session.login(uri, password, settings);
+	session.login(uri, password);
 	getPresenceManager().setOwnPresence(status, show);
     }
 
@@ -107,11 +106,7 @@ public class Xmpp extends DelegatedContainer {
     }
 
     public void setBoshSettings(final Bosh3Settings settings) {
-	this.settings = settings;
-    }
-
-    public void setBoshSettings(final String httpBase, final String hostName) {
-	this.settings = new Bosh3Settings(httpBase, hostName);
+	getInstance(Connection.class).setSettings(settings);
     }
 
     public void start() {

@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.core.bosh3.Bosh3Settings;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.AbstractSession;
 import com.calclab.emite.client.xmpp.session.Session;
@@ -67,7 +66,7 @@ public class MockedSession extends AbstractSession {
 	return currentUser != null;
     }
 
-    public void login(final XmppURI uri, final String password, final Bosh3Settings settings) {
+    public void login(final XmppURI uri, final String password) {
     }
 
     public void logout() {

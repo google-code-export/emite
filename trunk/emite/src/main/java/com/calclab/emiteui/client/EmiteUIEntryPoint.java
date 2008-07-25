@@ -31,7 +31,8 @@ import com.calclab.emiteuimodule.client.EmiteUIDialog;
 import com.calclab.emiteuimodule.client.EmiteUIModule;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.Suco;
+import com.calclab.suco.client.container.Container;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -48,11 +49,8 @@ public class EmiteUIEntryPoint implements EntryPoint {
     }
 
     public void onModuleLoadCont() {
-	final ModuleBuilder app = new ModuleBuilder();
-	app.add(new EmiteUIModule(), new DemoModule());
-
+	final Container app = Suco.create(new EmiteUIModule(), new DemoModule());
 	final EmiteUIDialog emiteUIDialog = app.getInstance(EmiteUIDialog.class);
-
 	final EmiteDemoUI demo = app.getInstance(EmiteDemoUI.class);
 
 	final EmiteDemoLoginPanel emiteDemoLoginPanel = demo.createLoginPanel(new LoginPanelListener() {

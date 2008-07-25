@@ -4,7 +4,7 @@
   <groupId>com.calclab</groupId>
   <artifactId>emite</artifactId>
   <packaging>jar</packaging>
-  <version>0.3.1</version>
+  <version>0.3.2</version>
   <description>emite: a pure gwt xmpp (jabber) library</description>
   <name>emite xmpp</name>
   <url>http://emite.googlecode.com</url>
@@ -55,17 +55,25 @@
           <!-- <logLevel>INFO</logLevel> -->
           <!--<style>OBF</style>-->
           <style>PRETTY</style>
+          <!--
           <runTarget>
             com.calclab.emiteui.EmiteUI/EmiteUI.html?log_level=DEBUG
+          </runTarget>
+           -->
+          <runTarget>
+            com.calclab.widgets.comenta.Comenta/Comenta.html?log_level=DEBUG
           </runTarget>
           <compileTarget>
             <param></param>
           </compileTarget>
           <compileTargets>
             <compileTarget>
-              com.calclab.emiteui.EmiteUI
+              com.calclab.widgets.comenta.Comenta
             </compileTarget>
             <!--
+            <compileTarget>
+              com.calclab.emiteui.EmiteUI
+            </compileTarget>
               <compileTarget>
               com.calclab.emite.Emite
               </compileTarget>

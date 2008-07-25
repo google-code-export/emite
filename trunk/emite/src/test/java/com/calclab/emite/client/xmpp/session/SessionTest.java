@@ -12,7 +12,6 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.core.bosh3.Bosh3Settings;
 import com.calclab.emite.client.core.bosh3.ConnectionTestHelper;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
@@ -44,9 +43,7 @@ public class SessionTest {
 	scope = mock(SessionScope.class);
 
 	saslManager = mock(SASLManager.class);
-
 	bindingManager = mock(ResourceBindingManager.class);
-
 	session = new XmppSession(helper.connection, scope, saslManager, bindingManager);
 
 	bindSignal = new SignalTester<XmppURI>();
@@ -55,10 +52,8 @@ public class SessionTest {
 
     @Test
     public void shouldConnectOnLogin() {
-	final XmppURI uri = uri("name@domain/resource");
-	final Bosh3Settings settings = new Bosh3Settings("base", "host");
-	session.login(uri, "password", settings);
-	verify(helper.connection).connect(same(settings));
+	session.login(uri("name@domain/resource"), "password");
+	verify(helper.connection).connect();
     }
 
     @Test
@@ -125,8 +120,7 @@ public class SessionTest {
     @Test
     public void shouldStartScopeOnLogin() {
 	final XmppURI uri = uri("name@domain/resource");
-	final Bosh3Settings settings = new Bosh3Settings("base", "host");
-	session.login(uri, "password", settings);
+	session.login(uri, "password");
 	verify(scope).createAll();
     }
 

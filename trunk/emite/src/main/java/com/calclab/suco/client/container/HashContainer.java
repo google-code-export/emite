@@ -22,6 +22,9 @@
 package com.calclab.suco.client.container;
 
 import java.util.HashMap;
+import java.util.Set;
+
+import com.allen_sauer.gwt.log.client.Log;
 
 /**
  * A class that implements the Container interface using a HashMap
@@ -43,7 +46,7 @@ public class HashContainer implements Container {
     public <T> Provider<T> getProvider(final Class<T> componentKey) {
 	final Provider<T> provider = (Provider<T>) providers.get(componentKey);
 	if (provider == null) {
-	    throw new RuntimeException("component not registered: " + componentKey);
+	    throw new RuntimeException("component not registered: " + componentKey + ":\n" + this.getComponentsNames());
 	}
 	return provider;
     }
@@ -53,6 +56,7 @@ public class HashContainer implements Container {
     }
 
     public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider) {
+	Log.debug("Registering: " + componentKey);
 	providers.put(componentKey, provider);
 	return provider;
     }
@@ -64,5 +68,17 @@ public class HashContainer implements Container {
 	    }
 	});
 	return component;
+    }
+
+    private String getComponentsNames() {
+	final StringBuilder builder = new StringBuilder();
+
+	final Set<Class<?>> keys = providers.keySet();
+	for (final Class<?> type : keys) {
+	    builder.append(type.toString()).append("\n");
+	}
+
+	return builder.toString();
+
     }
 }

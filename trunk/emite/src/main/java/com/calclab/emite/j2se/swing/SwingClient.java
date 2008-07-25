@@ -37,6 +37,7 @@ import javax.swing.JTabbedPane;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.core.bosh3.Bosh3Settings;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.presence.PresenceManagerListenerAdapter;
@@ -82,7 +83,7 @@ public class SwingClient {
 	loginPanel = new LoginPanel(new LoginPanelListener() {
 	    public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
 		final String resource = "emite-swing";
-		xmpp.setBoshSettings(httpBase, domain);
+		xmpp.setBoshSettings(new Bosh3Settings(httpBase, domain));
 		xmpp.login(new XmppURI(userName, domain, resource), password, Presence.Show.dnd, "do not disturb at: "
 			+ new Date().toString());
 	    }

@@ -25,6 +25,7 @@ public class Bosh3Connection implements Connection {
     private final Signal<IPacket> onStanzasReceived;
     private String httpBase;
     private boolean shouldCollectResponses;
+    private Bosh3Settings userSettings;
 
     public Bosh3Connection(final Services services) {
 	this.services = services;
@@ -60,14 +61,16 @@ public class Bosh3Connection implements Connection {
 	};
     }
 
-    public void connect(final Bosh3Settings settings) {
+    public void connect() {
+	assert userSettings != null;
+
 	if (!running) {
 	    this.running = true;
-	    this.httpBase = settings.httpBase;
+	    this.httpBase = userSettings.httpBase;
 	    this.rid = (long) (Math.random() * 10000000) + 1000;
 	    this.stream = null;
 	    this.activeConnections = 0;
-	    createInitialBody(settings);
+	    createInitialBody(userSettings);
 	    sendBody();
 	}
     }
@@ -101,6 +104,10 @@ public class Bosh3Connection implements Connection {
 	createBody();
 	body.addChild(packet);
 	sendBody();
+    }
+
+    public void setSettings(final Bosh3Settings settings) {
+	this.userSettings = settings;
     }
 
     private void continueConnection(final String ack) {
