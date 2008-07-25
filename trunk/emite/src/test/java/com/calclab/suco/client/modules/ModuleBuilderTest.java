@@ -14,7 +14,7 @@ import com.calclab.suco.client.scopes.Scopes;
 
 public class ModuleBuilderTest {
 
-    public class FakeModule implements Module {
+    public class FakeModule extends DeprecatedModule {
 	private int loaded;
 	private final Class<?> type;
 
@@ -31,6 +31,7 @@ public class ModuleBuilderTest {
 	    return type;
 	}
 
+	@Override
 	public void onLoad(final ModuleBuilder builder) {
 	    loaded++;
 	}

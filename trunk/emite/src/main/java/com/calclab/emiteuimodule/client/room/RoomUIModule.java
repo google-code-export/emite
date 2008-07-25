@@ -6,15 +6,16 @@ import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.DeprecatedModule;
 import com.calclab.suco.client.modules.ModuleBuilder;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public class RoomUIModule implements Module {
+public class RoomUIModule extends DeprecatedModule {
     public Class<RoomUIModule> getType() {
 	return RoomUIModule.class;
     }
 
+    @Override
     public void onLoad(final ModuleBuilder builder) {
 	builder.registerProvider(RoomUIManager.class, new Provider<RoomUIManager>() {
 	    public RoomUIManager get() {

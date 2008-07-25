@@ -27,7 +27,6 @@ import com.calclab.emite.client.services.ConnectorException;
 import com.calclab.emite.client.services.ScheduledAction;
 import com.calclab.emite.client.services.Services;
 import com.calclab.emite.client.services.ServicesModule;
-import com.calclab.suco.client.modules.ModuleBuilder;
 
 public class J2SEServicesModule extends ServicesModule implements Services {
     private final HttpConnector connector;
@@ -45,12 +44,13 @@ public class J2SEServicesModule extends ServicesModule implements Services {
 	xmler = new TigaseXMLService();
     }
 
-    public long getCurrentTime() {
-	return scheduler.getCurrentTime();
+    @Override
+    public Services createServices() {
+	return this;
     }
 
-    public void onLoad(final ModuleBuilder builder) {
-	ServicesModule.setServices(builder, this);
+    public long getCurrentTime() {
+	return scheduler.getCurrentTime();
     }
 
     public void schedule(final int msecs, final ScheduledAction action) {

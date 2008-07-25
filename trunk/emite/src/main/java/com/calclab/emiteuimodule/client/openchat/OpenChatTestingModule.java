@@ -4,15 +4,16 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.DeprecatedModule;
 import com.calclab.suco.client.modules.ModuleBuilder;
 
-public class OpenChatTestingModule implements Module {
+public class OpenChatTestingModule extends DeprecatedModule {
 
     public Class<OpenChatTestingModule> getType() {
 	return OpenChatTestingModule.class;
     }
 
+    @Override
     public void onLoad(final ModuleBuilder builder) {
 	// FIXME: this is an error
 	// ChatManager is in SessionContext: that means tou can only retrieve

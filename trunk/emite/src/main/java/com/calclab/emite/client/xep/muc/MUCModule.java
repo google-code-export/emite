@@ -25,10 +25,11 @@ import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.modules.DeprecatedModule;
 import com.calclab.suco.client.modules.Module;
 import com.calclab.suco.client.modules.ModuleBuilder;
 
-public class MUCModule implements Module {
+public class MUCModule extends DeprecatedModule {
     public static RoomManager getRoomManager(final Container components) {
 	return components.getInstance(RoomManager.class);
     }
@@ -37,6 +38,7 @@ public class MUCModule implements Module {
 	return MUCModule.class;
     }
 
+    @Override
     public void onLoad(final ModuleBuilder builder) {
 	builder.registerProvider(RoomManager.class, new Provider<RoomManager>() {
 	    public RoomManager get() {

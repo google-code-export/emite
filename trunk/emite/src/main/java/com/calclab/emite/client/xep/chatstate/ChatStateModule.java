@@ -23,10 +23,8 @@ package com.calclab.emite.client.xep.chatstate;
 
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.xmpp.session.SessionScope;
-import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.Factory;
 
 /**
  * Implements XEP-0085: Chat State Notifications
@@ -34,24 +32,17 @@ import com.calclab.suco.client.modules.ModuleBuilder;
  * @see http://www.xmpp.org/extensions/xep-0085.html (Version: 1.2)
  * 
  */
-public class ChatStateModule implements Module {
-    private static final Class<StateManager> COMPONENTS_MANAGER = StateManager.class;
-
-    public static StateManager getChatStateManager(final Container components) {
-	return components.getInstance(COMPONENTS_MANAGER);
+public class ChatStateModule extends AbstractModule {
+    public ChatStateModule() {
+	super(ChatStateModule.class);
     }
 
-    public Class<? extends Module> getType() {
-	return ChatStateModule.class;
-    }
-
-    public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(StateManager.class, new Provider<StateManager>() {
-	    public StateManager get() {
-		final ChatManager chatManager = builder.getInstance(ChatManager.class);
-		return new StateManager(chatManager);
+    @Override
+    public void onLoad() {
+	register(SessionScope.class, new Factory<StateManager>(StateManager.class) {
+	    public StateManager create() {
+		return new StateManager($(ChatManager.class));
 	    }
-	}, SessionScope.class);
-
+	});
     }
 }

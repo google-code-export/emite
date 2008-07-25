@@ -13,7 +13,7 @@ import com.calclab.emite.testing.SignalTester;
 
 public class ConnectionTestHelper {
 
-    public final Bosh3Connection connection;
+    public final Connection connection;
     private SignalTester<IPacket> onStanzaSignal;
     private final TigaseXMLService xmler;
 

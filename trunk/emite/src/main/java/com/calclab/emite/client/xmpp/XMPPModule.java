@@ -21,14 +21,15 @@
  */
 package com.calclab.emite.client.xmpp;
 
-import com.calclab.emite.client.core.bosh3.Bosh3Connection;
+import com.calclab.emite.client.core.bosh3.Connection;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.emite.client.xmpp.session.XmppSession;
 import com.calclab.suco.client.modules.AbstractModule;
-import com.calclab.suco.client.provider.SingletonFactory;
+import com.calclab.suco.client.provider.Factory;
+import com.calclab.suco.client.scopes.SingletonScope;
 
 public class XMPPModule extends AbstractModule {
 
@@ -41,21 +42,21 @@ public class XMPPModule extends AbstractModule {
 
 	registerScope(SessionScope.class, new SessionScope());
 
-	register(new SingletonFactory<ResourceBindingManager>(ResourceBindingManager.class) {
+	register(SingletonScope.class, new Factory<ResourceBindingManager>(ResourceBindingManager.class) {
 	    public ResourceBindingManager create() {
-		return new ResourceBindingManager($(Bosh3Connection.class));
+		return new ResourceBindingManager($(Connection.class));
 	    }
-	}, new SingletonFactory<ResourceBindingManager>(ResourceBindingManager.class) {
+	}, new Factory<ResourceBindingManager>(ResourceBindingManager.class) {
 	    public ResourceBindingManager create() {
-		return new ResourceBindingManager($(Bosh3Connection.class));
+		return new ResourceBindingManager($(Connection.class));
 	    }
-	}, new SingletonFactory<SASLManager>(SASLManager.class) {
+	}, new Factory<SASLManager>(SASLManager.class) {
 	    public SASLManager create() {
-		return new SASLManager($(Bosh3Connection.class));
+		return new SASLManager($(Connection.class));
 	    }
-	}, new SingletonFactory<Session>(Session.class) {
+	}, new Factory<Session>(Session.class) {
 	    public Session create() {
-		final XmppSession session = new XmppSession($(Bosh3Connection.class), $(SessionScope.class),
+		final XmppSession session = new XmppSession($(Connection.class), $(SessionScope.class),
 			$(SASLManager.class), $(ResourceBindingManager.class));
 		$(SessionScope.class).setContext(session);
 		return session;

@@ -36,17 +36,19 @@ import com.calclab.emiteuimodule.client.sound.SoundModule;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.emiteuimodule.client.status.StatusUIModule;
 import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.modules.DeprecatedModule;
 import com.calclab.suco.client.modules.Module;
 import com.calclab.suco.client.modules.ModuleBuilder;
 import com.calclab.suco.client.scopes.NoScope;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public class EmiteUIModule implements Module {
+public class EmiteUIModule extends DeprecatedModule {
 
     public Class<? extends Module> getType() {
 	return EmiteUIModule.class;
     }
 
+    @Override
     public void onLoad(final ModuleBuilder builder) {
 	builder.add(new GWTServicesModule());
 	builder.add(new EmiteModule(), new MUCModule(), new ChatStateModule(), new AvatarModule());

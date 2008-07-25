@@ -21,6 +21,7 @@
  */
 package com.calclab.emiteui.client;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.DOM;
 
 public class DemoParameters {
@@ -29,7 +30,7 @@ public class DemoParameters {
     private static final String GWT_PROPERTY_HTTPBASE = "emite:bosh:httpbase";
     private static final String GWT_PROPERTY_HOST = "emite:bosh:host";
     private static final String GWT_PROPERTY_ROOMHOST = "emite:muc:host";
-    private static final String GWT_PROPERTY_INFOHTML = "gwt_property_infohtml";
+    private static final String GWT_PROPERTY_INFOHTML = "emite:demo:info";
     private static final String GWT_PROPERTY_RELEASE = "emite:demo:version";
 
     public String getHost() {
@@ -41,7 +42,7 @@ public class DemoParameters {
     }
 
     public String getInfo(final String defaultVal) {
-	return getGwtMetaProperty(GWT_PROPERTY_INFOHTML, defaultVal);
+	return getGwtMetaProperty(GWT_PROPERTY_INFOHTML, null);
     }
 
     public String getJID() {
@@ -60,8 +61,14 @@ public class DemoParameters {
 	return getGwtMetaProperty(GWT_PROPERTY_ROOMHOST, null);
     }
 
-    private String getGwtMetaProperty(final String property, final String defaultVal) {
-	final String value = DOM.getElementProperty(DOM.getElementById(property), "content");
-	return value != null ? value : defaultVal;
+    private String getGwtMetaProperty(final String property, final String optionalValue) {
+	String value = DOM.getElementProperty(DOM.getElementById(property), "content");
+	if (value == null && optionalValue == null) {
+	    throw new RuntimeException("Property: " + property + " not found!");
+	} else {
+	    value = value != null ? value : optionalValue;
+	    Log.debug("Property => " + property + ": " + value);
+	    return value;
+	}
     }
 }

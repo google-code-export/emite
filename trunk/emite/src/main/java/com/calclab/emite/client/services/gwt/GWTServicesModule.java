@@ -27,17 +27,16 @@ import com.calclab.emite.client.services.ConnectorException;
 import com.calclab.emite.client.services.ScheduledAction;
 import com.calclab.emite.client.services.Services;
 import com.calclab.emite.client.services.ServicesModule;
-import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleBuilder;
 
-public class GWTServicesModule extends ServicesModule implements Services, Module {
+public class GWTServicesModule extends ServicesModule implements Services {
+
+    @Override
+    public Services createServices() {
+	return new GWTServicesModule();
+    }
 
     public long getCurrentTime() {
 	return GWTScheduler.getCurrentTime();
-    }
-
-    public void onLoad(final ModuleBuilder builder) {
-	ServicesModule.setServices(builder, new GWTServicesModule());
     }
 
     public void schedule(final int msecs, final ScheduledAction action) {
