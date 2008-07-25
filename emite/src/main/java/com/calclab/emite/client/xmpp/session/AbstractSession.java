@@ -1,6 +1,5 @@
 package com.calclab.emite.client.xmpp.session;
 
-import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -12,7 +11,6 @@ public abstract class AbstractSession implements Session {
     protected final Signal<Session.State> onStateChanged;
     protected final Signal<Presence> onPresence;
     protected final Signal<Message> onMessage;
-    protected final Signal<IQ> onIQ;
     protected final Signal<XmppURI> onLoggedOut;
     protected final Signal<XmppURI> onLoggedIn;
 
@@ -20,13 +18,8 @@ public abstract class AbstractSession implements Session {
 	this.onStateChanged = new Signal<Session.State>("session:onStateChanged");
 	this.onPresence = new Signal<Presence>("session:onPresence");
 	this.onMessage = new Signal<Message>("session:onMessage");
-	this.onIQ = new Signal<IQ>("session:onIQ");
 	this.onLoggedIn = new Signal<XmppURI>("session:onLoggedIn");
 	this.onLoggedOut = new Signal<XmppURI>("session:onLoggedOut");
-    }
-
-    public void onIQ(final Slot<IQ> slot) {
-	onIQ.add(slot);
     }
 
     public void onLoggedIn(final Slot<XmppURI> slot) {

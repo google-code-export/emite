@@ -21,7 +21,6 @@
  */
 package com.calclab.emite.j2se.services;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 
 import org.apache.commons.httpclient.HttpClient;

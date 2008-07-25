@@ -58,31 +58,6 @@ public class RosterManagerTest {
     }
 
     @Test
-    public void shouldHadleUncompleteJids() {
-	session.receives("<iq type='set' id='theId' to='user@domain/res'>" + "<query xmlns='jabber:iq:roster'>"
-		+ "<item jid='testunknownjid' name='testunknownname' ask='subscribe' subscription='none'/>"
-		+ "</query></iq>");
-	final XmppURI incompleteJid = uri("testunknownjid");
-	verify(roster).changeSubscription(incompleteJid, "none");
-    }
-
-    @Test
-    public void shouldHandleIQSets() {
-	session.receives("<iq id='theId' type='set'><query xmlns='jabber:iq:roster'><item jid='contact@example.org' "
-		+ "subscription='none' name='MyContact'><group>MyBuddies</group></item></query></iq>");
-	session.verifySent("<iq type='result' id='theId' />");
-	verify(roster).changeSubscription(uri("contact@example.org"), "none");
-    }
-
-    @Test
-    public void shouldHandleIQSetsWhenSubscribed() {
-	session.receives("<iq id='theId' type='set'><query xmlns='jabber:iq:roster'><item jid='contact@example.org' "
-		+ "subscription='to' name='MyContact'><group>MyBuddies</group></item></query></iq>");
-	session.verifySent("<iq type='result' id='theId' />");
-	verify(roster).changeSubscription(uri("contact@example.org"), "to");
-    }
-
-    @Test
     public void shouldHandlePresence() {
 	session.receives("<presence from='userInRoster@domain/res' to='user@domain/res'>"
 		+ "<priority>2</priority></presence>");

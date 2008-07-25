@@ -6,7 +6,7 @@ import static com.calclab.emite.testing.MockSlot.verifyCalledWith;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.bosh3.ConnectionTestHelper;
+import com.calclab.emite.client.core.bosh3.ConnectionTestHelper;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.MockSlot;

@@ -24,8 +24,6 @@ public interface Session {
 
     public abstract void logout();
 
-    public void onIQ(final Slot<IQ> slot);
-
     public abstract void onLoggedIn(final Slot<XmppURI> slot);
 
     public abstract void onLoggedOut(final Slot<XmppURI> slot);
