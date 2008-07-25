@@ -10,7 +10,7 @@ import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.Suco;
 
 public class MockitoXmpp extends Xmpp {
 
@@ -21,7 +21,7 @@ public class MockitoXmpp extends Xmpp {
     private final Session session;
 
     public MockitoXmpp() {
-	super(new ModuleBuilder());
+	super(Suco.create());
 	chat = mock(ChatManager.class);
 	presenceManager = mock(PresenceManager.class);
 	roster = mock(Roster.class);

@@ -1,0 +1,14 @@
+<module>
+  <inherits name="com.google.gwt.user.User" />
+  <inherits name="com.calclab.emite.Emite" />
+
+  <entry-point
+    class="com.calclab.widgets.comenta.client.ComentaEntryPoint" />
+
+  <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
+
+  <extend-property name="log_level" values="DEBUG" />
+  <set-property name="log_level" value="DEBUG" />
+  <set-property name="log_DivLogger" value="DISABLED" />
+  <set-property name="log_FirebugLogger" value="ENABLED" />
+</module>

@@ -5,7 +5,7 @@ import com.calclab.suco.client.signal.Slot;
 
 public interface Connection {
 
-    public abstract void connect(final Bosh3Settings settings);
+    public abstract void connect();
 
     public abstract void disconnect();
 
@@ -18,5 +18,7 @@ public interface Connection {
     public abstract void restartStream();
 
     public abstract void send(final IPacket packet);
+
+    public abstract void setSettings(Bosh3Settings settings);
 
 }

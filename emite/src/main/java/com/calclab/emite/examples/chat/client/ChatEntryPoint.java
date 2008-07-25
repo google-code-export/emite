@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import com.calclab.emite.client.Xmpp;
+import com.calclab.emite.client.core.bosh3.Bosh3Settings;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatListenerAdaptor;
@@ -137,7 +138,7 @@ public class ChatEntryPoint implements EntryPoint {
 
     private void createXMPP(final String httpBase, final String hostName) {
 	xmpp = Xmpp.create();
-	xmpp.setBoshSettings(httpBase, hostName);
+	xmpp.setBoshSettings(new Bosh3Settings(httpBase, hostName));
 
 	xmpp.getSession().onStateChanged(new Slot<Session.State>() {
 	    public void onEvent(final Session.State current) {

@@ -25,31 +25,27 @@ import com.calclab.emite.client.core.Core3Module;
 import com.calclab.emite.client.im.InstantMessagingModule;
 import com.calclab.emite.client.xmpp.XMPPModule;
 import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.DeprecatedModule;
-import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public class EmiteModule extends DeprecatedModule {
-
+public class EmiteModule extends AbstractModule {
     public static Xmpp getXmpp(final Container container) {
 	return container.getInstance(Xmpp.class);
     }
 
-    public Class<? extends Module> getType() {
-	return EmiteModule.class;
+    public EmiteModule() {
+	super(EmiteModule.class);
     }
 
     @Override
-    public void onLoad(final ModuleBuilder builder) {
-	builder.add(new Core3Module(), new XMPPModule(), new InstantMessagingModule());
-	builder.registerProvider(Xmpp.class, new Provider<Xmpp>() {
-	    public Xmpp get() {
-		return new Xmpp(builder);
+    protected void onLoad() {
+	load(new Core3Module(), new XMPPModule(), new InstantMessagingModule());
+	register(SingletonScope.class, new Factory<Xmpp>(Xmpp.class) {
+	    public Xmpp create() {
+		return new Xmpp($(Container.class));
 	    }
-
-	}, SingletonScope.class);
+	});
     }
 
 }

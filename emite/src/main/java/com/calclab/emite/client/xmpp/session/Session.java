@@ -1,6 +1,5 @@
 package com.calclab.emite.client.xmpp.session;
 
-import com.calclab.emite.client.core.bosh3.Bosh3Settings;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -20,7 +19,7 @@ public interface Session {
 
     public abstract boolean isLoggedIn();
 
-    public abstract void login(final XmppURI uri, final String password, final Bosh3Settings settings);
+    public abstract void login(final XmppURI uri, final String password);
 
     public abstract void logout();
 

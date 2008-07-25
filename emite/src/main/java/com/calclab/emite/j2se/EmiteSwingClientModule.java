@@ -27,32 +27,35 @@ import com.calclab.emite.client.xep.disco.DiscoveryModule;
 import com.calclab.emite.client.xep.muc.MUCModule;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.swing.SwingClient;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.DeprecatedModule;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.Suco;
+import com.calclab.suco.client.container.Container;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public class EmiteSwingClientModule extends DeprecatedModule {
+public class EmiteSwingClientModule extends AbstractModule {
 
     public static void main(final String args[]) {
-	final ModuleBuilder container = new ModuleBuilder();
-	container.add(new J2SEServicesModule(), new EmiteModule(), new MUCModule(), new DiscoveryModule());
-	container.add(new EmiteSwingClientModule());
+	final Container container = Suco.create(new J2SEServicesModule(), new EmiteModule(), new MUCModule(),
+		new DiscoveryModule(), new EmiteSwingClientModule());
 	container.getInstance(SwingClient.class).start();
     }
 
+    public EmiteSwingClientModule() {
+	super(EmiteSwingClientModule.class);
+    }
+
+    @Override
     public Class<?> getType() {
 	return EmiteSwingClientModule.class;
     }
 
     @Override
-    public void onLoad(final ModuleBuilder builder) {
-	final Xmpp xmpp = builder.getInstance(Xmpp.class);
-
-	builder.registerProvider(SwingClient.class, new Provider<SwingClient>() {
-	    public SwingClient get() {
-		return new SwingClient(xmpp);
+    protected void onLoad() {
+	register(SingletonScope.class, new Factory<SwingClient>(SwingClient.class) {
+	    public SwingClient create() {
+		return new SwingClient($(Xmpp.class));
 	    }
-	}, SingletonScope.class);
+	});
     }
 }

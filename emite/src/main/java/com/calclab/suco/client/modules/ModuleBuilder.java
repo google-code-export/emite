@@ -40,13 +40,13 @@ import com.calclab.suco.client.scopes.Scopes;
 public class ModuleBuilder extends DelegatedContainer {
     private HashMap<Class<?>, Module> modules;
 
-    public ModuleBuilder() {
-	this(new HashContainer());
-	this.modules = new HashMap<Class<?>, Module>();
-    }
-
     public ModuleBuilder(final Container delegate) {
 	super(delegate);
+    }
+
+    ModuleBuilder() {
+	this(new HashContainer());
+	this.modules = new HashMap<Class<?>, Module>();
     }
 
     /**

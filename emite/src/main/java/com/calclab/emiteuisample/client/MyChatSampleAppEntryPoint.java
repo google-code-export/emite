@@ -25,14 +25,14 @@ import com.calclab.emite.client.EmiteModule;
 import com.calclab.emiteuimodule.client.EmiteUIDialog;
 import com.calclab.emiteuimodule.client.EmiteUIModule;
 import com.calclab.emiteuimodule.client.status.OwnPresence;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.Suco;
+import com.calclab.suco.client.container.Container;
 import com.google.gwt.core.client.EntryPoint;
 
 public class MyChatSampleAppEntryPoint implements EntryPoint {
 
     public void onModuleLoad() {
-	final ModuleBuilder container = new ModuleBuilder();
-	container.add(new EmiteModule(), new EmiteUIModule());
+	final Container container = Suco.create(new EmiteModule(), new EmiteUIModule());
 	final EmiteUIDialog emiteUIDialog = container.getInstance(EmiteUIDialog.class);
 	emiteUIDialog.start("admin@localhost", "easyeasy", "/proxy", "localhost", "rooms.localhost");
 	emiteUIDialog.show(OwnPresence.OwnStatus.online);

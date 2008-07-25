@@ -46,10 +46,6 @@ public class XMPPModule extends AbstractModule {
 	    public ResourceBindingManager create() {
 		return new ResourceBindingManager($(Connection.class));
 	    }
-	}, new Factory<ResourceBindingManager>(ResourceBindingManager.class) {
-	    public ResourceBindingManager create() {
-		return new ResourceBindingManager($(Connection.class));
-	    }
 	}, new Factory<SASLManager>(SASLManager.class) {
 	    public SASLManager create() {
 		return new SASLManager($(Connection.class));
