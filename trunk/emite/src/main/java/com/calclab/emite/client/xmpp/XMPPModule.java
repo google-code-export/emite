@@ -61,5 +61,7 @@ public class XMPPModule extends AbstractModule {
 		return session;
 	    }
 	});
+
+	$(Session.class);
     }
 }

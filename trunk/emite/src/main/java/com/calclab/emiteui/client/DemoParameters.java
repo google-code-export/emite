@@ -24,13 +24,13 @@ package com.calclab.emiteui.client;
 import com.google.gwt.user.client.DOM;
 
 public class DemoParameters {
-    private static final String GWT_PROPERTY_JID = "gwt_property_jid";
-    private static final String GWT_PROPERTY_PASSWD = "gwt_property_passwd";
-    private static final String GWT_PROPERTY_HTTPBASE = "gwt_property_httpbase";
-    private static final String GWT_PROPERTY_ROOMHOST = "gwt_property_roomhost";
+    private static final String GWT_PROPERTY_JID = "emite:user:jid";
+    private static final String GWT_PROPERTY_PASSWD = "emite:user:password";
+    private static final String GWT_PROPERTY_HTTPBASE = "emite:bosh:httpbase";
+    private static final String GWT_PROPERTY_HOST = "emite:bosh:host";
+    private static final String GWT_PROPERTY_ROOMHOST = "emite:muc:host";
     private static final String GWT_PROPERTY_INFOHTML = "gwt_property_infohtml";
-    private static final String GWT_PROPERTY_RELEASE = "gwt_property_release";
-    private static final String GWT_PROPERTY_HOST = "gwt_property_host";
+    private static final String GWT_PROPERTY_RELEASE = "emite:demo:version";
 
     public String getHost() {
 	return getGwtMetaProperty(GWT_PROPERTY_HOST, null);
