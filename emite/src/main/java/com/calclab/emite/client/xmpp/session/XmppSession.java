@@ -133,9 +133,10 @@ public class XmppSession extends AbstractSession {
     /*
      * (non-Javadoc)
      * 
-     * @see com.calclab.emite.client.xmpp.session.Session#login(com.calclab.emite
-     *      .client.xmpp.stanzas.XmppURI, java.lang.String,
-     *      com.calclab.emite.client.core.bosh3.Bosh3Settings)
+     * @see
+     * com.calclab.emite.client.xmpp.session.Session#login(com.calclab.emite
+     * .client.xmpp.stanzas.XmppURI, java.lang.String,
+     * com.calclab.emite.client.core.bosh3.Bosh3Settings)
      */
     public void login(final XmppURI uri, final String password, final Bosh3Settings settings) {
 	if (state == Session.State.disconnected) {
@@ -144,7 +145,6 @@ public class XmppSession extends AbstractSession {
 	    scope.createAll();
 	    transaction = new AuthorizationTransaction(uri, password);
 	    Log.debug("Sending auth transaction: " + transaction);
-	    userURI = uri;
 	}
     }
 
@@ -156,8 +156,9 @@ public class XmppSession extends AbstractSession {
     public void logout() {
 	if (state != Session.State.disconnected) {
 	    connection.disconnect();
+	    final XmppURI lastUser = userURI;
 	    userURI = null;
-	    onLoggedOut.fire(this);
+	    onLoggedOut.fire(lastUser);
 	}
     }
 

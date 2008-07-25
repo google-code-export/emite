@@ -24,9 +24,7 @@ package com.calclab.emite.client.core;
 import com.calclab.emite.client.core.bosh.Bosh;
 import com.calclab.emite.client.core.bosh.BoshManager;
 import com.calclab.emite.client.core.bosh.Emite;
-import com.calclab.emite.client.core.bosh.EmiteBosh;
 import com.calclab.emite.client.core.bosh.Stream;
-import com.calclab.emite.client.core.bosh3.Bosh3Connection;
 import com.calclab.emite.client.core.dispatcher.Dispatcher;
 import com.calclab.emite.client.core.dispatcher.DispatcherDefault;
 import com.calclab.emite.client.services.Services;
@@ -41,14 +39,6 @@ public class CoreModule implements Module {
     }
 
     public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(Bosh3Connection.class, new Provider<Bosh3Connection>() {
-	    public Bosh3Connection get() {
-		return new Bosh3Connection(builder.getInstance(Services.class));
-	    }
-	}, SingletonScope.class);
-    }
-
-    public void onLoadOLD(final ModuleBuilder builder) {
 	builder.registerProvider(Dispatcher.class, new Provider<Dispatcher>() {
 	    public Dispatcher get() {
 		return new DispatcherDefault();
@@ -58,12 +48,6 @@ public class CoreModule implements Module {
 	builder.registerProvider(Stream.class, new Provider<Stream>() {
 	    public Stream get() {
 		return new Stream();
-	    }
-	}, SingletonScope.class);
-
-	builder.registerProvider(Emite.class, new Provider<Emite>() {
-	    public Emite get() {
-		return new EmiteBosh(builder.getInstance(Dispatcher.class), builder.getInstance(Stream.class));
 	    }
 	}, SingletonScope.class);
 

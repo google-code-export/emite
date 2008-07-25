@@ -242,14 +242,17 @@ public class RosterManager {
     }
 
     private void install() {
-	session.onIQ(new Slot<IQ>() {
-	    public void onEvent(final IQ received) {
-		session.send(new IQ(IQ.Type.result).With("id", received.getAttribute("id")));
-		final IPacket item = received.getFirstChild("query").getFirstChild("item");
-		final String jid = item.getAttribute("jid");
-		roster.changeSubscription(uri(jid), item.getAttribute("subscription"));
-	    }
-	});
+	// session.onIQ(new Slot<IQ>() {
+	// public void onEvent(final IQ received) {
+	// session.send(new IQ(IQ.Type.result).With("id",
+	// received.getAttribute("id")));
+	// final IPacket item =
+	// received.getFirstChild("query").getFirstChild("item");
+	// final String jid = item.getAttribute("jid");
+	// roster.changeSubscription(uri(jid),
+	// item.getAttribute("subscription"));
+	// }
+	// });
 
 	session.onPresence(new Slot<Presence>() {
 	    public void onEvent(final Presence presence) {

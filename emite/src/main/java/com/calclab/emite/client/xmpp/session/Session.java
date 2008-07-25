@@ -11,7 +11,7 @@ import com.calclab.suco.client.signal.Slot;
 public interface Session {
 
     public static enum State {
-        authorized, loggedIn, connecting, disconnected, error, notAuthorized, ready
+	authorized, loggedIn, connecting, disconnected, error, notAuthorized, ready
     }
 
     public abstract XmppURI getCurrentUser();
@@ -24,9 +24,11 @@ public interface Session {
 
     public abstract void logout();
 
+    public void onIQ(final Slot<IQ> slot);
+
     public abstract void onLoggedIn(final Slot<XmppURI> slot);
 
-    public abstract void onLoggedOut(final Slot<Session> slot);
+    public abstract void onLoggedOut(final Slot<XmppURI> slot);
 
     public abstract void onMessage(final Slot<Message> listener);
 
@@ -39,7 +41,5 @@ public interface Session {
     public abstract void sendIQ(final String id, final IQ iq, final Slot<IPacket> slot);
 
     public abstract void setLoggedIn(final XmppURI userURI);
-
-    public void onIQ(final Slot<IQ> slot);
 
 }

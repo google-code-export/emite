@@ -8,6 +8,7 @@ import com.calclab.emite.client.services.ConnectorCallback;
 import com.calclab.emite.client.services.ConnectorException;
 import com.calclab.emite.client.services.Services;
 import com.calclab.suco.client.signal.Signal;
+import com.calclab.suco.client.signal.Signal0;
 import com.calclab.suco.client.signal.Slot;
 
 public class Bosh3Connection {
@@ -20,7 +21,7 @@ public class Bosh3Connection {
     private StreamSettings stream;
     private final Signal<String> onError;
     private final Signal<String> onDisconnected;
-    private final Signal<Bosh3Connection> onConnected;
+    private final Signal0 onConnected;
     private final Signal<IPacket> onStanzasReceived;
     private String httpBase;
 
@@ -28,7 +29,7 @@ public class Bosh3Connection {
 	this.services = services;
 	this.onError = new Signal<String>("bosh:onError");
 	this.onDisconnected = new Signal<String>("bosh:onDisconnected");
-	this.onConnected = new Signal<Bosh3Connection>("bosh:onConnected");
+	this.onConnected = new Signal0("bosh:onConnected");
 	this.onStanzasReceived = new Signal<IPacket>("bosh:onStanzasReceived");
 
 	this.callback = new ConnectorCallback() {
@@ -83,7 +84,8 @@ public class Bosh3Connection {
     }
 
     public void restartStream() {
-	// TODO
+	createBody();
+	body.setAttribute("xmpp:restart", "true");
     }
 
     public void send(final IPacket packet) {
@@ -100,29 +102,31 @@ public class Bosh3Connection {
     }
 
     private void createBody() {
-	this.body = new Packet("body");
-	body.With("xmlns", "http://jabber.org/protocol/httpbind");
-	body.With("rid", getNextRid());
-	if (stream != null) {
-	    body.With("sid", stream.sid);
+	if (body == null) {
+	    this.body = new Packet("body");
+	    body.With("xmlns", "http://jabber.org/protocol/httpbind");
+	    body.With("rid", getNextRid());
+	    if (stream != null) {
+		body.With("sid", stream.sid);
+	    }
 	}
-
     }
 
     private void createInitialBody(final Bosh3Settings userSettings) {
 	this.body = new Packet("body");
-	body.With("content", "text/xml; charset=utf-8");
-	body.With("xmlns", "http://jabber.org/protocol/httpbind");
-	body.With("rid", getNextRid());
+	body.setAttribute("content", "text/xml; charset=utf-8");
+	body.setAttribute("xmlns", "http://jabber.org/protocol/httpbind");
+	body.setAttribute("xmlns:xmpp", "urn:xmpp:xbosh");
+	body.setAttribute("xmlns:stream", "http://etherx.jabber.org/streams");
+	body.setAttribute("xml:lang", "en");
+	body.setAttribute("ack", "1");
+	body.setAttribute("secure", "true");
+	body.setAttribute("rid", getNextRid());
+	body.setAttribute("xmpp:version", userSettings.version);
+	body.setAttribute("to", userSettings.hostName);
 	body.With("hold", userSettings.hold);
 	body.With("requests", userSettings.maxRequests);
-	body.With("to", userSettings.hostName);
-	body.With("ver", userSettings.version);
 	body.With("wait", userSettings.wait);
-    }
-
-    private String getBody() {
-	return services.toString(body);
     }
 
     private String getNextRid() {
@@ -141,7 +145,7 @@ public class Bosh3Connection {
 	    if (stream == null) {
 		stream = new StreamSettings(receivedSID, response.getAttribute("wait"), response
 			.getAttribute("inactivity"), response.getAttribute("maxpause"));
-		onConnected.fire(this);
+		onConnected.fire();
 	    }
 	    final List<? extends IPacket> stanzas = response.getChildren();
 	    for (final IPacket stanza : stanzas) {
@@ -159,7 +163,9 @@ public class Bosh3Connection {
     private void sendBody() {
 	try {
 	    activeConnections++;
-	    services.send(httpBase, getBody(), callback);
+	    final String request = services.toString(body);
+	    body = null;
+	    services.send(httpBase, request, callback);
 	} catch (final ConnectorException e) {
 	    activeConnections--;
 	    e.printStackTrace();
