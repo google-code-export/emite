@@ -24,7 +24,7 @@ package com.calclab.emite.client.xep.disco;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.DeprecatedModule;
 import com.calclab.suco.client.modules.ModuleBuilder;
 
 /**
@@ -38,12 +38,13 @@ import com.calclab.suco.client.modules.ModuleBuilder;
  *      NOT IMPLEMENTED
  * 
  */
-public class DiscoveryModule implements Module {
+public class DiscoveryModule extends DeprecatedModule {
 
     public Class<?> getType() {
 	return DiscoveryModule.class;
     }
 
+    @Override
     public void onLoad(final ModuleBuilder builder) {
 	builder.registerProvider(DiscoveryManager.class, new Provider<DiscoveryManager>() {
 	    public DiscoveryManager get() {

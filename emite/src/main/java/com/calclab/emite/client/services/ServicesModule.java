@@ -21,29 +21,24 @@
  */
 package com.calclab.emite.client.services;
 
-import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public abstract class ServicesModule implements Module {
-    private static final Class<Services> COMPONENT_SERVICES = Services.class;
+public abstract class ServicesModule extends AbstractModule {
 
-    public static Services getServices(final Container container) {
-	return container.getInstance(COMPONENT_SERVICES);
+    public ServicesModule() {
+	super(ServicesModule.class);
     }
 
-    public static void setServices(final ModuleBuilder builder, final Services services) {
-	builder.registerProvider(Services.class, new Provider<Services>() {
-	    public Services get() {
-		return services;
+    public abstract Services createServices();
+
+    @Override
+    public void onLoad() {
+	register(SingletonScope.class, new Factory<Services>(Services.class) {
+	    public Services create() {
+		return createServices();
 	    }
-	}, SingletonScope.class);
+	});
     }
-
-    public Class<? extends Module> getType() {
-	return ServicesModule.class;
-    }
-
 }

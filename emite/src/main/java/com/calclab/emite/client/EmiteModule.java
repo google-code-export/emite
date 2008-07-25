@@ -26,11 +26,12 @@ import com.calclab.emite.client.im.InstantMessagingModule;
 import com.calclab.emite.client.xmpp.XMPPModule;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.modules.DeprecatedModule;
 import com.calclab.suco.client.modules.Module;
 import com.calclab.suco.client.modules.ModuleBuilder;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public class EmiteModule implements Module {
+public class EmiteModule extends DeprecatedModule {
 
     public static Xmpp getXmpp(final Container container) {
 	return container.getInstance(Xmpp.class);
@@ -40,6 +41,7 @@ public class EmiteModule implements Module {
 	return EmiteModule.class;
     }
 
+    @Override
     public void onLoad(final ModuleBuilder builder) {
 	builder.add(new Core3Module(), new XMPPModule(), new InstantMessagingModule());
 	builder.registerProvider(Xmpp.class, new Provider<Xmpp>() {

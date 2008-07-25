@@ -35,7 +35,7 @@ import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatListenerAdaptor;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.xep.avatar.AvatarModule;
+import com.calclab.emite.client.xep.avatar.AvatarManager;
 import com.calclab.emite.client.xep.chatstate.ChatStateManager;
 import com.calclab.emite.client.xep.chatstate.StateManager;
 import com.calclab.emite.client.xep.muc.Occupant;
@@ -289,7 +289,7 @@ public class MultiChatPresenter {
     }
 
     public void setVCardAvatar(final String photoBinary) {
-	AvatarModule.getAvatarManager(xmpp).setVCardAvatar(photoBinary);
+	xmpp.getInstance(AvatarManager.class).setVCardAvatar(photoBinary);
     }
 
     public void show() {

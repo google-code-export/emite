@@ -24,28 +24,21 @@ package com.calclab.emite.client.xep.avatar;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionScope;
-import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.Factory;
 
-public class AvatarModule implements Module {
-    private static final Class<AvatarManager> COMPONENTS_MANAGER = AvatarManager.class;
+public class AvatarModule extends AbstractModule {
 
-    public static AvatarManager getAvatarManager(final Container components) {
-	return components.getInstance(COMPONENTS_MANAGER);
+    public AvatarModule() {
+	super(AvatarModule.class);
     }
 
-    public Class<? extends Module> getType() {
-	return AvatarModule.class;
-    }
-
-    public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(AvatarManager.class, new Provider<AvatarManager>() {
-	    public AvatarManager get() {
-		final PresenceManager presenceManager = builder.getInstance(PresenceManager.class);
-		return new AvatarManager(builder.getInstance(Session.class), presenceManager);
+    @Override
+    public void onLoad() {
+	register(SessionScope.class, new Factory<AvatarManager>(AvatarManager.class) {
+	    public AvatarManager create() {
+		return new AvatarManager($(Session.class), $(PresenceManager.class));
 	    }
-	}, SessionScope.class);
+	});
     }
 }

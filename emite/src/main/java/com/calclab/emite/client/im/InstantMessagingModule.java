@@ -27,41 +27,35 @@ import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.session.SessionScope;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public class InstantMessagingModule implements Module {
-    public Class<? extends Module> getType() {
-	return InstantMessagingModule.class;
+public class InstantMessagingModule extends AbstractModule {
+
+    public InstantMessagingModule() {
+	super(InstantMessagingModule.class);
     }
 
-    public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(Roster.class, new Provider<Roster>() {
-	    public Roster get() {
+    @Override
+    public void onLoad() {
+	register(SingletonScope.class, new Factory<Roster>(Roster.class) {
+	    public Roster create() {
 		return new Roster();
 	    }
-	}, SingletonScope.class);
-
-	builder.registerProvider(ChatManager.class, new Provider<ChatManager>() {
-	    public ChatManagerDefault get() {
-		return new ChatManagerDefault(builder.getInstance(Session.class));
+	}, new Factory<ChatManager>(ChatManager.class) {
+	    public ChatManagerDefault create() {
+		return new ChatManagerDefault($(Session.class));
 	    }
-	}, SessionScope.class);
-
-	builder.registerProvider(RosterManager.class, new Provider<RosterManager>() {
-	    public RosterManager get() {
-		return new RosterManager(builder.getInstance(Session.class), builder.getInstance(Roster.class));
+	}, new Factory<RosterManager>(RosterManager.class) {
+	    public RosterManager create() {
+		return new RosterManager($(Session.class), $(Roster.class));
 	    }
-	}, SessionScope.class);
-
-	builder.registerProvider(PresenceManager.class, new Provider<PresenceManager>() {
-	    public PresenceManager get() {
-		return new PresenceManager(builder.getInstance(Session.class), builder.getInstance(Roster.class));
+	}, new Factory<PresenceManager>(PresenceManager.class) {
+	    public PresenceManager create() {
+		return new PresenceManager($(Session.class), $(Roster.class));
 	    }
-	}, SessionScope.class);
+	});
 
     }
 }

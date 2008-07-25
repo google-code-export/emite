@@ -21,6 +21,8 @@
  */
 package com.calclab.suco.client.modules;
 
+import com.calclab.suco.client.container.Container;
+
 /**
  * A module is a simple object that installs components inside a container
  * 
@@ -33,7 +35,7 @@ public interface Module {
      * Install the components into the given container
      * 
      * @param builder
-     *                TODO
+     *            TODO
      */
-    public void onLoad(ModuleBuilder builder);
+    public void onLoad(Container container);
 }

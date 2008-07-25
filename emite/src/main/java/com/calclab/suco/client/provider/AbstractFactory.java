@@ -5,7 +5,7 @@ import com.calclab.suco.client.scopes.Scope;
 import com.calclab.suco.client.scopes.Scopes;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public abstract class AbstractFactory<T> implements Factory<T>, Provider<T> {
+public abstract class AbstractFactory<T> implements FactoryProvider<T>, Provider<T> {
     private final Class<T> type;
     private final Class<? extends Scope> scope;
 

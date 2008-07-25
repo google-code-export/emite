@@ -9,16 +9,17 @@ import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.DeprecatedModule;
 import com.calclab.suco.client.modules.ModuleBuilder;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public class StatusUIModule implements Module {
+public class StatusUIModule extends DeprecatedModule {
 
     public Class<StatusUIModule> getType() {
 	return StatusUIModule.class;
     }
 
+    @Override
     public void onLoad(final ModuleBuilder builder) {
 	builder.registerProvider(StatusUI.class, new Provider<StatusUI>() {
 	    public StatusUI get() {

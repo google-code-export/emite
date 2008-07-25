@@ -33,7 +33,10 @@ import com.calclab.suco.client.scopes.Scopes;
 
 /**
  * A container with module installation support
+ * 
+ * @deprecated use AbstractModule
  */
+@Deprecated
 public class ModuleBuilder extends DelegatedContainer {
     private HashMap<Class<?>, Module> modules;
 
