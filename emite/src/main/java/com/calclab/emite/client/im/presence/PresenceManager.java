@@ -37,11 +37,9 @@ public class PresenceManager {
     private final Signal<Presence> onOwnPresenceChanged;
     private final Signal<Presence> onPresenceReceived;
     private final Session session;
-    private final Roster roster;
 
     public PresenceManager(final Session session, final Roster roster) {
 	this.session = session;
-	this.roster = roster;
 	this.ownPresence = new Presence(Type.unavailable, null, null);
 	this.onPresenceReceived = new Signal<Presence>("onPresenceReceived");
 	this.onOwnPresenceChanged = new Signal<Presence>("onOwnPresenceChanged");
