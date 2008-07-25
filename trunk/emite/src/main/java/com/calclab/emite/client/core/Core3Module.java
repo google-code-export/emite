@@ -9,7 +9,7 @@ import com.calclab.suco.client.provider.SingletonFactory;
 public class Core3Module extends AbstractModule {
 
     public Core3Module() {
-	super(CoreModule.class);
+	super(Core3Module.class);
     }
 
     @Override
