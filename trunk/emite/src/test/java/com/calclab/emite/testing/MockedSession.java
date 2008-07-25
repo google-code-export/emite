@@ -71,32 +71,7 @@ public class MockedSession extends AbstractSession {
     }
 
     public void logout() {
-	onLoggedOut.fire(this);
-    }
-
-    @Override
-    public void onLoggedIn(final Slot<XmppURI> slot) {
-	this.onLoggedIn.add(slot);
-    }
-
-    @Override
-    public void onLoggedOut(final Slot<Session> slot) {
-	onLoggedOut.add(slot);
-    }
-
-    @Override
-    public void onMessage(final Slot<Message> slot) {
-	onMessage.add(slot);
-    }
-
-    @Override
-    public void onPresence(final Slot<Presence> slot) {
-	onPresence.add(slot);
-    }
-
-    @Override
-    public void onStateChanged(final Slot<Session.State> slot) {
-	onStateChanged.add(slot);
+	onLoggedOut.fire(currentUser);
     }
 
     public void receives(final Message message) {

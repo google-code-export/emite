@@ -13,7 +13,7 @@ public abstract class AbstractSession implements Session {
     protected final Signal<Presence> onPresence;
     protected final Signal<Message> onMessage;
     protected final Signal<IQ> onIQ;
-    protected final Signal<Session> onLoggedOut;
+    protected final Signal<XmppURI> onLoggedOut;
     protected final Signal<XmppURI> onLoggedIn;
 
     public AbstractSession() {
@@ -22,7 +22,7 @@ public abstract class AbstractSession implements Session {
 	this.onMessage = new Signal<Message>("session:onMessage");
 	this.onIQ = new Signal<IQ>("session:onIQ");
 	this.onLoggedIn = new Signal<XmppURI>("session:onLoggedIn");
-	this.onLoggedOut = new Signal<Session>("session:onLoggedOut");
+	this.onLoggedOut = new Signal<XmppURI>("session:onLoggedOut");
     }
 
     public void onIQ(final Slot<IQ> slot) {
@@ -33,7 +33,7 @@ public abstract class AbstractSession implements Session {
 	onLoggedIn.add(slot);
     }
 
-    public void onLoggedOut(final Slot<Session> slot) {
+    public void onLoggedOut(final Slot<XmppURI> slot) {
 	onLoggedOut.add(slot);
     }
 

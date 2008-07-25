@@ -25,8 +25,8 @@ import com.calclab.emite.client.core.bosh3.Bosh3Connection;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.session.XmppSession;
 import com.calclab.emite.client.xmpp.session.SessionScope;
+import com.calclab.emite.client.xmpp.session.XmppSession;
 import com.calclab.suco.client.modules.AbstractModule;
 import com.calclab.suco.client.provider.SingletonFactory;
 

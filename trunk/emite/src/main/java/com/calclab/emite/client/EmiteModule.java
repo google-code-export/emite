@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client;
 
-import com.calclab.emite.client.core.CoreModule;
+import com.calclab.emite.client.core.Core3Module;
 import com.calclab.emite.client.im.InstantMessagingModule;
 import com.calclab.emite.client.xmpp.XMPPModule;
 import com.calclab.suco.client.container.Container;
@@ -41,7 +41,7 @@ public class EmiteModule implements Module {
     }
 
     public void onLoad(final ModuleBuilder builder) {
-	builder.add(new CoreModule(), new XMPPModule(), new InstantMessagingModule());
+	builder.add(new Core3Module(), new XMPPModule(), new InstantMessagingModule());
 	builder.registerProvider(Xmpp.class, new Provider<Xmpp>() {
 	    public Xmpp get() {
 		return new Xmpp(builder);

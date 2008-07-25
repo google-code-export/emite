@@ -46,9 +46,9 @@ public class PresenceManager {
 	this.onPresenceReceived = new Signal<Presence>("onPresenceReceived");
 	this.onOwnPresenceChanged = new Signal<Presence>("onOwnPresenceChanged");
 	install();
-	session.onLoggedOut(new Slot<Session>() {
-	    public void onEvent(final Session parameter) {
-		logOut();
+	session.onLoggedOut(new Slot<XmppURI>() {
+	    public void onEvent(final XmppURI user) {
+		logOut(user);
 	    }
 	});
     }
@@ -160,9 +160,10 @@ public class PresenceManager {
      * "unavailable" (optionally, the final presence stanza MAY contain one or
      * more <status/> elements specifying the reason why the user is no longer
      * available).
+     * 
+     * @param userURI
      */
-    private void logOut() {
-	final XmppURI userURI = session.getCurrentUser();
+    private void logOut(final XmppURI userURI) {
 	final Presence presence = new Presence(Type.unavailable, userURI, userURI.getHostURI());
 	delayedPresence = null;
 	broadcastPresence(presence);

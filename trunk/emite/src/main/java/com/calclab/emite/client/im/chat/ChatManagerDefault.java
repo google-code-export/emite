@@ -58,8 +58,8 @@ public class ChatManagerDefault implements ChatManager {
 	    }
 	});
 
-	session.onLoggedOut(new Slot<Session>() {
-	    public void onEvent(final Session parameter) {
+	session.onLoggedOut(new Slot<XmppURI>() {
+	    public void onEvent(final XmppURI lastUser) {
 		logOut();
 	    }
 	});
@@ -134,8 +134,7 @@ public class ChatManagerDefault implements ChatManager {
 
     /**
      * We choose a chat by the thread, if no thread specified we look for the
-     * same XmppURI, and if no resource specified we look for the same
-     * node@domain
+     * same XmppURI, and if no resource specified we look for the same node@domain
      * 
      * @param from
      * @param thread

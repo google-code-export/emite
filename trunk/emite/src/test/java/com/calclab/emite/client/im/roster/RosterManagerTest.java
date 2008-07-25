@@ -35,7 +35,6 @@ public class RosterManagerTest {
 
     @Test
     public void shouldAcceptAutomatically() {
-	final MockSlot<Presence> slot = new MockSlot<Presence>();
 	manager.setSubscriptionMode(SubscriptionMode.autoAcceptAll);
 	session.receives(new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain")));
 	session.verifySent("<presence type='subscribed' />");

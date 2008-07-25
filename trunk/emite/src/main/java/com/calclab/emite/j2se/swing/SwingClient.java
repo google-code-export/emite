@@ -82,6 +82,7 @@ public class SwingClient {
 	loginPanel = new LoginPanel(new LoginPanelListener() {
 	    public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
 		final String resource = "emite-swing";
+		xmpp.setBoshSettings(httpBase, domain);
 		xmpp.login(new XmppURI(userName, domain, resource), password, Presence.Show.dnd, "do not disturb at: "
 			+ new Date().toString());
 	    }
