@@ -11,7 +11,7 @@ import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Signal0;
 import com.calclab.suco.client.signal.Slot;
 
-public class Bosh3Connection {
+public class Bosh3Connection implements Connection {
     private long rid;
     private int activeConnections;
     private Packet body;
@@ -24,6 +24,7 @@ public class Bosh3Connection {
     private final Signal0 onConnected;
     private final Signal<IPacket> onStanzasReceived;
     private String httpBase;
+    private boolean shouldCollectResponses;
 
     public Bosh3Connection(final Services services) {
 	this.services = services;
@@ -155,10 +156,12 @@ public class Bosh3Connection {
 			.getAttribute("inactivity"), response.getAttribute("maxpause"));
 		onConnected.fire();
 	    }
+	    shouldCollectResponses = true;
 	    final List<? extends IPacket> stanzas = response.getChildren();
 	    for (final IPacket stanza : stanzas) {
 		onStanzasReceived.fire(stanza);
 	    }
+	    shouldCollectResponses = false;
 	    continueConnection(ack);
 	}
     }
@@ -169,14 +172,16 @@ public class Bosh3Connection {
     }
 
     private void sendBody() {
-	try {
-	    activeConnections++;
-	    final String request = services.toString(body);
-	    body = null;
-	    services.send(httpBase, request, callback);
-	} catch (final ConnectorException e) {
-	    activeConnections--;
-	    e.printStackTrace();
+	if (!shouldCollectResponses) {
+	    try {
+		activeConnections++;
+		final String request = services.toString(body);
+		body = null;
+		services.send(httpBase, request, callback);
+	    } catch (final ConnectorException e) {
+		activeConnections--;
+		e.printStackTrace();
+	    }
 	}
     }
 }

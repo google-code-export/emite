@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.xmpp.sasl;
 
-import com.calclab.emite.client.core.bosh3.Bosh3Connection;
+import com.calclab.emite.client.core.bosh3.Connection;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTransaction.State;
@@ -34,9 +34,9 @@ public class SASLManager {
 
     private final Signal<AuthorizationTransaction> onAuthorized;
     private AuthorizationTransaction currentTransaction;
-    private final Bosh3Connection connection;
+    private final Connection connection;
 
-    public SASLManager(final Bosh3Connection connection) {
+    public SASLManager(final Connection connection) {
 	this.connection = connection;
 	this.onAuthorized = new Signal<AuthorizationTransaction>("onAuthorized");
 	install();

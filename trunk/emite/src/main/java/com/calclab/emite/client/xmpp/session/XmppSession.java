@@ -22,8 +22,8 @@
 package com.calclab.emite.client.xmpp.session;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.bosh3.Bosh3Connection;
 import com.calclab.emite.client.core.bosh3.Bosh3Settings;
+import com.calclab.emite.client.core.bosh3.Connection;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTransaction;
@@ -38,11 +38,11 @@ public class XmppSession extends AbstractSession {
     private State state;
     private XmppURI userURI;
     private final SessionScope scope;
-    private final Bosh3Connection connection;
+    private final Connection connection;
     private AuthorizationTransaction transaction;
     private final IQManager iqManager;
 
-    public XmppSession(final Bosh3Connection connection, final SessionScope scope, final SASLManager saslManager,
+    public XmppSession(final Connection connection, final SessionScope scope, final SASLManager saslManager,
 	    final ResourceBindingManager bindingManager) {
 	this.connection = connection;
 	this.scope = scope;
@@ -57,9 +57,7 @@ public class XmppSession extends AbstractSession {
 		} else if (name.equals("presence")) {
 		    onPresence.fire(new Presence(stanza));
 		} else if (name.equals("iq")) {
-		    if (!iqManager.handle(stanza)) {
-			onIQ.fire(new IQ(stanza));
-		    }
+		    iqManager.handle(stanza);
 		} else if ("stream:features".equals(name) && stanza.hasChild("mechanisms")) {
 		    if (transaction != null) {
 			saslManager.sendAuthorizationRequest(transaction);

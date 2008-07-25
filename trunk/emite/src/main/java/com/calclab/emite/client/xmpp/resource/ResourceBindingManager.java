@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.xmpp.resource;
 
-import com.calclab.emite.client.core.bosh3.Bosh3Connection;
+import com.calclab.emite.client.core.bosh3.Connection;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -30,9 +30,9 @@ import com.calclab.suco.client.signal.Slot;
 
 public class ResourceBindingManager {
     private final Signal<XmppURI> onBinded;
-    private final Bosh3Connection connection;
+    private final Connection connection;
 
-    public ResourceBindingManager(final Bosh3Connection connection) {
+    public ResourceBindingManager(final Connection connection) {
 	this.connection = connection;
 	this.onBinded = new Signal<XmppURI>("onBinded");
 

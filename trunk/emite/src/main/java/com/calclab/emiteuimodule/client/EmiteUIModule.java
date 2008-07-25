@@ -30,7 +30,6 @@ import com.calclab.emite.client.services.gwt.GWTServicesModule;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
 import com.calclab.emite.client.xep.chatstate.ChatStateModule;
 import com.calclab.emite.client.xep.muc.MUCModule;
-import com.calclab.emiteuimodule.client.openchat.OpenChatTestingModule;
 import com.calclab.emiteuimodule.client.room.RoomUIModule;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.sound.SoundModule;
