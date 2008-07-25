@@ -45,7 +45,37 @@ public class PresenceManager {
 	this.ownPresence = new Presence(Type.unavailable, null, null);
 	this.onPresenceReceived = new Signal<Presence>("onPresenceReceived");
 	this.onOwnPresenceChanged = new Signal<Presence>("onOwnPresenceChanged");
-	install();
+
+	// Upon connecting to the server and becoming an active resource, a
+	// client SHOULD request the roster before sending initial presence
+	roster.onReady(new Slot<Roster>() {
+	    public void onEvent(final Roster parameter) {
+		final Presence initialPresence = new Presence(session.getCurrentUser()).With(Presence.Show.chat);
+		broadcastPresence(initialPresence);
+		if (delayedPresence != null) {
+		    delayedPresence.setFrom(session.getCurrentUser());
+		    broadcastPresence(delayedPresence);
+		    delayedPresence = null;
+		}
+	    }
+	});
+
+	session.onPresence(new Slot<Presence>() {
+	    public void onEvent(final Presence presence) {
+		switch (presence.getType()) {
+		case probe:
+		    session.send(ownPresence);
+		    break;
+		case error:
+		    // FIXME: what should we do?
+		    Log.warn("Error presence!!!");
+		    break;
+		default:
+		    onPresenceReceived.fire(presence);
+		    break;
+		}
+	    }
+	});
 	session.onLoggedOut(new Slot<XmppURI>() {
 	    public void onEvent(final XmppURI user) {
 		logOut(user);
@@ -113,42 +143,6 @@ public class PresenceManager {
 	session.send(presence);
 	ownPresence = presence;
 	onOwnPresenceChanged.fire(ownPresence);
-    }
-
-    /**
-     * Upon connecting to the server and becoming an active resource, a client
-     * SHOULD request the roster before sending initial presence
-     */
-    private void install() {
-	roster.onReady(new Slot<Roster>() {
-	    public void onEvent(final Roster parameter) {
-		final Presence initialPresence = new Presence(session.getCurrentUser()).With(Presence.Show.chat);
-		broadcastPresence(initialPresence);
-		if (delayedPresence != null) {
-		    delayedPresence.setFrom(session.getCurrentUser());
-		    broadcastPresence(delayedPresence);
-		    delayedPresence = null;
-		}
-	    }
-	});
-
-	session.onPresence(new Slot<Presence>() {
-	    public void onEvent(final Presence presence) {
-		switch (presence.getType()) {
-		case probe:
-		    session.send(ownPresence);
-		    break;
-		case error:
-		    // FIXME: what should we do?
-		    Log.warn("Error presence!!!");
-		    break;
-		default:
-		    onPresenceReceived.fire(presence);
-		    break;
-		}
-	    }
-	});
-
     }
 
     /**

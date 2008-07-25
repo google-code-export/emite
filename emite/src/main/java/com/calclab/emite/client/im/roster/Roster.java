@@ -63,6 +63,10 @@ public class Roster {
 	}
     }
 
+    public void clear() {
+	items.clear();
+    }
+
     public RosterItem findItemByJID(final XmppURI jid) {
 	return items.get(jid.getJID());
     }

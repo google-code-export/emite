@@ -34,6 +34,7 @@ import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
+import com.calclab.emite.testing.MockSlot;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
@@ -65,12 +66,40 @@ public class RosterManager {
 	this.onSubscriptionRequested = new Signal<Presence>("onSubscriptionRequested");
 	this.onUnsubscribedReceived = new Signal<XmppURI>("onUnsubscribedReceived");
 
-	install();
 	session.onLoggedIn(new Slot<XmppURI>() {
 	    public void onEvent(final XmppURI parameter) {
 		requestRoster();
 	    }
 	});
+
+	session.onLoggedOut(new Slot<XmppURI>() {
+	    public void onEvent(final XmppURI parameter) {
+		roster.clear();
+	    }
+	});
+
+	session.onPresence(new Slot<Presence>() {
+	    public void onEvent(final Presence presence) {
+		switch (presence.getType()) {
+		case subscribe:
+		    handleSubscriptionRequest(presence);
+		    break;
+		case unsubscribed:
+		    // Inform to user but not update roster (only iq set update
+		    // roster)
+		    handleUnsubscribedReceived(presence.getFrom());
+		    break;
+		case subscribed:
+		    // Fine, but do nothing (only iq set update roster)
+		    break;
+		case available:
+		case unavailable:
+		    roster.changePresence(presence.getFrom(), presence);
+		    break;
+		}
+	    }
+	});
+
     }
 
     /**
@@ -239,43 +268,6 @@ public class RosterManager {
 
     private void handleUnsubscribedReceived(final XmppURI userUnsubscribed) {
 	onUnsubscribedReceived.fire(userUnsubscribed);
-    }
-
-    private void install() {
-	// session.onIQ(new Slot<IQ>() {
-	// public void onEvent(final IQ received) {
-	// session.send(new IQ(IQ.Type.result).With("id",
-	// received.getAttribute("id")));
-	// final IPacket item =
-	// received.getFirstChild("query").getFirstChild("item");
-	// final String jid = item.getAttribute("jid");
-	// roster.changeSubscription(uri(jid),
-	// item.getAttribute("subscription"));
-	// }
-	// });
-
-	session.onPresence(new Slot<Presence>() {
-	    public void onEvent(final Presence presence) {
-		switch (presence.getType()) {
-		case subscribe:
-		    handleSubscriptionRequest(presence);
-		    break;
-		case unsubscribed:
-		    // Inform to user but not update roster (only iq set update
-		    // roster)
-		    handleUnsubscribedReceived(presence.getFrom());
-		    break;
-		case subscribed:
-		    // Fine, but do nothing (only iq set update roster)
-		    break;
-		case available:
-		case unavailable:
-		    roster.changePresence(presence.getFrom(), presence);
-		    break;
-		}
-	    }
-	});
-
     }
 
     private void requestRoster() {
