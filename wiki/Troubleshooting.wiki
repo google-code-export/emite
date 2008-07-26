@@ -1,5 +1,4 @@
 #summary Troubleshooting information for emite
-#labels 
 
 = Emite Troubleshooting =
 
@@ -11,3 +10,16 @@ apt-get install mozilla-mplayer # it works for us...
 
 Apache applies its {{{Timeout}}} directive to BOSH/http-bind connections made through mod_proxy and kills such connections after the Timeout expires. In order to prevent this please remove the Timeout directive from your httpd.conf file, or use a higger value.
 
+== I can not use MUC (rooms) with emite and ejabberd ==
+You have to edit ejabberd.cnf and remove the comments (%%) in the muc section.
+this is an example of a valid configuration frament (using 'rooms' instead of the traditional 'conference' for the MUC domain)
+{{{
+  {mod_muc,      [
+                  {host, "rooms.@HOST@"},
+                  {access, muc},
+                  {access_create, muc},
+                  {access_persistent, muc},
+                  {access_admin, muc_admin}
+                 ]},
+  
+}}}
