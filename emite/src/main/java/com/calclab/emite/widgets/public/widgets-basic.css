@@ -1,0 +1,9 @@
+
+div.emite-widget {
+    border: 3px solid #efefef;
+    padding: 1em;
+    width: 10em;
+    height: 10em;
+    margin: 1em;
+    float: left;
+}
