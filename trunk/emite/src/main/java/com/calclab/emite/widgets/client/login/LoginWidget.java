@@ -43,6 +43,10 @@ public class LoginWidget extends VerticalPanel implements EmiteWidget {
 	add(status);
     }
 
+    public String[] getParamNames() {
+	return new String[] { "jid", "password" };
+    }
+
     public void setFieldsEnabled(final boolean enabled) {
 	jid.setEnabled(enabled);
 	password.setEnabled(enabled);
@@ -57,7 +61,16 @@ public class LoginWidget extends VerticalPanel implements EmiteWidget {
 
     }
 
+    public void setParam(final String name, final String value) {
+	if ("jid".equals(name)) {
+	    jid.setText(value);
+	} else if ("password".equals(name)) {
+	    password.setText(value);
+	}
+    }
+
     public void showMessage(final String statusMessage) {
 	status.setText(statusMessage);
     }
+
 }

@@ -15,6 +15,8 @@ public class LoginController {
     }
 
     public void setWidget(final LoginWidget widget) {
+	setLoginEnabled(widget, true);
+
 	widget.onLogin.add(new Slot2<String, String>() {
 	    public void onEvent(final String jid, final String password) {
 		session.login(uri(jid), password);
@@ -40,7 +42,6 @@ public class LoginController {
 	    }
 
 	});
-	setLoginEnabled(widget, true);
     }
 
     private void setLoginEnabled(final LoginWidget widget, final boolean enabled) {
