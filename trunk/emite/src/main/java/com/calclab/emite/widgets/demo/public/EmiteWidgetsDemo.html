@@ -12,23 +12,34 @@
     <script type="text/javascript" language="javascript"
         src="com.calclab.emite.widgets.demo.EmiteWidgetsDemo.nocache.js"></script>
 </body>
+<h1>Welcome to emite widgets demo page</h1>
+<p>Here there is some instances of emite widgets. Most of them are duplicated to view how, diferent
+instances the of the same widget, can be rendered in a single page.</p>
+<p>All the widget parameters are inserted in the html (all the div attributes prefixed
+with 'data-') and no javascript is required for initialization.</p>
 
-  <div id = "login1" class="emite-widget emite-widgets-login" data-jid="test1@localhost" data-password="test1">
+<h1>Logger widget</h1>
+  <div id="logger" class="emite-widget emite-widget-logger">
+    this is a logger widget
+  </div>
+
+<h1>Login widget</h1>
+  <div id = "login1" class="emite-widget emite-widget-login" data-jid="test1@localhost" data-password="test1">
     this is a login widget
   </div>
 
-  <div id = "login2" class="emite-widget emite-widgets-login">
+  <div id = "login2" class="emite-widget emite-widget-login">
     this is a login widget
   </div>
 
-
-  <div id="room1" class="emite-widget emite-widgets-room" data-room="testRoom@rooms.localhost">
+<h1>Room widget</h1>
+  <div id="room1" class="emite-widget emite-widget-room" data-room="testRoom@rooms.localhost"
+   data-nick="user1">
     this is a room widget
   </div>
 
-  <div id="room2" class="emite-widget emite-widgets-room" data-room="testRoom@rooms.localhost">
+  <div id="room2" class="emite-widget emite-widget-room" data-room="testRoom@rooms.localhost"
+   data-nick="user2">
     this is a room widget
   </div>
-
-
 </html>

@@ -6,6 +6,7 @@ import com.calclab.emite.client.services.gwt.GWTServicesModule;
 import com.calclab.emite.client.xep.muc.MUCModule;
 import com.calclab.emite.widgets.client.EmiteWidgetsModule;
 import com.calclab.emite.widgets.client.deploy.Deployer;
+import com.calclab.emite.widgets.client.logger.LoggerWidget;
 import com.calclab.emite.widgets.client.login.LoginWidget;
 import com.calclab.emite.widgets.client.room.RoomWidget;
 import com.calclab.suco.client.Suco;
@@ -21,7 +22,8 @@ public class EmiteWidgetsDemoEntryPoint implements EntryPoint {
 	final Connection connection = container.getInstance(Connection.class);
 	deployer.setConnectionSettings(connection);
 
-	deployer.deploy("emite-widgets-login", LoginWidget.class, container);
-	deployer.deploy("emite-widgets-room", RoomWidget.class, container);
+	deployer.deploy("emite-widget-login", LoginWidget.class, container);
+	deployer.deploy("emite-widget-room", RoomWidget.class, container);
+	deployer.deploy("emite-widget-logger", LoggerWidget.class, container);
     }
 }

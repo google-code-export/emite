@@ -68,25 +68,11 @@
           </compileTarget>
           <compileTargets>
             <compileTarget>
-              com.calclab.widgets.comenta.Comenta
+              com.calclab.emite.widgets.demo.EmiteWidgetsDemo
             </compileTarget>
-            <!--
             <compileTarget>
               com.calclab.emiteui.EmiteUI
             </compileTarget>
-              <compileTarget>
-              com.calclab.emite.Emite
-              </compileTarget>
-              <compileTarget>
-              com.calclab.emiteuimodule.EmiteUIModule
-              </compileTarget>
-              <compileTarget>
-              com.calclab.emite.examples.chat.Chat
-              </compileTarget>
-              <compileTarget>
-              com.calclab.emiteuisample.EmiteUISample
-              </compileTarget>
-            -->
           </compileTargets>
           <generatorRootClasses>
             <value>com.calclab.emite.MyBean</value>

@@ -22,7 +22,8 @@ public class Bosh3Connection implements Connection {
     private final Signal<String> onError;
     private final Signal<String> onDisconnected;
     private final Signal0 onConnected;
-    private final Signal<IPacket> onStanzasReceived;
+    private final Signal<IPacket> onStanzaReceived;
+    private final Signal<IPacket> onStanzaSent;
     private String httpBase;
     private boolean shouldCollectResponses;
     private Bosh3Settings userSettings;
@@ -32,7 +33,8 @@ public class Bosh3Connection implements Connection {
 	this.onError = new Signal<String>("bosh:onError");
 	this.onDisconnected = new Signal<String>("bosh:onDisconnected");
 	this.onConnected = new Signal0("bosh:onConnected");
-	this.onStanzasReceived = new Signal<IPacket>("bosh:onStanzasReceived");
+	this.onStanzaReceived = new Signal<IPacket>("bosh:onStanzaReceived");
+	this.onStanzaSent = new Signal<IPacket>("bosh:onStanzaReceived");
 
 	this.callback = new ConnectorCallback() {
 
@@ -92,7 +94,11 @@ public class Bosh3Connection implements Connection {
     }
 
     public void onStanzaReceived(final Slot<IPacket> slot) {
-	onStanzasReceived.add(slot);
+	onStanzaReceived.add(slot);
+    }
+
+    public void onStanzaSent(final Slot<IPacket> slot) {
+	onStanzaSent.add(slot);
     }
 
     public void restartStream() {
@@ -104,6 +110,7 @@ public class Bosh3Connection implements Connection {
 	createBody();
 	body.addChild(packet);
 	sendBody();
+	onStanzaSent.fire(packet);
     }
 
     public void setSettings(final Bosh3Settings settings) {
@@ -164,7 +171,7 @@ public class Bosh3Connection implements Connection {
 	    shouldCollectResponses = true;
 	    final List<? extends IPacket> stanzas = response.getChildren();
 	    for (final IPacket stanza : stanzas) {
-		onStanzasReceived.fire(stanza);
+		onStanzaReceived.fire(stanza);
 	    }
 	    shouldCollectResponses = false;
 	    continueConnection(ack);
