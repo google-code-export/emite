@@ -39,6 +39,7 @@ public class LoginWidget extends VerticalPanel implements EmiteWidget {
 	add(jid);
 	add(password);
 	add(login);
+	add(logout);
 	add(status);
     }
 

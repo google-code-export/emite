@@ -30,6 +30,14 @@ import tigase.xml.SimpleParser;
 import com.calclab.emite.client.core.packet.IPacket;
 
 public class TigaseXMLService {
+    private static TigaseXMLService instance;
+
+    public static TigaseXMLService getSingleton() {
+	if (instance == null)
+	    instance = new TigaseXMLService();
+	return instance;
+    }
+
     private final SimpleParser parser;
 
     public TigaseXMLService() {

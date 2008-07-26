@@ -2,6 +2,7 @@ package com.calclab.emite.widgets.client.deploy;
 
 import java.util.ArrayList;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh3.Bosh3Settings;
 import com.calclab.emite.client.core.bosh3.Connection;
 import com.calclab.suco.client.container.Container;
@@ -60,6 +61,7 @@ public class Deployer {
 
     public void setConnectionSettings(final Connection connection) {
 	final Settings boshSettings = getMeta("emite.bosh.", new Settings("httpBase", "host"));
+	Log.debug("Bosh settings: " + boshSettings.toString());
 	connection.setSettings(new Bosh3Settings(boshSettings.get("httpBase"), boshSettings.get("host")));
 
     }
@@ -77,6 +79,9 @@ public class Deployer {
     }
 
     private String getMeta(final String prefix, final String key) {
-	return DOM.getElementProperty(DOM.getElementById(prefix + key), "content");
+	final String name = prefix + key;
+	Log.debug("Getting meta: " + name);
+	final Element element = DOM.getElementById(name);
+	return element.getPropertyString("content");
     }
 }
