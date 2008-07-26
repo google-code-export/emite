@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh3.Bosh3Settings;
 import com.calclab.emite.client.core.bosh3.Connection;
+import com.calclab.emite.widgets.client.EmiteWidget;
 import com.calclab.suco.client.container.Container;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -16,7 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class Deployer {
 
-    public void deploy(final String divClass, final Class<? extends Widget> widgetClass, final Container container) {
+    public void deploy(final String divClass, final Class<? extends EmiteWidget> widgetClass, final Container container) {
 	final ArrayList<Element> elements = findElementsByClass(divClass);
 	for (final Element e : elements) {
 	    install(e, container.getInstance(widgetClass));
@@ -24,6 +25,7 @@ public class Deployer {
     }
 
     public ArrayList<Element> findElementsByClass(final String divClass) {
+	Log.debug("Finding elements div." + divClass);
 	final ArrayList<Element> elements = new ArrayList<Element>();
 	final Document document = Document.get();
 	final NodeList<Element> divs = document.getElementsByTagName("div");
@@ -54,9 +56,16 @@ public class Deployer {
 
     }
 
-    public void install(final Element element, final Widget widget) {
+    public void install(final Element element, final EmiteWidget widget) {
+	Log.debug("Installing on element id: " + element.getId());
+	for (final String name : widget.getParamNames()) {
+	    Log.debug("Param name of widget: " + name);
+	    final String value = element.getAttribute("data-" + name);
+	    Log.debug("Value: " + value);
+	    widget.setParam(name, value);
+	}
 	clearElement(element);
-	RootPanel.get(element.getId()).add(widget);
+	RootPanel.get(element.getId()).add((Widget) widget);
     }
 
     public void setConnectionSettings(final Connection connection) {

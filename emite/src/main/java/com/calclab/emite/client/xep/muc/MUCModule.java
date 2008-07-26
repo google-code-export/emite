@@ -24,27 +24,24 @@ package com.calclab.emite.client.xep.muc;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.DeprecatedModule;
-import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.Factory;
 
-public class MUCModule extends DeprecatedModule {
+public class MUCModule extends AbstractModule {
     public static RoomManager getRoomManager(final Container components) {
 	return components.getInstance(RoomManager.class);
     }
 
-    public Class<? extends Module> getType() {
-	return MUCModule.class;
+    public MUCModule() {
+	super(MUCModule.class);
     }
 
     @Override
-    public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(RoomManager.class, new Provider<RoomManager>() {
-	    public RoomManager get() {
-		return new MUCRoomManager(builder.getInstance(Session.class));
+    protected void onLoad() {
+	register(SessionScope.class, new Factory<RoomManager>(RoomManager.class) {
+	    public RoomManager create() {
+		return new MUCRoomManager($(Session.class));
 	    }
-	}, SessionScope.class);
-
+	});
     }
 }
