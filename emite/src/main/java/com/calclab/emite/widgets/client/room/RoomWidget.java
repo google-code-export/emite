@@ -42,7 +42,7 @@ public class RoomWidget extends DockPanel implements EmiteWidget {
     }
 
     public String[] getParamNames() {
-	return new String[] { "room" };
+	return new String[] { "room", "nick" };
     }
 
     public void setInputEnabled(final boolean enabled) {
@@ -53,6 +53,8 @@ public class RoomWidget extends DockPanel implements EmiteWidget {
     public void setParam(final String name, final String value) {
 	if ("room".equals(name)) {
 	    controller.setRoomName(value);
+	} else if ("nick".equals(name)) {
+	    controller.setNick(value);
 	}
     }
 

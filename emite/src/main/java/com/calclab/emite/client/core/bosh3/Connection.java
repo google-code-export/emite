@@ -15,6 +15,8 @@ public interface Connection {
 
     public abstract void onStanzaReceived(final Slot<IPacket> slot);
 
+    public abstract void onStanzaSent(final Slot<IPacket> slot);
+
     public abstract void restartStream();
 
     public abstract void send(final IPacket packet);

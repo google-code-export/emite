@@ -1,5 +1,7 @@
 package com.calclab.emite.widgets.client.room;
 
+import java.util.Date;
+
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xmpp.session.Session;
@@ -9,16 +11,21 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Slot;
 
 public class RoomController {
-
     private XmppURI room;
     private RoomWidget widget;
     private final Session session;
     private final RoomManager manager;
     protected Chat chat;
+    private String nick;
 
     public RoomController(final Session session, final RoomManager manager) {
 	this.session = session;
 	this.manager = manager;
+	this.nick = "" + new Date().getTime();
+    }
+
+    public void setNick(final String nick) {
+	this.nick = nick;
     }
 
     public void setWidget(final RoomWidget widget) {
@@ -41,7 +48,8 @@ public class RoomController {
 		    showWaitingStatus();
 		} else if (state == State.ready) {
 		    widget.setStatus("Room: " + room);
-		    manager.openChat(room, null, null);
+		    final XmppURI uri = new XmppURI(room.getNode(), room.getHost(), nick);
+		    manager.openChat(uri, null, null);
 		    widget.write(null, "Opening chat room...");
 		}
 	    }
