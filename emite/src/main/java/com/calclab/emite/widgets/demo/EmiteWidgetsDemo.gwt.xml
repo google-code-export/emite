@@ -1,9 +1,8 @@
 <module>
-  <inherits name="com.google.gwt.user.User" />
-  <inherits name="com.calclab.emite.Emite" />
+  <inherits name="com.calclab.emite.widgets.EmiteWidgets" />
 
   <entry-point
-    class="com.calclab.widgets.comenta.client.ComentaEntryPoint" />
+    class="com.calclab.emite.widgets.demo.client.EmiteWidgetsDemoEntryPoint" />
 
   <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
 

@@ -1,12 +1,12 @@
-package com.calclab.widgets.comenta.client;
+package com.calclab.emite.widgets.demo.client;
 
 import com.calclab.emite.client.xmpp.session.Session;
+import com.calclab.emite.widgets.client.comenta.ComentaWidget;
+import com.calclab.emite.widgets.client.installer.Installer;
 import com.calclab.suco.client.modules.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scopes.NoScope;
 import com.calclab.suco.client.scopes.SingletonScope;
-import com.calclab.widgets.comenta.client.installer.Installer;
-import com.calclab.widgets.comenta.client.ui.ComentaWidget;
 
 public class ComentaModule extends AbstractModule {
     public ComentaModule() {
