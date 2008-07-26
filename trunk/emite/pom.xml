@@ -61,7 +61,7 @@
           </runTarget>
            -->
           <runTarget>
-            com.calclab.widgets.comenta.Comenta/Comenta.html?log_level=DEBUG
+            com.calclab.emite.widgets.demo.EmiteWidgetsDemo/EmiteWidgetsDemo.html?log_level=DEBUG
           </runTarget>
           <compileTarget>
             <param></param>

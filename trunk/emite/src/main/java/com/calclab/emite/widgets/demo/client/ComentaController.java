@@ -1,10 +1,10 @@
-package com.calclab.widgets.comenta.client;
+package com.calclab.emite.widgets.demo.client;
 
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.widgets.client.comenta.ComentaWidget;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.client.signal.Slot2;
-import com.calclab.widgets.comenta.client.ui.ComentaWidget;
 
 public class ComentaController {
 

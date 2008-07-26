@@ -1,13 +1,13 @@
-package com.calclab.widgets.comenta.client;
+package com.calclab.emite.widgets.demo.client;
 
 import com.calclab.emite.client.EmiteModule;
 import com.calclab.emite.client.core.bosh3.Connection;
 import com.calclab.emite.client.services.gwt.GWTServicesModule;
+import com.calclab.emite.widgets.client.comenta.ComentaWidget;
+import com.calclab.emite.widgets.client.installer.Installer;
+import com.calclab.emite.widgets.client.installer.Settings;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
-import com.calclab.widgets.comenta.client.installer.Installer;
-import com.calclab.widgets.comenta.client.installer.Settings;
-import com.calclab.widgets.comenta.client.ui.ComentaWidget;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
