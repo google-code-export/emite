@@ -32,8 +32,10 @@ public class LoginController {
 		widget.showMessage(state.toString());
 		if (state == State.disconnected) {
 		    setLoginEnabled(widget, true);
+		    widget.showMessage("Please login.");
 		} else if (state == State.ready) {
 		    setLoginEnabled(widget, false);
+		    widget.showMessage("Logged as: " + session.getCurrentUser().getJID().toString());
 		}
 	    }
 

@@ -38,15 +38,15 @@ import com.calclab.suco.client.scopes.Scopes;
  */
 @Deprecated
 public class ModuleBuilder extends DelegatedContainer {
-    private HashMap<Class<?>, Module> modules;
+    private final HashMap<Class<?>, Module> modules;
 
     public ModuleBuilder(final Container delegate) {
 	super(delegate);
+	this.modules = new HashMap<Class<?>, Module>();
     }
 
     ModuleBuilder() {
 	this(new HashContainer());
-	this.modules = new HashMap<Class<?>, Module>();
     }
 
     /**

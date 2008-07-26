@@ -10,8 +10,14 @@ import java.util.List;
 import org.mockito.ArgumentMatcher;
 
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.j2se.services.TigaseXMLService;
 
 public class IsPacketLike extends ArgumentMatcher<IPacket> {
+    public static IsPacketLike build(final String xml) {
+	final IPacket packet = TigaseXMLService.getSingleton().toXML(xml);
+	return new IsPacketLike(packet);
+    }
+
     private final IPacket original;
 
     public IsPacketLike(final IPacket expected) {

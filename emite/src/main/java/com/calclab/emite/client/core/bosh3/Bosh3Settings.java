@@ -8,9 +8,8 @@ public class Bosh3Settings {
     public final int hold;
     public final int wait;
 
-    // FIXME: ver 1.6
     public Bosh3Settings(final String httpBase, final String hostName) {
-	this(httpBase, hostName, "1.0", 2000, 1, 2);
+	this(httpBase, hostName, "1.0", 60, 1, 2);
     }
 
     public Bosh3Settings(final String httpBase, final String hostName, final String version, final int wait,

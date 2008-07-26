@@ -133,15 +133,13 @@ public class Bosh3Connection implements Connection {
 	body.setAttribute("content", "text/xml; charset=utf-8");
 	body.setAttribute("xmlns", "http://jabber.org/protocol/httpbind");
 	body.setAttribute("xmlns:xmpp", "urn:xmpp:xbosh");
-	body.setAttribute("xmlns:stream", "http://etherx.jabber.org/streams");
+	body.setAttribute("xmpp:version", userSettings.version);
 	body.setAttribute("xml:lang", "en");
 	body.setAttribute("ack", "1");
 	body.setAttribute("secure", "true");
 	body.setAttribute("rid", getNextRid());
-	body.setAttribute("xmpp:version", userSettings.version);
 	body.setAttribute("to", userSettings.hostName);
 	body.With("hold", userSettings.hold);
-	body.With("requests", userSettings.maxRequests);
 	body.With("wait", userSettings.wait);
     }
 
