@@ -2,7 +2,7 @@ package com.calclab.emite.widgets.demo.client;
 
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.widgets.client.comenta.ComentaWidget;
+import com.calclab.emite.widgets.client.room.ComentaWidget;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.client.signal.Slot2;
 
