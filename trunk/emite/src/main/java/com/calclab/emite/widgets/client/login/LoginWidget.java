@@ -21,8 +21,8 @@ public class LoginWidget extends VerticalPanel implements EmiteWidget {
     final Signal0 onLogout;
 
     public LoginWidget() {
-	this.onLogin = new Signal2<String, String>("comenta:onLogin");
-	this.onLogout = new Signal0("comenta:onLogout");
+	this.onLogin = new Signal2<String, String>("widgets:login:onLogin");
+	this.onLogout = new Signal0("widgets:login:onLogout");
 	this.jid = new TextBox();
 	this.password = new PasswordTextBox();
 	this.login = new Button("login", new ClickListener() {

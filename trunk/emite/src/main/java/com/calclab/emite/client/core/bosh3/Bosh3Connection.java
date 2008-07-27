@@ -27,6 +27,7 @@ public class Bosh3Connection implements Connection {
     private String httpBase;
     private boolean shouldCollectResponses;
     private Bosh3Settings userSettings;
+    private int errors;
 
     public Bosh3Connection(final Services services) {
 	this.services = services;
@@ -35,15 +36,22 @@ public class Bosh3Connection implements Connection {
 	this.onConnected = new Signal0("bosh:onConnected");
 	this.onStanzaReceived = new Signal<IPacket>("bosh:onStanzaReceived");
 	this.onStanzaSent = new Signal<IPacket>("bosh:onStanzaReceived");
+	this.errors = 0;
 
 	this.callback = new ConnectorCallback() {
 
-	    public void onError(final Throwable throwable) {
-		running = false;
-		onError.fire("Exception thrown: " + throwable.toString());
+	    public void onError(final String request, final Throwable throwable) {
+		errors++;
+		if (errors > 2) {
+		    running = false;
+		    onError.fire("Exception thrown: " + throwable.toString());
+		} else {
+		    send(request);
+		}
 	    }
 
 	    public void onResponseReceived(final int statusCode, final String content) {
+		errors--;
 		activeConnections--;
 		if (running) {
 		    if (statusCode != 200) {
@@ -183,17 +191,26 @@ public class Bosh3Connection implements Connection {
 	return "terminate".equals(type) || "terminal".equals(type);
     }
 
+    /**
+     * Sends a new request (and count the activeConnections)
+     * 
+     * @param request
+     */
+    private void send(final String request) {
+	try {
+	    activeConnections++;
+	    services.send(httpBase, request, callback);
+	} catch (final ConnectorException e) {
+	    activeConnections--;
+	    e.printStackTrace();
+	}
+    }
+
     private void sendBody() {
 	if (!shouldCollectResponses) {
-	    try {
-		activeConnections++;
-		final String request = services.toString(body);
-		body = null;
-		services.send(httpBase, request, callback);
-	    } catch (final ConnectorException e) {
-		activeConnections--;
-		e.printStackTrace();
-	    }
+	    final String request = services.toString(body);
+	    body = null;
+	    send(request);
 	}
     }
 }

@@ -9,10 +9,10 @@ import org.mockito.Mockito;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.MockSlot;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.emite.testing.SignalTester;
 import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.testing.MockSlot;
 
 public class AvatarManagerTest {
     private AvatarManager avatarManager;
@@ -30,7 +30,7 @@ public class AvatarManagerTest {
     @Test
     public void managerShouldListenPresenceWithPhoto() {
 	final Slot<Presence> slot = Mockito.mock(Slot.class);
-	avatarManager.avatarHashPresenceReceived(slot);
+	avatarManager.onHashPresenceReceived(slot);
 	final Presence presence = new Presence(XmppURI.uri(("juliet@capulet.com/balcony")));
 	presence.addChild("x", "vcard-temp:x:update").addChild("photo", null).setText("sha1-hash-of-image");
 	final SignalTester<Presence> signalTester = new SignalTester<Presence>();
@@ -56,7 +56,7 @@ public class AvatarManagerTest {
     @Test
     public void verifySendVcardRequest() {
 	final MockSlot<AvatarVCard> slot = new MockSlot<AvatarVCard>();
-	avatarManager.onAvatarVCardReceived(slot);
+	avatarManager.onVCardReceived(slot);
 
 	session.setLoggedIn(uri("romeo@montague.net/orchard"));
 	avatarManager.requestVCard(XmppURI.uri("juliet@capulet.com"));

@@ -3,8 +3,6 @@ package com.calclab.emite.widgets.client.deploy;
 import java.util.ArrayList;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.bosh3.Bosh3Settings;
-import com.calclab.emite.client.core.bosh3.Connection;
 import com.calclab.emite.widgets.client.EmiteWidget;
 import com.calclab.suco.client.container.Container;
 import com.google.gwt.dom.client.Document;
@@ -17,7 +15,13 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class Deployer {
 
-    public void deploy(final String divClass, final Class<? extends EmiteWidget> widgetClass, final Container container) {
+    private final Container container;
+
+    public Deployer(final Container container) {
+	this.container = container;
+    }
+
+    public void deploy(final String divClass, final Class<? extends EmiteWidget> widgetClass) {
 	final ArrayList<Element> elements = findElementsByClass(divClass);
 	for (final Element e : elements) {
 	    install(e, container.getInstance(widgetClass));
@@ -58,21 +62,9 @@ public class Deployer {
 
     public void install(final Element element, final EmiteWidget widget) {
 	Log.debug("Installing on element id: " + element.getId());
-	for (final String name : widget.getParamNames()) {
-	    Log.debug("Param name of widget: " + name);
-	    final String value = element.getAttribute("data-" + name);
-	    Log.debug("Value: " + value);
-	    widget.setParam(name, value);
-	}
+	setParams(element, widget);
 	clearElement(element);
 	RootPanel.get(element.getId()).add((Widget) widget);
-    }
-
-    public void setConnectionSettings(final Connection connection) {
-	final Settings boshSettings = getMeta("emite.bosh.", new Settings("httpBase", "host"));
-	Log.debug("Bosh settings: " + boshSettings.toString());
-	connection.setSettings(new Bosh3Settings(boshSettings.get("httpBase"), boshSettings.get("host")));
-
     }
 
     private void clearElement(final Element element) {
@@ -92,5 +84,16 @@ public class Deployer {
 	Log.debug("Getting meta: " + name);
 	final Element element = DOM.getElementById(name);
 	return element.getPropertyString("content");
+    }
+
+    private void setParams(final Element element, final EmiteWidget widget) {
+	final String[] paramNames = widget.getParamNames();
+	if (paramNames != null)
+	    for (final String name : paramNames) {
+		Log.debug("Param name of widget: " + name);
+		final String value = element.getAttribute("data-" + name);
+		Log.debug("Value: " + value);
+		widget.setParam(name, value);
+	    }
     }
 }

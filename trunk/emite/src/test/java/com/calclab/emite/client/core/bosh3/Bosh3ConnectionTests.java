@@ -1,6 +1,7 @@
 package com.calclab.emite.client.core.bosh3;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ public class Bosh3ConnectionTests {
 	final IsPacketLike matcher = IsPacketLike.build("<body to='localhost' "
 		+ "content='text/xml; charset=utf-8' xmlns:xmpp='urn:xmpp:xbosh' "
 		+ " ack='1' hold='1' secure='true' xml:lang='en' "
-		+ "xmpp:version='1.6' wait='60' xmlns='http://jabber.org/protocol/httpbind' />");
+		+ "xmpp:version='1.0' wait='60' xmlns='http://jabber.org/protocol/httpbind' />");
 	assertTrue(matcher.matches(services.getSentPacket(0), System.out));
     }
 }

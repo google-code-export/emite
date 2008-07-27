@@ -1,13 +1,11 @@
 package com.calclab.emite.client.xep.muc;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.MockitoEmiteHelper.packetLike;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+
+import java.util.Collection;
 
 import org.junit.Test;
 
@@ -19,6 +17,7 @@ import com.calclab.emite.client.xep.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
+import com.calclab.suco.testing.MockSlot;
 
 public class MUCRoomManagerTest extends AbstractChatManagerTest {
 
@@ -48,10 +47,32 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
     }
 
     @Test
+    public void shouldFireChatMessages() {
+	final Chat chat = manager.openChat(uri("room@rooms.domain/user"), null, null);
+	final MockSlot<Message> slot = new MockSlot<Message>();
+	chat.onMessageReceived(slot);
+	session.receives("<message from='room@rooms.domain/other' to='user@domain/resource' "
+		+ "type='groupchat'><body>the message body</body></message>");
+
+	MockSlot.verifyCalled(slot, 1);
+    }
+
+    @Test
     public void shouldGiveSameRoomsWithSameURIS() {
 	final Room room1 = (Room) manager.openChat(uri("room@domain/nick"), null, null);
 	final Room room2 = (Room) manager.openChat(uri("room@domain/nick"), null, null);
 	assertSame(room1, room2);
+    }
+
+    @Test
+    public void shouldIgnoreLetterCaseInURIS() {
+	final Room room = (Room) manager.openChat(uri("ROOM@domain/nick"), null, null);
+	final MockSlot<Collection<Occupant>> slot = new MockSlot<Collection<Occupant>>();
+	room.onOccupantsChanged(slot);
+	session.receives("<presence to='user@domain/resource' xmlns='jabber:client' from='ROom@domain/otherUser'>"
+		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
+		+ "<item role='moderator' affiliation='owner' /></x></presence>");
+	MockSlot.verifyCalled(slot, 1);
     }
 
     @Test
@@ -82,17 +103,6 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
 		+ "<item role='none' affiliation='member' /></x></presence>");
 	assertEquals(0, room.getOccupantsCount());
 
-    }
-
-    @Test
-    public void XXshouldFireChatMessages() {
-	final Chat chat = manager.openChat(uri("room@rooms.domain/user"), null, null);
-	final RoomListener roomListener = mock(RoomListener.class);
-	new RoomListenerAdaptor(chat, roomListener);
-	final String message = "<message from='room@rooms.domain/other' to='user@domain/resource' "
-		+ "type='groupchat'><body>the message body</body></message>";
-	session.receives(message);
-	verify(roomListener).onMessageReceived(eq(chat), (Message) packetLike(message));
     }
 
     @Override

@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.client.xmpp.session;
 
+import java.util.Date;
+
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.bosh3.Connection;
 import com.calclab.emite.client.core.packet.IPacket;
@@ -135,11 +137,14 @@ public class XmppSession extends AbstractSession {
 	return userURI != null;
     }
 
-    public void login(final XmppURI uri, final String password) {
+    public void login(XmppURI uri, final String password) {
 	if (state == Session.State.disconnected) {
 	    setState(Session.State.connecting);
 	    connection.connect();
 	    scope.createAll();
+	    if (!uri.hasResource()) {
+		uri = new XmppURI(uri.getNode(), uri.getHost(), "" + new Date().getTime());
+	    }
 	    transaction = new AuthorizationTransaction(uri, password);
 	    Log.debug("Sending auth transaction: " + transaction);
 	}

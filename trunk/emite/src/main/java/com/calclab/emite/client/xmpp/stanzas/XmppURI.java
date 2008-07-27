@@ -29,59 +29,26 @@ package com.calclab.emite.client.xmpp.stanzas;
  * 
  */
 public class XmppURI {
-    private static final String PREFIX = "xmpp:";
-    private static final int PREFIX_LENGTH = PREFIX.length();
+    private static final XmppURIFactory factory = new XmppURIFactory();
 
     public static XmppURI jid(final String jid) {
 	return uri(jid).getJID();
     }
 
     public static XmppURI uri(final String xmppUri) {
-	if (xmppUri == null) {
-	    return null;
-	}
-
-	String node = null;
-	String domain = null;
-	String resource = null;
-
-	final String uri = xmppUri.startsWith(PREFIX) ? xmppUri.substring(PREFIX_LENGTH) : xmppUri;
-
-	final int atIndex = uri.indexOf('@') + 1;
-	if (atIndex > 0) {
-	    node = uri.substring(0, atIndex - 1);
-	    if (node.length() == 0) {
-		throw new RuntimeException("a uri with @ should have node");
-	    }
-	}
-
-	final int barIndex = uri.indexOf('/', atIndex);
-	if (atIndex == barIndex) {
-	    throw new RuntimeException("bad syntax!");
-	}
-	if (barIndex > 0) {
-	    domain = uri.substring(atIndex, barIndex);
-	    resource = uri.substring(barIndex + 1);
-	} else {
-	    domain = uri.substring(atIndex);
-	}
-	if (domain.length() == 0) {
-	    throw new RuntimeException("The domain is required");
-	}
-
-	return new XmppURI(node, domain, resource);
+	return factory.parse(xmppUri);
     }
+
     private final String host;
     private final String node;
     private final String representation;
-
     private final String resource;
 
     /**
      * 
      * @param jid
      * @param resource
-     *                <code> resource      = *( unreserved / escaped )
+     *            <code> resource      = *( unreserved / escaped )
                 reserved      = ";" / "/" / "?" / ":" / "@" / "&" / "=" / "+" /
                 "$" / "," / "[" / "]" </code>
      * 

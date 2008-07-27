@@ -10,7 +10,7 @@ import com.calclab.emite.client.im.chat.ChatDefault;
 import com.calclab.emite.client.xep.chatstate.ChatStateManager.ChatState;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.MockSlot;
+import com.calclab.suco.testing.MockSlot;
 
 public class ChatStateTest {
     private static final XmppURI MYSELF = uri("self@domain/res");

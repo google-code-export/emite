@@ -1,7 +1,6 @@
 package com.calclab.emite.client.im.roster;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.MockSlot.verifyCalled;
 import static com.calclab.emite.testing.MockitoEmiteHelper.isListOfSize;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
@@ -17,8 +16,8 @@ import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.testing.MockSlot;
 import com.calclab.emite.testing.MockedSession;
+import com.calclab.suco.testing.MockSlot;
 
 public class RosterManagerTest {
     private RosterManager manager;
@@ -109,7 +108,7 @@ public class RosterManagerTest {
 	manager.onSubscriptionRequested(listener);
 	final Presence presence = new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain"));
 	session.receives(presence);
-	verifyCalled(listener);
+	MockSlot.verifyCalled(listener);
     }
 
     @Test
@@ -119,7 +118,7 @@ public class RosterManagerTest {
 
 	final String presence = "<presence from='contact@example.org' to='user@example.com' type='unsubscribed'/>";
 	session.receives(presence);
-	verifyCalled(listener);
+	MockSlot.verifyCalled(listener);
     }
 
     @Test

@@ -43,7 +43,7 @@ public class DiscoveryManager {
 
     public DiscoveryManager(final Session session) {
 	this.session = session;
-	this.onReady = new Signal<DiscoveryManager>("onReady");
+	this.onReady = new Signal<DiscoveryManager>("discoveryManager:onReady");
 	this.filterQuery = Filters.byNameAndXMLNS("query", "http://jabber.org/protocol/disco#info");
 	session.onLoggedIn(new Slot<XmppURI>() {
 	    public void onEvent(final XmppURI uri) {

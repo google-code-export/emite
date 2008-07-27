@@ -4,8 +4,6 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.calclab.emite.client.core.bosh3.Bosh3Connection;
-import com.calclab.emite.client.core.bosh3.Connection;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 import com.calclab.emite.testing.IsPacketLike;

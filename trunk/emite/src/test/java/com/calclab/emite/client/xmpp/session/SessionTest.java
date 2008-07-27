@@ -1,7 +1,6 @@
 package com.calclab.emite.client.xmpp.session;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.MockSlot.verifyCalled;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.argThat;
@@ -24,9 +23,9 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.testing.MockSlot;
 import com.calclab.emite.testing.SignalTester;
 import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.testing.MockSlot;
 
 public class SessionTest {
 
@@ -94,7 +93,7 @@ public class SessionTest {
 	final SignalTester<IPacket> onStanza = new SignalTester<IPacket>();
 	verify(helper.connection).onStanzaReceived(argThat(onStanza));
 	onStanza.fire(new Packet("message"));
-	verifyCalled(listener);
+	MockSlot.verifyCalled(listener);
     }
 
     @Test
@@ -105,7 +104,7 @@ public class SessionTest {
 	final SignalTester<IPacket> onStanza = new SignalTester<IPacket>();
 	verify(helper.connection).onStanzaReceived(argThat(onStanza));
 	onStanza.fire(new Packet("presence"));
-	verifyCalled(listener);
+	MockSlot.verifyCalled(listener);
     }
 
     @SuppressWarnings("unchecked")

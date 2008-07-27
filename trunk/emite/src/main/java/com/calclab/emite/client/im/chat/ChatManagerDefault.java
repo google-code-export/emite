@@ -42,8 +42,8 @@ public class ChatManagerDefault implements ChatManager {
 
     public ChatManagerDefault(final Session session) {
 	this.session = session;
-	this.onChatCreated = new Signal<Chat>("onChatCreated");
-	this.onChatClosed = new Signal<Chat>("onChatClosed");
+	this.onChatCreated = new Signal<Chat>("chatManager:onChatCreated");
+	this.onChatClosed = new Signal<Chat>("chatManager:onChatClosed");
 	this.chats = new HashSet<Chat>();
 
 	session.onMessage(new Slot<Message>() {

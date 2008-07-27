@@ -3,8 +3,8 @@ package com.calclab.emite.client.xep.disco;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.testing.MockSlot;
 import com.calclab.emite.testing.MockedSession;
+import com.calclab.suco.testing.MockSlot;
 
 public class DiscoveryManagerTest {
 

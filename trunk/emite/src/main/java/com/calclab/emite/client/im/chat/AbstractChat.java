@@ -48,11 +48,11 @@ public abstract class AbstractChat implements Chat {
 	this.listeners = new ChatListenerCollection();
 	this.data = new HashMap<Class<?>, Object>();
 	this.status = Chat.Status.locked;
-	this.onStateChanged = new Signal<Status>("onStateChanged");
-	this.onMessageSent = new Signal<Message>("onMessageSent");
-	this.onMessageReceived = new Signal<Message>("onMessageReceived");
-	this.onBeforeSend = new Signal<Message>("Chat:onBeforeSend");
-	this.onBeforeReceive = new Signal<Message>("Chat:onBeforeReceive");
+	this.onStateChanged = new Signal<Status>("chat:onStateChanged");
+	this.onMessageSent = new Signal<Message>("chat:onMessageSent");
+	this.onMessageReceived = new Signal<Message>("chat:onMessageReceived");
+	this.onBeforeSend = new Signal<Message>("chat:onBeforeSend");
+	this.onBeforeReceive = new Signal<Message>("chat:onBeforeReceive");
     }
 
     public void addListener(final ChatListener listener) {

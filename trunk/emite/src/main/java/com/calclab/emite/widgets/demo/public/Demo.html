@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
 
     <meta id="emite.bosh.httpBase" content="/com.calclab.emiteui.EmiteUI/proxy" />
-    <meta id="emite.bosh.host" content="emitedemo.ourproject.org" />
+    <meta id="emite.bosh.host" content="localhost" />
 
 <body>
     <script type="text/javascript" language="javascript"
@@ -16,30 +16,39 @@
 <p>Here there is some instances of emite widgets. Most of them are duplicated to view how, diferent
 instances the of the same widget, can be rendered in a single page.</p>
 <p>All the widget parameters are inserted in the html (all the div attributes prefixed
-with 'data-', as recommended by HTML5 specification) and no javascript is required for initialization.</p>
+with 'data-') and no javascript is required for initialization.</p>
 
 <h1>Logger widget</h1>
-  <div id="logger" class="emite-widget emite-widget-logger">
+  <div id="logger" class="box emite-widget-logger">
     this is a logger widget
   </div>
 
 <h1>Login widget</h1>
-  <div id = "login1" class="emite-widget emite-widget-login" data-jid="test1@emitedemo.ourproject.org" data-password="test1">
+  <div id = "login1" class="box emite-widget-login" data-jid="test1@localhost" data-password="test1">
     this is a login widget
   </div>
 
-  <div id = "login2" class="emite-widget emite-widget-login">
+  <div id = "login2" class="box emite-widget-login">
     this is a login widget
   </div>
 
 <h1>Room widget</h1>
-  <div id="room1" class="emite-widget emite-widget-room" data-room="testRoom@rooms.localhost"
+  <div id="room1" class="box emite-widget-room" data-room="testRoom@rooms.localhost"
    data-nick="user1">
     this is a room widget
   </div>
 
-  <div id="room2" class="emite-widget emite-widget-room" data-room="testRoom@rooms.localhost"
+  <div id="room2" class="box emite-widget-room" data-room="testRoom@rooms.localhost"
    data-nick="user2">
     this is a room widget
   </div>
 </html>
+
+<h1>Room presence widget</h1>
+  <div id="roomPresence1" class="box emite-widget-room-presence"
+  data-room="testRoom@rooms.localhost">
+    this is a room presence widget
+  </div>
+
+
+

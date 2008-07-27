@@ -1,7 +1,6 @@
 package com.calclab.emite.client.im.presence;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.MockSlot.verifyCalled;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.argThat;
@@ -15,9 +14,9 @@ import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
-import com.calclab.emite.testing.MockSlot;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.emite.testing.SignalTester;
+import com.calclab.suco.testing.MockSlot;
 
 public class PresenceManagerTest {
 
@@ -96,7 +95,7 @@ public class PresenceManagerTest {
 	manager.onPresenceReceived(slot);
 	session.receives(createPresence(Type.available));
 	session.receives(createPresence(Type.unavailable));
-	verifyCalled(slot, 2);
+	MockSlot.verifyCalled(slot, 2);
     }
 
     @Test
@@ -105,7 +104,7 @@ public class PresenceManagerTest {
 	final MockSlot<Presence> listener = new MockSlot<Presence>();
 	manager.onOwnPresenceChanged(listener);
 	manager.setOwnPresence("status", Show.away);
-	verifyCalled(listener);
+	MockSlot.verifyCalled(listener);
 	assertEquals("status", listener.getValue(0).getStatus());
 	assertEquals(Show.away, listener.getValue(0).getShow());
     }

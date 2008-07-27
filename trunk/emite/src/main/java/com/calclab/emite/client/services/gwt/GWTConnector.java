@@ -39,7 +39,7 @@ public class GWTConnector {
 	    builder.sendRequest(request, new RequestCallback() {
 		public void onError(final Request arg0, final Throwable throwable) {
 		    Log.debug("GWT CONNECTOR ERROR: " + throwable);
-		    callback.onError(throwable);
+		    callback.onError(request, throwable);
 		}
 
 		public void onResponseReceived(final Request req, final Response res) {

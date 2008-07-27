@@ -40,8 +40,6 @@ import com.calclab.emite.client.xep.chatstate.ChatStateManager;
 import com.calclab.emite.client.xep.chatstate.StateManager;
 import com.calclab.emite.client.xep.muc.Occupant;
 import com.calclab.emite.client.xep.muc.Room;
-import com.calclab.emite.client.xep.muc.RoomListener;
-import com.calclab.emite.client.xep.muc.RoomListenerAdaptor;
 import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -466,40 +464,46 @@ public class MultiChatPresenter {
 	});
 
 	roomManager.onChatCreated(new Slot<Chat>() {
-	    public void onEvent(final Chat room) {
+	    public void onEvent(final Chat chat) {
+		final Room room = (Room) chat;
 		final RoomUI roomUI = createRoom(room, userChatOptions.getUserJid().getNode());
 		dockChatUIifIsStartedByMe(room, roomUI);
 
-		new RoomListenerAdaptor(room, new RoomListener() {
-		    public void onMessageReceived(final Chat chat, final Message message) {
+		room.onMessageReceived(new Slot<Message>() {
+		    public void onEvent(final Message message) {
 			if (message.getBody() != null) {
 			    dockChatUI(room, roomUI);
-			    messageReceivedInRoom(chat, message);
-			}
-		    }
-
-		    public void onMessageSent(final Chat chat, final Message message) {
-			// messageReceived(chat, message);
-		    }
-
-		    public void onOccupantModified(final Occupant occupant) {
-			Log.info("Room occupant changed (" + occupant.getUri() + ")");
-			roomUI.onOccupantModified(occupant);
-		    }
-
-		    public void onOccupantsChanged(final Collection<Occupant> occupants) {
-			roomUI.onOccupantsChanged(occupants);
-		    }
-
-		    public void onSubjectChanged(final String nick, final String newSubject) {
-			roomUI.setSubject(newSubject);
-			if (nick != null) {
-			    roomUI.addInfoMessage(i18n.t("[%s] has changed the subject to: ", nick) + newSubject);
-			} else {
-			    roomUI.addInfoMessage(i18n.t("Subject changed to: ") + newSubject);
+			    messageReceivedInRoom(room, message);
 			}
 		    }
 		});
+
+		room.onOccupantModified(new Slot<Occupant>() {
+		    public void onEvent(final Occupant occupant) {
+			Log.info("Room occupant changed (" + occupant.getUri() + ")");
+			roomUI.onOccupantModified(occupant);
+		    }
+		});
+
+		room.onOccupantsChanged(new Slot<Collection<Occupant>>() {
+		    public void onEvent(final Collection<Occupant> occupants) {
+			roomUI.onOccupantsChanged(occupants);
+		    }
+		});
+
+		room.onSubjectChanged(new Slot2<Occupant, String>() {
+		    public void onEvent(final Occupant occupant, final String newSubject) {
+			roomUI.setSubject(newSubject);
+			if (occupant != null) {
+			    roomUI.addInfoMessage(i18n.t("[%s] has changed the subject to: ", occupant.getNick())
+				    + newSubject);
+			} else {
+			    roomUI.addInfoMessage(i18n.t("Subject changed to: ") + newSubject);
+			}
+
+		    }
+		});
+
 		addStateListener(room);
 	    }
 	});

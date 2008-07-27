@@ -73,7 +73,7 @@ public class HttpConnector {
 		    response = post.getResponseBodyAsString();
 		} catch (final Exception e) {
 		    listener.onError(id, "exception " + e);
-		    callback.onError(e);
+		    callback.onError(xml, e);
 		    e.printStackTrace();
 		} finally {
 		    post.releaseConnection();
@@ -85,7 +85,7 @@ public class HttpConnector {
 		    callback.onResponseReceived(post.getStatusCode(), response);
 		} else {
 		    listener.onError(id, "bad status");
-		    callback.onError(new Exception("bad http status " + status));
+		    callback.onError(xml, new Exception("bad http status " + status));
 		}
 	    }
 	};
