@@ -42,8 +42,8 @@ public class Roster {
 
     public Roster() {
 	items = new HashMap<XmppURI, RosterItem>();
-	this.onItemChanged = new Signal<RosterItem>("onItemChanged");
-	this.onRosterChanged = new Signal<Collection<RosterItem>>("onRosterChanged");
+	this.onItemChanged = new Signal<RosterItem>("roster:onItemChanged");
+	this.onRosterChanged = new Signal<Collection<RosterItem>>("roster:onRosterChanged");
 	this.onReady = new Signal<Roster>("roster:onReady");
     }
 

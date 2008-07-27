@@ -27,7 +27,6 @@ import java.util.HashMap;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.im.chat.AbstractChat;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -50,9 +49,9 @@ public class Room extends AbstractChat implements Chat {
 	super(session, roomURI);
 	this.name = name;
 	this.occupants = new HashMap<XmppURI, Occupant>();
-	this.onOccupantModified = new Signal<Occupant>("onOccupantModified");
-	this.onOccupantsChanged = new Signal<Collection<Occupant>>("onOccupantsChanged");
-	this.onSubjectChanged = new Signal2<Occupant, String>("onSubjectChanged");
+	this.onOccupantModified = new Signal<Occupant>("room:onOccupantModified");
+	this.onOccupantsChanged = new Signal<Collection<Occupant>>("room:onOccupantsChanged");
+	this.onSubjectChanged = new Signal2<Occupant, String>("room:onSubjectChanged");
     }
 
     /**
@@ -109,7 +108,7 @@ public class Room extends AbstractChat implements Chat {
 	final String subject = message.getSubject();
 	if (subject != null) {
 	    onBeforeReceive.fire(message);
-	    fireSubjectChanged(message, subject);
+	    onSubjectChanged.fire(occupants.get(message.getFrom()), subject);
 	}
 	if (message.getBody() != null) {
 	    super.receive(message);
@@ -119,7 +118,7 @@ public class Room extends AbstractChat implements Chat {
     public void removeOccupant(final XmppURI uri) {
 	final Occupant occupant = occupants.remove(uri);
 	if (occupant != null) {
-	    fireOccupantsChanged();
+	    onOccupantsChanged.fire(occupants.values());
 	}
     }
 
@@ -155,11 +154,11 @@ public class Room extends AbstractChat implements Chat {
 	if (occupant == null) {
 	    occupant = new Occupant(uri, affiliation, role);
 	    occupants.put(occupant.getUri(), occupant);
-	    fireOccupantsChanged();
+	    onOccupantsChanged.fire(occupants.values());
 	} else {
 	    occupant.setAffiliation(affiliation);
 	    occupant.setRole(role);
-	    fireOccupantModified(occupant);
+	    onOccupantModified.fire(occupant);
 	}
 	return occupant;
     }
@@ -187,34 +186,6 @@ public class Room extends AbstractChat implements Chat {
     @Override
     public String toString() {
 	return "ROOM: " + other;
-    }
-
-    private void fireOccupantModified(final Occupant occupant) {
-	onOccupantModified.fire(occupant);
-	for (final ChatListener listener : listeners) {
-	    try {
-		((RoomListener) listener).onOccupantModified(occupant);
-	    } catch (final ClassCastException e) {
-	    }
-	}
-    }
-
-    private void fireOccupantsChanged() {
-	final Collection<Occupant> values = occupants.values();
-	onOccupantsChanged.fire(values);
-	for (final ChatListener listener : listeners) {
-	    try {
-		((RoomListener) listener).onOccupantsChanged(values);
-	    } catch (final ClassCastException e) {
-	    }
-	}
-    }
-
-    private void fireSubjectChanged(final Message message, final String subject) {
-	onSubjectChanged.fire(occupants.get(message.getFrom()), subject);
-	for (final ChatListener listener : listeners) {
-	    ((RoomListener) listener).onSubjectChanged(message.getFrom().getResource(), subject);
-	}
     }
 
 }

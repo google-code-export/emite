@@ -1,7 +1,6 @@
 package com.calclab.emite.client.im.roster;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.MockSlot.verifyCalled;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -15,7 +14,7 @@ import org.junit.Test;
 
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.emite.testing.MockSlot;
+import com.calclab.suco.testing.MockSlot;
 
 public class RosterTest {
     private Roster roster;
@@ -39,7 +38,7 @@ public class RosterTest {
 	roster.onItemChanged(listener);
 	roster.add(item);
 	roster.changePresence(item.getJID(), new Presence());
-	verifyCalled(listener);
+	MockSlot.verifyCalled(listener);
     }
 
     @Test
@@ -47,10 +46,10 @@ public class RosterTest {
 	final MockSlot<Collection<RosterItem>> slot = new MockSlot<Collection<RosterItem>>();
 	roster.onRosterChanged(slot);
 	roster.add(new RosterItem(uri("one@domain/resource1"), Subscription.none, "one"));
-	verifyCalled(slot, 1);
+	MockSlot.verifyCalled(slot, 1);
 	assertEquals(1, slot.getValue(0).size());
 	roster.removeItem(uri("one@domain/resource2"));
-	verifyCalled(slot, 2);
+	MockSlot.verifyCalled(slot, 2);
 
 	assertEquals(0, slot.getValue(1).size());
     }
@@ -62,7 +61,7 @@ public class RosterTest {
 	final List<RosterItem> itemCollection = new ArrayList<RosterItem>();
 	itemCollection.add(new RosterItem(uri("name@domain"), Subscription.none, "name"));
 	roster.setItems(itemCollection);
-	verifyCalled(slot, 1);
+	MockSlot.verifyCalled(slot, 1);
 	assertTrue(slot.getValue(0).contains(itemCollection.get(0)));
 	// verify(oldListener).onRosterChanged(hasSame(itemCollection));
     }
@@ -72,10 +71,10 @@ public class RosterTest {
 	final MockSlot<Collection<RosterItem>> slot = new MockSlot<Collection<RosterItem>>();
 	roster.onRosterChanged(slot);
 	roster.setItems(new ArrayList<RosterItem>());
-	verifyCalled(slot, 1);
+	MockSlot.verifyCalled(slot, 1);
 	assertEquals(0, slot.getValue(0).size());
 	roster.add(new RosterItem(uri("name@domain/res"), null, null));
-	verifyCalled(slot, 2);
+	MockSlot.verifyCalled(slot, 2);
 	assertEquals(1, slot.getValue(1).size());
     }
 }

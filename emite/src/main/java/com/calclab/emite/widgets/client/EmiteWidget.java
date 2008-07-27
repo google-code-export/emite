@@ -5,4 +5,5 @@ public interface EmiteWidget {
     public String[] getParamNames();
 
     public void setParam(String name, String value);
+
 }

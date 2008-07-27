@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.testing.MockSlot;
 import com.calclab.emite.testing.MockedSession;
+import com.calclab.suco.testing.MockSlot;
 
 public abstract class AbstractChatTest {
     protected final MockedSession session;

@@ -1,16 +1,13 @@
 package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.MockSlot.verifyCalled;
-import static com.calclab.emite.testing.MockSlot.verifyCalledWith;
-import static com.calclab.emite.testing.MockSlot.verifyCalledWithSame;
 import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
 import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.testing.MockSlot;
+import com.calclab.suco.testing.MockSlot;
 
 public class ChatManagerTest extends AbstractChatManagerTest {
 
@@ -19,7 +16,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	final MockSlot<Chat> listener = addOnChatCreatedSlot();
 	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 1"));
 	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
-	verifyCalled(listener, 1);
+	MockSlot.verifyCalled(listener, 1);
     }
 
     @Test
@@ -41,7 +38,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	final MockSlot<Status> listener = new MockSlot<Status>();
 	chat.onStateChanged(listener);
 	session.logout();
-	verifyCalledWith(listener, Status.locked);
+	MockSlot.verifyCalledWith(listener, Status.locked);
     }
 
     @Test
@@ -49,7 +46,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	final MockSlot<Chat> listener = addOnChatCreatedSlot();
 	session.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
 	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
-	verifyCalled(listener, 1);
+	MockSlot.verifyCalled(listener, 1);
     }
 
     @Test
@@ -60,16 +57,16 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	session.receives("<message type='chat' id='purplee8b92642' to='user@domain' "
 		+ "from='someone@domain'><x xmlns='jabber:x:event'/><active"
 		+ "xmlns='http://jabber.org/protocol/chatstates'/></message>");
-	verifyCalled(slot);
+	MockSlot.verifyCalled(slot);
     }
 
     @Test
     public void shouldUseSameRoomWhenAnswering() {
 	final MockSlot<Chat> listener = addOnChatCreatedSlot();
 	final Chat chat = manager.openChat(uri("someone@domain"), null, null);
-	verifyCalledWithSame(listener, chat);
+	MockSlot.verifyCalledWithSame(listener, chat);
 	session.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer").Thread(chat.getThread()));
-	verifyCalled(listener, 1);
+	MockSlot.verifyCalled(listener, 1);
     }
 
     @Override

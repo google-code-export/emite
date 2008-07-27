@@ -5,19 +5,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 public class XmppURITest {
-
-    @Test
-    public void checkEqualsContract() {
-	final XmppURI uri1 = uri("xmpp:test@example/res");
-	final XmppURI uri2 = uri("xmpp:test@example/res");
-	assertEquals(uri1, uri2);
-	assertEquals(uri1.hashCode(), uri2.hashCode());
-    }
 
     @Test
     public void checkUriEqualsNoResourceOtherWithoutNode() {
@@ -83,6 +76,28 @@ public class XmppURITest {
     @Test(expected = RuntimeException.class)
     public void checkUriFormatWithoutNodeFails() {
 	uri("xmpp:@example/res");
+    }
+
+    @Test
+    public void equalsShouldBeIndependentOfPrefix() {
+	final XmppURI uri1 = uri("xmpp:test@example/res");
+	final XmppURI uri2 = uri("test@example/res");
+	assertEquals(uri1, uri2);
+	assertEquals(uri1.hashCode(), uri2.hashCode());
+    }
+
+    @Test
+    public void shouldBeCaseInsensitive() {
+	final XmppURI uri1 = uri("xmpp:test@EXAMPLE/res");
+	final XmppURI uri2 = uri("tesT@example/reS");
+	assertEquals(uri1, uri2);
+    }
+
+    @Test
+    public void shouldCacheURIS() {
+	final XmppURI uri1 = uri("xmpp:test@example/res");
+	final XmppURI uri2 = uri("xmpp:test@example/res");
+	assertSame(uri1, uri2);
     }
 
     @Test

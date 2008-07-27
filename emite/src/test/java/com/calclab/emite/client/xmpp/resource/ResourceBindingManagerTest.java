@@ -1,7 +1,6 @@
 package com.calclab.emite.client.xmpp.resource;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.MockSlot.verifyCalledWith;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +8,7 @@ import org.junit.Test;
 import com.calclab.emite.client.core.bosh3.ConnectionTestHelper;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.MockSlot;
+import com.calclab.suco.testing.MockSlot;
 
 public class ResourceBindingManagerTest {
     private ResourceBindingManager manager;
@@ -34,7 +33,7 @@ public class ResourceBindingManagerTest {
 	helper.simulateReception("<iq type='result' id='bind-resource'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>"
 		+ "<jid>somenode@example.com/someresource</jid></bind></iq>");
 
-	verifyCalledWith(onBindedSlot, uri("somenode@example.com/someresource"));
+	MockSlot.verifyCalledWith(onBindedSlot, uri("somenode@example.com/someresource"));
 
     }
 }

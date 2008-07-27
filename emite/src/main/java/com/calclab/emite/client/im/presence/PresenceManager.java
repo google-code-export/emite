@@ -41,8 +41,8 @@ public class PresenceManager {
     public PresenceManager(final Session session, final Roster roster) {
 	this.session = session;
 	this.ownPresence = new Presence(Type.unavailable, null, null);
-	this.onPresenceReceived = new Signal<Presence>("onPresenceReceived");
-	this.onOwnPresenceChanged = new Signal<Presence>("onOwnPresenceChanged");
+	this.onPresenceReceived = new Signal<Presence>("presenceManager:onPresenceReceived");
+	this.onOwnPresenceChanged = new Signal<Presence>("presenceManager:onOwnPresenceChanged");
 
 	// Upon connecting to the server and becoming an active resource, a
 	// client SHOULD request the roster before sending initial presence

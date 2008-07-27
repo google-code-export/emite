@@ -1,8 +1,6 @@
 package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static com.calclab.emite.testing.MockSlot.verifyCalled;
-import static com.calclab.emite.testing.MockSlot.verifyCalledWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -11,8 +9,8 @@ import org.junit.Test;
 
 import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.MockSlot;
 import com.calclab.emite.testing.MockedSession;
+import com.calclab.suco.testing.MockSlot;
 
 public abstract class AbstractChatManagerTest {
     protected static final XmppURI MYSELF = uri("self@domain");
@@ -38,7 +36,7 @@ public abstract class AbstractChatManagerTest {
 	final MockSlot<Status> listener = new MockSlot<Status>();
 	chat.onStateChanged(listener);
 	session.logout();
-	verifyCalledWith(listener, Status.locked);
+	MockSlot.verifyCalledWith(listener, Status.locked);
     }
 
     @Test
@@ -47,7 +45,7 @@ public abstract class AbstractChatManagerTest {
 	final MockSlot<Chat> listener = new MockSlot<Chat>();
 	manager.onChatClosed(listener);
 	manager.close(chat);
-	verifyCalled(listener);
+	MockSlot.verifyCalled(listener);
     }
 
     @Test
@@ -55,7 +53,7 @@ public abstract class AbstractChatManagerTest {
 	final MockSlot<Chat> listener = new MockSlot<Chat>();
 	manager.onChatCreated(listener);
 	manager.openChat(uri("other@domain"), null, null);
-	verifyCalled(listener);
+	MockSlot.verifyCalled(listener);
     }
 
     @Test

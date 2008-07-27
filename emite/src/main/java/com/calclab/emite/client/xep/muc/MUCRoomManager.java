@@ -24,6 +24,8 @@ package com.calclab.emite.client.xep.muc;
 import java.util.HashMap;
 import java.util.List;
 
+import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.Logger;
 import com.calclab.emite.client.core.packet.Filters;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.NoPacket;
@@ -46,9 +48,20 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 
     public MUCRoomManager(final Session session) {
 	super(session);
-	this.onInvitationReceived = new Signal<RoomInvitation>("onInvitationReceived");
+	this.onInvitationReceived = new Signal<RoomInvitation>("roomManager:onInvitationReceived");
 	this.rooms = new HashMap<XmppURI, Room>();
-	install();
+
+	// @see http://www.xmpp.org/extensions/xep-0045.html#createroom
+	session.onPresence(new Slot<Presence>() {
+	    public void onEvent(final Presence presence) {
+		final XmppURI occupantURI = presence.getFrom();
+		final Room room = rooms.get(occupantURI.getJID());
+		if (room != null) {
+		    Log.debug("changing room presence!");
+		    changePresence(room, occupantURI, presence);
+		}
+	    }
+	});
     }
 
     @Override
@@ -98,28 +111,21 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 
     }
 
-    /**
-     * @see http://www.xmpp.org/extensions/xep-0045.html#createroom
-     */
-    private void eventPresence(final Presence presence) {
-	final XmppURI occupantURI = presence.getFrom();
-	final Room room = rooms.get(occupantURI.getJID());
-	if (room != null) {
-	    if (presence.hasAttribute("type", "unavailable")) {
-		room.removeOccupant(occupantURI);
-	    } else {
-		final List<? extends IPacket> children = presence.getChildren(Filters.byNameAndXMLNS("x",
-			"http://jabber.org/protocol/muc#user"));
-		for (final IPacket child : children) {
-		    final IPacket item = child.getFirstChild("item");
-		    final String affiliation = item.getAttribute("affiliation");
-		    final String role = item.getAttribute("role");
-		    room.setOccupantPresence(occupantURI, affiliation, role);
-		    if (isNewRoom(child)) {
-			requestCreateInstantRoom(room);
-		    } else {
-			room.setStatus(Chat.Status.ready);
-		    }
+    private void changePresence(final Room room, final XmppURI occupantURI, final Presence presence) {
+	if (presence.hasAttribute("type", "unavailable")) {
+	    room.removeOccupant(occupantURI);
+	} else {
+	    final List<? extends IPacket> children = presence.getChildren(Filters.byNameAndXMLNS("x",
+		    "http://jabber.org/protocol/muc#user"));
+	    for (final IPacket child : children) {
+		final IPacket item = child.getFirstChild("item");
+		final String affiliation = item.getAttribute("affiliation");
+		final String role = item.getAttribute("role");
+		room.setOccupantPresence(occupantURI, affiliation, role);
+		if (isNewRoom(child)) {
+		    requestCreateInstantRoom(room);
+		} else {
+		    room.setStatus(Chat.Status.ready);
 		}
 	    }
 	}
@@ -131,15 +137,6 @@ public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
 
     private void handleRoomInvitation(final XmppURI roomURI, final Stanza invitation) {
 	fireInvitationReceived(invitation.getFrom(), roomURI, invitation.getFirstChild("reason").getText());
-    }
-
-    private void install() {
-	session.onPresence(new Slot<Presence>() {
-	    public void onEvent(final Presence presence) {
-		eventPresence(presence);
-	    }
-
-	});
     }
 
     private boolean isNewRoom(final IPacket xtension) {

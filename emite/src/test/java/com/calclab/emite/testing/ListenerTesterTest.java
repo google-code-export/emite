@@ -1,8 +1,8 @@
 package com.calclab.emite.testing;
 
-import static com.calclab.emite.testing.MockSlot.verifyCalledWith;
-
 import org.junit.Test;
+
+import com.calclab.suco.testing.MockSlot;
 
 public class ListenerTesterTest {
 
@@ -11,6 +11,6 @@ public class ListenerTesterTest {
 	final MockSlot<Object> listener = new MockSlot<Object>();
 	final Object param1 = new Object();
 	listener.onEvent(param1);
-	verifyCalledWith(listener, param1);
+	MockSlot.verifyCalledWith(listener, param1);
     }
 }

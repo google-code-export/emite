@@ -1,4 +1,4 @@
-package com.calclab.emite.testing;
+package com.calclab.suco.testing;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -37,13 +37,14 @@ public class MockSlot<S> implements Slot<S> {
 	verifyCalled(slot, 0);
     }
 
-    private int calledTimes;
-
     private final ArrayList<S> parameters;
 
     public MockSlot() {
-	calledTimes = 0;
 	parameters = new ArrayList<S>();
+    }
+
+    public int getCalledTimes() {
+	return parameters.size();
     }
 
     public S getValue(final int index) {
@@ -51,12 +52,11 @@ public class MockSlot<S> implements Slot<S> {
     }
 
     public boolean isCalled(final int timesCalled) {
-	return calledTimes == timesCalled;
+	return getCalledTimes() == timesCalled;
     }
 
     public void onEvent(final S parameter) {
 	parameters.add(parameter);
-	this.calledTimes++;
     }
 
 }

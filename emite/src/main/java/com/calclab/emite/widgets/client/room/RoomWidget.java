@@ -21,7 +21,7 @@ public class RoomWidget extends DockPanel implements EmiteWidget {
     Signal<String> onSendMessage;
 
     public RoomWidget() {
-	this.onSendMessage = new Signal<String>("widget:room:sendMessage");
+	this.onSendMessage = new Signal<String>("widgets:room:sendMessage");
 	this.status = new Label();
 	this.area = new TextArea();
 	this.input = new TextBox();

@@ -10,12 +10,12 @@ import com.calclab.emite.client.im.chat.ChatManagerDefault;
 import com.calclab.emite.client.xep.chatstate.ChatStateManager.ChatState;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.MockSlot;
 import com.calclab.emite.testing.MockedSession;
+import com.calclab.suco.testing.MockSlot;
 
 public class ChatStateManagerTest {
     private static final XmppURI MYSELF = uri("self@domain/res");
-    private static final XmppURI OTHER = uri("other@domain/otherRes");
+    private static final XmppURI OTHER = uri("other@domain/other");
 
     private ChatManagerDefault chatManager;
     private MockSlot<ChatState> stateListener;
@@ -43,12 +43,12 @@ public class ChatStateManagerTest {
 
     @Test
     public void shouldNotRepiteState() {
-	session.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+	session.receives("<message from='other@domain/other' to='self@domain/res' type='chat'>" + "<thread>"
 		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
 	chatStateManager.setOwnState(ChatState.composing);
 	chatStateManager.setOwnState(ChatState.composing);
 	chatStateManager.setOwnState(ChatState.composing);
-	session.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'><thread>"
+	session.verifySent("<message from='self@domain/res' to='other@domain/other' type='chat'><thread>"
 		+ chat.getThread() + "</thread>"
 		+ "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
 	session.verifyNotSent("<message><composing/><active/></message>");
@@ -62,46 +62,45 @@ public class ChatStateManagerTest {
 
     @Test
     public void shouldSendActiveIfTheOtherStartNegotiation() {
-	session.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+	session.receives("<message from='other@domain/other' to='self@domain/res' type='chat'>" + "<thread>"
 		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
-	session.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
+	session.verifySent("<message from='self@domain/res' to='other@domain/other' type='chat'>" + "<thread>"
 		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
     }
 
     @Test
     public void shouldSendStateIfNegotiationAccepted() {
-	session.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+	session.receives("<message from='other@domain/other' to='self@domain/res' type='chat'>" + "<thread>"
 		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
 	chatStateManager.setOwnState(ChatState.composing);
-	session.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
+	session.verifySent("<message from='self@domain/res' to='other@domain/other' type='chat'>" + "<thread>"
 		+ chat.getThread() + "</thread>"
 		+ "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
     }
 
     @Test
     public void shouldSendTwoStateIfDiferent() {
-	session.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+	session.receives("<message from='other@domain/other' to='self@domain/res' type='chat'>" + "<thread>"
 		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
 	chatStateManager.setOwnState(ChatState.composing);
 	chatStateManager.setOwnState(ChatState.pause);
-	session.verifySent("<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
+	session.verifySent("<message from='self@domain/res' to='other@domain/other' type='chat'>" + "<thread>"
 		+ chat.getThread() + "</thread>"
 		+ "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>"
-		+ "<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
+		+ "<message from='self@domain/res' to='other@domain/other' type='chat'>" + "<thread>"
 		+ chat.getThread() + "</thread>" + "<pause xmlns='http://jabber.org/protocol/chatstates'/></message>");
     }
 
     @Test
     public void shouldStartStateAfterNegotiation() {
 	chat.send(new Message("test message"));
-	session.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'>" + "<thread>"
+	session.receives("<message from='other@domain/other' to='self@domain/res' type='chat'>" + "<thread>"
 		+ chat.getThread() + "</thread>" + "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
 	final Message message = new Message(MYSELF, OTHER, "test message").Thread(chat.getThread());
 	message.addChild(ChatStateManager.ChatState.active.toString(), ChatStateManager.XMLNS);
 	chatStateManager.setOwnState(ChatStateManager.ChatState.composing);
-	session.verifySent(message.toString()
-		+ "<message from='self@domain/res' to='other@domain/otherRes' type='chat'>" + "<thread>"
-		+ chat.getThread() + "</thread>"
+	session.verifySent(message.toString() + "<message from='self@domain/res' to='other@domain/other' type='chat'>"
+		+ "<thread>" + chat.getThread() + "</thread>"
 		+ "<composing xmlns='http://jabber.org/protocol/chatstates'/></message>");
     }
 
@@ -123,8 +122,8 @@ public class ChatStateManagerTest {
 
     @Test
     public void shouldStopAfterGone() {
-	session.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'><active /></message>");
-	session.receives("<message from='other@domain/otherRes' to='self@domain/res' type='chat'><gone /></message>");
+	session.receives("<message from='other@domain/other' to='self@domain/res' type='chat'><active /></message>");
+	session.receives("<message from='other@domain/other' to='self@domain/res' type='chat'><gone /></message>");
 	chatStateManager.setOwnState(ChatStateManager.ChatState.composing);
 	chatStateManager.setOwnState(ChatStateManager.ChatState.pause);
 	session.verifySent("<message><active /></message>");

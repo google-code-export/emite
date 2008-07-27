@@ -34,7 +34,7 @@ public class ResourceBindingManager {
 
     public ResourceBindingManager(final Connection connection) {
 	this.connection = connection;
-	this.onBinded = new Signal<XmppURI>("onBinded");
+	this.onBinded = new Signal<XmppURI>("resourceBindingManager:onBinded");
 
 	connection.onStanzaReceived(new Slot<IPacket>() {
 	    public void onEvent(final IPacket received) {

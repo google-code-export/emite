@@ -38,7 +38,7 @@ public class SASLManager {
 
     public SASLManager(final Connection connection) {
 	this.connection = connection;
-	this.onAuthorized = new Signal<AuthorizationTransaction>("onAuthorized");
+	this.onAuthorized = new Signal<AuthorizationTransaction>("saslManager:onAuthorized");
 	install();
     }
 

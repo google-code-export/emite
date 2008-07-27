@@ -1,11 +1,8 @@
 package com.calclab.suco.client.signal;
 
-import static com.calclab.emite.testing.MockSlot.verifyCalledWith;
-import static com.calclab.emite.testing.MockSlot.verifyNoCalled;
-
 import org.junit.Test;
 
-import com.calclab.emite.testing.MockSlot;
+import com.calclab.suco.testing.MockSlot;
 
 public class SignalTest {
 
@@ -16,7 +13,7 @@ public class SignalTest {
 	signal.add(listener);
 	signal.remove(listener);
 	signal.fire(new Object());
-	verifyNoCalled(listener);
+	MockSlot.verifyNoCalled(listener);
     }
 
     @Test
@@ -28,7 +25,7 @@ public class SignalTest {
 	signal.add(listener2);
 	final Object event = new Object();
 	signal.fire(event);
-	verifyCalledWith(listener1, event);
-	verifyCalledWith(listener2, event);
+	MockSlot.verifyCalledWith(listener1, event);
+	MockSlot.verifyCalledWith(listener2, event);
     }
 }

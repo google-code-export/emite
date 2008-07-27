@@ -43,25 +43,25 @@ public class AvatarManager {
     private static final String PHOTO = "PHOTO";
     private static final String TYPE = "TYPE";
     private static final String BINVAL = "BINVAL";
-    private final Signal<Presence> onAvatarHashPresenceReceived;
-    private final Signal<AvatarVCard> onAvatarVCardReceived;
+    private final Signal<Presence> onHashPresenceReceived;
+    private final Signal<AvatarVCard> onVCardReceived;
     private final PresenceManager presenceManager;
     private final Session session;
 
     public AvatarManager(final Session session, final PresenceManager presenceManager) {
 	this.session = session;
 	this.presenceManager = presenceManager;
-	this.onAvatarHashPresenceReceived = new Signal<Presence>("onAvatarHashPresenceReceived");
-	this.onAvatarVCardReceived = new Signal<AvatarVCard>("onAvatarVCardReceived");
+	this.onHashPresenceReceived = new Signal<Presence>("avatar:onHashPresenceReceived");
+	this.onVCardReceived = new Signal<AvatarVCard>("avatar:onVCardReceived");
 	install();
     }
 
-    public void avatarHashPresenceReceived(final Slot<Presence> slot) {
-	onAvatarHashPresenceReceived.add(slot);
+    public void onHashPresenceReceived(final Slot<Presence> slot) {
+	onHashPresenceReceived.add(slot);
     }
 
-    public void onAvatarVCardReceived(final Slot<AvatarVCard> slot) {
-	onAvatarVCardReceived.add(slot);
+    public void onVCardReceived(final Slot<AvatarVCard> slot) {
+	onVCardReceived.add(slot);
     }
 
     /**
@@ -85,7 +85,7 @@ public class AvatarManager {
 		    final String photoType = photo.getFirstChild(TYPE).getText();
 		    final String photoBinval = photo.getFirstChild(BINVAL).getText();
 		    final AvatarVCard avatar = new AvatarVCard(from, null, photoType, photoBinval);
-		    onAvatarVCardReceived.fire(avatar);
+		    onVCardReceived.fire(avatar);
 		}
 
 	    }
@@ -115,7 +115,7 @@ public class AvatarManager {
 		final List<? extends IPacket> children = presence.getChildren("x");
 		for (final IPacket child : children) {
 		    if (child.hasAttribute("xmlns", XMLNS + ":x:update")) {
-			onAvatarHashPresenceReceived.fire(presence);
+			onHashPresenceReceived.fire(presence);
 		    }
 		}
 	    }
