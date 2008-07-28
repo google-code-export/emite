@@ -97,7 +97,7 @@ public class ChatEntryPoint implements EntryPoint {
 	    public void onLogin(final String base, final String domain, final String name, final String password) {
 		loginPanel.setStatus("preparing...");
 		createXMPP(base, domain);
-		xmpp.login(new XmppURI(name, domain, "emite"), password, Show.notSpecified, null);
+		xmpp.login(XmppURI.uri(name, domain, "emite"), password, Show.notSpecified, null);
 	    }
 	});
 	dialogBox.setText("Login");
