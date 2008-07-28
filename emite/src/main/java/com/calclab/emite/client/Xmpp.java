@@ -21,8 +21,8 @@
  */
 package com.calclab.emite.client;
 
-import com.calclab.emite.client.core.bosh3.Bosh3Settings;
-import com.calclab.emite.client.core.bosh3.Connection;
+import com.calclab.emite.client.core.bosh.Bosh3Settings;
+import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.Roster;

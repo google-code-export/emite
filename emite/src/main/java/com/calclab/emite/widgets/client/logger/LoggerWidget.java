@@ -1,6 +1,6 @@
 package com.calclab.emite.widgets.client.logger;
 
-import com.calclab.emite.widgets.client.EmiteWidget;
+import com.calclab.emite.widgets.client.base.EmiteWidget;
 import com.calclab.suco.client.signal.Signal0;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;

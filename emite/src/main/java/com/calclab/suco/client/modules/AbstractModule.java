@@ -1,6 +1,5 @@
 package com.calclab.suco.client.modules;
 
-import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.Provider;
 import com.calclab.suco.client.provider.FactoryProvider;
@@ -35,7 +34,9 @@ public abstract class AbstractModule implements Module {
     }
 
     protected void load(final Module... modules) {
-	Suco.add(container, modules);
+	for (final Module m : modules) {
+	    m.onLoad(container);
+	}
     }
 
     protected abstract void onLoad();

@@ -10,9 +10,9 @@ import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.emite.testing.SignalTester;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.testing.MockSlot;
+import com.calclab.suco.testing.signal.SignalTester;
 
 public class AvatarManagerTest {
     private AvatarManager avatarManager;

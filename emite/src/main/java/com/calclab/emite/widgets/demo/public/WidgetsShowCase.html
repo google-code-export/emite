@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>emite widgets demo page</title>
+    <meta name="gwt:property" content="locale=en">
+    <link rel="stylesheet" type="text/css" href="widgets-basic.css" />
+    <link rel="shortcut icon" href="favicon.ico" />
+
+    <meta id="emite.httpBase" content="/com.calclab.emiteui.EmiteUI/proxy" />
+    <meta id="emite.host" content="localhost" />
+</head>
+<body>
+    <script type="text/javascript" language="javascript"
+        src="com.calclab.emite.widgets.demo.EmiteWidgetsDemo.nocache.js"></script>
+
+<h1>Welcome to emite widgets show case</h1>
+    <p>Here there is some instances of emite widgets. Most of them are duplicated to view how, diferent
+    instances the of the same widget, can be rendered in a single page.</p>
+    <p>All the widget parameters are inserted in the html (all the div attributes prefixed
+    with 'data-') and no javascript is required for initialization.</p>
+
+<h1>Composed widgets</h1>
+    <p>Normally you will insert one of them in a page.</p>
+
+<h2>Charla widget</h2>
+    <p>One to one chat widget with login.</p>
+    <div id="charla1" class="box emite-widget-charla" data-jid="test1@localhost"
+    data-password="test1" data-chat="admin@localhost">
+        this is a charla widget
+    </div>
+
+<h2>Comenta widget</h2>
+    <p>Room widget with login.</p>
+    <div id="comenta1" class="box emite-widget-comenta" data-room="NOroomNO@localhost">
+        this is a charla widget
+    </div>
+
+
+<h1>Simple widgets</h1>
+    <p>You dont usually insert them on pages... but here they are.</p>
+
+<h2>Logger widget</h2>
+    <p>Simple logger panel. You can see incoming and outcoming messages as well as errors.
+  <div id="logger" class="box emite-widget-logger">
+    this is a logger widget
+  </div>
+
+<h2>Login widget</h2>
+    <p>To login into a xmpp session: here is only on xmpp session for each page so, as you can see, when
+    you login with a LoginWidget you do it in all of them... i can not imagine a scenario
+    where two LoginWidgets are needed.</p>
+  <div id = "login1" class="box emite-widget-login" data-jid="test1@localhost" data-password="test1">
+    this is a login widget
+  </div>
+
+<h2>Logout widget</h2>
+    <p>Normally, you dont need this one.</p>
+    <div id="logout1" class="box emite-widget-logout">a logout widget</div>
+
+
+<h2>Chat widgets</h2>
+    <p>As its name implies, this widgets starts a one-to-one chat. You can configure the
+    target user by specifing the user JID in the attribute 'chat' of the container div.</p>
+    <div id="chat1" class="box emite-widget-chat" data-chat="admin@localhost">
+        this is a chat widget
+    </div>
+
+<h2>Room widget</h2>
+  <div id="room1" class="box emite-widget-room" data-room="testRoom1@rooms.localhost"
+   data-nick="user1">
+    this is a room widget
+  </div>
+
+<h2>Room presence widget</h2>
+  <div id="roomPresence1" class="box emite-widget-room-presence"
+  data-room="testroom1@rooms.localhost">
+    this is a room presence widget
+  </div>
+
+</body>
+</html>
+
+

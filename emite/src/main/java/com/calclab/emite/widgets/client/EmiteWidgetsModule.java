@@ -1,14 +1,22 @@
 package com.calclab.emite.widgets.client;
 
-import com.calclab.emite.client.core.bosh3.Connection;
+import com.calclab.emite.client.browser.DomAssist;
+import com.calclab.emite.client.browser.PageController;
+import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.widgets.client.deploy.AutoDeploy;
-import com.calclab.emite.widgets.client.deploy.Deployer;
+import com.calclab.emite.widgets.client.base.ComposedController;
+import com.calclab.emite.widgets.client.chat.CharlaWidget;
+import com.calclab.emite.widgets.client.chat.ChatController;
+import com.calclab.emite.widgets.client.chat.GWTChatWidget;
 import com.calclab.emite.widgets.client.logger.LoggerController;
 import com.calclab.emite.widgets.client.logger.LoggerWidget;
 import com.calclab.emite.widgets.client.login.LoginController;
 import com.calclab.emite.widgets.client.login.LoginWidget;
+import com.calclab.emite.widgets.client.logout.LogoutController;
+import com.calclab.emite.widgets.client.logout.LogoutWidget;
+import com.calclab.emite.widgets.client.room.ComentaWidget;
 import com.calclab.emite.widgets.client.room.RoomController;
 import com.calclab.emite.widgets.client.room.RoomPresenceController;
 import com.calclab.emite.widgets.client.room.RoomPresenceWidget;
@@ -26,16 +34,34 @@ public class EmiteWidgetsModule extends AbstractModule {
 
     @Override
     protected void onLoad() {
-	register(SingletonScope.class, new Factory<Deployer>(Deployer.class) {
-	    public Deployer create() {
-		return new Deployer($(Container.class));
-	    }
-	}, new Factory<AutoDeploy>(AutoDeploy.class) {
+	register(SingletonScope.class, new Factory<AutoDeploy>(AutoDeploy.class) {
 	    public AutoDeploy create() {
-		return new AutoDeploy($(Connection.class), $(Session.class), $(Deployer.class));
+		return new AutoDeploy($(Container.class), $(PageController.class), $(DomAssist.class));
 	    }
 	});
 
+	// composed widget registry
+	register(NoScope.class, // charla widget
+		new Factory<ComposedController>(ComposedController.class) {
+		    public ComposedController create() {
+			return new ComposedController($(Session.class));
+		    }
+		}, new Factory<CharlaWidget>(CharlaWidget.class) {
+		    public CharlaWidget create() {
+			final CharlaWidget widget = new CharlaWidget($(LoginWidget.class), $(GWTChatWidget.class),
+				$(LogoutWidget.class));
+			$(ComposedController.class).setWidget(widget);
+			return widget;
+		    }
+		}, new Factory<ComentaWidget>(ComentaWidget.class) {
+		    public ComentaWidget create() {
+			final ComentaWidget widget = new ComentaWidget($(LoginWidget.class), $(RoomWidget.class));
+			$(ComposedController.class).setWidget(widget);
+			return widget;
+		    }
+		});
+
+	// simple widget registry
 	register(NoScope.class, // login widget
 		new Factory<LoginController>(LoginController.class) {
 		    public LoginController create() {
@@ -47,6 +73,17 @@ public class EmiteWidgetsModule extends AbstractModule {
 			$(LoginController.class).setWidget(widget);
 			return widget;
 		    }
+		}, // logout widget
+		new Factory<LogoutController>(LogoutController.class) {
+		    public LogoutController create() {
+			return new LogoutController($(Session.class));
+		    }
+		}, new Factory<LogoutWidget>(LogoutWidget.class) {
+		    public LogoutWidget create() {
+			final LogoutWidget widget = new LogoutWidget();
+			$(LogoutController.class).setWidget(widget);
+			return widget;
+		    }
 		}, // logger widget
 		new Factory<LoggerController>(LoggerController.class) {
 		    public LoggerController create() {
@@ -56,6 +93,17 @@ public class EmiteWidgetsModule extends AbstractModule {
 		    public LoggerWidget create() {
 			final LoggerWidget widget = new LoggerWidget();
 			$(LoggerController.class).setWidget(widget);
+			return widget;
+		    }
+		}, // chat widget
+		new Factory<ChatController>(ChatController.class) {
+		    public ChatController create() {
+			return new ChatController($(Session.class), $(ChatManager.class));
+		    }
+		}, new Factory<GWTChatWidget>(GWTChatWidget.class) {
+		    public GWTChatWidget create() {
+			final GWTChatWidget widget = new GWTChatWidget();
+			$(ChatController.class).setWidget(widget);
 			return widget;
 		    }
 		}, // room widget
@@ -82,5 +130,4 @@ public class EmiteWidgetsModule extends AbstractModule {
 		    }
 		});
     }
-
 }

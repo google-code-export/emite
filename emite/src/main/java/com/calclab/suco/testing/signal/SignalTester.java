@@ -1,4 +1,4 @@
-package com.calclab.emite.testing;
+package com.calclab.suco.testing.signal;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -13,20 +13,16 @@ public class SignalTester<T> extends BaseMatcher<Slot<T>> {
     public SignalTester() {
     }
 
-    public Slot<T> asSlot() {
-	return Mockito.argThat(this);
-    }
-
-    public <M> M attachTo(final M mock) {
-	return Mockito.verify(mock);
-    }
-
     public void describeTo(final Description description) {
 	description.appendText("signal");
     }
 
     public void fire(final T parameter) {
 	slot.onEvent(parameter);
+    }
+
+    public Slot<T> getSlot() {
+	return Mockito.argThat(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -38,4 +34,9 @@ public class SignalTester<T> extends BaseMatcher<Slot<T>> {
 	}
 	return true;
     }
+
+    public <M> M mock(final M mock) {
+	return Mockito.verify(mock);
+    }
+
 }

@@ -2,91 +2,52 @@ package com.calclab.emite.widgets.client.room;
 
 import java.util.Date;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.session.Session.State;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.emite.widgets.client.chat.AbstractChatController;
 
-public class RoomController {
-    private XmppURI room;
-    private RoomWidget widget;
-    private final Session session;
-    private final RoomManager manager;
-    protected Chat chat;
+public class RoomController extends AbstractChatController {
+    private XmppURI chatJID;
     private String nick;
 
     public RoomController(final Session session, final RoomManager manager) {
-	this.session = session;
-	this.manager = manager;
-	this.nick = "" + new Date().getTime();
+	super(session, manager);
+	this.nick = "user-" + new Date().getTime();
     }
 
     public void setNick(final String nick) {
+	Log.debug("Nick: " + nick);
 	this.nick = nick;
     }
 
     public void setWidget(final RoomWidget widget) {
-	this.widget = widget;
 	widget.setController(this);
-	init();
+	super.setWidget(widget);
     }
 
-    void setRoomName(final String roomName) {
-	assert this.room == null;
-	this.room = XmppURI.uri(roomName);
+    @Override
+    protected XmppURI getChatURI() {
+	return new XmppURI(chatJID.getNode(), chatJID.getHost(), nick);
+    }
+
+    @Override
+    protected String getFromUserName(final Message message) {
+	return message.getFrom().getResource();
+    }
+
+    @Override
+    protected boolean isOurChat(final Chat chat) {
+	return chatJID.equalsNoResource(chat.getOtherURI());
+    }
+
+    void setRoomJID(final String roomName) {
+	assert this.chatJID == null;
+	this.chatJID = XmppURI.uri(roomName);
 	showWaitingStatus();
-    }
-
-    private void init() {
-	widget.setInputEnabled(false);
-	session.onStateChanged(new Slot<Session.State>() {
-	    public void onEvent(final State state) {
-		if (state == State.disconnected) {
-		    showWaitingStatus();
-		} else if (state == State.ready) {
-		    widget.setStatus("Room: " + room);
-		    final XmppURI uri = new XmppURI(room.getNode(), room.getHost(), nick);
-		    manager.openChat(uri, null, null);
-		    widget.write(null, "Opening chat room...");
-		}
-	    }
-	});
-
-	manager.onChatCreated(new Slot<Chat>() {
-	    public void onEvent(final Chat chat) {
-		setChat(chat);
-		widget.setInputEnabled(true);
-	    }
-	});
-
-	widget.onSendMessage.add(new Slot<String>() {
-	    public void onEvent(final String body) {
-		chat.send(new Message(body));
-	    }
-	});
-    }
-
-    private void setChat(final Chat chat) {
-	this.chat = chat;
-	widget.write(null, "room opened");
-	chat.onMessageReceived(new Slot<Message>() {
-	    public void onEvent(final Message message) {
-		widget.write(message.getFromAsString(), message.getBody());
-	    }
-	});
-
-	chat.onMessageSent(new Slot<Message>() {
-	    public void onEvent(final Message message) {
-		widget.write("me", message.getBody());
-	    }
-	});
-    }
-
-    private void showWaitingStatus() {
-	widget.setStatus("Waiting login to connect: " + room.toString());
     }
 
 }

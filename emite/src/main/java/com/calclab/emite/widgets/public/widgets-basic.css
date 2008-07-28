@@ -8,20 +8,31 @@ version: 2.2.0
 /*fonts.css*/body{font:13px arial,helvetica,clean,sans-serif;*font-size:small;*font:x-small;}table {font-size:inherit;font:100%;}select, input, textarea {font:99% arial,helvetica,clean,sans-serif;}pre, code {font:115% monospace;*font-size:100%;}body * {line-height:1.22em;}
 
 h1 {
+    font-size: 180%;
+    color: #656565;
+    margin: 1.5em 0 0 0.5em;
+    clear: both;
+}
+
+h2 {
  clear: both;
  font-size: 130%;
  color: gray;
- margin: 1em 0 0 1em;
+ margin: 1em 0 0 2.5em;
 }
 
 p {
-  margin: 0 0 0.3em 2em;
+  margin: 0.5em 0 0.3em 4em;
 }
 
 input[type=text], input[type=password] {
     border: 3px solid #efefef;
     padding: 2px;
     margin: 1px;
+    width: 10em;
+}
+
+.emite-LoginWidget {
     width: 10em;
 }
 
@@ -32,14 +43,19 @@ button {
 div.box {
     border: 3px solid #efefef;
     padding: 1em;
-    margin: 1em;
+    margin: 1em 1em 1em 4em;
     float: left;
 }
 
-div.emite-widget .gwt-Label {
+div.box .gwt-Label {
     width: 13em;
     color: gray;
 }
+
+.gwt-Label-error {
+    color: orange;
+}
+
 
 div.emite-widget-logger  {
 }
@@ -74,8 +90,9 @@ div.emite-widget-logger .gwt-Label.error {
 }
 
 
-div.emite-widget-room textarea {
+div.box textarea {
     border: 3px solid #efefef;
     width: 14em;
     height: 13em;
+    padding: 2px;
 }

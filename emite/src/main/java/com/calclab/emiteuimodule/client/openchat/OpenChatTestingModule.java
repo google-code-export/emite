@@ -15,9 +15,6 @@ public class OpenChatTestingModule extends DeprecatedModule {
 
     @Override
     public void onLoad(final ModuleBuilder builder) {
-	// FIXME: this is an error
-	// ChatManager is in SessionContext: that means tou can only retrieve
-	// the instance if the session is created... not this case!!!
 	final ChatManager chatManager = builder.getInstance(ChatManager.class);
 	final StatusUI statusUI = builder.getInstance(StatusUI.class);
 	final I18nTranslationService i18n = builder.getInstance(I18nTranslationService.class);

@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.bosh3.Bosh3Settings;
+import com.calclab.emite.client.core.bosh.Bosh3Settings;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
