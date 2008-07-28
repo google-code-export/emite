@@ -15,7 +15,7 @@ public class ChatUIPresenterTest {
 
     @Before
     public void begin() {
-	otherUri = new XmppURI("someone", "example.com", "home");
+	otherUri = XmppURI.uri("someone", "example.com", "home");
 	chatUI = new ChatUIPresenter(otherUri, "luther", "black");
 	view = Mockito.mock(ChatUIView.class);
 	chatUI.init(view);

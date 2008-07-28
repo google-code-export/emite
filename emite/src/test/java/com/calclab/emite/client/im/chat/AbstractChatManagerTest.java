@@ -61,7 +61,7 @@ public abstract class AbstractChatManagerTest {
 	final Chat chat = manager.openChat(uri("other@domain"), null, null);
 	manager.logOut();
 	assertEquals(Chat.Status.locked, chat.getState());
-	manager.logIn(new XmppURI(MYSELF.getNode(), MYSELF.getHost(), "other-resource"));
+	manager.logIn(XmppURI.uri(MYSELF.getNode(), MYSELF.getHost(), "other-resource"));
 	assertEquals(Chat.Status.ready, chat.getState());
     }
 

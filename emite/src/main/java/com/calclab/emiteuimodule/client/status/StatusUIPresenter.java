@@ -214,7 +214,7 @@ public class StatusUIPresenter implements StatusUI {
 	final XmppURI userJid = userChatOptions.getUserJid();
 	switch (xmpp.getSession().getState()) {
 	case disconnected:
-	    xmpp.login(new XmppURI(userJid.getNode(), userJid.getHost(), userChatOptions.getResource()),
+	    xmpp.login(XmppURI.uri(userJid.getNode(), userJid.getHost(), userChatOptions.getResource()),
 		    userChatOptions.getUserPassword(), status, statusText);
 	    break;
 	case authorized:

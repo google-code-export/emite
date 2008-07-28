@@ -31,7 +31,7 @@ public class RoomController extends AbstractChatController {
 
     @Override
     protected XmppURI getChatURI() {
-	return new XmppURI(chatJID.getNode(), chatJID.getHost(), nick);
+	return XmppURI.uri(chatJID.getNode(), chatJID.getHost(), nick);
     }
 
     @Override

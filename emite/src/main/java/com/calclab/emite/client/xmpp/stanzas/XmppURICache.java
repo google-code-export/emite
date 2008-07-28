@@ -2,7 +2,7 @@ package com.calclab.emite.client.xmpp.stanzas;
 
 import java.util.HashMap;
 
-public class XmppURIFactory {
+public class XmppURICache {
     private static final String PREFIX = "xmpp:";
     private static final int PREFIX_LENGTH = PREFIX.length();
     private final HashMap<String, XmppURI> cache = new HashMap<String, XmppURI>();
@@ -45,10 +45,10 @@ public class XmppURIFactory {
 	    throw new RuntimeException("The domain is required");
 	}
 
-	return cache(new XmppURI(node, domain, resource));
+	return XmppURI.uri(node, domain, resource);
     }
 
-    private XmppURI cache(final XmppURI xmppURI) {
+    XmppURI cache(final XmppURI xmppURI) {
 	cache.put(xmppURI.toString(), xmppURI);
 	return xmppURI;
     }

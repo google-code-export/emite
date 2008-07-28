@@ -29,7 +29,7 @@ package com.calclab.emite.client.xmpp.stanzas;
  * 
  */
 public class XmppURI {
-    private static final XmppURIFactory factory = new XmppURIFactory();
+    private static final XmppURICache factory = new XmppURICache();
 
     public static XmppURI jid(final String jid) {
 	return uri(jid).getJID();
@@ -37,6 +37,12 @@ public class XmppURI {
 
     public static XmppURI uri(final String xmppUri) {
 	return factory.parse(xmppUri);
+    }
+
+    public static XmppURI uri(final String node, final String host, final String resource) {
+	final XmppURI xmppURI = new XmppURI(node, host, resource);
+	factory.cache(xmppURI);
+	return xmppURI;
     }
 
     private final String host;
@@ -53,7 +59,7 @@ public class XmppURI {
                 "$" / "," / "[" / "]" </code>
      * 
      */
-    public XmppURI(final String node, final String host, final String resource) {
+    private XmppURI(final String node, final String host, final String resource) {
 	this.node = node;
 	this.host = host;
 	this.resource = resource;
@@ -86,11 +92,11 @@ public class XmppURI {
     }
 
     public XmppURI getHostURI() {
-	return new XmppURI(null, host, null);
+	return uri(null, host, null);
     }
 
     public XmppURI getJID() {
-	return new XmppURI(node, host, null);
+	return uri(node, host, null);
     }
 
     public String getNode() {

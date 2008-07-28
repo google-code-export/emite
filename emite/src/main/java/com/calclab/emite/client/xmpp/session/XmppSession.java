@@ -134,7 +134,7 @@ public class XmppSession extends AbstractSession {
 	    connection.connect();
 	    scope.createAll();
 	    if (!uri.hasResource()) {
-		uri = new XmppURI(uri.getNode(), uri.getHost(), "" + new Date().getTime());
+		uri = XmppURI.uri(uri.getNode(), uri.getHost(), "" + new Date().getTime());
 	    }
 	    transaction = new AuthorizationTransaction(uri, password);
 	    Log.debug("Sending auth transaction: " + transaction);
