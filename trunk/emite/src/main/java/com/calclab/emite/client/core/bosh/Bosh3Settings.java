@@ -1,4 +1,4 @@
-package com.calclab.emite.client.core.bosh3;
+package com.calclab.emite.client.core.bosh;
 
 public class Bosh3Settings {
     public final String hostName;

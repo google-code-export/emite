@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.bosh3.Bosh3Settings;
+import com.calclab.emite.client.core.bosh.Bosh3Settings;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatListener;
 import com.calclab.emite.client.im.chat.ChatListenerAdaptor;

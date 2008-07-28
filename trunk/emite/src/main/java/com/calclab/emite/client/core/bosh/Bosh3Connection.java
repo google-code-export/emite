@@ -1,4 +1,4 @@
-package com.calclab.emite.client.core.bosh3;
+package com.calclab.emite.client.core.bosh;
 
 import java.util.List;
 
@@ -12,7 +12,6 @@ import com.calclab.suco.client.signal.Signal0;
 import com.calclab.suco.client.signal.Slot;
 
 public class Bosh3Connection implements Connection {
-    private long rid;
     private int activeConnections;
     private Packet body;
     private final Services services;
@@ -24,7 +23,6 @@ public class Bosh3Connection implements Connection {
     private final Signal0 onConnected;
     private final Signal<IPacket> onStanzaReceived;
     private final Signal<IPacket> onStanzaSent;
-    private String httpBase;
     private boolean shouldCollectResponses;
     private Bosh3Settings userSettings;
     private int errors;
@@ -34,8 +32,8 @@ public class Bosh3Connection implements Connection {
 	this.onError = new Signal<String>("bosh:onError");
 	this.onDisconnected = new Signal<String>("bosh:onDisconnected");
 	this.onConnected = new Signal0("bosh:onConnected");
-	this.onStanzaReceived = new Signal<IPacket>("bosh:onStanzaReceived");
-	this.onStanzaSent = new Signal<IPacket>("bosh:onStanzaReceived");
+	this.onStanzaReceived = new Signal<IPacket>("bosh:onReceived");
+	this.onStanzaSent = new Signal<IPacket>("bosh:onSent");
 	this.errors = 0;
 
 	this.callback = new ConnectorCallback() {
@@ -76,9 +74,7 @@ public class Bosh3Connection implements Connection {
 
 	if (!running) {
 	    this.running = true;
-	    this.httpBase = userSettings.httpBase;
-	    this.rid = (long) (Math.random() * 10000000) + 1000;
-	    this.stream = null;
+	    this.stream = new StreamSettings();
 	    this.activeConnections = 0;
 	    createInitialBody(userSettings);
 	    sendBody();
@@ -109,9 +105,23 @@ public class Bosh3Connection implements Connection {
 	onStanzaSent.add(slot);
     }
 
+    public StreamSettings pause() {
+	createBody();
+	body.setAttribute("pause", stream.maxPause);
+	sendBody();
+	return stream;
+    }
+
     public void restartStream() {
 	createBody();
 	body.setAttribute("xmpp:restart", "true");
+    }
+
+    public boolean resume(final StreamSettings settings) {
+	running = true;
+	stream = settings;
+	continueConnection(null);
+	return running;
     }
 
     public void send(final IPacket packet) {
@@ -136,7 +146,7 @@ public class Bosh3Connection implements Connection {
 	if (body == null) {
 	    this.body = new Packet("body");
 	    body.With("xmlns", "http://jabber.org/protocol/httpbind");
-	    body.With("rid", getNextRid());
+	    body.With("rid", stream.getNextRid());
 	    if (stream != null) {
 		body.With("sid", stream.sid);
 	    }
@@ -152,28 +162,18 @@ public class Bosh3Connection implements Connection {
 	body.setAttribute("xml:lang", "en");
 	body.setAttribute("ack", "1");
 	body.setAttribute("secure", "true");
-	body.setAttribute("rid", getNextRid());
+	body.setAttribute("rid", stream.getNextRid());
 	body.setAttribute("to", userSettings.hostName);
 	body.With("hold", userSettings.hold);
 	body.With("wait", userSettings.wait);
     }
 
-    private String getNextRid() {
-	rid++;
-	return "" + rid;
-    }
-
     private void handleResponse(final IPacket response) {
-	final String receivedSID = response.getAttribute("sid");
-	final String type = response.getAttribute("type");
-	final String ack = response.getAttribute("ack");
-
-	if (isTerminate(type)) {
+	if (isTerminate(response.getAttribute("type"))) {
 	    onDisconnected.fire("disconnected by server");
 	} else {
-	    if (stream == null) {
-		stream = new StreamSettings(receivedSID, response.getAttribute("wait"), response
-			.getAttribute("inactivity"), response.getAttribute("maxpause"));
+	    if (stream.sid == null) {
+		initStream(response);
 		onConnected.fire();
 	    }
 	    shouldCollectResponses = true;
@@ -182,8 +182,15 @@ public class Bosh3Connection implements Connection {
 		onStanzaReceived.fire(stanza);
 	    }
 	    shouldCollectResponses = false;
-	    continueConnection(ack);
+	    continueConnection(response.getAttribute("ack"));
 	}
+    }
+
+    private void initStream(final IPacket response) {
+	stream.sid = response.getAttribute("sid");
+	stream.wait = response.getAttribute("wait");
+	stream.inactivity = response.getAttribute("inactivity");
+	stream.maxPause = response.getAttribute("maxpause");
     }
 
     private boolean isTerminate(final String type) {
@@ -199,7 +206,7 @@ public class Bosh3Connection implements Connection {
     private void send(final String request) {
 	try {
 	    activeConnections++;
-	    services.send(httpBase, request, callback);
+	    services.send(userSettings.httpBase, request, callback);
 	} catch (final ConnectorException e) {
 	    activeConnections--;
 	    e.printStackTrace();

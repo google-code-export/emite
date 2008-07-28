@@ -1,7 +1,7 @@
 package com.calclab.emite.client.core;
 
-import com.calclab.emite.client.core.bosh3.Bosh3Connection;
-import com.calclab.emite.client.core.bosh3.Connection;
+import com.calclab.emite.client.core.bosh.Bosh3Connection;
+import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.services.Services;
 import com.calclab.suco.client.modules.AbstractModule;
 import com.calclab.suco.client.provider.Factory;

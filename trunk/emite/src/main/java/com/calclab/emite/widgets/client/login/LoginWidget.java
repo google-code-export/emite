@@ -1,6 +1,6 @@
 package com.calclab.emite.widgets.client.login;
 
-import com.calclab.emite.widgets.client.EmiteWidget;
+import com.calclab.emite.widgets.client.base.EmiteWidget;
 import com.calclab.suco.client.signal.Signal0;
 import com.calclab.suco.client.signal.Signal2;
 import com.google.gwt.user.client.ui.Button;
@@ -11,35 +11,46 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Simple login widget
+ * 
+ * @html_param jid: The default JID
+ * @html_param password: the default password
+ * 
+ */
 public class LoginWidget extends VerticalPanel implements EmiteWidget {
     private final TextBox jid;
     private final PasswordTextBox password;
-    private final Button login;
+    private final Button button;
     final Signal2<String, String> onLogin;
     private final Label status;
-    private final Button logout;
     final Signal0 onLogout;
+    private boolean isConnected;
+    private final Label error;
 
     public LoginWidget() {
+	setStylePrimaryName("emite-LoginWidget");
+	this.isConnected = false;
 	this.onLogin = new Signal2<String, String>("widgets:login:onLogin");
 	this.onLogout = new Signal0("widgets:login:onLogout");
 	this.jid = new TextBox();
 	this.password = new PasswordTextBox();
-	this.login = new Button("login", new ClickListener() {
+	this.button = new Button("login", new ClickListener() {
 	    public void onClick(final Widget arg0) {
-		onLogin.fire(jid.getText(), password.getText());
-	    }
-	});
-	this.logout = new Button("logout", new ClickListener() {
-	    public void onClick(final Widget sender) {
-		onLogout.fire();
+		if (isConnected)
+		    onLogout.fire();
+		else
+		    onLogin.fire(jid.getText(), password.getText());
 	    }
 	});
 	this.status = new Label();
+	this.error = new Label("errors here!");
+	error.addStyleDependentName("error");
+
+	add(error);
 	add(jid);
 	add(password);
-	add(login);
-	add(logout);
+	add(button);
 	add(status);
     }
 
@@ -47,18 +58,18 @@ public class LoginWidget extends VerticalPanel implements EmiteWidget {
 	return new String[] { "jid", "password" };
     }
 
+    public void setButtonBehaviour(final boolean isConnected, final String label) {
+	this.isConnected = isConnected;
+	button.setText(label);
+    }
+
+    public void setButtonEnabled(final boolean enabled) {
+	button.setEnabled(enabled);
+    }
+
     public void setFieldsEnabled(final boolean enabled) {
 	jid.setEnabled(enabled);
 	password.setEnabled(enabled);
-    }
-
-    public void setLoginEnabled(final boolean enabled) {
-	login.setEnabled(enabled);
-    }
-
-    public void setLogoutEnabled(final boolean enabled) {
-	logout.setEnabled(enabled);
-
     }
 
     public void setParam(final String name, final String value) {
@@ -66,6 +77,15 @@ public class LoginWidget extends VerticalPanel implements EmiteWidget {
 	    jid.setText(value);
 	} else if ("password".equals(name)) {
 	    password.setText(value);
+	}
+    }
+
+    public void showError(final String errorMessage) {
+	if (errorMessage == null || errorMessage.length() == 0) {
+	    error.setVisible(false);
+	} else {
+	    error.setText(errorMessage);
+	    error.setVisible(true);
 	}
     }
 

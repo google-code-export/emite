@@ -1,5 +1,6 @@
 package com.calclab.emite.client.xmpp.session;
 
+import com.calclab.emite.client.core.bosh.StreamSettings;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
@@ -32,6 +33,10 @@ public interface Session {
     public abstract void onPresence(final Slot<Presence> listener);
 
     public abstract void onStateChanged(final Slot<Session.State> listener);
+
+    public abstract StreamSettings pause();
+
+    public abstract void resume(XmppURI userURI, StreamSettings settings);
 
     public abstract void send(final IPacket packet);
 

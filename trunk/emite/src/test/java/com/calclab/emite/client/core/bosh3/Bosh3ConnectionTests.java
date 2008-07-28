@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.calclab.emite.client.core.bosh.Bosh3Connection;
+import com.calclab.emite.client.core.bosh.Bosh3Settings;
 import com.calclab.emite.test.services.MockServices;
 import com.calclab.emite.testing.IsPacketLike;
 

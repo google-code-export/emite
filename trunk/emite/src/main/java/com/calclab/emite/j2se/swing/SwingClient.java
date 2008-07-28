@@ -37,7 +37,7 @@ import javax.swing.JTabbedPane;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.bosh3.Bosh3Settings;
+import com.calclab.emite.client.core.bosh.Bosh3Settings;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.presence.PresenceListener;
 import com.calclab.emite.client.im.presence.PresenceManagerListenerAdapter;

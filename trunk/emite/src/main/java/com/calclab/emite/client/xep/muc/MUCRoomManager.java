@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.Logger;
 import com.calclab.emite.client.core.packet.Filters;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.NoPacket;

@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.xmpp;
 
-import com.calclab.emite.client.core.bosh3.Connection;
+import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.session.Session;

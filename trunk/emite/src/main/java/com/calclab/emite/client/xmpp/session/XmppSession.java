@@ -24,7 +24,8 @@ package com.calclab.emite.client.xmpp.session;
 import java.util.Date;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.bosh3.Connection;
+import com.calclab.emite.client.core.bosh.Connection;
+import com.calclab.emite.client.core.bosh.StreamSettings;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTransaction;
@@ -73,7 +74,7 @@ public class XmppSession extends AbstractSession {
 	    public void onEvent(final String msg) {
 		Log.debug("ERROR: " + msg);
 		setState(State.error);
-		setState(State.disconnected);
+		disconnect();
 	    }
 	});
 
@@ -85,7 +86,7 @@ public class XmppSession extends AbstractSession {
 		    bindingManager.bindResource(ticket.uri.getResource());
 		} else {
 		    setState(Session.State.notAuthorized);
-		    connection.disconnect();
+		    disconnect();
 		}
 	    }
 
@@ -119,20 +120,10 @@ public class XmppSession extends AbstractSession {
 	return userURI;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.calclab.emite.client.xmpp.session.Session#getState()
-     */
     public Session.State getState() {
 	return state;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.calclab.emite.client.xmpp.session.Session#isLoggedIn()
-     */
     public boolean isLoggedIn() {
 	return userURI != null;
     }
@@ -150,11 +141,6 @@ public class XmppSession extends AbstractSession {
 	}
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.calclab.emite.client.xmpp.session.Session#logout()
-     */
     public void logout() {
 	if (state != State.disconnected && userURI != null) {
 	    onLoggedOut.fire(userURI);
@@ -162,6 +148,16 @@ public class XmppSession extends AbstractSession {
 	    connection.disconnect();
 	    setState(State.disconnected);
 	}
+    }
+
+    public StreamSettings pause() {
+	return state == State.ready ? connection.pause() : null;
+    }
+
+    public void resume(final XmppURI userURI, final StreamSettings settings) {
+	this.userURI = userURI;
+	connection.resume(settings);
+	setState(State.ready);
     }
 
     public void send(final IPacket packet) {
@@ -184,6 +180,11 @@ public class XmppSession extends AbstractSession {
     void setState(final Session.State newState) {
 	this.state = newState;
 	onStateChanged.fire(state);
+    }
+
+    private void disconnect() {
+	connection.disconnect();
+	setState(Session.State.disconnected);
     }
 
 }

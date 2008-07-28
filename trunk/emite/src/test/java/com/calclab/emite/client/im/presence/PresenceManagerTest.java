@@ -15,8 +15,8 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.emite.testing.SignalTester;
 import com.calclab.suco.testing.MockSlot;
+import com.calclab.suco.testing.signal.SignalTester;
 
 public class PresenceManagerTest {
 

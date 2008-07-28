@@ -1,4 +1,4 @@
-package com.calclab.emite.client.core.bosh3;
+package com.calclab.emite.client.core.bosh;
 
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.suco.client.signal.Slot;
@@ -17,7 +17,11 @@ public interface Connection {
 
     public abstract void onStanzaSent(final Slot<IPacket> slot);
 
+    public abstract StreamSettings pause();
+
     public abstract void restartStream();
+
+    public abstract boolean resume(StreamSettings settings);
 
     public abstract void send(final IPacket packet);
 

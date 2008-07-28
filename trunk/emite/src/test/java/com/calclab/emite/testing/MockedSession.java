@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
+import com.calclab.emite.client.core.bosh.StreamSettings;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.session.AbstractSession;
 import com.calclab.emite.client.xmpp.session.Session;
@@ -73,6 +74,10 @@ public class MockedSession extends AbstractSession {
 	onLoggedOut.fire(currentUser);
     }
 
+    public StreamSettings pause() {
+	return null;
+    }
+
     public void receives(final Message message) {
 	onMessage.fire(message);
     }
@@ -92,6 +97,9 @@ public class MockedSession extends AbstractSession {
 	    throw new RuntimeException("Not valid received: " + received);
 	}
 
+    }
+
+    public void resume(final XmppURI userURI, final StreamSettings settings) {
     }
 
     public void send(final IPacket packet) {

@@ -23,9 +23,9 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.testing.SignalTester;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.testing.MockSlot;
+import com.calclab.suco.testing.signal.SignalTester;
 
 public class SessionTest {
 
@@ -46,7 +46,7 @@ public class SessionTest {
 	session = new XmppSession(helper.connection, scope, saslManager, bindingManager);
 
 	bindSignal = new SignalTester<XmppURI>();
-	bindSignal.attachTo(bindingManager).onBinded(bindSignal.asSlot());
+	bindSignal.mock(bindingManager).onBinded(bindSignal.getSlot());
     }
 
     @Test

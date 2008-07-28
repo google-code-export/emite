@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client.xmpp.resource;
 
-import com.calclab.emite.client.core.bosh3.Connection;
+import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
