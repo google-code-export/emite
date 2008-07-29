@@ -170,6 +170,10 @@ public class StatusUIPresenter implements StatusUI {
 	view.setSubscriptionMode(subscriptionMode);
     }
 
+    public void setEnable(final boolean enable) {
+	view.setEnable(enable);
+    }
+
     public void setOwnPresence(final OwnPresence ownPresence) {
 	Show show;
 	switch (ownPresence.getStatus()) {

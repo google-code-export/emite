@@ -140,6 +140,14 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 	closeAllOption.setDisabled(!enabled);
     }
 
+    public void setEnable(final boolean enable) {
+	if (enable) {
+	    super.enable();
+	} else {
+	    super.disable();
+	}
+    }
+
     public void setLoadingVisible(final boolean visible) {
 	loading.setVisible(visible);
     }
