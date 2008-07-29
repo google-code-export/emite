@@ -4,22 +4,18 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.modules.DeprecatedModule;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.AbstractModule;
 
-public class OpenChatTestingModule extends DeprecatedModule {
+public class OpenChatTestingModule extends AbstractModule {
 
-    public Class<OpenChatTestingModule> getType() {
-	return OpenChatTestingModule.class;
+    public OpenChatTestingModule() {
+	super(OpenChatTestingModule.class);
     }
 
     @Override
-    public void onLoad(final ModuleBuilder builder) {
-	final ChatManager chatManager = builder.getInstance(ChatManager.class);
-	final StatusUI statusUI = builder.getInstance(StatusUI.class);
-	final I18nTranslationService i18n = builder.getInstance(I18nTranslationService.class);
-	final OpenChatTestingPresenter presenter = new OpenChatTestingPresenter(chatManager, statusUI);
-	final OpenChatTestingPanel panel = new OpenChatTestingPanel(presenter, statusUI, i18n);
+    public void onLoad() {
+	final OpenChatTestingPresenter presenter = new OpenChatTestingPresenter($(ChatManager.class), $(StatusUI.class));
+	final OpenChatTestingPanel panel = new OpenChatTestingPanel(presenter, $(StatusUI.class), $(I18nTranslationService.class));
 	presenter.init(panel);
     }
 

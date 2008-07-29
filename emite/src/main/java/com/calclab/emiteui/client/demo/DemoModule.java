@@ -22,32 +22,27 @@
 package com.calclab.emiteui.client.demo;
 
 import com.calclab.emiteui.client.DemoParameters;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.DeprecatedModule;
-import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public class DemoModule extends DeprecatedModule {
+public class DemoModule extends AbstractModule {
 
-    public Class<? extends Module> getType() {
-	return DemoModule.class;
+    public DemoModule() {
+	super(DemoModule.class);
     }
 
     @Override
-    public void onLoad(final ModuleBuilder builder) {
-
-	builder.registerProvider(DemoParameters.class, new Provider<DemoParameters>() {
-	    public DemoParameters get() {
+    public void onLoad() {
+	register(SingletonScope.class, new Factory<DemoParameters>(DemoParameters.class) {
+	    public DemoParameters create() {
 		return new DemoParameters();
 	    }
-	}, SingletonScope.class);
-
-	builder.registerProvider(EmiteDemoUI.class, new Provider<EmiteDemoUI>() {
-	    public EmiteDemoUI get() {
-		return new EmiteDemoUI(builder.getInstance(DemoParameters.class));
+	}, new Factory<EmiteDemoUI>(EmiteDemoUI.class) {
+	    public EmiteDemoUI create() {
+		return new EmiteDemoUI($(DemoParameters.class));
 	    }
-	}, SingletonScope.class);
+	});
 
     }
 

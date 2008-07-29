@@ -23,9 +23,8 @@ package com.calclab.emite.client.xep.disco;
 
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionScope;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.DeprecatedModule;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.Factory;
 
 /**
  * Implements XEP-0030: Service Discovery
@@ -35,21 +34,21 @@ import com.calclab.suco.client.modules.ModuleBuilder;
  * 
  * @see http://www.xmpp.org/extensions/xep-0030.html
  * 
- *      NOT IMPLEMENTED
+ * NOT IMPLEMENTED
  * 
  */
-public class DiscoveryModule extends DeprecatedModule {
+public class DiscoveryModule extends AbstractModule {
 
-    public Class<?> getType() {
-	return DiscoveryModule.class;
+    public DiscoveryModule() {
+	super(DiscoveryModule.class);
     }
 
     @Override
-    public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(DiscoveryManager.class, new Provider<DiscoveryManager>() {
-	    public DiscoveryManager get() {
-		return new DiscoveryManager(builder.getInstance(Session.class));
+    public void onLoad() {
+	register(SessionScope.class, new Factory<DiscoveryManager>(DiscoveryManager.class) {
+	    public DiscoveryManager create() {
+		return new DiscoveryManager($(Session.class));
 	    }
-	}, SessionScope.class);
+	});
     }
 }
