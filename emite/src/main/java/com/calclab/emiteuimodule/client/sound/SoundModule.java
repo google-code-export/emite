@@ -5,27 +5,23 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.calclab.emiteuimodule.client.room.RoomUIManager;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.DeprecatedModule;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.Factory;
+import com.calclab.suco.client.scopes.SingletonScope;
 
-public class SoundModule extends DeprecatedModule {
-
-    public Class<SoundModule> getType() {
-	return SoundModule.class;
+public class SoundModule extends AbstractModule {
+    public SoundModule() {
+	super(SoundModule.class);
     }
 
     @Override
-    public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(SoundManager.class, new Provider<SoundManager>() {
-	    public SoundManager get() {
-		final I18nTranslationService i18n = builder.getInstance(I18nTranslationService.class);
+    public void onLoad() {
+	register(SingletonScope.class, new Factory<SoundManager>(SoundManager.class) {
+	    public SoundManager create() {
 		// Waiting for RosterUIModule:
 		final RosterUIPresenter rosterUIPresenter = null;
-		final RoomUIManager roomUIManager = builder.getInstance(RoomUIManager.class);
-		final StatusUI statusUI = builder.getInstance(StatusUI.class);
-		final SoundManager soundManager = new SoundManager(rosterUIPresenter, roomUIManager);
-		final SoundPanel panel = new SoundPanel(soundManager, i18n, statusUI);
+		final SoundManager soundManager = new SoundManager(rosterUIPresenter, $(RoomUIManager.class));
+		final SoundPanel panel = new SoundPanel(soundManager, $(I18nTranslationService.class), $(StatusUI.class));
 		soundManager.init(panel);
 		return soundManager;
 	    }

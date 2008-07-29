@@ -39,6 +39,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
+import com.calclab.suco.client.container.Provider;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
@@ -48,28 +49,28 @@ public class StatusUIPresenter implements StatusUI {
 
     private StatusUIView view;
     private final PresenceManager presenceManager;
-    private final Session session;
-    private final Xmpp xmpp;
     private UserChatOptions userChatOptions;
+    private final Session session;
     private final I18nTranslationService i18n;
     private final Signal<StatusUI> onAfterLogin;
     private final Signal<StatusUI> onAfterLogout;
     private final Signal<StatusUI> onCloseAllConfirmed;
     private final Signal<String> onUserColorChanged;
     private final Signal<SubscriptionMode> onUserSubscriptionModeChanged;
-    private final RosterManager rosterManager;
-    private final ChatManager chatManager;
-    private final RoomManager roomManager;
+    private final Provider<Xmpp> xmppProvider;
+    private final Provider<RosterManager> rosterManagerProvider;
+    private final Provider<ChatManager> chatManagerProvider;
+    private final Provider<RoomManager> roomManagerProvider;
 
-    public StatusUIPresenter(final Xmpp xmpp, final Session session, final PresenceManager presenceManager,
-	    final RosterManager rosterManager, final ChatManager chatManager, final RoomManager roomManager,
-	    final I18nTranslationService i18n) {
-	this.xmpp = xmpp;
+    public StatusUIPresenter(final Provider<Xmpp> xmpp, final Session session, final PresenceManager presenceManager,
+	    final Provider<RosterManager> rosterManager, final Provider<ChatManager> chatManager,
+	    final Provider<RoomManager> roomManager, final I18nTranslationService i18n) {
+	this.xmppProvider = xmpp;
 	this.session = session;
 	this.presenceManager = presenceManager;
-	this.rosterManager = rosterManager;
-	this.chatManager = chatManager;
-	this.roomManager = roomManager;
+	this.rosterManagerProvider = rosterManager;
+	this.chatManagerProvider = chatManager;
+	this.roomManagerProvider = roomManager;
 	this.i18n = i18n;
 	this.onAfterLogin = new Signal<StatusUI>("onAfterLogin");
 	this.onAfterLogout = new Signal<StatusUI>("onAfterLogout");
@@ -78,12 +79,12 @@ public class StatusUIPresenter implements StatusUI {
 	onUserSubscriptionModeChanged = new Signal<SubscriptionMode>("onUserSubscriptionModeChanged");
     }
 
-    public void addChatMenuItem(final View item) {
-	view.addChatMenuItem(item);
-    }
-
     public void addButtonItem(final View item) {
 	view.addButtonItem(item);
+    }
+
+    public void addChatMenuItem(final View item) {
+	view.addChatMenuItem(item);
     }
 
     public void addOptionsSubMenuItem(final View item) {
@@ -165,7 +166,7 @@ public class StatusUIPresenter implements StatusUI {
     public void setCurrentUserChatOptions(final UserChatOptions userChatOptions) {
 	this.userChatOptions = userChatOptions;
 	final SubscriptionMode subscriptionMode = userChatOptions.getSubscriptionMode();
-	rosterManager.setSubscriptionMode(subscriptionMode);
+	rosterManagerProvider.get().setSubscriptionMode(subscriptionMode);
 	view.setSubscriptionMode(subscriptionMode);
     }
 
@@ -184,7 +185,7 @@ public class StatusUIPresenter implements StatusUI {
 	    loginIfnecessary(show, ownPresence.getStatusText());
 	    break;
 	case offline:
-	    xmpp.logout();
+	    xmppProvider.get().logout();
 	    break;
 	}
 	view.setOwnPresence(ownPresence);
@@ -192,10 +193,10 @@ public class StatusUIPresenter implements StatusUI {
 
     protected void onUserColorChanged(final String color) {
 	assert userChatOptions != null;
-	for (final Chat chat : chatManager.getChats()) {
+	for (final Chat chat : chatManagerProvider.get().getChats()) {
 	    setChatColor(chat, color);
 	}
-	for (final Chat room : roomManager.getChats()) {
+	for (final Chat room : roomManagerProvider.get().getChats()) {
 	    setChatColor(room, color);
 	}
 	userChatOptions.setColor(color);
@@ -204,7 +205,7 @@ public class StatusUIPresenter implements StatusUI {
 
     void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
 	assert userChatOptions != null;
-	rosterManager.setSubscriptionMode(subscriptionMode);
+	rosterManagerProvider.get().setSubscriptionMode(subscriptionMode);
 	userChatOptions.setSubscriptionMode(subscriptionMode);
 	onUserSubscriptionModeChanged.fire(subscriptionMode);
     }
@@ -212,9 +213,9 @@ public class StatusUIPresenter implements StatusUI {
     private void loginIfnecessary(final Show status, final String statusText) {
 	assert userChatOptions != null;
 	final XmppURI userJid = userChatOptions.getUserJid();
-	switch (xmpp.getSession().getState()) {
+	switch (xmppProvider.get().getSession().getState()) {
 	case disconnected:
-	    xmpp.login(XmppURI.uri(userJid.getNode(), userJid.getHost(), userChatOptions.getResource()),
+	    xmppProvider.get().login(XmppURI.uri(userJid.getNode(), userJid.getHost(), userChatOptions.getResource()),
 		    userChatOptions.getUserPassword(), status, statusText);
 	    break;
 	case authorized:

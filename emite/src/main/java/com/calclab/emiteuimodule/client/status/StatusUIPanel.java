@@ -113,12 +113,12 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 	chatMenu.addItem((BaseItem) item);
     }
 
-    public void addToolbarItem(final View item) {
-	super.addItem((ToolbarItem) item);
-    }
-
     public void addOptionsSubMenuItem(final View item) {
 	optionsSubMenu.addItem((BaseItem) item);
+    }
+
+    public void addToolbarItem(final View item) {
+	super.addItem((ToolbarItem) item);
     }
 
     public void confirmCloseAll() {
@@ -325,6 +325,7 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
     }
 
     private void setOwnStatusText(final String text) {
+	// statusButton.setTitle(text);
 	statusButton.setTooltip(text);
     }
 }

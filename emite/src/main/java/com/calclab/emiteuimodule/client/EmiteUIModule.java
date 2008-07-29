@@ -30,58 +30,58 @@ import com.calclab.emite.client.services.gwt.GWTServicesModule;
 import com.calclab.emite.client.xep.avatar.AvatarModule;
 import com.calclab.emite.client.xep.chatstate.ChatStateModule;
 import com.calclab.emite.client.xep.muc.MUCModule;
+import com.calclab.emiteuimodule.client.dialog.QuickTipsHelper;
 import com.calclab.emiteuimodule.client.room.RoomUIModule;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.sound.SoundModule;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.emiteuimodule.client.status.StatusUIModule;
-import com.calclab.suco.client.container.Provider;
-import com.calclab.suco.client.modules.DeprecatedModule;
-import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleBuilder;
+import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scopes.NoScope;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public class EmiteUIModule extends DeprecatedModule {
+public class EmiteUIModule extends AbstractModule {
 
-    public Class<? extends Module> getType() {
-	return EmiteUIModule.class;
+    public EmiteUIModule() {
+	super(EmiteUIModule.class);
     }
 
     @Override
-    public void onLoad(final ModuleBuilder builder) {
-	builder.add(new GWTServicesModule());
-	builder.add(new EmiteModule(), new MUCModule(), new ChatStateModule(), new AvatarModule());
+    public void onLoad() {
 
-	builder.registerProvider(I18nTranslationService.class, new Provider<I18nTranslationService>() {
-	    public I18nTranslationService get() {
+	load(new GWTServicesModule());
+	load(new EmiteModule(), new MUCModule(), new ChatStateModule(), new AvatarModule());
+
+	register(SingletonScope.class, new Factory<I18nTranslationService>(I18nTranslationService.class) {
+	    public I18nTranslationService create() {
 		return new I18nTranslationServiceMocked();
 	    }
-	}, SingletonScope.class);
+	}, new Factory<QuickTipsHelper>(QuickTipsHelper.class) {
+	    public QuickTipsHelper create() {
+		return new QuickTipsHelper();
+	    }
+	});
 
-	builder.add(new StatusUIModule(), new SoundModule(), new RoomUIModule());
+	$(QuickTipsHelper.class);
+
+	load(new StatusUIModule(), new SoundModule(), new RoomUIModule());
 
 	// Only for UI test (comment during release):
 	// builder.add(new OpenChatTestingModule());
 
-	builder.registerProvider(EmiteUIFactory.class, new Provider<EmiteUIFactory>() {
-	    public EmiteUIFactory get() {
-		final StatusUI statusUI = builder.getInstance(StatusUI.class);
-		final SoundManager soundManager = builder.getInstance(SoundManager.class);
-		return new EmiteUIFactory(builder.getInstance(Xmpp.class), builder
-			.getInstance(I18nTranslationService.class), statusUI, soundManager);
+	register(SingletonScope.class, new Factory<EmiteUIFactory>(EmiteUIFactory.class) {
+	    public EmiteUIFactory create() {
+		return new EmiteUIFactory($(Xmpp.class), $(I18nTranslationService.class), $(StatusUI.class),
+			$p(SoundManager.class));
 	    }
-	}, SingletonScope.class);
+	});
 
-	builder.registerProvider(EmiteUIDialog.class, new Provider<EmiteUIDialog>() {
-	    public EmiteUIDialog get() {
-		final Xmpp xmpp = builder.getInstance(Xmpp.class);
-		final StatusUI statusUI = builder.getInstance(StatusUI.class);
-		final EmiteUIFactory factory = builder.getInstance(EmiteUIFactory.class);
-		return new EmiteUIDialog(xmpp, factory, statusUI);
+	register(NoScope.class, new Factory<EmiteUIDialog>(EmiteUIDialog.class) {
+	    public EmiteUIDialog create() {
+		return new EmiteUIDialog($(Xmpp.class), $(EmiteUIFactory.class), $(StatusUI.class));
 	    }
-
-	}, NoScope.class);
+	});
 
     }
 }
