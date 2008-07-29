@@ -25,11 +25,29 @@ public abstract class AbstractModule implements Module {
 	onLoad();
     }
 
+    /**
+     * Get a instance of the specified component key
+     * 
+     * @param <T>
+     *            The component key
+     * @param componentType
+     *            The component key
+     * @return The component instance
+     */
     protected <T> T $(final Class<T> componentType) {
 	return container.getInstance(componentType);
     }
 
-    protected <T> Provider<T> $p(final Class<T> componentType) {
+    /**
+     * Get a provider of the specified component key
+     * 
+     * @param <T>
+     *            The component key
+     * @param componentType
+     *            The component key
+     * @return The provider of that component key
+     */
+    protected <T> Provider<T> $$(final Class<T> componentType) {
 	return container.getProvider(componentType);
     }
 

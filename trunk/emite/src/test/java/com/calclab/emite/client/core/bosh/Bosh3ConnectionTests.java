@@ -1,4 +1,4 @@
-package com.calclab.emite.client.core.bosh3;
+package com.calclab.emite.client.core.bosh;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

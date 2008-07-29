@@ -1,7 +1,8 @@
 package com.calclab.emite.widgets.client.chat;
 
-import com.allen_sauer.gwt.log.client.Log;
+import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.widgets.client.base.EmiteWidget;
+import com.calclab.emite.widgets.client.base.GWTExtensibleWidget;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 import com.google.gwt.user.client.ui.Button;
@@ -9,21 +10,19 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public abstract class GWTAbstractChatWidget extends DockPanel implements AbstractChatWidget {
-    private final Label status;
+public abstract class GWTAbstractChatWidget extends GWTExtensibleWidget implements AbstractChatWidget {
     private final TextArea area;
     private final TextBox input;
     private final Button send;
     protected Signal<String> onSendMessage;
+    private AbstractChatController controller;
 
     public GWTAbstractChatWidget() {
 	this.onSendMessage = new Signal<String>("widgets:room:sendMessage");
-	this.status = new Label();
 	this.area = new TextArea();
 	this.input = new TextBox();
 	input.addKeyboardListener(new KeyboardListener() {
@@ -50,7 +49,6 @@ public abstract class GWTAbstractChatWidget extends DockPanel implements Abstrac
 	inputBar.add(input);
 	inputBar.add(send);
 
-	add(status, DockPanel.NORTH);
 	add(area, DockPanel.CENTER);
 	add(inputBar, DockPanel.SOUTH);
     }
@@ -61,19 +59,26 @@ public abstract class GWTAbstractChatWidget extends DockPanel implements Abstrac
 	add((Widget) widget, layoutConstant);
     }
 
+    public AbstractChatController getController() {
+	return controller;
+    }
+
     public void onSendMessage(final Slot<String> slot) {
 	onSendMessage.add(slot);
     }
 
+    public void setChat(final Chat chat) {
+	controller.setChat(chat);
+    }
+
+    public void setController(final AbstractChatController controller) {
+	this.controller = controller;
+    }
+
     public void setInputEnabled(final boolean enabled) {
-	Log.debug("AbstractChat set input enabled: " + enabled);
 	area.setEnabled(enabled);
 	input.setEnabled(enabled);
 	send.setEnabled(enabled);
-    }
-
-    public void setStatus(final String message) {
-	status.setText(message);
     }
 
     public void write(final String from, final String message) {

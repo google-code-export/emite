@@ -2,6 +2,7 @@ package com.calclab.emite.client.core.bosh;
 
 import java.util.List;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.services.ConnectorCallback;
@@ -44,6 +45,7 @@ public class Bosh3Connection implements Connection {
 		    running = false;
 		    onError.fire("Exception thrown: " + throwable.toString());
 		} else {
+		    Log.error("Error retry: " + throwable);
 		    send(request);
 		}
 	    }

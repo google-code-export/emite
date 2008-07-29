@@ -73,7 +73,7 @@ public class EmiteUIModule extends AbstractModule {
 	register(SingletonScope.class, new Factory<EmiteUIFactory>(EmiteUIFactory.class) {
 	    public EmiteUIFactory create() {
 		return new EmiteUIFactory($(Xmpp.class), $(I18nTranslationService.class), $(StatusUI.class),
-			$p(SoundManager.class));
+			$$(SoundManager.class));
 	    }
 	});
 

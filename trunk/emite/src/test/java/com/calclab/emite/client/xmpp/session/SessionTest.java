@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.core.bosh3.ConnectionTestHelper;
+import com.calclab.emite.client.core.bosh.ConnectionTestHelper;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.resource.ResourceBindingManager;

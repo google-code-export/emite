@@ -10,13 +10,15 @@ import com.calclab.suco.client.signal.Slot2;
 
 public class LoginController {
     private final Session session;
+    private LoginWidget widget;
 
     public LoginController(final Session session) {
 	this.session = session;
     }
 
     public void setWidget(final LoginWidget widget) {
-	setLoginMode(widget);
+	this.widget = widget;
+	setLoggedIn(false);
 	widget.showError(null);
 
 	widget.onLogin.add(new Slot2<String, String>() {
@@ -40,12 +42,12 @@ public class LoginController {
 		    widget.showError(null);
 		    break;
 		case ready:
-		    setLogoutMode(widget);
+		    setLoggedIn(true);
 		    widget.setButtonEnabled(true);
 		    widget.showMessage("Logged as: " + session.getCurrentUser().getJID().toString());
 		    break;
 		case disconnected:
-		    setLoginMode(widget);
+		    setLoggedIn(false);
 		    widget.setButtonEnabled(true);
 		    widget.showMessage("Please login.");
 		    break;
@@ -53,21 +55,16 @@ public class LoginController {
 		    widget.showError("Not authorized.");
 		    break;
 		case error:
-		    widget.showError("Couldn't login.");
 		    break;
 		}
 	    }
 	});
     }
 
-    private void setLoginMode(final LoginWidget widget) {
-	widget.setButtonBehaviour(false, "login");
-	widget.setFieldsEnabled(true);
-    }
-
-    private void setLogoutMode(final LoginWidget widget) {
-	widget.setButtonBehaviour(true, "logout");
-	widget.setFieldsEnabled(false);
+    private void setLoggedIn(final boolean isLoggedIn) {
+	final String actionLabel = isLoggedIn ? "logout" : "login";
+	widget.setButtonBehaviour(isLoggedIn, actionLabel);
+	widget.setFieldsEnabled(!isLoggedIn);
     }
 
 }

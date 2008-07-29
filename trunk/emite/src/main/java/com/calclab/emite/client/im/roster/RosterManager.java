@@ -59,12 +59,15 @@ public class RosterManager {
 
     private final Session session;
 
+    private final Signal<Roster> onRosterReady;
+
     public RosterManager(final Session session, final Roster roster) {
 	this.session = session;
 	this.roster = roster;
 	this.subscriptionMode = DEF_SUBSCRIPTION_MODE;
-	this.onSubscriptionRequested = new Signal<Presence>("onSubscriptionRequested");
-	this.onUnsubscribedReceived = new Signal<XmppURI>("onUnsubscribedReceived");
+	this.onSubscriptionRequested = new Signal<Presence>("rosterManager:onSubscriptionRequested");
+	this.onUnsubscribedReceived = new Signal<XmppURI>("rosterManager:onUnsubscribedReceived");
+	this.onRosterReady = new Signal<Roster>("rosterManager:onRosterReady");
 
 	session.onLoggedIn(new Slot<XmppURI>() {
 	    public void onEvent(final XmppURI parameter) {
@@ -149,6 +152,10 @@ public class RosterManager {
 
     public SubscriptionMode getSubscriptionMode() {
 	return subscriptionMode;
+    }
+
+    public void onRosterReady(final Slot<Roster> slot) {
+	this.onRosterReady.add(slot);
     }
 
     public void onSubscriptionRequested(final Slot<Presence> listener) {
@@ -285,5 +292,6 @@ public class RosterManager {
 	    items.add(convert(item));
 	}
 	roster.setItems(items);
+	onRosterReady.fire(roster);
     }
 }

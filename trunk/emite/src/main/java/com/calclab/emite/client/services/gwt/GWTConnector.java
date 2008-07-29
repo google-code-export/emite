@@ -49,6 +49,9 @@ public class GWTConnector {
 	    });
 	} catch (final RequestException e) {
 	    throw new ConnectorException(e.getMessage());
+	} catch (final Exception e) {
+	    Log.error("Some GWT connector exception: " + e);
+	    throw new ConnectorException(e.getMessage());
 	}
     }
 

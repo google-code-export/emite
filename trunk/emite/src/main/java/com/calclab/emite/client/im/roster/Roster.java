@@ -71,10 +71,20 @@ public class Roster {
 	return items.get(jid.getJID());
     }
 
+    public Collection<RosterItem> getItems() {
+	return items.values();
+    }
+
     public void onItemChanged(final Slot<RosterItem> listener) {
 	onItemChanged.add(listener);
     }
 
+    /**
+     * @deprecated
+     * @param slot
+     * @see RosterManager.onRosterReady
+     */
+    @Deprecated
     public void onReady(final Slot<Roster> slot) {
 	this.onReady.add(slot);
     }
@@ -86,13 +96,13 @@ public class Roster {
     public void removeItem(final XmppURI jid) {
 	final RosterItem removed = items.remove(jid.getJID());
 	if (removed != null) {
-	    onRosterChanged.fire(items.values());
+	    onRosterChanged.fire(getItems());
 	}
     }
 
     void add(final RosterItem item) {
 	items.put(item.getJID(), item);
-	onRosterChanged.fire(items.values());
+	onRosterChanged.fire(getItems());
     }
 
     void setItems(final List<RosterItem> itemCollection) {
@@ -101,7 +111,7 @@ public class Roster {
 	for (final RosterItem item : itemCollection) {
 	    items.put(item.getJID(), item);
 	}
-	onRosterChanged.fire(items.values());
+	onRosterChanged.fire(getItems());
 
 	if (isFirst) {
 	    onReady.fire(this);

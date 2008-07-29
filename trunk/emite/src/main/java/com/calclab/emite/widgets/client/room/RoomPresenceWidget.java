@@ -11,40 +11,31 @@ public class RoomPresenceWidget extends DockPanel implements EmiteWidget {
 
     static class OccupantPanel extends HorizontalPanel {
 	private final Label nick;
-	private final Label affiliation;
-	private final Label role;
-	private final Label uri;
+
+	// private Occupant occupant;
 
 	OccupantPanel(final Occupant occupant) {
 	    this.nick = new Label();
-	    this.affiliation = new Label();
-	    this.role = new Label();
-	    this.uri = new Label();
 	    add(nick);
-	    add(affiliation);
-	    add(role);
-	    add(uri);
 	    setOccupant(occupant);
 	}
 
 	public void setOccupant(final Occupant occupant) {
+	    // this.occupant = occupant;
 	    nick.setText(occupant.getNick());
-	    affiliation.setText(occupant.getAffiliation().toString());
-	    role.setText(occupant.getRole().toString());
-	    uri.setText(occupant.getUri().toString());
 	}
 
     }
 
+    public static final String PARAM_ROOM = "room";
+
     private RoomPresenceController controller;
     private final VerticalPanel occupants;
-    private final Label status;
 
     public RoomPresenceWidget() {
+	setStylePrimaryName("emite-RoomPresenceWidget");
 	this.occupants = new VerticalPanel();
-	this.status = new Label();
 	add(occupants, DockPanel.CENTER);
-	add(status, DockPanel.SOUTH);
     }
 
     public void addOccupant(final OccupantPanel occupantUI) {
@@ -60,17 +51,13 @@ public class RoomPresenceWidget extends DockPanel implements EmiteWidget {
     }
 
     public String[] getParamNames() {
-	return new String[] { "room" };
+	return new String[] { PARAM_ROOM };
     }
 
     public void setParam(final String name, final String value) {
-	if ("room".equals(name)) {
+	if (PARAM_ROOM.equals(name)) {
 	    controller.setRoomName(value);
 	}
-    }
-
-    public void setStatus(final String message) {
-	status.setText(message);
     }
 
     void setController(final RoomPresenceController controller) {
