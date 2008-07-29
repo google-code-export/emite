@@ -1,4 +1,4 @@
-package com.calclab.emite.client.core.bosh3;
+package com.calclab.emite.client.core.bosh;
 
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;

@@ -40,9 +40,12 @@ public class DomAssist {
     }
 
     public String getMeta(final String name, final boolean isRequired) {
+	String value = null;
 	final Element element = DOM.getElementById(name);
-	final String value = element.getPropertyString("content");
-	Log.debug("Meta: " + name + ": " + value);
+	if (element != null) {
+	    value = element.getPropertyString("content");
+	    Log.debug("Meta: " + name + ": " + value);
+	}
 	if (isRequired && value == null)
 	    throw new RuntimeException("Required meta-attribute " + name + " not found.");
 

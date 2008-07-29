@@ -18,7 +18,6 @@ public class ChatController extends AbstractChatController {
     public void setChatJID(final String jid) {
 	this.chatJID = XmppURI.uri(jid);
 	this.userName = null;
-	showWaitingStatus();
     }
 
     public void setWidget(final ChatWidget widget) {

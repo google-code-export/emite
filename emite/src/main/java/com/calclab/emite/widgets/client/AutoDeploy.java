@@ -6,25 +6,17 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.browser.DomAssist;
 import com.calclab.emite.client.browser.PageController;
 import com.calclab.emite.widgets.client.base.EmiteWidget;
-import com.calclab.emite.widgets.client.chat.CharlaWidget;
-import com.calclab.emite.widgets.client.chat.GWTChatWidget;
-import com.calclab.emite.widgets.client.logger.LoggerWidget;
-import com.calclab.emite.widgets.client.login.LoginWidget;
-import com.calclab.emite.widgets.client.logout.LogoutWidget;
-import com.calclab.emite.widgets.client.room.ComentaWidget;
-import com.calclab.emite.widgets.client.room.RoomPresenceWidget;
-import com.calclab.emite.widgets.client.room.RoomWidget;
-import com.calclab.suco.client.container.Container;
+import com.calclab.suco.client.container.Provider;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class AutoDeploy {
     private final DomAssist domAssist;
-    private final Container container;
+    private final WidgetsRegistry registry;
 
-    public AutoDeploy(final Container container, final PageController controller, final DomAssist domAssist) {
-	this.container = container;
+    public AutoDeploy(final WidgetsRegistry registry, final PageController controller, final DomAssist domAssist) {
+	this.registry = registry;
 	this.domAssist = domAssist;
 
 	controller.configureConnection();
@@ -33,29 +25,29 @@ public class AutoDeploy {
 	controller.resumeSession();
     }
 
-    public void deploy(final String divClass, final Class<? extends EmiteWidget> widgetClass) {
+    public void deploy(final String divClass, final Provider<? extends EmiteWidget> provider) {
 	final ArrayList<Element> elements = domAssist.findElementsByClass(divClass);
 	for (final Element e : elements) {
-	    install(e, container.getInstance(widgetClass));
+	    install(e, provider.get());
 	}
     }
 
     public void install(final Element element, final EmiteWidget widget) {
-	Log.debug("Installing on element id: " + element.getId());
+	final String elementID = element.getId();
+	if (elementID == null) {
+	    Log.error("Trying to install a widget in a element without a id:" + element);
+	}
+	Log.debug("Installing on element id: " + elementID);
 	setParams(element, widget);
 	domAssist.clearElement(element);
-	RootPanel.get(element.getId()).add((Widget) widget);
+	RootPanel.get(elementID).add((Widget) widget);
     }
 
     private void deployWidgets() {
-	deploy("emite-widget-charla", CharlaWidget.class);
-	deploy("emite-widget-comenta", ComentaWidget.class);
-	deploy("emite-widget-logger", LoggerWidget.class);
-	deploy("emite-widget-login", LoginWidget.class);
-	deploy("emite-widget-chat", GWTChatWidget.class);
-	deploy("emite-widget-room", RoomWidget.class);
-	deploy("emite-widget-room-presence", RoomPresenceWidget.class);
-	deploy("emite-widget-logout", LogoutWidget.class);
+	for (final String divClass : registry.getClasses()) {
+	    final Provider<? extends EmiteWidget> provider = registry.getProvider(divClass);
+	    deploy(divClass, provider);
+	}
     }
 
     private void setParams(final Element element, final EmiteWidget widget) {

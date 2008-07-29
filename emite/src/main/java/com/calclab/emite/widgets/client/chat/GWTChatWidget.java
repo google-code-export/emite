@@ -2,18 +2,13 @@ package com.calclab.emite.widgets.client.chat;
 
 public class GWTChatWidget extends GWTAbstractChatWidget implements ChatWidget {
 
-    private ChatController controller;
-
     public String[] getParamNames() {
-	return new String[] { "chat" };
-    }
-
-    public void setController(final ChatController controller) {
-	this.controller = controller;
+	return new String[] { ChatWidget.PARAM_CHAT };
     }
 
     public void setParam(final String name, final String value) {
-	if ("chat".equals(name)) {
+	if (ChatWidget.PARAM_CHAT.equals(name)) {
+	    final ChatController controller = (ChatController) getController();
 	    controller.setChatJID(value);
 	}
     }

@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.core.bosh3.ConnectionTestHelper;
+import com.calclab.emite.client.core.bosh.ConnectionTestHelper;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.suco.testing.MockSlot;
 

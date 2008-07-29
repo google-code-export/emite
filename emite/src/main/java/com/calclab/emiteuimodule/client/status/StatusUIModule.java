@@ -22,9 +22,9 @@ public class StatusUIModule extends AbstractModule {
     public void onLoad() {
 	register(SingletonScope.class, new Factory<StatusUI>(StatusUI.class) {
 	    public StatusUI create() {
-		final StatusUIPresenter presenter = new StatusUIPresenter($p(Xmpp.class), $(Session.class),
-			$(PresenceManager.class), $p(RosterManager.class), $p(ChatManager.class),
-			$p(RoomManager.class), $(I18nTranslationService.class));
+		final StatusUIPresenter presenter = new StatusUIPresenter($$(Xmpp.class), $(Session.class),
+			$(PresenceManager.class), $$(RosterManager.class), $$(ChatManager.class),
+			$$(RoomManager.class), $(I18nTranslationService.class));
 		final StatusUIPanel panel = new StatusUIPanel(presenter, $(I18nTranslationService.class));
 		presenter.init(panel);
 		return presenter;

@@ -27,7 +27,6 @@ public class RoomPresenceController {
     public void setRoomName(final String name) {
 	assert room == null;
 	this.room = XmppURI.uri(name);
-	setWaitingStatus();
     }
 
     public void setWidget(final RoomPresenceWidget widget) {
@@ -37,7 +36,6 @@ public class RoomPresenceController {
 	    public void onEvent(final Chat chat) {
 		if (isOurRoom(chat)) {
 		    listenToRoomOccupants((Room) chat);
-		    widget.setStatus("ready");
 		}
 	    }
 
@@ -47,7 +45,6 @@ public class RoomPresenceController {
 	    public void onEvent(final Chat chat) {
 		if (isOurRoom(chat)) {
 		    widget.clearOccupants();
-		    setWaitingStatus();
 		}
 	    }
 	});
@@ -83,10 +80,6 @@ public class RoomPresenceController {
 		}
 	    }
 	});
-    }
-
-    private void setWaitingStatus() {
-	widget.setStatus("waiting for " + room + " presence information...");
     }
 
 }

@@ -15,7 +15,7 @@ public class LogoutWidget extends HorizontalPanel implements EmiteWidget {
     final Signal0 onLogout;
 
     public LogoutWidget() {
-	setStylePrimaryName("emite-LoginWidget");
+	setStylePrimaryName("emite-LogoutWidget");
 	this.onLogout = new Signal0("widgets:logout:onLogout");
 	this.label = new Label();
 	this.button = new Button("logout", new ClickListener() {

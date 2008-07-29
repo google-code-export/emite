@@ -39,6 +39,7 @@ public class InstantMessagingModule extends AbstractModule {
 
     @Override
     public void onLoad() {
+	// FIXME: Roster should not be singleton!!!
 	register(SingletonScope.class, new Factory<Roster>(Roster.class) {
 	    public Roster create() {
 		return new Roster();

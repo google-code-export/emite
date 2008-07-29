@@ -20,6 +20,21 @@ public abstract class AbstractChatController {
 	this.manager = manager;
     }
 
+    public void setChat(final Chat chat) {
+	this.chat = chat;
+	chat.onMessageReceived(new Slot<Message>() {
+	    public void onEvent(final Message message) {
+		widget.write(getFromUserName(message), message.getBody());
+	    }
+	});
+
+	chat.onMessageSent(new Slot<Message>() {
+	    public void onEvent(final Message message) {
+		widget.write("me", message.getBody());
+	    }
+	});
+    }
+
     protected abstract XmppURI getChatURI();
 
     protected abstract String getFromUserName(final Message message);
@@ -31,7 +46,6 @@ public abstract class AbstractChatController {
 		if (state == State.ready) {
 		    openChat();
 		} else {
-		    showWaitingStatus();
 		    widget.setInputEnabled(false);
 		}
 	    }
@@ -56,38 +70,22 @@ public abstract class AbstractChatController {
 
     protected abstract boolean isOurChat(Chat chat);
 
-    protected void setChat(final Chat chat) {
-	this.chat = chat;
-	chat.onMessageReceived(new Slot<Message>() {
-	    public void onEvent(final Message message) {
-		widget.write(getFromUserName(message), message.getBody());
-	    }
-	});
-
-	chat.onMessageSent(new Slot<Message>() {
-	    public void onEvent(final Message message) {
-		widget.write("me", message.getBody());
-	    }
-	});
-    }
-
     protected void setWidget(final AbstractChatWidget widget) {
 	this.widget = widget;
 	init();
     }
 
-    protected void showWaitingStatus() {
-	widget.setStatus("Chat with: " + getChatURI().getJID().toString());
-    }
-
     private void openChat() {
 	// if other chatWidget open the same chat before this widget do, then
 	// the listener onChatCreated is called before manager.openChat
-	if (chat == null) {
-	    widget.write(null, "opening chat...");
-	    manager.openChat(getChatURI(), null, null);
-	} else {
-	    widget.setInputEnabled(true);
+	final XmppURI chatURI = getChatURI();
+	if (chatURI != null) {
+	    if (chat == null) {
+		widget.write(null, "opening chat...");
+		manager.openChat(chatURI, null, null);
+	    } else {
+		widget.setInputEnabled(true);
+	    }
 	}
     }
 
