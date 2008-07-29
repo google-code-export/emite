@@ -8,13 +8,13 @@ import com.calclab.suco.client.signal.Slot;
 
 public interface StatusUI {
 
-    void addChatMenuItem(View item);
-
     void addButtonItem(View item);
 
-    void addToolbarItem(View item);
+    void addChatMenuItem(View item);
 
     void addOptionsSubMenuItem(View item);
+
+    void addToolbarItem(View item);
 
     void confirmCloseAll();
 
@@ -33,6 +33,8 @@ public interface StatusUI {
     void setCloseAllOptionEnabled(boolean enabled);
 
     void setCurrentUserChatOptions(UserChatOptions userChatOptions);
+
+    void setEnable(boolean enable);
 
     void setOwnPresence(OwnPresence ownPresence);
 
