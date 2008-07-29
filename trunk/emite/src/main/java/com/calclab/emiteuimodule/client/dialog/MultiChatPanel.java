@@ -52,8 +52,6 @@ import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Container;
 import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.QuickTip;
-import com.gwtext.client.widgets.QuickTips;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.Toolbar;
 import com.gwtext.client.widgets.ToolbarButton;
@@ -74,7 +72,6 @@ import com.gwtext.client.widgets.layout.FormLayout;
 public class MultiChatPanel {
 
     private static final int TIMEVISIBLE = 3000;
-
     private final RosterUIPanel rosterUIPanel;
     private Window dialog;
     private Button sendBtn;
@@ -102,7 +99,6 @@ public class MultiChatPanel {
     public MultiChatPanel(final String chatDialogTitle, final RosterUIPanel rosterUIPanel, final StatusUI statusUI,
 	    final I18nTranslationService i18n, final MultiChatPresenter presenter) {
 	this.statusUI = statusUI;
-	quickTipsInit();
 	this.chatDialogTitle = chatDialogTitle;
 	this.rosterUIPanel = rosterUIPanel;
 	this.i18n = i18n;
@@ -616,22 +612,6 @@ public class MultiChatPanel {
 	if (dialog.isRendered()) {
 	    dialog.doLayout();
 	}
-    }
-
-    private void quickTipsInit() {
-	DeferredCommand.addCommand(new Command() {
-	    public void execute() {
-		if (!QuickTips.isEnabled()) {
-		    // If not enabled before by another UI component
-		    QuickTips.init();
-		    final QuickTip quickTipInstance = QuickTips.getQuickTip();
-		    quickTipInstance.setInterceptTitles(true);
-		    quickTipInstance.setDismissDelay(7000);
-		    quickTipInstance.setHideDelay(400);
-		    quickTipInstance.setMinWidth(100);
-		}
-	    }
-	});
     }
 
     private void renderDialogIfNeeded() {

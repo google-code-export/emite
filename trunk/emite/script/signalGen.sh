@@ -18,9 +18,10 @@ do
   SIGNALNAME=${NAME/%\.*/}
   SIGNALPARAM=${NAME/#*./}
   echo "private final Signal<$SIGNALPARAM> $SIGNALNAME;"
-  echo "this.$SIGNALNAME = new Signal<$SIGNALPARAM>(\"$SIGNALNAME\");"
   echo "public void $SIGNALNAME(final Slot<$SIGNALPARAM> slot) {
   	$SIGNALNAME.add(slot);
       }"
+  echo ""
+  echo "this.$SIGNALNAME = new Signal<$SIGNALPARAM>(\"$SIGNALNAME\");"
   echo ""
 done

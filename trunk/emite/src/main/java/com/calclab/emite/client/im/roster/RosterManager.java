@@ -36,13 +36,14 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class RosterManager {
     public static class Events {
 	public static final Event ready = new Event("roster:on:ready");
     }
 
-    public static enum SubscriptionMode {
+    public static enum SubscriptionMode implements IsSerializable {
 	autoAcceptAll, autoRejectAll, manual
     }
 

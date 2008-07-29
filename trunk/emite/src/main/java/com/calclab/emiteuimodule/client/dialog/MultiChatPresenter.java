@@ -53,6 +53,7 @@ import com.calclab.emiteuimodule.client.room.RoomUI;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
+import com.calclab.suco.client.container.Provider;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.client.signal.Slot2;
@@ -76,17 +77,17 @@ public class MultiChatPresenter {
     private final StateManager stateManager;
     private final RosterManager rosterManager;
     private final StatusUI statusUI;
-    private final SoundManager soundManager;
+    private final Provider<SoundManager> soundManagerProvider;
 
     public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final EmiteUIFactory factory,
 	    final MultiChatCreationParam param, final RosterUIPresenter roster, final StatusUI statusUI,
-	    final SoundManager soundManager) {
+	    final Provider<SoundManager> soundManagerProvider) {
 	this.xmpp = xmpp;
 	this.i18n = i18n;
 	this.factory = factory;
 	this.roster = roster;
 	this.statusUI = statusUI;
-	this.soundManager = soundManager;
+	this.soundManagerProvider = soundManagerProvider;
 	setUserChatOptions(param.getUserChatOptions());
 	roomHost = param.getRoomHost();
 	chatManager = xmpp.getChatManager();
@@ -391,7 +392,7 @@ public class MultiChatPresenter {
 	chatUI.onHighLight(new Slot<ChatUI>() {
 	    public void onEvent(final ChatUI parameter) {
 		view.highLight();
-		soundManager.click();
+		soundManagerProvider.get().click();
 		onChatUnattendedWithActivity.fire(chatUI.getChatTitle());
 	    }
 	});
