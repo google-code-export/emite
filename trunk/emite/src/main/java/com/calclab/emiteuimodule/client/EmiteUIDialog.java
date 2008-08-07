@@ -24,6 +24,7 @@ package com.calclab.emiteuimodule.client;
 import java.util.Collection;
 import java.util.Date;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.Bosh3Settings;
 import com.calclab.emite.client.im.roster.RosterItem;
@@ -57,7 +58,11 @@ public class EmiteUIDialog {
     }
 
     public void chat(final XmppURI otherUserURI) {
-	xmpp.getChatManager().openChat(otherUserURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	if (xmpp.getSession().isLoggedIn()) {
+	    xmpp.getChatManager().openChat(otherUserURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	} else {
+	    Log.error("To start a chat you need to be 'online'.");
+	}
     }
 
     public void closeAllChats(final boolean withConfirmation) {
@@ -84,13 +89,21 @@ public class EmiteUIDialog {
 	return multiChatDialog == null;
     }
 
+    public boolean isLoggedIn() {
+	return xmpp.getSession().isLoggedIn();
+    }
+
     public boolean isVisible() {
 	checkIfDialogIsStarted();
 	return multiChatDialog.isVisible();
     }
 
     public void joinRoom(final XmppURI roomURI) {
-	xmpp.getInstance(RoomManager.class).openChat(roomURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	if (xmpp.getSession().isLoggedIn()) {
+	    xmpp.getInstance(RoomManager.class).openChat(roomURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	} else {
+	    Log.error("To join a chatroom you need to be 'online'.");
+	}
     }
 
     public void onChatAttended(final Slot<String> listener) {
@@ -130,6 +143,11 @@ public class EmiteUIDialog {
 	checkIfDialogIsStarted();
 	multiChatDialog.setUserChatOptions(userChatOptions);
 	statusUI.setCurrentUserChatOptions(userChatOptions);
+    }
+
+    public void setEnableStatusUI(final boolean enable) {
+	checkIfDialogIsStarted();
+	statusUI.setEnable(enable);
     }
 
     public void setOwnPresence(final OwnStatus status) {
