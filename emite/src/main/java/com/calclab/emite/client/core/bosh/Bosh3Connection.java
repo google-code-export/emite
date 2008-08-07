@@ -7,6 +7,7 @@ import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.services.ConnectorCallback;
 import com.calclab.emite.client.services.ConnectorException;
+import com.calclab.emite.client.services.ScheduledAction;
 import com.calclab.emite.client.services.Services;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Signal0;
@@ -142,8 +143,21 @@ public class Bosh3Connection implements Connection {
 
     private void continueConnection(final String ack) {
 	if (isConnected() && activeConnections == 0) {
-	    createBody();
-	    sendBody();
+	    if (body != null) {
+		sendBody();
+	    } else {
+		final long currentRID = stream.rid;
+		// FIXME: hardcoded
+		final int msecs = 6000;
+		services.schedule(msecs, new ScheduledAction() {
+		    public void run() {
+			if (body == null && stream.rid == currentRID) {
+			    createBody();
+			    sendBody();
+			}
+		    }
+		});
+	    }
 	}
     }
 
@@ -212,6 +226,7 @@ public class Bosh3Connection implements Connection {
 	try {
 	    activeConnections++;
 	    services.send(userSettings.httpBase, request, callback);
+	    stream.lastRequestTime = services.getCurrentTime();
 	} catch (final ConnectorException e) {
 	    activeConnections--;
 	    e.printStackTrace();
