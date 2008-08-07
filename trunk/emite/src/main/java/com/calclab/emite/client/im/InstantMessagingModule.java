@@ -34,7 +34,7 @@ import com.calclab.suco.client.scopes.SingletonScope;
 public class InstantMessagingModule extends AbstractModule {
 
     public InstantMessagingModule() {
-	super(InstantMessagingModule.class);
+	super();
     }
 
     @Override

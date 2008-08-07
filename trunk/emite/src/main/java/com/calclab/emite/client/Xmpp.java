@@ -35,6 +35,7 @@ import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.DelegatedContainer;
 import com.calclab.suco.client.modules.Module;
+import com.calclab.suco.client.modules.ModuleManager.ProviderRegisterStrategy;
 
 public class Xmpp extends DelegatedContainer {
 
@@ -57,7 +58,7 @@ public class Xmpp extends DelegatedContainer {
      */
     public static Xmpp create(final Module... modules) {
 	final Container container = Suco.create(modules);
-	Suco.install(container, new EmiteModule());
+	Suco.install(container, ProviderRegisterStrategy.failIfRegistered, new EmiteModule());
 	return container.getInstance(Xmpp.class);
     }
 

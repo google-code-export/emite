@@ -30,7 +30,7 @@ import com.calclab.suco.client.provider.Factory;
 public class AvatarModule extends AbstractModule {
 
     public AvatarModule() {
-	super(AvatarModule.class);
+	super();
     }
 
     @Override

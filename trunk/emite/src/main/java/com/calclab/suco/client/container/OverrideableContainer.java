@@ -27,14 +27,15 @@ import java.util.Set;
 import com.allen_sauer.gwt.log.client.Log;
 
 /**
- * A class that implements the Container interface using a HashMap
- * 
- * @author dani
+ * A class that implements the Container interface and allows to override the
+ * proviers, so, if you register a previously registered provider (using the
+ * same class literal) the old provider is removed and the new provider
+ * registered
  */
-public class HashContainer implements Container {
+public class OverrideableContainer implements Container {
     private final HashMap<Class<?>, Provider<?>> providers;
 
-    public HashContainer() {
+    public OverrideableContainer() {
 	this.providers = new HashMap<Class<?>, Provider<?>>();
     }
 

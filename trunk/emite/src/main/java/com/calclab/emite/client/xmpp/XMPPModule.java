@@ -34,7 +34,7 @@ import com.calclab.suco.client.scopes.SingletonScope;
 public class XMPPModule extends AbstractModule {
 
     public XMPPModule() {
-	super(XMPPModule.class);
+	super();
     }
 
     @Override

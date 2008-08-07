@@ -44,7 +44,7 @@ import com.calclab.suco.client.scopes.SingletonScope;
 public class EmiteUIModule extends AbstractModule {
 
     public EmiteUIModule() {
-	super(EmiteUIModule.class);
+	super();
     }
 
     @Override

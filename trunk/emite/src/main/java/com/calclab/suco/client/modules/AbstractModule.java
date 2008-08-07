@@ -2,6 +2,7 @@ package com.calclab.suco.client.modules;
 
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.modules.ModuleManager.ProviderRegisterStrategy;
 import com.calclab.suco.client.provider.FactoryProvider;
 import com.calclab.suco.client.scopes.Scope;
 import com.calclab.suco.client.scopes.Scopes;
@@ -9,15 +10,17 @@ import com.calclab.suco.client.scopes.SingletonScope;
 
 public abstract class AbstractModule implements Module {
 
-    private final Class<? extends Module> type;
     private Container container;
 
-    public AbstractModule(final Class<? extends Module> moduleType) {
-	this.type = moduleType;
+    public AbstractModule() {
     }
 
-    public Class<? extends Module> getType() {
-	return type;
+    /**
+     * @deprecated Use the AbstractModule() constructor
+     * @param moduleType
+     */
+    @Deprecated
+    public AbstractModule(final Class<? extends Module> moduleType) {
     }
 
     public void onLoad(final Container container) {
@@ -52,7 +55,11 @@ public abstract class AbstractModule implements Module {
     }
 
     protected void install(final Module... modules) {
-	container.getInstance(ModuleManager.class).install(modules);
+	container.getInstance(ModuleManager.class).install(ProviderRegisterStrategy.failIfRegistered, modules);
+    }
+
+    protected void install(final ProviderRegisterStrategy strategy, final Module... modules) {
+	container.getInstance(ModuleManager.class).install(strategy, modules);
     }
 
     /**
@@ -60,7 +67,7 @@ public abstract class AbstractModule implements Module {
      */
     @Deprecated
     protected void load(final Module... modules) {
-	container.getInstance(ModuleManager.class).install(modules);
+	install(modules);
     }
 
     protected abstract void onLoad();

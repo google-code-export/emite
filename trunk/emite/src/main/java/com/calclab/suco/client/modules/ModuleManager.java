@@ -1,69 +1,80 @@
 package com.calclab.suco.client.modules;
 
-import java.util.ArrayList;
-
 import com.calclab.suco.client.container.Container;
+import com.calclab.suco.client.container.DelegatedContainer;
+import com.calclab.suco.client.container.OverrideableContainer;
+import com.calclab.suco.client.container.Provider;
 
 public class ModuleManager {
 
-    public static final InstallationStrategy FAIL_IF_PREVIOUSLY_INSTALLED = new InstallationStrategy() {
-	public void install(final ModuleManager manager, final Module module) {
-	    if (manager.isModuleInstalled(module)) {
-		throw new RuntimeException("Module " + module.getType() + " is currently installed.");
-	    } else {
-		module.onLoad(manager.getContainer());
-		manager.setModuleInstalled(module);
+    public static enum ProviderRegisterStrategy {
+	/**
+	 * Register the provider always: override if previously registered
+	 */
+	registerOrOverride,
+	/**
+	 * Fail if try to register a provider twice
+	 */
+	failIfRegistered,
+	/**
+	 * Register the provider only if not previously registered
+	 */
+	registerOnlyIfNotRegistered
+    }
+
+    private final OverrideableContainer overrideable;
+    private final DelegatedContainer notOverrideable;
+    private final DelegatedContainer conditional;
+
+    public ModuleManager(final OverrideableContainer container) {
+	this.overrideable = container;
+	this.notOverrideable = new DelegatedContainer(container) {
+	    @Override
+	    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider) {
+		if (delegate.hasProvider(componentKey)) {
+		    throw new RuntimeException("Provider " + componentKey + " already registered");
+		} else {
+		    return super.registerProvider(componentKey, provider);
+		}
 	    }
-	}
-    };
-
-    public static final InstallationStrategy INSTALL_IF_NOT_PREVIOUSLY_INSTALLED = new InstallationStrategy() {
-	public void install(final ModuleManager manager, final Module module) {
-	    if (!manager.isModuleInstalled(module)) {
-		module.onLoad(manager.getContainer());
-		manager.setModuleInstalled(module);
+	};
+	this.conditional = new DelegatedContainer(container) {
+	    @Override
+	    public <T> Provider<T> registerProvider(final Class<T> componentKey, final Provider<T> provider) {
+		if (!delegate.hasProvider(componentKey)) {
+		    return super.registerProvider(componentKey, provider);
+		} else {
+		    return getProvider(componentKey);
+		}
 	    }
-	}
-    };
-
-    private final Container container;
-
-    private final ArrayList<Class<? extends Module>> installedModules;
-
-    public ModuleManager(final Container container) {
-	this.container = container;
-	this.installedModules = new ArrayList<Class<? extends Module>>();
+	};
     }
 
     public Container getContainer() {
-	return container;
+	return overrideable;
     }
 
-    public void install(final InstallationStrategy strategy, final Module... modules) {
-	for (final Module module : modules) {
-	    install(module, strategy);
+    public void install(final Module module, final ProviderRegisterStrategy registerStrategy) {
+	switch (registerStrategy) {
+	case failIfRegistered:
+	    install(module, notOverrideable);
+	    break;
+	case registerOrOverride:
+	    install(module, overrideable);
+	    break;
+	case registerOnlyIfNotRegistered:
+	    install(module, conditional);
 	}
     }
 
-    /**
-     * Install the modules with FAIL_IF_PREVIOUSLY_INSTALLED strategy
-     * 
-     * @param modules
-     */
-    public void install(final Module... modules) {
-	install(FAIL_IF_PREVIOUSLY_INSTALLED, modules);
+    public void install(final ProviderRegisterStrategy registerStrategy, final Module... modules) {
+	for (final Module module : modules) {
+	    install(module, registerStrategy);
+	}
     }
 
-    public void install(final Module m, final InstallationStrategy strategy) {
-	strategy.install(this, m);
-    }
-
-    public boolean isModuleInstalled(final Module module) {
-	return installedModules.contains(module.getType());
-    }
-
-    public void setModuleInstalled(final Module module) {
-	installedModules.add(module.getType());
+    private void install(final Module module, final Container aContainer) {
+	module.onLoad(aContainer);
     }
 
 }

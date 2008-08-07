@@ -15,7 +15,7 @@ import com.calclab.suco.client.scopes.SingletonScope;
 public class StatusUIModule extends AbstractModule {
 
     public StatusUIModule() {
-	super(StatusUIModule.class);
+	super();
     }
 
     @Override

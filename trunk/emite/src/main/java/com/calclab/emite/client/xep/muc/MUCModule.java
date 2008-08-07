@@ -33,7 +33,7 @@ public class MUCModule extends AbstractModule {
     }
 
     public MUCModule() {
-	super(MUCModule.class);
+	super();
     }
 
     @Override

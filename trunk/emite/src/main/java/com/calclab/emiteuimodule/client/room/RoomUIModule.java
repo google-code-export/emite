@@ -11,15 +11,17 @@ import com.calclab.suco.client.scopes.SingletonScope;
 
 public class RoomUIModule extends AbstractModule {
     public RoomUIModule() {
-	super(RoomUIModule.class);
+	super();
     }
 
     @Override
     public void onLoad() {
 	register(SingletonScope.class, new Factory<RoomUIManager>(RoomUIManager.class) {
 	    public RoomUIManager create() {
-		final RoomUIManager manager = new RoomUIManager($(Session.class), $(RoomManager.class), $(StatusUI.class), $(I18nTranslationService.class));
-		final RoomUICommonPanel roomUICommonPanel = new RoomUICommonPanel(manager, $(StatusUI.class), $(I18nTranslationService.class));
+		final RoomUIManager manager = new RoomUIManager($(Session.class), $(RoomManager.class),
+			$(StatusUI.class), $(I18nTranslationService.class));
+		final RoomUICommonPanel roomUICommonPanel = new RoomUICommonPanel(manager, $(StatusUI.class),
+			$(I18nTranslationService.class));
 		manager.init(roomUICommonPanel);
 		return manager;
 	    }
