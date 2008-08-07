@@ -55,14 +55,14 @@
           <!-- <logLevel>INFO</logLevel> -->
           <!--<style>OBF</style>-->
           <style>PRETTY</style>
-          <!--
           <runTarget>
             com.calclab.emiteui.EmiteUI/EmiteUI.html?log_level=DEBUG
           </runTarget>
-           -->
+          <!--
           <runTarget>
             com.calclab.emite.widgets.demo.EmiteWidgetsDemo/WidgetsShowCase.html?log_level=DEBUG
           </runTarget>
+           -->
           <compileTarget>
             <param></param>
           </compileTarget>
@@ -70,9 +70,11 @@
             <compileTarget>
               com.calclab.emite.widgets.demo.EmiteWidgetsDemo
             </compileTarget>
+            <!--
             <compileTarget>
               com.calclab.emiteui.EmiteUI
             </compileTarget>
+             -->
           </compileTargets>
           <generatorRootClasses>
             <value>com.calclab.emite.MyBean</value>

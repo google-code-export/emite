@@ -116,7 +116,10 @@ public class Bosh3Connection implements Connection {
 
     public void restartStream() {
 	createBody();
+	body.setAttribute("xmlns:xmpp", "urn:xmpp:xbosh");
 	body.setAttribute("xmpp:restart", "true");
+	body.setAttribute("to", userSettings.hostName);
+	body.setAttribute("xml:lang", "en");
     }
 
     public boolean resume(final StreamSettings settings) {
