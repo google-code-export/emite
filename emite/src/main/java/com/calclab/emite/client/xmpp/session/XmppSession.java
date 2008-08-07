@@ -60,13 +60,10 @@ public class XmppSession extends AbstractSession {
 		    onPresence.fire(new Presence(stanza));
 		} else if (name.equals("iq")) {
 		    iqManager.handle(stanza);
-		} else if ("stream:features".equals(name) && stanza.hasChild("mechanisms")) {
-		    if (transaction != null) {
-			saslManager.sendAuthorizationRequest(transaction);
-			transaction = null;
-		    }
+		} else if (transaction != null && "stream:features".equals(name) && stanza.hasChild("mechanisms")) {
+		    saslManager.sendAuthorizationRequest(transaction);
+		    transaction = null;
 		}
-
 	    }
 	});
 
@@ -89,7 +86,6 @@ public class XmppSession extends AbstractSession {
 		    disconnect();
 		}
 	    }
-
 	});
 
 	bindingManager.onBinded(new Slot<XmppURI>() {
@@ -111,11 +107,6 @@ public class XmppSession extends AbstractSession {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.calclab.emite.client.xmpp.session.Session#getCurrentUser()
-     */
     public XmppURI getCurrentUser() {
 	return userURI;
     }
