@@ -6,6 +6,7 @@ public class StreamSettings {
     public String wait;
     public String inactivity;
     public String maxPause;
+    long lastRequestTime;
 
     public StreamSettings() {
 	this.rid = (long) (Math.random() * 10000000) + 1000;
