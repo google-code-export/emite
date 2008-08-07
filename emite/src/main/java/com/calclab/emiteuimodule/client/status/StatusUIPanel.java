@@ -143,13 +143,22 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
     public void setEnable(final boolean enable) {
 	if (enable) {
 	    super.enable();
+	    chatMenu.setVisible(true);
+	    statusButton.setVisible(true);
 	} else {
 	    super.disable();
+	    chatMenu.setVisible(false);
+	    statusButton.setVisible(false);
 	}
     }
 
     public void setLoadingVisible(final boolean visible) {
 	loading.setVisible(visible);
+	if (visible) {
+	    loading.enable();
+	} else {
+	    loading.disable();
+	}
     }
 
     public void setOwnPresence(final OwnPresence ownPresence) {
