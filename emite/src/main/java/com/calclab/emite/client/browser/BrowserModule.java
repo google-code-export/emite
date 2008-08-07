@@ -12,7 +12,7 @@ import com.calclab.suco.client.scopes.SingletonScope;
 public class BrowserModule extends AbstractModule {
 
     public BrowserModule() {
-	super(BrowserModule.class);
+	super();
     }
 
     @Override

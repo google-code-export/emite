@@ -11,7 +11,7 @@ import com.calclab.suco.client.scopes.SingletonScope;
 
 public class SoundModule extends AbstractModule {
     public SoundModule() {
-	super(SoundModule.class);
+	super();
     }
 
     @Override
@@ -21,7 +21,8 @@ public class SoundModule extends AbstractModule {
 		// Waiting for RosterUIModule:
 		final RosterUIPresenter rosterUIPresenter = null;
 		final SoundManager soundManager = new SoundManager(rosterUIPresenter, $(RoomUIManager.class));
-		final SoundPanel panel = new SoundPanel(soundManager, $(I18nTranslationService.class), $(StatusUI.class));
+		final SoundPanel panel = new SoundPanel(soundManager, $(I18nTranslationService.class),
+			$(StatusUI.class));
 		soundManager.init(panel);
 		return soundManager;
 	    }

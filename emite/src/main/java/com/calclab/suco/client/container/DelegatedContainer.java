@@ -28,7 +28,7 @@ package com.calclab.suco.client.container;
  * @author dani
  */
 public class DelegatedContainer implements Container {
-    private final Container delegate;
+    protected final Container delegate;
 
     /**
      * Creates a delegated container with the given delegate

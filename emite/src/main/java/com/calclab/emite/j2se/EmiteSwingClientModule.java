@@ -42,7 +42,7 @@ public class EmiteSwingClientModule extends AbstractModule {
     }
 
     public EmiteSwingClientModule() {
-	super(EmiteSwingClientModule.class);
+	super();
     }
 
     @Override

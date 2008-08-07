@@ -29,7 +29,7 @@ import com.calclab.suco.client.scopes.SingletonScope;
 public class DemoModule extends AbstractModule {
 
     public DemoModule() {
-	super(DemoModule.class);
+	super();
     }
 
     @Override

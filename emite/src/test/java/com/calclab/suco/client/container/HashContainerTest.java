@@ -14,7 +14,7 @@ public class HashContainerTest {
 
     @Before
     public void beforeTest() {
-	container = new HashContainer();
+	container = new OverrideableContainer();
     }
 
     @Test(expected = RuntimeException.class)

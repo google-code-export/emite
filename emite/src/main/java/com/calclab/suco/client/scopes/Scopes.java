@@ -21,14 +21,14 @@
  */
 package com.calclab.suco.client.scopes;
 
-import com.calclab.suco.client.container.HashContainer;
+import com.calclab.suco.client.container.OverrideableContainer;
 import com.calclab.suco.client.container.Provider;
 
 public class Scopes {
-    private static final HashContainer container;
+    private static final OverrideableContainer container;
 
     static {
-	container = new HashContainer();
+	container = new OverrideableContainer();
 
 	container.registerSingletonInstance(SingletonScope.class, new SingletonScope());
 	container.registerSingletonInstance(NoScope.class, new NoScope());

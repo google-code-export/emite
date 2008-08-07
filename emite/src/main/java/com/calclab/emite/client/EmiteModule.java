@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.client;
 
-import com.calclab.emite.client.core.Core3Module;
+import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.im.InstantMessagingModule;
 import com.calclab.emite.client.xmpp.XMPPModule;
 import com.calclab.suco.client.container.Container;
@@ -35,12 +35,12 @@ public class EmiteModule extends AbstractModule {
     }
 
     public EmiteModule() {
-	super(EmiteModule.class);
+	super();
     }
 
     @Override
     protected void onLoad() {
-	install(new Core3Module(), new XMPPModule(), new InstantMessagingModule());
+	install(new CoreModule(), new XMPPModule(), new InstantMessagingModule());
 	register(SingletonScope.class, new Factory<Xmpp>(Xmpp.class) {
 	    public Xmpp create() {
 		return new Xmpp($(Container.class));

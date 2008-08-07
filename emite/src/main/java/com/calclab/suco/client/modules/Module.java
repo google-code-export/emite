@@ -29,13 +29,12 @@ import com.calclab.suco.client.container.Container;
  * @author dani
  */
 public interface Module {
-    public Class<? extends Module> getType();
 
     /**
      * Install the components into the given container
      * 
-     * @param builder
-     *            TODO
+     * @param the
+     *            container
      */
     public void onLoad(Container container);
 }

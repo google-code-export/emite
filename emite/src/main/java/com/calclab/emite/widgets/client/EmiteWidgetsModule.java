@@ -37,7 +37,7 @@ import com.calclab.suco.client.scopes.SingletonScope;
 
 public class EmiteWidgetsModule extends AbstractModule {
     public EmiteWidgetsModule() {
-	super(EmiteWidgetsModule.class);
+	super();
     }
 
     @Override

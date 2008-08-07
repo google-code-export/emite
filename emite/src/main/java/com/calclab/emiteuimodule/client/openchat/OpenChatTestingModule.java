@@ -9,13 +9,14 @@ import com.calclab.suco.client.modules.AbstractModule;
 public class OpenChatTestingModule extends AbstractModule {
 
     public OpenChatTestingModule() {
-	super(OpenChatTestingModule.class);
+	super();
     }
 
     @Override
     public void onLoad() {
 	final OpenChatTestingPresenter presenter = new OpenChatTestingPresenter($(ChatManager.class), $(StatusUI.class));
-	final OpenChatTestingPanel panel = new OpenChatTestingPanel(presenter, $(StatusUI.class), $(I18nTranslationService.class));
+	final OpenChatTestingPanel panel = new OpenChatTestingPanel(presenter, $(StatusUI.class),
+		$(I18nTranslationService.class));
 	presenter.init(panel);
     }
 

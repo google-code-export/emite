@@ -28,7 +28,7 @@ import com.calclab.suco.client.scopes.SingletonScope;
 public abstract class ServicesModule extends AbstractModule {
 
     public ServicesModule() {
-	super(ServicesModule.class);
+	super();
     }
 
     public abstract Services createServices();

@@ -7,10 +7,10 @@ import com.calclab.suco.client.modules.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scopes.SingletonScope;
 
-public class Core3Module extends AbstractModule {
+public class CoreModule extends AbstractModule {
 
-    public Core3Module() {
-	super(Core3Module.class);
+    public CoreModule() {
+	super();
     }
 
     @Override

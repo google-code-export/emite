@@ -34,13 +34,13 @@ import com.calclab.suco.client.provider.Factory;
  * 
  * @see http://www.xmpp.org/extensions/xep-0030.html
  * 
- * NOT IMPLEMENTED
+ *      NOT IMPLEMENTED
  * 
  */
 public class DiscoveryModule extends AbstractModule {
 
     public DiscoveryModule() {
-	super(DiscoveryModule.class);
+	super();
     }
 
     @Override

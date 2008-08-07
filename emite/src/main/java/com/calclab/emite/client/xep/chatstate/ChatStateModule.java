@@ -34,7 +34,7 @@ import com.calclab.suco.client.provider.Factory;
  */
 public class ChatStateModule extends AbstractModule {
     public ChatStateModule() {
-	super(ChatStateModule.class);
+	super();
     }
 
     @Override
