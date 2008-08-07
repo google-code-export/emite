@@ -40,7 +40,7 @@ public class EmiteModule extends AbstractModule {
 
     @Override
     protected void onLoad() {
-	load(new Core3Module(), new XMPPModule(), new InstantMessagingModule());
+	install(new Core3Module(), new XMPPModule(), new InstantMessagingModule());
 	register(SingletonScope.class, new Factory<Xmpp>(Xmpp.class) {
 	    public Xmpp create() {
 		return new Xmpp($(Container.class));

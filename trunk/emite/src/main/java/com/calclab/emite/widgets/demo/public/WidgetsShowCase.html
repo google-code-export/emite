@@ -15,11 +15,17 @@
             src="com.calclab.emite.widgets.demo.EmiteWidgetsDemo.nocache.js"></script>
 
     <h1>Welcome to emite widgets show case</h1>
-        <p>Here there is some instances of emite widgets. Most of them are duplicated to view how, diferent
-        instances the of the same widget, can be rendered in a single page.</p>
-        <p>All the widget parameters are inserted in the html (all the div attributes prefixed
-        with 'data-') and no javascript is required for initialization.</p>
-        <p style="color: orange">Important: every widget div should have a unique id attribute value.</p>
+        <p>Emite widgets are simple xmpp UI elements that can be easily inserted into html pages, without any javascript or java knowledge.
+        To insert a widget you only have to create a div tag with a specified class attribute. For example:</p>
+        <pre>
+&lt;div id=&quot;charla1&quot; class=&quot;box emite-widget-charla&quot; data-jid=&quot;test1@emitedemo.ourproject.org&quot;
+  data-password=&quot;test1&quot; data-chat=&quot;admin@emitedemo.ourproject.org&quot;&gt;
+  loading widget...
+&lt;/div&gt;
+        </pre>
+        <p>All the widget parameters are also inserted in the html (all the div attributes prefixed
+        with 'data-' as the HTML5 spec. recommends) and no javascript is required for initialization.</p>
+        <p>Here is a example of each emite widget available.</p>
 
     <h1>Composed widgets</h1>
         <p>Normally you will insert one of them in a page.</p>
@@ -40,7 +46,7 @@
     <h2>Conversations panel</h2>
         <p>This composite is not intented to use standalone but as part of Habla widget. Basically a
         panel that create a tab for each chat opened</p>
-        <div id="conversations1" class="box emite-widget-conversations">
+        <div id="conversations1" class="box NOemite-widget-conversations">
             coming soon...
         </div>
 

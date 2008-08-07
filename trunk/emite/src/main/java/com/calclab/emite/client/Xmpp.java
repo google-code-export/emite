@@ -57,7 +57,7 @@ public class Xmpp extends DelegatedContainer {
      */
     public static Xmpp create(final Module... modules) {
 	final Container container = Suco.create(modules);
-	Suco.add(container, new EmiteModule());
+	Suco.install(container, new EmiteModule());
 	return container.getInstance(Xmpp.class);
     }
 

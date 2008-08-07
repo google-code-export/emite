@@ -46,11 +46,6 @@ public class EmiteSwingClientModule extends AbstractModule {
     }
 
     @Override
-    public Class<?> getType() {
-	return EmiteSwingClientModule.class;
-    }
-
-    @Override
     protected void onLoad() {
 	register(SingletonScope.class, new Factory<SwingClient>(SwingClient.class) {
 	    public SwingClient create() {
