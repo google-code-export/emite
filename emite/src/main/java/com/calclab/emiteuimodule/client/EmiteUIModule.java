@@ -50,8 +50,8 @@ public class EmiteUIModule extends AbstractModule {
     @Override
     public void onLoad() {
 
-	load(new GWTServicesModule());
-	load(new EmiteModule(), new MUCModule(), new ChatStateModule(), new AvatarModule());
+	install(new GWTServicesModule());
+	install(new EmiteModule(), new MUCModule(), new ChatStateModule(), new AvatarModule());
 
 	register(SingletonScope.class, new Factory<I18nTranslationService>(I18nTranslationService.class) {
 	    public I18nTranslationService create() {
@@ -65,7 +65,7 @@ public class EmiteUIModule extends AbstractModule {
 
 	$(QuickTipsHelper.class);
 
-	load(new StatusUIModule(), new SoundModule(), new RoomUIModule());
+	install(new StatusUIModule(), new SoundModule(), new RoomUIModule());
 
 	// Only for UI test (comment during release):
 	// builder.add(new OpenChatTestingModule());

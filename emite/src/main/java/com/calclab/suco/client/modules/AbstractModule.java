@@ -9,14 +9,14 @@ import com.calclab.suco.client.scopes.SingletonScope;
 
 public abstract class AbstractModule implements Module {
 
-    private final Class<?> type;
+    private final Class<? extends Module> type;
     private Container container;
 
-    public AbstractModule(final Class<?> moduleType) {
+    public AbstractModule(final Class<? extends Module> moduleType) {
 	this.type = moduleType;
     }
 
-    public Class<?> getType() {
+    public Class<? extends Module> getType() {
 	return type;
     }
 
@@ -51,10 +51,16 @@ public abstract class AbstractModule implements Module {
 	return container.getProvider(componentType);
     }
 
+    protected void install(final Module... modules) {
+	container.getInstance(ModuleManager.class).install(modules);
+    }
+
+    /**
+     * @deprecated Use install method
+     */
+    @Deprecated
     protected void load(final Module... modules) {
-	for (final Module m : modules) {
-	    m.onLoad(container);
-	}
+	container.getInstance(ModuleManager.class).install(modules);
     }
 
     protected abstract void onLoad();

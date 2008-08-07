@@ -14,6 +14,8 @@ input[type=text], input[type=password] { border: 3px solid #efefef;
     padding: 2px; margin: 1px; width: 10em; }
 button { margin: 3px 10px 0 0; }
 
+pre {margin: 0.5em 0 0.3em 6em; width: 80%; color: gray; font-size: 90%; }
+
 textarea {
     border: 3px solid #efefef;
     width: 14em;
