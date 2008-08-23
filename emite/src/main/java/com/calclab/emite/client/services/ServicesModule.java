@@ -21,9 +21,9 @@
  */
 package com.calclab.emite.client.services;
 
-import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scopes.SingletonScope;
+import com.calclab.suco.client.scope.SingletonScope;
 
 public abstract class ServicesModule extends AbstractModule {
 

@@ -6,7 +6,7 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.browser.DomAssist;
 import com.calclab.emite.client.browser.PageController;
 import com.calclab.emite.widgets.client.base.EmiteWidget;
-import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.provider.Provider;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;

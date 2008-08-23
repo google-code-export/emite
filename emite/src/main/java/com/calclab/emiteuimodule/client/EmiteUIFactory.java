@@ -42,7 +42,7 @@ import com.calclab.emiteuimodule.client.roster.RosterUIPanel;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.provider.Provider;
 
 public class EmiteUIFactory {
     private final I18nTranslationService i18n;

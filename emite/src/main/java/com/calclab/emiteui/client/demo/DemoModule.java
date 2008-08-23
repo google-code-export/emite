@@ -22,9 +22,9 @@
 package com.calclab.emiteui.client.demo;
 
 import com.calclab.emiteui.client.DemoParameters;
-import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scopes.SingletonScope;
+import com.calclab.suco.client.scope.SingletonScope;
 
 public class DemoModule extends AbstractModule {
 

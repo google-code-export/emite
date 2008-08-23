@@ -36,10 +36,10 @@ import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.sound.SoundModule;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.emiteuimodule.client.status.StatusUIModule;
-import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scopes.NoScope;
-import com.calclab.suco.client.scopes.SingletonScope;
+import com.calclab.suco.client.scope.NoScope;
+import com.calclab.suco.client.scope.SingletonScope;
 
 public class EmiteUIModule extends AbstractModule {
 

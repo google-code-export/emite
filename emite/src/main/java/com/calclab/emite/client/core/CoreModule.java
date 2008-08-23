@@ -3,9 +3,9 @@ package com.calclab.emite.client.core;
 import com.calclab.emite.client.core.bosh.Bosh3Connection;
 import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.services.Services;
-import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scopes.SingletonScope;
+import com.calclab.suco.client.scope.SingletonScope;
 
 public class CoreModule extends AbstractModule {
 

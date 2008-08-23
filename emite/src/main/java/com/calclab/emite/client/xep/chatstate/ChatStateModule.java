@@ -23,7 +23,7 @@ package com.calclab.emite.client.xep.chatstate;
 
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.xmpp.session.SessionScope;
-import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 
 /**

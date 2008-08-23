@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.MockSlot;
+import com.calclab.suco.testing.signal.MockSlot;
 
 public abstract class AbstractChatManagerTest {
     protected static final XmppURI MYSELF = uri("self@domain");

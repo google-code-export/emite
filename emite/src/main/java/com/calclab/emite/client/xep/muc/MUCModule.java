@@ -24,7 +24,7 @@ package com.calclab.emite.client.xep.muc;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 
 public class MUCModule extends AbstractModule {

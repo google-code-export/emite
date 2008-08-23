@@ -25,9 +25,9 @@ import com.calclab.emite.client.core.CoreModule;
 import com.calclab.emite.client.im.InstantMessagingModule;
 import com.calclab.emite.client.xmpp.XMPPModule;
 import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scopes.SingletonScope;
+import com.calclab.suco.client.scope.SingletonScope;
 
 public class EmiteModule extends AbstractModule {
     public static Xmpp getXmpp(final Container container) {

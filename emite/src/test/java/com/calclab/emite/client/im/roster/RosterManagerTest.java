@@ -17,7 +17,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.MockSlot;
+import com.calclab.suco.testing.signal.MockSlot;
 
 public class RosterManagerTest {
     private RosterManager manager;

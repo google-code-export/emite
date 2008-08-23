@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.calclab.emite.client.core.bosh.ConnectionTestHelper;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.testing.MockSlot;
+import com.calclab.suco.testing.signal.MockSlot;
 
 public class ResourceBindingManagerTest {
     private ResourceBindingManager manager;

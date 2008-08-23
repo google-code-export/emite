@@ -30,10 +30,10 @@ import com.calclab.emite.widgets.client.roster.GWTRosterWidget;
 import com.calclab.emite.widgets.client.roster.RosterController;
 import com.calclab.emite.widgets.client.roster.RosterWidget;
 import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scopes.NoScope;
-import com.calclab.suco.client.scopes.SingletonScope;
+import com.calclab.suco.client.scope.NoScope;
+import com.calclab.suco.client.scope.SingletonScope;
 
 public class EmiteWidgetsModule extends AbstractModule {
     public EmiteWidgetsModule() {
