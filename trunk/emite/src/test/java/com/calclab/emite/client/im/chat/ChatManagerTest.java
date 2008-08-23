@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.suco.testing.MockSlot;
+import com.calclab.suco.testing.signal.MockSlot;
 
 public class ChatManagerTest extends AbstractChatManagerTest {
 

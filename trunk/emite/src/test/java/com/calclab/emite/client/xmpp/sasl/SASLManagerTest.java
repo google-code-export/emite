@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.calclab.emite.client.core.bosh.ConnectionTestHelper;
 import com.calclab.emite.client.core.packet.Packet;
-import com.calclab.suco.testing.MockSlot;
+import com.calclab.suco.testing.signal.MockSlot;
 
 public class SASLManagerTest {
     private SASLManager manager;

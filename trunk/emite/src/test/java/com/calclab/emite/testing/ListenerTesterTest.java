@@ -2,7 +2,7 @@ package com.calclab.emite.testing;
 
 import org.junit.Test;
 
-import com.calclab.suco.testing.MockSlot;
+import com.calclab.suco.testing.signal.MockSlot;
 
 public class ListenerTesterTest {
 

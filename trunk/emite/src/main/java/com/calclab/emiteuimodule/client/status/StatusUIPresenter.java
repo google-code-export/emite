@@ -39,7 +39,7 @@ import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
-import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.provider.Provider;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 

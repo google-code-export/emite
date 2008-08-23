@@ -5,9 +5,9 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.calclab.emiteuimodule.client.room.RoomUIManager;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scopes.SingletonScope;
+import com.calclab.suco.client.scope.SingletonScope;
 
 public class SoundModule extends AbstractModule {
     public SoundModule() {

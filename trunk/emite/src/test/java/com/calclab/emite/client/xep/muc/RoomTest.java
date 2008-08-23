@@ -16,8 +16,8 @@ import com.calclab.emite.client.im.chat.Chat.Status;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.MockSlot;
-import com.calclab.suco.testing.MockSlot2;
+import com.calclab.suco.testing.signal.MockSlot;
+import com.calclab.suco.testing.signal.MockSlot2;
 
 public class RoomTest extends AbstractChatTest {
 

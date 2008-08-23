@@ -34,8 +34,8 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.DelegatedContainer;
-import com.calclab.suco.client.modules.Module;
-import com.calclab.suco.client.modules.ModuleManager.ProviderRegisterStrategy;
+import com.calclab.suco.client.module.Module;
+import com.calclab.suco.client.module.ModuleManager.ProviderRegisterStrategy;
 
 public class Xmpp extends DelegatedContainer {
 

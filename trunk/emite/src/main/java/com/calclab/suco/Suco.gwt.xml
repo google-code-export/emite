@@ -1,4 +1,0 @@
-<module>
-  <entry-point class="com.calclab.suco.client.SucoEntryPoint" />
-  <inherits name="com.allen_sauer.gwt.log.gwt-log" />
-</module>

@@ -29,9 +29,9 @@ import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.swing.SwingClient;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scopes.SingletonScope;
+import com.calclab.suco.client.scope.SingletonScope;
 
 public class EmiteSwingClientModule extends AbstractModule {
 

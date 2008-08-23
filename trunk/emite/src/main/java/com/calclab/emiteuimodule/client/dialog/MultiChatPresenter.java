@@ -53,7 +53,7 @@ import com.calclab.emiteuimodule.client.room.RoomUI;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.provider.Provider;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.client.signal.Slot2;

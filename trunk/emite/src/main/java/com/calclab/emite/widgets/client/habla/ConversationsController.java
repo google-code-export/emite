@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.calclab.emite.client.im.chat.Chat;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.widgets.client.chat.ChatWidget;
-import com.calclab.suco.client.container.Provider;
+import com.calclab.suco.client.provider.Provider;
 import com.calclab.suco.client.signal.Slot;
 
 public class ConversationsController {

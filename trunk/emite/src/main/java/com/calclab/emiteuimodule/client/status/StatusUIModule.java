@@ -8,9 +8,9 @@ import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xep.muc.RoomManager;
 import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.suco.client.modules.AbstractModule;
+import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scopes.SingletonScope;
+import com.calclab.suco.client.scope.SingletonScope;
 
 public class StatusUIModule extends AbstractModule {
 
