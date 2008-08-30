@@ -69,6 +69,7 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
     private Menu optionsSubMenu;
     private final String ownStatusFootText;
     private final String ownStatusHeadText;
+    private final ToolbarButton chatMenuButton;
 
     public StatusUIPanel(final StatusUIPresenter presenter, final I18nTranslationService i18n) {
 	this.presenter = presenter;
@@ -83,7 +84,7 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 	chatMenu.addItem(closeAllOption);
 	chatMenu.addItem(optionsItem);
 
-	final ToolbarButton chatMenuButton = new ToolbarButton(i18n.t("Chat"));
+	chatMenuButton = new ToolbarButton(i18n.t("Chat"));
 	chatMenuButton.setMenu(chatMenu);
 	this.addButton(chatMenuButton);
 	this.addSeparator();
@@ -143,11 +144,11 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
     public void setEnable(final boolean enable) {
 	if (enable) {
 	    super.enable();
-	    chatMenu.setVisible(true);
+	    chatMenuButton.setVisible(true);
 	    statusButton.setVisible(true);
 	} else {
 	    super.disable();
-	    chatMenu.setVisible(false);
+	    chatMenuButton.setVisible(false);
 	    statusButton.setVisible(false);
 	}
     }
