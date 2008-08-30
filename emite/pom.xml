@@ -4,7 +4,7 @@
   <groupId>com.calclab</groupId>
   <artifactId>emite</artifactId>
   <packaging>jar</packaging>
-  <version>0.3.2</version>
+  <version>0.3.3</version>
   <description>emite: a pure gwt xmpp (jabber) library
   </description>
   <name>emite xmpp</name>
@@ -143,19 +143,6 @@
               <includes>
                 <include>**/JabberHTTPBind/**</include>
                 <include>**/spieleck/**</include>
-              </includes>
-            </configuration>
-          </execution>
-          <execution>
-            <id>suco</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <classifier>suco</classifier>
-              <includes>
-                <include>**/suco/**</include>
               </includes>
             </configuration>
           </execution>
