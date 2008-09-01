@@ -52,7 +52,7 @@ public interface ChatUI {
 
     void addInfoMessage(String message);
 
-    void addMessage(String userAlias, String message);
+    void addMessage(XmppURI fromURI, String body);
 
     void clearMessageEventInfo();
 
@@ -92,11 +92,11 @@ public interface ChatUI {
 
     void saveInput(String inputText);
 
+    void setCurrentUserColor(String color);
+
     void setDocked(boolean docked);
 
     void setSavedChatNotification(ChatNotification savedChatNotification);
-
-    void setUserColor(String userAlias, String color);
 
     void showMessageEventInfo();
 

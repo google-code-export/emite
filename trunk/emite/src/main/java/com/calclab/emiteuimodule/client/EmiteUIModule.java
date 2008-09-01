@@ -68,7 +68,7 @@ public class EmiteUIModule extends AbstractModule {
 	install(new StatusUIModule(), new SoundModule(), new RoomUIModule());
 
 	// Only for UI test (comment during release):
-	// builder.add(new OpenChatTestingModule());
+	// install(new OpenChatTestingModule());
 
 	register(SingletonScope.class, new Factory<EmiteUIFactory>(EmiteUIFactory.class) {
 	    public EmiteUIFactory create() {

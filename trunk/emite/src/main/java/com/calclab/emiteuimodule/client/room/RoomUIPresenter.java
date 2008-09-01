@@ -65,6 +65,11 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 	changeSubjectMessageDisplayed = false;
     }
 
+    @Override
+    public void addMessage(final XmppURI fromURI, final String body) {
+	super.addMessage(fromURI.getResource(), body);
+    }
+
     public void askInvitation(final XmppURI userURI) {
 	view.askInvitation(userURI, lastInvitationReasonText);
     }

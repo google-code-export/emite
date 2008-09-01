@@ -229,7 +229,7 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 	    public void onSelect(final ColorPalette colorPalette, final String color) {
 		DeferredCommand.addCommand(new Command() {
 		    public void execute() {
-			presenter.onUserColorChanged(color);
+			presenter.onUserColorChanged(color.charAt(0) == '#' ? color : "#" + color);
 		    }
 		});
 	    }
