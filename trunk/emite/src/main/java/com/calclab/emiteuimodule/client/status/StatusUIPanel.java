@@ -90,9 +90,8 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 	this.addSeparator();
 
 	statusMenu = createStatusMenu();
-	statusButton = new ToolbarButton("Set status");
+	statusButton = new ToolbarButton();
 	statusButton.setMenu(statusMenu);
-	statusButton.setTooltip(i18n.t("Set status"));
 	this.addButton(statusButton);
 
 	loading = new ToolbarButton();
@@ -163,30 +162,32 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
     }
 
     public void setOwnPresence(final OwnPresence ownPresence) {
+	String ownStatusText = "";
 	switch (ownPresence.getStatus()) {
 	case online:
+	    ownStatusText = ownStatusHeadText + i18n.t("Online") + ownStatusFootText;
 	    onlineMenuItem.setChecked(true);
-	    setOwnStatusText(ownStatusHeadText + i18n.t("Online") + ownStatusFootText);
 	    break;
 	case onlinecustom:
-	    setOwnStatusText(ownStatusHeadText + ownPresence.getStatusText() + ownStatusFootText);
+	    ownStatusText = ownStatusHeadText + ownPresence.getStatusText() + ownStatusFootText;
 	    onlineCustomMenuItem.setChecked(true);
 	    break;
 	case offline:
-	    setOwnStatusText(ownStatusHeadText + i18n.t("Offline") + ownStatusFootText);
+	    ownStatusText = ownStatusHeadText + i18n.t("Offline") + ownStatusFootText;
 	    offlineMenuItem.setChecked(true);
 	    break;
 	case busy:
-	    setOwnStatusText(ownStatusHeadText + i18n.t("Don't disturb") + ownStatusFootText);
+	    ownStatusText = ownStatusHeadText + i18n.t("Don't disturb") + ownStatusFootText;
 	    busyMenuItem.setChecked(true);
 	    break;
 	case busycustom:
-	    setOwnStatusText(ownStatusHeadText + ownPresence.getStatusText() + ownStatusFootText);
+	    ownStatusText = ownStatusHeadText + ownPresence.getStatusText() + ownStatusFootText;
 	    busyCustomMenuItem.setChecked(true);
 	    break;
 	}
 
-	final String icon = ChatUIUtils.getOwnStatusIcon(ownPresence.getStatus()).getHTML();
+	String icon = ChatUIUtils.getOwnStatusIcon(ownPresence.getStatus()).getHTML();
+	icon = icon.replaceFirst("<img ", "<img ext:qtip='" + ownStatusText + "' ");
 	statusButton.setText(icon);
     }
 
@@ -342,8 +343,4 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 	return submenu;
     }
 
-    private void setOwnStatusText(final String text) {
-	// statusButton.setTitle(text);
-	statusButton.setTooltip(text);
-    }
 }
