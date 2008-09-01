@@ -62,7 +62,7 @@ public class PresenceManagerTest {
 	manager.setOwnPresence("my delayed status", Show.dnd);
 	session.setLoggedIn(uri("myself@domain"));
 	onRosterReady.fire(roster);
-	session.verifySent("<presence from='myself@domain'><show>chat</show></presence>");
+	session.verifySent("<presence from='myself@domain'></presence>");
 	session.verifySent("<presence from='myself@domain'><show>dnd</show>"
 		+ "<status>my delayed status</status></presence>");
     }
@@ -78,7 +78,7 @@ public class PresenceManagerTest {
     public void shouldSendInitialPresenceAfterRosterReady() {
 	session.setLoggedIn(uri("myself@domain"));
 	onRosterReady.fire(roster);
-	session.verifySent("<presence from='myself@domain'><show>chat</show></presence>");
+	session.verifySent("<presence from='myself@domain'></presence>");
     }
 
     @Test
