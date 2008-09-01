@@ -336,14 +336,14 @@ public class MultiChatPresenter {
 
     void messageReceived(final Chat chat, final Message message) {
 	final String body = message.getBody();
+	final XmppURI fromURI = message.getFrom();
 	// FIXME: remove this?
 	if (body != null) {
 	    final ChatUI chatUI = getChatUI(chat);
 	    if (chatUI == null) {
-		Log.warn("Message received in a inexistent chatUI");
+		Log.warn("Message received in an inexistent chatUI");
 	    } else {
-		final String node = message.getFrom().getNode();
-		chatUI.addMessage(node != null ? node : message.getFromAsString(), body);
+		chatUI.addMessage(fromURI, body);
 	    }
 	}
     }
@@ -352,13 +352,13 @@ public class MultiChatPresenter {
 	final RoomUI roomUI = (RoomUI) getChatUI(chat);
 	final XmppURI fromURI = message.getFrom();
 	if (roomUI == null) {
-	    Log.warn("Message received in a inexistent roomUI");
+	    Log.warn("Message received in an inexistent roomUI");
 	} else {
 	    if (fromURI.getResource() == null && fromURI.getNode().equals(chat.getOtherURI().getNode())) {
 		// Info messsage from room
 		roomUI.addInfoMessage(message.getBody());
 	    } else {
-		roomUI.addMessage(fromURI.getResource(), message.getBody());
+		roomUI.addMessage(fromURI, message.getBody());
 	    }
 	}
     }

@@ -49,7 +49,6 @@ public class ChatUIPresenter implements ChatUI {
     private String savedInput;
     private ChatNotification savedChatNotification;
     private int oldColor;
-
     private final HashMap<String, String> userColors;
     private final String chatTitle;
     private final XmppURI otherURI;
@@ -60,6 +59,8 @@ public class ChatUIPresenter implements ChatUI {
     private final ChatIconDescriptor highIcon;
     private boolean docked;
     private ChatUIEventListenerCollection eventListenerCollection;
+    private final String currentUserAlias;
+    private String otherAlias;
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor) {
 	// Def Constructor for chats
@@ -70,6 +71,7 @@ public class ChatUIPresenter implements ChatUI {
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
 	    final ChatIconDescriptor unhighIcon, final ChatIconDescriptor highIcon) {
 	this.otherURI = otherURI;
+	this.currentUserAlias = currentUserAlias;
 	this.unhighIcon = unhighIcon;
 	this.highIcon = highIcon;
 	this.chatTitle = getOtherAlias();
@@ -104,9 +106,10 @@ public class ChatUIPresenter implements ChatUI {
 	view.addInfoMessage(message);
     }
 
-    public void addMessage(final String userAlias, final String message) {
-	checkIfHighlightNeeded();
-	view.addMessage(userAlias, getColor(userAlias), message);
+    public void addMessage(final XmppURI fromURI, final String body) {
+	final String node = fromURI.getNode() != null ? fromURI.getNode() : fromURI.toString();
+	final String alias = fromURI.equals(otherURI) ? getOtherAlias() : node;
+	addMessage(alias, body);
     }
 
     public void clearMessageEventInfo() {
@@ -140,7 +143,12 @@ public class ChatUIPresenter implements ChatUI {
 
     public String getOtherAlias() {
 	// Messages from server has no node
-	return otherURI.getNode() != null ? otherURI.getNode() : otherURI.getHost();
+	if (otherAlias == null) {
+	    otherAlias = otherURI.getNode() != null ? otherURI.getNode() : otherURI.getHost();
+	    final boolean likeMyAlias = currentUserAlias.equals(otherAlias);
+	    otherAlias = likeMyAlias ? otherURI.getJID().toString() : otherAlias;
+	}
+	return otherAlias;
     }
 
     public ChatNotification getSavedChatNotification() {
@@ -247,16 +255,16 @@ public class ChatUIPresenter implements ChatUI {
 	savedInput = inputText;
     }
 
+    public void setCurrentUserColor(final String color) {
+	setUserColor(currentUserAlias, color);
+    }
+
     public void setDocked(final boolean docked) {
 	this.docked = docked;
     }
 
     public void setSavedChatNotification(final ChatNotification savedChatNotification) {
 	this.savedChatNotification = savedChatNotification;
-    }
-
-    public void setUserColor(final String userAlias, final String color) {
-	userColors.put(userAlias, color);
     }
 
     public void showMessageEventInfo() {
@@ -267,6 +275,11 @@ public class ChatUIPresenter implements ChatUI {
 	view.setChatTitle(chatTitle, otherURI.toString(), unhighIcon);
 	alreadyHightlighted = false;
 	onUnHighLight.fire(this);
+    }
+
+    protected void addMessage(final String userAlias, final String message) {
+	checkIfHighlightNeeded();
+	view.addMessage(userAlias, getColor(userAlias), message);
     }
 
     protected void onActivated() {
@@ -291,6 +304,10 @@ public class ChatUIPresenter implements ChatUI {
 	    oldColor = 0;
 	}
 	return color;
+    }
+
+    private void setUserColor(final String userAlias, final String color) {
+	userColors.put(userAlias, color);
     }
 
     private void unHightAndActive() {

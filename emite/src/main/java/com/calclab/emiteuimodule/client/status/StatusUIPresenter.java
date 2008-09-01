@@ -251,7 +251,7 @@ public class StatusUIPresenter implements StatusUI {
     private void setChatColor(final Chat chat, final String color) {
 	final ChatUI chatUI = chat.getData(ChatUI.class);
 	if (chatUI != null) {
-	    chatUI.setUserColor(userChatOptions.getUserJid().getNode(), color);
+	    chatUI.setCurrentUserColor(color);
 	}
     }
 
