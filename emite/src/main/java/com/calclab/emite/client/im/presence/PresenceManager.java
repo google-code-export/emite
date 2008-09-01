@@ -48,7 +48,7 @@ public class PresenceManager {
 	// client SHOULD request the roster before sending initial presence
 	roster.onReady(new Slot<Roster>() {
 	    public void onEvent(final Roster parameter) {
-		final Presence initialPresence = new Presence(session.getCurrentUser()).With(Presence.Show.chat);
+		final Presence initialPresence = new Presence(session.getCurrentUser());
 		broadcastPresence(initialPresence);
 		if (delayedPresence != null) {
 		    delayedPresence.setFrom(session.getCurrentUser());
