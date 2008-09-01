@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.im.roster.Roster;
+import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.client.xmpp.stanzas.Presence.Type;
@@ -22,16 +23,16 @@ public class PresenceManagerTest {
 
     private PresenceManager manager;
     private MockedSession session;
-    private Roster roster;
+    private RosterManager rosterManager;
     private SignalTester<Roster> onRosterReady;
 
     @Before
     public void beforeTest() {
 	session = new MockedSession();
-	roster = mock(Roster.class);
+	rosterManager = mock(RosterManager.class);
 	onRosterReady = new SignalTester<Roster>();
-	manager = new PresenceManager(session, roster);
-	verify(roster).onReady(argThat(onRosterReady));
+	manager = new PresenceManager(session, rosterManager);
+	verify(rosterManager).onRosterReady(argThat(onRosterReady));
     }
 
     @Test
@@ -61,7 +62,7 @@ public class PresenceManagerTest {
     public void shouldSendDelayedAsSoonAsPossible() {
 	manager.setOwnPresence("my delayed status", Show.dnd);
 	session.setLoggedIn(uri("myself@domain"));
-	onRosterReady.fire(roster);
+	onRosterReady.fire(new Roster());
 	session.verifySent("<presence from='myself@domain'></presence>");
 	session.verifySent("<presence from='myself@domain'><show>dnd</show>"
 		+ "<status>my delayed status</status></presence>");
@@ -77,7 +78,7 @@ public class PresenceManagerTest {
     @Test
     public void shouldSendInitialPresenceAfterRosterReady() {
 	session.setLoggedIn(uri("myself@domain"));
-	onRosterReady.fire(roster);
+	onRosterReady.fire(new Roster());
 	session.verifySent("<presence from='myself@domain'></presence>");
     }
 

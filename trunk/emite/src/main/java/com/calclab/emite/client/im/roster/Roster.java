@@ -38,13 +38,11 @@ public class Roster {
 
     private final Signal<RosterItem> onItemChanged;
     private final Signal<Collection<RosterItem>> onRosterChanged;
-    private final Signal<Roster> onReady;
 
     public Roster() {
 	items = new HashMap<XmppURI, RosterItem>();
 	this.onItemChanged = new Signal<RosterItem>("roster:onItemChanged");
 	this.onRosterChanged = new Signal<Collection<RosterItem>>("roster:onRosterChanged");
-	this.onReady = new Signal<Roster>("roster:onReady");
     }
 
     public void changePresence(final XmppURI uri, final Presence presence) {
@@ -79,16 +77,6 @@ public class Roster {
 	onItemChanged.add(listener);
     }
 
-    /**
-     * @deprecated
-     * @param slot
-     * @see RosterManager.onRosterReady
-     */
-    @Deprecated
-    public void onReady(final Slot<Roster> slot) {
-	this.onReady.add(slot);
-    }
-
     public void onRosterChanged(final Slot<Collection<RosterItem>> listener) {
 	onRosterChanged.add(listener);
     }
@@ -106,17 +94,11 @@ public class Roster {
     }
 
     void setItems(final List<RosterItem> itemCollection) {
-	final boolean isFirst = items.size() == 0;
 	items.clear();
 	for (final RosterItem item : itemCollection) {
 	    items.put(item.getJID(), item);
 	}
 	onRosterChanged.fire(getItems());
-
-	if (isFirst) {
-	    onReady.fire(this);
-	}
-
     }
 
 }
