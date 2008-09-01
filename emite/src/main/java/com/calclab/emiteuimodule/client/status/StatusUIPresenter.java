@@ -228,6 +228,7 @@ public class StatusUIPresenter implements StatusUI {
 	    presenceManager.setOwnPresence(statusText, status);
 	    break;
 	case error:
+	    view.setLoadingVisible(false);
 	    Log.error("Trying to set status and whe have a internal error");
 	}
     }
