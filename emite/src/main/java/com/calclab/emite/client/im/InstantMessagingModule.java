@@ -39,22 +39,17 @@ public class InstantMessagingModule extends AbstractModule {
 
     @Override
     public void onLoad() {
-	// FIXME: Roster should not be singleton!!!
-	register(SingletonScope.class, new Factory<Roster>(Roster.class) {
-	    public Roster create() {
-		return new Roster();
-	    }
-	}, new Factory<ChatManager>(ChatManager.class) {
+	register(SingletonScope.class, new Factory<ChatManager>(ChatManager.class) {
 	    public ChatManagerDefault create() {
 		return new ChatManagerDefault($(Session.class));
 	    }
 	}, new Factory<RosterManager>(RosterManager.class) {
 	    public RosterManager create() {
-		return new RosterManager($(Session.class), $(Roster.class));
+		return new RosterManager($(Session.class), new Roster());
 	    }
 	}, new Factory<PresenceManager>(PresenceManager.class) {
 	    public PresenceManager create() {
-		return new PresenceManager($(Session.class), $(Roster.class));
+		return new PresenceManager($(Session.class), $(RosterManager.class));
 	    }
 	});
 

@@ -23,6 +23,7 @@ package com.calclab.emite.client.im.presence;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.im.roster.Roster;
+import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -38,7 +39,7 @@ public class PresenceManager {
     private final Signal<Presence> onPresenceReceived;
     private final Session session;
 
-    public PresenceManager(final Session session, final Roster roster) {
+    public PresenceManager(final Session session, final RosterManager rosterManager) {
 	this.session = session;
 	this.ownPresence = new Presence(Type.unavailable, null, null);
 	this.onPresenceReceived = new Signal<Presence>("presenceManager:onPresenceReceived");
@@ -46,7 +47,8 @@ public class PresenceManager {
 
 	// Upon connecting to the server and becoming an active resource, a
 	// client SHOULD request the roster before sending initial presence
-	roster.onReady(new Slot<Roster>() {
+
+	rosterManager.onRosterReady(new Slot<Roster>() {
 	    public void onEvent(final Roster parameter) {
 		final Presence initialPresence = new Presence(session.getCurrentUser());
 		broadcastPresence(initialPresence);
