@@ -2,7 +2,7 @@
 <html lang="en"><head>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>((e)) demos &mdash; <%= %> </title>
+    <title>((e)) demos &mdash; <%= yield :title%> </title>
 
     <!-- Framework CSS -->
     <link rel="stylesheet" href="/stylesheets/blueprint/screen.css" type="text/css" media="screen, projection">
@@ -15,12 +15,16 @@
   <%= yield :head %>
   <body>
     <div class="container">
-      <div class="span-24 last">
+      <div class="span-11 prepend-1">
+        <h1><%= yield :title %>&nbsp;</h1>
+      </div>
+      <div class="span-11 last brand">
         <h1><%= link_to '((e)) emite', :action => 'index' %></h1><span class="alt">a gwt and javascript xmpp library</span>
         <p>Visit the project home page at:
         <a href="http://emite.googlecode.com">emite.googlecode.com</a></p>
       </div>
     </div>
+    
     <div id="band">
       <div class="container">
         <%= yield :band %>
