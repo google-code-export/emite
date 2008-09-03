@@ -1,38 +1,39 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en"><head>
 
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>((e)) demos &mdash; <%= %> </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>((e)) demos &mdash; <%= %> </title>
 
-  <!-- Framework CSS -->
-  <link rel="stylesheet" href="/stylesheets/blueprint/screen.css" type="text/css" media="screen, projection">
-  <link rel="stylesheet" href="/stylesheets/blueprint/print.css" type="text/css" media="print">
-  <!--[if IE]><link rel="stylesheet" href="stylesheets/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
-  <link rel="stylesheet" href="/stylesheets/blueprint/fancy-type.css" type="text/css" media="screen, projection">
-  <link rel="stylesheet" href="/stylesheets/emite.css" type="text/css" media="screen, projection">
-</head>
-<%= yield :head %>
-<body>
-<div class="container">
-  <div class="span-24 last">
-    <h1><%= link_to '((e)) emite', :action => 'index' %></h1><span class="alt">a gwt and javascript xmpp library</span>
-    <p>Visit the project home page at:
-    <a href="http://emite.googlecode.com">emite.googlecode.com</a></p>
-  </div>
-</div>
-<div id="band">
-  <div class="container">
-    <%= yield :band %>
-  </div>
-</div>
+    <!-- Framework CSS -->
+    <link rel="stylesheet" href="/stylesheets/blueprint/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="/stylesheets/blueprint/print.css" type="text/css" media="print">
+    <!--[if IE]><link rel="stylesheet" href="stylesheets/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+    <link rel="stylesheet" href="/stylesheets/blueprint/fancy-type.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="/stylesheets/emite.css" type="text/css" media="screen, projection">
+    <link rel="shortcut icon" href="/favicon.ico" />
+  </head>
+  <%= yield :head %>
+  <body>
+    <div class="container">
+      <div class="span-24 last">
+        <h1><%= link_to '((e)) emite', :action => 'index' %></h1><span class="alt">a gwt and javascript xmpp library</span>
+        <p>Visit the project home page at:
+        <a href="http://emite.googlecode.com">emite.googlecode.com</a></p>
+      </div>
+    </div>
+    <div id="band">
+      <div class="container">
+        <%= yield :band %>
+      </div>
+    </div>
 
-<%= yield %>
+    <%= yield %>
 
-<div class="container">
-  <div class="span-24 footer">
-    <p>((e)) emite is <span class="alt">open source software</span> licensed under GNU Affero General Public License version 3</p>
-  </div>
-</div>
+    <div class="container">
+      <div class="span-24 footer">
+        <p>((e)) emite is <span class="alt">open source software</span> licensed under GNU Affero General Public License version 3</p>
+      </div>
+    </div>
 
-</body>
+  </body>
 </html>
