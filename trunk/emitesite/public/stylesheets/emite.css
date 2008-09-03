@@ -3,6 +3,8 @@
 
 body {background-color: white; font-size: 100%; padding: 0;}
 
+.brand {text-align: right}
+
 .alt {color: #920901;}
 .container { background-color: white; }
 .span-24 { padding: 0.5em 1em;}
