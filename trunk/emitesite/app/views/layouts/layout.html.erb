@@ -9,8 +9,14 @@
     <link rel="stylesheet" href="/stylesheets/blueprint/print.css" type="text/css" media="print">
     <!--[if IE]><link rel="stylesheet" href="stylesheets/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
     <link rel="stylesheet" href="/stylesheets/blueprint/fancy-type.css" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="/stylesheets/emite.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="/stylesheets/SyntaxHighlighter.css" type="text/css" media="all">
+    <link rel="stylesheet" href="/stylesheets/emite.css" type="text/css" media="all">
     <link rel="shortcut icon" href="/favicon.ico" />
+
+    <!-- SYNTAX HIGHLIGHTER -->
+    <script language="javascript" src="/javascripts/syntax/shCore.js"></script>
+    <script language="javascript" src="/javascripts/syntax/shBrushXml.js"></script>
+
   </head>
   <%= yield :head %>
   <body>
@@ -19,18 +25,17 @@
         <h1><%= yield :title %>&nbsp;</h1>
       </div>
       <div class="span-11 last brand">
-        <h1><%= link_to '((e)) emite', :action => 'index' %></h1><span class="alt">a gwt and javascript xmpp library</span>
-        <p>Visit the project home page at:
-        <a href="http://emite.googlecode.com">emite.googlecode.com</a></p>
+        <h1><%= link_to '((e)) emite', :action => 'index' %></h1><span class="alt">a gwt and javascript xmpp library</span><br/>
+        <a href="http://emite.googlecode.com">emite.googlecode.com</a>
       </div>
     </div>
-    
+
     <div id="band">
       <div class="container">
         <%= yield :band %>
       </div>
     </div>
-
+    
     <%= yield %>
 
     <div class="container">
@@ -39,5 +44,14 @@
       </div>
     </div>
 
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        var pageTracker = _gat._getTracker("UA-3241357-5");
+        pageTracker._initData();
+        pageTracker._trackPageview();
+    </script>
   </body>
 </html>

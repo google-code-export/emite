@@ -1,0 +1,63 @@
+<% content_for :title, 'widgets' %>
+
+<% content_for :head do -%>
+  <meta id="emite.httpBase" content="/proxy" />
+  <meta id="emite.host" content="localhost" />
+  <meta id="emite.onClose" content="login" />
+  <script>
+      toggle = function(id) {
+          document.getElementById(id).style.display = (document.getElementById(id).style.display == 'none' ? 'block' : 'none');
+      };
+      window.onload = function () { dp.SyntaxHighlighter.HighlightAll('code');}
+  </script>
+  <style type="text/css">
+    .box {text-align: center;}
+    .emite-widget-charla * {margin: 0; padding: 0;}
+    .emite-widget-charla {  border: 1px solid #6A6460; background-color: white;
+      width: 200px; margin: 10px auto;  padding: 10px; }
+    .emite-widget-charla textarea {width: 200px; margin: 5px 0; paddin: 2px;}
+    .emite-widget-charla button {width: 60px;}
+    .emite-widget-charla input[type=text] { width: 140px; }
+    .emite-widget-charla input[type=password] { width: 140px; }
+
+  </style>
+<% end -%>
+
+<script type="text/javascript" language="javascript" src="/lib/widgets/com.calclab.emite.widgets.EmiteWidgets.nocache.js"></script>
+
+
+<% content_for :band do -%>
+  <div class="prepend-1 span-22">
+    <p>Easy to embed chat widgets</p>
+    <p></p>
+  </div>
+<% end -%>
+
+<div class="container">
+  <div class="span-7 box">
+    <div id="charla1"  class="emite-widget-charla" data-jid="test1@localhost"
+         data-password="test1" data-chat="admin@localhost">
+      loading widget...
+    </div>
+    <a href="#" onclick="javascript: toggle('log_panel'); return false;">show/hide logger</a>
+  </div>
+  <div class="span-15 last">
+
+    <h2>Charla widget</h2>
+    <p>One to one chat widget with login.</p>
+    <pre name="code" class="xml">
+<%= h('<script type="text/javascript" language="javascript" src="/lib/widgets/com.calclab.emite.widgets.EmiteWidgets.nocache.js"></script>') %>
+<%= h('<div id="charla1"  class="emite-widget-charla" data-jid="test1@localhost" data-password="test1"') %>
+<%= h('data-chat="admin@localhost">loading widget...</div>') %>
+    </pre>
+  </div>
+
+  <div id="log_panel" class="span-24 last box" style="display: none">
+    <div id="logger" class="box emite-widget-logger">
+      loading widget...
+    </div>
+  </div>
+  <div class="span-24 last">
+    <%= link_to 'back', :action => 'widgets' %>
+  </div>
+</div>
