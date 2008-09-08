@@ -6,6 +6,9 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
+/**
+ * Session event plumbing.
+ */
 public abstract class AbstractSession implements Session {
 
     protected final Signal<Session.State> onStateChanged;

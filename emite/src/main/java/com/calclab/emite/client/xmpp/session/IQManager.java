@@ -6,7 +6,12 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.suco.client.signal.Slot;
 
-public class IQManager {
+/**
+ * Handles IQ callbacks and generates uniqe ids based on category strings. Used
+ * by XmppSession and not intended to be used outside
+ * 
+ */
+class IQManager {
     private int id;
     private final HashMap<String, Slot<IPacket>> listeners;
 
