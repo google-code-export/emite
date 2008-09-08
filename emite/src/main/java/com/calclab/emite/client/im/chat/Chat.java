@@ -25,6 +25,12 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Slot;
 
+/**
+ * A conversation between two users
+ * 
+ * @author dani
+ * 
+ */
 public interface Chat {
 
     /**

@@ -27,11 +27,17 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 
 /**
+ * <p>
+ * Default Chat implementation. Use Chat interface instead
+ * </p>
  * 
+ * <p>
  * About Chat ids: Other sender Uri plus thread identifies a chat (associated
  * with a chat panel in the UI). If no thread is specified, we join all messages
- * in one chat panel.
+ * in one chat.
+ * </p>
  * 
+ * @see Chat
  */
 public class ChatDefault extends AbstractChat {
     protected final String thread;

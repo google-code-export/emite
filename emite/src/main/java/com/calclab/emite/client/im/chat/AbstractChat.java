@@ -31,7 +31,6 @@ import com.calclab.suco.client.signal.Slot;
 
 public abstract class AbstractChat implements Chat {
 
-    protected final ChatListenerCollection listeners;
     protected final XmppURI other;
     protected Status status;
     protected final Signal<Status> onStateChanged;
@@ -45,7 +44,6 @@ public abstract class AbstractChat implements Chat {
     public AbstractChat(final Session session, final XmppURI other) {
 	this.session = session;
 	this.other = other;
-	this.listeners = new ChatListenerCollection();
 	this.data = new HashMap<Class<?>, Object>();
 	this.status = Chat.Status.locked;
 	this.onStateChanged = new Signal<Status>("chat:onStateChanged");
@@ -53,10 +51,6 @@ public abstract class AbstractChat implements Chat {
 	this.onMessageReceived = new Signal<Message>("chat:onMessageReceived");
 	this.onBeforeSend = new Signal<Message>("chat:onBeforeSend");
 	this.onBeforeReceive = new Signal<Message>("chat:onBeforeReceive");
-    }
-
-    public void addListener(final ChatListener listener) {
-	listeners.add(listener);
     }
 
     @SuppressWarnings("unchecked")
@@ -99,7 +93,6 @@ public abstract class AbstractChat implements Chat {
     public void receive(final Message message) {
 	onBeforeReceive.fire(message);
 	onMessageReceived.fire(message);
-	listeners.onMessageReceived(this, message);
     }
 
     public void send(final Message message) {
@@ -109,7 +102,6 @@ public abstract class AbstractChat implements Chat {
 	    onBeforeSend.fire(message);
 	    session.send(message);
 	    onMessageSent.fire(message);
-	    listeners.onMessageSent(this, message);
 	}
     }
 

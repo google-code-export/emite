@@ -29,8 +29,6 @@ import java.util.HashMap;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.Bosh3Settings;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatListener;
-import com.calclab.emite.client.im.chat.ChatListenerAdaptor;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
 import com.calclab.emite.client.xmpp.session.Session;
@@ -122,15 +120,18 @@ public class ChatEntryPoint implements EntryPoint {
 		chat.send(new Message(text));
 	    }
 	});
-	new ChatListenerAdaptor(chat, new ChatListener() {
-	    public void onMessageReceived(final Chat chat, final Message message) {
+	chat.onMessageReceived(new Slot<Message>() {
+	    public void onEvent(final Message message) {
 		chatPanel.showIncomingMessage(message.getFrom(), message.getBody());
 	    }
+	});
 
-	    public void onMessageSent(final Chat chat, final Message message) {
+	chat.onMessageSent(new Slot<Message>() {
+	    public void onEvent(final Message message) {
 		chatPanel.showOutcomingMessage(message.getBody());
 	    }
 	});
+
 	chats.put(uri, chatPanel);
 	conversationsPanel.addChat(uri.toString(), chatPanel);
 	return chatPanel;

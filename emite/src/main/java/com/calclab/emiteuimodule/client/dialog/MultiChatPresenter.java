@@ -31,8 +31,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatListener;
-import com.calclab.emite.client.im.chat.ChatListenerAdaptor;
 import com.calclab.emite.client.im.chat.ChatManager;
 import com.calclab.emite.client.im.roster.RosterManager;
 import com.calclab.emite.client.xep.avatar.AvatarManager;
@@ -442,18 +440,22 @@ public class MultiChatPresenter {
 	    public void onEvent(final Chat chat) {
 		final ChatUI chatUI = createChat(chat);
 		dockChatUIifIsStartedByMe(chat, chatUI);
-		new ChatListenerAdaptor(chat, new ChatListener() {
-		    public void onMessageReceived(final Chat chat, final Message message) {
+
+		chat.onMessageReceived(new Slot<Message>() {
+		    public void onEvent(final Message message) {
 			if (message.getBody() != null) {
 			    dockChatUI(chat, chatUI);
 			    messageReceived(chat, message);
 			}
 		    }
+		});
 
-		    public void onMessageSent(final Chat chat, final Message message) {
+		chat.onMessageSent(new Slot<Message>() {
+		    public void onEvent(final Message message) {
 			messageReceived(chat, message);
 		    }
 		});
+
 		addStateListener(chat);
 	    }
 	});
