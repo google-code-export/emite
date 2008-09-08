@@ -36,6 +36,9 @@ import com.calclab.emite.client.xmpp.stanzas.Presence;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Slot;
 
+/**
+ * Default Session implementation. Use Session interface instead.
+ */
 public class XmppSession extends AbstractSession {
     private State state;
     private XmppURI userURI;
