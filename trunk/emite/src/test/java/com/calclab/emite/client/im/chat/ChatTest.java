@@ -1,7 +1,6 @@
 package com.calclab.emite.client.im.chat;
 
 import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
-import static org.mockito.Mockito.mock;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +11,6 @@ import com.calclab.emite.testing.MockedSession;
 
 public class ChatTest extends AbstractChatTest {
     private ChatDefault chat;
-    private ChatListener listener;
     private MockedSession session;
 
     @Before
@@ -20,8 +18,6 @@ public class ChatTest extends AbstractChatTest {
 	session = new MockedSession("self@domain/res");
 	chat = new ChatDefault(session, uri("other@domain/other"), "theThread");
 	chat.setStatus(Status.ready);
-	listener = mock(ChatListener.class);
-	chat.addListener(listener);
     }
 
     @Override

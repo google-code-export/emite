@@ -33,6 +33,12 @@ import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
+/**
+ * Default ChatManager implementation. Use ChatManager interface instead
+ * 
+ * @author dani
+ * 
+ */
 public class ChatManagerDefault implements ChatManager {
     protected final HashSet<Chat> chats;
     protected final Signal<Chat> onChatCreated;

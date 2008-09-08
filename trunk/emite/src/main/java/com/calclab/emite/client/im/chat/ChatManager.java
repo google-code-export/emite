@@ -27,7 +27,12 @@ import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Slot;
 
 /**
- * @see ChatManagerListenerAdapter
+ * <p>
+ * The ChatManager is the object that allows you to chat with other people and
+ * mantain different conversations.
+ * </p>
+ * 
+ * 
  */
 public interface ChatManager {
 
