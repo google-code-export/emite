@@ -70,8 +70,8 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     }
 
     @Override
-    protected ChatManagerDefault createChatManager() {
-	final ChatManagerDefault chatManagerDefault = new ChatManagerDefault(session);
+    protected ChatManagerImpl createChatManager() {
+	final ChatManagerImpl chatManagerDefault = new ChatManagerImpl(session);
 	return chatManagerDefault;
     }
 

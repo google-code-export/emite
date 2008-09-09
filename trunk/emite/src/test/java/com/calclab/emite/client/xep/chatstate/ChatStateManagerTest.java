@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.im.chat.ChatManagerImpl;
 import com.calclab.emite.client.xep.chatstate.ChatStateManager.ChatState;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.XmppURI;
@@ -17,7 +17,7 @@ public class ChatStateManagerTest {
     private static final XmppURI MYSELF = uri("self@domain/res");
     private static final XmppURI OTHER = uri("other@domain/other");
 
-    private ChatManagerDefault chatManager;
+    private ChatManagerImpl chatManager;
     private MockSlot<ChatState> stateListener;
     private Chat chat;
     private ChatStateManager chatStateManager;
@@ -26,7 +26,7 @@ public class ChatStateManagerTest {
     @Before
     public void beforeTests() {
 	session = new MockedSession();
-	chatManager = new ChatManagerDefault(session);
+	chatManager = new ChatManagerImpl(session);
 	session.setLoggedIn(MYSELF);
 	final StateManager stateManager = new StateManager(chatManager);
 	chat = chatManager.openChat(OTHER, null, null);

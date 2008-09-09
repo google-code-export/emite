@@ -31,14 +31,14 @@ public class PresenceManagerTest {
 	session = new MockedSession();
 	rosterManager = mock(RosterManager.class);
 	onRosterReady = new SignalTester<Roster>();
-	manager = new PresenceManager(session, rosterManager);
+	manager = new PresenceManagerImpl(session, rosterManager);
 	verify(rosterManager).onRosterReady(argThat(onRosterReady));
     }
 
     @Test
     public void shouldBroadcastPresenceIfLoggedin() {
 	session.setLoggedIn("myself@domain");
-	manager.setOwnPresence("this is my new status", Show.away);
+	manager.setOwnPresence(Presence.build("this is my new status", Show.away));
 	session.verifySent("<presence from='myself@domain'><show>away</show>"
 		+ "<status>this is my new status</status></presence>");
 	final Presence current = manager.getOwnPresence();
@@ -48,7 +48,7 @@ public class PresenceManagerTest {
 
     @Test
     public void shouldDelayPresenceIfNotLoggedIn() {
-	manager.setOwnPresence("my message", Show.chat);
+	manager.setOwnPresence(Presence.build("my message", Show.chat));
 	session.verifySentNothing();
 	assertEquals(Presence.Type.unavailable, manager.getOwnPresence().getType());
     }
@@ -60,7 +60,7 @@ public class PresenceManagerTest {
 
     @Test
     public void shouldSendDelayedAsSoonAsPossible() {
-	manager.setOwnPresence("my delayed status", Show.dnd);
+	manager.setOwnPresence(Presence.build("my delayed status", Show.dnd));
 	session.setLoggedIn(uri("myself@domain"));
 	onRosterReady.fire(new Roster());
 	session.verifySent("<presence from='myself@domain'></presence>");
@@ -104,7 +104,7 @@ public class PresenceManagerTest {
 	session.setLoggedIn(uri("myself@domain"));
 	final MockSlot<Presence> listener = new MockSlot<Presence>();
 	manager.onOwnPresenceChanged(listener);
-	manager.setOwnPresence("status", Show.away);
+	manager.setOwnPresence(Presence.build("status", Show.away));
 	MockSlot.verifyCalled(listener);
 	assertEquals("status", listener.getValue(0).getStatus());
 	assertEquals(Show.away, listener.getValue(0).getShow());

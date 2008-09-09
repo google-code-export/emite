@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.calclab.emite.client.im.chat.AbstractChatManagerTest;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.im.chat.ChatManagerImpl;
 import com.calclab.emite.client.xep.muc.Occupant.Affiliation;
 import com.calclab.emite.client.xep.muc.Occupant.Role;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
@@ -106,8 +106,8 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
     }
 
     @Override
-    protected ChatManagerDefault createChatManager() {
-	final MUCRoomManager roomManager = new MUCRoomManager(session);
+    protected ChatManagerImpl createChatManager() {
+	final RoomManagerImpl roomManager = new RoomManagerImpl(session);
 	return roomManager;
     }
 }

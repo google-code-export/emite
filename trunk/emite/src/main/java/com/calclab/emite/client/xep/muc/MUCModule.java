@@ -40,7 +40,7 @@ public class MUCModule extends AbstractModule {
     protected void onLoad() {
 	register(SessionScope.class, new Factory<RoomManager>(RoomManager.class) {
 	    public RoomManager create() {
-		return new MUCRoomManager($(Session.class));
+		return new RoomManagerImpl($(Session.class));
 	    }
 	});
     }

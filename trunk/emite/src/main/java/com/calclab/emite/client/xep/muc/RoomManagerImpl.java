@@ -29,7 +29,7 @@ import com.calclab.emite.client.core.packet.Filters;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.NoPacket;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.im.chat.ChatManagerImpl;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
@@ -41,11 +41,11 @@ import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
-public class MUCRoomManager extends ChatManagerDefault implements RoomManager {
+public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
     private final HashMap<XmppURI, Room> rooms;
     private final Signal<RoomInvitation> onInvitationReceived;
 
-    public MUCRoomManager(final Session session) {
+    public RoomManagerImpl(final Session session) {
 	super(session);
 	this.onInvitationReceived = new Signal<RoomInvitation>("roomManager:onInvitationReceived");
 	this.rooms = new HashMap<XmppURI, Room>();

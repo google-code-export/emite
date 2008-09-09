@@ -10,13 +10,13 @@ import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.testing.MockedSession;
 
 public class ChatTest extends AbstractChatTest {
-    private ChatDefault chat;
+    private ChatImpl chat;
     private MockedSession session;
 
     @Before
     public void beforeTests() {
 	session = new MockedSession("self@domain/res");
-	chat = new ChatDefault(session, uri("other@domain/other"), "theThread");
+	chat = new ChatImpl(session, uri("other@domain/other"), "theThread");
 	chat.setStatus(Status.ready);
     }
 
@@ -27,7 +27,7 @@ public class ChatTest extends AbstractChatTest {
 
     @Test
     public void shouldSendNoThreadWhenNotSpecified() {
-	final AbstractChat noThreadChat = new ChatDefault(session, uri("other@domain/other"), null);
+	final AbstractChat noThreadChat = new ChatImpl(session, uri("other@domain/other"), null);
 	noThreadChat.setStatus(Status.ready);
 	noThreadChat.send(new Message("the message"));
 	session.verifySent("<message from='self@domain/res' to='other@domain/other' "

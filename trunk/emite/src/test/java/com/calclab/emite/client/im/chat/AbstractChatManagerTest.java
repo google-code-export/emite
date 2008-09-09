@@ -14,7 +14,7 @@ import com.calclab.suco.testing.signal.MockSlot;
 
 public abstract class AbstractChatManagerTest {
     protected static final XmppURI MYSELF = uri("self@domain");
-    protected ChatManagerDefault manager;
+    protected ChatManagerImpl manager;
     protected MockedSession session;
 
     @Before
@@ -65,5 +65,5 @@ public abstract class AbstractChatManagerTest {
 	assertEquals(Chat.Status.ready, chat.getState());
     }
 
-    protected abstract ChatManagerDefault createChatManager();
+    protected abstract ChatManagerImpl createChatManager();
 }

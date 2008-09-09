@@ -8,9 +8,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
-import com.calclab.emite.client.im.presence.PresenceListener;
-import com.calclab.emite.client.im.presence.PresenceManager;
-import com.calclab.emite.client.im.presence.PresenceManagerListenerAdapter;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.im.roster.RosterItem.Subscription;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -24,8 +21,6 @@ import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 
 public class RosterUIPresenterTest {
 
-    private PresenceManager presenceManager;
-    private PresenceListener presenceListener;
     private RosterUIPresenter rosterUI;
     private RosterItem rosterItem;
     private XmppURI otherUri;
@@ -59,9 +54,6 @@ public class RosterUIPresenterTest {
 
 	// Mocks creation
 	final MockitoXmpp xmpp = new MockitoXmpp();
-	presenceManager = xmpp.getPresenceManager();
-	presenceListener = Mockito.mock(PresenceListener.class);
-	new PresenceManagerListenerAdapter(presenceManager, presenceListener);
 	rosterUIView = Mockito.mock(RosterUIView.class);
 	i18n = new I18nTranslationServiceMocked();
 	final AvatarProvider avatarProvider = new AvatarProvider() {

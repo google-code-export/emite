@@ -39,11 +39,11 @@ import com.calclab.emite.client.xmpp.stanzas.Message.Type;
  * 
  * @see Chat
  */
-public class ChatDefault extends AbstractChat {
+public class ChatImpl extends AbstractChat {
     protected final String thread;
     private final String id;
 
-    ChatDefault(final Session session, final XmppURI other, final String thread) {
+    ChatImpl(final Session session, final XmppURI other, final String thread) {
 	super(session, other);
 	this.thread = thread;
 	this.id = generateChatID();
@@ -57,7 +57,7 @@ public class ChatDefault extends AbstractChat {
 	if (this == obj) {
 	    return true;
 	}
-	final ChatDefault other = (ChatDefault) obj;
+	final ChatImpl other = (ChatImpl) obj;
 	return id.equals(other.id);
     }
 

@@ -225,7 +225,7 @@ public class StatusUIPresenter implements StatusUI {
 	case authorized:
 	case connecting:
 	case ready:
-	    presenceManager.setOwnPresence(statusText, status);
+	    presenceManager.setOwnPresence(Presence.build(statusText, status));
 	    break;
 	case error:
 	    view.setLoadingVisible(false);
