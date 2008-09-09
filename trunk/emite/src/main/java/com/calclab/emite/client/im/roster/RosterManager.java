@@ -38,20 +38,20 @@ public interface RosterManager {
 	public static final SubscriptionMode DEF_SUBSCRIPTION_MODE = SubscriptionMode.manual;
 
 	// FIXME: vjrj - documentación: qué significa este presence?
-	void acceptSubscription(Presence presence);
+	public void acceptSubscription(Presence presence);
 
 	// FIXME: vjrj - documentación: igual que arriba
-	void cancelSubscriptor(XmppURI xmppURI);
+	public void cancelSubscriptor(XmppURI xmppURI);
 
-	void denySubscription(Presence presence);
+	public 	void denySubscription(Presence presence);
 
-	SubscriptionMode getSubscriptionMode();
+	public SubscriptionMode getSubscriptionMode();
 
-	void onRosterReady(Slot<Roster> slot);
+	public void onRosterReady(Slot<Roster> slot);
 
-	void onSubscriptionRequested(Slot<Presence> listener);
+	public void onSubscriptionRequested(Slot<Presence> listener);
 
-	void onUnsubscribedReceived(Slot<XmppURI> listener);
+	public void onUnsubscribedReceived(Slot<XmppURI> listener);
 
 	// FIXME: vjrj - documentación: ¿por qué si existe un requestAddItem
 	// no existe un onItemAdded?
@@ -67,7 +67,7 @@ public interface RosterManager {
 	 * @param group
 	 * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
 	 */
-	void requestAddItem(XmppURI jid, String name, String group);
+	public void requestAddItem(XmppURI jid, String name, String group);
 
 	// FIXME: lo mismo que arriba
 	/**
@@ -80,7 +80,7 @@ public interface RosterManager {
 	 * @param group
 	 * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
 	 */
-	void requestRemoveItem(XmppURI xmppURI);
+	public 	void requestRemoveItem(XmppURI xmppURI);
 
 	/**
 	 * A request to subscribe to another entity's presence is made by sending a
@@ -90,14 +90,14 @@ public interface RosterManager {
 	 * <contact@example.org/resource>
 	 * 
 	 */
-	void requestSubscribe(XmppURI to);
+	public void requestSubscribe(XmppURI to);
 
 	/**
 	 * If a user would like to unsubscribe from the presence of another entity,
 	 * it sends a presence stanza of type "unsubscribe".
 	 */
-	void requestUnsubscribe(XmppURI to);
+	public void requestUnsubscribe(XmppURI to);
 
-	void setSubscriptionMode(SubscriptionMode mode);
+	public void setSubscriptionMode(SubscriptionMode mode);
 
 }
