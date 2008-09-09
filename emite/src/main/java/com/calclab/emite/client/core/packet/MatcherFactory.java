@@ -21,22 +21,27 @@
  */
 package com.calclab.emite.client.core.packet;
 
-public class Event extends Packet {
-    private static final String TYPE = "type";
+public class MatcherFactory {
 
-    public Event(final String type) {
-	super("event", "emite:event");
-	setAttribute(TYPE, type);
+    public static final PacketMatcher ANY = new PacketMatcher() {
+	public boolean matches(final IPacket packet) {
+	    return true;
+	}
+    };
+
+    public static PacketMatcher byName(final String nodeName) {
+	return new PacketMatcher() {
+	    public boolean matches(final IPacket packet) {
+		return nodeName.equals(packet.getName());
+	    }
+	};
     }
 
-    public String getType() {
-	return getAttribute(TYPE);
+    public static PacketMatcher byNameAndXMLNS(final String nodeName, final String nodeXmls) {
+	return new PacketMatcher() {
+	    public boolean matches(final IPacket packet) {
+		return nodeName.equals(packet.getName()) && packet.hasAttribute("xmlns", nodeXmls);
+	    }
+	};
     }
-
-    public Event Params(final String name, final String value) {
-	final Event event = new Event(getType());
-	event.setAttribute(name, value);
-	return event;
-    }
-
 }

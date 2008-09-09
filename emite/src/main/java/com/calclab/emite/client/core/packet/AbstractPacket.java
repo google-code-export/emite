@@ -26,10 +26,10 @@ import java.util.List;
 
 public abstract class AbstractPacket implements IPacket {
 
-    public List<? extends IPacket> getChildren(final PacketFilter filter) {
+    public List<? extends IPacket> getChildren(final PacketMatcher filter) {
 	final List<IPacket> list = new ArrayList<IPacket>();
 	for (final IPacket child : getChildren()) {
-	    if (filter.isValid(child)) {
+	    if (filter.matches(child)) {
 		list.add(child);
 	    }
 	}
@@ -37,12 +37,12 @@ public abstract class AbstractPacket implements IPacket {
     }
 
     public List<? extends IPacket> getChildren(final String name) {
-	return getChildren(Filters.byName(name));
+	return getChildren(MatcherFactory.byName(name));
     }
 
-    public IPacket getFirstChild(final PacketFilter filter) {
+    public IPacket getFirstChild(final PacketMatcher filter) {
 	for (final IPacket child : getChildren()) {
-	    if (filter.isValid(child)) {
+	    if (filter.matches(child)) {
 		return child;
 	    }
 	}
@@ -50,7 +50,7 @@ public abstract class AbstractPacket implements IPacket {
     }
 
     public IPacket getFirstChild(final String name) {
-	return getFirstChild(Filters.byName(name));
+	return getFirstChild(MatcherFactory.byName(name));
     }
 
     public boolean hasAttribute(final String name) {

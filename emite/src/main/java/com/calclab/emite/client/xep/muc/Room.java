@@ -145,7 +145,7 @@ public class Room extends AbstractChat implements Chat {
 	final IPacket invite = x.addChild("invite", null);
 	invite.setAttribute("to", userJid);
 	final IPacket reason = invite.addChild("reason", null);
-	reason.WithText(reasonText);
+	reason.setText(reasonText);
 	session.send(message);
     }
 

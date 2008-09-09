@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * A substitute of null
+ */
 public class NoPacket implements IPacket {
     public static final NoPacket INSTANCE = new NoPacket();
     private static final HashMap<String, String> EMPTY_ATTRIBUTTES = new HashMap<String, String>();
@@ -53,7 +56,7 @@ public class NoPacket implements IPacket {
 	return EMPTY_CHILDREN;
     }
 
-    public List<? extends IPacket> getChildren(final PacketFilter filter) {
+    public List<? extends IPacket> getChildren(final PacketMatcher filter) {
 	return EMPTY_CHILDREN;
     }
 
@@ -65,7 +68,7 @@ public class NoPacket implements IPacket {
 	return 0;
     }
 
-    public IPacket getFirstChild(final PacketFilter filter) {
+    public IPacket getFirstChild(final PacketMatcher filter) {
 	return this;
     }
 

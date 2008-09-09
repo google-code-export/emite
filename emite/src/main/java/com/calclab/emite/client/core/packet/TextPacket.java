@@ -21,6 +21,9 @@
  */
 package com.calclab.emite.client.core.packet;
 
+/**
+ * Package private packet for use internal only
+ */
 class TextPacket extends Packet {
     private final String value;
 

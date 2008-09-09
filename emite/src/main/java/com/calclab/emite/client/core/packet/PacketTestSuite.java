@@ -25,9 +25,6 @@ import java.util.List;
 
 /**
  * A multi-environment class to test packets
- * 
- * @author dani
- * 
  */
 public final class PacketTestSuite {
 
@@ -94,7 +91,6 @@ public final class PacketTestSuite {
     public static void runPacketTests(final Helper utility) {
 	final HelperExtended helper = new HelperExtended(utility);
 	shouldNeverReturnNullWhenGetChildren(helper);
-	shouldGetChildren(helper);
 	shouldReturnNoPacketWhenGetFirstChild(helper);
 	shouldSetAndClearTheAttributes(helper);
 	shouldSetText(helper);
@@ -105,13 +101,6 @@ public final class PacketTestSuite {
 	shouldScapeText(helper);
     }
 
-    private static void shouldGetChildren(final HelperExtended helper) {
-	final IPacket packet = helper.createPacket("presence");
-	packet.addChild("x", "xmlns:x");
-	packet.addChild("x", "xmlns:x");
-	helper.assertEquals(2, packet.getChildren("x").size());
-	helper.log("- test ends");
-    }
 
     private static void shouldNeverReturnNullWhenGetChildren(final HelperExtended helper) {
 	helper.log("- shouldNeverReturnNullWhenGetChildren");

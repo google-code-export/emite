@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.packet.Filters;
+import com.calclab.emite.client.core.packet.MatcherFactory;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.NoPacket;
 import com.calclab.emite.client.im.chat.Chat;
@@ -114,7 +114,7 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
 	if (presence.hasAttribute("type", "unavailable")) {
 	    room.removeOccupant(occupantURI);
 	} else {
-	    final List<? extends IPacket> children = presence.getChildren(Filters.byNameAndXMLNS("x",
+	    final List<? extends IPacket> children = presence.getChildren(MatcherFactory.byNameAndXMLNS("x",
 		    "http://jabber.org/protocol/muc#user"));
 	    for (final IPacket child : children) {
 		final IPacket item = child.getFirstChild("item");
