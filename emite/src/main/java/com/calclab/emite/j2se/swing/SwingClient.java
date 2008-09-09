@@ -39,8 +39,6 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.client.Xmpp;
 import com.calclab.emite.client.core.bosh.Bosh3Settings;
 import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.presence.PresenceListener;
-import com.calclab.emite.client.im.presence.PresenceManagerListenerAdapter;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterItem;
 import com.calclab.emite.client.xep.muc.MUCModule;
@@ -61,263 +59,285 @@ import com.calclab.suco.client.signal.Slot2;
 
 public class SwingClient {
 
-    private final ConversationsPanel conversationsPanel;
-    private final JFrame frame;
+	private final ConversationsPanel conversationsPanel;
+	private final JFrame frame;
 
-    private final LoginPanel loginPanel;
+	private final LoginPanel loginPanel;
 
-    private final RoomsPanel roomsPanel;
-    private final JPanel root;
-    private final RosterPanel rosterPanel;
-    private final JLabel status;
-    private final JTabbedPane tabs;
-    private final Xmpp xmpp;
+	private final RoomsPanel roomsPanel;
+	private final JPanel root;
+	private final RosterPanel rosterPanel;
+	private final JLabel status;
+	private final JTabbedPane tabs;
+	private final Xmpp xmpp;
 
-    public SwingClient(final Xmpp xmpp) {
-	this.xmpp = xmpp;
-	this.frame = new JFrame("emite swing client");
-	root = new JPanel(new BorderLayout());
-	addXmppListeners();
+	public SwingClient(final Xmpp xmpp) {
+		this.xmpp = xmpp;
+		this.frame = new JFrame("emite swing client");
+		root = new JPanel(new BorderLayout());
+		addXmppListeners();
 
-	loginPanel = new LoginPanel(new LoginPanelListener() {
-	    public void onLogin(final String httpBase, final String domain, final String userName, final String password) {
-		final String resource = "emite-swing";
-		xmpp.setBoshSettings(new Bosh3Settings(httpBase, domain));
-		xmpp.login(XmppURI.uri(userName, domain, resource), password, Presence.Show.dnd, "do not disturb at: "
-			+ new Date().toString());
-	    }
+		loginPanel = new LoginPanel(new LoginPanelListener() {
+			public void onLogin(final String httpBase, final String domain,
+					final String userName, final String password) {
+				final String resource = "emite-swing";
+				xmpp.setBoshSettings(new Bosh3Settings(httpBase, domain));
+				xmpp.login(XmppURI.uri(userName, domain, resource), password,
+						Presence.Show.dnd, "do not disturb at: "
+								+ new Date().toString());
+			}
 
-	    public void onLogout() {
-		xmpp.logout();
-	    }
+			public void onLogout() {
+				xmpp.logout();
+			}
 
-	});
-
-	loginPanel.addConfiguration(new ConnectionConfiguration("empty", "", "", "", ""));
-	loginPanel.addConfiguration(new ConnectionConfiguration("admin @ local openfire",
-		"http://localhost:5280/http-bind/", "localhost", "admin", "easyeasy"));
-	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ local ejabberd",
-		"http://localhost:5280/http-bind/", "localhost", "dani", "dani"));
-	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ emite demo",
-		"http://emite.ourproject.org/proxy", "emitedemo.ourproject.org", "dani", "dani"));
-	loginPanel.addConfiguration(new ConnectionConfiguration("test1 @ jetty proxy",
-		"http://localhost:4444/http-bind", "localhost", "test1", "test1"));
-	loginPanel.addConfiguration(new ConnectionConfiguration("test1 @ jetty bosh servlet",
-		"http://emite.ourproject.org/proxy", "localhost", "test1", "test1"));
-
-	rosterPanel = new RosterPanel(frame, new RosterPanelListener() {
-	    public void onAddRosterItem(final String uri, final String name) {
-		xmpp.getRosterManager().requestAddItem(uri(uri), name, null);
-	    }
-
-	    public void onRemoveItem(final RosterItem item) {
-		xmpp.getRosterManager().requestRemoveItem(item.getJID());
-	    }
-
-	    public void onStartChat(final RosterItem item) {
-		xmpp.getChatManager().openChat(item.getJID(), null, null);
-	    }
-	});
-
-	roomsPanel = new RoomsPanel(new RoomsPanelListener() {
-	    public void onRoomEnterd(final String roomName) {
-		final RoomManager roomManager = MUCModule.getRoomManager(xmpp);
-		roomManager.openChat(uri(roomName), null, null);
-	    }
-	});
-
-	conversationsPanel = new ConversationsPanel();
-	status = new JLabel("emite test client");
-
-	root.add(loginPanel, BorderLayout.NORTH);
-	root.add(conversationsPanel, BorderLayout.CENTER);
-	root.add(status, BorderLayout.SOUTH);
-
-	tabs = new JTabbedPane();
-	tabs.add("chats", rosterPanel);
-	tabs.add("rooms", roomsPanel);
-
-	root.add(tabs, BorderLayout.EAST);
-
-    }
-
-    public void start() {
-	frame.setContentPane(root);
-	frame.setSize(900, 400);
-	frame.setVisible(true);
-	frame.addWindowListener(new WindowAdapter() {
-	    @Override
-	    public void windowClosing(final WindowEvent e) {
-		if (xmpp != null) {
-		    xmpp.stop();
-		}
-		System.exit(0);
-	    }
-	});
-    }
-
-    protected void addChatListener(final Chat chat, final ChatPanel chatPanel) {
-	chat.onMessageReceived(new Slot<Message>() {
-	    public void onEvent(final Message message) {
-		chatPanel.showIcomingMessage(message.getFromAsString(), message.getBody());
-	    }
-	});
-	chat.onMessageSent(new Slot<Message>() {
-	    public void onEvent(final Message message) {
-		chatPanel.showOutMessage(message.getBody());
-	    }
-	});
-
-    }
-
-    private void addXmppListeners() {
-	xmpp.getSession().onStateChanged(new Slot<Session.State>() {
-	    public void onEvent(final Session.State current) {
-		print("STATE: " + current);
-		final boolean isConnected = current == Session.State.ready;
-		loginPanel.showState("state: " + current.toString(), isConnected);
-		tabs.setEnabled(isConnected);
-		if (current == Session.State.disconnected) {
-		    rosterPanel.clear();
-		} else if (current == Session.State.notAuthorized) {
-		    JOptionPane.showMessageDialog(frame, "lo siento, tienes mal la contraseña -o el usuario ;)-");
-		}
-	    }
-	});
-
-	xmpp.getChatManager().onChatCreated(new Slot<Chat>() {
-	    public void onEvent(final Chat chat) {
-		final ChatPanel chatPanel = conversationsPanel.createChat(chat.getOtherURI().toString(), chat.getID(),
-			new ChatPanelListener() {
-			    public void onClose(final ChatPanel source) {
-				xmpp.getChatManager().close(chat);
-
-			    }
-
-			    public void onSend(final ChatPanel source, final String text) {
-				chat.send(new Message(text));
-				source.clearMessage();
-			    }
-
-			});
-		addChatListener(chat, chatPanel);
-		chatPanel.clearMessage();
-	    }
-	});
-
-	xmpp.getChatManager().onChatClosed(new Slot<Chat>() {
-	    public void onEvent(final Chat chat) {
-		conversationsPanel.close(chat.getID());
-	    }
-	});
-
-	final RoomManager roomManager = MUCModule.getRoomManager(xmpp);
-
-	roomManager.onChatCreated(new Slot<Chat>() {
-	    public void onEvent(final Chat chat) {
-		final Room room = (Room) chat;
-		final RoomPanel roomPanel = conversationsPanel.createRoom(room.getOtherURI(), room.getID(),
-			new RoomPanelListener() {
-			    public void onClose(final ChatPanel source) {
-				MUCModule.getRoomManager(xmpp).close(room);
-			    }
-
-			    public void onInviteUser(final String userJid, final String reasonText) {
-				(room).sendInvitationTo(userJid, reasonText);
-			    }
-
-			    public void onModifySubject(final String newSubject) {
-				(room).setSubject(newSubject);
-			    }
-
-			    public void onSend(final ChatPanel source, final String text) {
-				room.send(new Message(text));
-				source.clearMessage();
-			    }
-			});
-		addChatListener(room, roomPanel);
-
-		room.onMessageReceived(new Slot<Message>() {
-		    public void onEvent(final Message message) {
-			roomPanel.showIcomingMessage(message.getFromAsString(), message.getBody());
-		    }
 		});
 
-		room.onMessageSent(new Slot<Message>() {
-		    public void onEvent(final Message message) {
-			roomPanel.showOutMessage(message.getBody());
-		    }
+		loginPanel.addConfiguration(new ConnectionConfiguration("empty", "",
+				"", "", ""));
+		loginPanel.addConfiguration(new ConnectionConfiguration(
+				"admin @ local openfire", "http://localhost:5280/http-bind/",
+				"localhost", "admin", "easyeasy"));
+		loginPanel.addConfiguration(new ConnectionConfiguration(
+				"dani @ local ejabberd", "http://localhost:5280/http-bind/",
+				"localhost", "dani", "dani"));
+		loginPanel.addConfiguration(new ConnectionConfiguration(
+				"dani @ emite demo", "http://emite.ourproject.org/proxy",
+				"emitedemo.ourproject.org", "dani", "dani"));
+		loginPanel.addConfiguration(new ConnectionConfiguration(
+				"test1 @ jetty proxy", "http://localhost:4444/http-bind",
+				"localhost", "test1", "test1"));
+		loginPanel.addConfiguration(new ConnectionConfiguration(
+				"test1 @ jetty bosh servlet",
+				"http://emite.ourproject.org/proxy", "localhost", "test1",
+				"test1"));
+
+		rosterPanel = new RosterPanel(frame, new RosterPanelListener() {
+			public void onAddRosterItem(final String uri, final String name) {
+				xmpp.getRosterManager().requestAddItem(uri(uri), name, null);
+			}
+
+			public void onRemoveItem(final RosterItem item) {
+				xmpp.getRosterManager().requestRemoveItem(item.getJID());
+			}
+
+			public void onStartChat(final RosterItem item) {
+				xmpp.getChatManager().openChat(item.getJID(), null, null);
+			}
 		});
 
-		room.onOccupantsChanged(new Slot<Collection<Occupant>>() {
-		    public void onEvent(final Collection<Occupant> users) {
-			roomPanel.setUsers(users);
-		    }
+		roomsPanel = new RoomsPanel(new RoomsPanelListener() {
+			public void onRoomEnterd(final String roomName) {
+				final RoomManager roomManager = MUCModule.getRoomManager(xmpp);
+				roomManager.openChat(uri(roomName), null, null);
+			}
 		});
 
-		room.onSubjectChanged(new Slot2<Occupant, String>() {
-		    public void onEvent(final Occupant occupant, final String newSubject) {
-			final String nick = occupant != null ? occupant.getNick() : "";
-			roomPanel.showIcomingMessage(nick, "New subject: " + newSubject);
-		    }
-		});
+		conversationsPanel = new ConversationsPanel();
+		status = new JLabel("emite test client");
 
-	    }
-	});
+		root.add(loginPanel, BorderLayout.NORTH);
+		root.add(conversationsPanel, BorderLayout.CENTER);
+		root.add(status, BorderLayout.SOUTH);
 
-	roomManager.onChatClosed(new Slot<Chat>() {
-	    public void onEvent(final Chat chat) {
-		conversationsPanel.close(chat.getID());
-	    }
-	});
+		tabs = new JTabbedPane();
+		tabs.add("chats", rosterPanel);
+		tabs.add("rooms", roomsPanel);
 
-	roomManager.onInvitationReceived(new Slot<RoomInvitation>() {
-	    public void onEvent(final RoomInvitation invitation) {
-		roomManager.openChat(invitation.getRoomURI(), null, null);
-	    }
-	});
+		root.add(tabs, BorderLayout.EAST);
 
-	final Roster roster = xmpp.getRoster();
-	roster.onItemChanged(new Slot<RosterItem>() {
-	    public void onEvent(final RosterItem item) {
-		print("ROSTER ITEM PRESENCE CHANGED");
-		rosterPanel.refresh();
-	    }
-	});
-	roster.onRosterChanged(new Slot<Collection<RosterItem>>() {
-
-	    public void onEvent(final Collection<RosterItem> items) {
-		print("ROSTER INITIALIZED");
-		rosterPanel.clear();
-		for (final RosterItem item : items) {
-		    rosterPanel.add(item.getName(), item);
-		}
-	    }
-	});
-
-	xmpp.getRosterManager().onSubscriptionRequested(new Slot<Presence>() {
-	    public void onEvent(final Presence presence) {
-		final Object message = presence.getFromAsString() + " want to add you to his/her roster. Accept?";
-		final int result = JOptionPane.showConfirmDialog(frame, message);
-		if (result == JOptionPane.OK_OPTION) {
-		    xmpp.getRosterManager().acceptSubscription(presence);
-		}
-		print("SUBSCRIPTION: " + presence);
-	    }
-	});
-
-	new PresenceManagerListenerAdapter(xmpp.getPresenceManager(), new PresenceListener() {
-	    public void onPresenceReceived(final Presence presence) {
-		print("PRESENCE!!: " + presence);
-	    }
-
-	});
-    }
-
-    private void print(final String message) {
-	Log.info(message);
-	if (status != null) {
-	    status.setText(message);
 	}
-    }
+
+	public void start() {
+		frame.setContentPane(root);
+		frame.setSize(900, 400);
+		frame.setVisible(true);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(final WindowEvent e) {
+				if (xmpp != null) {
+					xmpp.stop();
+				}
+				System.exit(0);
+			}
+		});
+	}
+
+	protected void addChatListener(final Chat chat, final ChatPanel chatPanel) {
+		chat.onMessageReceived(new Slot<Message>() {
+			public void onEvent(final Message message) {
+				chatPanel.showIcomingMessage(message.getFromAsString(), message
+						.getBody());
+			}
+		});
+		chat.onMessageSent(new Slot<Message>() {
+			public void onEvent(final Message message) {
+				chatPanel.showOutMessage(message.getBody());
+			}
+		});
+
+	}
+
+	private void addXmppListeners() {
+		xmpp.getSession().onStateChanged(new Slot<Session.State>() {
+			public void onEvent(final Session.State current) {
+				print("STATE: " + current);
+				final boolean isConnected = current == Session.State.ready;
+				loginPanel.showState("state: " + current.toString(),
+						isConnected);
+				tabs.setEnabled(isConnected);
+				if (current == Session.State.disconnected) {
+					rosterPanel.clear();
+				} else if (current == Session.State.notAuthorized) {
+					JOptionPane
+							.showMessageDialog(frame,
+									"lo siento, tienes mal la contraseña -o el usuario ;)-");
+				}
+			}
+		});
+
+		xmpp.getChatManager().onChatCreated(new Slot<Chat>() {
+			public void onEvent(final Chat chat) {
+				final ChatPanel chatPanel = conversationsPanel.createChat(chat
+						.getOtherURI().toString(), chat.getID(),
+						new ChatPanelListener() {
+							public void onClose(final ChatPanel source) {
+								xmpp.getChatManager().close(chat);
+
+							}
+
+							public void onSend(final ChatPanel source,
+									final String text) {
+								chat.send(new Message(text));
+								source.clearMessage();
+							}
+
+						});
+				addChatListener(chat, chatPanel);
+				chatPanel.clearMessage();
+			}
+		});
+
+		xmpp.getChatManager().onChatClosed(new Slot<Chat>() {
+			public void onEvent(final Chat chat) {
+				conversationsPanel.close(chat.getID());
+			}
+		});
+
+		final RoomManager roomManager = MUCModule.getRoomManager(xmpp);
+
+		roomManager.onChatCreated(new Slot<Chat>() {
+			public void onEvent(final Chat chat) {
+				final Room room = (Room) chat;
+				final RoomPanel roomPanel = conversationsPanel.createRoom(room
+						.getOtherURI(), room.getID(), new RoomPanelListener() {
+					public void onClose(final ChatPanel source) {
+						MUCModule.getRoomManager(xmpp).close(room);
+					}
+
+					public void onInviteUser(final String userJid,
+							final String reasonText) {
+						(room).sendInvitationTo(userJid, reasonText);
+					}
+
+					public void onModifySubject(final String newSubject) {
+						(room).setSubject(newSubject);
+					}
+
+					public void onSend(final ChatPanel source, final String text) {
+						room.send(new Message(text));
+						source.clearMessage();
+					}
+				});
+				addChatListener(room, roomPanel);
+
+				room.onMessageReceived(new Slot<Message>() {
+					public void onEvent(final Message message) {
+						roomPanel.showIcomingMessage(message.getFromAsString(),
+								message.getBody());
+					}
+				});
+
+				room.onMessageSent(new Slot<Message>() {
+					public void onEvent(final Message message) {
+						roomPanel.showOutMessage(message.getBody());
+					}
+				});
+
+				room.onOccupantsChanged(new Slot<Collection<Occupant>>() {
+					public void onEvent(final Collection<Occupant> users) {
+						roomPanel.setUsers(users);
+					}
+				});
+
+				room.onSubjectChanged(new Slot2<Occupant, String>() {
+					public void onEvent(final Occupant occupant,
+							final String newSubject) {
+						final String nick = occupant != null ? occupant
+								.getNick() : "";
+						roomPanel.showIcomingMessage(nick, "New subject: "
+								+ newSubject);
+					}
+				});
+
+			}
+		});
+
+		roomManager.onChatClosed(new Slot<Chat>() {
+			public void onEvent(final Chat chat) {
+				conversationsPanel.close(chat.getID());
+			}
+		});
+
+		roomManager.onInvitationReceived(new Slot<RoomInvitation>() {
+			public void onEvent(final RoomInvitation invitation) {
+				roomManager.openChat(invitation.getRoomURI(), null, null);
+			}
+		});
+
+		final Roster roster = xmpp.getRoster();
+		roster.onItemChanged(new Slot<RosterItem>() {
+			public void onEvent(final RosterItem item) {
+				print("ROSTER ITEM PRESENCE CHANGED");
+				rosterPanel.refresh();
+			}
+		});
+		roster.onRosterChanged(new Slot<Collection<RosterItem>>() {
+
+			public void onEvent(final Collection<RosterItem> items) {
+				print("ROSTER INITIALIZED");
+				rosterPanel.clear();
+				for (final RosterItem item : items) {
+					rosterPanel.add(item.getName(), item);
+				}
+			}
+		});
+
+		xmpp.getRosterManager().onSubscriptionRequested(new Slot<Presence>() {
+			public void onEvent(final Presence presence) {
+				final Object message = presence.getFromAsString()
+						+ " want to add you to his/her roster. Accept?";
+				final int result = JOptionPane
+						.showConfirmDialog(frame, message);
+				if (result == JOptionPane.OK_OPTION) {
+					xmpp.getRosterManager().acceptSubscription(presence);
+				}
+				print("SUBSCRIPTION: " + presence);
+			}
+		});
+
+		xmpp.getPresenceManager().onPresenceReceived(new Slot<Presence>() {
+			public void onEvent(Presence presence) {
+				print("PRESENCE!!: " + presence);
+			}
+		});
+
+	}
+
+	private void print(final String message) {
+		Log.info(message);
+		if (status != null) {
+			status.setText(message);
+		}
+	}
 }

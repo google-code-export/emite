@@ -39,14 +39,14 @@ import com.calclab.suco.client.signal.Slot;
  * @author dani
  * 
  */
-public class ChatManagerDefault implements ChatManager {
+public class ChatManagerImpl implements ChatManager {
     protected final HashSet<Chat> chats;
     protected final Signal<Chat> onChatCreated;
     protected Signal<Chat> onChatClosed;
     protected final Session session;
     private XmppURI lastLoggedInUser;
 
-    public ChatManagerDefault(final Session session) {
+    public ChatManagerImpl(final Session session) {
 	this.session = session;
 	this.onChatCreated = new Signal<Chat>("chatManager:onChatCreated");
 	this.onChatClosed = new Signal<Chat>("chatManager:onChatClosed");
@@ -128,7 +128,7 @@ public class ChatManagerDefault implements ChatManager {
     }
 
     private <T> Chat createChat(final XmppURI toURI, final String thread, final Class<T> extraType, final T extraData) {
-	final ChatDefault chat = new ChatDefault(session, toURI, thread);
+	final ChatImpl chat = new ChatImpl(session, toURI, thread);
 	if (extraType != null) {
 	    chat.setData(extraType, extraData);
 	}

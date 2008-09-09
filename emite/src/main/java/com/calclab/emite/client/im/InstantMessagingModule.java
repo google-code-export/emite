@@ -22,10 +22,12 @@
 package com.calclab.emite.client.im;
 
 import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.emite.client.im.chat.ChatManagerDefault;
+import com.calclab.emite.client.im.chat.ChatManagerImpl;
 import com.calclab.emite.client.im.presence.PresenceManager;
+import com.calclab.emite.client.im.presence.PresenceManagerImpl;
 import com.calclab.emite.client.im.roster.Roster;
 import com.calclab.emite.client.im.roster.RosterManager;
+import com.calclab.emite.client.im.roster.RosterManagerImpl;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
@@ -44,16 +46,16 @@ public class InstantMessagingModule extends AbstractModule {
 		return new Roster();
 	    }
 	}, new Factory<ChatManager>(ChatManager.class) {
-	    public ChatManagerDefault create() {
-		return new ChatManagerDefault($(Session.class));
+	    public ChatManagerImpl create() {
+		return new ChatManagerImpl($(Session.class));
 	    }
 	}, new Factory<RosterManager>(RosterManager.class) {
 	    public RosterManager create() {
-		return new RosterManager($(Session.class), $(Roster.class));
+		return new RosterManagerImpl($(Session.class), $(Roster.class));
 	    }
 	}, new Factory<PresenceManager>(PresenceManager.class) {
 	    public PresenceManager create() {
-		return new PresenceManager($(Session.class), $(RosterManager.class));
+		return new PresenceManagerImpl($(Session.class), $(RosterManager.class));
 	    }
 	});
 

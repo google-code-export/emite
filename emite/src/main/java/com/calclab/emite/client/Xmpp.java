@@ -99,7 +99,7 @@ public class Xmpp extends DelegatedContainer {
     public void login(final XmppURI uri, final String password, final Presence.Show show, final String status) {
 	start();
 	session.login(uri, password);
-	getPresenceManager().setOwnPresence(status, show);
+	getPresenceManager().setOwnPresence(Presence.build(status, show));
     }
 
     public void logout() {

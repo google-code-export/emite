@@ -28,7 +28,7 @@ public class RosterManagerTest {
     public void aaCreate() {
 	session = new MockedSession();
 	roster = mock(Roster.class);
-	manager = new RosterManager(session, roster);
+	manager = new RosterManagerImpl(session, roster);
 
     }
 
@@ -121,16 +121,5 @@ public class RosterManagerTest {
 	MockSlot.verifyCalled(listener);
     }
 
-    @Test
-    @Deprecated
-    public void shouldUnsubscribe() {
-	final RosterManagerListener oldListener = mock(RosterManagerListener.class);
-	new RosterManagerListenerAdapter(manager, oldListener);
-
-	final Presence presence = new Presence(Presence.Type.unsubscribed, uri("from@domain"), uri("to@domain"));
-	session.receives(presence);
-	verify(oldListener).onUnsubscribedReceived(uri("from@domain"));
-
-    }
 
 }
