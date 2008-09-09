@@ -23,7 +23,9 @@ package com.calclab.emite.client.xep.avatar;
 
 import java.util.List;
 
+import com.calclab.emite.client.core.packet.MatcherFactory;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.core.packet.PacketMatcher;
 import com.calclab.emite.client.im.presence.PresenceManager;
 import com.calclab.emite.client.xmpp.session.Session;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
@@ -37,8 +39,8 @@ import com.calclab.suco.client.signal.Slot;
  * XEP-0153: vCard-Based Avatars (Version 1.0)
  */
 public class AvatarManager {
-
-    private static final String VCARD = "vCard";
+    private static final PacketMatcher FILTER_X = MatcherFactory.byName("x");
+	private static final String VCARD = "vCard";
     private static final String XMLNS = "vcard-temp";
     private static final String PHOTO = "PHOTO";
     private static final String TYPE = "TYPE";
@@ -112,7 +114,7 @@ public class AvatarManager {
     private void install() {
 	presenceManager.onPresenceReceived(new Slot<Presence>() {
 	    public void onEvent(final Presence presence) {
-		final List<? extends IPacket> children = presence.getChildren("x");
+		final List<? extends IPacket> children = presence.getChildren(FILTER_X);
 		for (final IPacket child : children) {
 		    if (child.hasAttribute("xmlns", XMLNS + ":x:update")) {
 			onHashPresenceReceived.fire(presence);

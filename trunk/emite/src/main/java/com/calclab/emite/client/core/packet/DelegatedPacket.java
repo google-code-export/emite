@@ -47,19 +47,16 @@ public class DelegatedPacket implements IPacket {
 	return delegate.getChildren();
     }
 
-    public List<? extends IPacket> getChildren(final PacketFilter filter) {
+    public List<? extends IPacket> getChildren(final PacketMatcher filter) {
 	return delegate.getChildren(filter);
     }
 
-    public List<? extends IPacket> getChildren(final String name) {
-	return delegate.getChildren(name);
-    }
 
     public int getChildrenCount() {
 	return delegate.getChildrenCount();
     }
 
-    public IPacket getFirstChild(final PacketFilter filter) {
+    public IPacket getFirstChild(final PacketMatcher filter) {
 	return delegate.getFirstChild(filter);
     }
 
@@ -104,19 +101,11 @@ public class DelegatedPacket implements IPacket {
 	return delegate.toString();
     }
 
-    public IPacket With(final String name, final long value) {
-	delegate.With(name, value);
-	return this;
-    }
 
     public IPacket With(final String name, final String value) {
 	delegate.With(name, value);
 	return this;
     }
 
-    public IPacket WithText(final String text) {
-	delegate.WithText(text);
-	return this;
-    }
 
 }

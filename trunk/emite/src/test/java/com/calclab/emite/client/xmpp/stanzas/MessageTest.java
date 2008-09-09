@@ -7,6 +7,7 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
+import com.calclab.emite.client.core.packet.MatcherFactory;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.stanzas.Message.Type;
 
@@ -22,9 +23,9 @@ public class MessageTest {
     public void shouldNotAddBodyIfNotSpecified() {
 	final Message message = new Message();
 	assertNull(message.getBody());
-	assertEquals(0, message.getChildren("body").size());
+	assertEquals(0, message.getChildren(MatcherFactory.byName("body")).size());
 	final Message message2 = new Message(uri("me@domain"), uri("other@domain"), null, Message.Type.chat);
-	assertEquals(0, message2.getChildren("body").size());
+	assertEquals(0, message2.getChildren(MatcherFactory.byName("body")).size());
     }
 
     @Test

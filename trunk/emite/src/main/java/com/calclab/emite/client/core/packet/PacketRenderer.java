@@ -24,6 +24,9 @@ package com.calclab.emite.client.core.packet;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Helper class to serialize a packet to string
+ */
 public class PacketRenderer {
     public static String toString(final IPacket packet) {
 	final StringBuffer buffer = new StringBuffer();

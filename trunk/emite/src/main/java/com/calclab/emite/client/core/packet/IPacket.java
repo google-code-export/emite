@@ -24,82 +24,74 @@ package com.calclab.emite.client.core.packet;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * 
- * @author dani
- * 
- */
 public interface IPacket {
 
-    public HashMap<String, String> getAttributes();
+	public HashMap<String, String> getAttributes();
 
-    public int getChildrenCount();
+	public int getChildrenCount();
 
-    public boolean hasAttribute(String name);
+	public boolean hasAttribute(String name);
 
-    public boolean hasAttribute(String name, String value);
+	public boolean hasAttribute(String name, String value);
 
-    /**
-     * Removes a single instance of the specified child from this packet, if it
-     * is present (optional operation).
-     * 
-     * @param child
-     * @return true if the list contained the specified element.
-     */
-    public boolean removeChild(IPacket child);
+	/**
+	 * Removes a single instance of the specified child from this packet, if it
+	 * is present (optional operation).
+	 * 
+	 * @param child
+	 * @return true if the list contained the specified element.
+	 */
+	public boolean removeChild(IPacket child);
 
-    IPacket addChild(String nodeName, String xmlns);
+	IPacket addChild(String nodeName, String xmlns);
 
-    String getAttribute(String name);
+	String getAttribute(String name);
 
-    List<? extends IPacket> getChildren();
+	List<? extends IPacket> getChildren();
 
-    /**
-     * Return a list of descendant childs after filter by the filter
-     * 
-     * @param filter
-     * @return
-     */
-    List<? extends IPacket> getChildren(PacketFilter filter);
+	/**
+	 * Return a list of descendant childs after filter by the filter
+	 * 
+	 * @param filter
+	 * @return
+	 */
+	List<? extends IPacket> getChildren(PacketMatcher matcher);
 
-    /**
-     * Return all the descendant childs with node name
-     * 
-     * @param name
-     */
-    List<? extends IPacket> getChildren(String name);
+	/**
+	 * Returns the first children that matches the matcher
+	 * 
+	 * @param matcher
+	 *            the matcher
+	 * @return
+	 * the first children if found, NoPacket.INSTANCE if nothing found
+	 */
+	IPacket getFirstChild(PacketMatcher matcher);
 
-    IPacket getFirstChild(PacketFilter filter);
+	/**
+	 * Return the first direct child with this name. NEVER returns null
+	 * 
+	 * @param childName
+	 * @return the Packet or NoPacket instance
+	 */
+	IPacket getFirstChild(String childName);
 
-    /**
-     * Return the first direct child with this name. NEVER returns null
-     * 
-     * @param childName
-     * @return the Packet or NoPacket instance
-     */
-    IPacket getFirstChild(String childName);
+	String getName();
 
-    String getName();
+	String getText();
 
-    String getText();
+	boolean hasChild(String name);
 
-    boolean hasChild(String name);
+	void setAttribute(String name, String value);
 
-    void setAttribute(String name, String value);
+	void setText(String text);
 
-    void setText(String text);
-
-    IPacket With(String name, long value);
-
-    /**
-     * Chain-able method to add a attribute
-     * 
-     * @param name
-     * @param value
-     * @return
-     */
-    IPacket With(String name, String value);
-
-    IPacket WithText(String text);
+	/**
+	 * Chain-able method to add a attribute
+	 * 
+	 * @param name
+	 * @param value
+	 * @return
+	 */
+	IPacket With(String name, String value);
 
 }
