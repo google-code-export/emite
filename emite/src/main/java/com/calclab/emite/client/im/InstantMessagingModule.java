@@ -33,31 +33,47 @@ import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scope.SingletonScope;
 
+/**
+ * <p>
+ * Implementation of the RFC-FIXME
+ * </p>
+ * <p>
+ * This module exports the following components:
+ * </p>
+ * <ul>
+ * <li>ChatManager: PURPOSE-FIXME</li>
+ * <li>RosterManager: FIXME purpose...</li>
+ * <li>PresenceManager: FIXME purpose</li>
+ * </ul>
+ * 
+ * @see RFC
+ */
 public class InstantMessagingModule extends AbstractModule {
 
-    public InstantMessagingModule() {
-	super();
-    }
+	public InstantMessagingModule() {
+		super();
+	}
 
-    @Override
-    public void onLoad() {
-	register(SingletonScope.class, new Factory<Roster>(Roster.class) {
-	    public Roster create() {
-		return new Roster();
-	    }
-	}, new Factory<ChatManager>(ChatManager.class) {
-	    public ChatManagerImpl create() {
-		return new ChatManagerImpl($(Session.class));
-	    }
-	}, new Factory<RosterManager>(RosterManager.class) {
-	    public RosterManager create() {
-		return new RosterManagerImpl($(Session.class), $(Roster.class));
-	    }
-	}, new Factory<PresenceManager>(PresenceManager.class) {
-	    public PresenceManager create() {
-		return new PresenceManagerImpl($(Session.class), $(RosterManager.class));
-	    }
-	});
+	@Override
+	public void onLoad() {
+		register(SingletonScope.class, new Factory<Roster>(Roster.class) {
+			public Roster create() {
+				return new Roster();
+			}
+		}, new Factory<ChatManager>(ChatManager.class) {
+			public ChatManagerImpl create() {
+				return new ChatManagerImpl($(Session.class));
+			}
+		}, new Factory<RosterManager>(RosterManager.class) {
+			public RosterManager create() {
+				return new RosterManagerImpl($(Session.class), $(Roster.class));
+			}
+		}, new Factory<PresenceManager>(PresenceManager.class) {
+			public PresenceManager create() {
+				return new PresenceManagerImpl($(Session.class),
+						$(RosterManager.class));
+			}
+		});
 
-    }
+	}
 }

@@ -27,6 +27,13 @@ import com.calclab.emite.client.xmpp.session.SessionScope;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 
+// FIXME - doc
+/**
+ *  AvatarModule: implements XEP-FIXME
+ *  <ul><li>AvatarManager</ul></li>
+ *  
+ *   @see FIXME
+ */
 public class AvatarModule extends AbstractModule {
 
     public AvatarModule() {
