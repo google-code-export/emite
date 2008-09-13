@@ -1,0 +1,8 @@
+<module>
+  <inherits name="com.google.gwt.user.User" />
+  <inherits name="com.calclab.emite.Emite" />
+
+  <entry-point
+    class="com.calclab.emite.widgets.client.EmiteWidgetsEntryPoint" />
+
+</module>
