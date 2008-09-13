@@ -1,5 +1,5 @@
-#labels Featured
 #summary If you're planning to use emite, this guide is for you.
+#labels Featured
 
 ==Basic concepts==
 
@@ -94,18 +94,16 @@ You already seen a example of how to login into a session.
 
 ¿what examples do you want to see here? please, write us!
 
-== InstantMessaging component==
+== !InstantMessaging module==
 
 This module register the following components:
-  * A ChatManager that helps to use different conversations at the same time
-  * A Roster component to manage the user's contacts
-  * A PresenceManager to change your own presence
-  * A PresenceSubscriptionManager that handles (automatically or not, you can choose ;-) ) the subscription issues
+  * A !ChatManager that helps to use different conversations at the same time
+  * A !Roster component to manage the user's contacts
+  * A !PresenceManager to change your own presence
+  * A !PresenceSubscriptionManager that handles (automatically or not, you can choose ;-) ) the subscription issues
 
 
 
 ==Help us===
 
 Obviously this documentation is not very exhaustive. ¿what do you want to see here?
-
-
