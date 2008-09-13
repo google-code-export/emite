@@ -25,12 +25,14 @@ import com.calclab.emite.client.core.bosh.Connection;
 import com.calclab.emite.client.core.packet.IPacket;
 import com.calclab.emite.client.core.packet.Packet;
 import com.calclab.emite.client.xmpp.sasl.AuthorizationTransaction.State;
+import com.calclab.emite.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
 public class SASLManager {
     private static final String SEP = new String(new char[] { 0 });
     private static final String XMLNS = "urn:ietf:params:xml:ns:xmpp-sasl";
+    public static final XmppURI ANONYMOUS = XmppURI.uri("anonymous", null, null);
 
     private final Signal<AuthorizationTransaction> onAuthorized;
     private AuthorizationTransaction currentTransaction;
@@ -92,6 +94,6 @@ public class SASLManager {
     }
 
     private boolean isAnonymous(final AuthorizationTransaction authorizationTransaction) {
-	return "anonymous".equals(authorizationTransaction.uri.toString());
+	return authorizationTransaction.uri == SASLManager.ANONYMOUS;
     }
 }

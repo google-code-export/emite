@@ -41,7 +41,7 @@ public class SASLManagerTest {
 
     @Test
     public void shouldSendAnonymousIfAnonymousProvided() {
-	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("anonymous"), null));
+	manager.sendAuthorizationRequest(new AuthorizationTransaction(SASLManager.ANONYMOUS, null));
 	helper.verifySentLike(new Packet("auth", "urn:ietf:params:xml:ns:xmpp-sasl").With("mechanism", "ANONYMOUS"));
     }
 

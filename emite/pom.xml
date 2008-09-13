@@ -4,7 +4,7 @@
   <groupId>com.calclab</groupId>
   <artifactId>emite</artifactId>
   <packaging>jar</packaging>
-  <version>0.3.3</version>
+  <version>0.3.4</version>
   <description>emite: a pure gwt xmpp (jabber) library
   </description>
   <name>emite xmpp</name>
