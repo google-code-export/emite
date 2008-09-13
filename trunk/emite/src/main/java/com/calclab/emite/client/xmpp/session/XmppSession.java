@@ -123,13 +123,16 @@ public class XmppSession extends AbstractSession {
     }
 
     public void login(XmppURI uri, final String password) {
+	if (uri == Session.ANONYMOUS && password != null) {
+	    throw new RuntimeException("Error on login: anonymous login can't have password");
+	} else if (uri != Session.ANONYMOUS && !uri.hasResource()) {
+	    uri = XmppURI.uri(uri.getNode(), uri.getHost(), "" + new Date().getTime());
+	}
+
 	if (state == Session.State.disconnected) {
+	    scope.createAll();
 	    setState(Session.State.connecting);
 	    connection.connect();
-	    scope.createAll();
-	    if (!uri.hasResource()) {
-		uri = XmppURI.uri(uri.getNode(), uri.getHost(), "" + new Date().getTime());
-	    }
 	    transaction = new AuthorizationTransaction(uri, password);
 	    Log.debug("Sending auth transaction: " + transaction);
 	}
@@ -164,13 +167,6 @@ public class XmppSession extends AbstractSession {
 	send(iq);
     }
 
-    public void setLoggedIn(final XmppURI userURI) {
-	this.userURI = userURI;
-	setState(Session.State.loggedIn);
-	onLoggedIn.fire(userURI);
-	setState(Session.State.ready);
-    }
-
     void setState(final Session.State newState) {
 	this.state = newState;
 	onStateChanged.fire(state);
@@ -179,6 +175,13 @@ public class XmppSession extends AbstractSession {
     private void disconnect() {
 	connection.disconnect();
 	setState(Session.State.disconnected);
+    }
+
+    private void setLoggedIn(final XmppURI userURI) {
+	this.userURI = userURI;
+	setState(Session.State.loggedIn);
+	onLoggedIn.fire(userURI);
+	setState(Session.State.ready);
     }
 
 }

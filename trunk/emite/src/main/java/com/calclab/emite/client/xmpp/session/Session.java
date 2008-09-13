@@ -2,6 +2,7 @@ package com.calclab.emite.client.xmpp.session;
 
 import com.calclab.emite.client.core.bosh.StreamSettings;
 import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.client.xmpp.stanzas.IQ;
 import com.calclab.emite.client.xmpp.stanzas.Message;
 import com.calclab.emite.client.xmpp.stanzas.Presence;
@@ -21,6 +22,8 @@ public interface Session {
     public static enum State {
 	authorized, loggedIn, connecting, disconnected, error, notAuthorized, ready
     }
+
+    public static XmppURI ANONYMOUS = SASLManager.ANONYMOUS;
 
     /**
      * Returns the current user xmpp uri
@@ -44,8 +47,15 @@ public interface Session {
     public abstract boolean isLoggedIn();
 
     /**
-     * Start a loggin process with the current xmpp uri and password. Use
-     * onLoggedIn method to know when you are really logged in.
+     * <p>
+     * Start a login process with the current xmpp uri and password. Use
+     * onLoggedIn method to know when you are really logged in. If the uri
+     * doesn't provide a resource, the session will generate one.
+     * </p>
+     * <p>
+     * You can use Session.ANONYMOUS and null as password to do an anonymous
+     * login.
+     * </p>
      * 
      * @param uri
      *            the user's uri to loggin
