@@ -23,7 +23,6 @@ package com.calclab.emite.core.client;
 
 import com.calclab.emite.core.client.bosh.Bosh3Settings;
 import com.calclab.emite.core.client.bosh.Connection;
-import com.calclab.emite.core.client.services.gwt.GWTServicesModule;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
@@ -34,19 +33,8 @@ import com.calclab.emite.im.client.roster.RosterManager;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.DelegatedContainer;
-import com.calclab.suco.client.module.Module;
-import com.calclab.suco.client.module.ModuleManager.ProviderRegisterStrategy;
 
 public class Xmpp extends DelegatedContainer {
-
-    /**
-     * Ready to use Xmpp object in GWT environments
-     * 
-     * @return
-     */
-    public static Xmpp create() {
-	return create(new GWTServicesModule());
-    }
 
     /**
      * Create a Xmpp object and install the specified modules before (you need
@@ -56,10 +44,8 @@ public class Xmpp extends DelegatedContainer {
      * @param container
      * @return
      */
-    public static Xmpp create(final Module... modules) {
-	final Container container = Suco.create(modules);
-	Suco.install(container, ProviderRegisterStrategy.failIfRegistered, new EmiteModule());
-	return container.getInstance(Xmpp.class);
+    public static Xmpp create() {
+	return Suco.get(Xmpp.class);
     }
 
     private Session session;

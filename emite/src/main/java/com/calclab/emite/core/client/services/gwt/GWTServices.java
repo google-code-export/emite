@@ -19,60 +19,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.j2se.services;
+package com.calclab.emite.core.client.services.gwt;
 
 import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.emite.core.client.services.ConnectorCallback;
 import com.calclab.emite.core.client.services.ConnectorException;
 import com.calclab.emite.core.client.services.ScheduledAction;
 import com.calclab.emite.core.client.services.Services;
-import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.module.Module;
-import com.calclab.suco.client.provider.Provider;
 
-public class J2SEServicesModule implements Services, Module {
-    private final HttpConnector connector;
-
-    private final ThreadScheduler scheduler;
-    private final TigaseXMLService xmler;
-
-    public J2SEServicesModule() {
-	this(new PrintStreamConnectionListener(System.out));
-    }
-
-    public J2SEServicesModule(final HttpConnectorListener listener) {
-	this.connector = new HttpConnector(listener);
-	scheduler = new ThreadScheduler();
-	xmler = new TigaseXMLService();
-    }
-
+public class GWTServices implements Services {
     public long getCurrentTime() {
-	return scheduler.getCurrentTime();
-    }
-
-    public void onLoad(final Container container) {
-	container.registerProvider(Services.class, new Provider<Services>() {
-	    public Services get() {
-		return J2SEServicesModule.this;
-	    }
-	});
+	return GWTScheduler.getCurrentTime();
     }
 
     public void schedule(final int msecs, final ScheduledAction action) {
-	scheduler.schedule(msecs, action);
+	GWTScheduler.schedule(msecs, action);
     }
 
-    public void send(final String httpBase, final String xml, final ConnectorCallback callback)
+    public void send(final String httpBase, final String request, final ConnectorCallback callback)
 	    throws ConnectorException {
-	connector.send(httpBase, xml, callback);
+	GWTConnector.send(httpBase, request, callback);
     }
 
     public String toString(final IPacket packet) {
-	return xmler.toString(packet);
+	return GWTXMLService.toString(packet);
     }
 
     public IPacket toXML(final String xml) {
-	return xmler.toXML(xml);
+	return GWTXMLService.toXML(xml);
     }
 
 }

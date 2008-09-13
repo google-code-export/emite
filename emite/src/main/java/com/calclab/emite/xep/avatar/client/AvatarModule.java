@@ -23,18 +23,22 @@ package com.calclab.emite.xep.avatar.client;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.SessionScope;
-import com.calclab.emite.im.client.presence.PresenceManager;
+import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
+import com.google.gwt.core.client.EntryPoint;
 
 // FIXME - doc
 /**
- *  AvatarModule: implements XEP-FIXME
- *  <ul><li>AvatarManager</ul></li>
- *  
- *   @see FIXME
+ * AvatarModule: implements XEP-FIXME
+ * <ul>
+ * <li>AvatarManager</li>
+ * </ul>
+ * 
+ * 
+ * @see FIXME
  */
-public class AvatarModule extends AbstractModule {
+public class AvatarModule extends AbstractModule implements EntryPoint {
 
     public AvatarModule() {
 	super();
@@ -44,8 +48,12 @@ public class AvatarModule extends AbstractModule {
     public void onLoad() {
 	register(SessionScope.class, new Factory<AvatarManager>(AvatarManager.class) {
 	    public AvatarManager create() {
-		return new AvatarManager($(Session.class), $(PresenceManager.class));
+		return new AvatarManager($(Session.class));
 	    }
 	});
+    }
+
+    public void onModuleLoad() {
+	Suco.install(this);
     }
 }

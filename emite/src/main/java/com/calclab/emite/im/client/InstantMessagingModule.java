@@ -29,13 +29,15 @@ import com.calclab.emite.im.client.presence.PresenceManagerImpl;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterManager;
 import com.calclab.emite.im.client.roster.RosterManagerImpl;
+import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scope.SingletonScope;
+import com.google.gwt.core.client.EntryPoint;
 
 /**
  * <p>
- * Implementation of the RFC-FIXME
+ * Implementation of the RFC-3921
  * </p>
  * <p>
  * This module exports the following components:
@@ -46,34 +48,37 @@ import com.calclab.suco.client.scope.SingletonScope;
  * <li>PresenceManager: FIXME purpose</li>
  * </ul>
  * 
- * @see RFC
+ * @see http://www.xmpp.org/rfcs/rfc3921.html
  */
-public class InstantMessagingModule extends AbstractModule {
+public class InstantMessagingModule extends AbstractModule implements EntryPoint {
 
-	public InstantMessagingModule() {
-		super();
-	}
+    public InstantMessagingModule() {
+	super();
+    }
 
-	@Override
-	public void onLoad() {
-		register(SingletonScope.class, new Factory<Roster>(Roster.class) {
-			public Roster create() {
-				return new Roster();
-			}
-		}, new Factory<ChatManager>(ChatManager.class) {
-			public ChatManagerImpl create() {
-				return new ChatManagerImpl($(Session.class));
-			}
-		}, new Factory<RosterManager>(RosterManager.class) {
-			public RosterManager create() {
-				return new RosterManagerImpl($(Session.class), $(Roster.class));
-			}
-		}, new Factory<PresenceManager>(PresenceManager.class) {
-			public PresenceManager create() {
-				return new PresenceManagerImpl($(Session.class),
-						$(RosterManager.class));
-			}
-		});
+    @Override
+    public void onLoad() {
+	register(SingletonScope.class, new Factory<Roster>(Roster.class) {
+	    public Roster create() {
+		return new Roster();
+	    }
+	}, new Factory<ChatManager>(ChatManager.class) {
+	    public ChatManagerImpl create() {
+		return new ChatManagerImpl($(Session.class));
+	    }
+	}, new Factory<RosterManager>(RosterManager.class) {
+	    public RosterManager create() {
+		return new RosterManagerImpl($(Session.class), $(Roster.class));
+	    }
+	}, new Factory<PresenceManager>(PresenceManager.class) {
+	    public PresenceManager create() {
+		return new PresenceManagerImpl($(Session.class), $(RosterManager.class));
+	    }
+	});
 
-	}
+    }
+
+    public void onModuleLoad() {
+	Suco.install(this);
+    }
 }

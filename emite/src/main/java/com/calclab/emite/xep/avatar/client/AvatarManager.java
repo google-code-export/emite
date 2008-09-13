@@ -31,7 +31,6 @@ import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
@@ -40,22 +39,30 @@ import com.calclab.suco.client.signal.Slot;
  */
 public class AvatarManager {
     private static final PacketMatcher FILTER_X = MatcherFactory.byName("x");
-	private static final String VCARD = "vCard";
+    private static final String VCARD = "vCard";
     private static final String XMLNS = "vcard-temp";
     private static final String PHOTO = "PHOTO";
     private static final String TYPE = "TYPE";
     private static final String BINVAL = "BINVAL";
     private final Signal<Presence> onHashPresenceReceived;
     private final Signal<AvatarVCard> onVCardReceived;
-    private final PresenceManager presenceManager;
     private final Session session;
 
-    public AvatarManager(final Session session, final PresenceManager presenceManager) {
+    public AvatarManager(final Session session) {
 	this.session = session;
-	this.presenceManager = presenceManager;
 	this.onHashPresenceReceived = new Signal<Presence>("avatar:onHashPresenceReceived");
 	this.onVCardReceived = new Signal<AvatarVCard>("avatar:onVCardReceived");
-	install();
+
+	session.onPresence(new Slot<Presence>() {
+	    public void onEvent(final Presence presence) {
+		final List<? extends IPacket> children = presence.getChildren(FILTER_X);
+		for (final IPacket child : children) {
+		    if (child.hasAttribute("xmlns", XMLNS + ":x:update")) {
+			onHashPresenceReceived.fire(presence);
+		    }
+		}
+	    }
+	});
     }
 
     public void onHashPresenceReceived(final Slot<Presence> slot) {
@@ -106,19 +113,6 @@ public class AvatarManager {
 	    public void onEvent(final IPacket received) {
 		if (IQ.isSuccess(received)) {
 
-		}
-	    }
-	});
-    }
-
-    private void install() {
-	presenceManager.onPresenceReceived(new Slot<Presence>() {
-	    public void onEvent(final Presence presence) {
-		final List<? extends IPacket> children = presence.getChildren(FILTER_X);
-		for (final IPacket child : children) {
-		    if (child.hasAttribute("xmlns", XMLNS + ":x:update")) {
-			onHashPresenceReceived.fire(presence);
-		    }
 		}
 	    }
 	});
