@@ -3,11 +3,11 @@ package com.calclab.emite.widgets.client.roster;
 import java.util.Collection;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.im.roster.Roster;
-import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.session.Session.State;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.session.Session.State;
+import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.im.client.roster.RosterItem;
+import com.calclab.emite.im.client.roster.RosterManager;
 import com.calclab.suco.client.signal.Slot;
 
 public class RosterController {

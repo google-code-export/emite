@@ -1,6 +1,6 @@
 package com.calclab.emite.widgets.client.chat;
 
-import com.calclab.emite.client.im.chat.Chat;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.widgets.client.base.EmiteWidget;
 import com.calclab.emite.widgets.client.base.GWTExtensibleWidget;
 import com.calclab.suco.client.signal.Signal;

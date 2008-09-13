@@ -23,8 +23,8 @@ package com.calclab.emiteuimodule.client.roster;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.DragGridConfiguration;
 import com.calclab.emiteuimodule.client.users.DropGridConfiguration;

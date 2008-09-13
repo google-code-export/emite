@@ -2,8 +2,8 @@ package com.calclab.emite.widgets.client.habla;
 
 import java.util.HashMap;
 
-import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatManager;
+import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.widgets.client.chat.ChatWidget;
 import com.calclab.suco.client.provider.Provider;
 import com.calclab.suco.client.signal.Slot;

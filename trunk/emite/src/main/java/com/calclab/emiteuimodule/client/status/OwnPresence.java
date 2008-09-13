@@ -22,8 +22,8 @@
 package com.calclab.emiteuimodule.client.status;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 
 public class OwnPresence {
     public enum OwnStatus {

@@ -1,6 +1,6 @@
 package com.calclab.emite.widgets.client.chat;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stub;
@@ -10,10 +10,10 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.stanzas.Message;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.stanzas.Message;
+import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.testing.signal.SignalTester;
 

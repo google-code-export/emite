@@ -23,7 +23,7 @@ package com.calclab.emiteuimodule.client.utils;
 
 import org.ourproject.kune.platf.client.ui.KuneStringUtils;
 
-import com.calclab.emite.client.core.packet.TextUtils;
+import com.calclab.emite.core.client.packet.TextUtils;
 import com.calclab.emiteuimodule.client.utils.emoticons.Emoticons;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;

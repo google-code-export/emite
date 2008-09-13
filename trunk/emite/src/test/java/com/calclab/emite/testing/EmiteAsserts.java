@@ -4,7 +4,7 @@ import static com.calclab.emite.testing.MockitoEmiteHelper.toXML;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.core.client.packet.IPacket;
 
 public class EmiteAsserts {
 

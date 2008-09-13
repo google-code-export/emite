@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteuimodule.client.params;
 
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 
 public interface AvatarProvider {
     String getAvatarURL(XmppURI userURI);

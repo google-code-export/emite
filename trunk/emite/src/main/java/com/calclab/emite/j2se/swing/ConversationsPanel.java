@@ -28,7 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.j2se.swing.ChatPanel.ChatPanelListener;
 import com.calclab.emite.j2se.swing.RoomPanel.RoomPanelListener;
 

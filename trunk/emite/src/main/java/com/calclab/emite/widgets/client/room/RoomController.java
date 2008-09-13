@@ -3,12 +3,12 @@ package com.calclab.emite.widgets.client.room;
 import java.util.Date;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.stanzas.Message;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.widgets.client.chat.AbstractChatController;
+import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.suco.client.provider.Provider;
 
 public class RoomController extends AbstractChatController {

@@ -1,7 +1,7 @@
 package com.calclab.emiteuimodule.client.openchat;
 
-import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.suco.client.signal.Slot;

@@ -28,10 +28,10 @@ import java.util.Map;
 
 import tigase.xml.Element;
 
-import com.calclab.emite.client.core.packet.AbstractPacket;
-import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.core.packet.PacketRenderer;
-import com.calclab.emite.client.core.packet.TextUtils;
+import com.calclab.emite.core.client.packet.AbstractPacket;
+import com.calclab.emite.core.client.packet.IPacket;
+import com.calclab.emite.core.client.packet.PacketRenderer;
+import com.calclab.emite.core.client.packet.TextUtils;
 
 public class TigasePacket extends AbstractPacket {
 

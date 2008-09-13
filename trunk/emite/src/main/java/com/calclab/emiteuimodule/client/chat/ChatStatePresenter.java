@@ -23,8 +23,8 @@ package com.calclab.emiteuimodule.client.chat;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.xep.chatstate.ChatStateManager;
-import com.calclab.emite.client.xep.chatstate.ChatStateManager.ChatState;
+import com.calclab.emite.xep.chatstate.client.ChatStateManager;
+import com.calclab.emite.xep.chatstate.client.ChatStateManager.ChatState;
 import com.calclab.suco.client.signal.Slot;
 
 public class ChatStatePresenter {

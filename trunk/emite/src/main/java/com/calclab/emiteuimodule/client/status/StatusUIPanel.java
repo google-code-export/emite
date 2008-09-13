@@ -24,7 +24,7 @@ package com.calclab.emiteuimodule.client.status;
 import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
+import com.calclab.emite.im.client.roster.RosterManager.SubscriptionMode;
 import com.calclab.emiteuimodule.client.dialog.MessageDialog;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
 import com.calclab.emiteuimodule.client.utils.ChatUIUtils;

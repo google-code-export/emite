@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteui.client.demo;
 
-import com.calclab.emite.client.core.packet.TextUtils;
+import com.calclab.emite.core.client.packet.TextUtils;
 import com.calclab.emiteui.client.DemoParameters;
 import com.calclab.emiteui.client.demo.EmiteDemoLoginPanel.LoginPanelListener;
 import com.google.gwt.user.client.ui.ClickListener;

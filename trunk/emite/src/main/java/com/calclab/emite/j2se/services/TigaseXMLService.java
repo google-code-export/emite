@@ -27,7 +27,7 @@ import tigase.xml.DomBuilderHandler;
 import tigase.xml.Element;
 import tigase.xml.SimpleParser;
 
-import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.core.client.packet.IPacket;
 
 public class TigaseXMLService {
     private static TigaseXMLService instance;

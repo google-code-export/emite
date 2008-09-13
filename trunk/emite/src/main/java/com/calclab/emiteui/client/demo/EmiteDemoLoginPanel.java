@@ -23,7 +23,7 @@ package com.calclab.emiteui.client.demo;
 
 import java.util.Date;
 
-import com.calclab.emite.client.im.roster.RosterManager;
+import com.calclab.emite.im.client.roster.RosterManager;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.gwtext.client.core.EventObject;

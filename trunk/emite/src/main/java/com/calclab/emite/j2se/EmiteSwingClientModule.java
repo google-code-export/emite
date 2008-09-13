@@ -21,12 +21,12 @@
  */
 package com.calclab.emite.j2se;
 
-import com.calclab.emite.client.EmiteModule;
-import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.xep.disco.DiscoveryModule;
-import com.calclab.emite.client.xep.muc.MUCModule;
+import com.calclab.emite.core.client.EmiteModule;
+import com.calclab.emite.core.client.Xmpp;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.swing.SwingClient;
+import com.calclab.emite.xep.disco.client.DiscoveryModule;
+import com.calclab.emite.xep.muc.client.MUCModule;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.module.AbstractModule;

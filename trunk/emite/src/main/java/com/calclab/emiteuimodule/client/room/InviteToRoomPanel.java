@@ -23,8 +23,8 @@ package com.calclab.emiteuimodule.client.room;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.core.packet.TextUtils;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.packet.TextUtils;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.dialog.BasicDialogExtended;
 import com.calclab.emiteuimodule.client.dialog.BasicDialogListener;
 import com.google.gwt.user.client.Command;

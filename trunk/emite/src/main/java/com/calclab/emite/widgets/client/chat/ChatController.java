@@ -1,10 +1,10 @@
 package com.calclab.emite.widgets.client.chat;
 
-import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.stanzas.Message;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.ChatManager;
 
 public class ChatController extends AbstractChatController {
 

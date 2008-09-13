@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.mockito.ArgumentMatcher;
 
-import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 
 public class IsPacketLike extends ArgumentMatcher<IPacket> {

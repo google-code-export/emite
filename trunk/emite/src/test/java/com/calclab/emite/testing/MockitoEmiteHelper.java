@@ -5,7 +5,7 @@ import static org.mockito.Matchers.argThat;
 import java.util.Collection;
 import java.util.List;
 
-import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 
 @SuppressWarnings("unchecked")

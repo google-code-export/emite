@@ -33,8 +33,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.calclab.emite.client.xep.muc.Room;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.xep.muc.client.Room;
 
 @SuppressWarnings("serial")
 public class RoomsPanel extends JPanel {
