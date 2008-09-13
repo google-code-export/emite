@@ -30,6 +30,7 @@ public class PageController {
 	    public void onWindowClosed() {
 		Log.debug("CLOSE!! Should pause? " + shouldPause);
 		if (shouldPause) {
+		    Log.debug("Pausing...");
 		    final StreamSettings stream = session.pause();
 		    if (stream != null) {
 			final String user = session.getCurrentUser().toString();
@@ -37,6 +38,7 @@ public class PageController {
 		    }
 		} else {
 		    session.logout();
+		    Log.debug("Logged out!");
 		}
 	    }
 
