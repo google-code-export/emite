@@ -23,8 +23,10 @@ package com.calclab.emite.xep.chatstate.client;
 
 import com.calclab.emite.core.client.xmpp.session.SessionScope;
 import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
+import com.google.gwt.core.client.EntryPoint;
 
 /**
  * Implements XEP-0085: Chat State Notifications
@@ -32,7 +34,7 @@ import com.calclab.suco.client.provider.Factory;
  * @see http://www.xmpp.org/extensions/xep-0085.html (Version: 1.2)
  * 
  */
-public class ChatStateModule extends AbstractModule {
+public class ChatStateModule extends AbstractModule implements EntryPoint {
     public ChatStateModule() {
 	super();
     }
@@ -44,5 +46,9 @@ public class ChatStateModule extends AbstractModule {
 		return new StateManager($(ChatManager.class));
 	    }
 	});
+    }
+
+    public void onModuleLoad() {
+	Suco.install(this);
     }
 }

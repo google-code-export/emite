@@ -1,5 +1,4 @@
 <module>
-  <inherits name="com.calclab.emite.Emite" />
   <inherits name="com.calclab.emiteuimodule.EmiteUIModule" />
   <entry-point class="com.calclab.emiteui.client.EmiteUIEntryPoint" />
   <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>

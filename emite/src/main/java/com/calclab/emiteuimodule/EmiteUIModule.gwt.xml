@@ -2,7 +2,12 @@
   <!-- other inherited modules, such as com.google.gwt.user.User -->
   <inherits name="com.google.gwt.user.User" />
 
-  <inherits name="com.calclab.emite.Emite" />
+  <inherits name="com.calclab.emite.core.EmiteCore" />
+  <inherits name="com.calclab.emite.im.EmiteIM" />
+  <inherits name="com.calclab.emite.xep.muc.EmiteMUC" />
+  <inherits name="com.calclab.emite.xep.avatar.EmiteAvatar" />
+  <inherits name="com.calclab.emite.xep.chatstate.EmiteChatState" />
+
   <inherits name="com.allen_sauer.gwt.log.gwt-log" />
   <inherits name='com.allen_sauer.gwt.voices.gwt-voices'/>
   <inherits name="org.ourproject.kune.platf.Kune-Platform" />
