@@ -1,0 +1,40 @@
+TODO-list for kune
+--------------------------------------------------------------------------------
+<nick>  == reported by
+-->nick == assigned to
+
+SHORT-TERM (URGENT):
+--------------------------------------------------------------------------------
+
+MID-TERM
+--------------------------------------------------------------------------------
+<vjrj> sort buddies by presence, and secondly by name
+<vjrj> parse your jid/nick and *bold*
+<vjrj> Get rid of room locks
+<vjrj> Translate: 
+This room is locked from entry until configuration is confirmed.
+This room is now unlocked.
+<vjrj> Room nicks conflict support XEP-0045, 7.1.10
+<dani> Support XEP-0030
+<vjrj> group support in roster
+
+LONG-TERM:
+--------------------------------------------------------------------------------
+
+<dani> Remove Bosh connection bugs
+<dani> Hot remove of plugins
+<dani> Add MD5 SASL mechanism
+
+--------------------------------------------------------------------------------
+
+IDEAS:
+--------------------------------------------------------------------------------
+
+DO-NOT-IMPLEMENT (stuff that was rejected):
+--------------------------------------------------------------------------------
+
+BACKTRACES/DEBUG/VALGRIND/EXCEPTIONS:
+--------------------------------------------------------------------------------
+
+[1] - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
