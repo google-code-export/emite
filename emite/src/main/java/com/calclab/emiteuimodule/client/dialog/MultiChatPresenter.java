@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteuimodule.client.dialog;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,18 +29,18 @@ import java.util.HashSet;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.xep.avatar.AvatarManager;
-import com.calclab.emite.client.xep.chatstate.ChatStateManager;
-import com.calclab.emite.client.xep.chatstate.StateManager;
-import com.calclab.emite.client.xep.muc.Occupant;
-import com.calclab.emite.client.xep.muc.Room;
-import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.Xmpp;
+import com.calclab.emite.core.client.xmpp.stanzas.Message;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.roster.RosterManager;
+import com.calclab.emite.xep.avatar.client.AvatarManager;
+import com.calclab.emite.xep.chatstate.client.ChatStateManager;
+import com.calclab.emite.xep.chatstate.client.StateManager;
+import com.calclab.emite.xep.muc.client.Occupant;
+import com.calclab.emite.xep.muc.client.Room;
+import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.emiteuimodule.client.EmiteUIFactory;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.chat.ChatNotification;
@@ -410,8 +410,8 @@ public class MultiChatPresenter {
     }
 
     private void addStateListener(final Chat chat) {
-	chat.onStateChanged(new Slot<com.calclab.emite.client.im.chat.Chat.Status>() {
-	    public void onEvent(final com.calclab.emite.client.im.chat.Chat.Status parameter) {
+	chat.onStateChanged(new Slot<com.calclab.emite.im.client.chat.Chat.Status>() {
+	    public void onEvent(final com.calclab.emite.im.client.chat.Chat.Status parameter) {
 		final ChatUI chatUI = getChatUI(chat);
 		if (chatUI != null && chatUI.equals(currentChat)) {
 		    updateViewWithChatStatus(chat, chatUI);

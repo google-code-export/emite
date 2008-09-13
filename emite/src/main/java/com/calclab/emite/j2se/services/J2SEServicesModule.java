@@ -21,12 +21,12 @@
  */
 package com.calclab.emite.j2se.services;
 
-import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.services.ConnectorCallback;
-import com.calclab.emite.client.services.ConnectorException;
-import com.calclab.emite.client.services.ScheduledAction;
-import com.calclab.emite.client.services.Services;
-import com.calclab.emite.client.services.ServicesModule;
+import com.calclab.emite.core.client.packet.IPacket;
+import com.calclab.emite.core.client.services.ConnectorCallback;
+import com.calclab.emite.core.client.services.ConnectorException;
+import com.calclab.emite.core.client.services.ScheduledAction;
+import com.calclab.emite.core.client.services.Services;
+import com.calclab.emite.core.client.services.ServicesModule;
 
 public class J2SEServicesModule extends ServicesModule implements Services {
     private final HttpConnector connector;

@@ -21,14 +21,14 @@
  */
 package com.calclab.emiteuimodule.client.users;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
 import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.packet.TextUtils;
-import com.calclab.emite.client.xep.muc.Occupant.Role;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.packet.TextUtils;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.xep.muc.client.Occupant.Role;
 import com.calclab.emiteuimodule.client.utils.ChatUIUtils;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;

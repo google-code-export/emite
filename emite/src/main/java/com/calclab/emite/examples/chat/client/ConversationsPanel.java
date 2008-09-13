@@ -24,7 +24,7 @@ package com.calclab.emite.examples.chat.client;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.calclab.emite.client.im.roster.RosterItem;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;

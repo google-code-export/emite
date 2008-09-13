@@ -1,7 +1,7 @@
 package com.calclab.emite.widgets.client.logout;
 
-import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.session.Session.State;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.client.signal.Slot0;
 

@@ -2,12 +2,12 @@ package com.calclab.emiteuimodule.client.status;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.emite.client.im.presence.PresenceManager;
-import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.session.Session;
+import com.calclab.emite.core.client.Xmpp;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.presence.PresenceManager;
+import com.calclab.emite.im.client.roster.RosterManager;
+import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scope.SingletonScope;

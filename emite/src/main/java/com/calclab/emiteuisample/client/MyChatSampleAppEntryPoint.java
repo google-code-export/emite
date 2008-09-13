@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteuisample.client;
 
-import com.calclab.emite.client.EmiteModule;
+import com.calclab.emite.core.client.EmiteModule;
 import com.calclab.emiteuimodule.client.EmiteUIDialog;
 import com.calclab.emiteuimodule.client.EmiteUIModule;
 import com.calclab.emiteuimodule.client.status.OwnPresence;

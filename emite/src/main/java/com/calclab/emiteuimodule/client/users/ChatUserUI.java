@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteuimodule.client.users;
 
-import com.calclab.emite.client.im.roster.RosterItem;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
 
 public class ChatUserUI extends AbstractChatUser {

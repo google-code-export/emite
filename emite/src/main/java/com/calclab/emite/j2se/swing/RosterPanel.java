@@ -36,8 +36,8 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emite.client.xmpp.stanzas.Presence;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.j2se.swing.AddRosterItemPanel.AddRosterItemPanelListener;
 
 @SuppressWarnings("serial")

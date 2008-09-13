@@ -1,8 +1,8 @@
 package com.calclab.emite.widgets.client.logger;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.core.bosh.Connection;
-import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.core.client.bosh.Connection;
+import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.client.signal.Slot0;
 

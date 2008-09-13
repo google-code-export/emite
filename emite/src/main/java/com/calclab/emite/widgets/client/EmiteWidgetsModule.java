@@ -1,12 +1,11 @@
 package com.calclab.emite.widgets.client;
 
-import com.calclab.emite.client.browser.DomAssist;
-import com.calclab.emite.client.browser.PageController;
-import com.calclab.emite.client.core.bosh.Connection;
-import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.session.Session;
+import com.calclab.emite.browser.client.DomAssist;
+import com.calclab.emite.browser.client.PageController;
+import com.calclab.emite.core.client.bosh.Connection;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.roster.RosterManager;
 import com.calclab.emite.widgets.client.base.ComposedController;
 import com.calclab.emite.widgets.client.chat.CharlaWidget;
 import com.calclab.emite.widgets.client.chat.ChatController;
@@ -29,6 +28,7 @@ import com.calclab.emite.widgets.client.room.RoomWidget;
 import com.calclab.emite.widgets.client.roster.GWTRosterWidget;
 import com.calclab.emite.widgets.client.roster.RosterController;
 import com.calclab.emite.widgets.client.roster.RosterWidget;
+import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;

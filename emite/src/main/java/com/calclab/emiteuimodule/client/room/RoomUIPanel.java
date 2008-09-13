@@ -25,7 +25,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.EditableClickListener;
 import org.ourproject.kune.platf.client.ui.EditableIconLabel;
 
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.chat.ChatUIPanel;
 import com.calclab.emiteuimodule.client.users.UserGridPanel;
 import com.gwtext.client.core.RegionPosition;

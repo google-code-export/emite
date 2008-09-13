@@ -23,7 +23,7 @@ package com.calclab.emiteuimodule.client.chat;
 
 import org.ourproject.kune.platf.client.View;
 
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Slot;
 
 public interface ChatUI {

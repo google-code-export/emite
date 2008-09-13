@@ -3,12 +3,12 @@ package com.calclab.emite.widgets.client.room;
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.xep.muc.Occupant;
-import com.calclab.emite.client.xep.muc.Room;
-import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.widgets.client.room.RoomPresenceWidget.OccupantPanel;
+import com.calclab.emite.xep.muc.client.Occupant;
+import com.calclab.emite.xep.muc.client.Room;
+import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.suco.client.signal.Slot;
 
 public class RoomPresenceController {

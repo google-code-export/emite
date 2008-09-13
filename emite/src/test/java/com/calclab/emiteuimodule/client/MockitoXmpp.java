@@ -2,14 +2,14 @@ package com.calclab.emiteuimodule.client;
 
 import static org.mockito.Mockito.mock;
 
-import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.im.chat.ChatManager;
-import com.calclab.emite.client.im.presence.PresenceManager;
-import com.calclab.emite.client.im.roster.Roster;
-import com.calclab.emite.client.im.roster.RosterManager;
-import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
+import com.calclab.emite.core.client.Xmpp;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
+import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.presence.PresenceManager;
+import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.im.client.roster.RosterManager;
 import com.calclab.suco.client.Suco;
 
 public class MockitoXmpp extends Xmpp {

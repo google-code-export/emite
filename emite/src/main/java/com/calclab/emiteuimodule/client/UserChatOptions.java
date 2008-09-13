@@ -21,8 +21,8 @@
  */
 package com.calclab.emiteuimodule.client;
 
-import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.im.client.roster.RosterManager.SubscriptionMode;
 
 public class UserChatOptions {
 

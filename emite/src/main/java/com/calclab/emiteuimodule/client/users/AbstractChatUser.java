@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteuimodule.client.users;
 
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 
 public class AbstractChatUser {
     private String alias;

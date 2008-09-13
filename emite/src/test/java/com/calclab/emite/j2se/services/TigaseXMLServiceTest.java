@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.calclab.emite.client.core.packet.IPacket;
+import com.calclab.emite.core.client.packet.IPacket;
 
 public class TigaseXMLServiceTest {
 

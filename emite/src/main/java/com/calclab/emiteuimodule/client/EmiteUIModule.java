@@ -24,12 +24,12 @@ package com.calclab.emiteuimodule.client;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
-import com.calclab.emite.client.EmiteModule;
-import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.services.gwt.GWTServicesModule;
-import com.calclab.emite.client.xep.avatar.AvatarModule;
-import com.calclab.emite.client.xep.chatstate.ChatStateModule;
-import com.calclab.emite.client.xep.muc.MUCModule;
+import com.calclab.emite.core.client.EmiteModule;
+import com.calclab.emite.core.client.Xmpp;
+import com.calclab.emite.core.client.services.gwt.GWTServicesModule;
+import com.calclab.emite.xep.avatar.client.AvatarModule;
+import com.calclab.emite.xep.chatstate.client.ChatStateModule;
+import com.calclab.emite.xep.muc.client.MUCModule;
 import com.calclab.emiteuimodule.client.dialog.QuickTipsHelper;
 import com.calclab.emiteuimodule.client.room.RoomUIModule;
 import com.calclab.emiteuimodule.client.sound.SoundManager;

@@ -7,15 +7,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
-import com.calclab.emite.client.core.bosh.StreamSettings;
-import com.calclab.emite.client.core.packet.IPacket;
-import com.calclab.emite.client.xmpp.session.AbstractSession;
-import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.stanzas.IQ;
-import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.client.xmpp.stanzas.IQ.Type;
+import com.calclab.emite.core.client.bosh.StreamSettings;
+import com.calclab.emite.core.client.packet.IPacket;
+import com.calclab.emite.core.client.xmpp.session.AbstractSession;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.stanzas.IQ;
+import com.calclab.emite.core.client.xmpp.stanzas.Message;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 import com.calclab.suco.client.signal.Slot;
 

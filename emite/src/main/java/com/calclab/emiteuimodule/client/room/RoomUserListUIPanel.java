@@ -24,8 +24,8 @@ package com.calclab.emiteuimodule.client.room;
 import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.xep.muc.Occupant.Role;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.xep.muc.client.Occupant.Role;
 import com.calclab.emiteuimodule.client.users.DragGridConfiguration;
 import com.calclab.emiteuimodule.client.users.RoomUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridListener;

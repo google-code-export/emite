@@ -23,9 +23,9 @@ package com.calclab.emiteuimodule.client;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.xep.chatstate.ChatStateManager;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.Xmpp;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.xep.chatstate.client.ChatStateManager;
 import com.calclab.emiteuimodule.client.chat.ChatStatePresenter;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.chat.ChatUIPanel;

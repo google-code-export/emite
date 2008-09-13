@@ -1,10 +1,10 @@
 package com.calclab.emite.widgets.client;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.EmiteModule;
-import com.calclab.emite.client.browser.BrowserModule;
-import com.calclab.emite.client.services.gwt.GWTServicesModule;
-import com.calclab.emite.client.xep.muc.MUCModule;
+import com.calclab.emite.browser.client.BrowserModule;
+import com.calclab.emite.core.client.EmiteModule;
+import com.calclab.emite.core.client.services.gwt.GWTServicesModule;
+import com.calclab.emite.xep.muc.client.MUCModule;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
 import com.google.gwt.core.client.EntryPoint;

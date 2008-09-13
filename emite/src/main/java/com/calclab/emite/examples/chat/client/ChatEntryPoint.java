@@ -21,23 +21,23 @@
  */
 package com.calclab.emite.examples.chat.client;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.bosh.Bosh3Settings;
-import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emite.client.im.roster.RosterManager.SubscriptionMode;
-import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.client.xmpp.stanzas.Presence.Show;
+import com.calclab.emite.core.client.Xmpp;
+import com.calclab.emite.core.client.bosh.Bosh3Settings;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.stanzas.Message;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.examples.chat.client.ChatPanel.ChatPanelListener;
 import com.calclab.emite.examples.chat.client.ConversationsPanel.ConversationsListener;
 import com.calclab.emite.examples.chat.client.LoginPanel.LoginPanelListener;
+import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.roster.RosterItem;
+import com.calclab.emite.im.client.roster.RosterManager.SubscriptionMode;
 import com.calclab.suco.client.signal.Slot;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Window;

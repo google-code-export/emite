@@ -1,9 +1,9 @@
 package com.calclab.emite.widgets.client.login;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
-import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.session.Session.State;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.client.signal.Slot0;
 import com.calclab.suco.client.signal.Slot2;

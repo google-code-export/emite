@@ -21,7 +21,7 @@
  */
 package com.calclab.emite.j2se.swing;
 
-import static com.calclab.emite.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
@@ -36,24 +36,24 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.client.Xmpp;
-import com.calclab.emite.client.core.bosh.Bosh3Settings;
-import com.calclab.emite.client.im.chat.Chat;
-import com.calclab.emite.client.im.roster.Roster;
-import com.calclab.emite.client.im.roster.RosterItem;
-import com.calclab.emite.client.xep.muc.MUCModule;
-import com.calclab.emite.client.xep.muc.Occupant;
-import com.calclab.emite.client.xep.muc.Room;
-import com.calclab.emite.client.xep.muc.RoomInvitation;
-import com.calclab.emite.client.xep.muc.RoomManager;
-import com.calclab.emite.client.xmpp.session.Session;
-import com.calclab.emite.client.xmpp.stanzas.Message;
-import com.calclab.emite.client.xmpp.stanzas.Presence;
-import com.calclab.emite.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.core.client.Xmpp;
+import com.calclab.emite.core.client.bosh.Bosh3Settings;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.stanzas.Message;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.j2se.swing.ChatPanel.ChatPanelListener;
 import com.calclab.emite.j2se.swing.LoginPanel.LoginPanelListener;
 import com.calclab.emite.j2se.swing.RoomPanel.RoomPanelListener;
 import com.calclab.emite.j2se.swing.RosterPanel.RosterPanelListener;
+import com.calclab.emite.xep.muc.client.MUCModule;
+import com.calclab.emite.xep.muc.client.Occupant;
+import com.calclab.emite.xep.muc.client.Room;
+import com.calclab.emite.xep.muc.client.RoomInvitation;
+import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.client.signal.Slot2;
 
