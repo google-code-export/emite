@@ -34,6 +34,7 @@ import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.DelegatedContainer;
 
+@Deprecated
 public class Xmpp extends DelegatedContainer {
 
     /**

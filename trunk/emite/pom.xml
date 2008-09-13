@@ -9,6 +9,24 @@
   </description>
   <name>emite xmpp</name>
   <url>http://emite.googlecode.com</url>
+
+  <!-- USE PROFILES WITH gwt:gwt. Example: mvn gwt:gwt -P widgets -->
+  <profiles>
+    <profile>
+      <id>widgets</id>
+      <properties>
+    <gwt.run>com.calclab.emite.widgets.demo.EmiteWidgetsDemo/WidgetsShowCase.html?log_level=DEBUG</gwt.run>
+      </properties>
+    </profile>
+    <profile>
+      <id>emiteui</id>
+      <properties>
+    <gwt.run>com.calclab.emiteui.EmiteUI/EmiteUI.html?log_level=DEBUG</gwt.run>
+      </properties>
+    </profile>
+  </profiles>
+
+
   <pluginRepositories>
     <pluginRepository>
       <id>kune-maven</id>
@@ -55,17 +73,7 @@
           <!--<style>OBF</style>-->
           <!--<style>PRETTY</style>-->
           <style>OBF</style>
-          <!--
-          <runTarget>
-            com.calclab.emiteui.EmiteUI/EmiteUI.html?log_level=DEBUG
-          </runTarget>
-          -->
-            <runTarget>
-            com.calclab.emite.widgets.demo.EmiteWidgetsDemo/WidgetsShowCase.html?log_level=DEBUG
-            </runTarget>
-          <compileTarget>
-            <param></param>
-          </compileTarget>
+          <runTarget>${gwt.run}</runTarget>
           <compileTargets>
             <!--
               <compileTarget>com.calclab.emite.core.EmiteCore</compileTarget>
@@ -84,12 +92,11 @@
         <executions>
           <execution>
             <goals>
-              <!-- <goal>mergewebxml</goal> -->
-              <!-- <goal>compile</goal> -->
             </goals>
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
@@ -269,6 +276,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <reporting>
     <plugins>
       <plugin>
