@@ -8,24 +8,20 @@ import org.mockito.Mockito;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.avatar.client.AvatarVCard;
 import com.calclab.suco.client.signal.Slot;
 import com.calclab.suco.testing.signal.MockSlot;
-import com.calclab.suco.testing.signal.SignalTester;
 
 public class AvatarManagerTest {
     private AvatarManager avatarManager;
-    private PresenceManager presenceManager;
     private MockedSession session;
 
     @Before
     public void aaaCreateManager() {
 	session = new MockedSession();
-	presenceManager = Mockito.mock(PresenceManager.class);
-	avatarManager = new AvatarManager(session, presenceManager);
+	avatarManager = new AvatarManager(session);
     }
 
     @SuppressWarnings("unchecked")
@@ -35,9 +31,7 @@ public class AvatarManagerTest {
 	avatarManager.onHashPresenceReceived(slot);
 	final Presence presence = new Presence(XmppURI.uri(("juliet@capulet.com/balcony")));
 	presence.addChild("x", "vcard-temp:x:update").addChild("photo", null).setText("sha1-hash-of-image");
-	final SignalTester<Presence> signalTester = new SignalTester<Presence>();
-	Mockito.verify(presenceManager).onPresenceReceived(Mockito.argThat(signalTester));
-	signalTester.fire(presence);
+	session.receives(presence);
 	Mockito.verify(slot).onEvent(presence);
     }
 

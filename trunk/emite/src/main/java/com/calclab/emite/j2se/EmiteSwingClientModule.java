@@ -21,24 +21,24 @@
  */
 package com.calclab.emite.j2se;
 
-import com.calclab.emite.core.client.EmiteModule;
+import com.calclab.emite.core.client.EmiteCoreModule;
 import com.calclab.emite.core.client.Xmpp;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.swing.SwingClient;
 import com.calclab.emite.xep.disco.client.DiscoveryModule;
 import com.calclab.emite.xep.muc.client.MUCModule;
 import com.calclab.suco.client.Suco;
-import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.module.AbstractModule;
+import com.calclab.suco.client.module.ModuleManager.ProviderRegisterStrategy;
 import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scope.SingletonScope;
 
 public class EmiteSwingClientModule extends AbstractModule {
 
     public static void main(final String args[]) {
-	final Container container = Suco.create(new J2SEServicesModule(), new EmiteModule(), new MUCModule(),
-		new DiscoveryModule(), new EmiteSwingClientModule());
-	container.getInstance(SwingClient.class).start();
+	Suco.install(ProviderRegisterStrategy.registerOrOverride, new EmiteCoreModule(), new J2SEServicesModule(),
+		new MUCModule(), new DiscoveryModule(), new EmiteSwingClientModule());
+	Suco.get(SwingClient.class).start();
     }
 
     public EmiteSwingClientModule() {

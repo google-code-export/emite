@@ -73,17 +73,19 @@ public interface Session {
     /**
      * The given slot is called when the user has logged in into the session
      * 
-     * @param slot
-     *            callback
+     * @param callback
+     *            receives the user's logged in URI
      */
     public abstract void onLoggedIn(final Slot<XmppURI> slot);
 
     /**
      * The given slot is called when the user has logged out into the session
+     * (and just before close the connection)
      * 
-     * @param slot
+     * @param callback
+     *            receives the user's logged out URI
      */
-    public abstract void onLoggedOut(final Slot<XmppURI> slot);
+    public abstract void onLoggedOut(final Slot<XmppURI> callback);
 
     /**
      * The given slot is called when a message stanza has arrived

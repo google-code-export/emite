@@ -23,17 +23,23 @@ package com.calclab.emite.xep.muc.client;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.SessionScope;
+import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
+import com.google.gwt.core.client.EntryPoint;
 
-public class MUCModule extends AbstractModule {
+public class MUCModule extends AbstractModule implements EntryPoint {
     public static RoomManager getRoomManager(final Container components) {
 	return components.getInstance(RoomManager.class);
     }
 
     public MUCModule() {
 	super();
+    }
+
+    public void onModuleLoad() {
+	Suco.install(this);
     }
 
     @Override

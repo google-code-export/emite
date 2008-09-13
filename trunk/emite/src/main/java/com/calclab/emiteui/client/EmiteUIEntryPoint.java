@@ -32,7 +32,6 @@ import com.calclab.emiteuimodule.client.EmiteUIModule;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
 import com.calclab.suco.client.Suco;
-import com.calclab.suco.client.container.Container;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -49,9 +48,9 @@ public class EmiteUIEntryPoint implements EntryPoint {
     }
 
     public void onModuleLoadCont() {
-	final Container app = Suco.create(new EmiteUIModule(), new DemoModule());
-	final EmiteUIDialog emiteUIDialog = app.getInstance(EmiteUIDialog.class);
-	final EmiteDemoUI demo = app.getInstance(EmiteDemoUI.class);
+	Suco.install(new EmiteUIModule(), new DemoModule());
+	final EmiteUIDialog emiteUIDialog = Suco.get(EmiteUIDialog.class);
+	final EmiteDemoUI demo = Suco.get(EmiteDemoUI.class);
 
 	final EmiteDemoLoginPanel emiteDemoLoginPanel = demo.createLoginPanel(new LoginPanelListener() {
 	    public void onOffline() {
@@ -79,7 +78,7 @@ public class EmiteUIEntryPoint implements EntryPoint {
 	});
 	demo.createInfoPanel();
 
-	final DemoParameters params = app.getInstance(DemoParameters.class);
+	final DemoParameters params = Suco.get(DemoParameters.class);
 	final UserChatOptions userChatOptions = emiteDemoLoginPanel.getUserChatOptions();
 	emiteUIDialog.start(userChatOptions, params.getHttpBase(), params.getHost(), params.getRoomHost());
 	emiteUIDialog.show(OwnStatus.offline);
