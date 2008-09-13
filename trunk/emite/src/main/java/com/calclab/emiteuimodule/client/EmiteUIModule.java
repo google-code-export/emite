@@ -25,7 +25,14 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.emite.core.client.Xmpp;
+import com.calclab.emite.core.client.bosh.Connection;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.xep.avatar.client.AvatarManager;
+import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.emiteuimodule.client.dialog.QuickTipsHelper;
+import com.calclab.emiteuimodule.client.room.RoomUIManager;
 import com.calclab.emiteuimodule.client.room.RoomUIModule;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.sound.SoundModule;
@@ -70,7 +77,9 @@ public class EmiteUIModule extends AbstractModule {
 
 	register(NoScope.class, new Factory<EmiteUIDialog>(EmiteUIDialog.class) {
 	    public EmiteUIDialog create() {
-		return new EmiteUIDialog($(Xmpp.class), $(EmiteUIFactory.class), $(StatusUI.class));
+		return new EmiteUIDialog($(Connection.class), $(Session.class), $(ChatManager.class),
+			$(EmiteUIFactory.class), $(RoomManager.class), $(Roster.class), $(AvatarManager.class),
+			$(StatusUI.class), $(RoomUIManager.class));
 	    }
 	});
 

@@ -10,6 +10,7 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.SessionScope;
 import com.calclab.emite.core.client.xmpp.session.XmppSession;
 import com.calclab.suco.client.Suco;
+import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scope.SingletonScope;
@@ -50,6 +51,12 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 			$(SASLManager.class), $(ResourceBindingManager.class));
 		$(SessionScope.class).setContext(session);
 		return session;
+	    }
+	});
+
+	register(SingletonScope.class, new Factory<Xmpp>(Xmpp.class) {
+	    public Xmpp create() {
+		return new Xmpp($(Container.class));
 	    }
 	});
     }

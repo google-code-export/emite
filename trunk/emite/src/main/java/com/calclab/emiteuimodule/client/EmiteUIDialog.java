@@ -25,9 +25,12 @@ import java.util.Collection;
 import java.util.Date;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.core.client.Xmpp;
 import com.calclab.emite.core.client.bosh.Bosh3Settings;
+import com.calclab.emite.core.client.bosh.Connection;
+import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.im.client.roster.RosterManager;
 import com.calclab.emite.im.client.roster.RosterManager.SubscriptionMode;
@@ -47,19 +50,33 @@ import com.google.gwt.user.client.Window;
 public class EmiteUIDialog {
     private static final String EMITE_DEF_TITLE = "Emite Chat";
     private MultiChatPresenter multiChatDialog;
-    private final Xmpp xmpp;
     private final EmiteUIFactory factory;
     private final StatusUI statusUI;
+    private final Session session;
+    private final ChatManager chatManager;
+    private final RoomManager roomManager;
+    private final Roster roster;
+    private final AvatarManager avatarManager;
+    private final Connection connection;
+    private final RoomUIManager roomUIManager;
 
-    public EmiteUIDialog(final Xmpp xmpp, final EmiteUIFactory factory, final StatusUI statusUI) {
-	this.xmpp = xmpp;
+    public EmiteUIDialog(final Connection connection, final Session session, final ChatManager chatManager,
+	    final EmiteUIFactory factory, final RoomManager roomManager, final Roster roster,
+	    final AvatarManager avatarManager, final StatusUI statusUI, final RoomUIManager roomUIManager) {
+	this.connection = connection;
+	this.session = session;
+	this.chatManager = chatManager;
 	this.factory = factory;
+	this.roomManager = roomManager;
+	this.roster = roster;
+	this.avatarManager = avatarManager;
 	this.statusUI = statusUI;
+	this.roomUIManager = roomUIManager;
     }
 
     public void chat(final XmppURI otherUserURI) {
-	if (xmpp.getSession().isLoggedIn()) {
-	    xmpp.getChatManager().openChat(otherUserURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	if (session.isLoggedIn()) {
+	    chatManager.openChat(otherUserURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
 	} else {
 	    Log.error("To start a chat you need to be 'online'.");
 	}
@@ -90,7 +107,7 @@ public class EmiteUIDialog {
     }
 
     public boolean isLoggedIn() {
-	return xmpp.getSession().isLoggedIn();
+	return session.isLoggedIn();
     }
 
     public boolean isVisible() {
@@ -99,8 +116,8 @@ public class EmiteUIDialog {
     }
 
     public void joinRoom(final XmppURI roomURI) {
-	if (xmpp.getSession().isLoggedIn()) {
-	    xmpp.getInstance(RoomManager.class).openChat(roomURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	if (session.isLoggedIn()) {
+	    roomManager.openChat(roomURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
 	} else {
 	    Log.error("To join a chatroom you need to be 'online'.");
 	}
@@ -117,11 +134,11 @@ public class EmiteUIDialog {
     }
 
     public void onRosterChanged(final Slot<Collection<RosterItem>> listener) {
-	xmpp.getRoster().onRosterChanged(listener);
+	roster.onRosterChanged(listener);
     }
 
     public void onRosterItemChanged(final Slot<RosterItem> listener) {
-	xmpp.getRoster().onItemChanged(listener);
+	roster.onItemChanged(listener);
     }
 
     public void onShowUnavailableRosterItemsChanged(final Slot<Boolean> listener) {
@@ -156,7 +173,7 @@ public class EmiteUIDialog {
     }
 
     public void setOwnVCardAvatar(final String photoBinary) {
-	xmpp.getInstance(AvatarManager.class).setVCardAvatar(photoBinary);
+	avatarManager.setVCardAvatar(photoBinary);
     }
 
     public void show() {
@@ -199,9 +216,9 @@ public class EmiteUIDialog {
 
     public void start(final UserChatOptions userChatOptions, final String httpBase, final String host,
 	    final String roomHost, final AvatarProvider avatarProvider, final String emiteDialogTitle) {
-	xmpp.setBoshSettings(new Bosh3Settings(httpBase, host));
-	xmpp.getInstance(StatusUI.class).setCurrentUserChatOptions(userChatOptions);
-	xmpp.getInstance(RoomUIManager.class).setRoomHostDefault(roomHost);
+	connection.setSettings(new Bosh3Settings(httpBase, host));
+	statusUI.setCurrentUserChatOptions(userChatOptions);
+	roomUIManager.setRoomHostDefault(roomHost);
 	multiChatDialog = createChatDialog(new MultiChatCreationParam(emiteDialogTitle, roomHost, avatarProvider,
 		userChatOptions));
 	ImagesHelper.preFetchImages();
