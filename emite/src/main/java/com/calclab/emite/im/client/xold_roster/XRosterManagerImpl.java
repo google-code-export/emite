@@ -1,4 +1,4 @@
-package com.calclab.emite.im.client.roster;
+package com.calclab.emite.im.client.xold_roster;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
@@ -11,13 +11,13 @@ import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
-import com.calclab.emite.im.client.roster.RosterItem.Subscription;
+import com.calclab.emite.im.client.xold_roster.XRosterItem.Subscription;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
-public class RosterManagerImpl implements RosterManager {
+public class XRosterManagerImpl implements XRosterManager {
 
-	private final Roster roster;
+	private final XRoster xRoster;
 
 	private SubscriptionMode subscriptionMode;
 
@@ -27,17 +27,17 @@ public class RosterManagerImpl implements RosterManager {
 
 	private final Session session;
 
-	private final Signal<Roster> onRosterReady;
+	private final Signal<XRoster> onRosterReady;
 
-	public RosterManagerImpl(final Session session, final Roster roster) {
+	public XRosterManagerImpl(final Session session, final XRoster xRoster) {
 		this.session = session;
-		this.roster = roster;
+		this.xRoster = xRoster;
 		this.subscriptionMode = DEF_SUBSCRIPTION_MODE;
 		this.onSubscriptionRequested = new Signal<Presence>(
 				"rosterManager:onSubscriptionRequested");
 		this.onUnsubscribedReceived = new Signal<XmppURI>(
 				"rosterManager:onUnsubscribedReceived");
-		this.onRosterReady = new Signal<Roster>("rosterManager:onRosterReady");
+		this.onRosterReady = new Signal<XRoster>("rosterManager:onRosterReady");
 
 		session.onLoggedIn(new Slot<XmppURI>() {
 			public void onEvent(final XmppURI parameter) {
@@ -47,7 +47,7 @@ public class RosterManagerImpl implements RosterManager {
 
 		session.onLoggedOut(new Slot<XmppURI>() {
 			public void onEvent(final XmppURI parameter) {
-				roster.clear();
+				xRoster.clear();
 			}
 		});
 
@@ -67,7 +67,7 @@ public class RosterManagerImpl implements RosterManager {
 					break;
 				case available:
 				case unavailable:
-					roster.changePresence(presence.getFrom(), presence);
+					xRoster.changePresence(presence.getFrom(), presence);
 					break;
 				}
 			}
@@ -82,10 +82,10 @@ public class RosterManagerImpl implements RosterManager {
 	public void acceptSubscription(final Presence presence) {
 		if (presence.getType() == Presence.Type.subscribe) {
 			final XmppURI from = presence.getFrom();
-			if (roster.findItemByJID(from.getJID()) == null) {
-				final RosterItem item = new RosterItem(from, Subscription.none,
+			if (xRoster.findItemByJID(from.getJID()) == null) {
+				final XRosterItem item = new XRosterItem(from, Subscription.none,
 						from.getNode());
-				roster.add(item);
+				xRoster.add(item);
 			}
 			final Presence response = new Presence(Presence.Type.subscribed,
 					session.getCurrentUser(), from);
@@ -129,7 +129,7 @@ public class RosterManagerImpl implements RosterManager {
 		return subscriptionMode;
 	}
 
-	public void onRosterReady(final Slot<Roster> slot) {
+	public void onRosterReady(final Slot<XRoster> slot) {
 		this.onRosterReady.add(slot);
 	}
 
@@ -152,7 +152,7 @@ public class RosterManagerImpl implements RosterManager {
 			item.addChild("group", null).setText(group);
 		}
 
-		roster.add(new RosterItem(jid, Subscription.none, name));
+		xRoster.add(new XRosterItem(jid, Subscription.none, name));
 		session.sendIQ("roster", iq, new Slot<IPacket>() {
 			public void onEvent(final IPacket received) {
 				if (IQ.isSuccess(received)) {
@@ -160,7 +160,7 @@ public class RosterManagerImpl implements RosterManager {
 							Type.subscribe, null, jid);
 					session.send(presenceRequest);
 				} else {
-					roster.removeItem(jid);
+					xRoster.removeItem(jid);
 				}
 			}
 		});
@@ -173,7 +173,7 @@ public class RosterManagerImpl implements RosterManager {
 		session.sendIQ("roster", iq, new Slot<IPacket>() {
 			public void onEvent(final IPacket iq) {
 				if (IQ.isSuccess(iq)) {
-					roster.removeItem(jid);
+					xRoster.removeItem(jid);
 				}
 			}
 		});
@@ -195,12 +195,12 @@ public class RosterManagerImpl implements RosterManager {
 		this.subscriptionMode = subscriptionMode;
 	}
 
-	private RosterItem convert(final IPacket item) {
+	private XRosterItem convert(final IPacket item) {
 		final String jid = item.getAttribute("jid");
 		final XmppURI uri = uri(jid);
-		final Subscription subscription = RosterItem.Subscription.valueOf(item
+		final Subscription subscription = XRosterItem.Subscription.valueOf(item
 				.getAttribute("subscription"));
-		return new RosterItem(uri, subscription, item.getAttribute("name"));
+		return new XRosterItem(uri, subscription, item.getAttribute("name"));
 	}
 
 	private List<? extends IPacket> getItems(final IPacket iPacket) {
@@ -229,19 +229,19 @@ public class RosterManagerImpl implements RosterManager {
 		session.sendIQ("roster", new IQ(IQ.Type.get)
 				.WithQuery("jabber:iq:roster"), new Slot<IPacket>() {
 			public void onEvent(final IPacket received) {
-				setRosterItems(roster, received);
+				setRosterItems(xRoster, received);
 			}
 
 		});
 	}
 
-	private void setRosterItems(final Roster roster, final IPacket received) {
-		final ArrayList<RosterItem> items = new ArrayList<RosterItem>();
+	private void setRosterItems(final XRoster xRoster, final IPacket received) {
+		final ArrayList<XRosterItem> items = new ArrayList<XRosterItem>();
 		for (final IPacket item : getItems(received)) {
 			items.add(convert(item));
 		}
-		roster.setItems(items);
-		onRosterReady.fire(roster);
+		xRoster.setItems(items);
+		onRosterReady.fire(xRoster);
 	}
 
 }

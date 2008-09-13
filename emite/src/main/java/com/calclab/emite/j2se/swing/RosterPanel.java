@@ -37,17 +37,17 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
-import com.calclab.emite.im.client.roster.RosterItem;
+import com.calclab.emite.im.client.xold_roster.XRosterItem;
 import com.calclab.emite.j2se.swing.AddRosterItemPanel.AddRosterItemPanelListener;
 
 @SuppressWarnings("serial")
 public class RosterPanel extends JPanel {
 
     public static class RosterItemWrapper {
-	final RosterItem item;
+	final XRosterItem item;
 	final String name;
 
-	public RosterItemWrapper(final String name, final RosterItem item) {
+	public RosterItemWrapper(final String name, final XRosterItem item) {
 	    this.item = item;
 	    this.name = name;
 	}
@@ -63,9 +63,9 @@ public class RosterPanel extends JPanel {
     public static interface RosterPanelListener {
 	void onAddRosterItem(String uri, String name);
 
-	void onRemoveItem(RosterItem item);
+	void onRemoveItem(XRosterItem item);
 
-	void onStartChat(RosterItem item);
+	void onStartChat(XRosterItem item);
     }
 
     private JPanel creationPanel;
@@ -81,7 +81,7 @@ public class RosterPanel extends JPanel {
 	init(owner);
     }
 
-    public void add(final String name, final RosterItem item) {
+    public void add(final String name, final XRosterItem item) {
 	model.addElement(new RosterItemWrapper(name, item));
     }
 

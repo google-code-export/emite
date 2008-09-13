@@ -12,8 +12,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
-import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emite.im.client.roster.RosterItem.Subscription;
+import com.calclab.emite.im.client.xold_roster.XRosterItem;
+import com.calclab.emite.im.client.xold_roster.XRosterItem.Subscription;
 import com.calclab.emiteuimodule.client.MockitoXmpp;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
@@ -22,7 +22,7 @@ import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 public class RosterUIPresenterTest {
 
     private RosterUIPresenter rosterUI;
-    private RosterItem rosterItem;
+    private XRosterItem xRosterItem;
     private XmppURI otherUri;
     private XmppURI meUri;
     private I18nTranslationServiceMocked i18n;
@@ -50,7 +50,7 @@ public class RosterUIPresenterTest {
     public void begin() {
 	meUri = uri("me@example.com");
 	otherUri = uri("matt@example.com");
-	rosterItem = new RosterItem(otherUri, Subscription.both, "matt");
+	xRosterItem = new XRosterItem(otherUri, Subscription.both, "matt");
 
 	// Mocks creation
 	final MockitoXmpp xmpp = new MockitoXmpp();
@@ -76,19 +76,19 @@ public class RosterUIPresenterTest {
 
     @Test
     public void novisibleItemAvailableMustAdd() {
-	rosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
-	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
+	xRosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
+	final ChatUserUI user = new ChatUserUI("", xRosterItem, "black");
 	user.setVisible(false);
-	rosterUI.refreshRosterItemInView(rosterItem, user, true);
+	rosterUI.refreshRosterItemInView(xRosterItem, user, true);
 	Mockito.verify(rosterUIView).addRosterItem(Mockito.eq(user), (UserGridMenuItemList) Mockito.anyObject());
     }
 
     @Test
     public void novisibleItemAvailableMustAddwithNotShowUnavailable() {
-	rosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
-	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
+	xRosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
+	final ChatUserUI user = new ChatUserUI("", xRosterItem, "black");
 	user.setVisible(false);
-	rosterUI.refreshRosterItemInView(rosterItem, user, false);
+	rosterUI.refreshRosterItemInView(xRosterItem, user, false);
 	Mockito.verify(rosterUIView).addRosterItem(Mockito.eq(user), (UserGridMenuItemList) Mockito.anyObject());
     }
 
@@ -112,37 +112,37 @@ public class RosterUIPresenterTest {
 
     @Test
     public void visibleItemAvailableMustUpdate() {
-	rosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
-	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
+	xRosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
+	final ChatUserUI user = new ChatUserUI("", xRosterItem, "black");
 	user.setVisible(true);
-	rosterUI.refreshRosterItemInView(rosterItem, user, true);
+	rosterUI.refreshRosterItemInView(xRosterItem, user, true);
 	Mockito.verify(rosterUIView).updateRosterItem(Mockito.eq(user), (UserGridMenuItemList) Mockito.anyObject());
     }
 
     @Test
     public void visibleItemAvailableMustUpdateWithNotShowUnavailable() {
-	rosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
-	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
+	xRosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
+	final ChatUserUI user = new ChatUserUI("", xRosterItem, "black");
 	user.setVisible(true);
-	rosterUI.refreshRosterItemInView(rosterItem, user, false);
+	rosterUI.refreshRosterItemInView(xRosterItem, user, false);
 	Mockito.verify(rosterUIView).updateRosterItem(Mockito.eq(user), (UserGridMenuItemList) Mockito.anyObject());
     }
 
     @Test
     public void visibleItemUnavailableMustRemoveWithNotShowAvailable() {
-	rosterItem.setPresence(createPresence(Type.unavailable, Show.notSpecified, "Nothing"));
-	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
+	xRosterItem.setPresence(createPresence(Type.unavailable, Show.notSpecified, "Nothing"));
+	final ChatUserUI user = new ChatUserUI("", xRosterItem, "black");
 	user.setVisible(true);
-	rosterUI.refreshRosterItemInView(rosterItem, user, false);
+	rosterUI.refreshRosterItemInView(xRosterItem, user, false);
 	Mockito.verify(rosterUIView).removeRosterItem(user);
     }
 
     @Test
     public void visibleItemUnavailableMustUpdate() {
-	rosterItem.setPresence(createPresence(Type.unavailable, Show.notSpecified, "Nothing"));
-	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
+	xRosterItem.setPresence(createPresence(Type.unavailable, Show.notSpecified, "Nothing"));
+	final ChatUserUI user = new ChatUserUI("", xRosterItem, "black");
 	user.setVisible(true);
-	rosterUI.refreshRosterItemInView(rosterItem, user, true);
+	rosterUI.refreshRosterItemInView(xRosterItem, user, true);
 	Mockito.verify(rosterUIView).updateRosterItem(Mockito.eq(user), (UserGridMenuItemList) Mockito.anyObject());
     }
 

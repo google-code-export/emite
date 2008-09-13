@@ -33,8 +33,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
-import com.calclab.emite.im.client.roster.RosterManager;
-import com.calclab.emite.im.client.roster.RosterManager.SubscriptionMode;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emite.im.client.xold_roster.XRosterManager.SubscriptionMode;
 import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
@@ -58,17 +58,17 @@ public class StatusUIPresenter implements StatusUI {
     private final Signal<String> onUserColorChanged;
     private final Signal<SubscriptionMode> onUserSubscriptionModeChanged;
     private final Provider<Xmpp> xmppProvider;
-    private final Provider<RosterManager> rosterManagerProvider;
+    private final Provider<XRosterManager> rosterManagerProvider;
     private final Provider<ChatManager> chatManagerProvider;
     private final Provider<RoomManager> roomManagerProvider;
 
     public StatusUIPresenter(final Provider<Xmpp> xmpp, final Session session, final PresenceManager presenceManager,
-	    final Provider<RosterManager> rosterManager, final Provider<ChatManager> chatManager,
+	    final Provider<XRosterManager> xRosterManager, final Provider<ChatManager> chatManager,
 	    final Provider<RoomManager> roomManager, final I18nTranslationService i18n) {
 	this.xmppProvider = xmpp;
 	this.session = session;
 	this.presenceManager = presenceManager;
-	this.rosterManagerProvider = rosterManager;
+	this.rosterManagerProvider = xRosterManager;
 	this.chatManagerProvider = chatManager;
 	this.roomManagerProvider = roomManager;
 	this.i18n = i18n;

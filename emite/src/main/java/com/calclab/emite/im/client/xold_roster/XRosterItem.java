@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.im.client.roster;
+package com.calclab.emite.im.client.xold_roster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 
-public class RosterItem {
+public class XRosterItem {
 
     public static enum Subscription {
         /**
@@ -63,7 +63,7 @@ public class RosterItem {
     private Presence presence;
     private Subscription subscription;
 
-    public RosterItem(final XmppURI jid, final Subscription subscription, final String name) {
+    public XRosterItem(final XmppURI jid, final Subscription subscription, final String name) {
         this.jid = jid.getJID();
         this.subscription = subscription;
         this.name = name;

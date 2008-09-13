@@ -23,7 +23,7 @@ package com.calclab.emiteui.client.demo;
 
 import java.util.Date;
 
-import com.calclab.emite.im.client.roster.RosterManager;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.gwtext.client.core.EventObject;
@@ -113,7 +113,7 @@ public class EmiteDemoLoginPanel {
     public UserChatOptions getUserChatOptions() {
         final String resource = "emiteui-" + new Date().getTime() + "-" + release;
         return new UserChatOptions(fieldJid.getRawValue(), fieldPassw.getRawValue(), resource, "blue",
-                RosterManager.DEF_SUBSCRIPTION_MODE, true);
+                XRosterManager.DEF_SUBSCRIPTION_MODE, true);
     }
 
     public void setInitalData(final String djid, final String pass, final String relVer) {
