@@ -20,7 +20,7 @@
  *
  */
 
-package com.calclab.emite.im.client.roster;
+package com.calclab.emite.im.client.xold_roster;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,22 +31,22 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
-public class Roster {
+public class XRoster {
 
     // Only JIDs
-    private final HashMap<XmppURI, RosterItem> items;
+    private final HashMap<XmppURI, XRosterItem> items;
 
-    private final Signal<RosterItem> onItemChanged;
-    private final Signal<Collection<RosterItem>> onRosterChanged;
+    private final Signal<XRosterItem> onItemChanged;
+    private final Signal<Collection<XRosterItem>> onRosterChanged;
 
-    public Roster() {
-	items = new HashMap<XmppURI, RosterItem>();
-	this.onItemChanged = new Signal<RosterItem>("roster:onItemChanged");
-	this.onRosterChanged = new Signal<Collection<RosterItem>>("roster:onRosterChanged");
+    public XRoster() {
+	items = new HashMap<XmppURI, XRosterItem>();
+	this.onItemChanged = new Signal<XRosterItem>("roster:onItemChanged");
+	this.onRosterChanged = new Signal<Collection<XRosterItem>>("roster:onRosterChanged");
     }
 
     public void changePresence(final XmppURI uri, final Presence presence) {
-	final RosterItem item = findItemByJID(uri);
+	final XRosterItem item = findItemByJID(uri);
 	if (item != null) {
 	    item.setPresence(presence);
 	    onItemChanged.fire(item);
@@ -54,7 +54,7 @@ public class Roster {
     }
 
     public void changeSubscription(final XmppURI jid, final String subscription) {
-	final RosterItem item = findItemByJID(jid);
+	final XRosterItem item = findItemByJID(jid);
 	if (item != null) {
 	    item.setSubscription(subscription);
 	    onItemChanged.fire(item);
@@ -65,37 +65,37 @@ public class Roster {
 	items.clear();
     }
 
-    public RosterItem findItemByJID(final XmppURI jid) {
+    public XRosterItem findItemByJID(final XmppURI jid) {
 	return items.get(jid.getJID());
     }
 
-    public Collection<RosterItem> getItems() {
+    public Collection<XRosterItem> getItems() {
 	return items.values();
     }
 
-    public void onItemChanged(final Slot<RosterItem> listener) {
+    public void onItemChanged(final Slot<XRosterItem> listener) {
 	onItemChanged.add(listener);
     }
 
-    public void onRosterChanged(final Slot<Collection<RosterItem>> listener) {
+    public void onRosterChanged(final Slot<Collection<XRosterItem>> listener) {
 	onRosterChanged.add(listener);
     }
 
     public void removeItem(final XmppURI jid) {
-	final RosterItem removed = items.remove(jid.getJID());
+	final XRosterItem removed = items.remove(jid.getJID());
 	if (removed != null) {
 	    onRosterChanged.fire(getItems());
 	}
     }
 
-    void add(final RosterItem item) {
+    void add(final XRosterItem item) {
 	items.put(item.getJID(), item);
 	onRosterChanged.fire(getItems());
     }
 
-    void setItems(final List<RosterItem> itemCollection) {
+    void setItems(final List<XRosterItem> itemCollection) {
 	items.clear();
-	for (final RosterItem item : itemCollection) {
+	for (final XRosterItem item : itemCollection) {
 	    items.put(item.getJID(), item);
 	}
 	onRosterChanged.fire(getItems());

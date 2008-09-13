@@ -1,4 +1,4 @@
-package com.calclab.emite.im.client.roster;
+package com.calclab.emite.im.client.xold_roster;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 import static com.calclab.emite.testing.MockitoEmiteHelper.isListOfSize;
@@ -15,24 +15,24 @@ import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.im.client.roster.Roster;
-import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emite.im.client.roster.RosterManager;
-import com.calclab.emite.im.client.roster.RosterManagerImpl;
-import com.calclab.emite.im.client.roster.RosterManager.SubscriptionMode;
+import com.calclab.emite.im.client.xold_roster.XRoster;
+import com.calclab.emite.im.client.xold_roster.XRosterItem;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emite.im.client.xold_roster.XRosterManagerImpl;
+import com.calclab.emite.im.client.xold_roster.XRosterManager.SubscriptionMode;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.signal.MockSlot;
 
 public class RosterManagerTest {
-    private RosterManager manager;
-    private Roster roster;
+    private XRosterManager manager;
+    private XRoster xRoster;
     private MockedSession session;
 
     @Before
     public void aaCreate() {
 	session = new MockedSession();
-	roster = mock(Roster.class);
-	manager = new RosterManagerImpl(session, roster);
+	xRoster = mock(XRoster.class);
+	manager = new XRosterManagerImpl(session, xRoster);
 
     }
 
@@ -47,14 +47,14 @@ public class RosterManagerTest {
     @Test
     public void shouldAddNewRosterItemWhenSubscriptionAccepted() {
 	manager.acceptSubscription(new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain")));
-	Mockito.verify(roster).add((RosterItem) anyObject());
+	Mockito.verify(xRoster).add((XRosterItem) anyObject());
     }
 
     @Test
     public void shouldAddRosterItem() {
 	session.setLoggedIn(uri("user@domain/res"));
 	manager.requestAddItem(uri("name@domain/res"), "the name", "the group");
-	verify(roster).add((RosterItem) anyObject());
+	verify(xRoster).add((XRosterItem) anyObject());
 	session.verifyIQSent("<iq from='user@domain/res' type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='name@domain/res' name='the name'><group>the group</group></item></query></iq>");
 	session.answerSuccess();
@@ -64,13 +64,13 @@ public class RosterManagerTest {
     public void shouldHandlePresence() {
 	session.receives("<presence from='userInRoster@domain/res' to='user@domain/res'>"
 		+ "<priority>2</priority></presence>");
-	verify(roster).changePresence(eq(uri("userInRoster@domain/res")), (Presence) anyObject());
+	verify(xRoster).changePresence(eq(uri("userInRoster@domain/res")), (Presence) anyObject());
     }
 
     @Test
     public void shouldHandlePresenceWithUncompleteJid() {
 	session.receives("<presence from='userInRoster' to='user@domain/res'>" + "<priority>2</priority></presence>");
-	verify(roster).changePresence(eq(uri("userInRoster")), (Presence) anyObject());
+	verify(xRoster).changePresence(eq(uri("userInRoster")), (Presence) anyObject());
     }
 
     @Test
@@ -86,7 +86,7 @@ public class RosterManagerTest {
 	manager.requestRemoveItem(uri);
 	session.verifyIQSent(new IQ(Type.set));
 	session.answerSuccess();
-	verify(roster).removeItem(uri);
+	verify(xRoster).removeItem(uri);
     }
 
     @SuppressWarnings("unchecked")
@@ -97,7 +97,7 @@ public class RosterManagerTest {
 	session.answer("<iq type='result' xmlns='jabber:client'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='name1@domain' subscription='both' name='complete name1' />"
 		+ "<item jid='name2@domain' subscription='both' name='complete name2' />" + "</query></iq>");
-	verify(roster).setItems(isListOfSize(2));
+	verify(xRoster).setItems(isListOfSize(2));
     }
 
     @Test
@@ -124,6 +124,5 @@ public class RosterManagerTest {
 	session.receives(presence);
 	MockSlot.verifyCalled(listener);
     }
-
 
 }

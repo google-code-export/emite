@@ -26,9 +26,9 @@ import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.presence.PresenceManagerImpl;
-import com.calclab.emite.im.client.roster.Roster;
-import com.calclab.emite.im.client.roster.RosterManager;
-import com.calclab.emite.im.client.roster.RosterManagerImpl;
+import com.calclab.emite.im.client.xold_roster.XRoster;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emite.im.client.xold_roster.XRosterManagerImpl;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
@@ -58,21 +58,21 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
 
     @Override
     public void onLoad() {
-	register(SingletonScope.class, new Factory<Roster>(Roster.class) {
-	    public Roster create() {
-		return new Roster();
+	register(SingletonScope.class, new Factory<XRoster>(XRoster.class) {
+	    public XRoster create() {
+		return new XRoster();
 	    }
 	}, new Factory<ChatManager>(ChatManager.class) {
 	    public ChatManagerImpl create() {
 		return new ChatManagerImpl($(Session.class));
 	    }
-	}, new Factory<RosterManager>(RosterManager.class) {
-	    public RosterManager create() {
-		return new RosterManagerImpl($(Session.class), $(Roster.class));
+	}, new Factory<XRosterManager>(XRosterManager.class) {
+	    public XRosterManager create() {
+		return new XRosterManagerImpl($(Session.class), $(XRoster.class));
 	    }
 	}, new Factory<PresenceManager>(PresenceManager.class) {
 	    public PresenceManager create() {
-		return new PresenceManagerImpl($(Session.class), $(RosterManager.class));
+		return new PresenceManagerImpl($(Session.class), $(XRosterManager.class));
 	    }
 	});
 

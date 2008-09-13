@@ -8,24 +8,24 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
-import com.calclab.emite.im.client.roster.Roster;
-import com.calclab.emite.im.client.roster.RosterManager;
+import com.calclab.emite.im.client.xold_roster.XRoster;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.suco.client.SucoFactory;
 
 public class MockitoXmpp extends Xmpp {
 
     private final ChatManager chat;
     private final PresenceManager presenceManager;
-    private final Roster roster;
-    private final RosterManager rosterManager;
+    private final XRoster xRoster;
+    private final XRosterManager xRosterManager;
     private final Session session;
 
     public MockitoXmpp() {
 	super(SucoFactory.create());
 	chat = mock(ChatManager.class);
 	presenceManager = mock(PresenceManager.class);
-	roster = mock(Roster.class);
-	rosterManager = mock(RosterManager.class);
+	xRoster = mock(XRoster.class);
+	xRosterManager = mock(XRosterManager.class);
 	session = mock(Session.class);
     }
 
@@ -40,13 +40,13 @@ public class MockitoXmpp extends Xmpp {
     }
 
     @Override
-    public Roster getRoster() {
-	return roster;
+    public XRoster getRoster() {
+	return xRoster;
     }
 
     @Override
-    public RosterManager getRosterManager() {
-	return rosterManager;
+    public XRosterManager getRosterManager() {
+	return xRosterManager;
     }
 
     @Override

@@ -28,8 +28,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
-import com.calclab.emite.im.client.roster.Roster;
-import com.calclab.emite.im.client.roster.RosterManager;
+import com.calclab.emite.im.client.xold_roster.XRoster;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.container.DelegatedContainer;
@@ -67,13 +67,13 @@ public class Xmpp extends DelegatedContainer {
 	return getInstance(PresenceManager.class);
     }
 
-    public Roster getRoster() {
+    public XRoster getRoster() {
 	getSession();
-	return getInstance(Roster.class);
+	return getInstance(XRoster.class);
     }
 
-    public RosterManager getRosterManager() {
-	return getInstance(RosterManager.class);
+    public XRosterManager getRosterManager() {
+	return getInstance(XRosterManager.class);
     }
 
     public Session getSession() {

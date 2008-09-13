@@ -34,7 +34,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.roster.RosterManager;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager;
 import com.calclab.emite.xep.chatstate.client.StateManager;
@@ -73,7 +73,7 @@ public class MultiChatPresenter {
     private final ChatManager chatManager;
     private final RoomManager roomManager;
     private final StateManager stateManager;
-    private final RosterManager rosterManager;
+    private final XRosterManager xRosterManager;
     private final StatusUI statusUI;
     private final Provider<SoundManager> soundManagerProvider;
 
@@ -90,7 +90,7 @@ public class MultiChatPresenter {
 	roomHost = param.getRoomHost();
 	chatManager = xmpp.getChatManager();
 	roomManager = xmpp.getInstance(RoomManager.class);
-	rosterManager = xmpp.getRosterManager();
+	xRosterManager = xmpp.getRosterManager();
 	stateManager = xmpp.getInstance(StateManager.class);
 	openedChats = 0;
 	onChatAttended = new Signal<String>("onChatAttended");
@@ -105,7 +105,7 @@ public class MultiChatPresenter {
 
     public void addRosterItem(final String name, final String jid) {
 	Log.info("Adding " + name + "(" + jid + ") to your roster.");
-	rosterManager.requestAddItem(uri(jid), name, null);
+	xRosterManager.requestAddItem(uri(jid), name, null);
     }
 
     public void center() {

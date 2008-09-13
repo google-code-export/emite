@@ -22,7 +22,7 @@
 package com.calclab.emiteuimodule.client;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.roster.RosterManager.SubscriptionMode;
+import com.calclab.emite.im.client.xold_roster.XRosterManager.SubscriptionMode;
 
 public class UserChatOptions {
 

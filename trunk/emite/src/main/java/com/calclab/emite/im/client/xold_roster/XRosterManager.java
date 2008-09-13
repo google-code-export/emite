@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.im.client.roster;
+package com.calclab.emite.im.client.xold_roster;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
@@ -28,7 +28,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 // FIXME: vjrj - necesito ayuda para documentar esta clase
 // no entiendo EXACTAMENTE qu� hace cada m�todo
-public interface RosterManager {
+public interface XRosterManager {
 	public static enum SubscriptionMode implements IsSerializable {
 		autoAcceptAll, autoRejectAll, manual
 	}
@@ -47,7 +47,7 @@ public interface RosterManager {
 
 	public SubscriptionMode getSubscriptionMode();
 
-	public void onRosterReady(Slot<Roster> slot);
+	public void onRosterReady(Slot<XRoster> slot);
 
 	public void onSubscriptionRequested(Slot<Presence> listener);
 

@@ -27,8 +27,8 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.im.client.InstantMessagingModule;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
-import com.calclab.emite.im.client.roster.Roster;
-import com.calclab.emite.im.client.roster.RosterManager;
+import com.calclab.emite.im.client.xold_roster.XRoster;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.swing.SwingClient;
 import com.calclab.emite.xep.disco.client.DiscoveryModule;
@@ -57,7 +57,7 @@ public class EmiteSwingClientModule extends AbstractModule {
 	register(SingletonScope.class, new Factory<SwingClient>(SwingClient.class) {
 	    public SwingClient create() {
 		return new SwingClient($(Connection.class), $(Session.class), $(PresenceManager.class),
-			$(RosterManager.class), $(Roster.class), $(ChatManager.class), $(RoomManager.class));
+			$(XRosterManager.class), $(XRoster.class), $(ChatManager.class), $(RoomManager.class));
 	    }
 	});
     }

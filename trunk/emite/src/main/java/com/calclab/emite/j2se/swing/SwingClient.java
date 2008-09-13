@@ -45,9 +45,9 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
-import com.calclab.emite.im.client.roster.Roster;
-import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emite.im.client.roster.RosterManager;
+import com.calclab.emite.im.client.xold_roster.XRoster;
+import com.calclab.emite.im.client.xold_roster.XRosterItem;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.j2se.swing.ChatPanel.ChatPanelListener;
 import com.calclab.emite.j2se.swing.LoginPanel.LoginPanelListener;
 import com.calclab.emite.j2se.swing.RoomPanel.RoomPanelListener;
@@ -74,15 +74,15 @@ public class SwingClient {
     private final Session session;
     private final ChatManager chatManager;
     private final RoomManager roomManager;
-    private final Roster roster;
-    private final RosterManager rosterManager;
+    private final XRoster xRoster;
+    private final XRosterManager xRosterManager;
 
     public SwingClient(final Connection connection, final Session session, final PresenceManager presenceManager,
-	    final RosterManager rosterManager, final Roster roster, final ChatManager chatManager,
+	    final XRosterManager xRosterManager, final XRoster xRoster, final ChatManager chatManager,
 	    final RoomManager roomManager) {
 	this.session = session;
-	this.rosterManager = rosterManager;
-	this.roster = roster;
+	this.xRosterManager = xRosterManager;
+	this.xRoster = xRoster;
 	this.chatManager = chatManager;
 	this.roomManager = roomManager;
 
@@ -126,14 +126,14 @@ public class SwingClient {
 
 	rosterPanel = new RosterPanel(frame, new RosterPanelListener() {
 	    public void onAddRosterItem(final String uri, final String name) {
-		rosterManager.requestAddItem(uri(uri), name, null);
+		xRosterManager.requestAddItem(uri(uri), name, null);
 	    }
 
-	    public void onRemoveItem(final RosterItem item) {
-		rosterManager.requestRemoveItem(item.getJID());
+	    public void onRemoveItem(final XRosterItem item) {
+		xRosterManager.requestRemoveItem(item.getJID());
 	    }
 
-	    public void onStartChat(final RosterItem item) {
+	    public void onStartChat(final XRosterItem item) {
 		chatManager.openChat(item.getJID(), null, null);
 	    }
 	});
@@ -291,29 +291,29 @@ public class SwingClient {
 	    }
 	});
 
-	roster.onItemChanged(new Slot<RosterItem>() {
-	    public void onEvent(final RosterItem item) {
+	xRoster.onItemChanged(new Slot<XRosterItem>() {
+	    public void onEvent(final XRosterItem item) {
 		print("ROSTER ITEM PRESENCE CHANGED");
 		rosterPanel.refresh();
 	    }
 	});
-	roster.onRosterChanged(new Slot<Collection<RosterItem>>() {
+	xRoster.onRosterChanged(new Slot<Collection<XRosterItem>>() {
 
-	    public void onEvent(final Collection<RosterItem> items) {
+	    public void onEvent(final Collection<XRosterItem> items) {
 		print("ROSTER INITIALIZED");
 		rosterPanel.clear();
-		for (final RosterItem item : items) {
+		for (final XRosterItem item : items) {
 		    rosterPanel.add(item.getName(), item);
 		}
 	    }
 	});
 
-	rosterManager.onSubscriptionRequested(new Slot<Presence>() {
+	xRosterManager.onSubscriptionRequested(new Slot<Presence>() {
 	    public void onEvent(final Presence presence) {
 		final Object message = presence.getFromAsString() + " want to add you to his/her roster. Accept?";
 		final int result = JOptionPane.showConfirmDialog(frame, message);
 		if (result == JOptionPane.OK_OPTION) {
-		    rosterManager.acceptSubscription(presence);
+		    xRosterManager.acceptSubscription(presence);
 		}
 		print("SUBSCRIPTION: " + presence);
 	    }

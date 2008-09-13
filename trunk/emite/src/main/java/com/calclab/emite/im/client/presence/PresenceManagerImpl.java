@@ -5,8 +5,8 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
-import com.calclab.emite.im.client.roster.Roster;
-import com.calclab.emite.im.client.roster.RosterManager;
+import com.calclab.emite.im.client.xold_roster.XRoster;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.suco.client.signal.Signal;
 import com.calclab.suco.client.signal.Slot;
 
@@ -18,7 +18,7 @@ public class PresenceManagerImpl implements PresenceManager {
 	private final Session session;
 
 	public PresenceManagerImpl(final Session session,
-			final RosterManager rosterManager) {
+			final XRosterManager xRosterManager) {
 		this.session = session;
 		this.ownPresence = new Presence(Type.unavailable, null, null);
 		this.onPresenceReceived = new Signal<Presence>(
@@ -29,8 +29,8 @@ public class PresenceManagerImpl implements PresenceManager {
 		// Upon connecting to the server and becoming an active resource, a
 		// client SHOULD request the roster before sending initial presence
 
-		rosterManager.onRosterReady(new Slot<Roster>() {
-			public void onEvent(final Roster parameter) {
+		xRosterManager.onRosterReady(new Slot<XRoster>() {
+			public void onEvent(final XRoster parameter) {
 				final Presence initialPresence = new Presence(session
 						.getCurrentUser());
 				broadcastPresence(initialPresence);

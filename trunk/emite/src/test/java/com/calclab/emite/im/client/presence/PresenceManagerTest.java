@@ -15,8 +15,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.presence.PresenceManagerImpl;
-import com.calclab.emite.im.client.roster.Roster;
-import com.calclab.emite.im.client.roster.RosterManager;
+import com.calclab.emite.im.client.xold_roster.XRoster;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.signal.MockSlot;
 import com.calclab.suco.testing.signal.SignalTester;
@@ -25,16 +25,16 @@ public class PresenceManagerTest {
 
     private PresenceManager manager;
     private MockedSession session;
-    private RosterManager rosterManager;
-    private SignalTester<Roster> onRosterReady;
+    private XRosterManager xRosterManager;
+    private SignalTester<XRoster> onRosterReady;
 
     @Before
     public void beforeTest() {
 	session = new MockedSession();
-	rosterManager = mock(RosterManager.class);
-	onRosterReady = new SignalTester<Roster>();
-	manager = new PresenceManagerImpl(session, rosterManager);
-	verify(rosterManager).onRosterReady(argThat(onRosterReady));
+	xRosterManager = mock(XRosterManager.class);
+	onRosterReady = new SignalTester<XRoster>();
+	manager = new PresenceManagerImpl(session, xRosterManager);
+	verify(xRosterManager).onRosterReady(argThat(onRosterReady));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class PresenceManagerTest {
     public void shouldSendDelayedAsSoonAsPossible() {
 	manager.setOwnPresence(Presence.build("my delayed status", Show.dnd));
 	session.setLoggedIn(uri("myself@domain"));
-	onRosterReady.fire(new Roster());
+	onRosterReady.fire(new XRoster());
 	session.verifySent("<presence from='myself@domain'></presence>");
 	session.verifySent("<presence from='myself@domain'><show>dnd</show>"
 		+ "<status>my delayed status</status></presence>");
@@ -80,7 +80,7 @@ public class PresenceManagerTest {
     @Test
     public void shouldSendInitialPresenceAfterRosterReady() {
 	session.setLoggedIn(uri("myself@domain"));
-	onRosterReady.fire(new Roster());
+	onRosterReady.fire(new XRoster());
 	session.verifySent("<presence from='myself@domain'></presence>");
     }
 
