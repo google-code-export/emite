@@ -22,11 +22,18 @@
 package com.calclab.emite.j2se;
 
 import com.calclab.emite.core.client.EmiteCoreModule;
-import com.calclab.emite.core.client.Xmpp;
+import com.calclab.emite.core.client.bosh.Connection;
+import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.im.client.InstantMessagingModule;
+import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.presence.PresenceManager;
+import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.im.client.roster.RosterManager;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.swing.SwingClient;
 import com.calclab.emite.xep.disco.client.DiscoveryModule;
 import com.calclab.emite.xep.muc.client.MUCModule;
+import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.module.ModuleManager.ProviderRegisterStrategy;
@@ -37,7 +44,7 @@ public class EmiteSwingClientModule extends AbstractModule {
 
     public static void main(final String args[]) {
 	Suco.install(ProviderRegisterStrategy.registerOrOverride, new EmiteCoreModule(), new J2SEServicesModule(),
-		new MUCModule(), new DiscoveryModule(), new EmiteSwingClientModule());
+		new InstantMessagingModule(), new MUCModule(), new DiscoveryModule(), new EmiteSwingClientModule());
 	Suco.get(SwingClient.class).start();
     }
 
@@ -49,7 +56,8 @@ public class EmiteSwingClientModule extends AbstractModule {
     protected void onLoad() {
 	register(SingletonScope.class, new Factory<SwingClient>(SwingClient.class) {
 	    public SwingClient create() {
-		return new SwingClient($(Xmpp.class));
+		return new SwingClient($(Connection.class), $(Session.class), $(PresenceManager.class),
+			$(RosterManager.class), $(Roster.class), $(ChatManager.class), $(RoomManager.class));
 	    }
 	});
     }

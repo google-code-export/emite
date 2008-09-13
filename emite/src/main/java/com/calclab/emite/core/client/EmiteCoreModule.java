@@ -9,6 +9,7 @@ import com.calclab.emite.core.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.SessionScope;
 import com.calclab.emite.core.client.xmpp.session.XmppSession;
+import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scope.SingletonScope;
@@ -54,7 +55,7 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
     }
 
     public void onModuleLoad() {
-
+	Suco.install(this);
     }
 
 }
