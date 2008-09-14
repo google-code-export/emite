@@ -24,6 +24,10 @@ public class EmiteAsserts {
 	assertTrue("" + actualPacket + " didn't match " + expectedPacket, m.matches(actualPacket, System.out));
     }
 
+    public static void assertPacketLike(final String expected, final IPacket actual) {
+	assertPacketLike(toXML(expected), actual);
+    }
+
     public static void assertPacketLike(final String expected, final String actual) {
 	final IPacket expectedPacket = toXML(expected);
 	final IPacket actualPacket = toXML(actual);

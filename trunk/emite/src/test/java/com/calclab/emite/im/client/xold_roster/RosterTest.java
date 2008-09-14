@@ -13,9 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
+import com.calclab.emite.im.client.roster.RosterItem;
+import com.calclab.emite.im.client.roster.RosterItem.Subscription;
 import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterItem;
-import com.calclab.emite.im.client.xold_roster.XRosterItem.Subscription;
 import com.calclab.suco.testing.signal.MockSlot;
 
 public class RosterTest {
@@ -28,15 +28,15 @@ public class RosterTest {
 
     @Test
     public void shouldFindByJID() {
-	final XRosterItem item = new XRosterItem(uri("someone@domain/resource"), null, null);
+	final RosterItem item = new RosterItem(uri("someone@domain/resource"), null, null);
 	xRoster.add(item);
 	assertSame(item, xRoster.findItemByJID(uri("someone@domain/different_resource")));
     }
 
     @Test
     public void shouldFireListenersWhenPresenceChanged() {
-	final XRosterItem item = new XRosterItem(uri("one@domain"), Subscription.none, "one");
-	final MockSlot<XRosterItem> listener = new MockSlot<XRosterItem>();
+	final RosterItem item = new RosterItem(uri("one@domain"), Subscription.none, "one");
+	final MockSlot<RosterItem> listener = new MockSlot<RosterItem>();
 	xRoster.onItemChanged(listener);
 	xRoster.add(item);
 	xRoster.changePresence(item.getJID(), new Presence());
@@ -45,9 +45,9 @@ public class RosterTest {
 
     @Test
     public void shouldFireListenerWhenItemRemoved() {
-	final MockSlot<Collection<XRosterItem>> slot = new MockSlot<Collection<XRosterItem>>();
+	final MockSlot<Collection<RosterItem>> slot = new MockSlot<Collection<RosterItem>>();
 	xRoster.onRosterChanged(slot);
-	xRoster.add(new XRosterItem(uri("one@domain/resource1"), Subscription.none, "one"));
+	xRoster.add(new RosterItem(uri("one@domain/resource1"), Subscription.none, "one"));
 	MockSlot.verifyCalled(slot, 1);
 	assertEquals(1, slot.getValue(0).size());
 	xRoster.removeItem(uri("one@domain/resource2"));
@@ -58,10 +58,10 @@ public class RosterTest {
 
     @Test
     public void shouldInformWhenRosterChanged() {
-	final MockSlot<Collection<XRosterItem>> slot = new MockSlot<Collection<XRosterItem>>();
+	final MockSlot<Collection<RosterItem>> slot = new MockSlot<Collection<RosterItem>>();
 	xRoster.onRosterChanged(slot);
-	final List<XRosterItem> itemCollection = new ArrayList<XRosterItem>();
-	itemCollection.add(new XRosterItem(uri("name@domain"), Subscription.none, "name"));
+	final List<RosterItem> itemCollection = new ArrayList<RosterItem>();
+	itemCollection.add(new RosterItem(uri("name@domain"), Subscription.none, "name"));
 	xRoster.setItems(itemCollection);
 	MockSlot.verifyCalled(slot, 1);
 	assertTrue(slot.getValue(0).contains(itemCollection.get(0)));
@@ -70,12 +70,12 @@ public class RosterTest {
 
     @Test
     public void shouldInformWhenRosterItemChanged() {
-	final MockSlot<Collection<XRosterItem>> slot = new MockSlot<Collection<XRosterItem>>();
+	final MockSlot<Collection<RosterItem>> slot = new MockSlot<Collection<RosterItem>>();
 	xRoster.onRosterChanged(slot);
-	xRoster.setItems(new ArrayList<XRosterItem>());
+	xRoster.setItems(new ArrayList<RosterItem>());
 	MockSlot.verifyCalled(slot, 1);
 	assertEquals(0, slot.getValue(0).size());
-	xRoster.add(new XRosterItem(uri("name@domain/res"), null, null));
+	xRoster.add(new RosterItem(uri("name@domain/res"), null, null));
 	MockSlot.verifyCalled(slot, 2);
 	assertEquals(1, slot.getValue(1).size());
     }

@@ -35,10 +35,10 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.presence.PresenceManager;
+import com.calclab.emite.im.client.roster.RosterItem;
+import com.calclab.emite.im.client.roster.RosterItem.Subscription;
 import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterItem;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
-import com.calclab.emite.im.client.xold_roster.XRosterItem.Subscription;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem;
@@ -178,7 +178,7 @@ public class RosterUIPresenter {
 	showUnavailableItems = show;
 	for (final Iterator<XmppURI> iterator = rosterMap.keySet().iterator(); iterator.hasNext();) {
 	    final XmppURI jid = iterator.next();
-	    final XRosterItem item = xRoster.findItemByJID(jid);
+	    final RosterItem item = xRoster.findItemByJID(jid);
 	    final ChatUserUI user = rosterMap.get(jid);
 	    if (item == null) {
 		Log.error("Trying to update a ui roster item not in roster");
@@ -246,7 +246,7 @@ public class RosterUIPresenter {
 	return ChatIconDescriptor.unknown;
     }
 
-    void refreshRosterItemInView(final XRosterItem item, final ChatUserUI user, final boolean showUnavailable) {
+    void refreshRosterItemInView(final RosterItem item, final ChatUserUI user, final boolean showUnavailable) {
 	final boolean mustShow = isAvailable(item) || showUnavailable;
 	if (mustShow) {
 	    if (user.getVisible()) {
@@ -271,7 +271,7 @@ public class RosterUIPresenter {
 		});
     }
 
-    private UserGridMenuItemList createMenuItemList(final XRosterItem item) {
+    private UserGridMenuItemList createMenuItemList(final RosterItem item) {
 	return createMenuItemList(item.getJID(), item.getPresence(), item.getSubscription());
     }
 
@@ -336,8 +336,8 @@ public class RosterUIPresenter {
     }
 
     private void createXmppListeners() {
-	xRoster.onItemChanged(new Slot<XRosterItem>() {
-	    public void onEvent(final XRosterItem item) {
+	xRoster.onItemChanged(new Slot<RosterItem>() {
+	    public void onEvent(final RosterItem item) {
 		final ChatUserUI user = rosterMap.get(item.getJID());
 		if (user == null) {
 		    Log.error("Trying to update a user is not in roster: " + item.getJID() + " ----> Roster: "
@@ -351,11 +351,11 @@ public class RosterUIPresenter {
 
 	});
 
-	xRoster.onRosterChanged(new Slot<Collection<XRosterItem>>() {
-	    public void onEvent(final Collection<XRosterItem> roster) {
+	xRoster.onRosterChanged(new Slot<Collection<RosterItem>>() {
+	    public void onEvent(final Collection<RosterItem> roster) {
 		rosterMap.clear();
 		view.clearRoster();
-		for (final XRosterItem item : roster) {
+		for (final RosterItem item : roster) {
 		    logRosterItem("Adding", item);
 		    final ChatUserUI user = new ChatUserUI(avatarProvider.getAvatarURL(item.getJID()), item, "black");
 		    updateUserWithRosterItem(user, item);
@@ -403,7 +403,7 @@ public class RosterUIPresenter {
 
     }
 
-    private boolean isAvailable(final XRosterItem item) {
+    private boolean isAvailable(final RosterItem item) {
 	final Presence presence = item.getPresence();
 	switch (presence.getType()) {
 	case available:
@@ -434,7 +434,7 @@ public class RosterUIPresenter {
 		+ presence.getShow().toString() + ", status: " + presence.getStatus() + " (" + subTitle + ")");
     }
 
-    private void logRosterItem(final String operation, final XRosterItem item) {
+    private void logRosterItem(final String operation, final RosterItem item) {
 	final String name = item.getName();
 	final Presence presence = item.getPresence();
 	Log.info(operation + " roster item: " + item.getJID() + ", name: " + name + ", subsc: "
@@ -446,7 +446,7 @@ public class RosterUIPresenter {
 	}
     }
 
-    private void updateUserWithRosterItem(final ChatUserUI user, final XRosterItem item) {
+    private void updateUserWithRosterItem(final ChatUserUI user, final RosterItem item) {
 	user.setStatusIcon(getPresenceIcon(item.getPresence()));
 	user.setStatusText(formatRosterItemStatusText(item.getPresence(), item.getSubscription()));
     }

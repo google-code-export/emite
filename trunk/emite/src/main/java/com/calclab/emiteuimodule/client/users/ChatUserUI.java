@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteuimodule.client.users;
 
-import com.calclab.emite.im.client.xold_roster.XRosterItem;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
 
 public class ChatUserUI extends AbstractChatUser {
@@ -32,8 +32,8 @@ public class ChatUserUI extends AbstractChatUser {
 
     private boolean visible;
 
-    public ChatUserUI(final String iconUrl, final XRosterItem xRosterItem, final String color) {
-        super(iconUrl, xRosterItem.getJID(), xRosterItem.getName(), color);
+    public ChatUserUI(final String iconUrl, final RosterItem rosterItem, final String color) {
+        super(iconUrl, rosterItem.getJID(), rosterItem.getName(), color);
     }
 
     public ChatIconDescriptor getStatusIcon() {
