@@ -21,6 +21,8 @@
  */
 package com.calclab.emite.j2se;
 
+import javax.swing.JFrame;
+
 import com.calclab.emite.core.client.EmiteCoreModule;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
@@ -30,7 +32,11 @@ import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
+import com.calclab.emite.j2se.swing.LoginPanel;
 import com.calclab.emite.j2se.swing.SwingClient;
+import com.calclab.emite.j2se.swing.login.LoginControl;
+import com.calclab.emite.j2se.swing.roster.RosterPanel;
+import com.calclab.emite.j2se.swing.roster.RosterControl;
 import com.calclab.emite.xep.disco.client.DiscoveryModule;
 import com.calclab.emite.xep.muc.client.MUCModule;
 import com.calclab.emite.xep.muc.client.RoomManager;
@@ -45,7 +51,7 @@ public class EmiteSwingClientModule extends AbstractModule {
     public static void main(final String args[]) {
 	Suco.install(ProviderRegisterStrategy.registerOrOverride, new EmiteCoreModule(), new J2SEServicesModule(),
 		new InstantMessagingModule(), new MUCModule(), new DiscoveryModule(), new EmiteSwingClientModule());
-	Suco.get(SwingClient.class).start();
+	Suco.get(SwingClient.class);
     }
 
     public EmiteSwingClientModule() {
@@ -56,8 +62,42 @@ public class EmiteSwingClientModule extends AbstractModule {
     protected void onLoad() {
 	register(SingletonScope.class, new Factory<SwingClient>(SwingClient.class) {
 	    public SwingClient create() {
-		return new SwingClient($(Connection.class), $(Session.class), $(PresenceManager.class),
-			$(XRosterManager.class), $(XRoster.class), $(ChatManager.class), $(RoomManager.class));
+		return new SwingClient($(JFrame.class), $(LoginPanel.class), $(RosterPanel.class),
+			$(ChatManager.class), $(RoomManager.class));
+	    }
+	});
+
+	register(SingletonScope.class, new Factory<FrameControl>(FrameControl.class) {
+	    public FrameControl create() {
+		return new FrameControl($(Session.class));
+	    }
+	}, new Factory<JFrame>(JFrame.class) {
+	    public JFrame create() {
+		final JFrame frame = new JFrame("emite swing client");
+		$(FrameControl.class).setView(frame);
+		return frame;
+	    }
+	});
+
+	register(SingletonScope.class, new Factory<LoginControl>(LoginControl.class) {
+	    public LoginControl create() {
+		return new LoginControl($(Connection.class), $(Session.class), $(PresenceManager.class));
+	    }
+	}, new Factory<LoginPanel>(LoginPanel.class) {
+	    public LoginPanel create() {
+		final LoginPanel panel = new LoginPanel($(JFrame.class));
+		$(LoginControl.class).setView(panel);
+		return panel;
+	    }
+	}, new Factory<RosterControl>(RosterControl.class) {
+	    public RosterControl create() {
+		return new RosterControl($(Session.class), $(XRosterManager.class), $(XRoster.class));
+	    }
+	}, new Factory<RosterPanel>(RosterPanel.class) {
+	    public RosterPanel create() {
+		final RosterPanel panel = new RosterPanel($(JFrame.class));
+		$(RosterControl.class).setView(panel);
+		return panel;
 	    }
 	});
     }

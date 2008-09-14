@@ -32,10 +32,17 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import com.calclab.suco.client.signal.Signal;
+import com.calclab.suco.client.signal.Signal0;
+import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot0;
 
 @SuppressWarnings("serial")
 public class LoginPanel extends JPanel {
@@ -45,24 +52,54 @@ public class LoginPanel extends JPanel {
 	void onLogout();
     }
 
+    public static class LoginParams {
+	public final String httpBase;
+	public final String domain;
+	public final String userName;
+	public final String password;
+
+	public LoginParams(final String httpBase, final String domain, final String userName, final String password) {
+	    this.httpBase = httpBase;
+	    this.domain = domain;
+	    this.userName = userName;
+	    this.password = password;
+	}
+    }
+
     private JButton btnLogin;
     private JButton btnLogout;
     private JTextField fieldDomain;
     private JTextField fieldName;
     private JPasswordField fieldPassword;
     private JLabel labelState;
-    private final LoginPanelListener listener;
     private JComboBox selectConfiguration;
     private JTextField fieldHttpBase;
+    private final Signal<LoginParams> onLogin;
+    private final Signal0 onLogout;
+    private final JFrame frame;
 
-    public LoginPanel(final LoginPanelListener listener) {
+    public LoginPanel(final JFrame frame) {
 	super(new BorderLayout());
-	this.listener = listener;
+	this.frame = frame;
+	this.onLogin = new Signal<LoginParams>("loginPanel:onLogin");
+	this.onLogout = new Signal0("loginPanel:onLogout");
 	init();
     }
 
     public void addConfiguration(final ConnectionConfiguration connectionConfiguration) {
 	selectConfiguration.addItem(connectionConfiguration);
+    }
+
+    public void onLogin(final Slot<LoginParams> slot) {
+	onLogin.add(slot);
+    }
+
+    public void onLogout(final Slot0 slot) {
+	onLogout.add(slot);
+    }
+
+    public void showMessage(final String message) {
+	JOptionPane.showMessageDialog(frame, message);
     }
 
     public void showState(final String message, final boolean isConnected) {
@@ -89,14 +126,14 @@ public class LoginPanel extends JPanel {
 	btnLogin = new JButton("login");
 	btnLogin.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		listener.onLogin(fieldHttpBase.getText(), fieldDomain.getText(), fieldName.getText(), new String(
-			fieldPassword.getPassword()));
+		onLogin.fire(new LoginParams(fieldHttpBase.getText(), fieldDomain.getText(), fieldName.getText(),
+			new String(fieldPassword.getPassword())));
 	    }
 	});
 	btnLogout = new JButton("logout");
 	btnLogout.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		listener.onLogout();
+		onLogout.fire();
 	    }
 	});
 	panel.add(btnLogin);

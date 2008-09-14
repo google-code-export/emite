@@ -95,6 +95,11 @@ public class XmppURI {
 	return uri(null, host, null);
     }
 
+    /**
+     * Returns the JID of this URI (a XmppURI without resource)
+     * 
+     * @return the JID of this URI
+     */
     public XmppURI getJID() {
 	return uri(node, host, null);
     }

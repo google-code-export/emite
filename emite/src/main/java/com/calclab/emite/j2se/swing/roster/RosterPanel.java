@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.j2se.swing;
+package com.calclab.emite.j2se.swing.roster;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -31,23 +31,30 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
-import com.calclab.emite.im.client.xold_roster.XRosterItem;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.im.client.roster.RosterItem;
+import com.calclab.emite.j2se.swing.AddRosterItemPanel;
 import com.calclab.emite.j2se.swing.AddRosterItemPanel.AddRosterItemPanelListener;
+import com.calclab.suco.client.signal.Signal;
+import com.calclab.suco.client.signal.Signal2;
+import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.signal.Slot2;
 
 @SuppressWarnings("serial")
 public class RosterPanel extends JPanel {
 
     public static class RosterItemWrapper {
-	final XRosterItem item;
+	final RosterItem item;
 	final String name;
 
-	public RosterItemWrapper(final String name, final XRosterItem item) {
+	public RosterItemWrapper(final String name, final RosterItem item) {
 	    this.item = item;
 	    this.name = name;
 	}
@@ -63,30 +70,49 @@ public class RosterPanel extends JPanel {
     public static interface RosterPanelListener {
 	void onAddRosterItem(String uri, String name);
 
-	void onRemoveItem(XRosterItem item);
+	void onRemoveItem(RosterItem item);
 
-	void onStartChat(XRosterItem item);
+	void onStartChat(RosterItem item);
     }
 
     private JPanel creationPanel;
     private JDialog currentDialog;
     private JList list;
-    private final RosterPanelListener listener;
     private DefaultListModel model;
+    private final Signal2<String, String> onAddRosterItem;
+    private final Signal<RosterItem> onRemoveItem;
+    private final Signal<XmppURI> onStartChat;
+    private final JFrame frame;
 
-    public RosterPanel(final JFrame owner, final RosterPanelListener listener) {
+    public RosterPanel(final JFrame frame) {
 	super(new BorderLayout());
-	this.listener = listener;
+	this.frame = frame;
+	this.onAddRosterItem = new Signal2<String, String>("roster:onAddRosterItem");
+	this.onRemoveItem = new Signal<RosterItem>("roster:onRemoveItem");
+	this.onStartChat = new Signal<XmppURI>("roster:onStartChat");
 	currentDialog = null;
-	init(owner);
+	init(frame);
     }
 
-    public void add(final String name, final XRosterItem item) {
+    public void add(final String name, final RosterItem item) {
 	model.addElement(new RosterItemWrapper(name, item));
     }
 
     public void clear() {
 	model.clear();
+    }
+
+    public boolean isConfirmed(final String message) {
+	final int result = JOptionPane.showConfirmDialog(frame, message);
+	return (result == JOptionPane.OK_OPTION);
+    }
+
+    public void onAddRosterItem(final Slot2<String, String> slot) {
+	onAddRosterItem.add(slot);
+    }
+
+    public void onRemoveItem(final Slot<RosterItem> slot) {
+	onRemoveItem.add(slot);
     }
 
     public void refresh() {
@@ -106,9 +132,9 @@ public class RosterPanel extends JPanel {
 		    closeDialog();
 		}
 
-		public void onCreate(final String uri, final String name) {
+		public void onCreate(final String jid, final String name) {
 		    closeDialog();
-		    listener.onAddRosterItem(uri, name);
+		    onAddRosterItem.fire(jid, name);
 		}
 
 	    });
@@ -131,7 +157,7 @@ public class RosterPanel extends JPanel {
 		final Object value = list.getSelectedValue();
 		if (value != null) {
 		    final RosterItemWrapper wrapper = (RosterItemWrapper) value;
-		    listener.onStartChat(wrapper.item);
+		    onStartChat.fire(wrapper.item.getJID());
 		}
 	    }
 	});
@@ -153,7 +179,7 @@ public class RosterPanel extends JPanel {
 	    public void actionPerformed(final ActionEvent e) {
 		final RosterItemWrapper wrapper = (RosterItemWrapper) list.getSelectedValue();
 		if (wrapper != null) {
-		    listener.onRemoveItem(wrapper.item);
+		    onRemoveItem.fire(wrapper.item);
 		}
 	    }
 	});

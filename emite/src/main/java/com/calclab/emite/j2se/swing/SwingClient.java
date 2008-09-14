@@ -24,34 +24,18 @@ package com.calclab.emite.j2se.swing;
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
 import java.awt.BorderLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Collection;
-import java.util.Date;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.core.client.bosh.Bosh3Settings;
-import com.calclab.emite.core.client.bosh.Connection;
-import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.core.client.xmpp.stanzas.Presence;
-import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.presence.PresenceManager;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterItem;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.j2se.swing.ChatPanel.ChatPanelListener;
-import com.calclab.emite.j2se.swing.LoginPanel.LoginPanelListener;
 import com.calclab.emite.j2se.swing.RoomPanel.RoomPanelListener;
-import com.calclab.emite.j2se.swing.RosterPanel.RosterPanelListener;
+import com.calclab.emite.j2se.swing.roster.RosterPanel;
 import com.calclab.emite.xep.muc.client.Occupant;
 import com.calclab.emite.xep.muc.client.Room;
 import com.calclab.emite.xep.muc.client.RoomInvitation;
@@ -62,83 +46,22 @@ import com.calclab.suco.client.signal.Slot2;
 public class SwingClient {
 
     private final ConversationsPanel conversationsPanel;
-    private final JFrame frame;
 
-    private final LoginPanel loginPanel;
-
-    private final RoomsPanel roomsPanel;
     private final JPanel root;
-    private final RosterPanel rosterPanel;
     private final JLabel status;
     private final JTabbedPane tabs;
-    private final Session session;
     private final ChatManager chatManager;
     private final RoomManager roomManager;
-    private final XRoster xRoster;
-    private final XRosterManager xRosterManager;
 
-    public SwingClient(final Connection connection, final Session session, final PresenceManager presenceManager,
-	    final XRosterManager xRosterManager, final XRoster xRoster, final ChatManager chatManager,
-	    final RoomManager roomManager) {
-	this.session = session;
-	this.xRosterManager = xRosterManager;
-	this.xRoster = xRoster;
+    public SwingClient(final JFrame frame, final LoginPanel loginPanel, final RosterPanel rosterPanel,
+	    final ChatManager chatManager, final RoomManager roomManager) {
 	this.chatManager = chatManager;
 	this.roomManager = roomManager;
 
-	this.frame = new JFrame("emite swing client");
 	root = new JPanel(new BorderLayout());
 	addXmppListeners();
 
-	loginPanel = new LoginPanel(new LoginPanelListener() {
-	    public void onLogin(final String httpBase, final String domain, final String userName, String password) {
-		final String resource = "emite-swing";
-		connection.setSettings(new Bosh3Settings(httpBase, domain));
-		XmppURI uri;
-		if ("anonymous".equals(userName)) {
-		    uri = Session.ANONYMOUS;
-		    password = null;
-		} else {
-		    uri = XmppURI.uri(userName, domain, resource);
-		}
-		session.login(uri, password);
-		presenceManager.setOwnPresence(Presence.build("do not disturb at: " + new Date().toString(),
-			Presence.Show.dnd));
-	    }
-
-	    public void onLogout() {
-		session.logout();
-	    }
-
-	});
-
-	loginPanel.addConfiguration(new ConnectionConfiguration("empty", "", "", "", ""));
-	loginPanel.addConfiguration(new ConnectionConfiguration("admin @ local openfire",
-		"http://localhost:5280/http-bind/", "localhost", "admin", "easyeasy"));
-	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ local ejabberd",
-		"http://localhost:5280/http-bind/", "localhost", "dani", "dani"));
-	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ emite demo",
-		"http://emite.ourproject.org/proxy", "emitedemo.ourproject.org", "dani", "dani"));
-	loginPanel.addConfiguration(new ConnectionConfiguration("test1 @ jetty proxy",
-		"http://localhost:4444/http-bind", "localhost", "test1", "test1"));
-	loginPanel.addConfiguration(new ConnectionConfiguration("test1 @ jetty bosh servlet",
-		"http://emite.ourproject.org/proxy", "localhost", "test1", "test1"));
-
-	rosterPanel = new RosterPanel(frame, new RosterPanelListener() {
-	    public void onAddRosterItem(final String uri, final String name) {
-		xRosterManager.requestAddItem(uri(uri), name, null);
-	    }
-
-	    public void onRemoveItem(final XRosterItem item) {
-		xRosterManager.requestRemoveItem(item.getJID());
-	    }
-
-	    public void onStartChat(final XRosterItem item) {
-		chatManager.openChat(item.getJID(), null, null);
-	    }
-	});
-
-	roomsPanel = new RoomsPanel(new RoomsPanelListener() {
+	final RoomsPanel roomsPanel = new RoomsPanel(new RoomsPanelListener() {
 	    public void onRoomEnterd(final String roomName) {
 		roomManager.openChat(uri(roomName), null, null);
 	    }
@@ -157,19 +80,8 @@ public class SwingClient {
 
 	root.add(tabs, BorderLayout.EAST);
 
-    }
-
-    public void start() {
 	frame.setContentPane(root);
-	frame.setSize(900, 400);
-	frame.setVisible(true);
-	frame.addWindowListener(new WindowAdapter() {
-	    @Override
-	    public void windowClosing(final WindowEvent e) {
-		session.logout();
-		System.exit(0);
-	    }
-	});
+
     }
 
     protected void addChatListener(final Chat chat, final ChatPanel chatPanel) {
@@ -187,19 +99,6 @@ public class SwingClient {
     }
 
     private void addXmppListeners() {
-	session.onStateChanged(new Slot<Session.State>() {
-	    public void onEvent(final Session.State current) {
-		print("STATE: " + current);
-		final boolean isConnected = current == Session.State.ready;
-		loginPanel.showState("state: " + current.toString(), isConnected);
-		tabs.setEnabled(isConnected);
-		if (current == Session.State.disconnected) {
-		    rosterPanel.clear();
-		} else if (current == Session.State.notAuthorized) {
-		    JOptionPane.showMessageDialog(frame, "lo siento, tienes mal la contraseña -o el usuario ;)-");
-		}
-	    }
-	});
 
 	chatManager.onChatCreated(new Slot<Chat>() {
 	    public void onEvent(final Chat chat) {
@@ -291,46 +190,6 @@ public class SwingClient {
 	    }
 	});
 
-	xRoster.onItemChanged(new Slot<XRosterItem>() {
-	    public void onEvent(final XRosterItem item) {
-		print("ROSTER ITEM PRESENCE CHANGED");
-		rosterPanel.refresh();
-	    }
-	});
-	xRoster.onRosterChanged(new Slot<Collection<XRosterItem>>() {
-
-	    public void onEvent(final Collection<XRosterItem> items) {
-		print("ROSTER INITIALIZED");
-		rosterPanel.clear();
-		for (final XRosterItem item : items) {
-		    rosterPanel.add(item.getName(), item);
-		}
-	    }
-	});
-
-	xRosterManager.onSubscriptionRequested(new Slot<Presence>() {
-	    public void onEvent(final Presence presence) {
-		final Object message = presence.getFromAsString() + " want to add you to his/her roster. Accept?";
-		final int result = JOptionPane.showConfirmDialog(frame, message);
-		if (result == JOptionPane.OK_OPTION) {
-		    xRosterManager.acceptSubscription(presence);
-		}
-		print("SUBSCRIPTION: " + presence);
-	    }
-	});
-
-	session.onPresence(new Slot<Presence>() {
-	    public void onEvent(final Presence presence) {
-		print("PRESENCE!!: " + presence);
-	    }
-	});
-
     }
 
-    private void print(final String message) {
-	Log.info(message);
-	if (status != null) {
-	    status.setText(message);
-	}
-    }
 }

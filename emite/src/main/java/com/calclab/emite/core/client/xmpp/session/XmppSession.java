@@ -62,7 +62,12 @@ public class XmppSession extends AbstractSession {
 		} else if (name.equals("presence")) {
 		    onPresence.fire(new Presence(stanza));
 		} else if (name.equals("iq")) {
-		    iqManager.handle(stanza);
+		    final String type = stanza.getAttribute("type");
+		    if ("get".equals(type) || "set".equals(type)) {
+			onIQ.fire(new IQ(stanza));
+		    } else {
+			iqManager.handle(stanza);
+		    }
 		} else if (transaction != null && "stream:features".equals(name) && stanza.hasChild("mechanisms")) {
 		    saslManager.sendAuthorizationRequest(transaction);
 		    transaction = null;
@@ -164,6 +169,7 @@ public class XmppSession extends AbstractSession {
     public void sendIQ(final String category, final IQ iq, final Slot<IPacket> slot) {
 	final String id = iqManager.register(category, slot);
 	iq.setAttribute("id", id);
+	iq.setAttribute("from", userURI.toString());
 	send(iq);
     }
 

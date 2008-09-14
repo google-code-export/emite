@@ -40,10 +40,11 @@ public class IsPacketLike extends ArgumentMatcher<IPacket> {
 	for (int index = 0; index < total; index++) {
 	    final IPacket actual = children.get(index);
 	    final String result = areEquals(expectedChild, actual);
-	    if (result == null)
+	    if (result == null) {
 		return null;
+	    }
 	}
-	return fail("children", expectedChild.toString(), toString(children));
+	return fail("child is not contained in children", expectedChild.toString(), toString(children));
     }
 
     private String areEquals(final IPacket expected, final IPacket actual) {
@@ -71,8 +72,9 @@ public class IsPacketLike extends ArgumentMatcher<IPacket> {
 
 	for (final IPacket expectedChild : expChildren) {
 	    final String result = areContained(expectedChild, actChildren);
-	    if (result != null)
+	    if (result != null) {
 		return result;
+	    }
 	}
 	return null;
     }

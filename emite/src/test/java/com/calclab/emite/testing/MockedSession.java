@@ -93,6 +93,8 @@ public class MockedSession extends AbstractSession {
 	    onMessage.fire(new Message(stanza));
 	} else if (name.equals("presence")) {
 	    onPresence.fire(new Presence(stanza));
+	} else if (name.equals("iq") && (stanza.hasAttribute("type", "set") || stanza.hasAttribute("type", "get"))) {
+	    onIQ.fire(new IQ(stanza));
 	} else {
 	    throw new RuntimeException("Not valid received: " + received);
 	}

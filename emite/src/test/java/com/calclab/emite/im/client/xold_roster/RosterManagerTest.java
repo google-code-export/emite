@@ -15,8 +15,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterItem;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.im.client.xold_roster.XRosterManagerImpl;
 import com.calclab.emite.im.client.xold_roster.XRosterManager.SubscriptionMode;
@@ -47,14 +47,14 @@ public class RosterManagerTest {
     @Test
     public void shouldAddNewRosterItemWhenSubscriptionAccepted() {
 	manager.acceptSubscription(new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain")));
-	Mockito.verify(xRoster).add((XRosterItem) anyObject());
+	Mockito.verify(xRoster).add((RosterItem) anyObject());
     }
 
     @Test
     public void shouldAddRosterItem() {
 	session.setLoggedIn(uri("user@domain/res"));
 	manager.requestAddItem(uri("name@domain/res"), "the name", "the group");
-	verify(xRoster).add((XRosterItem) anyObject());
+	verify(xRoster).add((RosterItem) anyObject());
 	session.verifyIQSent("<iq from='user@domain/res' type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='name@domain/res' name='the name'><group>the group</group></item></query></iq>");
 	session.answerSuccess();

@@ -71,6 +71,14 @@ public interface Session {
     public abstract void logout();
 
     /**
+     * The given callback is called when a IQ <b>of type 'get' or 'set'</b> is
+     * received
+     * 
+     * @param slot
+     */
+    public abstract void onIQ(Slot<IQ> slot);
+
+    /**
      * The given slot is called when the user has logged in into the session
      * 
      * @param callback
@@ -142,8 +150,9 @@ public interface Session {
 
     /**
      * A helper method that allows to send a IQ stanza and attach a callback to
-     * the response. This method overrides the given IQ id using the category
-     * provided and a internal sequential number.
+     * the response. This method overrides (if present) the given IQ id using
+     * the category provided and a internal sequential number. This method also
+     * overrides (if present) the given 'from' attribute
      * 
      * @param category
      *            a uniqe-per-component string that allows the session to

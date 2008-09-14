@@ -30,8 +30,8 @@ import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterItem;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.im.client.xold_roster.XRosterManager.SubscriptionMode;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
@@ -133,11 +133,11 @@ public class EmiteUIDialog {
 	multiChatDialog.onChatUnattendedWithActivity(listener);
     }
 
-    public void onRosterChanged(final Slot<Collection<XRosterItem>> listener) {
+    public void onRosterChanged(final Slot<Collection<RosterItem>> listener) {
 	xRoster.onRosterChanged(listener);
     }
 
-    public void onRosterItemChanged(final Slot<XRosterItem> listener) {
+    public void onRosterItemChanged(final Slot<RosterItem> listener) {
 	xRoster.onItemChanged(listener);
     }
 
