@@ -46,5 +46,5 @@ EOF
 
 ssh $DESTHOST "md5sum $POM > $POM.md5"
 
-
-
+ssh ${EXTRA}ourproject.org "chgrp -R kune /home/groups/kune/htdocs/mavenrepo/"
+ssh ${EXTRA}ourproject.org "chmod -R g+w /home/groups/kune/htdocs/mavenrepo/"
