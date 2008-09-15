@@ -19,7 +19,14 @@
       <groupId>com.calclab</groupId>
       <artifactId>emite</artifactId>
       <classifier>core</classifier>
-      <version>0.4.0</version>
+      <version>0.3.12</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>com.calclab</groupId>
+      <artifactId>emite</artifactId>
+      <classifier>browser</classifier>
+      <version>0.3.12</version>
       <type>jar</type>
     </dependency>
     <dependency>
@@ -28,7 +35,78 @@
       <type>jar</type>
       <version>2.0-alpha</version>
     </dependency>
+    <dependency>
+      <groupId>com.allen_sauer.gwt.log.gwt-log
+      </groupId>
+      <artifactId>gwt-log</artifactId>
+      <version>2.5.2</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>kune-maven</id>
+      <url>http://kune.ourproject.org/mavenrepo/
+      </url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>gwt-maven</id>
+      <url> http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+    </pluginRepository>
+  </pluginRepositories>
+  <repositories>
+    <repository>
+      <id>gwt-maven</id>
+      <url> http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+    </repository>
+    <repository>
+      <id>kune-maven</id>
+      <url>http://kune.ourproject.org/mavenrepo/
+      </url>
+    </repository>
+    <repository>
+      <id>gwtext</id>
+      <url>http://www.gwt-ext.com/maven2/
+      </url>
+    </repository>
+  </repositories>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.totsp.gwt</groupId>
+        <artifactId>maven-googlewebtoolkit2-plugin
+        </artifactId>
+        <version>2.0-beta23</version>
+        <configuration>
+          <style>${gwt.style}</style>
+          <runTarget>com.calclab.emite.js.EmiteJSEntryPoint</runTarget>
+          <compileTargets>
+            <compileTarget>com.calclab.emite.js.EmiteJS</compileTarget>
+          </compileTargets>
+          <generatorRootClasses>
+          </generatorRootClasses>
+          <generatorDestinationPackage>
+          </generatorDestinationPackage>
+          <generateGettersAndSetters>false</generateGettersAndSetters>
+          <generatePropertyChangeSupport>true
+          </generatePropertyChangeSupport>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
   <profiles>
     <profile>
       <id>gwt</id>
@@ -37,39 +115,13 @@
       </activation>
       <properties>
         <gwt.version>1.5.2</gwt.version>
+        <gwt.style>OBF</gwt.style>
       </properties>
     </profile>
     <profile>
-      <id>gwt-windows</id>
-      <activation>
-        <os>
-          <family>Windows</family>
-        </os>
-      </activation>
+      <id>debug</id>
       <properties>
-        <gwt.platform>windows</gwt.platform>
-      </properties>
-    </profile>
-    <profile>
-      <id>gwt-mac</id>
-      <activation>
-        <os>
-          <name>Mac OS X</name>
-        </os>
-      </activation>
-      <properties>
-        <gwt.platform>mac</gwt.platform>
-      </properties>
-    </profile>
-    <profile>
-      <id>gwt-linux</id>
-      <activation>
-        <os>
-          <name>linux</name>
-        </os>
-      </activation>
-      <properties>
-        <gwt.platform>linux</gwt.platform>
+        <gwt.style>PRETTY</gwt.style>
       </properties>
     </profile>
   </profiles>
