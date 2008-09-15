@@ -25,6 +25,7 @@ public class PageController {
     }
 
     public void configureCloseAction() {
+	Log.debug("PageController - configuring close action...");
 	final boolean shouldPause = "pause".equals(assist.getMeta("emite.onClose", "pause"));
 	Window.addWindowCloseListener(new WindowCloseListener() {
 	    public void onWindowClosed() {
@@ -49,10 +50,18 @@ public class PageController {
     }
 
     public void configureConnection() {
+	Log.debug("PageController - configuring connection...");
 	final String httpBase = assist.getMeta("emite.httpBase", true);
 	final String host = assist.getMeta("emite.host", true);
 	Log.debug("CONNECTION PARAMS: " + httpBase + ", " + host);
 	connection.setSettings(new Bosh3Settings(httpBase, host));
+    }
+
+    public void init() {
+	Log.debug("PageController - initializing...");
+	configureCloseAction();
+	configureConnection();
+	Log.debug("PageController - done.");
     }
 
     public void resumeSession() {

@@ -30,6 +30,7 @@ import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.im.client.xold_roster.XRosterManagerImpl;
 import com.calclab.suco.client.Suco;
+import com.calclab.suco.client.container.Container;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scope.SingletonScope;
@@ -73,6 +74,12 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
 	}, new Factory<PresenceManager>(PresenceManager.class) {
 	    public PresenceManager create() {
 		return new PresenceManagerImpl($(Session.class), $(XRosterManager.class));
+	    }
+	});
+
+	register(SingletonScope.class, new Factory<Xmpp>(Xmpp.class) {
+	    public Xmpp create() {
+		return new Xmpp($(Container.class));
 	    }
 	});
 

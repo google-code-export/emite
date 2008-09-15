@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.core.client;
+package com.calclab.emite.im.client;
 
 import com.calclab.emite.core.client.bosh.Bosh3Settings;
 import com.calclab.emite.core.client.bosh.Connection;

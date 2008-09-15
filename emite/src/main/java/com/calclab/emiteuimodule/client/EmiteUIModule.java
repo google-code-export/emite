@@ -24,9 +24,9 @@ package com.calclab.emiteuimodule.client;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
-import com.calclab.emite.core.client.Xmpp;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.im.client.Xmpp;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
