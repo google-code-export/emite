@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.calclab</groupId>
+  <artifactId>emite-js</artifactId>
+  <packaging>jar</packaging>
+  <version>0.4.0</version>
+  <description>emite javascript bridge</description>
+  <name>emite javascript</name>
+  <url>http://emite.googlecode.com</url>
+  <dependencies>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwt.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.calclab</groupId>
+      <artifactId>emite</artifactId>
+      <classifier>core</classifier>
+      <version>0.4.0</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.timepedia.exporter</groupId>
+      <artifactId>gwt-exporter</artifactId>
+      <type>jar</type>
+      <version>2.0-alpha</version>
+    </dependency>
+  </dependencies>
+  <profiles>
+    <profile>
+      <id>gwt</id>
+      <activation>
+        <jdk>1</jdk>
+      </activation>
+      <properties>
+        <gwt.version>1.5.2</gwt.version>
+      </properties>
+    </profile>
+    <profile>
+      <id>gwt-windows</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <properties>
+        <gwt.platform>windows</gwt.platform>
+      </properties>
+    </profile>
+    <profile>
+      <id>gwt-mac</id>
+      <activation>
+        <os>
+          <name>Mac OS X</name>
+        </os>
+      </activation>
+      <properties>
+        <gwt.platform>mac</gwt.platform>
+      </properties>
+    </profile>
+    <profile>
+      <id>gwt-linux</id>
+      <activation>
+        <os>
+          <name>linux</name>
+        </os>
+      </activation>
+      <properties>
+        <gwt.platform>linux</gwt.platform>
+      </properties>
+    </profile>
+  </profiles>
+</project>
