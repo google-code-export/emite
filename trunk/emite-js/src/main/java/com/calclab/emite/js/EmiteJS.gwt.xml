@@ -1,0 +1,9 @@
+<module>
+  <inherits name="com.calclab.emite.core.EmiteCore" />
+  <entry-point class="com.calclab.emite.js.client.EmiteJSEntryPoint" />
+  <inherits name="com.allen_sauer.gwt.log.gwt-log" />
+
+  <extend-property name="log_level" values="DEBUG,INFO,OFF" />
+  <set-property name="log_DivLogger" value="DISABLED" />
+  <set-property name="log_FirebugLogger" value="ENABLED" />
+</module>
