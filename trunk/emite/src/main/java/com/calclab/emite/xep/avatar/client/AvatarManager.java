@@ -31,8 +31,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 /**
  * XEP-0153: vCard-Based Avatars (Version 1.0)
@@ -44,16 +44,16 @@ public class AvatarManager {
     private static final String PHOTO = "PHOTO";
     private static final String TYPE = "TYPE";
     private static final String BINVAL = "BINVAL";
-    private final Signal<Presence> onHashPresenceReceived;
-    private final Signal<AvatarVCard> onVCardReceived;
+    private final Event<Presence> onHashPresenceReceived;
+    private final Event<AvatarVCard> onVCardReceived;
     private final Session session;
 
     public AvatarManager(final Session session) {
 	this.session = session;
-	this.onHashPresenceReceived = new Signal<Presence>("avatar:onHashPresenceReceived");
-	this.onVCardReceived = new Signal<AvatarVCard>("avatar:onVCardReceived");
+	this.onHashPresenceReceived = new Event<Presence>("avatar:onHashPresenceReceived");
+	this.onVCardReceived = new Event<AvatarVCard>("avatar:onVCardReceived");
 
-	session.onPresence(new Slot<Presence>() {
+	session.onPresence(new Listener<Presence>() {
 	    public void onEvent(final Presence presence) {
 		final List<? extends IPacket> children = presence.getChildren(FILTER_X);
 		for (final IPacket child : children) {
@@ -65,11 +65,11 @@ public class AvatarManager {
 	});
     }
 
-    public void onHashPresenceReceived(final Slot<Presence> slot) {
+    public void onHashPresenceReceived(final Listener<Presence> slot) {
 	onHashPresenceReceived.add(slot);
     }
 
-    public void onVCardReceived(final Slot<AvatarVCard> slot) {
+    public void onVCardReceived(final Listener<AvatarVCard> slot) {
 	onVCardReceived.add(slot);
     }
 
@@ -85,7 +85,7 @@ public class AvatarManager {
     public void requestVCard(final XmppURI otherJID) {
 	final IQ iq = new IQ(Type.get, session.getCurrentUser(), otherJID);
 	iq.addChild(VCARD, XMLNS);
-	session.sendIQ("avatar", iq, new Slot<IPacket>() {
+	session.sendIQ("avatar", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {
 		if (received.hasAttribute("type", "result") && received.hasChild(VCARD)
 			&& received.hasAttribute("to", session.getCurrentUser().toString())) {
@@ -109,7 +109,7 @@ public class AvatarManager {
 	vcard.setAttribute("prodid", "-//HandGen//NONSGML vGen v1.0//EN");
 	vcard.setAttribute("version", "2.0");
 	vcard.addChild(PHOTO, null).addChild(BINVAL, null).setText(photoBinary);
-	session.sendIQ("avatar", iq, new Slot<IPacket>() {
+	session.sendIQ("avatar", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {
 		if (IQ.isSuccess(received)) {
 

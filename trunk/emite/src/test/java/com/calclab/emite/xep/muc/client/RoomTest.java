@@ -18,8 +18,8 @@ import com.calclab.emite.im.client.chat.Chat.Status;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.emite.xep.muc.client.Occupant;
 import com.calclab.emite.xep.muc.client.Room;
-import com.calclab.suco.testing.signal.MockSlot;
-import com.calclab.suco.testing.signal.MockSlot2;
+import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.testing.listener.MockListener2;
 
 public class RoomTest extends AbstractChatTest {
 
@@ -44,11 +44,11 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldAddOccupantAndFireListeners() {
-	final MockSlot<Collection<Occupant>> slot = new MockSlot<Collection<Occupant>>();
+	final MockListener<Collection<Occupant>> slot = new MockListener<Collection<Occupant>>();
 	room.onOccupantsChanged(slot);
 	final XmppURI uri = uri("room@domain/name");
 	final Occupant occupant = room.setOccupantPresence(uri, "aff", "role");
-	MockSlot.verifyCalled(slot, 1);
+	MockListener.verifyCalled(slot, 1);
 	final Occupant result = room.findOccupant(uri);
 	assertEquals(occupant, result);
     }
@@ -62,31 +62,31 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldFireListenersWhenMessage() {
-	final MockSlot<Message> slot = new MockSlot<Message>();
+	final MockListener<Message> slot = new MockListener<Message>();
 	room.onMessageReceived(slot);
 	final Message message = new Message(uri("someone@domain/res"), uri("room@domain"), "message");
 	room.receive(message);
-	MockSlot.verifyCalledWith(slot, message);
+	MockListener.verifyCalledWith(slot, message);
     }
 
     @Test
     public void shouldFireListenersWhenSubjectChange() {
-	final MockSlot<Message> messageSlot = new MockSlot<Message>();
-	room.onMessageReceived(messageSlot);
-	final MockSlot2<Occupant, String> subjectSlot = new MockSlot2<Occupant, String>();
-	room.onSubjectChanged(subjectSlot);
+	final MockListener<Message> messageListener = new MockListener<Message>();
+	room.onMessageReceived(messageListener);
+	final MockListener2<Occupant, String> subjectListener = new MockListener2<Occupant, String>();
+	room.onSubjectChanged(subjectListener);
 
 	room.receive(new Message(uri("someone@domain/res"), uri("room@domain"), null).Subject("the subject"));
-	assertEquals(1, subjectSlot.getCalledTimes());
+	assertEquals(1, subjectListener.getCalledTimes());
 	// FIXME
 	// verify(listener).onSubjectChanged(userURI.getResource(),
 	// "the subject");
-	assertEquals(0, messageSlot.getCalledTimes());
+	assertEquals(0, messageListener.getCalledTimes());
     }
 
     @Test
     public void shouldRemoveOccupant() {
-	final MockSlot<Collection<Occupant>> slot = new MockSlot<Collection<Occupant>>();
+	final MockListener<Collection<Occupant>> slot = new MockListener<Collection<Occupant>>();
 	room.onOccupantsChanged(slot);
 	final XmppURI uri = uri("room@domain/name");
 	room.setOccupantPresence(uri, "owner", "participant");
@@ -107,7 +107,7 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldUpdateOccupantAndFireListeners() {
-	final MockSlot<Occupant> slot = new MockSlot<Occupant>();
+	final MockListener<Occupant> slot = new MockListener<Occupant>();
 	room.onOccupantModified(slot);
 	final XmppURI uri = uri("room@domain/name");
 	final Occupant occupant = room.setOccupantPresence(uri, "owner", "participant");

@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.emite.xep.disco.client.DiscoveryManager;
-import com.calclab.suco.testing.signal.MockSlot;
+import com.calclab.suco.testing.listener.MockListener;
 
 public class DiscoveryManagerTest {
 
@@ -20,7 +20,7 @@ public class DiscoveryManagerTest {
 
     @Test
     public void shouldInformListeners() {
-	final MockSlot<DiscoveryManager> listener = new MockSlot<DiscoveryManager>();
+	final MockListener<DiscoveryManager> listener = new MockListener<DiscoveryManager>();
 	manager.onReady(listener);
 
     }

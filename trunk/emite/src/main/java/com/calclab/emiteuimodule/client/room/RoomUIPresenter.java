@@ -36,10 +36,10 @@ import com.calclab.emiteuimodule.client.users.RoomUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem.UserGridMenuItemListener;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Signal2;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.client.signal.Slot2;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Event2;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener2;
 
 public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 
@@ -49,8 +49,8 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
     private final String currentUserAlias;
     private final I18nTranslationService i18n;
     private String lastInvitationReasonText;
-    private final Signal2<XmppURI, String> onInviteUserRequested;
-    private final Signal<String> onModifySubjectRequested;
+    private final Event2<XmppURI, String> onInviteUserRequested;
+    private final Event<String> onModifySubjectRequested;
     private boolean changeSubjectMessageDisplayed;
 
     public RoomUIPresenter(final I18nTranslationService i18n, final XmppURI otherURI, final String currentUserAlias,
@@ -60,8 +60,8 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 	this.i18n = i18n;
 	this.currentUserAlias = currentUserAlias;
 	this.lastInvitationReasonText = i18n.t("Join to our conversation");
-	this.onInviteUserRequested = new Signal2<XmppURI, String>("onInviteUserRequested");
-	this.onModifySubjectRequested = new Signal<String>("onModifySubjectRequested");
+	this.onInviteUserRequested = new Event2<XmppURI, String>("onInviteUserRequested");
+	this.onModifySubjectRequested = new Event<String>("onModifySubjectRequested");
 	changeSubjectMessageDisplayed = false;
     }
 
@@ -93,7 +93,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 	return isSubjectEditable;
     }
 
-    public void onInviteUserRequested(final Slot2<XmppURI, String> param) {
+    public void onInviteUserRequested(final Listener2<XmppURI, String> param) {
 	onInviteUserRequested.add(param);
     }
 
@@ -102,7 +102,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 	onInviteUserRequested.fire(userJid, reasonText);
     }
 
-    public void onModifySubjectRequested(final Slot<String> slot) {
+    public void onModifySubjectRequested(final Listener<String> slot) {
 	onModifySubjectRequested.add(slot);
     }
 

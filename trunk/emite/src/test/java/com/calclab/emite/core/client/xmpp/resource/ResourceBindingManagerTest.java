@@ -9,7 +9,7 @@ import com.calclab.emite.core.client.bosh.ConnectionTestHelper;
 import com.calclab.emite.core.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.testing.signal.MockSlot;
+import com.calclab.suco.testing.listener.MockListener;
 
 public class ResourceBindingManagerTest {
     private ResourceBindingManager manager;
@@ -22,19 +22,19 @@ public class ResourceBindingManagerTest {
     }
 
     @Test
-    public void shouldPerformBinding() {
-	manager.bindResource("resource");
-	helper.verifySentLike(new IQ(IQ.Type.set).Includes("bind", "urn:ietf:params:xml:ns:xmpp-bind"));
-    }
-
-    @Test
-    public void shouldSignalIfBindedSucceed() {
-	final MockSlot<XmppURI> onBindedSlot = new MockSlot<XmppURI>();
-	manager.onBinded(onBindedSlot);
+    public void shouldEventIfBindedSucceed() {
+	final MockListener<XmppURI> onBindedListener = new MockListener<XmppURI>();
+	manager.onBinded(onBindedListener);
 	helper.simulateReception("<iq type='result' id='bind-resource'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>"
 		+ "<jid>somenode@example.com/someresource</jid></bind></iq>");
 
-	MockSlot.verifyCalledWith(onBindedSlot, uri("somenode@example.com/someresource"));
+	MockListener.verifyCalledWith(onBindedListener, uri("somenode@example.com/someresource"));
 
+    }
+
+    @Test
+    public void shouldPerformBinding() {
+	manager.bindResource("resource");
+	helper.verifySentLike(new IQ(IQ.Type.set).Includes("bind", "urn:ietf:params:xml:ns:xmpp-bind"));
     }
 }

@@ -23,7 +23,7 @@ package com.calclab.emite.im.client.xold_roster;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 // FIXME: vjrj - necesito ayuda para documentar esta clase
@@ -47,11 +47,11 @@ public interface XRosterManager {
 
 	public SubscriptionMode getSubscriptionMode();
 
-	public void onRosterReady(Slot<XRoster> slot);
+	public void onRosterReady(Listener<XRoster> slot);
 
-	public void onSubscriptionRequested(Slot<Presence> listener);
+	public void onSubscriptionRequested(Listener<Presence> listener);
 
-	public void onUnsubscribedReceived(Slot<XmppURI> listener);
+	public void onUnsubscribedReceived(Listener<XmppURI> listener);
 
 	// FIXME: vjrj - documentaci�n: �por qu� si existe un requestAddItem
 	// no existe un onItemAdded?

@@ -11,12 +11,12 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatImpl;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager.ChatState;
-import com.calclab.suco.testing.signal.MockSlot;
+import com.calclab.suco.testing.listener.MockListener;
 
 public class ChatStateTest {
     private static final XmppURI MYSELF = uri("self@domain/res");
     private static final XmppURI OTHER = uri("other@domain/otherRes");
-    private MockSlot<ChatState> stateListener;
+    private MockListener<ChatState> stateListener;
     private ChatImpl chat;
     private ChatStateManager chatStateManager;
 
@@ -24,7 +24,7 @@ public class ChatStateTest {
     public void aaCreate() {
 	chat = Mockito.mock(ChatImpl.class);
 	chatStateManager = new ChatStateManager(chat);
-	stateListener = new MockSlot<ChatState>();
+	stateListener = new MockListener<ChatState>();
 	chatStateManager.onChatStateChanged(stateListener);
     }
 
@@ -33,7 +33,7 @@ public class ChatStateTest {
 	final Message message = new Message(MYSELF, OTHER, null);
 	message.addChild("gone", ChatStateManager.XMLNS);
 	chatStateManager.onMessageReceived(chat, message);
-	MockSlot.verifyCalledWith(stateListener, ChatState.gone);
+	MockListener.verifyCalledWith(stateListener, ChatState.gone);
     }
 
     @Test
@@ -41,7 +41,7 @@ public class ChatStateTest {
 	final Message message = new Message(MYSELF, OTHER, null);
 	message.addChild("composing", ChatStateManager.XMLNS);
 	chatStateManager.onMessageReceived(chat, message);
-	MockSlot.verifyCalledWith(stateListener, ChatState.composing);
+	MockListener.verifyCalledWith(stateListener, ChatState.composing);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class ChatStateTest {
 	final Message message = new Message(MYSELF, OTHER, null);
 	message.addChild("cha:composing", ChatStateManager.XMLNS);
 	chatStateManager.onMessageReceived(chat, message);
-	MockSlot.verifyCalledWith(stateListener, ChatState.composing);
+	MockListener.verifyCalledWith(stateListener, ChatState.composing);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class ChatStateTest {
 	final Message message = new Message(MYSELF, OTHER.getJID(), null);
 	message.addChild("cha:composing", ChatStateManager.XMLNS);
 	chatStateManager.onMessageReceived(chat, message);
-	MockSlot.verifyCalledWith(stateListener, ChatState.composing);
+	MockListener.verifyCalledWith(stateListener, ChatState.composing);
     }
 
 }

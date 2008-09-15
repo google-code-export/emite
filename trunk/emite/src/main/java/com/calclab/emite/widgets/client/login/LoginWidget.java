@@ -1,8 +1,8 @@
 package com.calclab.emite.widgets.client.login;
 
 import com.calclab.emite.widgets.client.base.EmiteWidget;
-import com.calclab.suco.client.signal.Signal0;
-import com.calclab.suco.client.signal.Signal2;
+import com.calclab.suco.client.listener.Event0;
+import com.calclab.suco.client.listener.Event2;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
@@ -22,17 +22,17 @@ public class LoginWidget extends VerticalPanel implements EmiteWidget {
     private final TextBox jid;
     private final PasswordTextBox password;
     private final Button button;
-    final Signal2<String, String> onLogin;
+    final Event2<String, String> onLogin;
     private final Label status;
-    final Signal0 onLogout;
+    final Event0 onLogout;
     private boolean isConnected;
     private final Label error;
 
     public LoginWidget() {
 	setStylePrimaryName("emite-LoginWidget");
 	this.isConnected = false;
-	this.onLogin = new Signal2<String, String>("widgets:login:onLogin");
-	this.onLogout = new Signal0("widgets:login:onLogout");
+	this.onLogin = new Event2<String, String>("widgets:login:onLogin");
+	this.onLogout = new Event0("widgets:login:onLogout");
 	this.jid = new TextBox();
 	this.password = new PasswordTextBox();
 	this.button = new Button("login", new ClickListener() {

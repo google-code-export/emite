@@ -13,8 +13,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.im.client.roster.RosterItem.Subscription;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class XRosterManagerImpl implements XRosterManager {
 
@@ -22,35 +22,35 @@ public class XRosterManagerImpl implements XRosterManager {
 
     private SubscriptionMode subscriptionMode;
 
-    private final Signal<Presence> onSubscriptionRequested;
+    private final Event<Presence> onSubscriptionRequested;
 
-    private final Signal<XmppURI> onUnsubscribedReceived;
+    private final Event<XmppURI> onUnsubscribedReceived;
 
     private final Session session;
 
-    private final Signal<XRoster> onRosterReady;
+    private final Event<XRoster> onRosterReady;
 
     public XRosterManagerImpl(final Session session, final XRoster xRoster) {
 	this.session = session;
 	this.xRoster = xRoster;
 	this.subscriptionMode = DEF_SUBSCRIPTION_MODE;
-	this.onSubscriptionRequested = new Signal<Presence>("rosterManager:onSubscriptionRequested");
-	this.onUnsubscribedReceived = new Signal<XmppURI>("rosterManager:onUnsubscribedReceived");
-	this.onRosterReady = new Signal<XRoster>("rosterManager:onRosterReady");
+	this.onSubscriptionRequested = new Event<Presence>("rosterManager:onSubscriptionRequested");
+	this.onUnsubscribedReceived = new Event<XmppURI>("rosterManager:onUnsubscribedReceived");
+	this.onRosterReady = new Event<XRoster>("rosterManager:onRosterReady");
 
-	session.onLoggedIn(new Slot<XmppURI>() {
+	session.onLoggedIn(new Listener<XmppURI>() {
 	    public void onEvent(final XmppURI parameter) {
 		requestRoster();
 	    }
 	});
 
-	session.onLoggedOut(new Slot<XmppURI>() {
+	session.onLoggedOut(new Listener<XmppURI>() {
 	    public void onEvent(final XmppURI parameter) {
 		xRoster.clear();
 	    }
 	});
 
-	session.onPresence(new Slot<Presence>() {
+	session.onPresence(new Listener<Presence>() {
 	    public void onEvent(final Presence presence) {
 		switch (presence.getType()) {
 		case subscribe:
@@ -123,15 +123,15 @@ public class XRosterManagerImpl implements XRosterManager {
 	return subscriptionMode;
     }
 
-    public void onRosterReady(final Slot<XRoster> slot) {
+    public void onRosterReady(final Listener<XRoster> slot) {
 	this.onRosterReady.add(slot);
     }
 
-    public void onSubscriptionRequested(final Slot<Presence> listener) {
+    public void onSubscriptionRequested(final Listener<Presence> listener) {
 	onSubscriptionRequested.add(listener);
     }
 
-    public void onUnsubscribedReceived(final Slot<XmppURI> listener) {
+    public void onUnsubscribedReceived(final Listener<XmppURI> listener) {
 	onUnsubscribedReceived.add(listener);
     }
 
@@ -146,7 +146,7 @@ public class XRosterManagerImpl implements XRosterManager {
 	}
 
 	xRoster.add(new RosterItem(jid, Subscription.none, name));
-	session.sendIQ("roster", iq, new Slot<IPacket>() {
+	session.sendIQ("roster", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {
 		if (IQ.isSuccess(received)) {
 		    final Presence presenceRequest = new Presence(Type.subscribe, null, jid);
@@ -162,7 +162,7 @@ public class XRosterManagerImpl implements XRosterManager {
 	final IQ iq = new IQ(IQ.Type.set);
 	iq.addQuery("jabber:iq:roster").addChild("item", null).With("jid", jid.toString()).With("subscription",
 		"remove");
-	session.sendIQ("roster", iq, new Slot<IPacket>() {
+	session.sendIQ("roster", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket iq) {
 		if (IQ.isSuccess(iq)) {
 		    xRoster.removeItem(jid);
@@ -214,7 +214,7 @@ public class XRosterManagerImpl implements XRosterManager {
     }
 
     private void requestRoster() {
-	session.sendIQ("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster"), new Slot<IPacket>() {
+	session.sendIQ("roster", new IQ(IQ.Type.get).WithQuery("jabber:iq:roster"), new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {
 		setRosterItems(xRoster, received);
 	    }

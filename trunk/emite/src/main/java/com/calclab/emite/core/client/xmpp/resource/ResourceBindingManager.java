@@ -25,18 +25,18 @@ import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class ResourceBindingManager {
-    private final Signal<XmppURI> onBinded;
+    private final Event<XmppURI> onBinded;
     private final Connection connection;
 
     public ResourceBindingManager(final Connection connection) {
 	this.connection = connection;
-	this.onBinded = new Signal<XmppURI>("resourceBindingManager:onBinded");
+	this.onBinded = new Event<XmppURI>("resourceBindingManager:onBinded");
 
-	connection.onStanzaReceived(new Slot<IPacket>() {
+	connection.onStanzaReceived(new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {
 		if ("bind-resource".equals(received.getAttribute("id"))) {
 		    final String jid = received.getFirstChild("bind").getFirstChild("jid").getText();
@@ -54,7 +54,7 @@ public class ResourceBindingManager {
 	connection.send(iq);
     }
 
-    public void onBinded(final Slot<XmppURI> listener) {
+    public void onBinded(final Listener<XmppURI> listener) {
 	onBinded.add(listener);
     }
 

@@ -27,8 +27,8 @@ import org.ourproject.kune.platf.client.View;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class ChatUIPresenter implements ChatUI {
 
@@ -36,15 +36,15 @@ public class ChatUIPresenter implements ChatUI {
 
     private static final String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
 	    "purple", "fuchsia", "maroon", "red" };
-    final Signal<String> onCurrentUserSend;
-    final Signal<ChatNotification> onNewChatNotification;
-    final Signal<XmppURI> onUserDrop;
-    final Signal<ChatUI> onActivate;
-    final Signal<ChatUI> onDeactivate;
-    final Signal<ChatUI> onUnHighLight;
-    final Signal<ChatUI> onChatNotificationClear;
-    final Signal<ChatUI> onClose;
-    final Signal<ChatUI> onHighLight;
+    final Event<String> onCurrentUserSend;
+    final Event<ChatNotification> onNewChatNotification;
+    final Event<XmppURI> onUserDrop;
+    final Event<ChatUI> onActivate;
+    final Event<ChatUI> onDeactivate;
+    final Event<ChatUI> onUnHighLight;
+    final Event<ChatUI> onChatNotificationClear;
+    final Event<ChatUI> onClose;
+    final Event<ChatUI> onHighLight;
     private ChatUIView view;
     private String savedInput;
     private ChatNotification savedChatNotification;
@@ -79,15 +79,15 @@ public class ChatUIPresenter implements ChatUI {
 	userColors.put(currentUserAlias, currentUserColor);
 	clearSavedChatNotification();
 	docked = false;
-	this.onDeactivate = new Signal<ChatUI>("onDeactivate");
-	this.onActivate = new Signal<ChatUI>("onActivate");
-	this.onChatNotificationClear = new Signal<ChatUI>("onChatNotificationClear");
-	this.onClose = new Signal<ChatUI>("onClose");
-	this.onCurrentUserSend = new Signal<String>("onCurrentUserSend");
-	this.onHighLight = new Signal<ChatUI>("onHighLight");
-	this.onNewChatNotification = new Signal<ChatNotification>("onNewChatNotification");
-	this.onUnHighLight = new Signal<ChatUI>("onUnHighLight");
-	this.onUserDrop = new Signal<XmppURI>("onUserDrop");
+	this.onDeactivate = new Event<ChatUI>("onDeactivate");
+	this.onActivate = new Event<ChatUI>("onActivate");
+	this.onChatNotificationClear = new Event<ChatUI>("onChatNotificationClear");
+	this.onClose = new Event<ChatUI>("onClose");
+	this.onCurrentUserSend = new Event<String>("onCurrentUserSend");
+	this.onHighLight = new Event<ChatUI>("onHighLight");
+	this.onNewChatNotification = new Event<ChatNotification>("onNewChatNotification");
+	this.onUnHighLight = new Event<ChatUI>("onUnHighLight");
+	this.onUserDrop = new Event<XmppURI>("onUserDrop");
     }
 
     public void addDelimiter(final String date) {
@@ -179,11 +179,11 @@ public class ChatUIPresenter implements ChatUI {
 	return docked;
     }
 
-    public void onActivate(final Slot<ChatUI> slot) {
+    public void onActivate(final Listener<ChatUI> slot) {
 	onActivate.add(slot);
     }
 
-    public void onChatNotificationClear(final Slot<ChatUI> slot) {
+    public void onChatNotificationClear(final Listener<ChatUI> slot) {
 	onChatNotificationClear.add(slot);
     }
 
@@ -195,7 +195,7 @@ public class ChatUIPresenter implements ChatUI {
 	onClose.fire(this);
     }
 
-    public void onClose(final Slot<ChatUI> slot) {
+    public void onClose(final Listener<ChatUI> slot) {
 	onClose.add(slot);
     }
 
@@ -205,7 +205,7 @@ public class ChatUIPresenter implements ChatUI {
 	}
     }
 
-    public void onCurrentUserSend(final Slot<String> slot) {
+    public void onCurrentUserSend(final Listener<String> slot) {
 	onCurrentUserSend.add(slot);
     }
 
@@ -213,11 +213,11 @@ public class ChatUIPresenter implements ChatUI {
 	onCurrentUserSend.fire(message);
     }
 
-    public void onDeactivate(final Slot<ChatUI> slot) {
+    public void onDeactivate(final Listener<ChatUI> slot) {
 	onDeactivate.add(slot);
     }
 
-    public void onHighLight(final Slot<ChatUI> slot) {
+    public void onHighLight(final Listener<ChatUI> slot) {
 	onHighLight.add(slot);
     }
 
@@ -235,15 +235,15 @@ public class ChatUIPresenter implements ChatUI {
 	}
     }
 
-    public void onNewChatNotification(final Slot<ChatNotification> slot) {
+    public void onNewChatNotification(final Listener<ChatNotification> slot) {
 	onNewChatNotification.add(slot);
     }
 
-    public void onUnHighLight(final Slot<ChatUI> slot) {
+    public void onUnHighLight(final Listener<ChatUI> slot) {
 	onUnHighLight.add(slot);
     }
 
-    public void onUserDrop(final Slot<XmppURI> slot) {
+    public void onUserDrop(final Listener<XmppURI> slot) {
 	onUserDrop.add(slot);
     }
 

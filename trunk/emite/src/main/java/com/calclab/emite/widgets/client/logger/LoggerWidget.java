@@ -1,7 +1,7 @@
 package com.calclab.emite.widgets.client.logger;
 
 import com.calclab.emite.widgets.client.base.EmiteWidget;
-import com.calclab.suco.client.signal.Signal0;
+import com.calclab.suco.client.listener.Event0;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -16,11 +16,11 @@ public class LoggerWidget extends DockPanel implements EmiteWidget {
     public static final String SENT = "sent";
     public static final String RECEIVED = "received";
     private final VerticalPanel content;
-    Signal0 onClear;
+    Event0 onClear;
     private final ScrollPanel scroll;
 
     public LoggerWidget() {
-	this.onClear = new Signal0("widgets.logger:onClear");
+	this.onClear = new Event0("widgets.logger:onClear");
 	content = new VerticalPanel();
 	final Button clear = new Button("clear", new ClickListener() {
 	    public void onClick(final Widget sender) {

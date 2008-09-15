@@ -30,8 +30,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Message.Type;
 import com.calclab.emite.im.client.chat.Chat.Status;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 /**
  * Default ChatManager implementation. Use ChatManager interface instead
@@ -41,30 +41,30 @@ import com.calclab.suco.client.signal.Slot;
  */
 public class ChatManagerImpl implements ChatManager {
     protected final HashSet<Chat> chats;
-    protected final Signal<Chat> onChatCreated;
-    protected Signal<Chat> onChatClosed;
+    protected final Event<Chat> onChatCreated;
+    protected Event<Chat> onChatClosed;
     protected final Session session;
     private XmppURI lastLoggedInUser;
 
     public ChatManagerImpl(final Session session) {
 	this.session = session;
-	this.onChatCreated = new Signal<Chat>("chatManager:onChatCreated");
-	this.onChatClosed = new Signal<Chat>("chatManager:onChatClosed");
+	this.onChatCreated = new Event<Chat>("chatManager:onChatCreated");
+	this.onChatClosed = new Event<Chat>("chatManager:onChatClosed");
 	this.chats = new HashSet<Chat>();
 
-	session.onMessage(new Slot<Message>() {
+	session.onMessage(new Listener<Message>() {
 	    public void onEvent(final Message message) {
 		eventMessage(message);
 	    }
 	});
 
-	session.onLoggedIn(new Slot<XmppURI>() {
+	session.onLoggedIn(new Listener<XmppURI>() {
 	    public void onEvent(final XmppURI uri) {
 		logIn(uri);
 	    }
 	});
 
-	session.onLoggedOut(new Slot<XmppURI>() {
+	session.onLoggedOut(new Listener<XmppURI>() {
 	    public void onEvent(final XmppURI lastUser) {
 		logOut();
 	    }
@@ -87,11 +87,11 @@ public class ChatManagerImpl implements ChatManager {
 	}
     }
 
-    public void onChatClosed(final Slot<Chat> listener) {
+    public void onChatClosed(final Listener<Chat> listener) {
 	onChatClosed.add(listener);
     }
 
-    public void onChatCreated(final Slot<Chat> listener) {
+    public void onChatCreated(final Listener<Chat> listener) {
 	onChatCreated.add(listener);
     }
 

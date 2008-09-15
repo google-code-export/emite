@@ -18,21 +18,21 @@ import com.calclab.emite.im.client.presence.PresenceManagerImpl;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.signal.MockSlot;
-import com.calclab.suco.testing.signal.SignalTester;
+import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.testing.listener.EventTester;
 
 public class PresenceManagerTest {
 
     private PresenceManager manager;
     private MockedSession session;
     private XRosterManager xRosterManager;
-    private SignalTester<XRoster> onRosterReady;
+    private EventTester<XRoster> onRosterReady;
 
     @Before
     public void beforeTest() {
 	session = new MockedSession();
 	xRosterManager = mock(XRosterManager.class);
-	onRosterReady = new SignalTester<XRoster>();
+	onRosterReady = new EventTester<XRoster>();
 	manager = new PresenceManagerImpl(session, xRosterManager);
 	verify(xRosterManager).onRosterReady(argThat(onRosterReady));
     }
@@ -93,21 +93,21 @@ public class PresenceManagerTest {
     }
 
     @Test
-    public void shouldSignalIncommingPresence() {
-	final MockSlot<Presence> slot = new MockSlot<Presence>();
+    public void shouldEventIncommingPresence() {
+	final MockListener<Presence> slot = new MockListener<Presence>();
 	manager.onPresenceReceived(slot);
 	session.receives(createPresence(Type.available));
 	session.receives(createPresence(Type.unavailable));
-	MockSlot.verifyCalled(slot, 2);
+	MockListener.verifyCalled(slot, 2);
     }
 
     @Test
-    public void shouldSignalOwnPresence() {
+    public void shouldEventOwnPresence() {
 	session.setLoggedIn(uri("myself@domain"));
-	final MockSlot<Presence> listener = new MockSlot<Presence>();
+	final MockListener<Presence> listener = new MockListener<Presence>();
 	manager.onOwnPresenceChanged(listener);
 	manager.setOwnPresence(Presence.build("status", Show.away));
-	MockSlot.verifyCalled(listener);
+	MockListener.verifyCalled(listener);
 	assertEquals("status", listener.getValue(0).getStatus());
 	assertEquals(Show.away, listener.getValue(0).getShow());
     }

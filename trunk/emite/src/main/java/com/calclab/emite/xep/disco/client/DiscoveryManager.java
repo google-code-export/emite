@@ -31,11 +31,11 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class DiscoveryManager {
-    private final Signal<DiscoveryManager> onReady;
+    private final Event<DiscoveryManager> onReady;
     private final PacketMatcher filterQuery;
     private ArrayList<Feature> features;
     private ArrayList<Identity> identities;
@@ -43,9 +43,9 @@ public class DiscoveryManager {
 
     public DiscoveryManager(final Session session) {
 	this.session = session;
-	this.onReady = new Signal<DiscoveryManager>("discoveryManager:onReady");
+	this.onReady = new Event<DiscoveryManager>("discoveryManager:onReady");
 	this.filterQuery = MatcherFactory.byNameAndXMLNS("query", "http://jabber.org/protocol/disco#info");
-	session.onLoggedIn(new Slot<XmppURI>() {
+	session.onLoggedIn(new Listener<XmppURI>() {
 	    public void onEvent(final XmppURI uri) {
 		sendDiscoQuery(uri);
 	    }
@@ -53,14 +53,14 @@ public class DiscoveryManager {
 	});
     }
 
-    public void onReady(final Slot<DiscoveryManager> listener) {
+    public void onReady(final Listener<DiscoveryManager> listener) {
 	onReady.add(listener);
     }
 
     public void sendDiscoQuery(final XmppURI uri) {
 	final IQ iq = new IQ(Type.get, uri, uri.getHostURI());
 	iq.addQuery("http://jabber.org/protocol/disco#info");
-	session.sendIQ("disco", iq, new Slot<IPacket>() {
+	session.sendIQ("disco", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket response) {
 		final IPacket query = response.getFirstChild(filterQuery);
 		processIdentity(query.getChildren(MatcherFactory.byName("identity")));

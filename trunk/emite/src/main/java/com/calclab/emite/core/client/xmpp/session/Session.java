@@ -7,7 +7,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 /**
  * The most important object in Xmpp emite module. You can login, send and
@@ -76,7 +76,7 @@ public interface Session {
      * 
      * @param slot
      */
-    public abstract void onIQ(Slot<IQ> slot);
+    public abstract void onIQ(Listener<IQ> slot);
 
     /**
      * The given slot is called when the user has logged in into the session
@@ -84,7 +84,7 @@ public interface Session {
      * @param callback
      *            receives the user's logged in URI
      */
-    public abstract void onLoggedIn(final Slot<XmppURI> slot);
+    public abstract void onLoggedIn(final Listener<XmppURI> slot);
 
     /**
      * The given slot is called when the user has logged out into the session
@@ -93,7 +93,7 @@ public interface Session {
      * @param callback
      *            receives the user's logged out URI
      */
-    public abstract void onLoggedOut(final Slot<XmppURI> callback);
+    public abstract void onLoggedOut(final Listener<XmppURI> callback);
 
     /**
      * The given slot is called when a message stanza has arrived
@@ -101,21 +101,21 @@ public interface Session {
      * @param slot
      * 
      */
-    public abstract void onMessage(final Slot<Message> slot);
+    public abstract void onMessage(final Listener<Message> slot);
 
     /**
      * The given slot is called when a presence stanza has arrived
      * 
      * @param slot
      */
-    public abstract void onPresence(final Slot<Presence> slot);
+    public abstract void onPresence(final Listener<Presence> slot);
 
     /**
      * The given slot is called when the session changed it's state
      * 
      * @param slot
      */
-    public abstract void onStateChanged(final Slot<State> slot);
+    public abstract void onStateChanged(final Listener<State> slot);
 
     /**
      * Call this method to pause the session. You can use the given object
@@ -164,6 +164,6 @@ public interface Session {
      *            server. After the invocation, the callback is discarded
      * 
      */
-    public abstract void sendIQ(final String category, final IQ iq, final Slot<IPacket> callback);
+    public abstract void sendIQ(final String category, final IQ iq, final Listener<IPacket> callback);
 
 }

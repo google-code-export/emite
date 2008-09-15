@@ -26,8 +26,8 @@ import java.util.Collection;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.xep.muc.client.Occupant;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.client.signal.Slot2;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener2;
 
 public interface RoomUI extends ChatUI {
 
@@ -35,9 +35,9 @@ public interface RoomUI extends ChatUI {
 
     boolean isSubjectEditable();
 
-    void onInviteUserRequested(Slot2<XmppURI, String> param);
+    void onInviteUserRequested(Listener2<XmppURI, String> param);
 
-    void onModifySubjectRequested(Slot<String> newSubject);
+    void onModifySubjectRequested(Listener<String> newSubject);
 
     void onModifySubjectRequested(String newSubject);
 

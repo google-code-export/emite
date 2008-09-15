@@ -38,20 +38,20 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
     private final HashMap<XmppURI, Room> rooms;
-    private final Signal<RoomInvitation> onInvitationReceived;
+    private final Event<RoomInvitation> onInvitationReceived;
 
     public RoomManagerImpl(final Session session) {
 	super(session);
-	this.onInvitationReceived = new Signal<RoomInvitation>("roomManager:onInvitationReceived");
+	this.onInvitationReceived = new Event<RoomInvitation>("roomManager:onInvitationReceived");
 	this.rooms = new HashMap<XmppURI, Room>();
 
 	// @see http://www.xmpp.org/extensions/xep-0045.html#createroom
-	session.onPresence(new Slot<Presence>() {
+	session.onPresence(new Listener<Presence>() {
 	    public void onEvent(final Presence presence) {
 		final XmppURI occupantURI = presence.getFrom();
 		final Room room = rooms.get(occupantURI.getJID());
@@ -72,7 +72,7 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
 	}
     }
 
-    public void onInvitationReceived(final Slot<RoomInvitation> listener) {
+    public void onInvitationReceived(final Listener<RoomInvitation> listener) {
 	onInvitationReceived.add(listener);
     }
 
@@ -147,7 +147,7 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
 
 	final IQ iq = new IQ(Type.set, session.getCurrentUser(), room.getOtherURI());
 	iq.addQuery("http://jabber.org/protocol/muc#owner").addChild("x", "jabber:x:data").With("type", "submit");
-	session.sendIQ("rooms", iq, new Slot<IPacket>() {
+	session.sendIQ("rooms", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {
 		if (IQ.isSuccess(received)) {
 		    room.setStatus(Chat.Status.ready);

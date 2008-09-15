@@ -14,8 +14,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.im.client.roster.RosterItem.Subscription;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class RosterImpl implements Roster {
 
@@ -24,29 +24,29 @@ public class RosterImpl implements Roster {
     private final HashMap<XmppURI, RosterItem> itemsByJID;
     private final HashMap<String, List<RosterItem>> itemsByGroup;
 
-    private final Signal<Collection<RosterItem>> onRosterReady;
-    private final Signal<RosterItem> onItemAdded;
-    private final Signal<RosterItem> onItemUpdated;
-    private final Signal<RosterItem> onItemRemoved;
+    private final Event<Collection<RosterItem>> onRosterReady;
+    private final Event<RosterItem> onItemAdded;
+    private final Event<RosterItem> onItemUpdated;
+    private final Event<RosterItem> onItemRemoved;
 
     public RosterImpl(final Session session) {
 	this.session = session;
 	itemsByJID = new HashMap<XmppURI, RosterItem>();
 	itemsByGroup = new HashMap<String, List<RosterItem>>();
 
-	this.onItemAdded = new Signal<RosterItem>("roster:onItemAdded");
-	this.onItemUpdated = new Signal<RosterItem>("roster:onItemUpdated");
-	this.onItemRemoved = new Signal<RosterItem>("roster:onItemRemoved");
+	this.onItemAdded = new Event<RosterItem>("roster:onItemAdded");
+	this.onItemUpdated = new Event<RosterItem>("roster:onItemUpdated");
+	this.onItemRemoved = new Event<RosterItem>("roster:onItemRemoved");
 
-	this.onRosterReady = new Signal<Collection<RosterItem>>("roster:onRosterReady");
+	this.onRosterReady = new Event<Collection<RosterItem>>("roster:onRosterReady");
 
-	session.onLoggedIn(new Slot<XmppURI>() {
+	session.onLoggedIn(new Listener<XmppURI>() {
 	    public void onEvent(final XmppURI user) {
 		requestRoster(user);
 	    }
 	});
 
-	session.onIQ(new Slot<IQ>() {
+	session.onIQ(new Listener<IQ>() {
 	    public void onEvent(final IQ iq) {
 		final IPacket query = iq.getFirstChild(ROSTER_QUERY_FILTER);
 		if (query != null) {
@@ -84,7 +84,7 @@ public class RosterImpl implements Roster {
 	    }
 	    final IQ iq = new IQ(Type.set);
 	    item.addStanzaTo(iq.addQuery("jabber:iq:roster"));
-	    session.sendIQ("roster", iq, new Slot<IPacket>() {
+	    session.sendIQ("roster", iq, new Listener<IPacket>() {
 		public void onEvent(final IPacket parameter) {
 		}
 	    });
@@ -107,19 +107,19 @@ public class RosterImpl implements Roster {
 	return itemsByGroup.get(groupName);
     }
 
-    public void onItemAdded(final Slot<RosterItem> slot) {
+    public void onItemAdded(final Listener<RosterItem> slot) {
 	onItemAdded.add(slot);
     }
 
-    public void onItemRemoved(final Slot<RosterItem> callback) {
+    public void onItemRemoved(final Listener<RosterItem> callback) {
 	onItemRemoved.add(callback);
     }
 
-    public void onItemUpdated(final Slot<RosterItem> callback) {
+    public void onItemUpdated(final Listener<RosterItem> callback) {
 	onItemUpdated.add(callback);
     }
 
-    public void onRosterRetrieved(final Slot<Collection<RosterItem>> slot) {
+    public void onRosterRetrieved(final Listener<Collection<RosterItem>> slot) {
 	onRosterReady.add(slot);
     }
 
@@ -129,7 +129,7 @@ public class RosterImpl implements Roster {
 	    final IQ iq = new IQ(Type.set);
 	    final IPacket itemNode = iq.addQuery("jabber:iq:roster").addChild("item", null);
 	    itemNode.With("subscription", "remove").With("jid", item.getJID().toString());
-	    session.sendIQ("remove-roster-item", iq, new Slot<IPacket>() {
+	    session.sendIQ("remove-roster-item", iq, new Listener<IPacket>() {
 		public void onEvent(final IPacket parameter) {
 		}
 	    });
@@ -169,7 +169,7 @@ public class RosterImpl implements Roster {
     }
 
     private void requestRoster(final XmppURI user) {
-	session.sendIQ("roster", new IQ(IQ.Type.get, user, null).WithQuery("jabber:iq:roster"), new Slot<IPacket>() {
+	session.sendIQ("roster", new IQ(IQ.Type.get, user, null).WithQuery("jabber:iq:roster"), new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {
 		if (IQ.isSuccess(received)) {
 		    itemsByJID.clear();

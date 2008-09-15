@@ -40,8 +40,8 @@ import com.calclab.emite.xep.muc.client.Occupant;
 import com.calclab.emite.xep.muc.client.Room;
 import com.calclab.emite.xep.muc.client.RoomInvitation;
 import com.calclab.emite.xep.muc.client.RoomManager;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.client.signal.Slot2;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener2;
 
 public class SwingClient {
 
@@ -85,12 +85,12 @@ public class SwingClient {
     }
 
     protected void addChatListener(final Chat chat, final ChatPanel chatPanel) {
-	chat.onMessageReceived(new Slot<Message>() {
+	chat.onMessageReceived(new Listener<Message>() {
 	    public void onEvent(final Message message) {
 		chatPanel.showIcomingMessage(message.getFromAsString(), message.getBody());
 	    }
 	});
-	chat.onMessageSent(new Slot<Message>() {
+	chat.onMessageSent(new Listener<Message>() {
 	    public void onEvent(final Message message) {
 		chatPanel.showOutMessage(message.getBody());
 	    }
@@ -100,7 +100,7 @@ public class SwingClient {
 
     private void addXmppListeners() {
 
-	chatManager.onChatCreated(new Slot<Chat>() {
+	chatManager.onChatCreated(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		final ChatPanel chatPanel = conversationsPanel.createChat(chat.getOtherURI().toString(), chat.getID(),
 			new ChatPanelListener() {
@@ -120,13 +120,13 @@ public class SwingClient {
 	    }
 	});
 
-	chatManager.onChatClosed(new Slot<Chat>() {
+	chatManager.onChatClosed(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		conversationsPanel.close(chat.getID());
 	    }
 	});
 
-	roomManager.onChatCreated(new Slot<Chat>() {
+	roomManager.onChatCreated(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		final Room room = (Room) chat;
 		final RoomPanel roomPanel = conversationsPanel.createRoom(room.getOtherURI(), room.getID(),
@@ -150,25 +150,25 @@ public class SwingClient {
 			});
 		addChatListener(room, roomPanel);
 
-		room.onMessageReceived(new Slot<Message>() {
+		room.onMessageReceived(new Listener<Message>() {
 		    public void onEvent(final Message message) {
 			roomPanel.showIcomingMessage(message.getFromAsString(), message.getBody());
 		    }
 		});
 
-		room.onMessageSent(new Slot<Message>() {
+		room.onMessageSent(new Listener<Message>() {
 		    public void onEvent(final Message message) {
 			roomPanel.showOutMessage(message.getBody());
 		    }
 		});
 
-		room.onOccupantsChanged(new Slot<Collection<Occupant>>() {
+		room.onOccupantsChanged(new Listener<Collection<Occupant>>() {
 		    public void onEvent(final Collection<Occupant> users) {
 			roomPanel.setUsers(users);
 		    }
 		});
 
-		room.onSubjectChanged(new Slot2<Occupant, String>() {
+		room.onSubjectChanged(new Listener2<Occupant, String>() {
 		    public void onEvent(final Occupant occupant, final String newSubject) {
 			final String nick = occupant != null ? occupant.getNick() : "";
 			roomPanel.showIcomingMessage(nick, "New subject: " + newSubject);
@@ -178,13 +178,13 @@ public class SwingClient {
 	    }
 	});
 
-	roomManager.onChatClosed(new Slot<Chat>() {
+	roomManager.onChatClosed(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		conversationsPanel.close(chat.getID());
 	    }
 	});
 
-	roomManager.onInvitationReceived(new Slot<RoomInvitation>() {
+	roomManager.onInvitationReceived(new Listener<RoomInvitation>() {
 	    public void onEvent(final RoomInvitation invitation) {
 		roomManager.openChat(invitation.getRoomURI(), null, null);
 	    }

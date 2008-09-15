@@ -4,7 +4,7 @@ import com.allen_sauer.gwt.voices.client.Sound;
 import com.allen_sauer.gwt.voices.client.SoundController;
 import com.calclab.emiteuimodule.client.room.RoomUIManager;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public class SoundManager {
 
@@ -16,14 +16,14 @@ public class SoundManager {
     public SoundManager(final RosterUIPresenter rosterUIPresenter, final RoomUIManager roomUIManager) {
 	configureSound();
 	if (roomUIManager != null) {
-	    roomUIManager.onUserAlert(new Slot<String>() {
+	    roomUIManager.onUserAlert(new Listener<String>() {
 		public void onEvent(final String parameter) {
 		    click();
 		}
 	    });
 	}
 	if (rosterUIPresenter != null) {
-	    rosterUIPresenter.onUserAlert(new Slot<String>() {
+	    rosterUIPresenter.onUserAlert(new Listener<String>() {
 		public void onEvent(final String parameter) {
 		    click();
 		}

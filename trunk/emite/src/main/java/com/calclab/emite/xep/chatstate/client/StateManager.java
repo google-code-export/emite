@@ -24,7 +24,7 @@ package com.calclab.emite.xep.chatstate.client;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 /**
  * XEP-0085: Chat State Notifications
@@ -39,13 +39,13 @@ public class StateManager {
 
     public StateManager(final ChatManager chatManager) {
 
-	chatManager.onChatCreated(new Slot<Chat>() {
+	chatManager.onChatCreated(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		getChatState(chat);
 	    }
 	});
 
-	chatManager.onChatClosed(new Slot<Chat>() {
+	chatManager.onChatClosed(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		Log.debug("Removing chat state to chat: " + chat.getID());
 		final ChatStateManager chatStateManager = chat.getData(ChatStateManager.class);

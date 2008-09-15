@@ -40,8 +40,8 @@ import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
 import com.calclab.suco.client.provider.Provider;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class StatusUIPresenter implements StatusUI {
 
@@ -52,11 +52,11 @@ public class StatusUIPresenter implements StatusUI {
     private UserChatOptions userChatOptions;
     private final Session session;
     private final I18nTranslationService i18n;
-    private final Signal<StatusUI> onAfterLogin;
-    private final Signal<StatusUI> onAfterLogout;
-    private final Signal<StatusUI> onCloseAllConfirmed;
-    private final Signal<String> onUserColorChanged;
-    private final Signal<SubscriptionMode> onUserSubscriptionModeChanged;
+    private final Event<StatusUI> onAfterLogin;
+    private final Event<StatusUI> onAfterLogout;
+    private final Event<StatusUI> onCloseAllConfirmed;
+    private final Event<String> onUserColorChanged;
+    private final Event<SubscriptionMode> onUserSubscriptionModeChanged;
     private final Provider<Xmpp> xmppProvider;
     private final Provider<XRosterManager> rosterManagerProvider;
     private final Provider<ChatManager> chatManagerProvider;
@@ -72,11 +72,11 @@ public class StatusUIPresenter implements StatusUI {
 	this.chatManagerProvider = chatManager;
 	this.roomManagerProvider = roomManager;
 	this.i18n = i18n;
-	this.onAfterLogin = new Signal<StatusUI>("onAfterLogin");
-	this.onAfterLogout = new Signal<StatusUI>("onAfterLogout");
-	this.onCloseAllConfirmed = new Signal<StatusUI>("onCloseAllConfirmed");
-	onUserColorChanged = new Signal<String>("onUserColorChanged");
-	onUserSubscriptionModeChanged = new Signal<SubscriptionMode>("onUserSubscriptionModeChanged");
+	this.onAfterLogin = new Event<StatusUI>("onAfterLogin");
+	this.onAfterLogout = new Event<StatusUI>("onAfterLogout");
+	this.onCloseAllConfirmed = new Event<StatusUI>("onCloseAllConfirmed");
+	onUserColorChanged = new Event<String>("onUserColorChanged");
+	onUserSubscriptionModeChanged = new Event<SubscriptionMode>("onUserSubscriptionModeChanged");
     }
 
     public void addButtonItem(final View item) {
@@ -100,12 +100,12 @@ public class StatusUIPresenter implements StatusUI {
     }
 
     public void createListeners() {
-	presenceManager.onOwnPresenceChanged(new Slot<Presence>() {
+	presenceManager.onOwnPresenceChanged(new Listener<Presence>() {
 	    public void onEvent(final Presence presence) {
 		view.setOwnPresence(new OwnPresence(presence));
 	    }
 	});
-	session.onStateChanged(new Slot<Session.State>() {
+	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final Session.State current) {
 		switch (current) {
 		case notAuthorized:
@@ -135,11 +135,11 @@ public class StatusUIPresenter implements StatusUI {
 	createListeners();
     }
 
-    public void onAfterLogin(final Slot<StatusUI> slot) {
+    public void onAfterLogin(final Listener<StatusUI> slot) {
 	onAfterLogin.add(slot);
     }
 
-    public void onAfterLogout(final Slot<StatusUI> slot) {
+    public void onAfterLogout(final Listener<StatusUI> slot) {
 	onAfterLogout.add(slot);
     }
 
@@ -147,15 +147,15 @@ public class StatusUIPresenter implements StatusUI {
 	onCloseAllConfirmed.fire(this);
     }
 
-    public void onCloseAllConfirmed(final Slot<StatusUI> slot) {
+    public void onCloseAllConfirmed(final Listener<StatusUI> slot) {
 	onCloseAllConfirmed.add(slot);
     }
 
-    public void onUserColorChanged(final Slot<String> slot) {
+    public void onUserColorChanged(final Listener<String> slot) {
 	onUserColorChanged.add(slot);
     }
 
-    public void onUserSubscriptionModeChanged(final Slot<SubscriptionMode> slot) {
+    public void onUserSubscriptionModeChanged(final Listener<SubscriptionMode> slot) {
 	onUserSubscriptionModeChanged.add(slot);
     }
 

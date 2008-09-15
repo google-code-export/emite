@@ -9,12 +9,12 @@ import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 import com.calclab.emite.testing.IsPacketLike;
-import com.calclab.suco.testing.signal.SignalTester;
+import com.calclab.suco.testing.listener.EventTester;
 
 public class ConnectionTestHelper {
 
     public final Connection connection;
-    private SignalTester<IPacket> onStanzaSignal;
+    private EventTester<IPacket> onStanzaEvent;
     private final TigaseXMLService xmler;
 
     public ConnectionTestHelper() {
@@ -27,9 +27,10 @@ public class ConnectionTestHelper {
     }
 
     public void simulateReception(final IPacket packet) {
-	if (onStanzaSignal == null)
-	    replaceOnStanzaSignal();
-	onStanzaSignal.fire(packet);
+	if (onStanzaEvent == null) {
+	    replaceOnStanzaEvent();
+	}
+	onStanzaEvent.fire(packet);
     }
 
     public void simulateReception(final String received) {
@@ -41,8 +42,8 @@ public class ConnectionTestHelper {
 	verify(connection).send(argThat(new IsPacketLike(packet)));
     }
 
-    private void replaceOnStanzaSignal() {
-	onStanzaSignal = new SignalTester<IPacket>();
-	verify(connection).onStanzaReceived(argThat(onStanzaSignal));
+    private void replaceOnStanzaEvent() {
+	onStanzaEvent = new EventTester<IPacket>();
+	verify(connection).onStanzaReceived(argThat(onStanzaEvent));
     }
 }

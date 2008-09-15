@@ -52,9 +52,9 @@ import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.suco.client.provider.Provider;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.client.signal.Slot2;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener2;
 
 public class MultiChatPresenter {
 
@@ -67,9 +67,9 @@ public class MultiChatPresenter {
     private final String roomHost;
     private final RosterUIPresenter roster;
     private int openedChats;
-    private final Signal<String> onChatAttended;
-    private final Signal<String> onChatUnattendedWithActivity;
-    private final Signal<Boolean> onShowUnavailableRosterItemsChanged;
+    private final Event<String> onChatAttended;
+    private final Event<String> onChatUnattendedWithActivity;
+    private final Event<Boolean> onShowUnavailableRosterItemsChanged;
     private final ChatManager chatManager;
     private final RoomManager roomManager;
     private final StateManager stateManager;
@@ -93,10 +93,10 @@ public class MultiChatPresenter {
 	xRosterManager = xmpp.getRosterManager();
 	stateManager = xmpp.getInstance(StateManager.class);
 	openedChats = 0;
-	onChatAttended = new Signal<String>("onChatAttended");
-	onChatUnattendedWithActivity = new Signal<String>("onChatUnattendedWithActivity");
-	onShowUnavailableRosterItemsChanged = new Signal<Boolean>("onShowUnavailableRosterItemsChanged");
-	roster.onOpenChat(new Slot<XmppURI>() {
+	onChatAttended = new Event<String>("onChatAttended");
+	onChatUnattendedWithActivity = new Event<String>("onChatUnattendedWithActivity");
+	onShowUnavailableRosterItemsChanged = new Event<Boolean>("onShowUnavailableRosterItemsChanged");
+	roster.onOpenChat(new Listener<XmppURI>() {
 	    public void onEvent(final XmppURI userURI) {
 		joinChat(userURI);
 	    }
@@ -131,13 +131,13 @@ public class MultiChatPresenter {
 	final ChatUI chatUI = chatUIalreadyOpened == null ? factory.createChatUI(chat.getOtherURI(), userChatOptions
 		.getUserJid().getNode(), userChatOptions.getColor(), chatStateManager) : chatUIalreadyOpened;
 	if (chatUIalreadyOpened == null) {
-	    addCommonChatSignals(chat, chatUI);
-	    chatUI.onClose(new Slot<ChatUI>() {
+	    addCommonChatEvents(chat, chatUI);
+	    chatUI.onClose(new Listener<ChatUI>() {
 		public void onEvent(final ChatUI parameter) {
 		    chatManager.close(chat);
 		}
 	    });
-	    chatUI.onUserDrop(new Slot<XmppURI>() {
+	    chatUI.onUserDrop(new Listener<XmppURI>() {
 		public void onEvent(final XmppURI userURI) {
 		    if (!chat.getOtherURI().equals(userURI)) {
 			joinChat(userURI);
@@ -156,24 +156,24 @@ public class MultiChatPresenter {
 	final RoomUI roomUI = (RoomUI) (chatUIalreadyOpened == null ? factory.createRoomUI(chat.getOtherURI(),
 		userChatOptions.getUserJid().getNode(), userChatOptions.getColor(), i18n) : chatUIalreadyOpened);
 	if (chatUIalreadyOpened == null) {
-	    addCommonChatSignals(chat, roomUI);
-	    roomUI.onClose(new Slot<ChatUI>() {
+	    addCommonChatEvents(chat, roomUI);
+	    roomUI.onClose(new Listener<ChatUI>() {
 		public void onEvent(final ChatUI parameter) {
 		    roomManager.close(chat);
 		}
 	    });
-	    roomUI.onUserDrop(new Slot<XmppURI>() {
+	    roomUI.onUserDrop(new Listener<XmppURI>() {
 		public void onEvent(final XmppURI userURI) {
 		    roomUI.askInvitation(userURI);
 		}
 	    });
-	    roomUI.onInviteUserRequested(new Slot2<XmppURI, String>() {
+	    roomUI.onInviteUserRequested(new Listener2<XmppURI, String>() {
 		public void onEvent(final XmppURI userJid, final String reasonText) {
 		    ((Room) chat).sendInvitationTo(userJid.toString(), reasonText);
 		    view.setBottomInfoMessage(i18n.t("Invitation sended"));
 		}
 	    });
-	    roomUI.onModifySubjectRequested(new Slot<String>() {
+	    roomUI.onModifySubjectRequested(new Listener<String>() {
 		public void onEvent(final String newSubject) {
 		    ((Room) chat).setSubject(newSubject);
 		}
@@ -205,17 +205,17 @@ public class MultiChatPresenter {
 	resetAfterLogout();
 	createXmppListeners();
 	setUnavailableRosterItemVisibility();
-	statusUI.onAfterLogin(new Slot<StatusUI>() {
+	statusUI.onAfterLogin(new Listener<StatusUI>() {
 	    public void onEvent(final StatusUI parameter) {
 		doAfterLogin();
 	    }
 	});
-	statusUI.onAfterLogout(new Slot<StatusUI>() {
+	statusUI.onAfterLogout(new Listener<StatusUI>() {
 	    public void onEvent(final StatusUI parameter) {
 		resetAfterLogout();
 	    }
 	});
-	statusUI.onCloseAllConfirmed(new Slot<StatusUI>() {
+	statusUI.onCloseAllConfirmed(new Listener<StatusUI>() {
 	    public void onEvent(final StatusUI parameter) {
 		onCloseAllConfirmed();
 	    }
@@ -236,11 +236,11 @@ public class MultiChatPresenter {
 	}
     }
 
-    public void onChatAttended(final Slot<String> listener) {
+    public void onChatAttended(final Listener<String> listener) {
 	onChatAttended.add(listener);
     }
 
-    public void onChatUnattendedWithActivity(final Slot<String> listener) {
+    public void onChatUnattendedWithActivity(final Listener<String> listener) {
 	onChatUnattendedWithActivity.add(listener);
     }
 
@@ -269,7 +269,7 @@ public class MultiChatPresenter {
 	roomUI.onModifySubjectRequested(newSubject);
     }
 
-    public void onShowUnavailableRosterItemsChanged(final Slot<Boolean> listener) {
+    public void onShowUnavailableRosterItemsChanged(final Listener<Boolean> listener) {
 	onShowUnavailableRosterItemsChanged.add(listener);
     }
 
@@ -361,8 +361,8 @@ public class MultiChatPresenter {
 	}
     }
 
-    private void addCommonChatSignals(final Chat chat, final ChatUI chatUI) {
-	chatUI.onActivate(new Slot<ChatUI>() {
+    private void addCommonChatEvents(final Chat chat, final ChatUI chatUI) {
+	chatUI.onActivate(new Listener<ChatUI>() {
 	    public void onEvent(final ChatUI parameter) {
 		view.setInputText(chatUI.getSavedInput());
 		currentChat = chatUI;
@@ -370,38 +370,38 @@ public class MultiChatPresenter {
 		view.setBottomChatNotification(chatUI.getSavedChatNotification());
 	    }
 	});
-	chatUI.onChatNotificationClear(new Slot<ChatUI>() {
+	chatUI.onChatNotificationClear(new Listener<ChatUI>() {
 	    public void onEvent(final ChatUI parameter) {
 		if (chatUI.equals(currentChat)) {
 		    view.clearBottomChatNotification();
 		}
 	    }
 	});
-	chatUI.onCurrentUserSend(new Slot<String>() {
+	chatUI.onCurrentUserSend(new Listener<String>() {
 	    public void onEvent(final String message) {
 		chat.send(new Message(message));
 	    }
 	});
-	chatUI.onDeactivate(new Slot<ChatUI>() {
+	chatUI.onDeactivate(new Listener<ChatUI>() {
 	    public void onEvent(final ChatUI parameter) {
 		chatUI.saveInput(view.getInputText());
 	    }
 	});
-	chatUI.onHighLight(new Slot<ChatUI>() {
+	chatUI.onHighLight(new Listener<ChatUI>() {
 	    public void onEvent(final ChatUI parameter) {
 		view.highLight();
 		soundManagerProvider.get().click();
 		onChatUnattendedWithActivity.fire(chatUI.getChatTitle());
 	    }
 	});
-	chatUI.onNewChatNotification(new Slot<ChatNotification>() {
+	chatUI.onNewChatNotification(new Listener<ChatNotification>() {
 	    public void onEvent(final ChatNotification chatNotification) {
 		if (chatUI.equals(currentChat)) {
 		    view.setBottomChatNotification(chatNotification);
 		}
 	    }
 	});
-	chatUI.onUnHighLight(new Slot<ChatUI>() {
+	chatUI.onUnHighLight(new Listener<ChatUI>() {
 	    public void onEvent(final ChatUI parameter) {
 		view.unHighLight();
 		onChatAttended.fire(chatUI.getChatTitle());
@@ -410,7 +410,7 @@ public class MultiChatPresenter {
     }
 
     private void addStateListener(final Chat chat) {
-	chat.onStateChanged(new Slot<com.calclab.emite.im.client.chat.Chat.Status>() {
+	chat.onStateChanged(new Listener<com.calclab.emite.im.client.chat.Chat.Status>() {
 	    public void onEvent(final com.calclab.emite.im.client.chat.Chat.Status parameter) {
 		final ChatUI chatUI = getChatUI(chat);
 		if (chatUI != null && chatUI.equals(currentChat)) {
@@ -436,12 +436,12 @@ public class MultiChatPresenter {
 
     private void createXmppListeners() {
 
-	chatManager.onChatCreated(new Slot<Chat>() {
+	chatManager.onChatCreated(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		final ChatUI chatUI = createChat(chat);
 		dockChatUIifIsStartedByMe(chat, chatUI);
 
-		chat.onMessageReceived(new Slot<Message>() {
+		chat.onMessageReceived(new Listener<Message>() {
 		    public void onEvent(final Message message) {
 			if (message.getBody() != null) {
 			    dockChatUI(chat, chatUI);
@@ -450,7 +450,7 @@ public class MultiChatPresenter {
 		    }
 		});
 
-		chat.onMessageSent(new Slot<Message>() {
+		chat.onMessageSent(new Listener<Message>() {
 		    public void onEvent(final Message message) {
 			messageReceived(chat, message);
 		    }
@@ -460,19 +460,19 @@ public class MultiChatPresenter {
 	    }
 	});
 
-	chatManager.onChatClosed(new Slot<Chat>() {
+	chatManager.onChatClosed(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		doAfterChatClosed(chat);
 	    }
 	});
 
-	roomManager.onChatCreated(new Slot<Chat>() {
+	roomManager.onChatCreated(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		final Room room = (Room) chat;
 		final RoomUI roomUI = createRoom(room, userChatOptions.getUserJid().getNode());
 		dockChatUIifIsStartedByMe(room, roomUI);
 
-		room.onMessageReceived(new Slot<Message>() {
+		room.onMessageReceived(new Listener<Message>() {
 		    public void onEvent(final Message message) {
 			if (message.getBody() != null) {
 			    dockChatUI(room, roomUI);
@@ -481,20 +481,20 @@ public class MultiChatPresenter {
 		    }
 		});
 
-		room.onOccupantModified(new Slot<Occupant>() {
+		room.onOccupantModified(new Listener<Occupant>() {
 		    public void onEvent(final Occupant occupant) {
 			Log.info("Room occupant changed (" + occupant.getUri() + ")");
 			roomUI.onOccupantModified(occupant);
 		    }
 		});
 
-		room.onOccupantsChanged(new Slot<Collection<Occupant>>() {
+		room.onOccupantsChanged(new Listener<Collection<Occupant>>() {
 		    public void onEvent(final Collection<Occupant> occupants) {
 			roomUI.onOccupantsChanged(occupants);
 		    }
 		});
 
-		room.onSubjectChanged(new Slot2<Occupant, String>() {
+		room.onSubjectChanged(new Listener2<Occupant, String>() {
 		    public void onEvent(final Occupant occupant, final String newSubject) {
 			roomUI.setSubject(newSubject);
 			if (occupant != null) {
@@ -511,7 +511,7 @@ public class MultiChatPresenter {
 	    }
 	});
 
-	roomManager.onChatClosed(new Slot<Chat>() {
+	roomManager.onChatClosed(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		doAfterChatClosed(chat);
 	    }

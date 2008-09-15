@@ -8,7 +8,7 @@ import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public class RosterController {
 
@@ -24,13 +24,13 @@ public class RosterController {
     public void setWidget(final RosterWidget widget) {
 	this.widget = widget;
 	widget.setDisconnected();
-	manager.onRosterReady(new Slot<XRoster>() {
+	manager.onRosterReady(new Listener<XRoster>() {
 	    public void onEvent(final XRoster xRoster) {
 		setRoster(xRoster);
 	    }
 	});
 
-	session.onStateChanged(new Slot<State>() {
+	session.onStateChanged(new Listener<State>() {
 	    public void onEvent(final State state) {
 		if (state == State.disconnected) {
 		    widget.setDisconnected();
@@ -50,12 +50,12 @@ public class RosterController {
     private void setRoster(final XRoster xRoster) {
 	setItems(xRoster.getItems());
 
-	xRoster.onItemChanged(new Slot<RosterItem>() {
+	xRoster.onItemChanged(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
 		Log.debug("(widget) Roster item changed: " + item);
 	    }
 	});
-	xRoster.onRosterChanged(new Slot<Collection<RosterItem>>() {
+	xRoster.onRosterChanged(new Listener<Collection<RosterItem>>() {
 	    public void onEvent(final Collection<RosterItem> items) {
 		Log.debug("(widget) Roster changed: " + items);
 		setItems(items);

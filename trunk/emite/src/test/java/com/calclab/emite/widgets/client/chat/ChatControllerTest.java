@@ -14,8 +14,8 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.testing.signal.SignalTester;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.testing.listener.EventTester;
 
 @SuppressWarnings("unchecked")
 public class ChatControllerTest extends AbstractChatControllerTest {
@@ -38,7 +38,7 @@ public class ChatControllerTest extends AbstractChatControllerTest {
 	final Chat chat = createMockChat("user@domain/resource");
 	controller.setChatJID("user@domain");
 	mockOnChatCreated().fire(chat);
-	verify(chat, times(1)).onMessageReceived((Slot<Message>) anyObject());
+	verify(chat, times(1)).onMessageReceived((Listener<Message>) anyObject());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class ChatControllerTest extends AbstractChatControllerTest {
 	final Chat chat = createMockChat("admin@domain");
 	controller.setChatJID("user@domain");
 	mockOnChatCreated().fire(chat);
-	verify(chat, times(0)).onMessageReceived((Slot<Message>) anyObject());
+	verify(chat, times(0)).onMessageReceived((Listener<Message>) anyObject());
     }
 
     private Chat createMockChat(final String chatURI) {
@@ -55,9 +55,9 @@ public class ChatControllerTest extends AbstractChatControllerTest {
 	return chat;
     }
 
-    private SignalTester<Chat> mockOnChatCreated() {
-	final SignalTester<Chat> tester = new SignalTester<Chat>();
-	tester.mock(manager).onChatCreated(tester.getSlot());
+    private EventTester<Chat> mockOnChatCreated() {
+	final EventTester<Chat> tester = new EventTester<Chat>();
+	tester.mock(manager).onChatCreated(tester.getListener());
 	return tester;
     }
 

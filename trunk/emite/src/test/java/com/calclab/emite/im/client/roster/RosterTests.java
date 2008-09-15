@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.signal.MockSlot;
+import com.calclab.suco.testing.listener.MockListener;
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.*;
 import static org.junit.Assert.*;
 
@@ -26,13 +26,13 @@ public class RosterTests {
 
     @Test
     public void shouldAddItem() {
-	final MockSlot<RosterItem> slot = new MockSlot<RosterItem>();
+	final MockListener<RosterItem> slot = new MockListener<RosterItem>();
 	roster.onItemAdded(slot);
 
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='MyFriend'><group>Group1</group><group>Group2</group>"
 		+ "</item></query></iq>");
-	MockSlot.verifyCalled(slot);
+	MockListener.verifyCalled(slot);
 	assertEquals(1, roster.getItems().size());
     }
 
@@ -48,27 +48,27 @@ public class RosterTests {
 
     @Test
     public void shouldFireEventOnlyWhenRosterReady() {
-	final MockSlot<Collection<RosterItem>> slot = new MockSlot<Collection<RosterItem>>();
+	final MockListener<Collection<RosterItem>> slot = new MockListener<Collection<RosterItem>>();
 	roster.onRosterRetrieved(slot);
 
 	shouldRequestRosterOnLogin();
 	session.answer(new IQ(Type.error));
-	MockSlot.verifyNoCalled(slot);
+	MockListener.verifyNotCalled(slot);
     }
 
     @Test
     public void shouldFireEventWhenRosterReady() {
-	final MockSlot<Collection<RosterItem>> slot = new MockSlot<Collection<RosterItem>>();
+	final MockListener<Collection<RosterItem>> slot = new MockListener<Collection<RosterItem>>();
 	roster.onRosterRetrieved(slot);
 
 	shouldRequestRosterOnLogin();
 	session.answer(serverRoster());
-	MockSlot.verifyCalled(slot);
+	MockListener.verifyCalled(slot);
     }
 
     @Test
     public void shouldRemoveItems() {
-	final MockSlot<RosterItem> slot = new MockSlot<RosterItem>();
+	final MockListener<RosterItem> slot = new MockListener<RosterItem>();
 	roster.onItemRemoved(slot);
 
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
@@ -79,7 +79,7 @@ public class RosterTests {
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' subscription='remove' name='MyFriend'><group>Group1</group>"
 		+ "</item></query></iq>");
-	MockSlot.verifyCalled(slot);
+	MockListener.verifyCalled(slot);
 	assertEquals(0, roster.getItems().size());
 	assertEquals(0, roster.getGroups().size());
     }
@@ -138,7 +138,7 @@ public class RosterTests {
 
     @Test
     public void shouldUpdateItem() {
-	final MockSlot<RosterItem> slot = new MockSlot<RosterItem>();
+	final MockListener<RosterItem> slot = new MockListener<RosterItem>();
 	roster.onItemUpdated(slot);
 
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
@@ -147,7 +147,7 @@ public class RosterTests {
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='Friend2'><group>HH1</group><group>HH2</group>"
 		+ "</item></query></iq>");
-	MockSlot.verifyCalled(slot);
+	MockListener.verifyCalled(slot);
 	assertEquals(1, roster.getItems().size());
 	assertEquals(2, roster.getGroups().size());
 	assertTrue(roster.getGroups().contains("HH1"));
