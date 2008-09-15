@@ -36,9 +36,9 @@ public class GWTServices implements Services {
 	GWTScheduler.schedule(msecs, action);
     }
 
-    public void send(final String httpBase, final String request, final ConnectorCallback callback)
+    public void send(final String httpBase, final String request, final ConnectorCallback listener)
 	    throws ConnectorException {
-	GWTConnector.send(httpBase, request, callback);
+	GWTConnector.send(httpBase, request, listener);
     }
 
     public String toString(final IPacket packet) {

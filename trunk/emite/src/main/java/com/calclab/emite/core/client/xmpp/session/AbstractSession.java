@@ -28,16 +28,16 @@ public abstract class AbstractSession implements Session {
 	this.onIQ = new Event<IQ>("session:onIQ");
     }
 
-    public void onIQ(final Listener<IQ> slot) {
-	onIQ.add(slot);
+    public void onIQ(final Listener<IQ> listener) {
+	onIQ.add(listener);
     }
 
-    public void onLoggedIn(final Listener<XmppURI> slot) {
-	onLoggedIn.add(slot);
+    public void onLoggedIn(final Listener<XmppURI> listener) {
+	onLoggedIn.add(listener);
     }
 
-    public void onLoggedOut(final Listener<XmppURI> slot) {
-	onLoggedOut.add(slot);
+    public void onLoggedOut(final Listener<XmppURI> listener) {
+	onLoggedOut.add(listener);
     }
 
     public void onMessage(final Listener<Message> listener) {

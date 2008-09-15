@@ -17,7 +17,7 @@ public class Bosh3Connection implements Connection {
     private int activeConnections;
     private Packet body;
     private final Services services;
-    private final ConnectorCallback callback;
+    private final ConnectorCallback listener;
     private boolean running;
     private StreamSettings stream;
     private final Event<String> onError;
@@ -38,7 +38,7 @@ public class Bosh3Connection implements Connection {
 	this.onStanzaSent = new Event<IPacket>("bosh:onSent");
 	this.errors = 0;
 
-	this.callback = new ConnectorCallback() {
+	this.listener = new ConnectorCallback() {
 
 	    public void onError(final String request, final Throwable throwable) {
 		errors++;
@@ -96,16 +96,16 @@ public class Bosh3Connection implements Connection {
 	return stream != null;
     }
 
-    public void onError(final Listener<String> slot) {
-	onError.add(slot);
+    public void onError(final Listener<String> listener) {
+	onError.add(listener);
     }
 
-    public void onStanzaReceived(final Listener<IPacket> slot) {
-	onStanzaReceived.add(slot);
+    public void onStanzaReceived(final Listener<IPacket> listener) {
+	onStanzaReceived.add(listener);
     }
 
-    public void onStanzaSent(final Listener<IPacket> slot) {
-	onStanzaSent.add(slot);
+    public void onStanzaSent(final Listener<IPacket> listener) {
+	onStanzaSent.add(listener);
     }
 
     public StreamSettings pause() {
@@ -225,7 +225,7 @@ public class Bosh3Connection implements Connection {
     private void send(final String request) {
 	try {
 	    activeConnections++;
-	    services.send(userSettings.httpBase, request, callback);
+	    services.send(userSettings.httpBase, request, listener);
 	    stream.lastRequestTime = services.getCurrentTime();
 	} catch (final ConnectorException e) {
 	    activeConnections--;

@@ -36,7 +36,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emite.im.client.roster.RosterItem.Subscription;
+import com.calclab.emite.im.client.roster.SubscriptionState;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
@@ -150,8 +150,8 @@ public class RosterUIPresenter {
 	createXmppListeners();
     }
 
-    public void onOpenChat(final Listener<XmppURI> slot) {
-	onOpenChat.add(slot);
+    public void onOpenChat(final Listener<XmppURI> listener) {
+	onOpenChat.add(listener);
     }
 
     public void onPresenceAccepted(final Presence presence) {
@@ -162,8 +162,8 @@ public class RosterUIPresenter {
 	xRosterManager.denySubscription(presence);
     }
 
-    public void onUserAlert(final Listener<String> slot) {
-	onUserAlert.add(slot);
+    public void onUserAlert(final Listener<String> listener) {
+	onUserAlert.add(listener);
     }
 
     public void openChat(final XmppURI userURI) {
@@ -188,7 +188,7 @@ public class RosterUIPresenter {
 	}
     }
 
-    String formatRosterItemStatusText(final Presence presence, final Subscription subscription) {
+    String formatRosterItemStatusText(final Presence presence, final SubscriptionState subscriptionState) {
 	String statusText = "";
 	if (presence != null) {
 	    statusText = presence.getStatus();
@@ -203,8 +203,8 @@ public class RosterUIPresenter {
 		statusText += getShowText(presence.getType(), show);
 	    }
 	}
-	if (subscription != null) {
-	    switch (subscription) {
+	if (subscriptionState != null) {
+	    switch (subscriptionState) {
 	    case none:
 		statusText += " " + i18n.t("(you cannot see your buddy status, your buddy neither)");
 		break;
@@ -272,14 +272,14 @@ public class RosterUIPresenter {
     }
 
     private UserGridMenuItemList createMenuItemList(final RosterItem item) {
-	return createMenuItemList(item.getJID(), item.getPresence(), item.getSubscription());
+	return createMenuItemList(item.getJID(), item.getPresence(), item.getSubscriptionState());
     }
 
     private UserGridMenuItemList createMenuItemList(final XmppURI userURI, final Presence presence,
-	    final Subscription subscription) {
+	    final SubscriptionState subscriptionState) {
 	final UserGridMenuItemList itemList = new UserGridMenuItemList();
 	itemList.addItem(createStartChatMenuItem(userURI));
-	switch (subscription) {
+	switch (subscriptionState) {
 	case to:
 	    itemList.addItem(createUnsubscribeBuddyMenuItem(userURI));
 	    break;
@@ -438,7 +438,7 @@ public class RosterUIPresenter {
 	final String name = item.getName();
 	final Presence presence = item.getPresence();
 	Log.info(operation + " roster item: " + item.getJID() + ", name: " + name + ", subsc: "
-		+ item.getSubscription());
+		+ item.getSubscriptionState());
 	if (presence != null) {
 	    logPresence(presence, "processed after RosterChanged or RosterItemChanged");
 	} else {
@@ -448,7 +448,7 @@ public class RosterUIPresenter {
 
     private void updateUserWithRosterItem(final ChatUserUI user, final RosterItem item) {
 	user.setStatusIcon(getPresenceIcon(item.getPresence()));
-	user.setStatusText(formatRosterItemStatusText(item.getPresence(), item.getSubscription()));
+	user.setStatusText(formatRosterItemStatusText(item.getPresence(), item.getSubscriptionState()));
     }
 
 }

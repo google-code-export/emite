@@ -53,25 +53,25 @@ public interface Chat {
 
     public String getThread();
 
-    public void onBeforeReceive(Listener<Message> slot);
+    public void onBeforeReceive(Listener<Message> listener);
 
     /**
      * Allows to modify the message just before send it
      * 
      * @param messageInterceptor
      */
-    public void onBeforeSend(Listener<Message> slot);
+    public void onBeforeSend(Listener<Message> listener);
 
     /**
      * Allows to modify the message just before inform about the reception
      * 
      * @param messageInterceptor
      */
-    public void onMessageReceived(Listener<Message> slot);
+    public void onMessageReceived(Listener<Message> listener);
 
-    public void onMessageSent(Listener<Message> slot);
+    public void onMessageSent(Listener<Message> listener);
 
-    public void onStateChanged(Listener<Status> slot);
+    public void onStateChanged(Listener<Status> listener);
 
     /**
      * To make this chat receive a message

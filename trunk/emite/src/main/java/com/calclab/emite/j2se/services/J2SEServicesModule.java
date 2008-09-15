@@ -62,9 +62,9 @@ public class J2SEServicesModule implements Services, Module {
 	scheduler.schedule(msecs, action);
     }
 
-    public void send(final String httpBase, final String xml, final ConnectorCallback callback)
+    public void send(final String httpBase, final String xml, final ConnectorCallback listener)
 	    throws ConnectorException {
-	connector.send(httpBase, xml, callback);
+	connector.send(httpBase, xml, listener);
     }
 
     public String toString(final IPacket packet) {

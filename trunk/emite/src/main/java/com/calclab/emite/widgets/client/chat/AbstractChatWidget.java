@@ -13,7 +13,7 @@ public interface AbstractChatWidget extends EmiteWidget, DockableWidget {
 
     public void setController(AbstractChatController chatController);
 
-    void onSendMessage(Listener<String> slot);
+    void onSendMessage(Listener<String> listener);
 
     void setInputEnabled(boolean enabled);
 

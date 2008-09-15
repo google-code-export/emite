@@ -71,51 +71,51 @@ public interface Session {
     public abstract void logout();
 
     /**
-     * The given callback is called when a IQ <b>of type 'get' or 'set'</b> is
+     * The given listener is called when a IQ <b>of type 'get' or 'set'</b> is
      * received
      * 
-     * @param slot
+     * @param listener
      */
-    public abstract void onIQ(Listener<IQ> slot);
+    public abstract void onIQ(Listener<IQ> listener);
 
     /**
-     * The given slot is called when the user has logged in into the session
+     * The given listener is called when the user has logged in into the session
      * 
-     * @param callback
+     * @param listener
      *            receives the user's logged in URI
      */
-    public abstract void onLoggedIn(final Listener<XmppURI> slot);
+    public abstract void onLoggedIn(final Listener<XmppURI> listener);
 
     /**
-     * The given slot is called when the user has logged out into the session
-     * (and just before close the connection)
+     * The given listener is called when the user has logged out into the
+     * session (and just before close the connection)
      * 
-     * @param callback
+     * @param listener
      *            receives the user's logged out URI
      */
-    public abstract void onLoggedOut(final Listener<XmppURI> callback);
+    public abstract void onLoggedOut(final Listener<XmppURI> listener);
 
     /**
-     * The given slot is called when a message stanza has arrived
+     * The given listener is called when a message stanza has arrived
      * 
-     * @param slot
+     * @param listener
      * 
      */
-    public abstract void onMessage(final Listener<Message> slot);
+    public abstract void onMessage(final Listener<Message> listener);
 
     /**
-     * The given slot is called when a presence stanza has arrived
+     * The given listener is called when a presence stanza has arrived
      * 
-     * @param slot
+     * @param listener
      */
-    public abstract void onPresence(final Listener<Presence> slot);
+    public abstract void onPresence(final Listener<Presence> listener);
 
     /**
-     * The given slot is called when the session changed it's state
+     * The given listener is called when the session changed it's state
      * 
-     * @param slot
+     * @param listener
      */
-    public abstract void onStateChanged(final Listener<State> slot);
+    public abstract void onStateChanged(final Listener<State> listener);
 
     /**
      * Call this method to pause the session. You can use the given object
@@ -149,7 +149,7 @@ public interface Session {
     public abstract void send(final IPacket packet);
 
     /**
-     * A helper method that allows to send a IQ stanza and attach a callback to
+     * A helper method that allows to send a IQ stanza and attach a listener to
      * the response. This method overrides (if present) the given IQ id using
      * the category provided and a internal sequential number. This method also
      * overrides (if present) the given 'from' attribute
@@ -159,11 +159,11 @@ public interface Session {
      *            generate a sequential and uniqe id for the IQ
      * @param iq
      *            the IQ stanza to be sent
-     * @param callback
-     *            the callback called when a IQ of type "result" arrives to the
-     *            server. After the invocation, the callback is discarded
+     * @param listener
+     *            the listener called when a IQ of type "result" arrives to the
+     *            server. After the invocation, the listener is discarded
      * 
      */
-    public abstract void sendIQ(final String category, final IQ iq, final Listener<IPacket> callback);
+    public abstract void sendIQ(final String category, final IQ iq, final Listener<IPacket> listener);
 
 }

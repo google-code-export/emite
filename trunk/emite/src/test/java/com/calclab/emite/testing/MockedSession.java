@@ -68,6 +68,7 @@ public class MockedSession extends AbstractSession {
     }
 
     public void login(final XmppURI uri, final String password) {
+	setLoggedIn(uri);
     }
 
     public void logout() {
@@ -108,9 +109,9 @@ public class MockedSession extends AbstractSession {
 	sent.add(packet);
     }
 
-    public void sendIQ(final String id, final IQ iq, final Listener<IPacket> slot) {
+    public void sendIQ(final String id, final IQ iq, final Listener<IPacket> listener) {
 	this.lastIQSent = iq;
-	this.lastIQListener = slot;
+	this.lastIQListener = listener;
     }
 
     public void setCurrentUser(final XmppURI currentUser) {

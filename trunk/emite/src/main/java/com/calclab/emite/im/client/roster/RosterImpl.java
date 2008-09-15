@@ -13,7 +13,6 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.im.client.roster.RosterItem.Subscription;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
 
@@ -29,7 +28,7 @@ public class RosterImpl implements Roster {
     private final Event<RosterItem> onItemUpdated;
     private final Event<RosterItem> onItemRemoved;
 
-    public RosterImpl(final Session session) {
+    public RosterImpl(final Session session, final SubscriptionManager subscriptionManager) {
 	this.session = session;
 	itemsByJID = new HashMap<XmppURI, RosterItem>();
 	itemsByGroup = new HashMap<String, List<RosterItem>>();
@@ -63,7 +62,7 @@ public class RosterImpl implements Roster {
 		    onItemAdded.fire(item);
 		} else {
 		    removeItem(old);
-		    if (item.getSubscription() == Subscription.remove) {
+		    if (item.getSubscriptionState() == SubscriptionState.remove) {
 			onItemRemoved.fire(item);
 		    } else {
 			addItem(item);
@@ -78,16 +77,7 @@ public class RosterImpl implements Roster {
 
     public void addItem(final XmppURI jid, final String name, final String... groups) {
 	if (findByJID(jid) == null) {
-	    final RosterItem item = new RosterItem(jid, null, name);
-	    for (final String group : groups) {
-		item.addGroup(group);
-	    }
-	    final IQ iq = new IQ(Type.set);
-	    item.addStanzaTo(iq.addQuery("jabber:iq:roster"));
-	    session.sendIQ("roster", iq, new Listener<IPacket>() {
-		public void onEvent(final IPacket parameter) {
-		}
-	    });
+	    addOrUpdateItem(jid, name, null, groups);
 	}
     }
 
@@ -107,20 +97,20 @@ public class RosterImpl implements Roster {
 	return itemsByGroup.get(groupName);
     }
 
-    public void onItemAdded(final Listener<RosterItem> slot) {
-	onItemAdded.add(slot);
+    public void onItemAdded(final Listener<RosterItem> listener) {
+	onItemAdded.add(listener);
     }
 
-    public void onItemRemoved(final Listener<RosterItem> callback) {
-	onItemRemoved.add(callback);
+    public void onItemRemoved(final Listener<RosterItem> listener) {
+	onItemRemoved.add(listener);
     }
 
-    public void onItemUpdated(final Listener<RosterItem> callback) {
-	onItemUpdated.add(callback);
+    public void onItemUpdated(final Listener<RosterItem> listener) {
+	onItemUpdated.add(listener);
     }
 
-    public void onRosterRetrieved(final Listener<Collection<RosterItem>> slot) {
-	onRosterReady.add(slot);
+    public void onRosterRetrieved(final Listener<Collection<RosterItem>> listener) {
+	onRosterReady.add(listener);
     }
 
     public void removeItem(final XmppURI uri) {
@@ -133,6 +123,14 @@ public class RosterImpl implements Roster {
 		public void onEvent(final IPacket parameter) {
 		}
 	    });
+	}
+    }
+
+    public void updateItem(final XmppURI jid, final String name, final String... groups) {
+	final RosterItem oldItem = findByJID(jid);
+	if (oldItem != null) {
+	    final String newName = name == null ? oldItem.getName() : name;
+	    addOrUpdateItem(jid, newName, oldItem.getSubscriptionState(), groups);
 	}
     }
 
@@ -153,6 +151,18 @@ public class RosterImpl implements Roster {
 	}
     }
 
+    private void addOrUpdateItem(final XmppURI jid, final String name, final SubscriptionState subscriptionState,
+	    final String... groups) {
+	final RosterItem item = new RosterItem(jid, subscriptionState, name, null);
+	item.setGroups(groups);
+	final IQ iq = new IQ(Type.set);
+	item.addStanzaTo(iq.addQuery("jabber:iq:roster"));
+	session.sendIQ("roster", iq, new Listener<IPacket>() {
+	    public void onEvent(final IPacket parameter) {
+	    }
+	});
+    }
+
     private void removeItem(final RosterItem item) {
 	itemsByJID.remove(item.getJID());
 	final ArrayList<String> groupsToRemove = new ArrayList<String>();
@@ -169,19 +179,20 @@ public class RosterImpl implements Roster {
     }
 
     private void requestRoster(final XmppURI user) {
-	session.sendIQ("roster", new IQ(IQ.Type.get, user, null).WithQuery("jabber:iq:roster"), new Listener<IPacket>() {
-	    public void onEvent(final IPacket received) {
-		if (IQ.isSuccess(received)) {
-		    itemsByJID.clear();
-		    final List<? extends IPacket> children = received.getFirstChild("query").getChildren();
-		    for (final IPacket child : children) {
-			final RosterItem item = RosterItem.parse(child);
-			addItem(item);
+	session.sendIQ("roster", new IQ(IQ.Type.get, user, null).WithQuery("jabber:iq:roster"),
+		new Listener<IPacket>() {
+		    public void onEvent(final IPacket received) {
+			if (IQ.isSuccess(received)) {
+			    itemsByJID.clear();
+			    final List<? extends IPacket> children = received.getFirstChild("query").getChildren();
+			    for (final IPacket child : children) {
+				final RosterItem item = RosterItem.parse(child);
+				addItem(item);
+			    }
+			    onRosterReady.fire(getItems());
+			}
 		    }
-		    onRosterReady.fire(getItems());
-		}
-	    }
 
-	});
+		});
     }
 }

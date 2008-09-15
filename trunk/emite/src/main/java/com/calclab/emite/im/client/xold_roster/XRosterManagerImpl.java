@@ -12,7 +12,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emite.im.client.roster.RosterItem.Subscription;
+import com.calclab.emite.im.client.roster.SubscriptionState;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
 
@@ -82,7 +82,7 @@ public class XRosterManagerImpl implements XRosterManager {
 	if (presence.getType() == Presence.Type.subscribe) {
 	    final XmppURI from = presence.getFrom();
 	    if (xRoster.findItemByJID(from.getJID()) == null) {
-		final RosterItem item = new RosterItem(from, Subscription.none, from.getNode());
+		final RosterItem item = new RosterItem(from, SubscriptionState.none, from.getNode(), null);
 		xRoster.add(item);
 	    }
 	    final Presence response = new Presence(Presence.Type.subscribed, session.getCurrentUser(), from);
@@ -123,8 +123,8 @@ public class XRosterManagerImpl implements XRosterManager {
 	return subscriptionMode;
     }
 
-    public void onRosterReady(final Listener<XRoster> slot) {
-	this.onRosterReady.add(slot);
+    public void onRosterReady(final Listener<XRoster> listener) {
+	this.onRosterReady.add(listener);
     }
 
     public void onSubscriptionRequested(final Listener<Presence> listener) {
@@ -145,7 +145,7 @@ public class XRosterManagerImpl implements XRosterManager {
 	    item.addChild("group", null).setText(group);
 	}
 
-	xRoster.add(new RosterItem(jid, Subscription.none, name));
+	xRoster.add(new RosterItem(jid, SubscriptionState.none, name, null));
 	session.sendIQ("roster", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {
 		if (IQ.isSuccess(received)) {
@@ -188,8 +188,8 @@ public class XRosterManagerImpl implements XRosterManager {
     private RosterItem convert(final IPacket item) {
 	final String jid = item.getAttribute("jid");
 	final XmppURI uri = uri(jid);
-	final Subscription subscription = RosterItem.Subscription.valueOf(item.getAttribute("subscription"));
-	return new RosterItem(uri, subscription, item.getAttribute("name"));
+	final SubscriptionState subscriptionState = SubscriptionState.valueOf(item.getAttribute("subscription"));
+	return new RosterItem(uri, subscriptionState, item.getAttribute("name"), null);
     }
 
     private List<? extends IPacket> getItems(final IPacket iPacket) {

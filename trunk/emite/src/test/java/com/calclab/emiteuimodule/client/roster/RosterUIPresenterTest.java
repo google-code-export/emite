@@ -13,7 +13,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emite.im.client.roster.RosterItem.Subscription;
+import com.calclab.emite.im.client.roster.SubscriptionState;
 import com.calclab.emiteuimodule.client.MockitoXmpp;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
@@ -50,7 +50,7 @@ public class RosterUIPresenterTest {
     public void begin() {
 	meUri = uri("me@example.com");
 	otherUri = uri("matt@example.com");
-	rosterItem = new RosterItem(otherUri, Subscription.both, "matt");
+	rosterItem = new RosterItem(otherUri, SubscriptionState.both, "matt", null);
 
 	// Mocks creation
 	final MockitoXmpp xmpp = new MockitoXmpp();

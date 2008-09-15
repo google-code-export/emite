@@ -95,8 +95,8 @@ public class ChatStateManager {
 	return ownState;
     }
 
-    public void onChatStateChanged(final Listener<ChatState> slot) {
-	onChatStateChanged.add(slot);
+    public void onChatStateChanged(final Listener<ChatState> listener) {
+	onChatStateChanged.add(listener);
     }
 
     public void setOwnState(final ChatState chatState) {

@@ -27,12 +27,12 @@ public class AvatarManagerTest {
     @SuppressWarnings("unchecked")
     @Test
     public void managerShouldListenPresenceWithPhoto() {
-	final Listener<Presence> slot = Mockito.mock(Listener.class);
-	avatarManager.onHashPresenceReceived(slot);
+	final Listener<Presence> listener = Mockito.mock(Listener.class);
+	avatarManager.onHashPresenceReceived(listener);
 	final Presence presence = new Presence(XmppURI.uri(("juliet@capulet.com/balcony")));
 	presence.addChild("x", "vcard-temp:x:update").addChild("photo", null).setText("sha1-hash-of-image");
 	session.receives(presence);
-	Mockito.verify(slot).onEvent(presence);
+	Mockito.verify(listener).onEvent(presence);
     }
 
     @Test
@@ -51,8 +51,8 @@ public class AvatarManagerTest {
 
     @Test
     public void verifySendVcardRequest() {
-	final MockListener<AvatarVCard> slot = new MockListener<AvatarVCard>();
-	avatarManager.onVCardReceived(slot);
+	final MockListener<AvatarVCard> listener = new MockListener<AvatarVCard>();
+	avatarManager.onVCardReceived(listener);
 
 	session.setLoggedIn(uri("romeo@montague.net/orchard"));
 	avatarManager.requestVCard(XmppURI.uri("juliet@capulet.com"));
@@ -61,6 +61,6 @@ public class AvatarManagerTest {
 	session.answer("<iq from='juliet@capulet.com' to='romeo@montague.net/orchard' type='result'>"
 		+ "<vCard xmlns='vcard-temp'><PHOTO><TYPE>image/jpeg</TYPE>"
 		+ "<BINVAL>Base64-encoded-avatar-file-here!</BINVAL></PHOTO></vCard></iq>");
-	MockListener.verifyCalled(slot);
+	MockListener.verifyCalled(listener);
     }
 }

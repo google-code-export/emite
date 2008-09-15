@@ -166,8 +166,8 @@ public class XmppSession extends AbstractSession {
 	connection.send(packet);
     }
 
-    public void sendIQ(final String category, final IQ iq, final Listener<IPacket> slot) {
-	final String id = iqManager.register(category, slot);
+    public void sendIQ(final String category, final IQ iq, final Listener<IPacket> listener) {
+	final String id = iqManager.register(category, listener);
 	iq.setAttribute("id", id);
 	iq.setAttribute("from", userURI.toString());
 	send(iq);

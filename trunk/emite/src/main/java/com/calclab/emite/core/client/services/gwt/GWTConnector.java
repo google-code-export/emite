@@ -31,7 +31,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 
 public class GWTConnector {
-    public static void send(final String httpBase, final String request, final ConnectorCallback callback)
+    public static void send(final String httpBase, final String request, final ConnectorCallback listener)
 	    throws ConnectorException {
 	Log.debug("GWT CONNECTOR SEND: " + request);
 	final RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, httpBase);
@@ -39,12 +39,12 @@ public class GWTConnector {
 	    builder.sendRequest(request, new RequestCallback() {
 		public void onError(final Request arg0, final Throwable throwable) {
 		    Log.debug("GWT CONNECTOR ERROR: " + throwable);
-		    callback.onError(request, throwable);
+		    listener.onError(request, throwable);
 		}
 
 		public void onResponseReceived(final Request req, final Response res) {
 		    Log.debug("GWT CONNECTOR RECEIVED: " + res.getText());
-		    callback.onResponseReceived(res.getStatusCode(), res.getText());
+		    listener.onResponseReceived(res.getStatusCode(), res.getText());
 		}
 	    });
 	} catch (final RequestException e) {

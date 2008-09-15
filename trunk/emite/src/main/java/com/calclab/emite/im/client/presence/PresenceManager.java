@@ -27,14 +27,14 @@ import com.calclab.suco.client.listener.Listener;
 public interface PresenceManager {
     Presence getOwnPresence();
 
-    void onOwnPresenceChanged(Listener<Presence> slot);
+    void onOwnPresenceChanged(Listener<Presence> listener);
 
     /**
      * @deprecated Use Session.onPresence
-     * @param slot
+     * @param listener
      */
     @Deprecated
-    void onPresenceReceived(Listener<Presence> slot);
+    void onPresenceReceived(Listener<Presence> listener);
 
     void setOwnPresence(Presence presence);
 }

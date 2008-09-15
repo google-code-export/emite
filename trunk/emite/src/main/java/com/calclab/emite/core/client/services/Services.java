@@ -28,7 +28,7 @@ public interface Services {
 
     void schedule(int msecs, ScheduledAction action);
 
-    void send(String httpBase, String request, ConnectorCallback callback) throws ConnectorException;
+    void send(String httpBase, String request, ConnectorCallback listener) throws ConnectorException;
 
     String toString(IPacket iPacket);
 

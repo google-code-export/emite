@@ -63,8 +63,8 @@ public class RoomUIManager {
 	joinRoomPanel.show();
     }
 
-    public void onUserAlert(final Listener<String> slot) {
-	onUserAlert.add(slot);
+    public void onUserAlert(final Listener<String> listener) {
+	onUserAlert.add(listener);
     }
 
     public void setRoomHostDefault(final String roomHostDefault) {

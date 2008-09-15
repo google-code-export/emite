@@ -107,12 +107,12 @@ public class RosterPanel extends JPanel {
 	return (result == JOptionPane.OK_OPTION);
     }
 
-    public void onAddRosterItem(final Listener2<String, String> slot) {
-	onAddRosterItem.add(slot);
+    public void onAddRosterItem(final Listener2<String, String> listener) {
+	onAddRosterItem.add(listener);
     }
 
-    public void onRemoveItem(final Listener<RosterItem> slot) {
-	onRemoveItem.add(slot);
+    public void onRemoveItem(final Listener<RosterItem> listener) {
+	onRemoveItem.add(listener);
     }
 
     public void refresh() {

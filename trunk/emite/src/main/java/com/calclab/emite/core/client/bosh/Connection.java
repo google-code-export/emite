@@ -11,11 +11,11 @@ public interface Connection {
 
     public abstract boolean isConnected();
 
-    public abstract void onError(final Listener<String> slot);
+    public abstract void onError(final Listener<String> listener);
 
-    public abstract void onStanzaReceived(final Listener<IPacket> slot);
+    public abstract void onStanzaReceived(final Listener<IPacket> listener);
 
-    public abstract void onStanzaSent(final Listener<IPacket> slot);
+    public abstract void onStanzaSent(final Listener<IPacket> listener);
 
     public abstract StreamSettings pause();
 

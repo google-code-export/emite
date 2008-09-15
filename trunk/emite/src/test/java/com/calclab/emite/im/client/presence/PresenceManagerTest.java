@@ -94,11 +94,11 @@ public class PresenceManagerTest {
 
     @Test
     public void shouldEventIncommingPresence() {
-	final MockListener<Presence> slot = new MockListener<Presence>();
-	manager.onPresenceReceived(slot);
+	final MockListener<Presence> listener = new MockListener<Presence>();
+	manager.onPresenceReceived(listener);
 	session.receives(createPresence(Type.available));
 	session.receives(createPresence(Type.unavailable));
-	MockListener.verifyCalled(slot, 2);
+	MockListener.verifyCalled(listener, 2);
     }
 
     @Test
