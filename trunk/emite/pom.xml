@@ -1,193 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.calclab</groupId>
   <artifactId>emite</artifactId>
   <packaging>jar</packaging>
-  <version>0.3.6</version>
+  <version>0.4.0</version>
   <description>emite: a pure gwt xmpp (jabber) library
   </description>
   <name>emite xmpp</name>
   <url>http://emite.googlecode.com</url>
 
-  <!-- USE PROFILES WITH gwt:gwt. Example: mvn gwt:gwt -P widgets -->
-  <profiles>
-    <profile>
-      <id>widgets</id>
-      <properties>
-    <gwt.run>com.calclab.emite.widgets.demo.EmiteWidgetsDemo/WidgetsShowCase.html?log_level=DEBUG</gwt.run>
-      </properties>
-    </profile>
-    <profile>
-      <id>emiteui</id>
-      <properties>
-    <gwt.run>com.calclab.emiteui.EmiteUI/EmiteUI.html?log_level=DEBUG</gwt.run>
-      </properties>
-    </profile>
-  </profiles>
-
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>kune-maven</id>
-      <url>http://kune.ourproject.org/mavenrepo/
-      </url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>gwt-maven</id>
-      <url> http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
-    </pluginRepository>
-  </pluginRepositories>
-  <repositories>
-    <repository>
-      <id>gwt-maven</id>
-      <url> http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
-    </repository>
-    <repository>
-      <id>kune-maven</id>
-      <url>http://kune.ourproject.org/mavenrepo/
-      </url>
-    </repository>
-    <repository>
-      <id>gwtext</id>
-      <url>http://www.gwt-ext.com/maven2/
-      </url>
-    </repository>
-  </repositories>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.totsp.gwt</groupId>
-        <artifactId>maven-googlewebtoolkit2-plugin
-        </artifactId>
-        <version>2.0-beta14</version>
-        <configuration>
-          <!-- <logLevel>INFO</logLevel> -->
-          <!--<style>OBF</style>-->
-          <!--<style>PRETTY</style>-->
-          <style>OBF</style>
-          <runTarget>${gwt.run}</runTarget>
-          <compileTargets>
-            <!--
-              <compileTarget>com.calclab.emite.core.EmiteCore</compileTarget>
-              <compileTarget>com.calclab.emiteui.EmiteUI</compileTarget>
-            <compileTarget>com.calclab.emite.widgets.EmiteWidgets</compileTarget>
-            -->
-              <compileTarget>com.calclab.emite.widgets.demo.EmiteWidgetsDemo</compileTarget>
-          </compileTargets>
-          <generatorRootClasses>
-          </generatorRootClasses>
-          <generatorDestinationPackage>
-          </generatorDestinationPackage>
-          <generateGettersAndSetters>false</generateGettersAndSetters>
-          <generatePropertyChangeSupport>true</generatePropertyChangeSupport>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.mortbay.jetty</groupId>
-        <artifactId>maven-jetty-plugin</artifactId>
-        <version>6.1.5</version>
-        <configuration>
-          <contextPath>/</contextPath>
-          <scanIntervalSeconds>0</scanIntervalSeconds>
-          <connectors>
-            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-              <port>4444</port>
-              <maxIdleTime>60000</maxIdleTime>
-            </connector>
-          </connectors>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.2</version>
-        <executions>
-          <execution>
-            <id>core</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <archive>
-                <manifest>
-                  <mainClass> com.calclab.emite.j2se.swing.SwingClient
-                  </mainClass>
-                </manifest>
-              </archive>
-              <classifier>core</classifier>
-              <includes>
-                <include>**/emite/**</include>
-                <include>**/JabberHTTPBind/**</include>
-                <include>**/spieleck/**</include>
-              </includes>
-            </configuration>
-          </execution>
-          <execution>
-            <id>proxies</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <classifier>proxies</classifier>
-              <includes>
-                <include>**/JabberHTTPBind/**</include>
-                <include>**/spieleck/**</include>
-              </includes>
-            </configuration>
-          </execution>
-          <execution>
-            <id>emiteuimodule</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <classifier>emiteuimodule</classifier>
-              <includes>
-                <include>**/emiteuimodule/**</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.0.1</version>
-        <configuration>
-          <warSourceExcludes> WEB-INF/lib/*.jar</warSourceExcludes>
-          <dependentWarExcludes> **/*.class</dependentWarExcludes>
-        </configuration>
-      </plugin>
-    </plugins>
-    <sourceDirectory>src/main/java</sourceDirectory>
-    <testSourceDirectory>src/test/java</testSourceDirectory>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>src/main/java</directory>
-      </resource>
-    </resources>
-  </build>
   <dependencies>
 
     <!--  gwt -->
@@ -277,6 +101,234 @@
     </dependency>
   </dependencies>
 
+  <!-- USE PROFILES WITH gwt:gwt. Example: mvn gwt:gwt -P widgets -->
+  <profiles>
+    <profile>
+      <id>widgets</id>
+      <properties>
+        <gwt.run>
+          com.calclab.emite.widgets.demo.EmiteWidgetsDemo/WidgetsShowCase.html?log_level=DEBUG
+        </gwt.run>
+      </properties>
+    </profile>
+    <profile>
+      <id>emiteui</id>
+      <properties>
+        <gwt.run>com.calclab.emiteui.EmiteUI/EmiteUI.html?log_level=DEBUG
+        </gwt.run>
+      </properties>
+    </profile>
+  </profiles>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>kune-maven</id>
+      <url>http://kune.ourproject.org/mavenrepo/
+      </url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>gwt-maven</id>
+      <url> http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+    </pluginRepository>
+  </pluginRepositories>
+  <repositories>
+    <repository>
+      <id>gwt-maven</id>
+      <url> http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+    </repository>
+    <repository>
+      <id>kune-maven</id>
+      <url>http://kune.ourproject.org/mavenrepo/
+      </url>
+    </repository>
+    <repository>
+      <id>gwtext</id>
+      <url>http://www.gwt-ext.com/maven2/
+      </url>
+    </repository>
+  </repositories>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.totsp.gwt</groupId>
+        <artifactId>maven-googlewebtoolkit2-plugin
+        </artifactId>
+        <version>2.0-beta14</version>
+        <configuration>
+          <!-- <logLevel>INFO</logLevel> -->
+          <!--<style>OBF</style>-->
+          <!--<style>PRETTY</style>-->
+          <style>OBF</style>
+          <runTarget>${gwt.run}</runTarget>
+          <compileTargets>
+            <!--
+              <compileTarget>com.calclab.emite.core.EmiteCore</compileTarget>
+              <compileTarget>com.calclab.emiteui.EmiteUI</compileTarget>
+              <compileTarget>com.calclab.emite.widgets.EmiteWidgets</compileTarget>
+            -->
+            <compileTarget>com.calclab.emite.widgets.demo.EmiteWidgetsDemo
+            </compileTarget>
+          </compileTargets>
+          <generatorRootClasses>
+          </generatorRootClasses>
+          <generatorDestinationPackage>
+          </generatorDestinationPackage>
+          <generateGettersAndSetters>false</generateGettersAndSetters>
+          <generatePropertyChangeSupport>true
+          </generatePropertyChangeSupport>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>maven-jetty-plugin</artifactId>
+        <version>6.1.5</version>
+        <configuration>
+          <contextPath>/</contextPath>
+          <scanIntervalSeconds>0</scanIntervalSeconds>
+          <connectors>
+            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+              <port>4444</port>
+              <maxIdleTime>60000</maxIdleTime>
+            </connector>
+          </connectors>
+        </configuration>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.2</version>
+        <executions>
+
+          <!--  build emite-core -->
+          <execution>
+            <id>core</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>core</classifier>
+              <includes>
+                <include>**/emite/core/**</include>
+              </includes>
+            </configuration>
+          </execution>
+
+         <!--  build emite-im -->
+          <execution>
+            <id>im</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>im</classifier>
+              <includes>
+                <include>**/emite/im/**</include>
+              </includes>
+            </configuration>
+          </execution>
+
+         <!--  build emite-xep -->
+          <execution>
+            <id>xep</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>xep</classifier>
+              <includes>
+                <include>**/emite/xep/**</include>
+              </includes>
+            </configuration>
+          </execution>
+
+          <!--  build emite-browser -->
+          <execution>
+            <id>browser</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>browser</classifier>
+              <includes>
+                <include>**/emite/browser/**</include>
+              </includes>
+            </configuration>
+          </execution>
+
+            <!--  build proxies jar -->
+          <execution>
+            <id>proxies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>proxies</classifier>
+              <includes>
+                <include>**/JabberHTTPBind/**</include>
+                <include>**/spieleck/**</include>
+              </includes>
+            </configuration>
+          </execution>
+
+          <!-- build emiteuimodule jar -->
+          <execution>
+            <id>emiteuimodule</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>emiteuimodule</classifier>
+              <includes>
+                <include>**/emiteuimodule/**</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.0.1</version>
+        <configuration>
+          <warSourceExcludes> WEB-INF/lib/*.jar</warSourceExcludes>
+          <dependentWarExcludes> **/*.class</dependentWarExcludes>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <testSourceDirectory>src/test/java</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/java</directory>
+      </resource>
+    </resources>
+  </build>
+
   <reporting>
     <plugins>
       <plugin>
@@ -315,4 +367,3 @@
     </plugins>
   </reporting>
 </project>
-
