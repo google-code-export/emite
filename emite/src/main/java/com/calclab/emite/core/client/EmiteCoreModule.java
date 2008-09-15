@@ -11,6 +11,7 @@ import com.calclab.emite.core.client.xmpp.session.SessionScope;
 import com.calclab.emite.core.client.xmpp.session.XmppSession;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.container.Container;
+import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.client.module.AbstractModule;
 import com.calclab.suco.client.provider.Factory;
 import com.calclab.suco.client.scope.SingletonScope;
@@ -37,6 +38,21 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 	    }
 	});
 
+	final Factory<Session> sessionFactory = new Factory<Session>(Session.class) {
+	    public Session create() {
+		final XmppSession session = new XmppSession($(Connection.class), $(SASLManager.class),
+			$(ResourceBindingManager.class));
+		return session;
+	    }
+	};
+	sessionFactory.onAfterCreated(new Listener<Session>() {
+	    public void onEvent(final Session session) {
+		final SessionScope sessionScope = $(SessionScope.class);
+		sessionScope.setContext(session);
+		sessionScope.createAll();
+	    }
+	});
+
 	register(SingletonScope.class, new Factory<ResourceBindingManager>(ResourceBindingManager.class) {
 	    public ResourceBindingManager create() {
 		return new ResourceBindingManager($(Connection.class));
@@ -45,14 +61,7 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 	    public SASLManager create() {
 		return new SASLManager($(Connection.class));
 	    }
-	}, new Factory<Session>(Session.class) {
-	    public Session create() {
-		final XmppSession session = new XmppSession($(Connection.class), $(SessionScope.class),
-			$(SASLManager.class), $(ResourceBindingManager.class));
-		$(SessionScope.class).setContext(session);
-		return session;
-	    }
-	});
+	}, sessionFactory);
 
 	register(SingletonScope.class, new Factory<Xmpp>(Xmpp.class) {
 	    public Xmpp create() {
