@@ -26,25 +26,25 @@ import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.emite.core.client.packet.Packet;
 import com.calclab.emite.core.client.xmpp.sasl.AuthorizationTransaction.State;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class SASLManager {
     private static final String SEP = new String(new char[] { 0 });
     private static final String XMLNS = "urn:ietf:params:xml:ns:xmpp-sasl";
     public static final XmppURI ANONYMOUS = XmppURI.uri("anonymous", null, null);
 
-    private final Signal<AuthorizationTransaction> onAuthorized;
+    private final Event<AuthorizationTransaction> onAuthorized;
     private AuthorizationTransaction currentTransaction;
     private final Connection connection;
 
     public SASLManager(final Connection connection) {
 	this.connection = connection;
-	this.onAuthorized = new Signal<AuthorizationTransaction>("saslManager:onAuthorized");
+	this.onAuthorized = new Event<AuthorizationTransaction>("saslManager:onAuthorized");
 	install();
     }
 
-    public void onAuthorized(final Slot<AuthorizationTransaction> listener) {
+    public void onAuthorized(final Listener<AuthorizationTransaction> listener) {
 	onAuthorized.add(listener);
     }
 
@@ -75,7 +75,7 @@ public class SASLManager {
     }
 
     private void install() {
-	connection.onStanzaReceived(new Slot<IPacket>() {
+	connection.onStanzaReceived(new Listener<IPacket>() {
 	    public void onEvent(final IPacket stanza) {
 		final String name = stanza.getName();
 		if ("failure".equals(name)) { // & XMLNS

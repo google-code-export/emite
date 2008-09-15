@@ -22,9 +22,9 @@
 package com.calclab.emite.xep.muc.client;
 
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public interface RoomManager extends ChatManager {
 
-    void onInvitationReceived(Slot<RoomInvitation> listener);
+    void onInvitationReceived(Listener<RoomInvitation> listener);
 }

@@ -11,8 +11,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.avatar.client.AvatarVCard;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.testing.signal.MockSlot;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.testing.listener.MockListener;
 
 public class AvatarManagerTest {
     private AvatarManager avatarManager;
@@ -27,7 +27,7 @@ public class AvatarManagerTest {
     @SuppressWarnings("unchecked")
     @Test
     public void managerShouldListenPresenceWithPhoto() {
-	final Slot<Presence> slot = Mockito.mock(Slot.class);
+	final Listener<Presence> slot = Mockito.mock(Listener.class);
 	avatarManager.onHashPresenceReceived(slot);
 	final Presence presence = new Presence(XmppURI.uri(("juliet@capulet.com/balcony")));
 	presence.addChild("x", "vcard-temp:x:update").addChild("photo", null).setText("sha1-hash-of-image");
@@ -51,7 +51,7 @@ public class AvatarManagerTest {
 
     @Test
     public void verifySendVcardRequest() {
-	final MockSlot<AvatarVCard> slot = new MockSlot<AvatarVCard>();
+	final MockListener<AvatarVCard> slot = new MockListener<AvatarVCard>();
 	avatarManager.onVCardReceived(slot);
 
 	session.setLoggedIn(uri("romeo@montague.net/orchard"));
@@ -61,6 +61,6 @@ public class AvatarManagerTest {
 	session.answer("<iq from='juliet@capulet.com' to='romeo@montague.net/orchard' type='result'>"
 		+ "<vCard xmlns='vcard-temp'><PHOTO><TYPE>image/jpeg</TYPE>"
 		+ "<BINVAL>Base64-encoded-avatar-file-here!</BINVAL></PHOTO></vCard></iq>");
-	MockSlot.verifyCalled(slot);
+	MockListener.verifyCalled(slot);
     }
 }

@@ -1,7 +1,7 @@
 package com.calclab.emite.core.client.bosh;
 
 import com.calclab.emite.core.client.packet.IPacket;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public interface Connection {
 
@@ -11,11 +11,11 @@ public interface Connection {
 
     public abstract boolean isConnected();
 
-    public abstract void onError(final Slot<String> slot);
+    public abstract void onError(final Listener<String> slot);
 
-    public abstract void onStanzaReceived(final Slot<IPacket> slot);
+    public abstract void onStanzaReceived(final Listener<IPacket> slot);
 
-    public abstract void onStanzaSent(final Slot<IPacket> slot);
+    public abstract void onStanzaSent(final Listener<IPacket> slot);
 
     public abstract StreamSettings pause();
 

@@ -22,19 +22,19 @@
 package com.calclab.emite.im.client.presence;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public interface PresenceManager {
     Presence getOwnPresence();
 
-    void onOwnPresenceChanged(Slot<Presence> slot);
+    void onOwnPresenceChanged(Listener<Presence> slot);
 
     /**
      * @deprecated Use Session.onPresence
      * @param slot
      */
     @Deprecated
-    void onPresenceReceived(Slot<Presence> slot);
+    void onPresenceReceived(Listener<Presence> slot);
 
     void setOwnPresence(Presence presence);
 }

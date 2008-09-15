@@ -21,7 +21,7 @@ import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.im.client.xold_roster.XRosterManagerImpl;
 import com.calclab.emite.im.client.xold_roster.XRosterManager.SubscriptionMode;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.signal.MockSlot;
+import com.calclab.suco.testing.listener.MockListener;
 
 public class RosterManagerTest {
     private XRosterManager manager;
@@ -107,22 +107,22 @@ public class RosterManagerTest {
     }
 
     @Test
-    public void shouldSignalSubscribtionRequests() {
-	final MockSlot<Presence> listener = new MockSlot<Presence>();
+    public void shouldEventSubscribtionRequests() {
+	final MockListener<Presence> listener = new MockListener<Presence>();
 	manager.onSubscriptionRequested(listener);
 	final Presence presence = new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain"));
 	session.receives(presence);
-	MockSlot.verifyCalled(listener);
+	MockListener.verifyCalled(listener);
     }
 
     @Test
-    public void shouldSignalUnsibscirvedEvents() {
-	final MockSlot<XmppURI> listener = new MockSlot<XmppURI>();
+    public void shouldEventUnsibscirvedEvents() {
+	final MockListener<XmppURI> listener = new MockListener<XmppURI>();
 	manager.onUnsubscribedReceived(listener);
 
 	final String presence = "<presence from='contact@example.org' to='user@example.com' type='unsubscribed'/>";
 	session.receives(presence);
-	MockSlot.verifyCalled(listener);
+	MockListener.verifyCalled(listener);
     }
 
 }

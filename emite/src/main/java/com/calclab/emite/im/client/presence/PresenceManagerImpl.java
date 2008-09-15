@@ -7,29 +7,29 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class PresenceManagerImpl implements PresenceManager {
 	private Presence delayedPresence;
 	private Presence ownPresence;
-	private final Signal<Presence> onOwnPresenceChanged;
-	private final Signal<Presence> onPresenceReceived;
+	private final Event<Presence> onOwnPresenceChanged;
+	private final Event<Presence> onPresenceReceived;
 	private final Session session;
 
 	public PresenceManagerImpl(final Session session,
 			final XRosterManager xRosterManager) {
 		this.session = session;
 		this.ownPresence = new Presence(Type.unavailable, null, null);
-		this.onPresenceReceived = new Signal<Presence>(
+		this.onPresenceReceived = new Event<Presence>(
 				"presenceManager:onPresenceReceived");
-		this.onOwnPresenceChanged = new Signal<Presence>(
+		this.onOwnPresenceChanged = new Event<Presence>(
 				"presenceManager:onOwnPresenceChanged");
 
 		// Upon connecting to the server and becoming an active resource, a
 		// client SHOULD request the roster before sending initial presence
 
-		xRosterManager.onRosterReady(new Slot<XRoster>() {
+		xRosterManager.onRosterReady(new Listener<XRoster>() {
 			public void onEvent(final XRoster parameter) {
 				final Presence initialPresence = new Presence(session
 						.getCurrentUser());
@@ -42,7 +42,7 @@ public class PresenceManagerImpl implements PresenceManager {
 			}
 		});
 
-		session.onPresence(new Slot<Presence>() {
+		session.onPresence(new Listener<Presence>() {
 			public void onEvent(final Presence presence) {
 				switch (presence.getType()) {
 				case probe:
@@ -58,7 +58,7 @@ public class PresenceManagerImpl implements PresenceManager {
 				}
 			}
 		});
-		session.onLoggedOut(new Slot<XmppURI>() {
+		session.onLoggedOut(new Listener<XmppURI>() {
 			public void onEvent(final XmppURI user) {
 				logOut(user);
 			}
@@ -75,11 +75,11 @@ public class PresenceManagerImpl implements PresenceManager {
 		return ownPresence;
 	}
 
-	public void onOwnPresenceChanged(final Slot<Presence> listener) {
+	public void onOwnPresenceChanged(final Listener<Presence> listener) {
 		onOwnPresenceChanged.add(listener);
 	}
 
-	public void onPresenceReceived(final Slot<Presence> slot) {
+	public void onPresenceReceived(final Listener<Presence> slot) {
 		onPresenceReceived.add(slot);
 	}
 

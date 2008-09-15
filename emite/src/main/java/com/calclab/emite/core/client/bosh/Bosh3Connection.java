@@ -9,9 +9,9 @@ import com.calclab.emite.core.client.services.ConnectorCallback;
 import com.calclab.emite.core.client.services.ConnectorException;
 import com.calclab.emite.core.client.services.ScheduledAction;
 import com.calclab.emite.core.client.services.Services;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Signal0;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Event0;
+import com.calclab.suco.client.listener.Listener;
 
 public class Bosh3Connection implements Connection {
     private int activeConnections;
@@ -20,22 +20,22 @@ public class Bosh3Connection implements Connection {
     private final ConnectorCallback callback;
     private boolean running;
     private StreamSettings stream;
-    private final Signal<String> onError;
-    private final Signal<String> onDisconnected;
-    private final Signal0 onConnected;
-    private final Signal<IPacket> onStanzaReceived;
-    private final Signal<IPacket> onStanzaSent;
+    private final Event<String> onError;
+    private final Event<String> onDisconnected;
+    private final Event0 onConnected;
+    private final Event<IPacket> onStanzaReceived;
+    private final Event<IPacket> onStanzaSent;
     private boolean shouldCollectResponses;
     private Bosh3Settings userSettings;
     private int errors;
 
     public Bosh3Connection(final Services services) {
 	this.services = services;
-	this.onError = new Signal<String>("bosh:onError");
-	this.onDisconnected = new Signal<String>("bosh:onDisconnected");
-	this.onConnected = new Signal0("bosh:onConnected");
-	this.onStanzaReceived = new Signal<IPacket>("bosh:onReceived");
-	this.onStanzaSent = new Signal<IPacket>("bosh:onSent");
+	this.onError = new Event<String>("bosh:onError");
+	this.onDisconnected = new Event<String>("bosh:onDisconnected");
+	this.onConnected = new Event0("bosh:onConnected");
+	this.onStanzaReceived = new Event<IPacket>("bosh:onReceived");
+	this.onStanzaSent = new Event<IPacket>("bosh:onSent");
 	this.errors = 0;
 
 	this.callback = new ConnectorCallback() {
@@ -96,15 +96,15 @@ public class Bosh3Connection implements Connection {
 	return stream != null;
     }
 
-    public void onError(final Slot<String> slot) {
+    public void onError(final Listener<String> slot) {
 	onError.add(slot);
     }
 
-    public void onStanzaReceived(final Slot<IPacket> slot) {
+    public void onStanzaReceived(final Listener<IPacket> slot) {
 	onStanzaReceived.add(slot);
     }
 
-    public void onStanzaSent(final Slot<IPacket> slot) {
+    public void onStanzaSent(final Listener<IPacket> slot) {
 	onStanzaSent.add(slot);
     }
 

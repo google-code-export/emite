@@ -39,10 +39,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Signal0;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.client.signal.Slot0;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Event0;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener0;
 
 @SuppressWarnings("serial")
 public class LoginPanel extends JPanel {
@@ -74,15 +74,15 @@ public class LoginPanel extends JPanel {
     private JLabel labelState;
     private JComboBox selectConfiguration;
     private JTextField fieldHttpBase;
-    private final Signal<LoginParams> onLogin;
-    private final Signal0 onLogout;
+    private final Event<LoginParams> onLogin;
+    private final Event0 onLogout;
     private final JFrame frame;
 
     public LoginPanel(final JFrame frame) {
 	super(new BorderLayout());
 	this.frame = frame;
-	this.onLogin = new Signal<LoginParams>("loginPanel:onLogin");
-	this.onLogout = new Signal0("loginPanel:onLogout");
+	this.onLogin = new Event<LoginParams>("loginPanel:onLogin");
+	this.onLogout = new Event0("loginPanel:onLogout");
 	init();
     }
 
@@ -90,11 +90,11 @@ public class LoginPanel extends JPanel {
 	selectConfiguration.addItem(connectionConfiguration);
     }
 
-    public void onLogin(final Slot<LoginParams> slot) {
+    public void onLogin(final Listener<LoginParams> slot) {
 	onLogin.add(slot);
     }
 
-    public void onLogout(final Slot0 slot) {
+    public void onLogout(final Listener0 slot) {
 	onLogout.add(slot);
     }
 

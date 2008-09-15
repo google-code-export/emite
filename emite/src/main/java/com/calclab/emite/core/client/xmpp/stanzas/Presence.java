@@ -83,7 +83,7 @@ public class Presence extends BasicStanza {
 		 */
 		subscribed,
 		/**
-		 * unavailable -- Signals that the entity is no longer available for
+		 * unavailable -- Events that the entity is no longer available for
 		 * communication.
 		 */
 		unavailable,

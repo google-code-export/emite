@@ -42,10 +42,10 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.j2se.swing.AddRosterItemPanel;
 import com.calclab.emite.j2se.swing.AddRosterItemPanel.AddRosterItemPanelListener;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Signal2;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.client.signal.Slot2;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Event2;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener2;
 
 @SuppressWarnings("serial")
 public class RosterPanel extends JPanel {
@@ -79,17 +79,17 @@ public class RosterPanel extends JPanel {
     private JDialog currentDialog;
     private JList list;
     private DefaultListModel model;
-    private final Signal2<String, String> onAddRosterItem;
-    private final Signal<RosterItem> onRemoveItem;
-    private final Signal<XmppURI> onStartChat;
+    private final Event2<String, String> onAddRosterItem;
+    private final Event<RosterItem> onRemoveItem;
+    private final Event<XmppURI> onStartChat;
     private final JFrame frame;
 
     public RosterPanel(final JFrame frame) {
 	super(new BorderLayout());
 	this.frame = frame;
-	this.onAddRosterItem = new Signal2<String, String>("roster:onAddRosterItem");
-	this.onRemoveItem = new Signal<RosterItem>("roster:onRemoveItem");
-	this.onStartChat = new Signal<XmppURI>("roster:onStartChat");
+	this.onAddRosterItem = new Event2<String, String>("roster:onAddRosterItem");
+	this.onRemoveItem = new Event<RosterItem>("roster:onRemoveItem");
+	this.onStartChat = new Event<XmppURI>("roster:onStartChat");
 	currentDialog = null;
 	init(frame);
     }
@@ -107,11 +107,11 @@ public class RosterPanel extends JPanel {
 	return (result == JOptionPane.OK_OPTION);
     }
 
-    public void onAddRosterItem(final Slot2<String, String> slot) {
+    public void onAddRosterItem(final Listener2<String, String> slot) {
 	onAddRosterItem.add(slot);
     }
 
-    public void onRemoveItem(final Slot<RosterItem> slot) {
+    public void onRemoveItem(final Listener<RosterItem> slot) {
 	onRemoveItem.add(slot);
     }
 

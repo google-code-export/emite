@@ -29,21 +29,21 @@ import java.util.List;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class XRoster {
 
     // Only JIDs
     private final HashMap<XmppURI, RosterItem> items;
 
-    private final Signal<RosterItem> onItemChanged;
-    private final Signal<Collection<RosterItem>> onRosterChanged;
+    private final Event<RosterItem> onItemChanged;
+    private final Event<Collection<RosterItem>> onRosterChanged;
 
     public XRoster() {
 	items = new HashMap<XmppURI, RosterItem>();
-	this.onItemChanged = new Signal<RosterItem>("roster:onItemChanged");
-	this.onRosterChanged = new Signal<Collection<RosterItem>>("roster:onRosterChanged");
+	this.onItemChanged = new Event<RosterItem>("roster:onItemChanged");
+	this.onRosterChanged = new Event<Collection<RosterItem>>("roster:onRosterChanged");
     }
 
     public void changePresence(final XmppURI uri, final Presence presence) {
@@ -74,11 +74,11 @@ public class XRoster {
 	return items.values();
     }
 
-    public void onItemChanged(final Slot<RosterItem> listener) {
+    public void onItemChanged(final Listener<RosterItem> listener) {
 	onItemChanged.add(listener);
     }
 
-    public void onRosterChanged(final Slot<Collection<RosterItem>> listener) {
+    public void onRosterChanged(final Listener<Collection<RosterItem>> listener) {
 	onRosterChanged.add(listener);
     }
 

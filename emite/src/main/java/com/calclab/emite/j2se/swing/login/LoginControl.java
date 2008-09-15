@@ -11,8 +11,8 @@ import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.j2se.swing.ConnectionConfiguration;
 import com.calclab.emite.j2se.swing.LoginPanel;
 import com.calclab.emite.j2se.swing.LoginPanel.LoginParams;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.client.signal.Slot0;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener0;
 
 public class LoginControl {
 
@@ -27,7 +27,7 @@ public class LoginControl {
     }
 
     public void setView(final LoginPanel loginPanel) {
-	loginPanel.onLogin(new Slot<LoginParams>() {
+	loginPanel.onLogin(new Listener<LoginParams>() {
 	    public void onEvent(final LoginParams p) {
 		final String resource = "emite-swing";
 		connection.setSettings(new Bosh3Settings(p.httpBase, p.domain));
@@ -45,14 +45,14 @@ public class LoginControl {
 	    }
 	});
 
-	loginPanel.onLogout(new Slot0() {
+	loginPanel.onLogout(new Listener0() {
 	    public void onEvent() {
 		session.logout();
 
 	    }
 	});
 
-	session.onStateChanged(new Slot<Session.State>() {
+	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final Session.State current) {
 		final boolean isConnected = current == Session.State.ready;
 		loginPanel.showState("state: " + current.toString(), isConnected);

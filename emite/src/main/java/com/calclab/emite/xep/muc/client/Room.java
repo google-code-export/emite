@@ -33,25 +33,25 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.chat.AbstractChat;
 import com.calclab.emite.im.client.chat.Chat;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Signal2;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.client.signal.Slot2;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Event2;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener2;
 
 public class Room extends AbstractChat implements Chat {
     private final HashMap<XmppURI, Occupant> occupants;
     private final String name;
-    private final Signal<Occupant> onOccupantModified;
-    private final Signal<Collection<Occupant>> onOccupantsChanged;
-    private final Signal2<Occupant, String> onSubjectChanged;
+    private final Event<Occupant> onOccupantModified;
+    private final Event<Collection<Occupant>> onOccupantsChanged;
+    private final Event2<Occupant, String> onSubjectChanged;
 
     public Room(final Session session, final XmppURI roomURI, final String name) {
 	super(session, roomURI);
 	this.name = name;
 	this.occupants = new HashMap<XmppURI, Occupant>();
-	this.onOccupantModified = new Signal<Occupant>("room:onOccupantModified");
-	this.onOccupantsChanged = new Signal<Collection<Occupant>>("room:onOccupantsChanged");
-	this.onSubjectChanged = new Signal2<Occupant, String>("room:onSubjectChanged");
+	this.onOccupantModified = new Event<Occupant>("room:onOccupantModified");
+	this.onOccupantsChanged = new Event<Collection<Occupant>>("room:onOccupantsChanged");
+	this.onSubjectChanged = new Event2<Occupant, String>("room:onSubjectChanged");
     }
 
     /**
@@ -91,15 +91,15 @@ public class Room extends AbstractChat implements Chat {
 	return other.getNode();
     }
 
-    public void onOccupantModified(final Slot<Occupant> slot) {
+    public void onOccupantModified(final Listener<Occupant> slot) {
 	onOccupantModified.add(slot);
     }
 
-    public void onOccupantsChanged(final Slot<Collection<Occupant>> slot) {
+    public void onOccupantsChanged(final Listener<Collection<Occupant>> slot) {
 	onOccupantsChanged.add(slot);
     }
 
-    public void onSubjectChanged(final Slot2<Occupant, String> slot) {
+    public void onSubjectChanged(final Listener2<Occupant, String> slot) {
 	onSubjectChanged.add(slot);
     }
 

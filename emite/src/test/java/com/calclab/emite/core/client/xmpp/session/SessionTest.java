@@ -26,9 +26,9 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.testing.signal.MockSlot;
-import com.calclab.suco.testing.signal.SignalTester;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.testing.listener.EventTester;
 
 public class SessionTest {
 
@@ -36,7 +36,7 @@ public class SessionTest {
     private SessionScope scope;
     private SASLManager saslManager;
     private ResourceBindingManager bindingManager;
-    private SignalTester<XmppURI> bindSignal;
+    private EventTester<XmppURI> bindEvent;
     private ConnectionTestHelper helper;
 
     @Before
@@ -48,8 +48,8 @@ public class SessionTest {
 	bindingManager = mock(ResourceBindingManager.class);
 	session = new XmppSession(helper.connection, scope, saslManager, bindingManager);
 
-	bindSignal = new SignalTester<XmppURI>();
-	bindSignal.mock(bindingManager).onBinded(bindSignal.getSlot());
+	bindEvent = new EventTester<XmppURI>();
+	bindEvent.mock(bindingManager).onBinded(bindEvent.getListener());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class SessionTest {
 
     @Test
     public void shouldHandleFailedAuthorizationResult() {
-	final SignalTester<AuthorizationTransaction> onAuthorized = new SignalTester<AuthorizationTransaction>();
+	final EventTester<AuthorizationTransaction> onAuthorized = new EventTester<AuthorizationTransaction>();
 	verify(saslManager).onAuthorized(argThat(onAuthorized));
 	onAuthorized.fire(new AuthorizationTransaction(uri("node@domain"), "password",
 		AuthorizationTransaction.State.failed));
@@ -69,7 +69,7 @@ public class SessionTest {
 
     @Test
     public void shouldHandleSucceedAuthorizationResult() {
-	final SignalTester<AuthorizationTransaction> onAuthorized = new SignalTester<AuthorizationTransaction>();
+	final EventTester<AuthorizationTransaction> onAuthorized = new EventTester<AuthorizationTransaction>();
 	verify(saslManager).onAuthorized(argThat(onAuthorized));
 	onAuthorized.fire(new AuthorizationTransaction(uri("node@domain/resource"), "password",
 		AuthorizationTransaction.State.succeed));
@@ -81,7 +81,7 @@ public class SessionTest {
 
     @Test
     public void shouldRequestSessionWhenBinded() {
-	bindSignal.fire(uri("name@domain/resource"));
+	bindEvent.fire(uri("name@domain/resource"));
 	helper.verifySentLike(new IQ(IQ.Type.set).With("id", "session_1"));
 	helper.simulateReception(new IQ(Type.result).With("id", "session_1"));
 	assertEquals(State.ready, session.getState());
@@ -89,31 +89,31 @@ public class SessionTest {
     }
 
     @Test
-    public void shouldSignalMessages() {
-	final MockSlot<Message> listener = new MockSlot<Message>();
+    public void shouldEventMessages() {
+	final MockListener<Message> listener = new MockListener<Message>();
 	session.onMessage(listener);
 
-	final SignalTester<IPacket> onStanza = new SignalTester<IPacket>();
+	final EventTester<IPacket> onStanza = new EventTester<IPacket>();
 	verify(helper.connection).onStanzaReceived(argThat(onStanza));
 	onStanza.fire(new Packet("message"));
-	MockSlot.verifyCalled(listener);
+	MockListener.verifyCalled(listener);
     }
 
     @Test
-    public void shouldSignalPresences() {
-	final MockSlot<Presence> listener = new MockSlot<Presence>();
+    public void shouldEventPresences() {
+	final MockListener<Presence> listener = new MockListener<Presence>();
 	session.onPresence(listener);
 
-	final SignalTester<IPacket> onStanza = new SignalTester<IPacket>();
+	final EventTester<IPacket> onStanza = new EventTester<IPacket>();
 	verify(helper.connection).onStanzaReceived(argThat(onStanza));
 	onStanza.fire(new Packet("presence"));
-	MockSlot.verifyCalled(listener);
+	MockListener.verifyCalled(listener);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void shouldSignalStateChanges() {
-	final Slot<Session.State> listener = mock(Slot.class);
+    public void shouldEventStateChanges() {
+	final Listener<Session.State> listener = mock(Listener.class);
 	session.onStateChanged(listener);
 	session.setState(Session.State.ready);
 	verify(listener).onEvent(same(Session.State.ready));

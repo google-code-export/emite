@@ -12,7 +12,7 @@ import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
 import com.calclab.emite.im.client.chat.Chat.Status;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.signal.MockSlot;
+import com.calclab.suco.testing.listener.MockListener;
 
 public abstract class AbstractChatManagerTest {
     protected static final XmppURI MYSELF = uri("self@domain");
@@ -35,27 +35,27 @@ public abstract class AbstractChatManagerTest {
     @Test
     public void shouldLockChatsWhenLoggedOut() {
 	final Chat chat = manager.openChat(uri("other@domain"), null, null);
-	final MockSlot<Status> listener = new MockSlot<Status>();
+	final MockListener<Status> listener = new MockListener<Status>();
 	chat.onStateChanged(listener);
 	session.logout();
-	MockSlot.verifyCalledWith(listener, Status.locked);
+	MockListener.verifyCalledWith(listener, Status.locked);
     }
 
     @Test
-    public void shouldSignalWhenAChatIsClosed() {
+    public void shouldEventWhenAChatIsClosed() {
 	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
-	final MockSlot<Chat> listener = new MockSlot<Chat>();
+	final MockListener<Chat> listener = new MockListener<Chat>();
 	manager.onChatClosed(listener);
 	manager.close(chat);
-	MockSlot.verifyCalled(listener);
+	MockListener.verifyCalled(listener);
     }
 
     @Test
-    public void shouldSignalWhenChatCreated() {
-	final MockSlot<Chat> listener = new MockSlot<Chat>();
+    public void shouldEventWhenChatCreated() {
+	final MockListener<Chat> listener = new MockListener<Chat>();
 	manager.onChatCreated(listener);
 	manager.openChat(uri("other@domain"), null, null);
-	MockSlot.verifyCalled(listener);
+	MockListener.verifyCalled(listener);
     }
 
     @Test

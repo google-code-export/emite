@@ -24,27 +24,27 @@ package com.calclab.emiteuimodule.client.chat;
 import org.ourproject.kune.platf.client.View;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public interface ChatUI {
 
-    public void onActivate(final Slot<ChatUI> slot);
+    public void onActivate(final Listener<ChatUI> slot);
 
-    public void onChatNotificationClear(final Slot<ChatUI> slot);
+    public void onChatNotificationClear(final Listener<ChatUI> slot);
 
-    public void onClose(final Slot<ChatUI> slot);
+    public void onClose(final Listener<ChatUI> slot);
 
-    public void onCurrentUserSend(final Slot<String> slot);
+    public void onCurrentUserSend(final Listener<String> slot);
 
-    public void onDeactivate(final Slot<ChatUI> slot);
+    public void onDeactivate(final Listener<ChatUI> slot);
 
-    public void onHighLight(final Slot<ChatUI> slot);
+    public void onHighLight(final Listener<ChatUI> slot);
 
-    public void onNewChatNotification(final Slot<ChatNotification> slot);
+    public void onNewChatNotification(final Listener<ChatNotification> slot);
 
-    public void onUnHighLight(final Slot<ChatUI> slot);
+    public void onUnHighLight(final Listener<ChatUI> slot);
 
-    public void onUserDrop(final Slot<XmppURI> slot);
+    public void onUserDrop(final Listener<XmppURI> slot);
 
     void addDelimiter(String date);
 

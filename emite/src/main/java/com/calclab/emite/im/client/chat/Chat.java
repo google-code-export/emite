@@ -23,7 +23,7 @@ package com.calclab.emite.im.client.chat;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 /**
  * A conversation between two users
@@ -53,25 +53,25 @@ public interface Chat {
 
     public String getThread();
 
-    public void onBeforeReceive(Slot<Message> slot);
+    public void onBeforeReceive(Listener<Message> slot);
 
     /**
      * Allows to modify the message just before send it
      * 
      * @param messageInterceptor
      */
-    public void onBeforeSend(Slot<Message> slot);
+    public void onBeforeSend(Listener<Message> slot);
 
     /**
      * Allows to modify the message just before inform about the reception
      * 
      * @param messageInterceptor
      */
-    public void onMessageReceived(Slot<Message> slot);
+    public void onMessageReceived(Listener<Message> slot);
 
-    public void onMessageSent(Slot<Message> slot);
+    public void onMessageSent(Listener<Message> slot);
 
-    public void onStateChanged(Slot<Status> slot);
+    public void onStateChanged(Listener<Status> slot);
 
     /**
      * To make this chat receive a message

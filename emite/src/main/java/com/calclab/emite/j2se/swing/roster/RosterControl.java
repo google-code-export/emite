@@ -9,8 +9,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.client.signal.Slot2;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener2;
 
 public class RosterControl {
 
@@ -25,24 +25,24 @@ public class RosterControl {
     }
 
     public void setView(final RosterPanel rosterPanel) {
-	rosterPanel.onAddRosterItem(new Slot2<String, String>() {
+	rosterPanel.onAddRosterItem(new Listener2<String, String>() {
 	    public void onEvent(final String jid, final String name) {
 		rosterManager.requestAddItem(uri(jid), name, null);
 	    }
 	});
 
-	rosterPanel.onRemoveItem(new Slot<RosterItem>() {
+	rosterPanel.onRemoveItem(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
 		rosterManager.requestRemoveItem(item.getJID());
 	    }
 	});
 
-	xRoster.onItemChanged(new Slot<RosterItem>() {
+	xRoster.onItemChanged(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
 		rosterPanel.refresh();
 	    }
 	});
-	xRoster.onRosterChanged(new Slot<Collection<RosterItem>>() {
+	xRoster.onRosterChanged(new Listener<Collection<RosterItem>>() {
 	    public void onEvent(final Collection<RosterItem> items) {
 		rosterPanel.clear();
 		for (final RosterItem item : items) {
@@ -51,7 +51,7 @@ public class RosterControl {
 	    }
 	});
 
-	session.onStateChanged(new Slot<Session.State>() {
+	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final Session.State current) {
 		if (current == Session.State.disconnected) {
 		    rosterPanel.clear();
@@ -59,7 +59,7 @@ public class RosterControl {
 	    }
 	});
 
-	rosterManager.onSubscriptionRequested(new Slot<Presence>() {
+	rosterManager.onSubscriptionRequested(new Listener<Presence>() {
 	    public void onEvent(final Presence presence) {
 		final String message = presence.getFromAsString() + " want to add you to his/her roster. Accept?";
 		if (rosterPanel.isConfirmed(message)) {

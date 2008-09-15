@@ -24,8 +24,8 @@ package com.calclab.emite.xep.chatstate.client;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.im.client.chat.Chat;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 /**
  * XEP-0085: Chat State Notifications
@@ -46,9 +46,9 @@ public class ChatStateManager {
     private ChatState otherState;
     private final Chat chat;
     private NegotiationStatus negotiationStatus;
-    private final Signal<ChatState> onChatStateChanged;
+    private final Event<ChatState> onChatStateChanged;
 
-    final Slot<Message> doBeforeSend = new Slot<Message>() {
+    final Listener<Message> doBeforeSend = new Listener<Message>() {
 	public void onEvent(final Message message) {
 	    switch (negotiationStatus) {
 	    case notStarted:
@@ -74,9 +74,9 @@ public class ChatStateManager {
 
     public ChatStateManager(final Chat chat) {
 	this.chat = chat;
-	this.onChatStateChanged = new Signal<ChatState>("chatStateManager:onChatStateChanged");
+	this.onChatStateChanged = new Event<ChatState>("chatStateManager:onChatStateChanged");
 	negotiationStatus = NegotiationStatus.notStarted;
-	chat.onMessageReceived(new Slot<Message>() {
+	chat.onMessageReceived(new Listener<Message>() {
 	    public void onEvent(final Message message) {
 		onMessageReceived(chat, message);
 	    }
@@ -95,7 +95,7 @@ public class ChatStateManager {
 	return ownState;
     }
 
-    public void onChatStateChanged(final Slot<ChatState> slot) {
+    public void onChatStateChanged(final Listener<ChatState> slot) {
 	onChatStateChanged.add(slot);
     }
 

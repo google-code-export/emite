@@ -20,7 +20,7 @@ import com.calclab.emite.xep.muc.client.Room;
 import com.calclab.emite.xep.muc.client.RoomManagerImpl;
 import com.calclab.emite.xep.muc.client.Occupant.Affiliation;
 import com.calclab.emite.xep.muc.client.Occupant.Role;
-import com.calclab.suco.testing.signal.MockSlot;
+import com.calclab.suco.testing.listener.MockListener;
 
 public class MUCRoomManagerTest extends AbstractChatManagerTest {
 
@@ -52,12 +52,12 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldFireChatMessages() {
 	final Chat chat = manager.openChat(uri("room@rooms.domain/user"), null, null);
-	final MockSlot<Message> slot = new MockSlot<Message>();
+	final MockListener<Message> slot = new MockListener<Message>();
 	chat.onMessageReceived(slot);
 	session.receives("<message from='room@rooms.domain/other' to='user@domain/resource' "
 		+ "type='groupchat'><body>the message body</body></message>");
 
-	MockSlot.verifyCalled(slot, 1);
+	MockListener.verifyCalled(slot, 1);
     }
 
     @Test
@@ -70,12 +70,12 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldIgnoreLetterCaseInURIS() {
 	final Room room = (Room) manager.openChat(uri("ROOM@domain/nick"), null, null);
-	final MockSlot<Collection<Occupant>> slot = new MockSlot<Collection<Occupant>>();
+	final MockListener<Collection<Occupant>> slot = new MockListener<Collection<Occupant>>();
 	room.onOccupantsChanged(slot);
 	session.receives("<presence to='user@domain/resource' xmlns='jabber:client' from='ROom@domain/otherUser'>"
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item role='moderator' affiliation='owner' /></x></presence>");
-	MockSlot.verifyCalled(slot, 1);
+	MockListener.verifyCalled(slot, 1);
     }
 
     @Test

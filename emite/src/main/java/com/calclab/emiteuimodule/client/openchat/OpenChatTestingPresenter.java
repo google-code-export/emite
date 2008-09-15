@@ -4,7 +4,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public class OpenChatTestingPresenter {
     private final ChatManager chatManager;
@@ -17,12 +17,12 @@ public class OpenChatTestingPresenter {
 
     public void init(final OpenChatTestingView view) {
 	view.setMenuItemEnabled(false);
-	statusUI.onAfterLogin(new Slot<StatusUI>() {
+	statusUI.onAfterLogin(new Listener<StatusUI>() {
 	    public void onEvent(final StatusUI parameter) {
 		view.setMenuItemEnabled(true);
 	    }
 	});
-	statusUI.onAfterLogout(new Slot<StatusUI>() {
+	statusUI.onAfterLogout(new Listener<StatusUI>() {
 	    public void onEvent(final StatusUI parameter) {
 		view.setMenuItemEnabled(false);
 	    }

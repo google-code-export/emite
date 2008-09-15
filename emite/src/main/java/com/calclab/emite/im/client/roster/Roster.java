@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public interface Roster {
 
@@ -54,21 +54,21 @@ public interface Roster {
      * 
      * @param slot
      */
-    void onItemAdded(Slot<RosterItem> slot);
+    void onItemAdded(Listener<RosterItem> slot);
 
     /**
      * Add a callback to know when a item is removed from the roster
      * 
      * @param callback
      */
-    void onItemRemoved(Slot<RosterItem> callback);
+    void onItemRemoved(Listener<RosterItem> callback);
 
     /**
      * Fired when a RosterItem is updated
      * 
      * @param callback
      */
-    void onItemUpdated(Slot<RosterItem> callback);
+    void onItemUpdated(Listener<RosterItem> callback);
 
     /**
      * Add a callback to receive the Roster when ready
@@ -77,7 +77,7 @@ public interface Roster {
      *            a callback that receives the roster as collection of
      *            RosterItems
      */
-    void onRosterRetrieved(Slot<Collection<RosterItem>> slot);
+    void onRosterRetrieved(Listener<Collection<RosterItem>> slot);
 
     /**
      * Send a request to remove item. No callback is called until the item is

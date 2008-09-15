@@ -26,31 +26,31 @@ import java.util.HashMap;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public abstract class AbstractChat implements Chat {
 
     protected final XmppURI other;
     protected Status status;
-    protected final Signal<Status> onStateChanged;
-    protected final Signal<Message> onBeforeReceive;
+    protected final Event<Status> onStateChanged;
+    protected final Event<Message> onBeforeReceive;
     protected final Session session;
     private final HashMap<Class<?>, Object> data;
-    private final Signal<Message> onMessageSent;
-    private final Signal<Message> onMessageReceived;
-    private final Signal<Message> onBeforeSend;
+    private final Event<Message> onMessageSent;
+    private final Event<Message> onMessageReceived;
+    private final Event<Message> onBeforeSend;
 
     public AbstractChat(final Session session, final XmppURI other) {
 	this.session = session;
 	this.other = other;
 	this.data = new HashMap<Class<?>, Object>();
 	this.status = Chat.Status.locked;
-	this.onStateChanged = new Signal<Status>("chat:onStateChanged");
-	this.onMessageSent = new Signal<Message>("chat:onMessageSent");
-	this.onMessageReceived = new Signal<Message>("chat:onMessageReceived");
-	this.onBeforeSend = new Signal<Message>("chat:onBeforeSend");
-	this.onBeforeReceive = new Signal<Message>("chat:onBeforeReceive");
+	this.onStateChanged = new Event<Status>("chat:onStateChanged");
+	this.onMessageSent = new Event<Message>("chat:onMessageSent");
+	this.onMessageReceived = new Event<Message>("chat:onMessageReceived");
+	this.onBeforeSend = new Event<Message>("chat:onBeforeSend");
+	this.onBeforeReceive = new Event<Message>("chat:onBeforeReceive");
     }
 
     @SuppressWarnings("unchecked")
@@ -70,23 +70,23 @@ public abstract class AbstractChat implements Chat {
 	return status;
     }
 
-    public void onBeforeReceive(final Slot<Message> slot) {
+    public void onBeforeReceive(final Listener<Message> slot) {
 	onBeforeReceive.add(slot);
     }
 
-    public void onBeforeSend(final Slot<Message> slot) {
+    public void onBeforeSend(final Listener<Message> slot) {
 	onBeforeSend.add(slot);
     }
 
-    public void onMessageReceived(final Slot<Message> slot) {
+    public void onMessageReceived(final Listener<Message> slot) {
 	onMessageReceived.add(slot);
     }
 
-    public void onMessageSent(final Slot<Message> slot) {
+    public void onMessageSent(final Listener<Message> slot) {
 	onMessageSent.add(slot);
     }
 
-    public void onStateChanged(final Slot<Status> listener) {
+    public void onStateChanged(final Listener<Status> listener) {
 	onStateChanged.add(listener);
     }
 

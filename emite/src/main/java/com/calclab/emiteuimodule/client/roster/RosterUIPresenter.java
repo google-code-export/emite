@@ -44,8 +44,8 @@ import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem.UserGridMenuItemListener;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class RosterUIPresenter {
 
@@ -72,8 +72,8 @@ public class RosterUIPresenter {
     private final AvatarProvider avatarProvider;
     private boolean showUnavailableItems;
     private RosterPresenceListener listener;
-    private final Signal<XmppURI> onOpenChat;
-    private final Signal<String> onUserAlert;
+    private final Event<XmppURI> onOpenChat;
+    private final Event<String> onUserAlert;
 
     public RosterUIPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final AvatarProvider avatarProvider) {
 	this.i18n = i18n;
@@ -83,8 +83,8 @@ public class RosterUIPresenter {
 	xRosterManager = xmpp.getRosterManager();
 	xRoster = xmpp.getRoster();
 	showUnavailableItems = false;
-	this.onOpenChat = new Signal<XmppURI>("onOpenChat");
-	this.onUserAlert = new Signal<String>("onUserAlert");
+	this.onOpenChat = new Event<XmppURI>("onOpenChat");
+	this.onUserAlert = new Event<String>("onUserAlert");
 	// FIXME: User signals...
 	listener = new RosterPresenceListener() {
 	    public void onCancelSubscriptor(final XmppURI userURI) {
@@ -150,7 +150,7 @@ public class RosterUIPresenter {
 	createXmppListeners();
     }
 
-    public void onOpenChat(final Slot<XmppURI> slot) {
+    public void onOpenChat(final Listener<XmppURI> slot) {
 	onOpenChat.add(slot);
     }
 
@@ -162,7 +162,7 @@ public class RosterUIPresenter {
 	xRosterManager.denySubscription(presence);
     }
 
-    public void onUserAlert(final Slot<String> slot) {
+    public void onUserAlert(final Listener<String> slot) {
 	onUserAlert.add(slot);
     }
 
@@ -336,7 +336,7 @@ public class RosterUIPresenter {
     }
 
     private void createXmppListeners() {
-	xRoster.onItemChanged(new Slot<RosterItem>() {
+	xRoster.onItemChanged(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
 		final ChatUserUI user = rosterMap.get(item.getJID());
 		if (user == null) {
@@ -351,7 +351,7 @@ public class RosterUIPresenter {
 
 	});
 
-	xRoster.onRosterChanged(new Slot<Collection<RosterItem>>() {
+	xRoster.onRosterChanged(new Listener<Collection<RosterItem>>() {
 	    public void onEvent(final Collection<RosterItem> roster) {
 		rosterMap.clear();
 		view.clearRoster();
@@ -370,7 +370,7 @@ public class RosterUIPresenter {
 	    }
 	});
 
-	xRosterManager.onSubscriptionRequested(new Slot<Presence>() {
+	xRosterManager.onSubscriptionRequested(new Listener<Presence>() {
 	    public void onEvent(final Presence presence) {
 		switch (xRosterManager.getSubscriptionMode()) {
 		case autoAcceptAll:
@@ -388,14 +388,14 @@ public class RosterUIPresenter {
 	    }
 	});
 
-	xRosterManager.onUnsubscribedReceived(new Slot<XmppURI>() {
+	xRosterManager.onUnsubscribedReceived(new Listener<XmppURI>() {
 	    public void onEvent(final XmppURI userUnsubscribed) {
 		Log.info("UNSUBS RECEIVED");
 		view.showMessageAboutUnsuscription(userUnsubscribed);
 	    }
 	});
 
-	presenceManager.onPresenceReceived(new Slot<Presence>() {
+	presenceManager.onPresenceReceived(new Listener<Presence>() {
 	    public void onEvent(final Presence presence) {
 		logPresence(presence, "not processed in RosterUIPresenter presence listener but logged");
 	    }

@@ -6,7 +6,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public abstract class AbstractChatController {
 
@@ -22,13 +22,13 @@ public abstract class AbstractChatController {
 
     public void setChat(final Chat chat) {
 	this.chat = chat;
-	chat.onMessageReceived(new Slot<Message>() {
+	chat.onMessageReceived(new Listener<Message>() {
 	    public void onEvent(final Message message) {
 		widget.write(getFromUserName(message), message.getBody());
 	    }
 	});
 
-	chat.onMessageSent(new Slot<Message>() {
+	chat.onMessageSent(new Listener<Message>() {
 	    public void onEvent(final Message message) {
 		widget.write("me", message.getBody());
 	    }
@@ -41,7 +41,7 @@ public abstract class AbstractChatController {
 
     protected void init() {
 	widget.setInputEnabled(false);
-	session.onStateChanged(new Slot<Session.State>() {
+	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final State state) {
 		if (state == State.ready) {
 		    openChat();
@@ -51,7 +51,7 @@ public abstract class AbstractChatController {
 	    }
 	});
 
-	manager.onChatCreated(new Slot<Chat>() {
+	manager.onChatCreated(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		if (isOurChat(chat)) {
 		    widget.write(null, "chat ready.");
@@ -61,7 +61,7 @@ public abstract class AbstractChatController {
 	    }
 	});
 
-	widget.onSendMessage(new Slot<String>() {
+	widget.onSendMessage(new Listener<String>() {
 	    public void onEvent(final String body) {
 		chat.send(new Message(body));
 	    }

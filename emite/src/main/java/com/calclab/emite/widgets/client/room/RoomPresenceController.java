@@ -9,7 +9,7 @@ import com.calclab.emite.widgets.client.room.RoomPresenceWidget.OccupantPanel;
 import com.calclab.emite.xep.muc.client.Occupant;
 import com.calclab.emite.xep.muc.client.Room;
 import com.calclab.emite.xep.muc.client.RoomManager;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public class RoomPresenceController {
 
@@ -32,7 +32,7 @@ public class RoomPresenceController {
     public void setWidget(final RoomPresenceWidget widget) {
 	this.widget = widget;
 	widget.setController(this);
-	manager.onChatCreated(new Slot<Chat>() {
+	manager.onChatCreated(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		if (isOurRoom(chat)) {
 		    listenToRoomOccupants((Room) chat);
@@ -41,7 +41,7 @@ public class RoomPresenceController {
 
 	});
 
-	manager.onChatClosed(new Slot<Chat>() {
+	manager.onChatClosed(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		if (isOurRoom(chat)) {
 		    widget.clearOccupants();
@@ -61,7 +61,7 @@ public class RoomPresenceController {
     }
 
     private void listenToRoomOccupants(final Room room) {
-	room.onOccupantsChanged(new Slot<Collection<Occupant>>() {
+	room.onOccupantsChanged(new Listener<Collection<Occupant>>() {
 	    public void onEvent(final Collection<Occupant> occupants) {
 		widget.clearOccupants();
 		for (final Occupant o : occupants) {
@@ -70,7 +70,7 @@ public class RoomPresenceController {
 	    }
 	});
 
-	room.onOccupantModified(new Slot<Occupant>() {
+	room.onOccupantModified(new Listener<Occupant>() {
 	    public void onEvent(final Occupant occupant) {
 		final OccupantPanel occupantUI = occupantsUIByXmpp.get(occupant.getUri());
 		if (occupantUI == null) {

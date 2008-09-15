@@ -2,8 +2,8 @@ package com.calclab.emite.widgets.client.logout;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.client.signal.Slot0;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener0;
 
 public class LogoutController {
     private final Session session;
@@ -14,7 +14,7 @@ public class LogoutController {
 
     public void setWidget(final LogoutWidget widget) {
 	showNotLoggedIn(widget);
-	session.onStateChanged(new Slot<State>() {
+	session.onStateChanged(new Listener<State>() {
 	    public void onEvent(final State state) {
 		if (state == State.disconnected) {
 		    showNotLoggedIn(widget);
@@ -24,7 +24,7 @@ public class LogoutController {
 	    }
 	});
 
-	widget.onLogout.add(new Slot0() {
+	widget.onLogout.add(new Listener0() {
 	    public void onEvent() {
 		session.logout();
 	    }

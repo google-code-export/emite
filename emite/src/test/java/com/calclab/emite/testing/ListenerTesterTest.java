@@ -2,15 +2,15 @@ package com.calclab.emite.testing;
 
 import org.junit.Test;
 
-import com.calclab.suco.testing.signal.MockSlot;
+import com.calclab.suco.testing.listener.MockListener;
 
 public class ListenerTesterTest {
 
     @Test
     public void shouldVerify() {
-	final MockSlot<Object> listener = new MockSlot<Object>();
+	final MockListener<Object> listener = new MockListener<Object>();
 	final Object param1 = new Object();
 	listener.onEvent(param1);
-	MockSlot.verifyCalledWith(listener, param1);
+	MockListener.verifyCalledWith(listener, param1);
     }
 }

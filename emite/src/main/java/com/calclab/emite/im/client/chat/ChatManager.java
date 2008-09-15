@@ -24,7 +24,7 @@ package com.calclab.emite.im.client.chat;
 import java.util.Collection;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 /**
  * <p>
@@ -40,9 +40,9 @@ public interface ChatManager {
 
     public Collection<? extends Chat> getChats();
 
-    public void onChatClosed(Slot<Chat> listener);
+    public void onChatClosed(Listener<Chat> listener);
 
-    public void onChatCreated(Slot<Chat> listener);
+    public void onChatCreated(Listener<Chat> listener);
 
     public <T> Chat openChat(final XmppURI xmppURI, Class<T> dataType, T dataValue);
 

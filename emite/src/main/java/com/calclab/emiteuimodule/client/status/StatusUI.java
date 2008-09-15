@@ -4,7 +4,7 @@ import org.ourproject.kune.platf.client.View;
 
 import com.calclab.emite.im.client.xold_roster.XRosterManager.SubscriptionMode;
 import com.calclab.emiteuimodule.client.UserChatOptions;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public interface StatusUI {
 
@@ -20,15 +20,15 @@ public interface StatusUI {
 
     View getView();
 
-    void onAfterLogin(Slot<StatusUI> slot);
+    void onAfterLogin(Listener<StatusUI> slot);
 
-    void onAfterLogout(Slot<StatusUI> slot);
+    void onAfterLogout(Listener<StatusUI> slot);
 
-    void onCloseAllConfirmed(Slot<StatusUI> slot);
+    void onCloseAllConfirmed(Listener<StatusUI> slot);
 
-    void onUserColorChanged(Slot<String> slot);
+    void onUserColorChanged(Listener<String> slot);
 
-    void onUserSubscriptionModeChanged(Slot<SubscriptionMode> slot);
+    void onUserSubscriptionModeChanged(Listener<SubscriptionMode> slot);
 
     void setCloseAllOptionEnabled(boolean enabled);
 

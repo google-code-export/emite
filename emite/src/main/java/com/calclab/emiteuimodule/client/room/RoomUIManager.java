@@ -8,8 +8,8 @@ import com.calclab.emite.xep.muc.client.RoomInvitation;
 import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 
 public class RoomUIManager {
 
@@ -19,7 +19,7 @@ public class RoomUIManager {
     private final StatusUI statusUI;
     private final Session session;
     private String roomHostDefault;
-    private final Signal<String> onUserAlert;
+    private final Event<String> onUserAlert;
 
     public RoomUIManager(final Session session, final RoomManager roomManager, final StatusUI statusUI,
 	    final I18nTranslationService i18n) {
@@ -28,22 +28,22 @@ public class RoomUIManager {
 	this.statusUI = statusUI;
 	this.i18n = i18n;
 	this.roomHostDefault = "";
-	this.onUserAlert = new Signal<String>("onUserAlert");
+	this.onUserAlert = new Event<String>("onUserAlert");
     }
 
     public void init(final RoomUICommonPanelView view) {
 	view.setJoinRoomEnabled(false);
-	statusUI.onAfterLogin(new Slot<StatusUI>() {
+	statusUI.onAfterLogin(new Listener<StatusUI>() {
 	    public void onEvent(final StatusUI parameter) {
 		view.setJoinRoomEnabled(true);
 	    }
 	});
-	statusUI.onAfterLogout(new Slot<StatusUI>() {
+	statusUI.onAfterLogout(new Listener<StatusUI>() {
 	    public void onEvent(final StatusUI parameter) {
 		view.setJoinRoomEnabled(false);
 	    }
 	});
-	roomManager.onInvitationReceived(new Slot<RoomInvitation>() {
+	roomManager.onInvitationReceived(new Listener<RoomInvitation>() {
 	    public void onEvent(final RoomInvitation parameter) {
 		onUserAlert.fire("");
 		view.roomJoinConfirm(parameter.getInvitor(), parameter.getRoomURI(), parameter.getReason());
@@ -63,7 +63,7 @@ public class RoomUIManager {
 	joinRoomPanel.show();
     }
 
-    public void onUserAlert(final Slot<String> slot) {
+    public void onUserAlert(final Listener<String> slot) {
 	onUserAlert.add(slot);
     }
 

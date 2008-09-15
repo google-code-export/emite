@@ -4,9 +4,9 @@ import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
-import com.calclab.suco.client.signal.Slot;
-import com.calclab.suco.client.signal.Slot0;
-import com.calclab.suco.client.signal.Slot2;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener0;
+import com.calclab.suco.client.listener.Listener2;
 
 public class LoginController {
     private final Session session;
@@ -21,19 +21,19 @@ public class LoginController {
 	setLoggedIn(false);
 	widget.showError(null);
 
-	widget.onLogin.add(new Slot2<String, String>() {
+	widget.onLogin.add(new Listener2<String, String>() {
 	    public void onEvent(final String jid, final String password) {
 		session.login(uri(jid), password);
 	    }
 	});
 
-	widget.onLogout.add(new Slot0() {
+	widget.onLogout.add(new Listener0() {
 	    public void onEvent() {
 		session.logout();
 	    }
 	});
 
-	session.onStateChanged(new Slot<Session.State>() {
+	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final State state) {
 		widget.showMessage(state.toString());
 

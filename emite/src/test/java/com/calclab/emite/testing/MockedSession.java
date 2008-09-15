@@ -17,7 +17,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.j2se.services.TigaseXMLService;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public class MockedSession extends AbstractSession {
     private XmppURI currentUser;
@@ -25,7 +25,7 @@ public class MockedSession extends AbstractSession {
     private final TigaseXMLService xmler;
     private final ArrayList<IPacket> sent;
     private IPacket lastIQSent;
-    private Slot<IPacket> lastIQSlot;
+    private Listener<IPacket> lastIQListener;
 
     public MockedSession() {
 	this((XmppURI) null);
@@ -44,7 +44,7 @@ public class MockedSession extends AbstractSession {
     }
 
     public void answer(final IPacket iq) {
-	lastIQSlot.onEvent(iq);
+	lastIQListener.onEvent(iq);
     }
 
     public void answer(final String iq) {
@@ -108,9 +108,9 @@ public class MockedSession extends AbstractSession {
 	sent.add(packet);
     }
 
-    public void sendIQ(final String id, final IQ iq, final Slot<IPacket> slot) {
+    public void sendIQ(final String id, final IQ iq, final Listener<IPacket> slot) {
 	this.lastIQSent = iq;
-	this.lastIQSlot = slot;
+	this.lastIQListener = slot;
     }
 
     public void setCurrentUser(final XmppURI currentUser) {
@@ -130,10 +130,10 @@ public class MockedSession extends AbstractSession {
 	this.state = state;
     }
 
-    public Slot<IPacket> verifyIQSent(final IPacket iq) {
+    public Listener<IPacket> verifyIQSent(final IPacket iq) {
 	assertNotNull(lastIQSent);
 	EmiteAsserts.assertPacketLike(iq, lastIQSent);
-	return lastIQSlot;
+	return lastIQListener;
     }
 
     public void verifyIQSent(final String xml) {

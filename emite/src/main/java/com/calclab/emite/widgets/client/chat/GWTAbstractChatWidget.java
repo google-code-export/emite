@@ -3,8 +3,8 @@ package com.calclab.emite.widgets.client.chat;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.widgets.client.base.EmiteWidget;
 import com.calclab.emite.widgets.client.base.GWTExtensibleWidget;
-import com.calclab.suco.client.signal.Signal;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Listener;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -18,11 +18,11 @@ public abstract class GWTAbstractChatWidget extends GWTExtensibleWidget implemen
     private final TextArea area;
     private final TextBox input;
     private final Button send;
-    protected Signal<String> onSendMessage;
+    protected Event<String> onSendMessage;
     private AbstractChatController controller;
 
     public GWTAbstractChatWidget() {
-	this.onSendMessage = new Signal<String>("widgets:room:sendMessage");
+	this.onSendMessage = new Event<String>("widgets:room:sendMessage");
 	this.area = new TextArea();
 	this.input = new TextBox();
 	input.addKeyboardListener(new KeyboardListener() {
@@ -63,7 +63,7 @@ public abstract class GWTAbstractChatWidget extends GWTExtensibleWidget implemen
 	return controller;
     }
 
-    public void onSendMessage(final Slot<String> slot) {
+    public void onSendMessage(final Listener<String> slot) {
 	onSendMessage.add(slot);
     }
 

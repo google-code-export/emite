@@ -10,18 +10,18 @@ import com.calclab.emite.core.client.bosh.ConnectionTestHelper;
 import com.calclab.emite.core.client.packet.Packet;
 import com.calclab.emite.core.client.xmpp.sasl.AuthorizationTransaction;
 import com.calclab.emite.core.client.xmpp.sasl.SASLManager;
-import com.calclab.suco.testing.signal.MockSlot;
+import com.calclab.suco.testing.listener.MockListener;
 
 public class SASLManagerTest {
     private SASLManager manager;
-    private MockSlot<AuthorizationTransaction> listener;
+    private MockListener<AuthorizationTransaction> listener;
     private ConnectionTestHelper helper;
 
     @Before
     public void beforeTests() {
 	helper = new ConnectionTestHelper();
 	manager = new SASLManager(helper.getConnection());
-	listener = new MockSlot<AuthorizationTransaction>();
+	listener = new MockListener<AuthorizationTransaction>();
 	manager.onAuthorized(listener);
     }
 
@@ -29,7 +29,7 @@ public class SASLManagerTest {
     public void shouldHandleSuccessWhenAuthorizationSent() {
 	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("me@domain"), "password"));
 	helper.simulateReception("<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"/>");
-	MockSlot.verifyCalled(listener);
+	MockListener.verifyCalled(listener);
 	assertSame(AuthorizationTransaction.State.succeed, listener.getValue(0).getState());
     }
 
@@ -37,7 +37,7 @@ public class SASLManagerTest {
     public void shouldHanonStanzadleFailure() {
 	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("node@domain"), "password"));
 	helper.simulateReception("<failure xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><not-authorized/></failure>");
-	MockSlot.verifyCalled(listener);
+	MockListener.verifyCalled(listener);
 	assertSame(AuthorizationTransaction.State.failed, listener.getValue(0).getState());
     }
 

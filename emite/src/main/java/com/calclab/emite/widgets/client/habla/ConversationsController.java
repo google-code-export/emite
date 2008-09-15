@@ -6,7 +6,7 @@ import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.widgets.client.chat.ChatWidget;
 import com.calclab.suco.client.provider.Provider;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 public class ConversationsController {
     private final ChatManager manager;
@@ -20,7 +20,7 @@ public class ConversationsController {
     }
 
     public void setWidget(final ConversationsWidget widget) {
-	manager.onChatCreated(new Slot<Chat>() {
+	manager.onChatCreated(new Listener<Chat>() {
 	    public void onEvent(final Chat chat) {
 		ChatWidget chatWidget = chats.get(chat.getID());
 		if (chatWidget == null) {

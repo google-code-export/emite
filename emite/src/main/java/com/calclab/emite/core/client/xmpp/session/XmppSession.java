@@ -34,7 +34,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.signal.Slot;
+import com.calclab.suco.client.listener.Listener;
 
 /**
  * Default Session implementation. Use Session interface instead.
@@ -54,7 +54,7 @@ public class XmppSession extends AbstractSession {
 	state = State.disconnected;
 	this.iqManager = new IQManager();
 
-	connection.onStanzaReceived(new Slot<IPacket>() {
+	connection.onStanzaReceived(new Listener<IPacket>() {
 	    public void onEvent(final IPacket stanza) {
 		final String name = stanza.getName();
 		if (name.equals("message")) {
@@ -75,7 +75,7 @@ public class XmppSession extends AbstractSession {
 	    }
 	});
 
-	connection.onError(new Slot<String>() {
+	connection.onError(new Listener<String>() {
 	    public void onEvent(final String msg) {
 		Log.debug("ERROR: " + msg);
 		setState(State.error);
@@ -83,7 +83,7 @@ public class XmppSession extends AbstractSession {
 	    }
 	});
 
-	saslManager.onAuthorized(new Slot<AuthorizationTransaction>() {
+	saslManager.onAuthorized(new Listener<AuthorizationTransaction>() {
 	    public void onEvent(final AuthorizationTransaction ticket) {
 		if (ticket.getState() == AuthorizationTransaction.State.succeed) {
 		    setState(Session.State.authorized);
@@ -96,13 +96,13 @@ public class XmppSession extends AbstractSession {
 	    }
 	});
 
-	bindingManager.onBinded(new Slot<XmppURI>() {
+	bindingManager.onBinded(new Listener<XmppURI>() {
 	    public void onEvent(final XmppURI uri) {
 		userURI = uri;
 		final IQ iq = new IQ(IQ.Type.set, userURI, userURI.getHostURI());
 		iq.Includes("session", "urn:ietf:params:xml:ns:xmpp-session");
 
-		sendIQ("session", iq, new Slot<IPacket>() {
+		sendIQ("session", iq, new Listener<IPacket>() {
 		    public void onEvent(final IPacket received) {
 			if (IQ.isSuccess(received)) {
 			    setLoggedIn(uri);
@@ -166,7 +166,7 @@ public class XmppSession extends AbstractSession {
 	connection.send(packet);
     }
 
-    public void sendIQ(final String category, final IQ iq, final Slot<IPacket> slot) {
+    public void sendIQ(final String category, final IQ iq, final Listener<IPacket> slot) {
 	final String id = iqManager.register(category, slot);
 	iq.setAttribute("id", id);
 	iq.setAttribute("from", userURI.toString());
