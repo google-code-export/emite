@@ -36,43 +36,13 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 
 public class RosterItem {
 
-    public static enum Subscription {
-	/**
-	 * "both" -- both the user and the contact have subscriptions to each
-	 * other's presence information
-	 */
-	both,
-	/**
-	 * "from" -- the contact has a subscription to the user's presence
-	 * information, but the user does not have a subscription to the
-	 * contact's presence information
-	 */
-	from,
-	/**
-	 * "none" -- the user does not have a subscription to the contact's
-	 * presence information, and the contact does not have a subscription to
-	 * the user's presence information
-	 */
-	none,
-	/**
-	 * "to" -- the user has a subscription to the contact's presence
-	 * information, but the contact does not have a subscription to the
-	 * user's presence information
-	 */
-	to,
-	/**
-	 * remove -- the contact and it's presence subscription is going to be
-	 * removed
-	 */
-	remove
-    }
-
     private static final PacketMatcher GROUP_FILTER = MatcherFactory.byName("group");
 
     static RosterItem parse(final IPacket packet) {
 	final String jid = packet.getAttribute("jid");
 	final XmppURI uri = uri(jid);
-	final RosterItem item = new RosterItem(uri, null, packet.getAttribute("name"));
+	final Type ask = parseAsk(packet.getAttribute("ask"));
+	final RosterItem item = new RosterItem(uri, null, packet.getAttribute("name"), ask);
 	item.setSubscription(packet.getAttribute("subscription"));
 	final List<? extends IPacket> groups = packet.getChildren(GROUP_FILTER);
 
@@ -83,21 +53,40 @@ public class RosterItem {
 	}
 	return item;
     }
+
+    private static Type parseAsk(final String ask) {
+	Type type = null;
+	if (ask != null) {
+	    try {
+		type = Presence.Type.valueOf(ask);
+	    } catch (final IllegalArgumentException e) {
+
+	    }
+	}
+	return type;
+
+    }
     private final ArrayList<String> groups;
     private final XmppURI jid;
     private final String name;
     private Presence presence;
 
-    private Subscription subscription;
+    private SubscriptionState subscriptionState;
+    private final Type ask;
 
     // FIXME: should be not public -- wait until old roster implementation is
     // deleted
-    public RosterItem(final XmppURI jid, final Subscription subscription, final String name) {
+    public RosterItem(final XmppURI jid, final SubscriptionState subscriptionState, final String name, final Type ask) {
+	this.ask = ask;
 	this.jid = jid.getJID();
-	this.subscription = subscription;
+	this.subscriptionState = subscriptionState;
 	this.name = name;
 	this.groups = new ArrayList<String>();
 	setPresence(null);
+    }
+
+    public Type getAsk() {
+	return ask;
     }
 
     public List<String> getGroups() {
@@ -116,8 +105,8 @@ public class RosterItem {
 	return presence;
     }
 
-    public Subscription getSubscription() {
-	return subscription;
+    public SubscriptionState getSubscriptionState() {
+	return subscriptionState;
     }
 
     public void setPresence(final Presence presence) {
@@ -128,12 +117,17 @@ public class RosterItem {
 	}
     }
 
+    @Deprecated
     public void setSubscription(final String value) {
 	try {
-	    this.subscription = Subscription.valueOf(value);
+	    this.subscriptionState = SubscriptionState.valueOf(value);
 	} catch (final Exception e) {
-	    this.subscription = null;
+	    this.subscriptionState = null;
 	}
+    }
+
+    public void setSubscriptionState(final SubscriptionState state) {
+	this.subscriptionState = state;
     }
 
     void addGroup(final String group) {
@@ -153,6 +147,13 @@ public class RosterItem {
 	    packet.addChild("group", null).setText(group);
 	}
 	return packet;
+    }
+
+    void setGroups(final String... groups) {
+	this.groups.clear();
+	for (final String group : groups) {
+	    addGroup(group);
+	}
     }
 
 }

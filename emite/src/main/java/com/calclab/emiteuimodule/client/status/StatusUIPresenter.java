@@ -135,28 +135,28 @@ public class StatusUIPresenter implements StatusUI {
 	createListeners();
     }
 
-    public void onAfterLogin(final Listener<StatusUI> slot) {
-	onAfterLogin.add(slot);
+    public void onAfterLogin(final Listener<StatusUI> listener) {
+	onAfterLogin.add(listener);
     }
 
-    public void onAfterLogout(final Listener<StatusUI> slot) {
-	onAfterLogout.add(slot);
+    public void onAfterLogout(final Listener<StatusUI> listener) {
+	onAfterLogout.add(listener);
     }
 
     public void onCloseAllConfirmed() {
 	onCloseAllConfirmed.fire(this);
     }
 
-    public void onCloseAllConfirmed(final Listener<StatusUI> slot) {
-	onCloseAllConfirmed.add(slot);
+    public void onCloseAllConfirmed(final Listener<StatusUI> listener) {
+	onCloseAllConfirmed.add(listener);
     }
 
-    public void onUserColorChanged(final Listener<String> slot) {
-	onUserColorChanged.add(slot);
+    public void onUserColorChanged(final Listener<String> listener) {
+	onUserColorChanged.add(listener);
     }
 
-    public void onUserSubscriptionModeChanged(final Listener<SubscriptionMode> slot) {
-	onUserSubscriptionModeChanged.add(slot);
+    public void onUserSubscriptionModeChanged(final Listener<SubscriptionMode> listener) {
+	onUserSubscriptionModeChanged.add(listener);
     }
 
     public void setCloseAllOptionEnabled(final boolean enabled) {

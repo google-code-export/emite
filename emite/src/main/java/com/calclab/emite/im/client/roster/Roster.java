@@ -6,12 +6,20 @@ import java.util.Set;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.listener.Listener;
 
+/**
+ * Implements Roster management.
+ * 
+ * @see http://www.xmpp.org/rfcs/rfc3921.html#roster
+ */
 public interface Roster {
 
     /**
-     * Request add a item to the Roster. If a item with a same JID is already
-     * present in the roster, nothing is done. No callback is called until the
-     * item is really added to the roster
+     * Request add a item to the Roster. No listener is called until the item is
+     * really added to the roster. When the item is effectively added, the
+     * Roster sends a subscription to the roster item's presence
+     * 
+     * If a item with a same JID is already present in the roster, nothing is
+     * done.
      * 
      * @param jid
      *            the user JID (resource ignored)
@@ -50,42 +58,56 @@ public interface Roster {
     Collection<RosterItem> getItemsByGroup(String groupName);
 
     /**
-     * Add a callback to know when a item is added to the roster
+     * Add a listener if fired when a item is added to the roster
      * 
-     * @param slot
+     * @param listener
      */
-    void onItemAdded(Listener<RosterItem> slot);
+    void onItemAdded(Listener<RosterItem> listener);
 
     /**
-     * Add a callback to know when a item is removed from the roster
+     * Add a listener to know when a item is removed from the roster
      * 
-     * @param callback
+     * @param listener
      */
-    void onItemRemoved(Listener<RosterItem> callback);
+    void onItemRemoved(Listener<RosterItem> listener);
 
     /**
      * Fired when a RosterItem is updated
      * 
-     * @param callback
+     * @param listener
      */
-    void onItemUpdated(Listener<RosterItem> callback);
+    void onItemUpdated(Listener<RosterItem> listener);
 
     /**
-     * Add a callback to receive the Roster when ready
+     * Add a listener to receive the Roster when ready
      * 
-     * @param slot
-     *            a callback that receives the roster as collection of
+     * @param listener
+     *            a listener that receives the roster as collection of
      *            RosterItems
      */
-    void onRosterRetrieved(Listener<Collection<RosterItem>> slot);
+    void onRosterRetrieved(Listener<Collection<RosterItem>> listener);
 
     /**
-     * Send a request to remove item. No callback is called until the item is
+     * Send a request to remove item. No listener is called until the item is
      * really removed from roster
      * 
      * @param uri
      *            the jid (resource ignored) of the roster item to be removed
      */
     void removeItem(XmppURI uri);
+
+    /**
+     * Request to update a item to the Roster. If the item.jid is not in the
+     * roster, nothing is done. Notice that the subscription mode is IGNORED
+     * (you should use SubscriptionManager instead)
+     * 
+     * @param jid
+     *            the roster item jid to be updated
+     * @param name
+     *            the new name or the old one if null
+     * @param groups
+     *            the new groups (ALWAYS overriden)
+     */
+    void updateItem(XmppURI jid, String name, String... groups);
 
 }

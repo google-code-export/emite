@@ -47,7 +47,7 @@ public interface XRosterManager {
 
 	public SubscriptionMode getSubscriptionMode();
 
-	public void onRosterReady(Listener<XRoster> slot);
+	public void onRosterReady(Listener<XRoster> listener);
 
 	public void onSubscriptionRequested(Listener<Presence> listener);
 

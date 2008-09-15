@@ -70,20 +70,20 @@ public abstract class AbstractChat implements Chat {
 	return status;
     }
 
-    public void onBeforeReceive(final Listener<Message> slot) {
-	onBeforeReceive.add(slot);
+    public void onBeforeReceive(final Listener<Message> listener) {
+	onBeforeReceive.add(listener);
     }
 
-    public void onBeforeSend(final Listener<Message> slot) {
-	onBeforeSend.add(slot);
+    public void onBeforeSend(final Listener<Message> listener) {
+	onBeforeSend.add(listener);
     }
 
-    public void onMessageReceived(final Listener<Message> slot) {
-	onMessageReceived.add(slot);
+    public void onMessageReceived(final Listener<Message> listener) {
+	onMessageReceived.add(listener);
     }
 
-    public void onMessageSent(final Listener<Message> slot) {
-	onMessageSent.add(slot);
+    public void onMessageSent(final Listener<Message> listener) {
+	onMessageSent.add(listener);
     }
 
     public void onStateChanged(final Listener<Status> listener) {

@@ -179,12 +179,12 @@ public class ChatUIPresenter implements ChatUI {
 	return docked;
     }
 
-    public void onActivate(final Listener<ChatUI> slot) {
-	onActivate.add(slot);
+    public void onActivate(final Listener<ChatUI> listener) {
+	onActivate.add(listener);
     }
 
-    public void onChatNotificationClear(final Listener<ChatUI> slot) {
-	onChatNotificationClear.add(slot);
+    public void onChatNotificationClear(final Listener<ChatUI> listener) {
+	onChatNotificationClear.add(listener);
     }
 
     public void onClose() {
@@ -195,8 +195,8 @@ public class ChatUIPresenter implements ChatUI {
 	onClose.fire(this);
     }
 
-    public void onClose(final Listener<ChatUI> slot) {
-	onClose.add(slot);
+    public void onClose(final Listener<ChatUI> listener) {
+	onClose.add(listener);
     }
 
     public void onComposing() {
@@ -205,20 +205,20 @@ public class ChatUIPresenter implements ChatUI {
 	}
     }
 
-    public void onCurrentUserSend(final Listener<String> slot) {
-	onCurrentUserSend.add(slot);
+    public void onCurrentUserSend(final Listener<String> listener) {
+	onCurrentUserSend.add(listener);
     }
 
     public void onCurrentUserSend(final String message) {
 	onCurrentUserSend.fire(message);
     }
 
-    public void onDeactivate(final Listener<ChatUI> slot) {
-	onDeactivate.add(slot);
+    public void onDeactivate(final Listener<ChatUI> listener) {
+	onDeactivate.add(listener);
     }
 
-    public void onHighLight(final Listener<ChatUI> slot) {
-	onHighLight.add(slot);
+    public void onHighLight(final Listener<ChatUI> listener) {
+	onHighLight.add(listener);
     }
 
     public void onInputFocus() {
@@ -235,16 +235,16 @@ public class ChatUIPresenter implements ChatUI {
 	}
     }
 
-    public void onNewChatNotification(final Listener<ChatNotification> slot) {
-	onNewChatNotification.add(slot);
+    public void onNewChatNotification(final Listener<ChatNotification> listener) {
+	onNewChatNotification.add(listener);
     }
 
-    public void onUnHighLight(final Listener<ChatUI> slot) {
-	onUnHighLight.add(slot);
+    public void onUnHighLight(final Listener<ChatUI> listener) {
+	onUnHighLight.add(listener);
     }
 
-    public void onUserDrop(final Listener<XmppURI> slot) {
-	onUserDrop.add(slot);
+    public void onUserDrop(final Listener<XmppURI> listener) {
+	onUserDrop.add(listener);
     }
 
     public void onUserDrop(final XmppURI userURI) {

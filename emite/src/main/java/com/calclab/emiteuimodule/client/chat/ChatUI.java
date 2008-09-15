@@ -28,23 +28,23 @@ import com.calclab.suco.client.listener.Listener;
 
 public interface ChatUI {
 
-    public void onActivate(final Listener<ChatUI> slot);
+    public void onActivate(final Listener<ChatUI> listener);
 
-    public void onChatNotificationClear(final Listener<ChatUI> slot);
+    public void onChatNotificationClear(final Listener<ChatUI> listener);
 
-    public void onClose(final Listener<ChatUI> slot);
+    public void onClose(final Listener<ChatUI> listener);
 
-    public void onCurrentUserSend(final Listener<String> slot);
+    public void onCurrentUserSend(final Listener<String> listener);
 
-    public void onDeactivate(final Listener<ChatUI> slot);
+    public void onDeactivate(final Listener<ChatUI> listener);
 
-    public void onHighLight(final Listener<ChatUI> slot);
+    public void onHighLight(final Listener<ChatUI> listener);
 
-    public void onNewChatNotification(final Listener<ChatNotification> slot);
+    public void onNewChatNotification(final Listener<ChatNotification> listener);
 
-    public void onUnHighLight(final Listener<ChatUI> slot);
+    public void onUnHighLight(final Listener<ChatUI> listener);
 
-    public void onUserDrop(final Listener<XmppURI> slot);
+    public void onUserDrop(final Listener<XmppURI> listener);
 
     void addDelimiter(String date);
 

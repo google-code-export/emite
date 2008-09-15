@@ -102,8 +102,8 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 	onInviteUserRequested.fire(userJid, reasonText);
     }
 
-    public void onModifySubjectRequested(final Listener<String> slot) {
-	onModifySubjectRequested.add(slot);
+    public void onModifySubjectRequested(final Listener<String> listener) {
+	onModifySubjectRequested.add(listener);
     }
 
     public void onModifySubjectRequested(final String newSubject) {

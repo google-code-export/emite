@@ -79,8 +79,8 @@ public class PresenceManagerImpl implements PresenceManager {
 		onOwnPresenceChanged.add(listener);
 	}
 
-	public void onPresenceReceived(final Listener<Presence> slot) {
-		onPresenceReceived.add(slot);
+	public void onPresenceReceived(final Listener<Presence> listener) {
+		onPresenceReceived.add(listener);
 	}
 
 	/**

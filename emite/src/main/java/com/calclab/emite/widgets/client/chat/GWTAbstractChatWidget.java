@@ -63,8 +63,8 @@ public abstract class GWTAbstractChatWidget extends GWTExtensibleWidget implemen
 	return controller;
     }
 
-    public void onSendMessage(final Listener<String> slot) {
-	onSendMessage.add(slot);
+    public void onSendMessage(final Listener<String> listener) {
+	onSendMessage.add(listener);
     }
 
     public void setChat(final Chat chat) {

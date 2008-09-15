@@ -54,12 +54,12 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldEventIncommingMessages() {
 	final Chat chat = manager.openChat(uri("someone@domain"), null, null);
-	final MockListener<Message> slot = new MockListener<Message>();
-	chat.onMessageReceived(slot);
+	final MockListener<Message> listener = new MockListener<Message>();
+	chat.onMessageReceived(listener);
 	session.receives("<message type='chat' id='purplee8b92642' to='user@domain' "
 		+ "from='someone@domain'><x xmlns='jabber:x:event'/><active"
 		+ "xmlns='http://jabber.org/protocol/chatstates'/></message>");
-	MockListener.verifyCalled(slot);
+	MockListener.verifyCalled(listener);
     }
 
     @Test

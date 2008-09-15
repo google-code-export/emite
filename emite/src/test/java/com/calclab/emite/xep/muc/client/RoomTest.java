@@ -44,11 +44,11 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldAddOccupantAndFireListeners() {
-	final MockListener<Collection<Occupant>> slot = new MockListener<Collection<Occupant>>();
-	room.onOccupantsChanged(slot);
+	final MockListener<Collection<Occupant>> listener = new MockListener<Collection<Occupant>>();
+	room.onOccupantsChanged(listener);
 	final XmppURI uri = uri("room@domain/name");
 	final Occupant occupant = room.setOccupantPresence(uri, "aff", "role");
-	MockListener.verifyCalled(slot, 1);
+	MockListener.verifyCalled(listener, 1);
 	final Occupant result = room.findOccupant(uri);
 	assertEquals(occupant, result);
     }
@@ -62,11 +62,11 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldFireListenersWhenMessage() {
-	final MockListener<Message> slot = new MockListener<Message>();
-	room.onMessageReceived(slot);
+	final MockListener<Message> listener = new MockListener<Message>();
+	room.onMessageReceived(listener);
 	final Message message = new Message(uri("someone@domain/res"), uri("room@domain"), "message");
 	room.receive(message);
-	MockListener.verifyCalledWith(slot, message);
+	MockListener.verifyCalledWith(listener, message);
     }
 
     @Test
@@ -86,14 +86,14 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldRemoveOccupant() {
-	final MockListener<Collection<Occupant>> slot = new MockListener<Collection<Occupant>>();
-	room.onOccupantsChanged(slot);
+	final MockListener<Collection<Occupant>> listener = new MockListener<Collection<Occupant>>();
+	room.onOccupantsChanged(listener);
 	final XmppURI uri = uri("room@domain/name");
 	room.setOccupantPresence(uri, "owner", "participant");
 	assertEquals(1, room.getOccupantsCount());
 	room.removeOccupant(uri);
 	assertEquals(0, room.getOccupantsCount());
-	assertEquals(2, slot.getCalledTimes());
+	assertEquals(2, listener.getCalledTimes());
 	assertNull(room.findOccupant(uri));
     }
 
@@ -107,12 +107,12 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldUpdateOccupantAndFireListeners() {
-	final MockListener<Occupant> slot = new MockListener<Occupant>();
-	room.onOccupantModified(slot);
+	final MockListener<Occupant> listener = new MockListener<Occupant>();
+	room.onOccupantModified(listener);
 	final XmppURI uri = uri("room@domain/name");
 	final Occupant occupant = room.setOccupantPresence(uri, "owner", "participant");
 	final Occupant occupant2 = room.setOccupantPresence(uri, "admin", "moderator");
-	assertEquals(1, slot.getCalledTimes());
+	assertEquals(1, listener.getCalledTimes());
 	assertSame(occupant, occupant2);
     }
 

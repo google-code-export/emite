@@ -91,16 +91,16 @@ public class Room extends AbstractChat implements Chat {
 	return other.getNode();
     }
 
-    public void onOccupantModified(final Listener<Occupant> slot) {
-	onOccupantModified.add(slot);
+    public void onOccupantModified(final Listener<Occupant> listener) {
+	onOccupantModified.add(listener);
     }
 
-    public void onOccupantsChanged(final Listener<Collection<Occupant>> slot) {
-	onOccupantsChanged.add(slot);
+    public void onOccupantsChanged(final Listener<Collection<Occupant>> listener) {
+	onOccupantsChanged.add(listener);
     }
 
-    public void onSubjectChanged(final Listener2<Occupant, String> slot) {
-	onSubjectChanged.add(slot);
+    public void onSubjectChanged(final Listener2<Occupant, String> listener) {
+	onSubjectChanged.add(listener);
     }
 
     @Override

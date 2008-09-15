@@ -52,12 +52,12 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldFireChatMessages() {
 	final Chat chat = manager.openChat(uri("room@rooms.domain/user"), null, null);
-	final MockListener<Message> slot = new MockListener<Message>();
-	chat.onMessageReceived(slot);
+	final MockListener<Message> listener = new MockListener<Message>();
+	chat.onMessageReceived(listener);
 	session.receives("<message from='room@rooms.domain/other' to='user@domain/resource' "
 		+ "type='groupchat'><body>the message body</body></message>");
 
-	MockListener.verifyCalled(slot, 1);
+	MockListener.verifyCalled(listener, 1);
     }
 
     @Test
@@ -70,12 +70,12 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldIgnoreLetterCaseInURIS() {
 	final Room room = (Room) manager.openChat(uri("ROOM@domain/nick"), null, null);
-	final MockListener<Collection<Occupant>> slot = new MockListener<Collection<Occupant>>();
-	room.onOccupantsChanged(slot);
+	final MockListener<Collection<Occupant>> listener = new MockListener<Collection<Occupant>>();
+	room.onOccupantsChanged(listener);
 	session.receives("<presence to='user@domain/resource' xmlns='jabber:client' from='ROom@domain/otherUser'>"
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item role='moderator' affiliation='owner' /></x></presence>");
-	MockListener.verifyCalled(slot, 1);
+	MockListener.verifyCalled(listener, 1);
     }
 
     @Test

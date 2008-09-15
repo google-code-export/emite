@@ -20,15 +20,15 @@ public interface StatusUI {
 
     View getView();
 
-    void onAfterLogin(Listener<StatusUI> slot);
+    void onAfterLogin(Listener<StatusUI> listener);
 
-    void onAfterLogout(Listener<StatusUI> slot);
+    void onAfterLogout(Listener<StatusUI> listener);
 
-    void onCloseAllConfirmed(Listener<StatusUI> slot);
+    void onCloseAllConfirmed(Listener<StatusUI> listener);
 
-    void onUserColorChanged(Listener<String> slot);
+    void onUserColorChanged(Listener<String> listener);
 
-    void onUserSubscriptionModeChanged(Listener<SubscriptionMode> slot);
+    void onUserSubscriptionModeChanged(Listener<SubscriptionMode> listener);
 
     void setCloseAllOptionEnabled(boolean enabled);
 

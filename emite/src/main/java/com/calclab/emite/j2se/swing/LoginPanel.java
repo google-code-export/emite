@@ -90,12 +90,12 @@ public class LoginPanel extends JPanel {
 	selectConfiguration.addItem(connectionConfiguration);
     }
 
-    public void onLogin(final Listener<LoginParams> slot) {
-	onLogin.add(slot);
+    public void onLogin(final Listener<LoginParams> listener) {
+	onLogin.add(listener);
     }
 
-    public void onLogout(final Listener0 slot) {
-	onLogout.add(slot);
+    public void onLogout(final Listener0 listener) {
+	onLogout.add(listener);
     }
 
     public void showMessage(final String message) {

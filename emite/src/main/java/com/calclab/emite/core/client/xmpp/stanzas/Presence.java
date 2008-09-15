@@ -25,196 +25,198 @@ import com.calclab.emite.core.client.packet.IPacket;
 
 public class Presence extends BasicStanza {
 
+    /**
+     * @see http://www.xmpp.org/rfcs/rfc3921.html#stanzas
+     * 
+     *      2.2.2.1. Show
+     * 
+     *      <p>
+     *      If no 'show' element is provided, the entity is assumed to be online
+     *      and available.
+     *      </p>
+     * 
+     *      <p>
+     *      If provided, the XML character data value MUST be one of the
+     *      following (additional availability types could be defined through a
+     *      properly-namespaced child element of the presence stanza):
+     *      </p>
+     */
+    public static enum Show {
+	away, chat, dnd, xa, notSpecified, unknown
+    }
+
+    public enum Type {
 	/**
-	 * @see http://www.xmpp.org/rfcs/rfc3921.html#stanzas
-	 * 
-	 * 2.2.2.1. Show
+	 * 2.2.1. Types of Presence
 	 * 
 	 * <p>
-	 * If no 'show' element is provided, the entity is assumed to be online and
-	 * available.
+	 * The 'type' attribute of a presence stanza is OPTIONAL. A presence
+	 * stanza that does not possess a 'type' attribute is used to signal to
+	 * the server that the sender is online and available for communication.
+	 * If included, the 'type' attribute specifies a lack of availability, a
+	 * request to manage a subscription to another entity's presence, a
+	 * request for another entity's current presence, or an error related to
+	 * a previously-sent presence stanza. If included, the 'type' attribute
+	 * MUST have one of the following values:
 	 * </p>
-	 * 
-	 * <p>
-	 * If provided, the XML character data value MUST be one of the following
-	 * (additional availability types could be defined through a
-	 * properly-namespaced child element of the presence stanza):
-	 * </p>
 	 */
-	public static enum Show {
-		away, chat, dnd, xa, notSpecified, unknown
-	}
-
-	public enum Type {
-		/**
-		 * 2.2.1. Types of Presence
-		 * 
-		 * <p>
-		 * The 'type' attribute of a presence stanza is OPTIONAL. A presence
-		 * stanza that does not possess a 'type' attribute is used to signal to
-		 * the server that the sender is online and available for communication.
-		 * If included, the 'type' attribute specifies a lack of availability, a
-		 * request to manage a subscription to another entity's presence, a
-		 * request for another entity's current presence, or an error related to
-		 * a previously-sent presence stanza. If included, the 'type' attribute
-		 * MUST have one of the following values:
-		 * </p>
-		 */
-		available,
-		/**
-		 * error -- An error has occurred regarding processing or delivery of a
-		 * previously-sent presence stanza.
-		 */
-		error,
-		/**
-		 * probe -- A request for an entity's current presence; SHOULD be
-		 * generated only by a server on behalf of a user.
-		 */
-		probe,
-		/**
-		 * subscribe -- The sender wishes to subscribe to the recipient's
-		 * presence.
-		 */
-
-		subscribe,
-		/**
-		 * subscribed -- The sender has allowed the recipient to receive their
-		 * presence.
-		 */
-		subscribed,
-		/**
-		 * unavailable -- Events that the entity is no longer available for
-		 * communication.
-		 */
-		unavailable,
-		/**
-		 * unsubscribe -- The sender is unsubscribing from another entity's
-		 * presence.
-		 */
-		unsubscribe,
-		/**
-		 * unsubscribed -- The subscription request has been denied or a
-		 * previously-granted subscription has been cancelled.
-		 */
-		unsubscribed
-	}
-
-	public Presence() {
-		this(null, null, null);
-	}
-
-	public Presence(final IPacket stanza) {
-		super(stanza);
-	}
-
-	public Presence(final Type type, final XmppURI from, final XmppURI to) {
-		super("presence", null);
-		if (type != null) {
-			setType(type.toString());
-		}
-		setFrom(from);
-		setTo(to);
-	}
-
-	public Presence(final XmppURI from) {
-		this(null, from, null);
-	}
-
+	available,
 	/**
-	 * Get the priority of the presence
-	 * 
-	 * @return The priority (1-10), 0 if not specified
+	 * error -- An error has occurred regarding processing or delivery of a
+	 * previously-sent presence stanza.
 	 */
-	public int getPriority() {
-		int value = 0;
-		final String priority = getFirstChild("priority").getText();
-		if (priority != null) {
-			try {
-				value = Integer.parseInt(priority);
-			} catch (final NumberFormatException e) {
-				value = 0;
-			}
-		}
-		return value;
-	}
-
+	error,
 	/**
-	 * Return the show of the presence
-	 * 
-	 * @return The show, never null
+	 * probe -- A request for an entity's current presence; SHOULD be
+	 * generated only by a server on behalf of a user.
 	 */
-	public Show getShow() {
-		final String value = getFirstChild("show").getText();
-		try {
-			return value != null ? Show.valueOf(value) : Show.notSpecified;
-		} catch (final IllegalArgumentException e) {
-			return Show.unknown;
-		}
-	}
-
+	probe,
 	/**
-	 * Return the status of the presence.
-	 * 
-	 * @return The status, null if not specified
+	 * subscribe -- The sender wishes to subscribe to the recipient's
+	 * presence.
 	 */
-	public String getStatus() {
-		return getFirstChild("status").getText();
-	}
 
+	subscribe,
 	/**
-	 * Get the presence's type
-	 * 
-	 * @return The type, never null
-	 * @see http://www.xmpp.org/rfcs/rfc3921.html#presence
+	 * subscribed -- The sender has allowed the recipient to receive their
+	 * presence.
 	 */
-	public Type getType() {
-		final String type = getAttribute(BasicStanza.TYPE);
-		try {
-			return type != null ? Type.valueOf(type) : Type.available;
-		} catch (final IllegalArgumentException e) {
-			return Type.error;
-		}
-	}
-
-	public void setPriority(final int value) {
-		setTextToChild("priority", Integer.toString(value >= 0 ? value : 0));
-	}
-
-	public void setShow(final Show value) {
-		setTextToChild(
-				"show",
-				(value != null && (value != Show.notSpecified || value != Show.unknown)) ? value
-						.toString()
-						: null);
-	}
-
-	public void setStatus(final String statusMessage) {
-		setTextToChild("status", statusMessage);
-	}
-
-	public Presence With(final Show value) {
-		setShow(value);
-		return this;
-	}
-
+	subscribed,
 	/**
-	 * Create a new presence with the given status message and the given Show
-	 * 
-	 * @param statusMessage
-	 *            the given status message if not null
-	 * @param show
-	 *            the show or Show.notSpecified if null
-	 * @return
+	 * unavailable -- Events that the entity is no longer available for
+	 * communication.
 	 */
-	public static Presence build(String statusMessage, Show show) {
-		final Presence presence = new Presence();
+	unavailable,
+	/**
+	 * unsubscribe -- The sender is unsubscribing from another entity's
+	 * presence.
+	 */
+	unsubscribe,
+	/**
+	 * unsubscribed -- The subscription request has been denied or a
+	 * previously-granted subscription has been cancelled.
+	 */
+	unsubscribed
+    }
 
-		if (show != null && show != Show.notSpecified) {
-			presence.setShow(show);
-		}
-		if (statusMessage != null) {
-			presence.setStatus(statusMessage);
-		}
-		return presence;
+    /**
+     * Create a new presence with the given status message and the given Show
+     * 
+     * @param statusMessage
+     *            the given status message if not null
+     * @param show
+     *            the show or Show.notSpecified if null
+     * @return
+     */
+    public static Presence build(final String statusMessage, final Show show) {
+	final Presence presence = new Presence();
+
+	if (show != null && show != Show.notSpecified) {
+	    presence.setShow(show);
 	}
+	if (statusMessage != null) {
+	    presence.setStatus(statusMessage);
+	}
+	return presence;
+    }
+
+    public static Object parseType(final String attribute) {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    public Presence() {
+	this(null, null, null);
+    }
+
+    public Presence(final IPacket stanza) {
+	super(stanza);
+    }
+
+    public Presence(final Type type, final XmppURI from, final XmppURI to) {
+	super("presence", null);
+	if (type != null) {
+	    setType(type.toString());
+	}
+	setFrom(from);
+	setTo(to);
+    }
+
+    public Presence(final XmppURI from) {
+	this(null, from, null);
+    }
+
+    /**
+     * Get the priority of the presence
+     * 
+     * @return The priority (1-10), 0 if not specified
+     */
+    public int getPriority() {
+	int value = 0;
+	final String priority = getFirstChild("priority").getText();
+	if (priority != null) {
+	    try {
+		value = Integer.parseInt(priority);
+	    } catch (final NumberFormatException e) {
+		value = 0;
+	    }
+	}
+	return value;
+    }
+
+    /**
+     * Return the show of the presence
+     * 
+     * @return The show, never null
+     */
+    public Show getShow() {
+	final String value = getFirstChild("show").getText();
+	try {
+	    return value != null ? Show.valueOf(value) : Show.notSpecified;
+	} catch (final IllegalArgumentException e) {
+	    return Show.unknown;
+	}
+    }
+
+    /**
+     * Return the status of the presence.
+     * 
+     * @return The status, null if not specified
+     */
+    public String getStatus() {
+	return getFirstChild("status").getText();
+    }
+
+    /**
+     * Get the presence's type
+     * 
+     * @return The type, never null
+     * @see http://www.xmpp.org/rfcs/rfc3921.html#presence
+     */
+    public Type getType() {
+	final String type = getAttribute(BasicStanza.TYPE);
+	try {
+	    return type != null ? Type.valueOf(type) : Type.available;
+	} catch (final IllegalArgumentException e) {
+	    return Type.error;
+	}
+    }
+
+    public void setPriority(final int value) {
+	setTextToChild("priority", Integer.toString(value >= 0 ? value : 0));
+    }
+
+    public void setShow(final Show value) {
+	setTextToChild("show", (value != null && (value != Show.notSpecified || value != Show.unknown)) ? value
+		.toString() : null);
+    }
+
+    public void setStatus(final String statusMessage) {
+	setTextToChild("status", statusMessage);
+    }
+
+    public Presence With(final Show value) {
+	setShow(value);
+	return this;
+    }
 }

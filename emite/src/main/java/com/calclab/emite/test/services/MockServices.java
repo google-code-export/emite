@@ -13,12 +13,12 @@ public class MockServices implements Services {
     public static class Request {
 	public final String httpBase;
 	public final String request;
-	public final ConnectorCallback callback;
+	public final ConnectorCallback listener;
 
-	public Request(final String httpBase, final String request, final ConnectorCallback callback) {
+	public Request(final String httpBase, final String request, final ConnectorCallback listener) {
 	    this.httpBase = httpBase;
 	    this.request = request;
-	    this.callback = callback;
+	    this.listener = listener;
 	}
 
     }
@@ -47,9 +47,9 @@ public class MockServices implements Services {
     public void schedule(final int msecs, final ScheduledAction action) {
     }
 
-    public void send(final String httpBase, final String request, final ConnectorCallback callback)
+    public void send(final String httpBase, final String request, final ConnectorCallback listener)
 	    throws ConnectorException {
-	requests.add(new Request(httpBase, request, callback));
+	requests.add(new Request(httpBase, request, listener));
     }
 
     public String toString(final IPacket packet) {

@@ -65,12 +65,12 @@ public class AvatarManager {
 	});
     }
 
-    public void onHashPresenceReceived(final Listener<Presence> slot) {
-	onHashPresenceReceived.add(slot);
+    public void onHashPresenceReceived(final Listener<Presence> listener) {
+	onHashPresenceReceived.add(listener);
     }
 
-    public void onVCardReceived(final Listener<AvatarVCard> slot) {
-	onVCardReceived.add(slot);
+    public void onVCardReceived(final Listener<AvatarVCard> listener) {
+	onVCardReceived.add(listener);
     }
 
     /**
