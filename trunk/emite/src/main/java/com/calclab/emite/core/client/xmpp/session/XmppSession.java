@@ -42,15 +42,13 @@ import com.calclab.suco.client.listener.Listener;
 public class XmppSession extends AbstractSession {
     private State state;
     private XmppURI userURI;
-    private final SessionScope scope;
     private final Connection connection;
     private AuthorizationTransaction transaction;
     private final IQManager iqManager;
 
-    public XmppSession(final Connection connection, final SessionScope scope, final SASLManager saslManager,
+    public XmppSession(final Connection connection, final SASLManager saslManager,
 	    final ResourceBindingManager bindingManager) {
 	this.connection = connection;
-	this.scope = scope;
 	state = State.disconnected;
 	this.iqManager = new IQManager();
 
@@ -135,7 +133,6 @@ public class XmppSession extends AbstractSession {
 	}
 
 	if (state == Session.State.disconnected) {
-	    scope.createAll();
 	    setState(Session.State.connecting);
 	    connection.connect();
 	    transaction = new AuthorizationTransaction(uri, password);
