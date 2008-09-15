@@ -2,10 +2,10 @@ package com.calclab.emiteuimodule.client;
 
 import static org.mockito.Mockito.mock;
 
-import com.calclab.emite.core.client.Xmpp;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
+import com.calclab.emite.im.client.Xmpp;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.xold_roster.XRoster;

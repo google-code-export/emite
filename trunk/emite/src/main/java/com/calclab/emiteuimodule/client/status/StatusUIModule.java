@@ -2,8 +2,8 @@ package com.calclab.emiteuimodule.client.status;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.core.client.Xmpp;
 import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.im.client.Xmpp;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;

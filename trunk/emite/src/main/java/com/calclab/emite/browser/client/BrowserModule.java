@@ -19,6 +19,7 @@ public class BrowserModule extends AbstractModule implements EntryPoint {
 
     public void onModuleLoad() {
 	Suco.install(this);
+	Suco.get(PageController.class).init();
     }
 
     @Override
