@@ -14,6 +14,12 @@ import com.google.gwt.user.client.WindowCloseListener;
 
 public class PageController {
 
+    private static final String PARAM_HOST = "emite.host";
+    private static final String PARAM_HTTPBASE = "emite.httpBase";
+    private static final String PARAM_PASSWORD = "emite.password";
+    private static final String PARAM_JID = "emite.user";
+    private static final String PARAM_CLOSE = "emite.onClose";
+    private static final String PARAM_PAUSE = "emite.pause";
     private final DomAssist assist;
     private final Connection connection;
     private final Session session;
@@ -24,19 +30,48 @@ public class PageController {
 	this.assist = assist;
     }
 
-    public void configureCloseAction() {
+    public void init() {
+	Log.debug("PageController - initializing...");
+	final String onCloseAction = assist.getMeta(PARAM_CLOSE, "pause");
+	prepareOnCloseAction(onCloseAction);
+	configureConnection();
+	prepareOnOpenAction(onCloseAction);
+	Log.debug("PageController - done.");
+    }
+
+    private void configureConnection() {
+	Log.debug("PageController - configuring connection...");
+	final String httpBase = assist.getMeta(PARAM_HTTPBASE, true);
+	final String host = assist.getMeta(PARAM_HOST, true);
+	Log.debug("CONNECTION PARAMS: " + httpBase + ", " + host);
+	connection.setSettings(new Bosh3Settings(httpBase, host));
+    }
+
+    private void pauseConnection() {
+	Log.debug("Pausing connection...");
+	final StreamSettings stream = session.pause();
+	if (stream != null) {
+	    final String user = session.getCurrentUser().toString();
+	    final SerializableMap map = new SerializableMap();
+	    map.put("rid", "" + stream.rid);
+	    map.put("sid", stream.sid);
+	    map.put("wait", stream.wait);
+	    map.put("inactivity", stream.inactivity);
+	    map.put("maxPause", stream.maxPause);
+	    map.put("user", user);
+	    final String serialized = map.serialize();
+	    Log.debug("Pausing session: " + serialized);
+	    Cookies.setCookie(PARAM_PAUSE, serialized);
+	}
+    }
+
+    private void prepareOnCloseAction(final String onCloseAction) {
 	Log.debug("PageController - configuring close action...");
-	final boolean shouldPause = "pause".equals(assist.getMeta("emite.onClose", "pause"));
+	final boolean shouldPause = "pause".equals(onCloseAction);
 	Window.addWindowCloseListener(new WindowCloseListener() {
 	    public void onWindowClosed() {
-		Log.debug("CLOSE!! Should pause? " + shouldPause);
 		if (shouldPause) {
-		    Log.debug("Pausing...");
-		    final StreamSettings stream = session.pause();
-		    if (stream != null) {
-			final String user = session.getCurrentUser().toString();
-			saveSettings(stream, user);
-		    }
+		    pauseConnection();
 		} else {
 		    session.logout();
 		    Log.debug("Logged out!");
@@ -49,39 +84,21 @@ public class PageController {
 	});
     }
 
-    public void configureConnection() {
-	Log.debug("PageController - configuring connection...");
-	final String httpBase = assist.getMeta("emite.httpBase", true);
-	final String host = assist.getMeta("emite.host", true);
-	Log.debug("CONNECTION PARAMS: " + httpBase + ", " + host);
-	connection.setSettings(new Bosh3Settings(httpBase, host));
-    }
-
-    public void init() {
-	Log.debug("PageController - initializing...");
-	configureCloseAction();
-	configureConnection();
-	Log.debug("PageController - done.");
-    }
-
-    public void resumeSession() {
-	final boolean shouldResume = "pause".equals(assist.getMeta("emite.onClose", "pause"));
-	final String pause = Cookies.getCookie("emite.pause");
+    private void prepareOnOpenAction(final String onCloseAction) {
+	Log.debug("PageController - configuring opening action...");
+	final boolean shouldResume = "pause".equals(assist.getMeta(PARAM_CLOSE, "pause"));
+	final String pause = Cookies.getCookie(PARAM_PAUSE);
 	if (shouldResume && pause != null) {
-	    Log.debug("Resume session: " + pause);
-	    Cookies.removeCookie("emite.pause");
-	    final SerializableMap map = SerializableMap.restore(pause);
-	    resume(map);
-	} else if (false) {
-	    final XmppURI jid = uri(assist.getMeta("emite.jid", false));
-	    final String password = assist.getMeta("emite.password", false);
-	    if (jid != null) {
-		session.login(jid, password);
-	    }
+	    resumeConnection(pause);
+	} else {
+	    tryToLogin();
 	}
     }
 
-    private void resume(final SerializableMap map) {
+    private void resumeConnection(final String pause) {
+	Log.debug("Resume session: " + pause);
+	Cookies.removeCookie(PARAM_PAUSE);
+	final SerializableMap map = SerializableMap.restore(pause);
 	final StreamSettings stream = new StreamSettings();
 	stream.rid = Integer.parseInt(map.get("rid"));
 	stream.sid = map.get("sid");
@@ -92,16 +109,14 @@ public class PageController {
 	session.resume(user, stream);
     }
 
-    private void saveSettings(final StreamSettings stream, final String user) {
-	final SerializableMap map = new SerializableMap();
-	map.put("rid", "" + stream.rid);
-	map.put("sid", stream.sid);
-	map.put("wait", stream.wait);
-	map.put("inactivity", stream.inactivity);
-	map.put("maxPause", stream.maxPause);
-	map.put("user", user);
-	final String serialized = map.serialize();
-	Log.debug("Pausing session: " + serialized);
-	Cookies.setCookie("emite.pause", serialized);
+    private void tryToLogin() {
+	final XmppURI jid = uri(assist.getMeta(PARAM_JID, false));
+	final String password = assist.getMeta(PARAM_PASSWORD, false);
+	if (jid != null) {
+	    Log.debug("Loging in...");
+	    session.login(jid, password);
+	} else {
+	    Log.debug("No action perfomer on open.");
+	}
     }
 }
