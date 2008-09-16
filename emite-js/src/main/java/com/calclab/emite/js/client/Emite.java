@@ -16,7 +16,7 @@ import com.calclab.suco.client.listener.Listener;
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.*;
 
 @Export
-@ExportPackage("emite")
+@ExportPackage("emitexmpp")
 public class Emite implements Exportable {
     private final Session session;
     private final Services services;

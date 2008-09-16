@@ -2,24 +2,21 @@
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Emite JS - ping</html>
+        <title>Emite JS - log</html>
         <script src="com.calclab.emite.js.EmiteJS.nocache.js"></script>
 
         <!-- Emite connection configuration -->
-        <meta id="emite.httpBase" content="proxy" />
+        <meta id="emite.httpBase" content="/com.calclab.emite.js.EmiteJS/proxy" />
         <meta id="emite.host" content="localhost" />
-        <!--
         <meta id="emite.user" content="dani@localhost/emitejs" />
         <meta id="emite.password" content="dani" />
-        -->
         <meta id="emite.onClose" content="login" />
 
         <script language='javascript'>
         function runLog() {
-          var emite = new emite.Emite();
-          alert(emite);
+          var emite = new emitexmpp.Emite();
           emite.log("this seems to work!");
-          emite.login("dani", "dani");
+          emite.login("dani@localhost/emitejs", "dani");
           }
 
         </script>
