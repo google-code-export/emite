@@ -5,7 +5,7 @@ import org.timepedia.exporter.client.ExportClosure;
 import org.timepedia.exporter.client.ExportPackage;
 
 @Export
-@ExportPackage("emite")
+@ExportPackage("emitexmpp")
 @ExportClosure
 public interface Callback {
     public void onEvent(String param);
