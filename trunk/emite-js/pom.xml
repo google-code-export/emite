@@ -19,14 +19,21 @@
       <groupId>com.calclab</groupId>
       <artifactId>emite</artifactId>
       <classifier>core</classifier>
-      <version>0.3.12</version>
+      <version>0.4.1</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>com.calclab</groupId>
       <artifactId>emite</artifactId>
       <classifier>browser</classifier>
-      <version>0.3.12</version>
+      <version>0.4.1</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>com.calclab</groupId>
+      <artifactId>emite</artifactId>
+      <classifier>proxies</classifier>
+      <version>0.4.1</version>
       <type>jar</type>
     </dependency>
     <dependency>
@@ -40,7 +47,6 @@
       </groupId>
       <artifactId>gwt-log</artifactId>
       <version>2.5.2</version>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
   <pluginRepositories>
@@ -86,7 +92,7 @@
         <version>2.0-beta23</version>
         <configuration>
           <style>${gwt.style}</style>
-          <runTarget>com.calclab.emite.js.EmiteJSEntryPoint</runTarget>
+          <runTarget>com.calclab.emite.js.EmiteJS/LogDemo.html?log_level=DEBUG</runTarget>
           <compileTargets>
             <compileTarget>com.calclab.emite.js.EmiteJS</compileTarget>
           </compileTargets>
