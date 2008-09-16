@@ -31,11 +31,10 @@ import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.suco.client.Suco;
-import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.container.DelegatedContainer;
+import com.calclab.suco.client.ioc.Container;
 
 @Deprecated
-public class Xmpp extends DelegatedContainer {
+public class Xmpp {
 
     /**
      * Create a Xmpp object and install the specified modules before (you need
@@ -51,34 +50,35 @@ public class Xmpp extends DelegatedContainer {
 
     private Session session;
     private final boolean isStarted;
+    private final Container container;
 
     protected Xmpp(final Container container) {
-	super(container);
+	this.container = container;
 	this.isStarted = false;
     }
 
     public ChatManager getChatManager() {
 	getSession();
-	return this.getInstance(ChatManager.class);
+	return container.getInstance(ChatManager.class);
     }
 
     public PresenceManager getPresenceManager() {
 	getSession();
-	return getInstance(PresenceManager.class);
+	return container.getInstance(PresenceManager.class);
     }
 
     public XRoster getRoster() {
 	getSession();
-	return getInstance(XRoster.class);
+	return container.getInstance(XRoster.class);
     }
 
     public XRosterManager getRosterManager() {
-	return getInstance(XRosterManager.class);
+	return container.getInstance(XRosterManager.class);
     }
 
     public Session getSession() {
 	if (this.session == null) {
-	    this.session = getInstance(Session.class);
+	    this.session = container.getInstance(Session.class);
 	}
 	return session;
     }
@@ -94,7 +94,7 @@ public class Xmpp extends DelegatedContainer {
     }
 
     public void setBoshSettings(final Bosh3Settings settings) {
-	getInstance(Connection.class).setSettings(settings);
+	container.getInstance(Connection.class).setSettings(settings);
     }
 
     public void start() {

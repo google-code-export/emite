@@ -14,8 +14,8 @@ import com.calclab.emite.widgets.client.room.ComentaWidget;
 import com.calclab.emite.widgets.client.room.RoomPresenceWidget;
 import com.calclab.emite.widgets.client.room.RoomWidget;
 import com.calclab.emite.widgets.client.roster.RosterWidget;
-import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.provider.Provider;
+import com.calclab.suco.client.ioc.Container;
+import com.calclab.suco.client.ioc.Provider;
 
 public class WidgetsRegistry {
     private final HashMap<String, Class<? extends EmiteWidget>> registry;

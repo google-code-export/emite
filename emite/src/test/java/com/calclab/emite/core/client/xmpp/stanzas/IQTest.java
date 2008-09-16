@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.emite.core.client.packet.NoPacket;
-import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 
 public class IQTest {
 

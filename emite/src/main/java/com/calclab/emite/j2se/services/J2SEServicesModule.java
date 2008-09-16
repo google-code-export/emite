@@ -26,9 +26,9 @@ import com.calclab.emite.core.client.services.ConnectorCallback;
 import com.calclab.emite.core.client.services.ConnectorException;
 import com.calclab.emite.core.client.services.ScheduledAction;
 import com.calclab.emite.core.client.services.Services;
-import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.module.Module;
-import com.calclab.suco.client.provider.Provider;
+import com.calclab.suco.client.ioc.Container;
+import com.calclab.suco.client.ioc.Provider;
+import com.calclab.suco.client.ioc.module.Module;
 
 public class J2SEServicesModule implements Services, Module {
     private final HttpConnector connector;
@@ -37,11 +37,7 @@ public class J2SEServicesModule implements Services, Module {
     private final TigaseXMLService xmler;
 
     public J2SEServicesModule() {
-	this(new PrintStreamConnectionListener(System.out));
-    }
-
-    public J2SEServicesModule(final HttpConnectorListener listener) {
-	this.connector = new HttpConnector(listener);
+	this.connector = new HttpConnector();
 	scheduler = new ThreadScheduler();
 	xmler = new TigaseXMLService();
     }
@@ -51,7 +47,8 @@ public class J2SEServicesModule implements Services, Module {
     }
 
     public void onLoad(final Container container) {
-	container.registerProvider(Services.class, new Provider<Services>() {
+	container.removeProvider(Services.class);
+	container.registerProvider(null, Services.class, new Provider<Services>() {
 	    public Services get() {
 		return J2SEServicesModule.this;
 	    }

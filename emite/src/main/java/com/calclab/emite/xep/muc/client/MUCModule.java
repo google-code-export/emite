@@ -22,11 +22,11 @@
 package com.calclab.emite.xep.muc.client;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
-import com.calclab.emite.core.client.xmpp.session.SessionScope;
+import com.calclab.emite.core.client.xmpp.session.SessionListener;
 import com.calclab.suco.client.Suco;
-import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.module.AbstractModule;
-import com.calclab.suco.client.provider.Factory;
+import com.calclab.suco.client.ioc.Container;
+import com.calclab.suco.client.ioc.module.AbstractModule;
+import com.calclab.suco.client.ioc.module.Factory;
 import com.google.gwt.core.client.EntryPoint;
 
 public class MUCModule extends AbstractModule implements EntryPoint {
@@ -44,7 +44,8 @@ public class MUCModule extends AbstractModule implements EntryPoint {
 
     @Override
     protected void onLoad() {
-	register(SessionScope.class, new Factory<RoomManager>(RoomManager.class) {
+	register(SessionListener.class, new Factory<RoomManager>(RoomManager.class) {
+	    @Override
 	    public RoomManager create() {
 		return new RoomManagerImpl($(Session.class));
 	    }

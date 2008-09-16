@@ -9,7 +9,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.widgets.client.chat.AbstractChatController;
 import com.calclab.emite.xep.muc.client.RoomManager;
-import com.calclab.suco.client.provider.Provider;
+import com.calclab.suco.client.ioc.Provider;
 
 public class RoomController extends AbstractChatController {
     private XmppURI chatJID;

@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.emite.xep.disco.client.DiscoveryManager;
 import com.calclab.suco.testing.listener.MockListener;
 
 public class DiscoveryManagerTest {

@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.packet.MatcherFactory;
 import com.calclab.emite.core.client.packet.Packet;
-import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Message.Type;
 
 public class MessageTest {

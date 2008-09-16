@@ -1,5 +1,10 @@
 package com.calclab.emite.im.client.roster;
 
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,10 +13,6 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.listener.EventTester;
 import com.calclab.suco.testing.listener.MockListener;
-
-import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.*;
-
-import static org.mockito.Mockito.*;
 
 public class SubscriptionManagerTests {
 

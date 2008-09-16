@@ -12,6 +12,7 @@ import com.calclab.emite.core.client.services.Services;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Event0;
 import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.log.Logger;
 
 public class Bosh3Connection implements Connection {
     private int activeConnections;
@@ -41,18 +42,21 @@ public class Bosh3Connection implements Connection {
 	this.listener = new ConnectorCallback() {
 
 	    public void onError(final String request, final Throwable throwable) {
-		errors++;
-		if (errors > 2) {
-		    running = false;
-		    onError.fire("Exception thrown: " + throwable.toString());
-		} else {
-		    Log.error("Error retry: " + throwable);
-		    send(request);
+		if (running) {
+		    Logger.debug("Connection error (total: {0}): {1}", errors, throwable);
+		    errors++;
+		    if (errors > 2) {
+			running = false;
+			onError.fire("Connection error: " + throwable.toString());
+		    } else {
+			Log.error("Error retry: " + throwable);
+			send(request);
+		    }
 		}
 	    }
 
 	    public void onResponseReceived(final int statusCode, final String content) {
-		errors--;
+		errors = 0;
 		activeConnections--;
 		if (running) {
 		    if (statusCode != 200) {

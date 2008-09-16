@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.calclab.emite.xep.muc.client.Occupant;
-
 public class RoomOccupantTest {
 
     @Test

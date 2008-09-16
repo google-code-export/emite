@@ -6,7 +6,7 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.browser.client.DomAssist;
 import com.calclab.emite.browser.client.PageController;
 import com.calclab.emite.widgets.client.base.EmiteWidget;
-import com.calclab.suco.client.provider.Provider;
+import com.calclab.suco.client.ioc.Provider;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -52,13 +52,14 @@ public class AutoDeploy {
 
     private void setParams(final Element element, final EmiteWidget widget) {
 	final String[] paramNames = widget.getParamNames();
-	if (paramNames != null)
+	if (paramNames != null) {
 	    for (final String name : paramNames) {
 		Log.debug("Param name of widget: " + name);
 		final String value = element.getAttribute("data-" + name);
 		Log.debug("Value: " + value);
 		widget.setParam(name, value);
 	    }
+	}
     }
 
 }

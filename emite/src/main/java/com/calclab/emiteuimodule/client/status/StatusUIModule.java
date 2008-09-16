@@ -8,9 +8,9 @@ import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.xep.muc.client.RoomManager;
-import com.calclab.suco.client.module.AbstractModule;
-import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scope.SingletonScope;
+import com.calclab.suco.client.ioc.decorator.Singleton;
+import com.calclab.suco.client.ioc.module.AbstractModule;
+import com.calclab.suco.client.ioc.module.Factory;
 
 public class StatusUIModule extends AbstractModule {
 
@@ -20,7 +20,8 @@ public class StatusUIModule extends AbstractModule {
 
     @Override
     public void onLoad() {
-	register(SingletonScope.class, new Factory<StatusUI>(StatusUI.class) {
+	register(Singleton.class, new Factory<StatusUI>(StatusUI.class) {
+	    @Override
 	    public StatusUI create() {
 		final StatusUIPresenter presenter = new StatusUIPresenter($$(Xmpp.class), $(Session.class),
 			$(PresenceManager.class), $$(XRosterManager.class), $$(ChatManager.class),

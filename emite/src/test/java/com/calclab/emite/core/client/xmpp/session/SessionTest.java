@@ -17,8 +17,6 @@ import com.calclab.emite.core.client.packet.Packet;
 import com.calclab.emite.core.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.core.client.xmpp.sasl.AuthorizationTransaction;
 import com.calclab.emite.core.client.xmpp.sasl.SASLManager;
-import com.calclab.emite.core.client.xmpp.session.Session;
-import com.calclab.emite.core.client.xmpp.session.XmppSession;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
@@ -26,8 +24,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
 import com.calclab.suco.client.listener.Listener;
-import com.calclab.suco.testing.listener.MockListener;
 import com.calclab.suco.testing.listener.EventTester;
+import com.calclab.suco.testing.listener.MockListener;
 
 public class SessionTest {
 

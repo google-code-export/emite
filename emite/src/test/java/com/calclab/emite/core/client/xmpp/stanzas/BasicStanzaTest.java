@@ -8,8 +8,6 @@ import static org.junit.Assert.assertSame;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.packet.NoPacket;
-import com.calclab.emite.core.client.xmpp.stanzas.BasicStanza;
-import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 
 public class BasicStanzaTest {
     @Test

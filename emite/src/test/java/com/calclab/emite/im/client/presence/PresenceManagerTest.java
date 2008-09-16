@@ -13,13 +13,11 @@ import org.junit.Test;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
-import com.calclab.emite.im.client.presence.PresenceManager;
-import com.calclab.emite.im.client.presence.PresenceManagerImpl;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.listener.MockListener;
 import com.calclab.suco.testing.listener.EventTester;
+import com.calclab.suco.testing.listener.MockListener;
 
 public class PresenceManagerTest {
 

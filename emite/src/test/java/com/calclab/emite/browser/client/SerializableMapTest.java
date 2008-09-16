@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.calclab.emite.browser.client.SerializableMap;
-
 public class SerializableMapTest {
 
     @Test

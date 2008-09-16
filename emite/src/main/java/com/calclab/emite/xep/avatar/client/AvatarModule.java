@@ -22,10 +22,10 @@
 package com.calclab.emite.xep.avatar.client;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
-import com.calclab.emite.core.client.xmpp.session.SessionScope;
 import com.calclab.suco.client.Suco;
-import com.calclab.suco.client.module.AbstractModule;
-import com.calclab.suco.client.provider.Factory;
+import com.calclab.suco.client.ioc.decorator.Singleton;
+import com.calclab.suco.client.ioc.module.AbstractModule;
+import com.calclab.suco.client.ioc.module.Factory;
 import com.google.gwt.core.client.EntryPoint;
 
 // FIXME - doc
@@ -46,7 +46,8 @@ public class AvatarModule extends AbstractModule implements EntryPoint {
 
     @Override
     public void onLoad() {
-	register(SessionScope.class, new Factory<AvatarManager>(AvatarManager.class) {
+	register(Singleton.class, new Factory<AvatarManager>(AvatarManager.class) {
+	    @Override
 	    public AvatarManager create() {
 		return new AvatarManager($(Session.class));
 	    }

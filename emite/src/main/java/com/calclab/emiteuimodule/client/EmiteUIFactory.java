@@ -25,7 +25,10 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.Xmpp;
+import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager;
+import com.calclab.emite.xep.chatstate.client.StateManager;
+import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.emiteuimodule.client.chat.ChatStatePresenter;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.chat.ChatUIPanel;
@@ -42,20 +45,27 @@ import com.calclab.emiteuimodule.client.roster.RosterUIPanel;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.provider.Provider;
+import com.calclab.suco.client.ioc.Provider;
 
 public class EmiteUIFactory {
     private final I18nTranslationService i18n;
     private final Xmpp xmpp;
     private final StatusUI statusUI;
     private final Provider<SoundManager> soundManagerProvider;
+    private final RoomManager roomManager;
+    private final StateManager stateManager;
+    private final AvatarManager avatarManager;
 
     public EmiteUIFactory(final Xmpp xmpp, final I18nTranslationService i18n, final StatusUI statusUI,
-	    final Provider<SoundManager> soundManagerProvider) {
+	    final Provider<SoundManager> soundManagerProvider, final RoomManager roomManager,
+	    final StateManager stateManager, final AvatarManager avatarManager) {
 	this.xmpp = xmpp;
 	this.i18n = i18n;
 	this.statusUI = statusUI;
 	this.soundManagerProvider = soundManagerProvider;
+	this.roomManager = roomManager;
+	this.stateManager = stateManager;
+	this.avatarManager = avatarManager;
     }
 
     public ChatUI createChatUI(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
@@ -70,7 +80,7 @@ public class EmiteUIFactory {
     public MultiChatPresenter createMultiChat(final MultiChatCreationParam param) {
 	final RosterUIPresenter roster = createRosterUI(param.getAvatarProvider());
 	final MultiChatPresenter presenter = new MultiChatPresenter(xmpp, i18n, this, param, roster, statusUI,
-		soundManagerProvider);
+		soundManagerProvider, roomManager, stateManager, avatarManager);
 	final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), (RosterUIPanel) roster.getView(),
 		statusUI, i18n, presenter);
 	presenter.init(panel);

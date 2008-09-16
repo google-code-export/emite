@@ -30,6 +30,7 @@ import com.calclab.emite.im.client.Xmpp;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
+import com.calclab.emite.xep.chatstate.client.StateManager;
 import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.emiteuimodule.client.dialog.QuickTipsHelper;
 import com.calclab.emiteuimodule.client.room.RoomUIManager;
@@ -38,10 +39,10 @@ import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.sound.SoundModule;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.emiteuimodule.client.status.StatusUIModule;
-import com.calclab.suco.client.module.AbstractModule;
-import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scope.NoScope;
-import com.calclab.suco.client.scope.SingletonScope;
+import com.calclab.suco.client.ioc.decorator.NoDecoration;
+import com.calclab.suco.client.ioc.decorator.Singleton;
+import com.calclab.suco.client.ioc.module.AbstractModule;
+import com.calclab.suco.client.ioc.module.Factory;
 
 public class EmiteUIModule extends AbstractModule {
 
@@ -51,11 +52,13 @@ public class EmiteUIModule extends AbstractModule {
 
     @Override
     public void onLoad() {
-	register(SingletonScope.class, new Factory<I18nTranslationService>(I18nTranslationService.class) {
+	register(Singleton.class, new Factory<I18nTranslationService>(I18nTranslationService.class) {
+	    @Override
 	    public I18nTranslationService create() {
 		return new I18nTranslationServiceMocked();
 	    }
 	}, new Factory<QuickTipsHelper>(QuickTipsHelper.class) {
+	    @Override
 	    public QuickTipsHelper create() {
 		return new QuickTipsHelper();
 	    }
@@ -68,14 +71,16 @@ public class EmiteUIModule extends AbstractModule {
 	// Only for UI test (comment during release):
 	// install(new OpenChatTestingModule());
 
-	register(SingletonScope.class, new Factory<EmiteUIFactory>(EmiteUIFactory.class) {
+	register(Singleton.class, new Factory<EmiteUIFactory>(EmiteUIFactory.class) {
+	    @Override
 	    public EmiteUIFactory create() {
 		return new EmiteUIFactory($(Xmpp.class), $(I18nTranslationService.class), $(StatusUI.class),
-			$$(SoundManager.class));
+			$$(SoundManager.class), $(RoomManager.class), $(StateManager.class), $(AvatarManager.class));
 	    }
 	});
 
-	register(NoScope.class, new Factory<EmiteUIDialog>(EmiteUIDialog.class) {
+	register(NoDecoration.class, new Factory<EmiteUIDialog>(EmiteUIDialog.class) {
+	    @Override
 	    public EmiteUIDialog create() {
 		return new EmiteUIDialog($(Connection.class), $(Session.class), $(ChatManager.class),
 			$(EmiteUIFactory.class), $(RoomManager.class), $(XRoster.class), $(AvatarManager.class),

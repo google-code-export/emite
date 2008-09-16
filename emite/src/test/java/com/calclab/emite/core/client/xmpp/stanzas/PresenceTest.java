@@ -7,7 +7,6 @@ import static org.junit.Assert.assertSame;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.packet.Packet;
-import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 

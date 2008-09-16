@@ -3,7 +3,6 @@ package com.calclab.emite.im.client.chat;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.im.client.chat.AbstractChat;
 import com.calclab.emite.im.client.chat.Chat.Status;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.listener.MockListener;

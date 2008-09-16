@@ -1,5 +1,12 @@
 package com.calclab.emite.im.client.roster;
 
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+
 import java.util.Collection;
 import java.util.Set;
 
@@ -10,9 +17,6 @@ import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.listener.MockListener;
-import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class RosterTests {
 
