@@ -6,8 +6,6 @@ import static org.junit.Assert.assertSame;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.im.client.chat.Chat;
-import com.calclab.emite.im.client.chat.ChatManagerImpl;
 import com.calclab.emite.im.client.chat.Chat.Status;
 import com.calclab.suco.testing.listener.MockListener;
 

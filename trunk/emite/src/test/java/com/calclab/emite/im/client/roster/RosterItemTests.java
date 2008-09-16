@@ -1,5 +1,6 @@
 package com.calclab.emite.im.client.roster;
 
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -10,7 +11,6 @@ import com.calclab.emite.core.client.packet.Packet;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.j2se.services.TigaseXMLService;
 import com.calclab.emite.testing.EmiteAsserts;
-import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.*;
 
 public class RosterItemTests {
 

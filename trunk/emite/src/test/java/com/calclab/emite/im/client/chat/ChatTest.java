@@ -6,8 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.im.client.chat.AbstractChat;
-import com.calclab.emite.im.client.chat.ChatImpl;
 import com.calclab.emite.im.client.chat.Chat.Status;
 import com.calclab.emite.testing.MockedSession;
 

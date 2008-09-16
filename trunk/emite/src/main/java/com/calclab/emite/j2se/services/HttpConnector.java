@@ -32,6 +32,7 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.services.ConnectorCallback;
 import com.calclab.emite.core.client.services.ConnectorException;
+import com.calclab.suco.client.log.Logger;
 
 public class HttpConnector {
 
@@ -45,17 +46,13 @@ public class HttpConnector {
 
     }
 
-    private final HttpConnectorListener listener;
-
-    public HttpConnector(final HttpConnectorListener listener) {
-	this.listener = listener;
+    public HttpConnector() {
     }
 
     public synchronized void send(final String httpBase, final String xml, final ConnectorCallback callback)
 	    throws ConnectorException {
-	final long timeBegin = System.currentTimeMillis();
 	final String id = HttpConnectorID.getNext();
-	listener.onStart(id);
+	Logger.debug("Connector [{0}] send: {1}", id, xml);
 	final HttpClientParams params = new HttpClientParams();
 	params.setConnectionManagerTimeout(10000);
 	final HttpClient client = new HttpClient(params);
@@ -68,11 +65,9 @@ public class HttpConnector {
 
 		try {
 		    post.setRequestEntity(new StringRequestEntity(xml, "text/xml", "utf-8"));
-		    listener.onSend(id, xml);
 		    status = client.executeMethod(post);
 		    response = post.getResponseBodyAsString();
 		} catch (final Exception e) {
-		    listener.onError(id, "exception " + e);
 		    callback.onError(xml, e);
 		    e.printStackTrace();
 		} finally {
@@ -80,11 +75,10 @@ public class HttpConnector {
 		}
 
 		if (status == HttpStatus.SC_OK) {
-		    listener.onFinish(id, System.currentTimeMillis() - timeBegin);
-		    listener.onResponse(id, response);
+		    Logger.debug("Connector [{0}] receive: {1}", id, response);
 		    callback.onResponseReceived(post.getStatusCode(), response);
 		} else {
-		    listener.onError(id, "bad status");
+		    Logger.debug("Connector [{0}] bad status: {1}", id, status);
 		    callback.onError(xml, new Exception("bad http status " + status));
 		}
 	    }

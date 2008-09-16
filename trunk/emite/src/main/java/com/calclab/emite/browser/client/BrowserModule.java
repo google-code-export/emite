@@ -3,9 +3,9 @@ package com.calclab.emite.browser.client;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.suco.client.Suco;
-import com.calclab.suco.client.module.AbstractModule;
-import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scope.SingletonScope;
+import com.calclab.suco.client.ioc.decorator.Singleton;
+import com.calclab.suco.client.ioc.module.AbstractModule;
+import com.calclab.suco.client.ioc.module.Factory;
 import com.google.gwt.core.client.EntryPoint;
 
 /**
@@ -24,11 +24,13 @@ public class BrowserModule extends AbstractModule implements EntryPoint {
 
     @Override
     protected void onLoad() {
-	register(SingletonScope.class, new Factory<DomAssist>(DomAssist.class) {
+	register(Singleton.class, new Factory<DomAssist>(DomAssist.class) {
+	    @Override
 	    public DomAssist create() {
 		return new DomAssist();
 	    }
 	}, new Factory<PageController>(PageController.class) {
+	    @Override
 	    public PageController create() {
 		return new PageController($(Connection.class), $(Session.class), $(DomAssist.class));
 	    }

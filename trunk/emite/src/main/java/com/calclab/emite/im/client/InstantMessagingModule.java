@@ -30,10 +30,10 @@ import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.im.client.xold_roster.XRosterManagerImpl;
 import com.calclab.suco.client.Suco;
-import com.calclab.suco.client.container.Container;
-import com.calclab.suco.client.module.AbstractModule;
-import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scope.SingletonScope;
+import com.calclab.suco.client.ioc.Container;
+import com.calclab.suco.client.ioc.decorator.Singleton;
+import com.calclab.suco.client.ioc.module.AbstractModule;
+import com.calclab.suco.client.ioc.module.Factory;
 import com.google.gwt.core.client.EntryPoint;
 
 /**
@@ -59,25 +59,30 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
 
     @Override
     public void onLoad() {
-	register(SingletonScope.class, new Factory<XRoster>(XRoster.class) {
+	register(Singleton.class, new Factory<XRoster>(XRoster.class) {
+	    @Override
 	    public XRoster create() {
 		return new XRoster();
 	    }
 	}, new Factory<ChatManager>(ChatManager.class) {
+	    @Override
 	    public ChatManagerImpl create() {
 		return new ChatManagerImpl($(Session.class));
 	    }
 	}, new Factory<XRosterManager>(XRosterManager.class) {
+	    @Override
 	    public XRosterManager create() {
 		return new XRosterManagerImpl($(Session.class), $(XRoster.class));
 	    }
 	}, new Factory<PresenceManager>(PresenceManager.class) {
+	    @Override
 	    public PresenceManager create() {
 		return new PresenceManagerImpl($(Session.class), $(XRosterManager.class));
 	    }
 	});
 
-	register(SingletonScope.class, new Factory<Xmpp>(Xmpp.class) {
+	register(Singleton.class, new Factory<Xmpp>(Xmpp.class) {
+	    @Override
 	    public Xmpp create() {
 		return new Xmpp($(Container.class));
 	    }

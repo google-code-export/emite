@@ -1,5 +1,7 @@
 package com.calclab.emite.browser.client;
 
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.bosh.Bosh3Settings;
 import com.calclab.emite.core.client.bosh.Connection;
@@ -9,8 +11,6 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
-
-import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
 public class PageController {
 

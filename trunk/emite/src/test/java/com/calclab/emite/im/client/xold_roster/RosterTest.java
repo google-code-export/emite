@@ -15,7 +15,6 @@ import org.junit.Test;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.im.client.roster.SubscriptionState;
-import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.suco.testing.listener.MockListener;
 
 public class RosterTest {

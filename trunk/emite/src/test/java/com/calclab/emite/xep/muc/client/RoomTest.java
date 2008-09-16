@@ -16,8 +16,6 @@ import com.calclab.emite.im.client.chat.AbstractChat;
 import com.calclab.emite.im.client.chat.AbstractChatTest;
 import com.calclab.emite.im.client.chat.Chat.Status;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.emite.xep.muc.client.Occupant;
-import com.calclab.emite.xep.muc.client.Room;
 import com.calclab.suco.testing.listener.MockListener;
 import com.calclab.suco.testing.listener.MockListener2;
 

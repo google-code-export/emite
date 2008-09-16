@@ -5,9 +5,9 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.calclab.emiteuimodule.client.room.RoomUIManager;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.module.AbstractModule;
-import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scope.SingletonScope;
+import com.calclab.suco.client.ioc.decorator.Singleton;
+import com.calclab.suco.client.ioc.module.AbstractModule;
+import com.calclab.suco.client.ioc.module.Factory;
 
 public class SoundModule extends AbstractModule {
     public SoundModule() {
@@ -16,7 +16,8 @@ public class SoundModule extends AbstractModule {
 
     @Override
     public void onLoad() {
-	register(SingletonScope.class, new Factory<SoundManager>(SoundManager.class) {
+	register(Singleton.class, new Factory<SoundManager>(SoundManager.class) {
+	    @Override
 	    public SoundManager create() {
 		// Waiting for RosterUIModule:
 		final RosterUIPresenter rosterUIPresenter = null;

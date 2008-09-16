@@ -1,15 +1,13 @@
 package com.calclab.emite.core.client.xmpp.sasl;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.bosh.ConnectionTestHelper;
 import com.calclab.emite.core.client.packet.Packet;
-import com.calclab.emite.core.client.xmpp.sasl.AuthorizationTransaction;
-import com.calclab.emite.core.client.xmpp.sasl.SASLManager;
 import com.calclab.suco.testing.listener.MockListener;
 
 public class SASLManagerTest {

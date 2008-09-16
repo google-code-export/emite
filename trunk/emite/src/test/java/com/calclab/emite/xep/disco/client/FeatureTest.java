@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.emite.core.client.packet.Packet;
-import com.calclab.emite.xep.disco.client.Feature;
 
 public class FeatureTest {
 

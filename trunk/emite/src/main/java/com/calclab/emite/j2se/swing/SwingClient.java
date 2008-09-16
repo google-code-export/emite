@@ -25,6 +25,7 @@ import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
 import java.awt.BorderLayout;
 import java.util.Collection;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;

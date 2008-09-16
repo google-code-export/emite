@@ -39,7 +39,7 @@ import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
-import com.calclab.suco.client.provider.Provider;
+import com.calclab.suco.client.ioc.Provider;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
 

@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.j2se.services.TigaseXMLService;
-import com.calclab.emite.xep.disco.client.Identity;
 
 public class IdentityTest {
     private TigaseXMLService xmler;

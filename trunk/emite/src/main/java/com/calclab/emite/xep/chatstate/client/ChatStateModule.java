@@ -21,11 +21,11 @@
  */
 package com.calclab.emite.xep.chatstate.client;
 
-import com.calclab.emite.core.client.xmpp.session.SessionScope;
+import com.calclab.emite.core.client.xmpp.session.SessionListener;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.suco.client.Suco;
-import com.calclab.suco.client.module.AbstractModule;
-import com.calclab.suco.client.provider.Factory;
+import com.calclab.suco.client.ioc.module.AbstractModule;
+import com.calclab.suco.client.ioc.module.Factory;
 import com.google.gwt.core.client.EntryPoint;
 
 /**
@@ -41,7 +41,8 @@ public class ChatStateModule extends AbstractModule implements EntryPoint {
 
     @Override
     public void onLoad() {
-	register(SessionScope.class, new Factory<StateManager>(StateManager.class) {
+	register(SessionListener.class, new Factory<StateManager>(StateManager.class) {
+	    @Override
 	    public StateManager create() {
 		return new StateManager($(ChatManager.class));
 	    }

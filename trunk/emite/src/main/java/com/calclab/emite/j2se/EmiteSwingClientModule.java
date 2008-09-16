@@ -35,22 +35,21 @@ import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.swing.LoginPanel;
 import com.calclab.emite.j2se.swing.SwingClient;
 import com.calclab.emite.j2se.swing.login.LoginControl;
-import com.calclab.emite.j2se.swing.roster.RosterPanel;
 import com.calclab.emite.j2se.swing.roster.RosterControl;
+import com.calclab.emite.j2se.swing.roster.RosterPanel;
 import com.calclab.emite.xep.disco.client.DiscoveryModule;
 import com.calclab.emite.xep.muc.client.MUCModule;
 import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.suco.client.Suco;
-import com.calclab.suco.client.module.AbstractModule;
-import com.calclab.suco.client.module.ModuleManager.ProviderRegisterStrategy;
-import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scope.SingletonScope;
+import com.calclab.suco.client.ioc.decorator.Singleton;
+import com.calclab.suco.client.ioc.module.AbstractModule;
+import com.calclab.suco.client.ioc.module.Factory;
 
 public class EmiteSwingClientModule extends AbstractModule {
 
     public static void main(final String args[]) {
-	Suco.install(ProviderRegisterStrategy.registerOrOverride, new EmiteCoreModule(), new J2SEServicesModule(),
-		new InstantMessagingModule(), new MUCModule(), new DiscoveryModule(), new EmiteSwingClientModule());
+	Suco.install(new EmiteCoreModule(), new J2SEServicesModule(), new InstantMessagingModule(), new MUCModule(),
+		new DiscoveryModule(), new EmiteSwingClientModule());
 	Suco.get(SwingClient.class);
     }
 
@@ -60,18 +59,21 @@ public class EmiteSwingClientModule extends AbstractModule {
 
     @Override
     protected void onLoad() {
-	register(SingletonScope.class, new Factory<SwingClient>(SwingClient.class) {
+	register(Singleton.class, new Factory<SwingClient>(SwingClient.class) {
+	    @Override
 	    public SwingClient create() {
 		return new SwingClient($(JFrame.class), $(LoginPanel.class), $(RosterPanel.class),
 			$(ChatManager.class), $(RoomManager.class));
 	    }
 	});
 
-	register(SingletonScope.class, new Factory<FrameControl>(FrameControl.class) {
+	register(Singleton.class, new Factory<FrameControl>(FrameControl.class) {
+	    @Override
 	    public FrameControl create() {
 		return new FrameControl($(Session.class));
 	    }
 	}, new Factory<JFrame>(JFrame.class) {
+	    @Override
 	    public JFrame create() {
 		final JFrame frame = new JFrame("emite swing client");
 		$(FrameControl.class).setView(frame);
@@ -79,21 +81,25 @@ public class EmiteSwingClientModule extends AbstractModule {
 	    }
 	});
 
-	register(SingletonScope.class, new Factory<LoginControl>(LoginControl.class) {
+	register(Singleton.class, new Factory<LoginControl>(LoginControl.class) {
+	    @Override
 	    public LoginControl create() {
 		return new LoginControl($(Connection.class), $(Session.class), $(PresenceManager.class));
 	    }
 	}, new Factory<LoginPanel>(LoginPanel.class) {
+	    @Override
 	    public LoginPanel create() {
 		final LoginPanel panel = new LoginPanel($(JFrame.class));
 		$(LoginControl.class).setView(panel);
 		return panel;
 	    }
 	}, new Factory<RosterControl>(RosterControl.class) {
+	    @Override
 	    public RosterControl create() {
 		return new RosterControl($(Session.class), $(XRosterManager.class), $(XRoster.class));
 	    }
 	}, new Factory<RosterPanel>(RosterPanel.class) {
+	    @Override
 	    public RosterPanel create() {
 		final RosterPanel panel = new RosterPanel($(JFrame.class));
 		$(RosterControl.class).setView(panel);

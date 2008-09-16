@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.bosh.ConnectionTestHelper;
-import com.calclab.emite.core.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.testing.listener.MockListener;

@@ -4,7 +4,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.module.AbstractModule;
+import com.calclab.suco.client.ioc.module.AbstractModule;
 
 public class OpenChatTestingModule extends AbstractModule {
 

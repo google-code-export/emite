@@ -10,8 +10,6 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.emite.xep.chatstate.client.ChatStateManager;
-import com.calclab.emite.xep.chatstate.client.StateManager;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager.ChatState;
 import com.calclab.suco.testing.listener.MockListener;
 

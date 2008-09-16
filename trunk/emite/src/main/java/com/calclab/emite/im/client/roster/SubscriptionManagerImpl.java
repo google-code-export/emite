@@ -11,11 +11,9 @@ public class SubscriptionManagerImpl implements SubscriptionManager {
 
     private final Session session;
     private final Event<XmppURI> onSubscriptionRequested;
-    private final Roster roster;
 
     public SubscriptionManagerImpl(final Session session, final Roster roster) {
 	this.session = session;
-	this.roster = roster;
 	this.onSubscriptionRequested = new Event<XmppURI>("subscriptionManager:onSubscriptionRequested");
 
 	session.onPresence(new Listener<Presence>() {

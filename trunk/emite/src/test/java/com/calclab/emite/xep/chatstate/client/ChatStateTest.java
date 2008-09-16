@@ -9,7 +9,6 @@ import org.mockito.Mockito;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatImpl;
-import com.calclab.emite.xep.chatstate.client.ChatStateManager;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager.ChatState;
 import com.calclab.suco.testing.listener.MockListener;
 

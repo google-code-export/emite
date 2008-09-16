@@ -51,7 +51,7 @@ import com.calclab.emiteuimodule.client.room.RoomUI;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.provider.Provider;
+import com.calclab.suco.client.ioc.Provider;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.client.listener.Listener2;
@@ -63,7 +63,6 @@ public class MultiChatPresenter {
     private final I18nTranslationService i18n;
     private UserChatOptions userChatOptions;
     private MultiChatPanel view;
-    private final Xmpp xmpp;
     private final String roomHost;
     private final RosterUIPresenter roster;
     private int openedChats;
@@ -76,22 +75,24 @@ public class MultiChatPresenter {
     private final XRosterManager xRosterManager;
     private final StatusUI statusUI;
     private final Provider<SoundManager> soundManagerProvider;
+    private final AvatarManager avatarManager;
 
     public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final EmiteUIFactory factory,
 	    final MultiChatCreationParam param, final RosterUIPresenter roster, final StatusUI statusUI,
-	    final Provider<SoundManager> soundManagerProvider) {
-	this.xmpp = xmpp;
+	    final Provider<SoundManager> soundManagerProvider, final RoomManager roomManager,
+	    final StateManager stateManager, final AvatarManager avatarManager) {
 	this.i18n = i18n;
 	this.factory = factory;
 	this.roster = roster;
 	this.statusUI = statusUI;
 	this.soundManagerProvider = soundManagerProvider;
+	this.roomManager = roomManager;
+	this.stateManager = stateManager;
+	this.avatarManager = avatarManager;
 	setUserChatOptions(param.getUserChatOptions());
 	roomHost = param.getRoomHost();
 	chatManager = xmpp.getChatManager();
-	roomManager = xmpp.getInstance(RoomManager.class);
 	xRosterManager = xmpp.getRosterManager();
-	stateManager = xmpp.getInstance(StateManager.class);
 	openedChats = 0;
 	onChatAttended = new Event<String>("onChatAttended");
 	onChatUnattendedWithActivity = new Event<String>("onChatUnattendedWithActivity");
@@ -286,7 +287,7 @@ public class MultiChatPresenter {
     }
 
     public void setVCardAvatar(final String photoBinary) {
-	xmpp.getInstance(AvatarManager.class).setVCardAvatar(photoBinary);
+	avatarManager.setVCardAvatar(photoBinary);
     }
 
     public void show() {

@@ -22,9 +22,9 @@
 package com.calclab.emiteui.client.demo;
 
 import com.calclab.emiteui.client.DemoParameters;
-import com.calclab.suco.client.module.AbstractModule;
-import com.calclab.suco.client.provider.Factory;
-import com.calclab.suco.client.scope.SingletonScope;
+import com.calclab.suco.client.ioc.decorator.Singleton;
+import com.calclab.suco.client.ioc.module.AbstractModule;
+import com.calclab.suco.client.ioc.module.Factory;
 
 public class DemoModule extends AbstractModule {
 
@@ -34,11 +34,13 @@ public class DemoModule extends AbstractModule {
 
     @Override
     public void onLoad() {
-	register(SingletonScope.class, new Factory<DemoParameters>(DemoParameters.class) {
+	register(Singleton.class, new Factory<DemoParameters>(DemoParameters.class) {
+	    @Override
 	    public DemoParameters create() {
 		return new DemoParameters();
 	    }
 	}, new Factory<EmiteDemoUI>(EmiteDemoUI.class) {
+	    @Override
 	    public EmiteDemoUI create() {
 		return new EmiteDemoUI($(DemoParameters.class));
 	    }
