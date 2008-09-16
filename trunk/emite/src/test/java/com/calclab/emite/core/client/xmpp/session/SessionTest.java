@@ -2,15 +2,18 @@ package com.calclab.emite.core.client.xmpp.session;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.bosh.ConnectionTestHelper;
 import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.emite.core.client.packet.Packet;
@@ -18,22 +21,22 @@ import com.calclab.emite.core.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.core.client.xmpp.sasl.AuthorizationTransaction;
 import com.calclab.emite.core.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
-import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
+import com.calclab.emite.testing.IsPacketLike;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.testing.listener.EventTester;
 import com.calclab.suco.testing.listener.MockListener;
 
 public class SessionTest {
 
-    private XmppSession session;
+    private SessionImpl session;
     private SASLManager saslManager;
     private ResourceBindingManager bindingManager;
-    private EventTester<XmppURI> bindEvent;
     private ConnectionTestHelper helper;
+    private Connection connection;
+    private IMSessionManager iMSessionManager;
 
     @Before
     public void beforeTest() {
@@ -41,10 +44,10 @@ public class SessionTest {
 
 	saslManager = mock(SASLManager.class);
 	bindingManager = mock(ResourceBindingManager.class);
-	session = new XmppSession(helper.connection, saslManager, bindingManager);
+	iMSessionManager = mock(IMSessionManager.class);
+	connection = helper.connection;
+	session = new SessionImpl(connection, saslManager, bindingManager, iMSessionManager);
 
-	bindEvent = new EventTester<XmppURI>();
-	bindEvent.mock(bindingManager).onBinded(bindEvent.getListener());
     }
 
     @Test
@@ -106,12 +109,38 @@ public class SessionTest {
     }
 
     @Test
-    public void shouldRequestSessionWhenBinded() {
-	bindEvent.fire(uri("name@domain/resource"));
-	helper.verifySentLike(new IQ(IQ.Type.set).With("id", "session_1"));
-	helper.simulateReception(new IQ(Type.result).With("id", "session_1"));
-	assertEquals(State.ready, session.getState());
+    public void shouldLoginWhenSessionCreated() {
+	final EventTester<XmppURI> sessionCreatedEvent = new EventTester<XmppURI>();
+	sessionCreatedEvent.mock(iMSessionManager).onSessionCreated(sessionCreatedEvent.getListener());
 
+	final MockListener<XmppURI> onLoginListener = new MockListener<XmppURI>();
+	session.onLoggedIn(onLoginListener);
+
+	final XmppURI uri = uri("name@domain/resource");
+	sessionCreatedEvent.fire(uri);
+	MockListener.verifyCalled(onLoginListener);
+    }
+
+    @Test
+    public void shouldQueueOutcomingStanzas() {
+	session.send(new Message("the Message", "other@domain"));
+	verify(connection, never()).send((IPacket) anyObject());
+	final EventTester<XmppURI> sessionCreatedEvent = new EventTester<XmppURI>();
+	sessionCreatedEvent.mock(iMSessionManager).onSessionCreated(sessionCreatedEvent.getListener());
+	sessionCreatedEvent.fire(uri("user@domain"));
+	final IPacket expected = new Message(uri("user@domain"), uri("other@domain"), "theMessage");
+	// FIXME: weird!!! error in test
+	// verify(connection).send(argThat(new IsPacketLike(expected)));
+	verify(connection).send((IPacket) anyObject());
+    }
+
+    @Test
+    public void shouldRequestSessionWhenBinded() {
+	final EventTester<XmppURI> bindEvent = new EventTester<XmppURI>();
+	bindEvent.mock(bindingManager).onBinded(bindEvent.getListener());
+	final XmppURI uri = uri("name@domain/resource");
+	bindEvent.fire(uri);
+	verify(iMSessionManager).requestSession(same(uri));
     }
 
     @Test

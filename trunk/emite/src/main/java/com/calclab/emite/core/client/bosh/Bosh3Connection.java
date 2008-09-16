@@ -119,6 +119,10 @@ public class Bosh3Connection implements Connection {
 	return stream;
     }
 
+    public void removeOnStanzaReceived(final Listener<IPacket> listener) {
+	onStanzaReceived.remove(listener);
+    }
+
     public void restartStream() {
 	createBody();
 	body.setAttribute("xmlns:xmpp", "urn:xmpp:xbosh");

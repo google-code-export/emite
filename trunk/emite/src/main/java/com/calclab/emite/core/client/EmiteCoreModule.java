@@ -8,7 +8,8 @@ import com.calclab.emite.core.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.core.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.SessionListener;
-import com.calclab.emite.core.client.xmpp.session.XmppSession;
+import com.calclab.emite.core.client.xmpp.session.SessionImpl;
+import com.calclab.emite.core.client.xmpp.session.IMSessionManager;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.ioc.decorator.Singleton;
 import com.calclab.suco.client.ioc.module.AbstractModule;
@@ -36,11 +37,16 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 	    public Connection create() {
 		return new Bosh3Connection($(Services.class));
 	    }
+	}, new Factory<IMSessionManager>(IMSessionManager.class) {
+	    @Override
+	    public IMSessionManager create() {
+		return new IMSessionManager($(Connection.class));
+	    }
 	}, new Factory<Session>(Session.class) {
 	    @Override
 	    public Session create() {
-		final XmppSession session = new XmppSession($(Connection.class), $(SASLManager.class),
-			$(ResourceBindingManager.class));
+		final SessionImpl session = new SessionImpl($(Connection.class), $(SASLManager.class),
+			$(ResourceBindingManager.class), $(IMSessionManager.class));
 		return session;
 	    }
 

@@ -19,6 +19,8 @@ public interface Connection {
 
     public abstract StreamSettings pause();
 
+    public abstract void removeOnStanzaReceived(Listener<IPacket> listener);
+
     public abstract void restartStream();
 
     public abstract boolean resume(StreamSettings settings);

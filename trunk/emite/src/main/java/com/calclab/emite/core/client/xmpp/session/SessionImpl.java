@@ -21,6 +21,7 @@
  */
 package com.calclab.emite.core.client.xmpp.session;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -39,18 +40,20 @@ import com.calclab.suco.client.listener.Listener;
 /**
  * Default Session implementation. Use Session interface instead.
  */
-public class XmppSession extends AbstractSession {
+public class SessionImpl extends AbstractSession implements Session {
     private State state;
     private XmppURI userURI;
     private final Connection connection;
     private AuthorizationTransaction transaction;
     private final IQManager iqManager;
+    private final ArrayList<IPacket> queuedStanzas;
 
-    public XmppSession(final Connection connection, final SASLManager saslManager,
-	    final ResourceBindingManager bindingManager) {
+    public SessionImpl(final Connection connection, final SASLManager saslManager,
+	    final ResourceBindingManager bindingManager, final IMSessionManager iMSessionManager) {
 	this.connection = connection;
 	state = State.disconnected;
 	this.iqManager = new IQManager();
+	this.queuedStanzas = new ArrayList<IPacket>();
 
 	connection.onStanzaReceived(new Listener<IPacket>() {
 	    public void onEvent(final IPacket stanza) {
@@ -96,21 +99,16 @@ public class XmppSession extends AbstractSession {
 
 	bindingManager.onBinded(new Listener<XmppURI>() {
 	    public void onEvent(final XmppURI uri) {
-		userURI = uri;
-		final IQ iq = new IQ(IQ.Type.set, userURI, userURI.getHostURI());
-		iq.Includes("session", "urn:ietf:params:xml:ns:xmpp-session");
+		iMSessionManager.requestSession(uri);
+	    }
+	});
 
-		sendIQ("session", iq, new Listener<IPacket>() {
-		    public void onEvent(final IPacket received) {
-			if (IQ.isSuccess(received)) {
-			    setLoggedIn(uri);
-			}
-		    }
-		});
+	iMSessionManager.onSessionCreated(new Listener<XmppURI>() {
+	    public void onEvent(final XmppURI uri) {
+		setLoggedIn(uri);
 	    }
 
 	});
-
     }
 
     public XmppURI getCurrentUser() {
@@ -160,24 +158,38 @@ public class XmppSession extends AbstractSession {
     }
 
     public void send(final IPacket packet) {
-	connection.send(packet);
+	if (state == State.loggedIn || state == State.ready) {
+	    packet.setAttribute("from", userURI.toString());
+	    connection.send(packet);
+	} else {
+	    queuedStanzas.add(packet);
+	}
     }
 
     public void sendIQ(final String category, final IQ iq, final Listener<IPacket> listener) {
 	final String id = iqManager.register(category, listener);
 	iq.setAttribute("id", id);
-	iq.setAttribute("from", userURI.toString());
 	send(iq);
     }
 
     void setState(final Session.State newState) {
 	this.state = newState;
+	if (state == State.ready) {
+	    sendQueuedStanzas();
+	}
 	onStateChanged.fire(state);
     }
 
     private void disconnect() {
 	connection.disconnect();
 	setState(Session.State.disconnected);
+    }
+
+    private void sendQueuedStanzas() {
+	for (final IPacket packet : queuedStanzas) {
+	    send(packet);
+	}
+	queuedStanzas.clear();
     }
 
     private void setLoggedIn(final XmppURI userURI) {

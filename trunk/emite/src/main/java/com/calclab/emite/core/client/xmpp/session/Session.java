@@ -79,7 +79,8 @@ public interface Session {
     public abstract void onIQ(Listener<IQ> listener);
 
     /**
-     * The given listener is called when the user has logged in into the session
+     * The given listener is called when the user has logged in into the
+     * session.
      * 
      * @param listener
      *            receives the user's logged in URI
@@ -140,19 +141,26 @@ public interface Session {
     public abstract void resume(XmppURI userURI, StreamSettings settings);
 
     /**
-     * Send a stanza to the server.
+     * Send a stanza to the server. This method overrides the "from" uri
+     * attribute.
+     * 
+     * <b>All the stanzas sent using this method BEFORE the LoggedIn state are
+     * queued and sent AFTER Ready state.</b>
      * 
      * @see sendIQ
-     * @param packet
-     *            the packet to be sent
+     * @param stanza
+     *            the stanza to be sent
      */
-    public abstract void send(final IPacket packet);
+    public abstract void send(final IPacket stanza);
 
     /**
      * A helper method that allows to send a IQ stanza and attach a listener to
      * the response. This method overrides (if present) the given IQ id using
      * the category provided and a internal sequential number. This method also
      * overrides (if present) the given 'from' attribute
+     * 
+     * <b>All the stanzas sent using this method BEFORE the LoggedIn state are
+     * queued and sent AFTER Ready state.</b>
      * 
      * @param category
      *            a uniqe-per-component string that allows the session to
