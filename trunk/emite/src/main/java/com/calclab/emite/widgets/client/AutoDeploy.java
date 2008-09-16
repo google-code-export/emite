@@ -19,10 +19,7 @@ public class AutoDeploy {
 	this.registry = registry;
 	this.domAssist = domAssist;
 
-	controller.configureConnection();
-	controller.configureCloseAction();
 	deployWidgets();
-	controller.resumeSession();
     }
 
     public void deploy(final String divClass, final Provider<? extends EmiteWidget> provider) {
