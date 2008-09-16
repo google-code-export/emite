@@ -28,17 +28,36 @@ public class Message extends BasicStanza {
 	chat, error, groupchat, headlines, normal
     }
 
-    public Message() {
-	this(null, null, null);
-    }
-
+    /**
+     * Create a message by delegation. Not for normal use
+     * 
+     * @param iPacket
+     */
     public Message(final IPacket iPacket) {
 	super(iPacket);
     }
 
+    /**
+     * Create a message with a body
+     * 
+     * @param body
+     *            the body of the message
+     */
     public Message(final String body) {
 	this();
 	setBody(body);
+    }
+
+    /**
+     * Easy to use constructor to create a chat message with body and recipient
+     * 
+     * @param body
+     *            the message body
+     * @param to
+     *            the message recipient
+     */
+    public Message(final String body, final String to) {
+	this(null, XmppURI.uri(to), body, Type.chat);
     }
 
     /**
@@ -65,6 +84,10 @@ public class Message extends BasicStanza {
 	setFrom(fromUri);
 	setTo(toURI);
 	setBody(message);
+    }
+
+    Message() {
+	this(null, null, null);
     }
 
     public Message Body(final String body) {

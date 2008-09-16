@@ -11,120 +11,101 @@ import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
 
 public class PresenceManagerImpl implements PresenceManager {
-	private Presence delayedPresence;
-	private Presence ownPresence;
-	private final Event<Presence> onOwnPresenceChanged;
-	private final Event<Presence> onPresenceReceived;
-	private final Session session;
+    private Presence ownPresence;
+    private final Event<Presence> onOwnPresenceChanged;
+    private final Event<Presence> onPresenceReceived;
+    private final Session session;
 
-	public PresenceManagerImpl(final Session session,
-			final XRosterManager xRosterManager) {
-		this.session = session;
-		this.ownPresence = new Presence(Type.unavailable, null, null);
-		this.onPresenceReceived = new Event<Presence>(
-				"presenceManager:onPresenceReceived");
-		this.onOwnPresenceChanged = new Event<Presence>(
-				"presenceManager:onOwnPresenceChanged");
+    public PresenceManagerImpl(final Session session, final XRosterManager xRosterManager) {
+	this.session = session;
+	this.ownPresence = new Presence(Type.unavailable, null, null);
+	this.onPresenceReceived = new Event<Presence>("presenceManager:onPresenceReceived");
+	this.onOwnPresenceChanged = new Event<Presence>("presenceManager:onOwnPresenceChanged");
 
-		// Upon connecting to the server and becoming an active resource, a
-		// client SHOULD request the roster before sending initial presence
+	// Upon connecting to the server and becoming an active resource, a
+	// client SHOULD request the roster before sending initial presence
 
-		xRosterManager.onRosterReady(new Listener<XRoster>() {
-			public void onEvent(final XRoster parameter) {
-				final Presence initialPresence = new Presence(session
-						.getCurrentUser());
-				broadcastPresence(initialPresence);
-				if (delayedPresence != null) {
-					delayedPresence.setFrom(session.getCurrentUser());
-					broadcastPresence(delayedPresence);
-					delayedPresence = null;
-				}
-			}
-		});
+	xRosterManager.onRosterReady(new Listener<XRoster>() {
+	    public void onEvent(final XRoster parameter) {
+		final Presence initialPresence = new Presence(session.getCurrentUser());
+		broadcastPresence(initialPresence);
+	    }
+	});
 
-		session.onPresence(new Listener<Presence>() {
-			public void onEvent(final Presence presence) {
-				switch (presence.getType()) {
-				case probe:
-					session.send(ownPresence);
-					break;
-				case error:
-					// FIXME: what should we do?
-					Log.warn("Error presence!!!");
-					break;
-				default:
-					onPresenceReceived.fire(presence);
-					break;
-				}
-			}
-		});
-		session.onLoggedOut(new Listener<XmppURI>() {
-			public void onEvent(final XmppURI user) {
-				logOut(user);
-			}
-		});
-	}
-
-	/**
-	 * Return the current logged in user presence or a Presence with type
-	 * unavailable if logged out
-	 * 
-	 * @return
-	 */
-	public Presence getOwnPresence() {
-		return ownPresence;
-	}
-
-	public void onOwnPresenceChanged(final Listener<Presence> listener) {
-		onOwnPresenceChanged.add(listener);
-	}
-
-	public void onPresenceReceived(final Listener<Presence> listener) {
-		onPresenceReceived.add(listener);
-	}
-
-	/**
-	 * Set the logged in user's presence. If the user is not logged in, the
-	 * presence is sent just after the initial presence
-	 * 
-	 * @see http://www.xmpp.org/rfcs/rfc3921.html#presence
-	 * 
-	 * @param presence
-	 */
-	public void setOwnPresence(final Presence presence) {
-		if (session.isLoggedIn()) {
-			broadcastPresence(presence);
-		} else {
-			delayedPresence = presence;
+	session.onPresence(new Listener<Presence>() {
+	    public void onEvent(final Presence presence) {
+		switch (presence.getType()) {
+		case probe:
+		    session.send(ownPresence);
+		    break;
+		case error:
+		    // FIXME: what should we do?
+		    Log.warn("Error presence!!!");
+		    break;
+		default:
+		    onPresenceReceived.fire(presence);
+		    break;
 		}
-	}
+	    }
+	});
+	session.onLoggedOut(new Listener<XmppURI>() {
+	    public void onEvent(final XmppURI user) {
+		logOut(user);
+	    }
+	});
+    }
 
+    /**
+     * Return the current logged in user presence or a Presence with type
+     * unavailable if logged out
+     * 
+     * @return
+     */
+    public Presence getOwnPresence() {
+	return ownPresence;
+    }
 
-	private void broadcastPresence(final Presence presence) {
-		presence.setFrom(session.getCurrentUser());
-		session.send(presence);
-		ownPresence = presence;
-		onOwnPresenceChanged.fire(ownPresence);
-	}
+    public void onOwnPresenceChanged(final Listener<Presence> listener) {
+	onOwnPresenceChanged.add(listener);
+    }
 
-	/**
-	 * 5.1.5. Unavailable Presence (rfc 3921)
-	 * 
-	 * Before ending its session with a server, a client SHOULD gracefully
-	 * become unavailable by sending a final presence stanza that possesses no
-	 * 'to' attribute and that possesses a 'type' attribute whose value is
-	 * "unavailable" (optionally, the final presence stanza MAY contain one or
-	 * more <status/> elements specifying the reason why the user is no longer
-	 * available).
-	 * 
-	 * @param userURI
-	 */
-	private void logOut(final XmppURI userURI) {
-		final Presence presence = new Presence(Type.unavailable, userURI,
-				userURI.getHostURI());
-		delayedPresence = null;
-		broadcastPresence(presence);
-	}
+    public void onPresenceReceived(final Listener<Presence> listener) {
+	onPresenceReceived.add(listener);
+    }
 
+    /**
+     * Set the logged in user's presence. If the user is not logged in, the
+     * presence is sent just after the initial presence
+     * 
+     * @see http://www.xmpp.org/rfcs/rfc3921.html#presence
+     * 
+     * @param presence
+     */
+    public void setOwnPresence(final Presence presence) {
+	broadcastPresence(presence);
+    }
+
+    private void broadcastPresence(final Presence presence) {
+	session.send(presence);
+	ownPresence = presence;
+	onOwnPresenceChanged.fire(ownPresence);
+    }
+
+    /**
+     * 5.1.5. Unavailable Presence (rfc 3921)
+     * 
+     * Before ending its session with a server, a client SHOULD gracefully
+     * become unavailable by sending a final presence stanza that possesses no
+     * 'to' attribute and that possesses a 'type' attribute whose value is
+     * "unavailable" (optionally, the final presence stanza MAY contain one or
+     * more <status/> elements specifying the reason why the user is no longer
+     * available).
+     * 
+     * @param userURI
+     */
+    private void logOut(final XmppURI userURI) {
+	final Presence presence = new Presence(Type.unavailable, userURI, userURI.getHostURI());
+	broadcastPresence(presence);
+    }
 
 }
