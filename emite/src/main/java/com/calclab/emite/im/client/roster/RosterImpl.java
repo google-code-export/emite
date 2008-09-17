@@ -39,9 +39,11 @@ public class RosterImpl implements Roster {
 
 	this.onRosterReady = new Event<Collection<RosterItem>>("roster:onRosterReady");
 
-	session.onLoggedIn(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI user) {
-		requestRoster(user);
+	session.onStateChanged(new Listener<Session.State>() {
+	    public void onEvent(final Session.State state) {
+		if (state == Session.State.loggedIn) {
+		    requestRoster(session.getCurrentUser());
+		}
 	    }
 	});
 

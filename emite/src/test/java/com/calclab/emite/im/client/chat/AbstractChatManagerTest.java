@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Chat.State;
 import com.calclab.emite.testing.MockedSession;
@@ -21,22 +22,13 @@ public abstract class AbstractChatManagerTest {
     public void beforeTests() {
 	session = new MockedSession();
 	manager = createChatManager();
-	manager.logIn(MYSELF);
+	session.login(MYSELF, null);
     }
 
     @Test
     public void everyChatOpenedByUserShouldHaveThread() {
 	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
 	assertNotNull(chat.getThread());
-    }
-
-    @Test
-    public void shouldLockChatsWhenLoggedOut() {
-	final Chat chat = manager.openChat(uri("other@domain"), null, null);
-	final MockListener<State> listener = new MockListener<State>();
-	chat.onStateChanged(listener);
-	session.logout();
-	MockListener.verifyCalledWith(listener, State.locked);
     }
 
     @Test
@@ -57,11 +49,20 @@ public abstract class AbstractChatManagerTest {
     }
 
     @Test
+    public void shouldLockChatsWhenLoggedOut() {
+	final Chat chat = manager.openChat(uri("other@domain"), null, null);
+	final MockListener<State> listener = new MockListener<State>();
+	chat.onStateChanged(listener);
+	session.logout();
+	MockListener.verifyCalledWith(listener, State.locked);
+    }
+
+    @Test
     public void shouldUnlockChatsIfLoggedWithSameUserEvenWithDifferentResource() {
 	final Chat chat = manager.openChat(uri("other@domain"), null, null);
-	manager.logOut();
+	session.setState(Session.State.disconnected);
 	assertEquals(Chat.State.locked, chat.getState());
-	manager.logIn(XmppURI.uri(MYSELF.getNode(), MYSELF.getHost(), "other-resource"));
+	session.login(XmppURI.uri(MYSELF.getNode(), MYSELF.getHost(), "other-resource"), null);
 	assertEquals(Chat.State.ready, chat.getState());
     }
 

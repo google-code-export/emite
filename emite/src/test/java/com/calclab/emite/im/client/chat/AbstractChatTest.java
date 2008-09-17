@@ -39,7 +39,7 @@ public abstract class AbstractChatTest {
     @Test
     public void shouldNotSendMessagesWhenStatusIsNotReady() {
 	final AbstractChat chat = getChat();
-	chat.setStatus(State.locked);
+	chat.setState(State.locked);
 	chat.send(new Message("a message"));
 	session.verifyNotSent("<message />");
     }

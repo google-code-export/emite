@@ -20,6 +20,7 @@ import com.calclab.emite.core.client.packet.Packet;
 import com.calclab.emite.core.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.core.client.xmpp.sasl.AuthorizationTransaction;
 import com.calclab.emite.core.client.xmpp.sasl.SASLManager;
+import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
@@ -111,12 +112,12 @@ public class SessionTest {
 	final EventTester<XmppURI> sessionCreatedEvent = new EventTester<XmppURI>();
 	sessionCreatedEvent.mock(iMSessionManager).onSessionCreated(sessionCreatedEvent.getListener());
 
-	final MockListener<XmppURI> onLoginListener = new MockListener<XmppURI>();
-	session.onLoggedIn(onLoginListener);
+	final MockListener<State> onStateChanged = new MockListener<State>();
+	session.onStateChanged(onStateChanged);
 
 	final XmppURI uri = uri("name@domain/resource");
 	sessionCreatedEvent.fire(uri);
-	MockListener.verifyCalled(onLoginListener);
+	MockListener.verifyCalledWith(onStateChanged, State.loggedIn, State.ready);
     }
 
     @Test

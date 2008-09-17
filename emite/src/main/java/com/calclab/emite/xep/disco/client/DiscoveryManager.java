@@ -45,11 +45,13 @@ public class DiscoveryManager {
 	this.session = session;
 	this.onReady = new Event<DiscoveryManager>("discoveryManager:onReady");
 	this.filterQuery = MatcherFactory.byNameAndXMLNS("query", "http://jabber.org/protocol/disco#info");
-	session.onLoggedIn(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI uri) {
-		sendDiscoQuery(uri);
-	    }
 
+	session.onStateChanged(new Listener<Session.State>() {
+	    public void onEvent(final Session.State state) {
+		if (state == Session.State.loggedIn) {
+		    sendDiscoQuery(session.getCurrentUser());
+		}
+	    }
 	});
     }
 

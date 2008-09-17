@@ -33,7 +33,7 @@ public class RoomTest extends AbstractChatTest {
 	roomURI = uri("room@domain/nick");
 	session = new MockedSession(userURI);
 	room = new Room(session, roomURI);
-	room.setStatus(State.ready);
+	room.setState(State.ready);
     }
 
     @Override
