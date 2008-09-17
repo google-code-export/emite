@@ -67,14 +67,6 @@ public class RosterPanel extends JPanel {
 	}
     }
 
-    public static interface RosterPanelListener {
-	void onAddRosterItem(String uri, String name);
-
-	void onRemoveItem(RosterItem item);
-
-	void onStartChat(RosterItem item);
-    }
-
     private JPanel creationPanel;
     private JDialog currentDialog;
     private JList list;
@@ -113,6 +105,10 @@ public class RosterPanel extends JPanel {
 
     public void onRemoveItem(final Listener<RosterItem> listener) {
 	onRemoveItem.add(listener);
+    }
+
+    public void onStartChat(final Listener<XmppURI> listener) {
+	onStartChat.add(listener);
     }
 
     public void refresh() {

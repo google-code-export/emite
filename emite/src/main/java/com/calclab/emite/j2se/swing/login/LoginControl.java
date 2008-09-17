@@ -1,32 +1,18 @@
 package com.calclab.emite.j2se.swing.login;
 
-import java.util.Date;
-
 import com.calclab.emite.core.client.bosh.Bosh3Settings;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
-import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.j2se.swing.ConnectionConfiguration;
-import com.calclab.emite.j2se.swing.LoginPanel;
-import com.calclab.emite.j2se.swing.LoginPanel.LoginParams;
+import com.calclab.emite.j2se.swing.login.LoginPanel.LoginParams;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.client.listener.Listener0;
 
 public class LoginControl {
 
-    private final Connection connection;
-    private final Session session;
-    private final PresenceManager presenceManager;
+    public LoginControl(final Connection connection, final Session session, final LoginPanel loginPanel) {
 
-    public LoginControl(final Connection connection, final Session session, final PresenceManager presenceManager) {
-	this.connection = connection;
-	this.session = session;
-	this.presenceManager = presenceManager;
-    }
-
-    public void setView(final LoginPanel loginPanel) {
 	loginPanel.onLogin(new Listener<LoginParams>() {
 	    public void onEvent(final LoginParams p) {
 		final String resource = "emite-swing";
@@ -40,8 +26,6 @@ public class LoginControl {
 		    uri = XmppURI.uri(p.userName, p.domain, resource);
 		}
 		session.login(uri, password);
-		presenceManager.setOwnPresence(Presence.build("do not disturb at: " + new Date().toString(),
-			Presence.Show.dnd));
 	    }
 	});
 
@@ -62,6 +46,10 @@ public class LoginControl {
 	    }
 	});
 
+	addConfigurations(loginPanel);
+    }
+
+    private void addConfigurations(final LoginPanel loginPanel) {
 	loginPanel.addConfiguration(new ConnectionConfiguration("empty", "", "", "", ""));
 	loginPanel.addConfiguration(new ConnectionConfiguration("admin @ local openfire",
 		"http://localhost:5280/http-bind/", "localhost", "admin", "easyeasy"));
