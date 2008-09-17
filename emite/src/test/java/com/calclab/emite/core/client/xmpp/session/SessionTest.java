@@ -20,11 +20,9 @@ import com.calclab.emite.core.client.packet.Packet;
 import com.calclab.emite.core.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.core.client.xmpp.sasl.AuthorizationTransaction;
 import com.calclab.emite.core.client.xmpp.sasl.SASLManager;
-import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.testing.IsPacketLike;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.testing.listener.EventTester;
 import com.calclab.suco.testing.listener.MockListener;
@@ -128,8 +126,9 @@ public class SessionTest {
 	final EventTester<XmppURI> sessionCreatedEvent = new EventTester<XmppURI>();
 	sessionCreatedEvent.mock(iMSessionManager).onSessionCreated(sessionCreatedEvent.getListener());
 	sessionCreatedEvent.fire(uri("user@domain"));
-	final IPacket expected = new Message(uri("user@domain"), uri("other@domain"), "theMessage");
 	// FIXME: weird!!! error in test
+	// final IPacket expected = new Message(uri("user@domain"),
+	// uri("other@domain"), "theMessage");
 	// verify(connection).send(argThat(new IsPacketLike(expected)));
 	verify(connection).send((IPacket) anyObject());
     }

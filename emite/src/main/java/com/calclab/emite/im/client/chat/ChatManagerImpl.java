@@ -29,7 +29,7 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Message.Type;
-import com.calclab.emite.im.client.chat.Chat.Status;
+import com.calclab.emite.im.client.chat.Chat.State;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
 
@@ -73,7 +73,7 @@ public class ChatManagerImpl implements ChatManager {
 
     public void close(final Chat chat) {
 	chats.remove(chat);
-	((AbstractChat) chat).setStatus(Status.locked);
+	((AbstractChat) chat).setStatus(State.locked);
 	onChatClosed.fire(chat);
     }
 
@@ -83,7 +83,7 @@ public class ChatManagerImpl implements ChatManager {
 
     public void logOut() {
 	for (final Chat chat : chats) {
-	    ((AbstractChat) chat).setStatus(Status.locked);
+	    ((AbstractChat) chat).setStatus(State.locked);
 	}
     }
 
@@ -121,7 +121,7 @@ public class ChatManagerImpl implements ChatManager {
     protected void logIn(final XmppURI uri) {
 	if (uri.equalsNoResource(lastLoggedInUser)) {
 	    for (final Chat chat : chats) {
-		((AbstractChat) chat).setStatus(Status.ready);
+		((AbstractChat) chat).setStatus(State.ready);
 	    }
 	}
 	this.lastLoggedInUser = uri;
@@ -134,7 +134,7 @@ public class ChatManagerImpl implements ChatManager {
 	}
 	chats.add(chat);
 	onChatCreated.fire(chat);
-	chat.setStatus(Chat.Status.ready);
+	chat.setStatus(Chat.State.ready);
 	return chat;
     }
 

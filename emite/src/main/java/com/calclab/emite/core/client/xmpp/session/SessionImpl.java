@@ -24,7 +24,6 @@ package com.calclab.emite.core.client.xmpp.session;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.bosh.StreamSettings;
 import com.calclab.emite.core.client.packet.IPacket;
@@ -36,6 +35,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.log.Logger;
 
 /**
  * Default Session implementation. Use Session interface instead.
@@ -78,7 +78,7 @@ public class SessionImpl extends AbstractSession implements Session {
 
 	connection.onError(new Listener<String>() {
 	    public void onEvent(final String msg) {
-		Log.debug("ERROR: " + msg);
+		Logger.debug("ERROR: {0}", msg);
 		setState(State.error);
 		disconnect();
 	    }
@@ -134,7 +134,7 @@ public class SessionImpl extends AbstractSession implements Session {
 	    setState(Session.State.connecting);
 	    connection.connect();
 	    transaction = new AuthorizationTransaction(uri, password);
-	    Log.debug("Sending auth transaction: " + transaction);
+	    Logger.debug("Sending auth transaction: {0}", transaction);
 	}
     }
 
@@ -162,6 +162,7 @@ public class SessionImpl extends AbstractSession implements Session {
 	    packet.setAttribute("from", userURI.toString());
 	    connection.send(packet);
 	} else {
+	    Logger.debug("session queuing stanza {0}", packet);
 	    queuedStanzas.add(packet);
 	}
     }
@@ -186,6 +187,7 @@ public class SessionImpl extends AbstractSession implements Session {
     }
 
     private void sendQueuedStanzas() {
+	Logger.debug("Sending queued stanzas....");
 	for (final IPacket packet : queuedStanzas) {
 	    send(packet);
 	}

@@ -179,20 +179,19 @@ public class RosterImpl implements Roster {
     }
 
     private void requestRoster(final XmppURI user) {
-	session.sendIQ("roster", new IQ(IQ.Type.get, user, null).WithQuery("jabber:iq:roster"),
-		new Listener<IPacket>() {
-		    public void onEvent(final IPacket received) {
-			if (IQ.isSuccess(received)) {
-			    itemsByJID.clear();
-			    final List<? extends IPacket> children = received.getFirstChild("query").getChildren();
-			    for (final IPacket child : children) {
-				final RosterItem item = RosterItem.parse(child);
-				addItem(item);
-			    }
-			    onRosterReady.fire(getItems());
-			}
+	session.sendIQ("roster", new IQ(IQ.Type.get, null).WithQuery("jabber:iq:roster"), new Listener<IPacket>() {
+	    public void onEvent(final IPacket received) {
+		if (IQ.isSuccess(received)) {
+		    itemsByJID.clear();
+		    final List<? extends IPacket> children = received.getFirstChild("query").getChildren();
+		    for (final IPacket child : children) {
+			final RosterItem item = RosterItem.parse(child);
+			addItem(item);
 		    }
+		    onRosterReady.fire(getItems());
+		}
+	    }
 
-		});
+	});
     }
 }

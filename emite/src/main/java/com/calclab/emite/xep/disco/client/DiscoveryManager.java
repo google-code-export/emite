@@ -58,7 +58,7 @@ public class DiscoveryManager {
     }
 
     public void sendDiscoQuery(final XmppURI uri) {
-	final IQ iq = new IQ(Type.get, uri, uri.getHostURI());
+	final IQ iq = new IQ(Type.get, uri.getHostURI());
 	iq.addQuery("http://jabber.org/protocol/disco#info");
 	session.sendIQ("disco", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket response) {

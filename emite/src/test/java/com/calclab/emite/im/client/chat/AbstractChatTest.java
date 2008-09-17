@@ -3,7 +3,7 @@ package com.calclab.emite.im.client.chat;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.im.client.chat.Chat.Status;
+import com.calclab.emite.im.client.chat.Chat.State;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.listener.MockListener;
 
@@ -39,7 +39,7 @@ public abstract class AbstractChatTest {
     @Test
     public void shouldNotSendMessagesWhenStatusIsNotReady() {
 	final AbstractChat chat = getChat();
-	chat.setStatus(Status.locked);
+	chat.setStatus(State.locked);
 	chat.send(new Message("a message"));
 	session.verifyNotSent("<message />");
     }

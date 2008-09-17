@@ -410,8 +410,8 @@ public class MultiChatPresenter {
     }
 
     private void addStateListener(final Chat chat) {
-	chat.onStateChanged(new Listener<com.calclab.emite.im.client.chat.Chat.Status>() {
-	    public void onEvent(final com.calclab.emite.im.client.chat.Chat.Status parameter) {
+	chat.onStateChanged(new Listener<com.calclab.emite.im.client.chat.Chat.State>() {
+	    public void onEvent(final com.calclab.emite.im.client.chat.Chat.State parameter) {
 		final ChatUI chatUI = getChatUI(chat);
 		if (chatUI != null && chatUI.equals(currentChat)) {
 		    updateViewWithChatStatus(chat, chatUI);
