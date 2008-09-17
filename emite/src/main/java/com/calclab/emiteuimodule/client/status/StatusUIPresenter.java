@@ -29,7 +29,6 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
-import com.calclab.emite.im.client.Xmpp;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
@@ -57,15 +56,13 @@ public class StatusUIPresenter implements StatusUI {
     private final Event<StatusUI> onCloseAllConfirmed;
     private final Event<String> onUserColorChanged;
     private final Event<SubscriptionMode> onUserSubscriptionModeChanged;
-    private final Provider<Xmpp> xmppProvider;
     private final Provider<XRosterManager> rosterManagerProvider;
     private final Provider<ChatManager> chatManagerProvider;
     private final Provider<RoomManager> roomManagerProvider;
 
-    public StatusUIPresenter(final Provider<Xmpp> xmpp, final Session session, final PresenceManager presenceManager,
+    public StatusUIPresenter(final Session session, final PresenceManager presenceManager,
 	    final Provider<XRosterManager> xRosterManager, final Provider<ChatManager> chatManager,
 	    final Provider<RoomManager> roomManager, final I18nTranslationService i18n) {
-	this.xmppProvider = xmpp;
 	this.session = session;
 	this.presenceManager = presenceManager;
 	this.rosterManagerProvider = xRosterManager;
@@ -189,7 +186,7 @@ public class StatusUIPresenter implements StatusUI {
 	    loginIfnecessary(show, ownPresence.getStatusText());
 	    break;
 	case offline:
-	    xmppProvider.get().logout();
+	    session.logout();
 	    break;
 	}
 	view.setOwnPresence(ownPresence);
@@ -217,10 +214,10 @@ public class StatusUIPresenter implements StatusUI {
     private void loginIfnecessary(final Show status, final String statusText) {
 	assert userChatOptions != null;
 	final XmppURI userJid = userChatOptions.getUserJid();
-	switch (xmppProvider.get().getSession().getState()) {
+	switch (session.getState()) {
 	case disconnected:
-	    xmppProvider.get().login(XmppURI.uri(userJid.getNode(), userJid.getHost(), userChatOptions.getResource()),
-		    userChatOptions.getUserPassword(), status, statusText);
+	    session.login(XmppURI.uri(userJid.getNode(), userJid.getHost(), userChatOptions.getResource()),
+		    userChatOptions.getUserPassword());
 	    break;
 	case authorized:
 	case connecting:

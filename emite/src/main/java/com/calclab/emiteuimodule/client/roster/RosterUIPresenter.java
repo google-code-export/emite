@@ -33,8 +33,6 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
-import com.calclab.emite.im.client.Xmpp;
-import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.im.client.roster.SubscriptionState;
 import com.calclab.emite.im.client.xold_roster.XRoster;
@@ -66,7 +64,6 @@ public class RosterUIPresenter {
     private RosterUIView view;
     private final HashMap<XmppURI, ChatUserUI> rosterMap;
     private final I18nTranslationService i18n;
-    private final PresenceManager presenceManager;
     private final XRoster xRoster;
     private final XRosterManager xRosterManager;
     private final AvatarProvider avatarProvider;
@@ -75,13 +72,13 @@ public class RosterUIPresenter {
     private final Event<XmppURI> onOpenChat;
     private final Event<String> onUserAlert;
 
-    public RosterUIPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final AvatarProvider avatarProvider) {
+    public RosterUIPresenter(final XRoster roster, final XRosterManager rosterManager,
+	    final I18nTranslationService i18n, final AvatarProvider avatarProvider) {
 	this.i18n = i18n;
 	this.avatarProvider = avatarProvider;
 	rosterMap = new HashMap<XmppURI, ChatUserUI>();
-	presenceManager = xmpp.getPresenceManager();
-	xRosterManager = xmpp.getRosterManager();
-	xRoster = xmpp.getRoster();
+	this.xRosterManager = rosterManager;
+	this.xRoster = roster;
 	showUnavailableItems = false;
 	this.onOpenChat = new Event<XmppURI>("onOpenChat");
 	this.onUserAlert = new Event<String>("onUserAlert");
@@ -392,12 +389,6 @@ public class RosterUIPresenter {
 	    public void onEvent(final XmppURI userUnsubscribed) {
 		Log.info("UNSUBS RECEIVED");
 		view.showMessageAboutUnsuscription(userUnsubscribed);
-	    }
-	});
-
-	presenceManager.onPresenceReceived(new Listener<Presence>() {
-	    public void onEvent(final Presence presence) {
-		logPresence(presence, "not processed in RosterUIPresenter presence listener but logged");
 	    }
 	});
 

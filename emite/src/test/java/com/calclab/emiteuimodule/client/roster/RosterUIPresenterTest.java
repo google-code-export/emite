@@ -14,7 +14,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.im.client.roster.SubscriptionState;
-import com.calclab.emiteuimodule.client.MockitoXmpp;
+import com.calclab.emite.im.client.xold_roster.XRoster;
+import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
@@ -53,8 +54,9 @@ public class RosterUIPresenterTest {
 	rosterItem = new RosterItem(otherUri, SubscriptionState.both, "matt", null);
 
 	// Mocks creation
-	final MockitoXmpp xmpp = new MockitoXmpp();
 	rosterUIView = Mockito.mock(RosterUIView.class);
+	final XRoster roster = Mockito.mock(XRoster.class);
+	final XRosterManager rosterManager = Mockito.mock(XRosterManager.class);
 	i18n = new I18nTranslationServiceMocked();
 	final AvatarProvider avatarProvider = new AvatarProvider() {
 	    public String getAvatarURL(XmppURI userURI) {
@@ -62,7 +64,7 @@ public class RosterUIPresenterTest {
 	    }
 	};
 
-	rosterUI = new RosterUIPresenter(xmpp, i18n, avatarProvider);
+	rosterUI = new RosterUIPresenter(roster, rosterManager, i18n, avatarProvider);
 	rosterUI.init(rosterUIView);
 
 	// Stubs
