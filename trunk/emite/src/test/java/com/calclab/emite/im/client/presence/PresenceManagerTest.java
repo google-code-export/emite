@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
-import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.testing.MockedSession;
@@ -43,15 +42,6 @@ public class PresenceManagerTest {
 	final Presence current = manager.getOwnPresence();
 	assertEquals(Show.away, current.getShow());
 	assertEquals("this is my new status", current.getStatus());
-    }
-
-    @Test
-    public void shouldEventIncommingPresence() {
-	final MockListener<Presence> listener = new MockListener<Presence>();
-	manager.onPresenceReceived(listener);
-	session.receives(createPresence(Type.available));
-	session.receives(createPresence(Type.unavailable));
-	MockListener.verifyCalled(listener, 2);
     }
 
     @Test
@@ -92,8 +82,4 @@ public class PresenceManagerTest {
 
     }
 
-    private Presence createPresence(final Type type) {
-	final Presence presence = new Presence(type, uri("from@domain"), uri("to@domain"));
-	return presence;
-    }
 }

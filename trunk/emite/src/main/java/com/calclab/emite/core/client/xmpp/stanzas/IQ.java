@@ -63,6 +63,14 @@ public class IQ extends BasicStanza {
 	return query;
     }
 
+    public Type getType() {
+	try {
+	    return Type.valueOf(getAttribute(TYPE));
+	} catch (final IllegalArgumentException e) {
+	    return null;
+	}
+    }
+
     public IPacket Includes(final String name, final String xmlns) {
 	addChild(name, xmlns);
 	return this;

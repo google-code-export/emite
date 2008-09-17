@@ -13,13 +13,11 @@ import com.calclab.suco.client.listener.Listener;
 public class PresenceManagerImpl implements PresenceManager {
     private Presence ownPresence;
     private final Event<Presence> onOwnPresenceChanged;
-    private final Event<Presence> onPresenceReceived;
     private final Session session;
 
     public PresenceManagerImpl(final Session session, final XRosterManager xRosterManager) {
 	this.session = session;
 	this.ownPresence = new Presence(Type.unavailable, null, null);
-	this.onPresenceReceived = new Event<Presence>("presenceManager:onPresenceReceived");
 	this.onOwnPresenceChanged = new Event<Presence>("presenceManager:onOwnPresenceChanged");
 
 	// Upon connecting to the server and becoming an active resource, a
@@ -42,15 +40,15 @@ public class PresenceManagerImpl implements PresenceManager {
 		    // FIXME: what should we do?
 		    Log.warn("Error presence!!!");
 		    break;
-		default:
-		    onPresenceReceived.fire(presence);
-		    break;
 		}
 	    }
 	});
-	session.onLoggedOut(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI user) {
-		logOut(user);
+
+	session.onStateChanged(new Listener<Session.State>() {
+	    public void onEvent(final Session.State state) {
+		if (state == Session.State.loggingOut) {
+		    logOut(session.getCurrentUser());
+		}
 	    }
 	});
     }
@@ -67,10 +65,6 @@ public class PresenceManagerImpl implements PresenceManager {
 
     public void onOwnPresenceChanged(final Listener<Presence> listener) {
 	onOwnPresenceChanged.add(listener);
-    }
-
-    public void onPresenceReceived(final Listener<Presence> listener) {
-	onPresenceReceived.add(listener);
     }
 
     /**

@@ -72,7 +72,8 @@ public class MockedSession extends AbstractSession {
     }
 
     public void logout() {
-	onLoggedOut.fire(currentUser);
+	setState(Session.State.loggingOut);
+	setState(Session.State.disconnected);
     }
 
     public StreamSettings pause() {
@@ -124,11 +125,13 @@ public class MockedSession extends AbstractSession {
 
     public void setLoggedIn(final XmppURI userURI) {
 	this.currentUser = userURI;
-	onLoggedIn.fire(userURI);
+	setState(State.loggedIn);
+	setState(State.ready);
     }
 
     public void setState(final Session.State state) {
 	this.state = state;
+	onStateChanged.fire(state);
     }
 
     public Listener<IPacket> verifyIQSent(final IPacket iq) {

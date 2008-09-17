@@ -110,7 +110,7 @@ public abstract class AbstractChat implements Chat {
 	return (T) data.put(type, value);
     }
 
-    protected void setStatus(final State state) {
+    protected void setState(final State state) {
 	this.state = state;
 	onStateChanged.fire(state);
     }

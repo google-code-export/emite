@@ -38,15 +38,19 @@ public class XRosterManagerImpl implements XRosterManager {
 	this.onUnsubscribedReceived = new Event<XmppURI>("rosterManager:onUnsubscribedReceived");
 	this.onRosterReady = new Event<XRoster>("rosterManager:onRosterReady");
 
-	session.onLoggedIn(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI parameter) {
-		requestRoster();
+	session.onStateChanged(new Listener<Session.State>() {
+	    public void onEvent(final Session.State state) {
+		if (state == Session.State.loggedIn) {
+		    requestRoster();
+		}
 	    }
 	});
 
-	session.onLoggedOut(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI parameter) {
-		xRoster.clear();
+	session.onStateChanged(new Listener<Session.State>() {
+	    public void onEvent(final Session.State state) {
+		if (state == Session.State.disconnected) {
+		    xRoster.clear();
+		}
 	    }
 	});
 

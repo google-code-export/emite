@@ -29,12 +29,5 @@ public interface PresenceManager {
 
     void onOwnPresenceChanged(Listener<Presence> listener);
 
-    /**
-     * @deprecated Use Session.onPresence
-     * @param listener
-     */
-    @Deprecated
-    void onPresenceReceived(Listener<Presence> listener);
-
     void setOwnPresence(Presence presence);
 }

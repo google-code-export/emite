@@ -90,7 +90,7 @@ public class Room extends AbstractChat implements Chat {
      */
     public void close() {
 	session.send(new Presence(Type.unavailable, getFromURI(), getOtherURI()));
-	setStatus(State.locked);
+	setState(State.locked);
     }
 
     public Occupant findOccupant(final XmppURI uri) {
@@ -182,8 +182,8 @@ public class Room extends AbstractChat implements Chat {
     }
 
     @Override
-    public void setStatus(final State state) {
-	super.setStatus(state);
+    public void setState(final State state) {
+	super.setState(state);
     }
 
     /**
@@ -220,7 +220,7 @@ public class Room extends AbstractChat implements Chat {
 		    requestCreateInstantRoom();
 		} else {
 		    if (state != State.ready)
-			this.setStatus(Chat.State.ready);
+			this.setState(Chat.State.ready);
 		}
 	    }
 	}
@@ -237,7 +237,7 @@ public class Room extends AbstractChat implements Chat {
 	session.sendIQ("rooms", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {
 		if (IQ.isSuccess(received)) {
-		    setStatus(Chat.State.ready);
+		    setState(Chat.State.ready);
 		}
 	    }
 	});

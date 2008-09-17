@@ -140,7 +140,7 @@ public class SessionImpl extends AbstractSession implements Session {
 
     public void logout() {
 	if (state != State.disconnected && userURI != null) {
-	    onLoggedOut.fire(userURI);
+	    setState(State.loggingOut);
 	    userURI = null;
 	    connection.disconnect();
 	    setState(State.disconnected);
@@ -197,7 +197,6 @@ public class SessionImpl extends AbstractSession implements Session {
     private void setLoggedIn(final XmppURI userURI) {
 	this.userURI = userURI;
 	setState(Session.State.loggedIn);
-	onLoggedIn.fire(userURI);
 	setState(Session.State.ready);
     }
 

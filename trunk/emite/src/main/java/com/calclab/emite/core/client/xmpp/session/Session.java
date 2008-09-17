@@ -17,10 +17,45 @@ import com.calclab.suco.client.listener.Listener;
 public interface Session {
 
     /**
-     * Different session states
+     * Different session states. The different states paths are:
+     * <ul>
+     * <li>Successfull login: (disconnected) - connecting - authorized -
+     * loggedIn - ready</li>
+     * <li>Unsuccessfull login: (disconnected) - connecting - notAuthorized -
+     * disconected</li>
+     * <li>Loging out: (ready) - loggingOut - disconnected</li>
+     * </ul>
      */
     public static enum State {
-	authorized, loggedIn, connecting, disconnected, error, notAuthorized, ready
+	/**
+	 * The authorization was successfull. You can NOT send stanzas using the
+	 * session (stanzas will be queued). If you need to send stanzas, use
+	 * the connection object directly
+	 */
+	authorized,
+	/**
+	 * You are logged in. This is the first state when you can send stanzas.
+	 */
+	loggedIn,
+	/**
+	 * Start login process. You can NOT send stanzas using session (you
+	 * should use the connection directly)
+	 */
+	connecting,
+	/**
+	 * We are disconnected. You can NOT send stanzas.
+	 */
+	disconnected, error, notAuthorized,
+	/**
+	 * The session is ready to use. All the queued stanzas are sent just
+	 * before this state.
+	 */
+	ready,
+	/**
+	 * We are loggin out. Last oportunity to send stanzas (i.e: last
+	 * presence). session.getCurrentUser() returns the current user;
+	 */
+	loggingOut
     }
 
     public static XmppURI ANONYMOUS = SASLManager.ANONYMOUS;
@@ -77,24 +112,6 @@ public interface Session {
      * @param listener
      */
     public abstract void onIQ(Listener<IQ> listener);
-
-    /**
-     * The given listener is called when the user has logged in into the
-     * session.
-     * 
-     * @param listener
-     *            receives the user's logged in URI
-     */
-    public abstract void onLoggedIn(final Listener<XmppURI> listener);
-
-    /**
-     * The given listener is called when the user has logged out into the
-     * session (and just before close the connection)
-     * 
-     * @param listener
-     *            receives the user's logged out URI
-     */
-    public abstract void onLoggedOut(final Listener<XmppURI> listener);
 
     /**
      * The given listener is called when a message stanza has arrived

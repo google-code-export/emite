@@ -17,7 +17,7 @@ public class ChatTest extends AbstractChatTest {
     public void beforeTests() {
 	session = new MockedSession("self@domain/res");
 	chat = new ChatImpl(session, uri("other@domain/other"), "theThread");
-	chat.setStatus(State.ready);
+	chat.setState(State.ready);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ChatTest extends AbstractChatTest {
     @Test
     public void shouldSendNoThreadWhenNotSpecified() {
 	final AbstractChat noThreadChat = new ChatImpl(session, uri("other@domain/other"), null);
-	noThreadChat.setStatus(State.ready);
+	noThreadChat.setState(State.ready);
 	noThreadChat.send(new Message("the message"));
 	session.verifySent("<message from='self@domain/res' to='other@domain/other' "
 		+ "type='chat'><body>the message</body></message>");

@@ -58,33 +58,26 @@ public class ChatManagerImpl implements ChatManager {
 	    }
 	});
 
-	session.onLoggedIn(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI uri) {
-		logIn(uri);
+	session.onStateChanged(new Listener<Session.State>() {
+	    public void onEvent(final Session.State state) {
+		if (state == Session.State.loggedIn) {
+		    unlockChatsIfSameResource(session.getCurrentUser());
+		} else if (state == Session.State.disconnected) {
+		    lockAllChats();
+		}
 	    }
 	});
 
-	session.onLoggedOut(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI lastUser) {
-		logOut();
-	    }
-	});
     }
 
     public void close(final Chat chat) {
 	chats.remove(chat);
-	((AbstractChat) chat).setStatus(State.locked);
+	((AbstractChat) chat).setState(State.locked);
 	onChatClosed.fire(chat);
     }
 
     public Collection<? extends Chat> getChats() {
 	return chats;
-    }
-
-    public void logOut() {
-	for (final Chat chat : chats) {
-	    ((AbstractChat) chat).setStatus(State.locked);
-	}
     }
 
     public void onChatClosed(final Listener<Chat> listener) {
@@ -118,15 +111,6 @@ public class ChatManagerImpl implements ChatManager {
 	}
     }
 
-    protected void logIn(final XmppURI uri) {
-	if (uri.equalsNoResource(lastLoggedInUser)) {
-	    for (final Chat chat : chats) {
-		((AbstractChat) chat).setStatus(State.ready);
-	    }
-	}
-	this.lastLoggedInUser = uri;
-    }
-
     private <T> Chat createChat(final XmppURI toURI, final String thread, final Class<T> extraType, final T extraData) {
 	final ChatImpl chat = new ChatImpl(session, toURI, thread);
 	if (extraType != null) {
@@ -134,7 +118,7 @@ public class ChatManagerImpl implements ChatManager {
 	}
 	chats.add(chat);
 	onChatCreated.fire(chat);
-	chat.setStatus(Chat.State.ready);
+	chat.setState(Chat.State.ready);
 	return chat;
     }
 
@@ -168,6 +152,12 @@ public class ChatManagerImpl implements ChatManager {
 	return selected;
     }
 
+    private void lockAllChats() {
+	for (final Chat chat : chats) {
+	    ((AbstractChat) chat).setState(State.locked);
+	}
+    }
+
     private void onChatMessageReceived(final Message message) {
 	final XmppURI from = message.getFrom();
 	final String thread = message.getThread();
@@ -177,6 +167,15 @@ public class ChatManagerImpl implements ChatManager {
 	    chat = createChat(from, thread, null, null);
 	}
 	chat.receive(message);
+    }
+
+    private void unlockChatsIfSameResource(final XmppURI uri) {
+	if (uri.equalsNoResource(lastLoggedInUser)) {
+	    for (final Chat chat : chats) {
+		((AbstractChat) chat).setState(State.ready);
+	    }
+	}
+	this.lastLoggedInUser = uri;
     }
 
 }
