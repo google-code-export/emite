@@ -97,6 +97,10 @@ public class EmiteUIDialog {
 	multiChatDialog.expand();
     }
 
+    public Session getSession() {
+	return session;
+    }
+
     public void hide() {
 	checkIfDialogIsStarted();
 	multiChatDialog.hide();

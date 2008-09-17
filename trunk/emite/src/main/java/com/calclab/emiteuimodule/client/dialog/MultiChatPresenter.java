@@ -31,7 +31,6 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.Xmpp;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
@@ -77,10 +76,10 @@ public class MultiChatPresenter {
     private final Provider<SoundManager> soundManagerProvider;
     private final AvatarManager avatarManager;
 
-    public MultiChatPresenter(final Xmpp xmpp, final I18nTranslationService i18n, final EmiteUIFactory factory,
-	    final MultiChatCreationParam param, final RosterUIPresenter roster, final StatusUI statusUI,
-	    final Provider<SoundManager> soundManagerProvider, final RoomManager roomManager,
-	    final StateManager stateManager, final AvatarManager avatarManager) {
+    public MultiChatPresenter(final ChatManager chatManager, final XRosterManager rosterManager,
+	    final I18nTranslationService i18n, final EmiteUIFactory factory, final MultiChatCreationParam param,
+	    final RosterUIPresenter roster, final StatusUI statusUI, final Provider<SoundManager> soundManagerProvider,
+	    final RoomManager roomManager, final StateManager stateManager, final AvatarManager avatarManager) {
 	this.i18n = i18n;
 	this.factory = factory;
 	this.roster = roster;
@@ -91,8 +90,8 @@ public class MultiChatPresenter {
 	this.avatarManager = avatarManager;
 	setUserChatOptions(param.getUserChatOptions());
 	roomHost = param.getRoomHost();
-	chatManager = xmpp.getChatManager();
-	xRosterManager = xmpp.getRosterManager();
+	this.chatManager = chatManager;
+	this.xRosterManager = rosterManager;
 	openedChats = 0;
 	onChatAttended = new Event<String>("onChatAttended");
 	onChatUnattendedWithActivity = new Event<String>("onChatUnattendedWithActivity");

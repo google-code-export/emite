@@ -3,7 +3,6 @@ package com.calclab.emiteuimodule.client.status;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
-import com.calclab.emite.im.client.Xmpp;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
@@ -23,9 +22,9 @@ public class StatusUIModule extends AbstractModule {
 	register(Singleton.class, new Factory<StatusUI>(StatusUI.class) {
 	    @Override
 	    public StatusUI create() {
-		final StatusUIPresenter presenter = new StatusUIPresenter($$(Xmpp.class), $(Session.class),
-			$(PresenceManager.class), $$(XRosterManager.class), $$(ChatManager.class),
-			$$(RoomManager.class), $(I18nTranslationService.class));
+		final StatusUIPresenter presenter = new StatusUIPresenter($(Session.class), $(PresenceManager.class),
+			$$(XRosterManager.class), $$(ChatManager.class), $$(RoomManager.class),
+			$(I18nTranslationService.class));
 		final StatusUIPanel panel = new StatusUIPanel(presenter, $(I18nTranslationService.class));
 		presenter.init(panel);
 		return presenter;
