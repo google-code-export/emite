@@ -37,7 +37,7 @@ public interface Chat {
      * Possible chat states.
      * 
      */
-    public static enum Status {
+    public static enum State {
 	ready, locked
     }
 
@@ -49,7 +49,7 @@ public interface Chat {
 
     public XmppURI getOtherURI();
 
-    public Status getState();
+    public State getState();
 
     public String getThread();
 
@@ -71,7 +71,13 @@ public interface Chat {
 
     public void onMessageSent(Listener<Message> listener);
 
-    public void onStateChanged(Listener<Status> listener);
+    /**
+     * Add a listener to know when the chat state changed. You should send
+     * messages while the state != ready
+     * 
+     * @param listener
+     */
+    public void onStateChanged(Listener<State> listener);
 
     /**
      * To make this chat receive a message

@@ -23,10 +23,14 @@ package com.calclab.emite.xep.muc.client;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import com.calclab.emite.core.client.packet.IPacket;
+import com.calclab.emite.core.client.packet.MatcherFactory;
+import com.calclab.emite.core.client.packet.PacketMatcher;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.BasicStanza;
+import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
@@ -39,19 +43,42 @@ import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.client.listener.Listener2;
 
 public class Room extends AbstractChat implements Chat {
+    private static final PacketMatcher ROOM_CREATED = MatcherFactory.byNameAndXMLNS("x",
+	    "http://jabber.org/protocol/muc#user");
     private final HashMap<XmppURI, Occupant> occupants;
-    private final String name;
     private final Event<Occupant> onOccupantModified;
     private final Event<Collection<Occupant>> onOccupantsChanged;
     private final Event2<Occupant, String> onSubjectChanged;
 
-    public Room(final Session session, final XmppURI roomURI, final String name) {
+    /**
+     * Create a new room. The roomURI MUST include the nick (as the resource)
+     * 
+     * @param session
+     *            the session
+     * @param roomURI
+     *            the room uri with the nick specified in the resource part
+     */
+    public Room(final Session session, final XmppURI roomURI) {
 	super(session, roomURI);
-	this.name = name;
 	this.occupants = new HashMap<XmppURI, Occupant>();
 	this.onOccupantModified = new Event<Occupant>("room:onOccupantModified");
 	this.onOccupantsChanged = new Event<Collection<Occupant>>("room:onOccupantsChanged");
 	this.onSubjectChanged = new Event2<Occupant, String>("room:onSubjectChanged");
+
+	// @see http://www.xmpp.org/extensions/xep-0045.html#createroom
+	session.onPresence(new Listener<Presence>() {
+	    public void onEvent(final Presence presence) {
+		final XmppURI occupantURI = presence.getFrom();
+		if (roomURI.equalsNoResource(occupantURI)) {
+		    changePresence(occupantURI, presence);
+		}
+	    }
+	});
+
+	final Presence presence = new Presence(null, session.getCurrentUser(), roomURI);
+	presence.addChild("x", "http://jabber.org/protocol/muc");
+	session.send(presence);
+
     }
 
     /**
@@ -63,7 +90,7 @@ public class Room extends AbstractChat implements Chat {
      */
     public void close() {
 	session.send(new Presence(Type.unavailable, getFromURI(), getOtherURI()));
-	setStatus(Status.locked);
+	setStatus(State.locked);
     }
 
     public Occupant findOccupant(final XmppURI uri) {
@@ -72,15 +99,6 @@ public class Room extends AbstractChat implements Chat {
 
     public String getID() {
 	return other.toString();
-    }
-
-    /**
-     * Return the room name
-     * 
-     * @return the name
-     */
-    public String getName() {
-	return name;
     }
 
     public Object getOccupantsCount() {
@@ -164,8 +182,8 @@ public class Room extends AbstractChat implements Chat {
     }
 
     @Override
-    public void setStatus(final Status status) {
-	super.setStatus(status);
+    public void setStatus(final State state) {
+	super.setStatus(state);
     }
 
     /**
@@ -188,4 +206,40 @@ public class Room extends AbstractChat implements Chat {
 	return "ROOM: " + other;
     }
 
+    private void changePresence(final XmppURI occupantURI, final Presence presence) {
+	if (presence.hasAttribute("type", "unavailable")) {
+	    this.removeOccupant(occupantURI);
+	} else {
+	    final List<? extends IPacket> children = presence.getChildren(ROOM_CREATED);
+	    for (final IPacket child : children) {
+		final IPacket item = child.getFirstChild("item");
+		final String affiliation = item.getAttribute("affiliation");
+		final String role = item.getAttribute("role");
+		this.setOccupantPresence(occupantURI, affiliation, role);
+		if (isNewRoom(child)) {
+		    requestCreateInstantRoom();
+		} else {
+		    if (state != State.ready)
+			this.setStatus(Chat.State.ready);
+		}
+	    }
+	}
+    }
+
+    private boolean isNewRoom(final IPacket xtension) {
+	final String code = xtension.getFirstChild("status").getAttribute("code");
+	return code != null && code.equals("201");
+    }
+
+    private void requestCreateInstantRoom() {
+	final IQ iq = new IQ(IQ.Type.set, this.getOtherURI());
+	iq.addQuery("http://jabber.org/protocol/muc#owner").addChild("x", "jabber:x:data").With("type", "submit");
+	session.sendIQ("rooms", iq, new Listener<IPacket>() {
+	    public void onEvent(final IPacket received) {
+		if (IQ.isSuccess(received)) {
+		    setStatus(Chat.State.ready);
+		}
+	    }
+	});
+    }
 }

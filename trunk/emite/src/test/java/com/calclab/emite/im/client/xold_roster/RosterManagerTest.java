@@ -52,9 +52,28 @@ public class RosterManagerTest {
 	session.setLoggedIn(uri("user@domain/res"));
 	manager.requestAddItem(uri("name@domain/res"), "the name", "the group");
 	verify(xRoster).add((RosterItem) anyObject());
-	session.verifyIQSent("<iq from='user@domain/res' type='set'><query xmlns='jabber:iq:roster'>"
+	session.verifyIQSent("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='name@domain/res' name='the name'><group>the group</group></item></query></iq>");
 	session.answerSuccess();
+    }
+
+    @Test
+    public void shouldEventSubscribtionRequests() {
+	final MockListener<Presence> listener = new MockListener<Presence>();
+	manager.onSubscriptionRequested(listener);
+	final Presence presence = new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain"));
+	session.receives(presence);
+	MockListener.verifyCalled(listener);
+    }
+
+    @Test
+    public void shouldEventUnsibscirvedEvents() {
+	final MockListener<XmppURI> listener = new MockListener<XmppURI>();
+	manager.onUnsubscribedReceived(listener);
+
+	final String presence = "<presence from='contact@example.org' to='user@example.com' type='unsubscribed'/>";
+	session.receives(presence);
+	MockListener.verifyCalled(listener);
     }
 
     @Test
@@ -101,25 +120,6 @@ public class RosterManagerTest {
     public void shouldRequestSubscribe() {
 	manager.requestSubscribe(uri("some@domain/res"));
 	session.verifySent("<presence to='some@domain' type='subscribe' />");
-    }
-
-    @Test
-    public void shouldEventSubscribtionRequests() {
-	final MockListener<Presence> listener = new MockListener<Presence>();
-	manager.onSubscriptionRequested(listener);
-	final Presence presence = new Presence(Presence.Type.subscribe, uri("from@domain"), uri("to@domain"));
-	session.receives(presence);
-	MockListener.verifyCalled(listener);
-    }
-
-    @Test
-    public void shouldEventUnsibscirvedEvents() {
-	final MockListener<XmppURI> listener = new MockListener<XmppURI>();
-	manager.onUnsubscribedReceived(listener);
-
-	final String presence = "<presence from='contact@example.org' to='user@example.com' type='unsubscribed'/>";
-	session.receives(presence);
-	MockListener.verifyCalled(listener);
     }
 
 }

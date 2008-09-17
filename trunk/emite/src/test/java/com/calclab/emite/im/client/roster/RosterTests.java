@@ -115,7 +115,7 @@ public class RosterTests {
     @Test
     public void shouldRequestRosterOnLogin() {
 	session.setLoggedIn("user@domain/resource");
-	session.verifyIQSent("<iq from='user@domain/resource' type='get' ><query xmlns='jabber:iq:roster'/></iq>");
+	session.verifyIQSent("<iq type='get' ><query xmlns='jabber:iq:roster'/></iq>");
     }
 
     @Test

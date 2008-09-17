@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.im.client.chat.Chat.Status;
+import com.calclab.emite.im.client.chat.Chat.State;
 import com.calclab.emite.testing.MockedSession;
 
 public class ChatTest extends AbstractChatTest {
@@ -17,7 +17,7 @@ public class ChatTest extends AbstractChatTest {
     public void beforeTests() {
 	session = new MockedSession("self@domain/res");
 	chat = new ChatImpl(session, uri("other@domain/other"), "theThread");
-	chat.setStatus(Status.ready);
+	chat.setStatus(State.ready);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ChatTest extends AbstractChatTest {
     @Test
     public void shouldSendNoThreadWhenNotSpecified() {
 	final AbstractChat noThreadChat = new ChatImpl(session, uri("other@domain/other"), null);
-	noThreadChat.setStatus(Status.ready);
+	noThreadChat.setStatus(State.ready);
 	noThreadChat.send(new Message("the message"));
 	session.verifySent("<message from='self@domain/res' to='other@domain/other' "
 		+ "type='chat'><body>the message</body></message>");

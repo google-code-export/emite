@@ -45,9 +45,16 @@ public class IQ extends BasicStanza {
 	}
     }
 
-    public IQ(final Type type, final XmppURI from, final XmppURI to) {
+    /**
+     * Create a new IQ
+     * 
+     * @param type
+     *            type of the IQ
+     * @param to
+     *            iq recipient
+     */
+    public IQ(final Type type, final XmppURI to) {
 	this(type);
-	super.setFrom(from);
 	super.setTo(to);
     }
 

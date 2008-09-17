@@ -83,7 +83,7 @@ public class AvatarManager {
      * @param otherJID
      */
     public void requestVCard(final XmppURI otherJID) {
-	final IQ iq = new IQ(Type.get, session.getCurrentUser(), otherJID);
+	final IQ iq = new IQ(Type.get, otherJID);
 	iq.addChild(VCARD, XMLNS);
 	session.sendIQ("avatar", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {
@@ -102,7 +102,7 @@ public class AvatarManager {
     }
 
     public void setVCardAvatar(final String photoBinary) {
-	final IQ iq = new IQ(Type.set, session.getCurrentUser(), null);
+	final IQ iq = new IQ(Type.set, null);
 	final IPacket vcard = iq.addChild(VCARD, XMLNS);
 	vcard.With("xdbns", XMLNS).With("prodid", "-//HandGen//NONSGML vGen v1.0//EN");
 	vcard.setAttribute("xdbns", XMLNS);

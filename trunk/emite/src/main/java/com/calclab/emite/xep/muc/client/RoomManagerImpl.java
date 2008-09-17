@@ -22,20 +22,14 @@
 package com.calclab.emite.xep.muc.client;
 
 import java.util.HashMap;
-import java.util.List;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.packet.IPacket;
-import com.calclab.emite.core.client.packet.MatcherFactory;
 import com.calclab.emite.core.client.packet.NoPacket;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.BasicStanza;
-import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.Stanza;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
 import com.calclab.suco.client.listener.Event;
@@ -50,17 +44,6 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
 	this.onInvitationReceived = new Event<RoomInvitation>("roomManager:onInvitationReceived");
 	this.rooms = new HashMap<XmppURI, Room>();
 
-	// @see http://www.xmpp.org/extensions/xep-0045.html#createroom
-	session.onPresence(new Listener<Presence>() {
-	    public void onEvent(final Presence presence) {
-		final XmppURI occupantURI = presence.getFrom();
-		final Room room = rooms.get(occupantURI.getJID());
-		if (room != null) {
-		    Log.debug("changing room presence!");
-		    changePresence(room, occupantURI, presence);
-		}
-	    }
-	});
     }
 
     @Override
@@ -80,15 +63,12 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
     public <T> Room openChat(final XmppURI roomURI, final java.lang.Class<T> dataType, final T dataValue) {
 	Room room = rooms.get(roomURI.getJID());
 	if (room == null) {
-	    room = new Room(session, roomURI.getJID(), "the name of the room");
+	    room = new Room(session, roomURI.getJID());
 	    if (dataType != null) {
 		room.setData(dataType, dataValue);
 	    }
 	    rooms.put(roomURI.getJID(), room);
 	    chats.add(room);
-	    final Presence presence = new Presence(null, session.getCurrentUser(), roomURI);
-	    presence.addChild("x", "http://jabber.org/protocol/muc");
-	    session.send(presence);
 	    onChatCreated.fire(room);
 	} else {
 	    room.setData(dataType, dataValue);
@@ -110,50 +90,12 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
 
     }
 
-    private void changePresence(final Room room, final XmppURI occupantURI, final Presence presence) {
-	if (presence.hasAttribute("type", "unavailable")) {
-	    room.removeOccupant(occupantURI);
-	} else {
-	    final List<? extends IPacket> children = presence.getChildren(MatcherFactory.byNameAndXMLNS("x",
-		    "http://jabber.org/protocol/muc#user"));
-	    for (final IPacket child : children) {
-		final IPacket item = child.getFirstChild("item");
-		final String affiliation = item.getAttribute("affiliation");
-		final String role = item.getAttribute("role");
-		room.setOccupantPresence(occupantURI, affiliation, role);
-		if (isNewRoom(child)) {
-		    requestCreateInstantRoom(room);
-		} else {
-		    room.setStatus(Chat.Status.ready);
-		}
-	    }
-	}
-    }
-
     private void fireInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
 	onInvitationReceived.fire(new RoomInvitation(invitor, roomURI, reason));
     }
 
     private void handleRoomInvitation(final XmppURI roomURI, final Stanza invitation) {
 	fireInvitationReceived(invitation.getFrom(), roomURI, invitation.getFirstChild("reason").getText());
-    }
-
-    private boolean isNewRoom(final IPacket xtension) {
-	final String code = xtension.getFirstChild("status").getAttribute("code");
-	return code != null && code.equals("201");
-    }
-
-    private void requestCreateInstantRoom(final Room room) {
-
-	final IQ iq = new IQ(Type.set, session.getCurrentUser(), room.getOtherURI());
-	iq.addQuery("http://jabber.org/protocol/muc#owner").addChild("x", "jabber:x:data").With("type", "submit");
-	session.sendIQ("rooms", iq, new Listener<IPacket>() {
-	    public void onEvent(final IPacket received) {
-		if (IQ.isSuccess(received)) {
-		    room.setStatus(Chat.Status.ready);
-		}
-	    }
-	});
     }
 
 }

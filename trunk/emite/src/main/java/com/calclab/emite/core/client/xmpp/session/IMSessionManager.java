@@ -35,7 +35,8 @@ public class IMSessionManager {
     }
 
     public void requestSession(final XmppURI uri) {
-	final IQ iq = new IQ(IQ.Type.set, uri, uri.getHostURI());
+	final IQ iq = new IQ(IQ.Type.set, uri.getHostURI());
+	iq.setFrom(uri);
 	iq.setAttribute("id", "im-session-request");
 	iq.Includes("session", "urn:ietf:params:xml:ns:xmpp-session");
 

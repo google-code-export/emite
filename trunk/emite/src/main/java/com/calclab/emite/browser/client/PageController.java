@@ -110,11 +110,16 @@ public class PageController {
     }
 
     private void tryToLogin() {
-	final XmppURI jid = uri(assist.getMeta(PARAM_JID, false));
+	final String userJID = assist.getMeta(PARAM_JID, false);
 	final String password = assist.getMeta(PARAM_PASSWORD, false);
-	if (jid != null) {
+	if (userJID != null) {
 	    Log.debug("Loging in...");
-	    session.login(jid, password);
+	    if ("anonymous".equals(userJID.toLowerCase())) {
+		session.login(Session.ANONYMOUS, null);
+	    } else {
+		final XmppURI jid = uri(userJID);
+		session.login(jid, password);
+	    }
 	} else {
 	    Log.debug("No action perfomer on open.");
 	}

@@ -137,7 +137,7 @@ public class XRosterManagerImpl implements XRosterManager {
 
     public void requestAddItem(final XmppURI jid, final String name, final String group) {
 
-	final IQ iq = new IQ(IQ.Type.set, session.getCurrentUser(), null);
+	final IQ iq = new IQ(IQ.Type.set, null);
 	final IPacket item = iq.addQuery("jabber:iq:roster").addChild("item", null).With("jid", jid.toString()).With(
 		"name", name);
 

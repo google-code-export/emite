@@ -32,8 +32,8 @@ import com.calclab.suco.client.listener.Listener;
 public abstract class AbstractChat implements Chat {
 
     protected final XmppURI other;
-    protected Status status;
-    protected final Event<Status> onStateChanged;
+    protected State state;
+    protected final Event<State> onStateChanged;
     protected final Event<Message> onBeforeReceive;
     protected final Session session;
     private final HashMap<Class<?>, Object> data;
@@ -45,8 +45,8 @@ public abstract class AbstractChat implements Chat {
 	this.session = session;
 	this.other = other;
 	this.data = new HashMap<Class<?>, Object>();
-	this.status = Chat.Status.locked;
-	this.onStateChanged = new Event<Status>("chat:onStateChanged");
+	this.state = Chat.State.locked;
+	this.onStateChanged = new Event<State>("chat:onStateChanged");
 	this.onMessageSent = new Event<Message>("chat:onMessageSent");
 	this.onMessageReceived = new Event<Message>("chat:onMessageReceived");
 	this.onBeforeSend = new Event<Message>("chat:onBeforeSend");
@@ -66,8 +66,8 @@ public abstract class AbstractChat implements Chat {
 	return other;
     }
 
-    public Status getState() {
-	return status;
+    public State getState() {
+	return state;
     }
 
     public void onBeforeReceive(final Listener<Message> listener) {
@@ -86,7 +86,7 @@ public abstract class AbstractChat implements Chat {
 	onMessageSent.add(listener);
     }
 
-    public void onStateChanged(final Listener<Status> listener) {
+    public void onStateChanged(final Listener<State> listener) {
 	onStateChanged.add(listener);
     }
 
@@ -96,7 +96,7 @@ public abstract class AbstractChat implements Chat {
     }
 
     public void send(final Message message) {
-	if (status == Status.ready) {
+	if (state == State.ready) {
 	    message.setFrom(session.getCurrentUser());
 	    message.setTo(other);
 	    onBeforeSend.fire(message);
@@ -110,8 +110,8 @@ public abstract class AbstractChat implements Chat {
 	return (T) data.put(type, value);
     }
 
-    protected void setStatus(final Status status) {
-	this.status = status;
-	onStateChanged.fire(status);
+    protected void setStatus(final State state) {
+	this.state = state;
+	onStateChanged.fire(state);
     }
 }

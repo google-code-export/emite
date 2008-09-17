@@ -119,7 +119,15 @@
         </gwt.run>
       </properties>
     </profile>
+    <profile>
+      <id>comenta</id>
+      <properties>
+        <gwt.run>com.calclab.emite.widgets.comenta.Comenta/Comenta.html?log_level=DEBUG
+        </gwt.run>
+      </properties>
+    </profile>
   </profiles>
+
   <pluginRepositories>
     <pluginRepository>
       <id>kune-maven</id>

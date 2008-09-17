@@ -38,9 +38,8 @@ public class AvatarManagerTest {
 	session.setLoggedIn(uri("romeo@montague.net/orchard"));
 	final String photo = "some base64 encoded photo";
 	avatarManager.setVCardAvatar(photo);
-	session.verifyIQSent("<iq from='romeo@montague.net/orchard' type='set'>"
-		+ "<vCard prodid='-//HandGen//NONSGML vGen v1.0//EN' version='2.0' "
-		+ "xmlns='vcard-temp' xdbns='vcard-temp'>"
+	session.verifyIQSent("<iq type='set'><vCard prodid='-//HandGen//NONSGML vGen v1.0//EN' "
+		+ "version='2.0' xmlns='vcard-temp' xdbns='vcard-temp'>"
 		+ "<PHOTO><BINVAL>some base64 encoded photo</BINVAL></PHOTO></vCard></iq>");
 	session.answerSuccess();
 	// User's Server Acknowledges Publish:
@@ -54,8 +53,7 @@ public class AvatarManagerTest {
 
 	session.setLoggedIn(uri("romeo@montague.net/orchard"));
 	avatarManager.requestVCard(XmppURI.uri("juliet@capulet.com"));
-	session.verifyIQSent("<iq from='romeo@montague.net/orchard' to='juliet@capulet.com' type='get'>"
-		+ "<vCard xmlns='vcard-temp'/></iq>");
+	session.verifyIQSent("<iq to='juliet@capulet.com' type='get'><vCard xmlns='vcard-temp'/></iq>");
 	session.answer("<iq from='juliet@capulet.com' to='romeo@montague.net/orchard' type='result'>"
 		+ "<vCard xmlns='vcard-temp'><PHOTO><TYPE>image/jpeg</TYPE>"
 		+ "<BINVAL>Base64-encoded-avatar-file-here!</BINVAL></PHOTO></vCard></iq>");

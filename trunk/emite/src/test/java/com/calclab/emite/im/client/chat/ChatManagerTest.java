@@ -6,7 +6,7 @@ import static org.junit.Assert.assertSame;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.im.client.chat.Chat.Status;
+import com.calclab.emite.im.client.chat.Chat.State;
 import com.calclab.suco.testing.listener.MockListener;
 
 public class ChatManagerTest extends AbstractChatManagerTest {
@@ -22,23 +22,23 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Test
     public void oneToOneChatsAreAlwaysReadyWhenCreated() {
 	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
-	assertSame(Chat.Status.ready, chat.getState());
+	assertSame(Chat.State.ready, chat.getState());
     }
 
     @Test
     public void shouldBlockChatWhenClosingIt() {
 	final Chat chat = manager.openChat(uri("other@domain/resource"), null, null);
 	manager.close(chat);
-	assertSame(Chat.Status.locked, chat.getState());
+	assertSame(Chat.State.locked, chat.getState());
     }
 
     @Test
     public void shouldCloseChatWhenLoggedOut() {
 	final Chat chat = manager.openChat(uri("name@domain/resouce"), null, null);
-	final MockListener<Status> listener = new MockListener<Status>();
+	final MockListener<State> listener = new MockListener<State>();
 	chat.onStateChanged(listener);
 	session.logout();
-	MockListener.verifyCalledWith(listener, Status.locked);
+	MockListener.verifyCalledWith(listener, State.locked);
     }
 
     @Test

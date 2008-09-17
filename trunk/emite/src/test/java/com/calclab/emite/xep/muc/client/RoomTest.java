@@ -14,7 +14,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.AbstractChat;
 import com.calclab.emite.im.client.chat.AbstractChatTest;
-import com.calclab.emite.im.client.chat.Chat.Status;
+import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Chat.State;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.listener.MockListener;
 import com.calclab.suco.testing.listener.MockListener2;
@@ -31,8 +32,8 @@ public class RoomTest extends AbstractChatTest {
 	userURI = uri("user@domain/res");
 	roomURI = uri("room@domain/nick");
 	session = new MockedSession(userURI);
-	room = new Room(session, roomURI, "roomName");
-	room.setStatus(Status.ready);
+	room = new Room(session, roomURI);
+	room.setStatus(State.ready);
     }
 
     @Override
@@ -56,6 +57,20 @@ public class RoomTest extends AbstractChatTest {
 	room.setSubject("Some subject");
 	session.verifySent("<message type=\"groupchat\" from=\"" + userURI + "\" to=\"" + room.getOtherURI()
 		+ "\"><subject>Some subject</subject></message></body>");
+    }
+
+    @Test
+    public void shouldCreateInstantRooms() {
+	final MockListener<State> listener = new MockListener<Chat.State>();
+	room.onStateChanged(listener);
+	session.receives("<presence to='user@domain/res' from='room@domain/nick'>"
+		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
+		+ "<item affiliation='owner' role='moderator'/><status code='201'/></x></presence>");
+	session.verifyIQSent("<iq to='room@domain/nick' type='set'>"
+		+ "<query xmlns='http://jabber.org/protocol/muc#owner'>"
+		+ "<x xmlns='jabber:x:data' type='submit'/></query></iq>");
+	session.answerSuccess();
+	MockListener.verifyCalled(listener);
     }
 
     @Test
@@ -101,6 +116,11 @@ public class RoomTest extends AbstractChatTest {
 	session.verifySent("<message from='" + userURI + "' to='" + roomURI
 		+ "'><x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<invite to='otherUser@domain/resource'><reason>this is the reason</reason></invite></x></message>");
+    }
+
+    @Test
+    public void shouldSendRoomPresenceWhenCreated() {
+	session.verifySent("<presence to='room@domain/nick'><x xmlns='http://jabber.org/protocol/muc' /></presence>");
     }
 
     @Test
