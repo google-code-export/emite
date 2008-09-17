@@ -28,13 +28,14 @@ import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.im.client.InstantMessagingModule;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
-import com.calclab.emite.j2se.swing.LoginPanel;
 import com.calclab.emite.j2se.swing.SwingClient;
+import com.calclab.emite.j2se.swing.chat.ConversationControl;
+import com.calclab.emite.j2se.swing.chat.ConversationsPanel;
 import com.calclab.emite.j2se.swing.login.LoginControl;
+import com.calclab.emite.j2se.swing.login.LoginPanel;
 import com.calclab.emite.j2se.swing.roster.RosterControl;
 import com.calclab.emite.j2se.swing.roster.RosterPanel;
 import com.calclab.emite.xep.disco.client.DiscoveryModule;
@@ -63,47 +64,54 @@ public class EmiteSwingClientModule extends AbstractModule {
 	    @Override
 	    public SwingClient create() {
 		return new SwingClient($(JFrame.class), $(LoginPanel.class), $(RosterPanel.class),
-			$(ChatManager.class), $(RoomManager.class));
+			$(ConversationsPanel.class));
 	    }
 	});
 
-	register(Singleton.class, new Factory<FrameControl>(FrameControl.class) {
-	    @Override
-	    public FrameControl create() {
-		return new FrameControl($(Session.class));
-	    }
-	}, new Factory<JFrame>(JFrame.class) {
+	register(Singleton.class, new Factory<JFrame>(JFrame.class) {
 	    @Override
 	    public JFrame create() {
-		final JFrame frame = new JFrame("emite swing client");
-		$(FrameControl.class).setView(frame);
-		return frame;
+		return new JFrame("emite swing client");
+	    }
+
+	    @Override
+	    public void onAfterCreated(final JFrame instance) {
+		new FrameControl($(Session.class), instance);
 	    }
 	});
 
-	register(Singleton.class, new Factory<LoginControl>(LoginControl.class) {
-	    @Override
-	    public LoginControl create() {
-		return new LoginControl($(Connection.class), $(Session.class), $(PresenceManager.class));
-	    }
-	}, new Factory<LoginPanel>(LoginPanel.class) {
+	register(Singleton.class, new Factory<LoginPanel>(LoginPanel.class) {
 	    @Override
 	    public LoginPanel create() {
-		final LoginPanel panel = new LoginPanel($(JFrame.class));
-		$(LoginControl.class).setView(panel);
-		return panel;
+		return new LoginPanel($(JFrame.class));
 	    }
-	}, new Factory<RosterControl>(RosterControl.class) {
+
 	    @Override
-	    public RosterControl create() {
-		return new RosterControl($(Session.class), $(XRosterManager.class), $(XRoster.class));
+	    public void onAfterCreated(final LoginPanel instance) {
+		new LoginControl($(Connection.class), $(Session.class), instance);
 	    }
+
 	}, new Factory<RosterPanel>(RosterPanel.class) {
 	    @Override
 	    public RosterPanel create() {
 		final RosterPanel panel = new RosterPanel($(JFrame.class));
-		$(RosterControl.class).setView(panel);
 		return panel;
+	    }
+
+	    @Override
+	    public void onAfterCreated(final RosterPanel instance) {
+		new RosterControl($(Session.class), $(XRosterManager.class), $(XRoster.class), instance);
+	    }
+
+	}, new Factory<ConversationsPanel>(ConversationsPanel.class) {
+	    @Override
+	    public ConversationsPanel create() {
+		return new ConversationsPanel();
+	    }
+
+	    @Override
+	    public void onAfterCreated(final ConversationsPanel instance) {
+		new ConversationControl($(ChatManager.class), $(RoomManager.class), $(RosterPanel.class), instance);
 	    }
 	});
     }

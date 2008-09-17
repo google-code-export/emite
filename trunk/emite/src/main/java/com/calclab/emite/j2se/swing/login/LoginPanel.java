@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.j2se.swing;
+package com.calclab.emite.j2se.swing.login;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -39,6 +39,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import com.calclab.emite.j2se.swing.ConnectionConfiguration;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Event0;
 import com.calclab.suco.client.listener.Listener;

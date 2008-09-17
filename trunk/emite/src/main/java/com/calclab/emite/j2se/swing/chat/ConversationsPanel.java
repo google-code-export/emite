@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.j2se.swing;
+package com.calclab.emite.j2se.swing.chat;
 
 import java.awt.BorderLayout;
 import java.util.HashMap;
@@ -29,8 +29,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.j2se.swing.ChatPanel.ChatPanelListener;
+import com.calclab.emite.j2se.swing.RoomPanel;
 import com.calclab.emite.j2se.swing.RoomPanel.RoomPanelListener;
+import com.calclab.emite.j2se.swing.chat.ChatPanel.ChatPanelListener;
 
 @SuppressWarnings("serial")
 public class ConversationsPanel extends JPanel {

@@ -14,17 +14,9 @@ import com.calclab.suco.client.listener.Listener2;
 
 public class RosterControl {
 
-    private final XRosterManager rosterManager;
-    private final XRoster xRoster;
-    private final Session session;
+    public RosterControl(final Session session, final XRosterManager rosterManager, final XRoster xRoster,
+	    final RosterPanel rosterPanel) {
 
-    public RosterControl(final Session session, final XRosterManager xRosterManager, final XRoster xRoster) {
-	this.session = session;
-	rosterManager = xRosterManager;
-	this.xRoster = xRoster;
-    }
-
-    public void setView(final RosterPanel rosterPanel) {
 	rosterPanel.onAddRosterItem(new Listener2<String, String>() {
 	    public void onEvent(final String jid, final String name) {
 		rosterManager.requestAddItem(uri(jid), name, null);
