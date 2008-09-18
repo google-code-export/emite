@@ -5,41 +5,45 @@ import java.util.Map;
 import com.calclab.emite.browser.client.HasProperties;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ComentaWidget extends DockPanel implements HasProperties {
+public class ComentaWidget extends AbsolutePanel implements HasProperties {
     private final Event<Map<String, String>> onSetProperties;
     private final Event<String> onMessage;
     private final HTML output;
-    private final TextBox input;
-    private final Button send;
+    private final TextArea input;
+    private final Label status;
 
     public ComentaWidget() {
-	addStyleName("emite-widgets-Comenta");
 	this.onSetProperties = new Event<Map<String, String>>("comenta:onSetProperty");
 	this.onMessage = new Event<String>("comenta:onMessage");
+
+	this.status = new Label();
 	this.output = new HTML();
-	output.addStyleName("output");
-	this.input = new TextBox();
-	this.send = new Button("send", new ClickListener() {
-	    public void onClick(final Widget sender) {
-		onMessage.fire(input.getText());
-		input.setText("");
+	this.input = new TextArea();
+	input.addKeyboardListener(new KeyboardListener() {
+	    public void onKeyDown(final Widget sender, final char keyCode, final int modifiers) {
 	    }
+
+	    public void onKeyPress(final Widget sender, final char keyCode, final int modifiers) {
+		if (keyCode == 13) {
+		    onMessage.fire(input.getText());
+		    input.setText("");
+		    input.setFocus(true);
+		}
+	    }
+
+	    public void onKeyUp(final Widget sender, final char keyCode, final int modifiers) {
+	    }
+
 	});
 
-	add(output, DockPanel.CENTER);
-	final HorizontalPanel bottomPanel = new HorizontalPanel();
-	bottomPanel.add(input);
-	bottomPanel.add(send);
-	bottomPanel.addStyleName("input");
-	add(bottomPanel, DockPanel.SOUTH);
+	initLayout();
     }
 
     public String[] getPropertyNames() {
@@ -56,7 +60,6 @@ public class ComentaWidget extends DockPanel implements HasProperties {
 
     public void setEnabled(final boolean enabled) {
 	input.setEnabled(enabled);
-	send.setEnabled(enabled);
     }
 
     public void setProperties(final Map<String, String> properties) {
@@ -68,6 +71,38 @@ public class ComentaWidget extends DockPanel implements HasProperties {
 	final String user = name != null ? "<span class=\"" + userClass + "\">" + name + "</span>: " : "";
 	final String line = "<div>" + user + body + "</div>";
 	output.setHTML(output.getHTML() + line);
+    }
+
+    public void showStatus(final String message, final String cssClass) {
+	status.setText(message);
+    }
+
+    private void initLayout() {
+	final int width = 300;
+	final int height = 300;
+	this.setPixelSize(width, height);
+	this.setStylePrimaryName("emite-widgets-Comenta");
+
+	final Label top = new Label();
+	add(top, 0, 0);
+	top.setPixelSize(width, 30);
+	top.setStylePrimaryName("top");
+	add(status, 10, 10);
+	status.setPixelSize(width, 35);
+
+	final Label middle = new Label();
+	add(middle, 0, 31);
+	middle.setPixelSize(width, height - 85);
+	middle.setStylePrimaryName("middle");
+	add(output, 0, 32);
+	output.setPixelSize(100, 100);
+
+	final Label bottom = new Label();
+	add(bottom, 0, height - 51);
+	bottom.setPixelSize(width, 51);
+	bottom.setStylePrimaryName("bottom");
+	add(input, 10, height - 43);
+	input.setPixelSize(width - 20, 30);
     }
 
 }

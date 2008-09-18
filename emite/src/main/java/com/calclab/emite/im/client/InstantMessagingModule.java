@@ -21,7 +21,9 @@
  */
 package com.calclab.emite.im.client;
 
+import com.calclab.emite.core.client.xmpp.session.InitialPresence;
 import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.session.LoadOnSession;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
 import com.calclab.emite.im.client.presence.PresenceManager;
@@ -30,7 +32,6 @@ import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.im.client.xold_roster.XRosterManagerImpl;
 import com.calclab.suco.client.Suco;
-import com.calclab.suco.client.ioc.decorator.Singleton;
 import com.calclab.suco.client.ioc.module.AbstractModule;
 import com.calclab.suco.client.ioc.module.Factory;
 import com.google.gwt.core.client.EntryPoint;
@@ -58,7 +59,9 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
 
     @Override
     public void onLoad() {
-	register(Singleton.class, new Factory<XRoster>(XRoster.class) {
+	container.removeProvider(InitialPresence.class);
+
+	register(LoadOnSession.class, new Factory<XRoster>(XRoster.class) {
 	    @Override
 	    public XRoster create() {
 		return new XRoster();

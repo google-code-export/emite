@@ -31,11 +31,13 @@ import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
+import com.calclab.emite.j2se.swing.FrameControl;
 import com.calclab.emite.j2se.swing.SwingClient;
 import com.calclab.emite.j2se.swing.chat.ConversationControl;
 import com.calclab.emite.j2se.swing.chat.ConversationsPanel;
 import com.calclab.emite.j2se.swing.login.LoginControl;
 import com.calclab.emite.j2se.swing.login.LoginPanel;
+import com.calclab.emite.j2se.swing.roster.AddRosterItemPanel;
 import com.calclab.emite.j2se.swing.roster.RosterControl;
 import com.calclab.emite.j2se.swing.roster.RosterPanel;
 import com.calclab.emite.xep.disco.client.DiscoveryModule;
@@ -91,10 +93,16 @@ public class EmiteSwingClientModule extends AbstractModule {
 		new LoginControl($(Connection.class), $(Session.class), instance);
 	    }
 
+	}, new Factory<AddRosterItemPanel>(AddRosterItemPanel.class) {
+	    @Override
+	    public AddRosterItemPanel create() {
+		final AddRosterItemPanel panel = new AddRosterItemPanel($(JFrame.class));
+		return panel;
+	    }
 	}, new Factory<RosterPanel>(RosterPanel.class) {
 	    @Override
 	    public RosterPanel create() {
-		final RosterPanel panel = new RosterPanel($(JFrame.class));
+		final RosterPanel panel = new RosterPanel($(JFrame.class), $(AddRosterItemPanel.class));
 		return panel;
 	    }
 

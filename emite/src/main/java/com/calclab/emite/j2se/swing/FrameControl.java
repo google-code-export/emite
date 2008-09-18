@@ -1,4 +1,4 @@
-package com.calclab.emite.j2se;
+package com.calclab.emite.j2se.swing;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

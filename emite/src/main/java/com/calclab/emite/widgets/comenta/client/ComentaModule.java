@@ -24,13 +24,12 @@ public class ComentaModule extends AbstractModule implements EntryPoint {
 	}, new Factory<ComentaWidget>(ComentaWidget.class) {
 	    @Override
 	    public ComentaWidget create() {
-		final ComentaWidget widget = new ComentaWidget();
-		return $(ComentaController.class).setWidget(widget);
+		return new ComentaWidget();
 	    }
-	}, new Factory<ComentaController>(ComentaController.class) {
+
 	    @Override
-	    public ComentaController create() {
-		return new ComentaController($(Session.class));
+	    public void onAfterCreated(final ComentaWidget instance) {
+		new ComentaController($(Session.class), instance);
 	    }
 	});
     }

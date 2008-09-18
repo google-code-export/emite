@@ -31,25 +31,30 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Event0;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener0;
+
 @SuppressWarnings("serial")
 public class ChatPanel extends JPanel {
-    public static interface ChatPanelListener {
-	void onClose(ChatPanel source);
-
-	void onSend(ChatPanel source, String text);
-    }
 
     private final JTextArea area;
     private final JTextField fieldBody;
+    private final Event0 onClose;
+    private final Event<String> onSend;
 
-    public ChatPanel(final ChatPanelListener listener) {
+    public ChatPanel() {
 	super(new BorderLayout());
 	this.area = new JTextArea();
 	add(new JScrollPane(area));
 
+	this.onClose = new Event0("chat:onClose");
+	this.onSend = new Event<String>("chat:onSend");
+
 	final ActionListener actionListener = new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		listener.onSend(ChatPanel.this, fieldBody.getText());
+		onSend.fire(fieldBody.getText());
 	    }
 	};
 
@@ -61,7 +66,7 @@ public class ChatPanel extends JPanel {
 	final JButton btnClose = new JButton("close");
 	btnClose.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		listener.onClose(ChatPanel.this);
+		onClose.fire();
 	    }
 	});
 
@@ -80,6 +85,14 @@ public class ChatPanel extends JPanel {
     public void clearMessage() {
 	fieldBody.setText("");
 	fieldBody.requestFocus();
+    }
+
+    public void onClose(final Listener0 listener) {
+	onClose.add(listener);
+    }
+
+    public void onSend(final Listener<String> listener) {
+	onSend.add(listener);
     }
 
     public void showIcomingMessage(final String from, final String body) {

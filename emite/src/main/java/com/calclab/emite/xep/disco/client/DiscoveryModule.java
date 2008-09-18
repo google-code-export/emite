@@ -22,7 +22,7 @@
 package com.calclab.emite.xep.disco.client;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
-import com.calclab.emite.core.client.xmpp.session.SessionListener;
+import com.calclab.emite.core.client.xmpp.session.LoadOnSession;
 import com.calclab.suco.client.ioc.module.AbstractModule;
 import com.calclab.suco.client.ioc.module.Factory;
 
@@ -45,7 +45,7 @@ public class DiscoveryModule extends AbstractModule {
 
     @Override
     public void onLoad() {
-	register(SessionListener.class, new Factory<DiscoveryManager>(DiscoveryManager.class) {
+	register(LoadOnSession.class, new Factory<DiscoveryManager>(DiscoveryManager.class) {
 	    @Override
 	    public DiscoveryManager create() {
 		return new DiscoveryManager($(Session.class));

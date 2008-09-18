@@ -4,8 +4,6 @@ import com.calclab.emite.core.client.bosh.Bosh3Settings;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.j2se.swing.ConnectionConfiguration;
-import com.calclab.emite.j2se.swing.login.LoginPanel.LoginParams;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.client.listener.Listener0;
 
@@ -32,16 +30,24 @@ public class LoginControl {
 	loginPanel.onLogout(new Listener0() {
 	    public void onEvent() {
 		session.logout();
-
 	    }
 	});
 
 	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final Session.State current) {
-		final boolean isConnected = current == Session.State.ready;
-		loginPanel.showState("state: " + current.toString(), isConnected);
-		if (current == Session.State.notAuthorized) {
+		loginPanel.showState(current.toString());
+		switch (current) {
+		case connecting:
+		    loginPanel.setConnected(true);
+		    break;
+		case notAuthorized:
 		    loginPanel.showMessage("lo siento, tienes mal la contraseña o el usuario");
+		    break;
+		case ready:
+		    loginPanel.showState("connected as " + session.getCurrentUser());
+		    break;
+		case disconnected:
+		    loginPanel.setConnected(false);
 		}
 	    }
 	});

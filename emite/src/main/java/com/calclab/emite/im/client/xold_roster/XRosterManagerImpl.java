@@ -15,6 +15,7 @@ import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.im.client.roster.SubscriptionState;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.log.Logger;
 
 public class XRosterManagerImpl implements XRosterManager {
 
@@ -40,16 +41,15 @@ public class XRosterManagerImpl implements XRosterManager {
 
 	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final Session.State state) {
-		if (state == Session.State.loggedIn) {
+		switch (state) {
+		case loggedIn:
+		    Logger.debug("Request roster...");
 		    requestRoster();
-		}
-	    }
-	});
+		    break;
 
-	session.onStateChanged(new Listener<Session.State>() {
-	    public void onEvent(final Session.State state) {
-		if (state == Session.State.disconnected) {
+		case disconnected:
 		    xRoster.clear();
+		    break;
 		}
 	    }
 	});
