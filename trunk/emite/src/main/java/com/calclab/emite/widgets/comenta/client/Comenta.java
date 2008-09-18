@@ -19,7 +19,7 @@ public class Comenta {
     public void deploy() {
 	final ArrayList<Element> elements = domAssist.findElementsByClass("emite-widgets-comenta");
 	for (final Element element : elements) {
-	    domAssist.clearElement(element);
+	    // domAssist.clearElement(element);
 	    final ComentaWidget widget = widgetProvider.get();
 	    domAssist.setProperties(element, widget);
 	    RootPanel.get(element.getId()).add(widget);

@@ -109,6 +109,7 @@ public class SessionImpl extends AbstractSession implements Session {
 	    }
 
 	});
+
     }
 
     public XmppURI getCurrentUser() {
@@ -173,6 +174,12 @@ public class SessionImpl extends AbstractSession implements Session {
 	send(iq);
     }
 
+    public void setReady() {
+	if (state == State.loggedIn) {
+	    setState(State.ready);
+	}
+    }
+
     void setState(final Session.State newState) {
 	this.state = newState;
 	if (state == State.ready) {
@@ -197,7 +204,6 @@ public class SessionImpl extends AbstractSession implements Session {
     private void setLoggedIn(final XmppURI userURI) {
 	this.userURI = userURI;
 	setState(Session.State.loggedIn);
-	setState(Session.State.ready);
     }
 
 }

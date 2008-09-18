@@ -19,7 +19,6 @@ import com.calclab.emite.widgets.client.login.LoginController;
 import com.calclab.emite.widgets.client.login.LoginWidget;
 import com.calclab.emite.widgets.client.logout.LogoutController;
 import com.calclab.emite.widgets.client.logout.LogoutWidget;
-import com.calclab.emite.widgets.client.room.ComentaWidget;
 import com.calclab.emite.widgets.client.room.GWTRoomWidget;
 import com.calclab.emite.widgets.client.room.RoomController;
 import com.calclab.emite.widgets.client.room.RoomPresenceController;
@@ -79,13 +78,6 @@ public class EmiteWidgetsModule extends AbstractModule {
 		    public CharlaWidget create() {
 			final CharlaWidget widget = new CharlaWidget($(LoginWidget.class), $(ChatWidget.class),
 				$(LogoutWidget.class));
-			$(ComposedController.class).setWidget(widget);
-			return widget;
-		    }
-		}, new Factory<ComentaWidget>(ComentaWidget.class) {
-		    @Override
-		    public ComentaWidget create() {
-			final ComentaWidget widget = new ComentaWidget($(LoginWidget.class), $(RoomWidget.class));
 			$(ComposedController.class).setWidget(widget);
 			return widget;
 		    }

@@ -10,7 +10,6 @@ import com.calclab.emite.widgets.client.habla.ConversationsWidget;
 import com.calclab.emite.widgets.client.logger.LoggerWidget;
 import com.calclab.emite.widgets.client.login.LoginWidget;
 import com.calclab.emite.widgets.client.logout.LogoutWidget;
-import com.calclab.emite.widgets.client.room.ComentaWidget;
 import com.calclab.emite.widgets.client.room.RoomPresenceWidget;
 import com.calclab.emite.widgets.client.room.RoomWidget;
 import com.calclab.emite.widgets.client.roster.RosterWidget;
@@ -42,7 +41,6 @@ public class WidgetsRegistry {
     private void initDefaults() {
 	register("emite-widget-conversations", ConversationsWidget.class);
 	register("emite-widget-charla", CharlaWidget.class);
-	register("emite-widget-comenta", ComentaWidget.class);
 	register("emite-widget-logger", LoggerWidget.class);
 	register("emite-widget-login", LoginWidget.class);
 	register("emite-widget-chat", ChatWidget.class);

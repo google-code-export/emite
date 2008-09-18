@@ -129,6 +129,10 @@ public class MockedSession extends AbstractSession {
 	setState(State.ready);
     }
 
+    public void setReady() {
+	setState(State.ready);
+    }
+
     public void setState(final Session.State state) {
 	this.state = state;
 	onStateChanged.fire(state);

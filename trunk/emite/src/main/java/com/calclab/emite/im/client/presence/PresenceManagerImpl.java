@@ -9,6 +9,7 @@ import com.calclab.emite.im.client.xold_roster.XRoster;
 import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.log.Logger;
 
 public class PresenceManagerImpl implements PresenceManager {
     private Presence ownPresence;
@@ -22,11 +23,12 @@ public class PresenceManagerImpl implements PresenceManager {
 
 	// Upon connecting to the server and becoming an active resource, a
 	// client SHOULD request the roster before sending initial presence
-
 	xRosterManager.onRosterReady(new Listener<XRoster>() {
 	    public void onEvent(final XRoster parameter) {
+		Logger.debug("Sending initial presence");
 		final Presence initialPresence = new Presence(session.getCurrentUser());
 		broadcastPresence(initialPresence);
+		session.setReady();
 	    }
 	});
 

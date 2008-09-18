@@ -28,7 +28,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -37,53 +36,34 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emite.j2se.swing.AddRosterItemPanel;
-import com.calclab.emite.j2se.swing.AddRosterItemPanel.AddRosterItemPanelListener;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Event2;
 import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener0;
 import com.calclab.suco.client.listener.Listener2;
 
 @SuppressWarnings("serial")
 public class RosterPanel extends JPanel {
 
-    public static class RosterItemWrapper {
-	final RosterItem item;
-	final String name;
-
-	public RosterItemWrapper(final String name, final RosterItem item) {
-	    this.item = item;
-	    this.name = name;
-	}
-
-	@Override
-	public String toString() {
-	    final Presence presence = item.getPresence();
-	    final String status = " - " + presence.getType() + ":" + presence.getShow();
-	    return name + "(" + item.getJID() + ") - " + presence.getStatus() + status;
-	}
-    }
-
-    private JPanel creationPanel;
-    private JDialog currentDialog;
     private JList list;
     private DefaultListModel model;
     private final Event2<String, String> onAddRosterItem;
     private final Event<RosterItem> onRemoveItem;
     private final Event<XmppURI> onStartChat;
     private final JFrame frame;
+    private final AddRosterItemPanel addRosterPanel;
 
-    public RosterPanel(final JFrame frame) {
+    public RosterPanel(final JFrame frame, final AddRosterItemPanel addRosterPanel) {
 	super(new BorderLayout());
 	this.frame = frame;
+	this.addRosterPanel = addRosterPanel;
 	this.onAddRosterItem = new Event2<String, String>("roster:onAddRosterItem");
 	this.onRemoveItem = new Event<RosterItem>("roster:onRemoveItem");
 	this.onStartChat = new Event<XmppURI>("roster:onStartChat");
-	currentDialog = null;
-	init(frame);
+	init();
+	initAddPanel();
     }
 
     public void add(final String name, final RosterItem item) {
@@ -115,31 +95,7 @@ public class RosterPanel extends JPanel {
 	list.repaint();
     }
 
-    protected void closeDialog() {
-	if (currentDialog != null) {
-	    currentDialog.setVisible(false);
-	}
-    }
-
-    protected JPanel getCreationPanel() {
-	if (this.creationPanel == null) {
-	    this.creationPanel = new AddRosterItemPanel(new AddRosterItemPanelListener() {
-		public void onCancel() {
-		    closeDialog();
-		}
-
-		public void onCreate(final String jid, final String name) {
-		    closeDialog();
-		    onAddRosterItem.fire(jid, name);
-		}
-
-	    });
-
-	}
-	return creationPanel;
-    }
-
-    private void init(final JFrame owner) {
+    private void init() {
 	model = new DefaultListModel();
 	list = new JList(model);
 	list.addListSelectionListener(new ListSelectionListener() {
@@ -162,11 +118,7 @@ public class RosterPanel extends JPanel {
 
 	btnAddContact.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		currentDialog = new JDialog(owner);
-		currentDialog.setContentPane(getCreationPanel());
-		currentDialog.setModal(true);
-		currentDialog.pack();
-		currentDialog.setVisible(true);
+		addRosterPanel.showPanel(true);
 	    }
 	});
 
@@ -185,6 +137,22 @@ public class RosterPanel extends JPanel {
 	buttons.add(btnAddContact);
 	buttons.add(btnRemoveContact);
 	add(buttons, BorderLayout.SOUTH);
+    }
+
+    private void initAddPanel() {
+	addRosterPanel.onCancel(new Listener0() {
+	    public void onEvent() {
+		addRosterPanel.hidePanel();
+	    }
+	});
+
+	addRosterPanel.onCreate(new Listener2<String, String>() {
+	    public void onEvent(final String jid, final String name) {
+		addRosterPanel.hidePanel();
+		onAddRosterItem.fire(jid, name);
+	    }
+
+	});
     }
 
 }

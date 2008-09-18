@@ -1,6 +1,5 @@
 package com.calclab.emite.widgets.comenta.client;
 
-import java.util.Date;
 import java.util.Map;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
@@ -12,15 +11,12 @@ import com.calclab.emite.xep.muc.client.Room;
 import com.calclab.suco.client.listener.Listener;
 
 public class ComentaController {
-    private ComentaWidget widget;
+    private final ComentaWidget widget;
     private final Session session;
     private Room room;
 
-    public ComentaController(final Session session) {
+    public ComentaController(final Session session, final ComentaWidget widget) {
 	this.session = session;
-    }
-
-    public ComentaWidget setWidget(final ComentaWidget widget) {
 	this.widget = widget;
 	widget.setEnabled(false);
 
@@ -40,16 +36,28 @@ public class ComentaController {
 	    }
 	});
 
-	return widget;
+	session.onStateChanged(new Listener<Session.State>() {
+	    public void onEvent(final Session.State state) {
+		widget.showStatus(state.toString(), "");
+		switch (state) {
+		case ready:
+		    widget.showStatus("Entering " + room.getOtherURI().getNode() + "...", "");
+		    break;
+
+		default:
+		    break;
+		}
+	    }
+	});
+
     }
 
     private void createRoom(final XmppURI roomURI) {
 	room = new Room(session, roomURI);
-	widget.show(null, "entering room " + roomURI.getNode() + "...");
 
 	room.onStateChanged(new Listener<Chat.State>() {
 	    public void onEvent(final State state) {
-		widget.show(null, "room " + state + ".");
+		widget.showStatus(room.getOtherURI().getNode(), "green");
 		widget.setEnabled(state == State.ready);
 	    }
 	});
@@ -63,6 +71,6 @@ public class ComentaController {
     }
 
     private String generateNick() {
-	return "user" + new Date().getTime();
+	return "dani";
     }
 }

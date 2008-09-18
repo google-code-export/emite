@@ -19,35 +19,59 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.j2se.swing;
+package com.calclab.emite.j2se.swing.roster;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.calclab.suco.client.listener.Event0;
+import com.calclab.suco.client.listener.Event2;
+import com.calclab.suco.client.listener.Listener0;
+import com.calclab.suco.client.listener.Listener2;
+
 @SuppressWarnings("serial")
 public class AddRosterItemPanel extends JPanel {
-    public static interface AddRosterItemPanelListener {
-
-	void onCancel();
-
-	void onCreate(String uri, String name);
-
-    }
-
     private JTextField fieldURI;
     private JTextField fieldName;
+    private final Event0 onCancel;
+    private final Event2<String, String> onCreate;
+    private final JDialog dialog;
 
-    public AddRosterItemPanel(final AddRosterItemPanelListener listener) {
+    public AddRosterItemPanel(final Frame owner) {
 	super(new BorderLayout());
-	init(listener);
+	this.onCancel = new Event0("addRoster:onCancel");
+	this.onCreate = new Event2<String, String>("addRoster:onCreate");
+	dialog = new JDialog(owner);
+	dialog.setContentPane(this);
+	dialog.setModal(true);
+	dialog.pack();
+	init();
+    }
+
+    public void hidePanel() {
+	dialog.setVisible(false);
+    }
+
+    public void onCancel(final Listener0 listener) {
+	onCancel.add(listener);
+    }
+
+    public void onCreate(final Listener2<String, String> listener2) {
+	onCreate.add(listener2);
+    }
+
+    public void showPanel(final boolean b) {
+	dialog.setVisible(true);
     }
 
     private Component createRow(final String label, final JTextField field) {
@@ -57,7 +81,7 @@ public class AddRosterItemPanel extends JPanel {
 	return panel;
     }
 
-    private void init(final AddRosterItemPanelListener listener) {
+    private void init() {
 
 	fieldURI = new JTextField();
 	fieldName = new JTextField();
@@ -70,14 +94,14 @@ public class AddRosterItemPanel extends JPanel {
 	final JButton btnOk = new JButton("Ok");
 	btnOk.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		listener.onCreate(fieldURI.getText(), fieldName.getText());
+		onCreate.fire(fieldURI.getText(), fieldName.getText());
 	    }
 	});
 
 	final JButton btnCancel = new JButton("Cancel");
 	btnCancel.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		listener.onCancel();
+		onCancel.fire();
 	    }
 	});
 	final JPanel buttons = new JPanel();
@@ -85,4 +109,5 @@ public class AddRosterItemPanel extends JPanel {
 	buttons.add(btnCancel);
 	add(buttons, BorderLayout.SOUTH);
     }
+
 }

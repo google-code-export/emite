@@ -39,7 +39,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.calclab.emite.j2se.swing.ConnectionConfiguration;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Event0;
 import com.calclab.suco.client.listener.Listener;
@@ -47,26 +46,6 @@ import com.calclab.suco.client.listener.Listener0;
 
 @SuppressWarnings("serial")
 public class LoginPanel extends JPanel {
-    public static interface LoginPanelListener {
-	void onLogin(String httpBase, String domain, String userName, String password);
-
-	void onLogout();
-    }
-
-    public static class LoginParams {
-	public final String httpBase;
-	public final String domain;
-	public final String userName;
-	public final String password;
-
-	public LoginParams(final String httpBase, final String domain, final String userName, final String password) {
-	    this.httpBase = httpBase;
-	    this.domain = domain;
-	    this.userName = userName;
-	    this.password = password;
-	}
-    }
-
     private JButton btnLogin;
     private JButton btnLogout;
     private JTextField fieldDomain;
@@ -78,6 +57,7 @@ public class LoginPanel extends JPanel {
     private final Event<LoginParams> onLogin;
     private final Event0 onLogout;
     private final JFrame frame;
+    private JPanel panelFields;
 
     public LoginPanel(final JFrame frame) {
 	super(new BorderLayout());
@@ -99,14 +79,18 @@ public class LoginPanel extends JPanel {
 	onLogout.add(listener);
     }
 
+    public void setConnected(final boolean isConnected) {
+	btnLogin.setEnabled(!isConnected);
+	panelFields.setVisible(!isConnected);
+	btnLogout.setEnabled(isConnected);
+    }
+
     public void showMessage(final String message) {
 	JOptionPane.showMessageDialog(frame, message);
     }
 
-    public void showState(final String message, final boolean isConnected) {
-	labelState.setText(message + "(connected: " + isConnected + ")");
-	btnLogin.setEnabled(!isConnected);
-	btnLogout.setEnabled(isConnected);
+    public void showState(final String message) {
+	labelState.setText(message);
     }
 
     private void init() {
@@ -143,7 +127,7 @@ public class LoginPanel extends JPanel {
 	labelState = new JLabel("current state: none (connected: false)");
 	panel.add(labelState);
 
-	final JPanel panelFields = new JPanel(new GridLayout(1, 4));
+	panelFields = new JPanel(new GridLayout(1, 4));
 	panelFields.setMinimumSize(new Dimension(200, 1));
 	fieldHttpBase = new JTextField("http url here");
 	fieldDomain = new JTextField("domain here");

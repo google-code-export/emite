@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emite.j2se.swing;
+package com.calclab.emite.j2se.swing.chat;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -32,25 +32,27 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.calclab.emite.j2se.swing.chat.ChatPanel;
 import com.calclab.emite.xep.muc.client.Occupant;
+import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Event2;
+import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener2;
 
 @SuppressWarnings("serial")
 public class RoomPanel extends ChatPanel {
-
-    public static interface RoomPanelListener extends ChatPanelListener {
-	void onInviteUser(String user, String reason);
-
-	void onModifySubject(String newSubject);
-    }
 
     private final DefaultListModel users;
     private final JList usersList;
     private final JTextField fieldSubjRoom;
     private final JTextField fieldInvitedUser;
+    private final Event2<String, String> onInviteUser;
+    private final Event<String> onSubjectModified;
 
-    public RoomPanel(final RoomPanelListener listener) {
-	super(listener);
+    public RoomPanel() {
+	super();
+	this.onInviteUser = new Event2<String, String>("roomPanel:InviteUser");
+	this.onSubjectModified = new Event<String>("roomPanel:onSubjectModified");
+
 	users = new DefaultListModel();
 	usersList = new JList(users);
 	add(usersList, BorderLayout.EAST);
@@ -58,13 +60,13 @@ public class RoomPanel extends ChatPanel {
 	final JButton btnModSubject = new JButton("modify subject");
 	btnModSubject.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		listener.onModifySubject(fieldSubjRoom.getText());
+		onSubjectModified.fire(fieldSubjRoom.getText());
 	    }
 	});
 	final JButton btnInvite = new JButton("invite user");
 	btnInvite.addActionListener(new ActionListener() {
 	    public void actionPerformed(final ActionEvent e) {
-		listener.onInviteUser(fieldInvitedUser.getText(), "This is the reason");
+		onInviteUser.fire(fieldInvitedUser.getText(), "This is the reason");
 	    }
 	});
 	fieldSubjRoom = new JTextField();
@@ -78,6 +80,15 @@ public class RoomPanel extends ChatPanel {
 	northPanel.add(fieldInvitedUser);
 	northPanel.add(btnInvite);
 	add(northPanel, BorderLayout.NORTH);
+    }
+
+    public void onSubjectChanged(final Listener<String> listener) {
+	onSubjectModified.add(listener);
+    }
+
+    public void onUserInvited(final Listener2<String, String> listener) {
+	onInviteUser.add(listener);
+
     }
 
     public void setUsers(final Collection<Occupant> users) {

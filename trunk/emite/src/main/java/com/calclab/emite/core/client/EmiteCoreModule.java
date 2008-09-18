@@ -6,14 +6,16 @@ import com.calclab.emite.core.client.services.Services;
 import com.calclab.emite.core.client.services.gwt.GWTServices;
 import com.calclab.emite.core.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.core.client.xmpp.sasl.SASLManager;
+import com.calclab.emite.core.client.xmpp.session.InitialPresence;
 import com.calclab.emite.core.client.xmpp.session.Session;
-import com.calclab.emite.core.client.xmpp.session.SessionListener;
+import com.calclab.emite.core.client.xmpp.session.LoadOnSession;
 import com.calclab.emite.core.client.xmpp.session.SessionImpl;
 import com.calclab.emite.core.client.xmpp.session.IMSessionManager;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.ioc.decorator.Singleton;
 import com.calclab.suco.client.ioc.module.AbstractModule;
 import com.calclab.suco.client.ioc.module.Factory;
+import com.calclab.suco.client.log.Logger;
 import com.google.gwt.core.client.EntryPoint;
 
 public class EmiteCoreModule extends AbstractModule implements EntryPoint {
@@ -23,7 +25,7 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 
     @Override
     public void onLoad() {
-	registerDecorator(SessionListener.class, new SessionListener());
+	registerDecorator(LoadOnSession.class, new LoadOnSession());
 
 	register(Singleton.class, new Factory<Services>(Services.class) {
 	    @Override
@@ -52,8 +54,8 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 
 	    @Override
 	    public void onAfterCreated(final Session session) {
-		final SessionListener sessionListener = $(SessionListener.class);
-		sessionListener.createAll();
+		Logger.debug("Creating Session grouped objects...");
+		$(LoadOnSession.class).createAll();
 	    }
 	}, new Factory<ResourceBindingManager>(ResourceBindingManager.class) {
 	    @Override
@@ -64,6 +66,12 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 	    @Override
 	    public SASLManager create() {
 		return new SASLManager($(Connection.class));
+	    }
+	});
+	register(LoadOnSession.class, new Factory<InitialPresence>(InitialPresence.class) {
+	    @Override
+	    public InitialPresence create() {
+		return new InitialPresence($(Session.class));
 	    }
 	});
 
