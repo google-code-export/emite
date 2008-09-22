@@ -23,7 +23,6 @@ package com.calclab.emiteuimodule.client.roster;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.DragGridConfiguration;
@@ -69,20 +68,20 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
 	super.confDropInPanel(panel, dropGridConfiguration);
     }
 
-    public void confirmSusbscriptionRequest(final Presence presence) {
-	MessageBox.confirm(i18n.t("Confirm"), i18n.t("[%s] want to add you as a buddy. Do you want to permit?",
-		presence.getFrom().getJID().toString()), new MessageBox.ConfirmCallback() {
+    public void confirmSusbscriptionRequest(final XmppURI jid) {
+	MessageBox.confirm(i18n.t("Confirm"), i18n.t("[%s] want to add you as a buddy. Do you want to permit?", jid
+		.getJID().toString()), new MessageBox.ConfirmCallback() {
 	    public void execute(final String btnID) {
 		if (btnID.equals("yes")) {
 		    DeferredCommand.addCommand(new Command() {
 			public void execute() {
-			    presenter.onPresenceAccepted(presence);
+			    presenter.onPresenceAccepted(jid);
 			}
 		    });
 		} else {
 		    DeferredCommand.addCommand(new Command() {
 			public void execute() {
-			    presenter.onPresenceNotAccepted(presence);
+			    presenter.onPresenceNotAccepted(jid);
 			}
 		    });
 		}

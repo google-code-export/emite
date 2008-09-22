@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 import java.util.Collection;
 import java.util.Set;
@@ -22,14 +21,12 @@ public class RosterTests {
 
     private MockedSession session;
     private Roster roster;
-    private SubscriptionManager subscriptionManager;
 
     @Before
     public void beforeTests() {
 	session = new MockedSession();
 
-	subscriptionManager = mock(SubscriptionManager.class);
-	roster = new RosterImpl(session, subscriptionManager);
+	roster = new RosterImpl(session);
     }
 
     @Test

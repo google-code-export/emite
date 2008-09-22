@@ -2,7 +2,7 @@ package com.calclab.emiteuimodule.client.status;
 
 import org.ourproject.kune.platf.client.View;
 
-import com.calclab.emite.im.client.xold_roster.XRosterManager.SubscriptionMode;
+import com.calclab.emiteuimodule.client.SubscriptionMode;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.suco.client.listener.Listener;
 

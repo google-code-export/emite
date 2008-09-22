@@ -28,8 +28,8 @@ import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.im.client.InstantMessagingModule;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.im.client.roster.SubscriptionManager;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.swing.FrameControl;
 import com.calclab.emite.j2se.swing.SwingClient;
@@ -108,7 +108,7 @@ public class EmiteSwingClientModule extends AbstractModule {
 
 	    @Override
 	    public void onAfterCreated(final RosterPanel instance) {
-		new RosterControl($(Session.class), $(XRosterManager.class), $(XRoster.class), instance);
+		new RosterControl($(Session.class), $(Roster.class), $(SubscriptionManager.class), instance);
 	    }
 
 	}, new Factory<ConversationsPanel>(ConversationsPanel.class) {

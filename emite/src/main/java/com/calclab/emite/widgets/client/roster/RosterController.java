@@ -5,28 +5,28 @@ import java.util.Collection;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.suco.client.listener.Listener;
 
 public class RosterController {
 
-    private final XRosterManager manager;
     private RosterWidget widget;
     private final Session session;
+    private final Roster roster;
 
-    public RosterController(final Session session, final XRosterManager manager) {
+    public RosterController(final Session session, final Roster roster) {
 	this.session = session;
-	this.manager = manager;
+	this.roster = roster;
     }
 
     public void setWidget(final RosterWidget widget) {
 	this.widget = widget;
 	widget.setDisconnected();
-	manager.onRosterReady(new Listener<XRoster>() {
-	    public void onEvent(final XRoster xRoster) {
-		setRoster(xRoster);
+
+	roster.onRosterRetrieved(new Listener<Collection<RosterItem>>() {
+	    public void onEvent(final Collection<RosterItem> parameter) {
+		handleRosterReception(roster);
 	    }
 	});
 
@@ -39,6 +39,27 @@ public class RosterController {
 	});
     }
 
+    private void handleRosterReception(final Roster roster) {
+	setItems(roster.getItems());
+
+	// FIXME: new roster implementation
+	roster.onItemUpdated(new Listener<RosterItem>() {
+	    public void onEvent(final RosterItem item) {
+		Log.debug("(widget) Roster item updated: " + item);
+	    }
+	});
+	roster.onItemAdded(new Listener<RosterItem>() {
+	    public void onEvent(final RosterItem item) {
+		Log.debug("(widget) Roster item added: " + item);
+	    }
+	});
+	roster.onItemRemoved(new Listener<RosterItem>() {
+	    public void onEvent(final RosterItem item) {
+		Log.debug("(widget) Roster item removed: " + item);
+	    }
+	});
+    }
+
     private void setItems(final Collection<RosterItem> items) {
 	Log.debug("Adding roster items: " + items.size());
 	widget.clearItems();
@@ -46,21 +67,4 @@ public class RosterController {
 	    widget.addItem(item.getJID());
 	}
     }
-
-    private void setRoster(final XRoster xRoster) {
-	setItems(xRoster.getItems());
-
-	xRoster.onItemChanged(new Listener<RosterItem>() {
-	    public void onEvent(final RosterItem item) {
-		Log.debug("(widget) Roster item changed: " + item);
-	    }
-	});
-	xRoster.onRosterChanged(new Listener<Collection<RosterItem>>() {
-	    public void onEvent(final Collection<RosterItem> items) {
-		Log.debug("(widget) Roster changed: " + items);
-		setItems(items);
-	    }
-	});
-    }
-
 }

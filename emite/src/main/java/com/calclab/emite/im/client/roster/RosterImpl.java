@@ -28,7 +28,7 @@ public class RosterImpl implements Roster {
     private final Event<RosterItem> onItemUpdated;
     private final Event<RosterItem> onItemRemoved;
 
-    public RosterImpl(final Session session, final SubscriptionManager subscriptionManager) {
+    public RosterImpl(final Session session) {
 	this.session = session;
 	itemsByJID = new HashMap<XmppURI, RosterItem>();
 	itemsByGroup = new HashMap<String, List<RosterItem>>();

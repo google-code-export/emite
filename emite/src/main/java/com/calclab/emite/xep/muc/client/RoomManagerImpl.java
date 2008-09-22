@@ -24,7 +24,9 @@ package com.calclab.emite.xep.muc.client;
 import java.util.HashMap;
 
 import com.calclab.emite.core.client.packet.IPacket;
+import com.calclab.emite.core.client.packet.MatcherFactory;
 import com.calclab.emite.core.client.packet.NoPacket;
+import com.calclab.emite.core.client.packet.PacketMatcher;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
@@ -36,6 +38,9 @@ import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
 
 public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
+    private static final PacketMatcher FILTER_X = MatcherFactory.byNameAndXMLNS("x",
+	    "http://jabber.org/protocol/muc#user");
+    private static final PacketMatcher FILTER_INVITE = MatcherFactory.byName("invite");
     private final HashMap<XmppURI, Room> rooms;
     private final Event<RoomInvitation> onInvitationReceived;
 
@@ -84,18 +89,15 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
 	    if (room != null) {
 		room.receive(message);
 	    }
-	} else if ((child = message.getFirstChild("x").getFirstChild("invite")) != NoPacket.INSTANCE) {
+	} else if ((child = message.getFirstChild(FILTER_X).getFirstChild(FILTER_INVITE)) != NoPacket.INSTANCE) {
 	    handleRoomInvitation(message.getFrom(), new BasicStanza(child));
 	}
 
     }
 
-    private void fireInvitationReceived(final XmppURI invitor, final XmppURI roomURI, final String reason) {
-	onInvitationReceived.fire(new RoomInvitation(invitor, roomURI, reason));
-    }
-
     private void handleRoomInvitation(final XmppURI roomURI, final Stanza invitation) {
-	fireInvitationReceived(invitation.getFrom(), roomURI, invitation.getFirstChild("reason").getText());
+	onInvitationReceived.fire(new RoomInvitation(invitation.getFrom(), roomURI, invitation.getFirstChild("reason")
+		.getText()));
     }
 
 }

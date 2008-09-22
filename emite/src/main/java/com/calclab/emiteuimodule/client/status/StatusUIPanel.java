@@ -24,7 +24,7 @@ package com.calclab.emiteuimodule.client.status;
 import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
-import com.calclab.emite.im.client.xold_roster.XRosterManager.SubscriptionMode;
+import com.calclab.emiteuimodule.client.SubscriptionMode;
 import com.calclab.emiteuimodule.client.dialog.MessageDialog;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
 import com.calclab.emiteuimodule.client.utils.ChatUIUtils;
@@ -136,7 +136,7 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 		});
     }
 
-    public void setCloseAllOptionEnabled(boolean enabled) {
+    public void setCloseAllOptionEnabled(final boolean enabled) {
 	closeAllOption.setDisabled(!enabled);
     }
 
@@ -311,7 +311,7 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
     private CheckItem createSubscritionItem(final String text, final Menu submenu, final SubscriptionMode mode) {
 	final CheckItemListenerAdapter itemListener = new CheckItemListenerAdapter() {
 	    @Override
-	    public void onCheckChange(CheckItem item, boolean checked) {
+	    public void onCheckChange(final CheckItem item, final boolean checked) {
 		if (checked) {
 		    DeferredCommand.addCommand(new Command() {
 			public void execute() {

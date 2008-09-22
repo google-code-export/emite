@@ -12,10 +12,10 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
+import com.calclab.emite.im.client.roster.SubscriptionManager;
 import com.calclab.emite.im.client.roster.SubscriptionState;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
@@ -55,11 +55,11 @@ public class RosterUIPresenterTest {
 
 	// Mocks creation
 	rosterUIView = Mockito.mock(RosterUIView.class);
-	final XRoster roster = Mockito.mock(XRoster.class);
-	final XRosterManager rosterManager = Mockito.mock(XRosterManager.class);
+	final Roster roster = Mockito.mock(Roster.class);
+	final SubscriptionManager rosterManager = Mockito.mock(SubscriptionManager.class);
 	i18n = new I18nTranslationServiceMocked();
 	final AvatarProvider avatarProvider = new AvatarProvider() {
-	    public String getAvatarURL(XmppURI userURI) {
+	    public String getAvatarURL(final XmppURI userURI) {
 		return "images/person-def.gif";
 	    }
 	};

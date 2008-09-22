@@ -33,10 +33,10 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
+import com.calclab.emite.im.client.roster.SubscriptionManager;
 import com.calclab.emite.im.client.roster.SubscriptionState;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem;
@@ -64,28 +64,29 @@ public class RosterUIPresenter {
     private RosterUIView view;
     private final HashMap<XmppURI, ChatUserUI> rosterMap;
     private final I18nTranslationService i18n;
-    private final XRoster xRoster;
-    private final XRosterManager xRosterManager;
     private final AvatarProvider avatarProvider;
     private boolean showUnavailableItems;
     private RosterPresenceListener listener;
     private final Event<XmppURI> onOpenChat;
     private final Event<String> onUserAlert;
+    private final Roster roster;
+    private final SubscriptionManager subscriptionManager;
 
-    public RosterUIPresenter(final XRoster roster, final XRosterManager rosterManager,
+    public RosterUIPresenter(final Roster roster, final SubscriptionManager subscriptionManager,
 	    final I18nTranslationService i18n, final AvatarProvider avatarProvider) {
+	this.roster = roster;
+	this.subscriptionManager = subscriptionManager;
 	this.i18n = i18n;
 	this.avatarProvider = avatarProvider;
 	rosterMap = new HashMap<XmppURI, ChatUserUI>();
-	this.xRosterManager = rosterManager;
-	this.xRoster = roster;
 	showUnavailableItems = false;
 	this.onOpenChat = new Event<XmppURI>("onOpenChat");
 	this.onUserAlert = new Event<String>("onUserAlert");
+
 	// FIXME: User signals...
 	listener = new RosterPresenceListener() {
 	    public void onCancelSubscriptor(final XmppURI userURI) {
-		xRosterManager.cancelSubscriptor(userURI);
+		subscriptionManager.cancelSubscription(userURI);
 	    }
 
 	    public void onOpenChat(final XmppURI userURI) {
@@ -93,15 +94,15 @@ public class RosterUIPresenter {
 	    }
 
 	    public void onRequestRemoveItem(final XmppURI userURI) {
-		xRosterManager.requestRemoveItem(userURI);
+		roster.removeItem(userURI);
 	    }
 
 	    public void onRequestSubscribe(final XmppURI userURI) {
-		xRosterManager.requestSubscribe(userURI);
+		subscriptionManager.requestSubscribe(userURI);
 	    }
 
 	    public void onRequestUnsubscribe(final XmppURI userURI) {
-		xRosterManager.requestUnsubscribe(userURI);
+		subscriptionManager.unsubscribe(userURI);
 	    }
 	};
     }
@@ -151,12 +152,12 @@ public class RosterUIPresenter {
 	onOpenChat.add(listener);
     }
 
-    public void onPresenceAccepted(final Presence presence) {
-	xRosterManager.acceptSubscription(presence);
+    public void onPresenceAccepted(final XmppURI jid) {
+	subscriptionManager.approveSubscriptionRequest(jid);
     }
 
-    public void onPresenceNotAccepted(final Presence presence) {
-	xRosterManager.denySubscription(presence);
+    public void onPresenceNotAccepted(final XmppURI jid) {
+	subscriptionManager.refuseSubscriptionRequest(jid);
     }
 
     public void onUserAlert(final Listener<String> listener) {
@@ -175,7 +176,7 @@ public class RosterUIPresenter {
 	showUnavailableItems = show;
 	for (final Iterator<XmppURI> iterator = rosterMap.keySet().iterator(); iterator.hasNext();) {
 	    final XmppURI jid = iterator.next();
-	    final RosterItem item = xRoster.findItemByJID(jid);
+	    final RosterItem item = roster.findByJID(jid);
 	    final ChatUserUI user = rosterMap.get(jid);
 	    if (item == null) {
 		Log.error("Trying to update a ui roster item not in roster");
@@ -333,7 +334,8 @@ public class RosterUIPresenter {
     }
 
     private void createXmppListeners() {
-	xRoster.onItemChanged(new Listener<RosterItem>() {
+
+	roster.onItemUpdated(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
 		final ChatUserUI user = rosterMap.get(item.getJID());
 		if (user == null) {
@@ -345,52 +347,52 @@ public class RosterUIPresenter {
 		    refreshRosterItemInView(item, user, showUnavailableItems);
 		}
 	    }
-
 	});
 
-	xRoster.onRosterChanged(new Listener<Collection<RosterItem>>() {
-	    public void onEvent(final Collection<RosterItem> roster) {
-		rosterMap.clear();
-		view.clearRoster();
-		for (final RosterItem item : roster) {
-		    logRosterItem("Adding", item);
-		    final ChatUserUI user = new ChatUserUI(avatarProvider.getAvatarURL(item.getJID()), item, "black");
-		    updateUserWithRosterItem(user, item);
-		    if (showUnavailableItems || isAvailable(item)) {
-			user.setVisible(true);
-			view.addRosterItem(user, createMenuItemList(item));
-		    } else {
-			user.setVisible(false);
-		    }
-		    rosterMap.put(user.getURI(), user);
-		}
+	roster.onItemAdded(new Listener<RosterItem>() {
+	    public void onEvent(final RosterItem parameter) {
+		refreshRoster(roster.getItems());
+	    }
+	});
+	roster.onItemRemoved(new Listener<RosterItem>() {
+	    public void onEvent(final RosterItem parameter) {
+		refreshRoster(roster.getItems());
 	    }
 	});
 
-	xRosterManager.onSubscriptionRequested(new Listener<Presence>() {
-	    public void onEvent(final Presence presence) {
-		switch (xRosterManager.getSubscriptionMode()) {
-		case autoAcceptAll:
-		    Log.info("Accepting because we are auto accepting");
-		    break;
-		case autoRejectAll:
-		    Log.info("Rejecting because we are auto rejecting");
-		    break;
-		default:
-		    Log.info("Manual accept/reject");
-		    onUserAlert.fire("");
-		    view.confirmSusbscriptionRequest(presence);
-		    break;
-		}
+	// FIXME: new Roster impl
+	subscriptionManager.onSubscriptionRequested(new Listener<XmppURI>() {
+	    public void onEvent(final XmppURI jid) {
+		Log.info("Manual accept/reject");
+		onUserAlert.fire("");
+		view.confirmSusbscriptionRequest(jid);
 	    }
 	});
 
-	xRosterManager.onUnsubscribedReceived(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI userUnsubscribed) {
-		Log.info("UNSUBS RECEIVED");
-		view.showMessageAboutUnsuscription(userUnsubscribed);
-	    }
-	});
+	// xRosterManager.onSubscriptionRequested(new Listener<Presence>() {
+	// public void onEvent(final Presence presence) {
+	// switch (xRosterManager.getSubscriptionMode()) {
+	// case autoAcceptAll:
+	// Log.info("Accepting because we are auto accepting");
+	// break;
+	// case autoRejectAll:
+	// Log.info("Rejecting because we are auto rejecting");
+	// break;
+	// default:
+	// Log.info("Manual accept/reject");
+	// onUserAlert.fire("");
+	// view.confirmSusbscriptionRequest(presence);
+	// break;
+	// }
+	// }
+	// });
+
+	// subscriptionManager.onUnsubscribedReceived(new Listener<XmppURI>() {
+	// public void onEvent(final XmppURI userUnsubscribed) {
+	// Log.info("UNSUBS RECEIVED");
+	// view.showMessageAboutUnsuscription(userUnsubscribed);
+	// }
+	// });
 
     }
 
@@ -434,6 +436,23 @@ public class RosterUIPresenter {
 	    logPresence(presence, "processed after RosterChanged or RosterItemChanged");
 	} else {
 	    Log.info("with null presence");
+	}
+    }
+
+    private void refreshRoster(final Collection<RosterItem> rosterItems) {
+	rosterMap.clear();
+	view.clearRoster();
+	for (final RosterItem item : rosterItems) {
+	    logRosterItem("Adding", item);
+	    final ChatUserUI user = new ChatUserUI(avatarProvider.getAvatarURL(item.getJID()), item, "black");
+	    updateUserWithRosterItem(user, item);
+	    if (showUnavailableItems || isAvailable(item)) {
+		user.setVisible(true);
+		view.addRosterItem(user, createMenuItemList(item));
+	    } else {
+		user.setVisible(false);
+	    }
+	    rosterMap.put(user.getURI(), user);
 	}
     }
 
