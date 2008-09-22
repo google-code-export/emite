@@ -156,7 +156,11 @@ public class GWTPacket extends AbstractPacket {
 	}
 	final ArrayList<IPacket> selected = new ArrayList<IPacket>();
 	for (int index = 0; index < length; index++) {
-	    selected.add(new GWTPacket((Element) nodes.item(index)));
+	    final Node node = nodes.item(index);
+	    if (node.getNodeType() == Node.ELEMENT_NODE) {
+		selected.add(new GWTPacket((Element) node));
+	    } else if (node.getNodeType() == Node.TEXT_NODE) {
+	    }
 	}
 	return selected;
     }

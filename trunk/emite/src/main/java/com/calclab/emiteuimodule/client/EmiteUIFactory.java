@@ -25,8 +25,8 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.im.client.roster.SubscriptionManager;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager;
 import com.calclab.emite.xep.chatstate.client.StateManager;
@@ -56,17 +56,17 @@ public class EmiteUIFactory {
     private final RoomManager roomManager;
     private final StateManager stateManager;
     private final AvatarManager avatarManager;
-    private final XRosterManager rosterManager;
-    private final XRoster xroster;
     private final ChatManager chatManager;
+    private final Roster roster;
+    private final SubscriptionManager subscriptionManager;
 
-    public EmiteUIFactory(final ChatManager chatManager, final XRoster roster, final XRosterManager rosterManager,
-	    final I18nTranslationService i18n, final StatusUI statusUI,
+    public EmiteUIFactory(final ChatManager chatManager, final Roster roster,
+	    final SubscriptionManager subscriptionManager, final I18nTranslationService i18n, final StatusUI statusUI,
 	    final Provider<SoundManager> soundManagerProvider, final RoomManager roomManager,
 	    final StateManager stateManager, final AvatarManager avatarManager) {
 	this.chatManager = chatManager;
-	this.xroster = roster;
-	this.rosterManager = rosterManager;
+	this.roster = roster;
+	this.subscriptionManager = subscriptionManager;
 	this.i18n = i18n;
 	this.statusUI = statusUI;
 	this.soundManagerProvider = soundManagerProvider;
@@ -85,11 +85,11 @@ public class EmiteUIFactory {
     }
 
     public MultiChatPresenter createMultiChat(final MultiChatCreationParam param) {
-	final RosterUIPresenter roster = createRosterUI(param.getAvatarProvider());
-	final MultiChatPresenter presenter = new MultiChatPresenter(chatManager, rosterManager, i18n, this, param,
-		roster, statusUI, soundManagerProvider, roomManager, stateManager, avatarManager);
-	final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), (RosterUIPanel) roster.getView(),
-		statusUI, i18n, presenter);
+	final RosterUIPresenter rosterPresenter = createRosterUI(param.getAvatarProvider());
+	final MultiChatPresenter presenter = new MultiChatPresenter(chatManager, roster, i18n, this, param,
+		rosterPresenter, statusUI, soundManagerProvider, roomManager, stateManager, avatarManager);
+	final MultiChatPanel panel = new MultiChatPanel(param.getChatDialogTitle(), (RosterUIPanel) rosterPresenter
+		.getView(), statusUI, i18n, presenter);
 	presenter.init(panel);
 	return presenter;
     }
@@ -105,10 +105,10 @@ public class EmiteUIFactory {
     }
 
     public RosterUIPresenter createRosterUI(final AvatarProvider provider) {
-	final RosterUIPresenter roster = new RosterUIPresenter(xroster, rosterManager, i18n, provider);
-	final RosterUIPanel rosterUIPanel = new RosterUIPanel(i18n, roster);
-	roster.init(rosterUIPanel);
-	return roster;
+	final RosterUIPresenter rosterPreseter = new RosterUIPresenter(roster, subscriptionManager, i18n, provider);
+	final RosterUIPanel rosterUIPanel = new RosterUIPanel(i18n, rosterPreseter);
+	rosterPreseter.init(rosterUIPanel);
+	return rosterPreseter;
     }
 
 }

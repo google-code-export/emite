@@ -21,7 +21,6 @@
  */
 package com.calclab.emiteuimodule.client.roster;
 
-import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
@@ -32,7 +31,7 @@ public interface RosterUIView {
 
     public void clearRoster();
 
-    public void confirmSusbscriptionRequest(final Presence presence);
+    public void confirmSusbscriptionRequest(final XmppURI presence);
 
     public void informRosterItemRemoved(final ChatUserUI user);
 

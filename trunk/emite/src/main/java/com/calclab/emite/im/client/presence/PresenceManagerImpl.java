@@ -1,12 +1,14 @@
 package com.calclab.emite.im.client.presence;
 
+import java.util.Collection;
+
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.client.log.Logger;
@@ -16,15 +18,15 @@ public class PresenceManagerImpl implements PresenceManager {
     private final Event<Presence> onOwnPresenceChanged;
     private final Session session;
 
-    public PresenceManagerImpl(final Session session, final XRosterManager xRosterManager) {
+    public PresenceManagerImpl(final Session session, final Roster roster) {
 	this.session = session;
 	this.ownPresence = new Presence(Type.unavailable, null, null);
 	this.onOwnPresenceChanged = new Event<Presence>("presenceManager:onOwnPresenceChanged");
 
 	// Upon connecting to the server and becoming an active resource, a
 	// client SHOULD request the roster before sending initial presence
-	xRosterManager.onRosterReady(new Listener<XRoster>() {
-	    public void onEvent(final XRoster parameter) {
+	roster.onRosterRetrieved(new Listener<Collection<RosterItem>>() {
+	    public void onEvent(final Collection<RosterItem> parameter) {
 		Logger.debug("Sending initial presence");
 		final Presence initialPresence = new Presence(session.getCurrentUser());
 		broadcastPresence(initialPresence);

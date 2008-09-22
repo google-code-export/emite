@@ -66,7 +66,7 @@ public class RosterPanel extends JPanel {
 	initAddPanel();
     }
 
-    public void add(final String name, final RosterItem item) {
+    public void addItem(final String name, final RosterItem item) {
 	model.addElement(new RosterItemWrapper(name, item));
     }
 

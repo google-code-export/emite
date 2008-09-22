@@ -30,10 +30,8 @@ import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
-import com.calclab.emite.im.client.xold_roster.XRosterManager.SubscriptionMode;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
@@ -55,20 +53,18 @@ public class EmiteUIDialog {
     private final Session session;
     private final ChatManager chatManager;
     private final RoomManager roomManager;
-    private final XRoster xRoster;
     private final AvatarManager avatarManager;
     private final Connection connection;
     private final RoomUIManager roomUIManager;
 
     public EmiteUIDialog(final Connection connection, final Session session, final ChatManager chatManager,
-	    final EmiteUIFactory factory, final RoomManager roomManager, final XRoster xRoster,
+	    final EmiteUIFactory factory, final RoomManager roomManager, final Roster roster,
 	    final AvatarManager avatarManager, final StatusUI statusUI, final RoomUIManager roomUIManager) {
 	this.connection = connection;
 	this.session = session;
 	this.chatManager = chatManager;
 	this.factory = factory;
 	this.roomManager = roomManager;
-	this.xRoster = xRoster;
 	this.avatarManager = avatarManager;
 	this.statusUI = statusUI;
 	this.roomUIManager = roomUIManager;
@@ -138,11 +134,13 @@ public class EmiteUIDialog {
     }
 
     public void onRosterChanged(final Listener<Collection<RosterItem>> listener) {
-	xRoster.onRosterChanged(listener);
+	// FIXME: new Roster
+	// roster.onRosterChanged(listener);
     }
 
     public void onRosterItemChanged(final Listener<RosterItem> listener) {
-	xRoster.onItemChanged(listener);
+	// FIXME: new Roster
+	// xRoster.onItemChanged(listener);
     }
 
     public void onShowUnavailableRosterItemsChanged(final Listener<Boolean> listener) {
@@ -193,7 +191,7 @@ public class EmiteUIDialog {
     public void start(final String userJid, final String userPasswd, final String httpBase, final String host,
 	    final String roomHost) {
 	start(new UserChatOptions(userJid, userPasswd, ("emiteui-" + new Date().getTime()), "blue",
-		XRosterManager.DEF_SUBSCRIPTION_MODE, true), httpBase, host, roomHost);
+		SubscriptionMode.autoAcceptAll, true), httpBase, host, roomHost);
     }
 
     public void start(final UserChatOptions userChatOptions, final String httpBase, final String host,

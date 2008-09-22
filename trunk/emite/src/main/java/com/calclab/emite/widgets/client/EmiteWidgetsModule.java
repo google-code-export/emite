@@ -5,7 +5,7 @@ import com.calclab.emite.browser.client.PageController;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.widgets.client.base.ComposedController;
 import com.calclab.emite.widgets.client.chat.CharlaWidget;
 import com.calclab.emite.widgets.client.chat.ChatController;
@@ -140,7 +140,7 @@ public class EmiteWidgetsModule extends AbstractModule {
 		new Factory<RosterController>(RosterController.class) {
 		    @Override
 		    public RosterController create() {
-			return new RosterController($(Session.class), $(XRosterManager.class));
+			return new RosterController($(Session.class), $(Roster.class));
 		    }
 		}, new Factory<RosterWidget>(RosterWidget.class) {
 		    @Override

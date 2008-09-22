@@ -27,8 +27,8 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.im.client.roster.SubscriptionManager;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.chatstate.client.StateManager;
 import com.calclab.emite.xep.muc.client.RoomManager;
@@ -74,7 +74,7 @@ public class EmiteUIModule extends AbstractModule {
 	register(Singleton.class, new Factory<EmiteUIFactory>(EmiteUIFactory.class) {
 	    @Override
 	    public EmiteUIFactory create() {
-		return new EmiteUIFactory($(ChatManager.class), $(XRoster.class), $(XRosterManager.class),
+		return new EmiteUIFactory($(ChatManager.class), $(Roster.class), $(SubscriptionManager.class),
 			$(I18nTranslationService.class), $(StatusUI.class), $$(SoundManager.class),
 			$(RoomManager.class), $(StateManager.class), $(AvatarManager.class));
 	    }
@@ -84,7 +84,7 @@ public class EmiteUIModule extends AbstractModule {
 	    @Override
 	    public EmiteUIDialog create() {
 		return new EmiteUIDialog($(Connection.class), $(Session.class), $(ChatManager.class),
-			$(EmiteUIFactory.class), $(RoomManager.class), $(XRoster.class), $(AvatarManager.class),
+			$(EmiteUIFactory.class), $(RoomManager.class), $(Roster.class), $(AvatarManager.class),
 			$(StatusUI.class), $(RoomUIManager.class));
 	    }
 	});

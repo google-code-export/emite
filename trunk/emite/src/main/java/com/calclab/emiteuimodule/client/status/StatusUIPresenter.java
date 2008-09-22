@@ -32,9 +32,10 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
-import com.calclab.emite.im.client.xold_roster.XRosterManager.SubscriptionMode;
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.xep.muc.client.RoomManager;
+import com.calclab.emiteuimodule.client.AutoSubscriber;
+import com.calclab.emiteuimodule.client.SubscriptionMode;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
@@ -56,16 +57,17 @@ public class StatusUIPresenter implements StatusUI {
     private final Event<StatusUI> onCloseAllConfirmed;
     private final Event<String> onUserColorChanged;
     private final Event<SubscriptionMode> onUserSubscriptionModeChanged;
-    private final Provider<XRosterManager> rosterManagerProvider;
     private final Provider<ChatManager> chatManagerProvider;
     private final Provider<RoomManager> roomManagerProvider;
 
-    public StatusUIPresenter(final Session session, final PresenceManager presenceManager,
-	    final Provider<XRosterManager> xRosterManager, final Provider<ChatManager> chatManager,
+    private final AutoSubscriber subscriber;
+
+    public StatusUIPresenter(final Session session, final PresenceManager presenceManager, final Roster roster,
+	    final AutoSubscriber subscriber, final Provider<ChatManager> chatManager,
 	    final Provider<RoomManager> roomManager, final I18nTranslationService i18n) {
 	this.session = session;
 	this.presenceManager = presenceManager;
-	this.rosterManagerProvider = xRosterManager;
+	this.subscriber = subscriber;
 	this.chatManagerProvider = chatManager;
 	this.roomManagerProvider = roomManager;
 	this.i18n = i18n;
@@ -163,7 +165,7 @@ public class StatusUIPresenter implements StatusUI {
     public void setCurrentUserChatOptions(final UserChatOptions userChatOptions) {
 	this.userChatOptions = userChatOptions;
 	final SubscriptionMode subscriptionMode = userChatOptions.getSubscriptionMode();
-	rosterManagerProvider.get().setSubscriptionMode(subscriptionMode);
+	subscriber.setSubscriptionMode(subscriptionMode);
 	view.setSubscriptionMode(subscriptionMode);
     }
 
@@ -206,7 +208,7 @@ public class StatusUIPresenter implements StatusUI {
 
     void onUserSubscriptionModeChanged(final SubscriptionMode subscriptionMode) {
 	assert userChatOptions != null;
-	rosterManagerProvider.get().setSubscriptionMode(subscriptionMode);
+	subscriber.setSubscriptionMode(subscriptionMode);
 	userChatOptions.setSubscriptionMode(subscriptionMode);
 	onUserSubscriptionModeChanged.fire(subscriptionMode);
     }

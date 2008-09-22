@@ -33,7 +33,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager;
 import com.calclab.emite.xep.chatstate.client.StateManager;
@@ -63,7 +63,7 @@ public class MultiChatPresenter {
     private UserChatOptions userChatOptions;
     private MultiChatPanel view;
     private final String roomHost;
-    private final RosterUIPresenter roster;
+    private final RosterUIPresenter rosterPresenter;
     private int openedChats;
     private final Event<String> onChatAttended;
     private final Event<String> onChatUnattendedWithActivity;
@@ -71,18 +71,19 @@ public class MultiChatPresenter {
     private final ChatManager chatManager;
     private final RoomManager roomManager;
     private final StateManager stateManager;
-    private final XRosterManager xRosterManager;
     private final StatusUI statusUI;
     private final Provider<SoundManager> soundManagerProvider;
     private final AvatarManager avatarManager;
+    private final Roster roster;
 
-    public MultiChatPresenter(final ChatManager chatManager, final XRosterManager rosterManager,
-	    final I18nTranslationService i18n, final EmiteUIFactory factory, final MultiChatCreationParam param,
-	    final RosterUIPresenter roster, final StatusUI statusUI, final Provider<SoundManager> soundManagerProvider,
-	    final RoomManager roomManager, final StateManager stateManager, final AvatarManager avatarManager) {
+    public MultiChatPresenter(final ChatManager chatManager, final Roster roster, final I18nTranslationService i18n,
+	    final EmiteUIFactory factory, final MultiChatCreationParam param, final RosterUIPresenter rosterPresenter,
+	    final StatusUI statusUI, final Provider<SoundManager> soundManagerProvider, final RoomManager roomManager,
+	    final StateManager stateManager, final AvatarManager avatarManager) {
+	this.roster = roster;
 	this.i18n = i18n;
 	this.factory = factory;
-	this.roster = roster;
+	this.rosterPresenter = rosterPresenter;
 	this.statusUI = statusUI;
 	this.soundManagerProvider = soundManagerProvider;
 	this.roomManager = roomManager;
@@ -91,12 +92,11 @@ public class MultiChatPresenter {
 	setUserChatOptions(param.getUserChatOptions());
 	roomHost = param.getRoomHost();
 	this.chatManager = chatManager;
-	this.xRosterManager = rosterManager;
 	openedChats = 0;
 	onChatAttended = new Event<String>("onChatAttended");
 	onChatUnattendedWithActivity = new Event<String>("onChatUnattendedWithActivity");
 	onShowUnavailableRosterItemsChanged = new Event<Boolean>("onShowUnavailableRosterItemsChanged");
-	roster.onOpenChat(new Listener<XmppURI>() {
+	rosterPresenter.onOpenChat(new Listener<XmppURI>() {
 	    public void onEvent(final XmppURI userURI) {
 		joinChat(userURI);
 	    }
@@ -105,7 +105,7 @@ public class MultiChatPresenter {
 
     public void addRosterItem(final String name, final String jid) {
 	Log.info("Adding " + name + "(" + jid + ") to your roster.");
-	xRosterManager.requestAddItem(uri(jid), name, null);
+	roster.addItem(uri(jid), name);
     }
 
     public void center() {
@@ -294,7 +294,7 @@ public class MultiChatPresenter {
     }
 
     public void showUnavailableRosterItems(final boolean show) {
-	roster.showUnavailableRosterItems(show);
+	rosterPresenter.showUnavailableRosterItems(show);
 	onShowUnavailableRosterItemsChanged.fire(show);
 	userChatOptions.setUnavailableRosterItemsVisible(show);
     }
@@ -585,7 +585,7 @@ public class MultiChatPresenter {
 	view.setRosterVisible(false);
 	view.setOfflineInfo();
 	setInputEnabled(false);
-	roster.clearRoster();
+	rosterPresenter.clearRoster();
 	view.clearBottomChatNotification();
     }
 
@@ -606,7 +606,7 @@ public class MultiChatPresenter {
 
     private void setUnavailableRosterItemVisibility() {
 	// during init
-	roster.showUnavailableRosterItems(this.getUserChatOptions().isUnavailableRosterItemsVisible());
+	rosterPresenter.showUnavailableRosterItems(this.getUserChatOptions().isUnavailableRosterItemsVisible());
 	view.setShowUnavailableItemsButtonPressed(this.getUserChatOptions().isUnavailableRosterItemsVisible());
     }
 

@@ -13,6 +13,14 @@ import com.calclab.suco.client.listener.Listener;
 public interface SubscriptionManager {
 
     /**
+     * Approves previously subscription request stanza
+     * 
+     * @param jid
+     *            the other entity's JID
+     */
+    public void approveSubscriptionRequest(XmppURI jid);
+
+    /**
      * Cancels a previously-granted subscription
      * 
      * @param jid
@@ -28,6 +36,14 @@ public interface SubscriptionManager {
      *            the listener to be called
      */
     public void onSubscriptionRequested(Listener<XmppURI> listener);
+
+    /**
+     * Refuse a previously subscription request stanza
+     * 
+     * @param jid
+     *            the other entity's JID
+     */
+    public void refuseSubscriptionRequest(XmppURI jid);
 
     /**
      * Send a request to subscribe to another entity's presence

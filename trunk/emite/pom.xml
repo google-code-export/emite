@@ -50,7 +50,6 @@
       </groupId>
       <artifactId>gwt-voices</artifactId>
       <version>1.5.5</version>
-      <scope>provided</scope>
     </dependency>
 
     <!--  swing client -->
@@ -71,13 +70,11 @@
       <groupId>com.gwtext</groupId>
       <artifactId>gwtext</artifactId>
       <version>2.0.4</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.ourproject.kune</groupId>
       <artifactId>kune-core</artifactId>
       <version>0.0.4</version>
-      <scope>provided</scope>
     </dependency>
     <!--
       <dependency> <groupId>com.extjs</groupId>
@@ -110,6 +107,9 @@
         <gwt.run>
           com.calclab.emite.widgets.demo.EmiteWidgetsDemo/WidgetsShowCase.html?log_level=DEBUG
         </gwt.run>
+        <gwt.compile>
+          com.calclab.emite.widgets.demo.EmiteWidgetsDemo
+        </gwt.compile>
       </properties>
     </profile>
     <profile>
@@ -117,6 +117,9 @@
       <properties>
         <gwt.run>com.calclab.emiteui.EmiteUI/EmiteUI.html?log_level=DEBUG
         </gwt.run>
+        <gwt.compile>
+          com.calclab.emiteui.EmiteUI
+        </gwt.compile>
       </properties>
     </profile>
     <profile>
@@ -124,6 +127,9 @@
       <properties>
         <gwt.run>com.calclab.emite.widgets.comenta.Comenta/Comenta.html?log_level=DEBUG
         </gwt.run>
+        <gwt.compile>
+          com.calclab.emite.widgets.comenta.Comenta
+        </gwt.compile>
       </properties>
     </profile>
   </profiles>
@@ -176,13 +182,7 @@
           <style>OBF</style>
           <runTarget>${gwt.run}</runTarget>
           <compileTargets>
-            <!--
-              <compileTarget>com.calclab.emite.core.EmiteCore</compileTarget>
-              <compileTarget>com.calclab.emiteui.EmiteUI</compileTarget>
-              <compileTarget>com.calclab.emite.widgets.EmiteWidgets</compileTarget>
-            -->
-            <compileTarget>com.calclab.emite.widgets.demo.EmiteWidgetsDemo
-            </compileTarget>
+            <compileTarget>${gwt.compile}</compileTarget>
           </compileTargets>
           <generatorRootClasses>
           </generatorRootClasses>

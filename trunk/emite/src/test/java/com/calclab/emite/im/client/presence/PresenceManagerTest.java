@@ -7,13 +7,16 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.listener.EventTester;
 import com.calclab.suco.testing.listener.MockListener;
@@ -22,16 +25,16 @@ public class PresenceManagerTest {
 
     private PresenceManager manager;
     private MockedSession session;
-    private XRosterManager xRosterManager;
-    private EventTester<XRoster> onRosterReady;
+    private Roster roster;
+    private EventTester<Collection<RosterItem>> onRosterReady;
 
     @Before
     public void beforeTest() {
 	session = new MockedSession();
-	xRosterManager = mock(XRosterManager.class);
-	onRosterReady = new EventTester<XRoster>();
-	manager = new PresenceManagerImpl(session, xRosterManager);
-	verify(xRosterManager).onRosterReady(argThat(onRosterReady));
+	roster = mock(Roster.class);
+	onRosterReady = new EventTester<Collection<RosterItem>>();
+	manager = new PresenceManagerImpl(session, roster);
+	verify(roster).onRosterRetrieved(argThat(onRosterReady));
     }
 
     @Test
@@ -70,7 +73,7 @@ public class PresenceManagerTest {
     @Test
     public void shouldSendInitialPresenceAfterRosterReady() {
 	session.setLoggedIn(uri("myself@domain"));
-	onRosterReady.fire(new XRoster());
+	onRosterReady.fire(new ArrayList<RosterItem>());
 	session.verifySent("<presence from='myself@domain'></presence>");
     }
 

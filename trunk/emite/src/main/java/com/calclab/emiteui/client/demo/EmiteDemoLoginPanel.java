@@ -23,7 +23,7 @@ package com.calclab.emiteui.client.demo;
 
 import java.util.Date;
 
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emiteuimodule.client.SubscriptionMode;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.gwtext.client.core.EventObject;
@@ -40,11 +40,11 @@ public class EmiteDemoLoginPanel {
 
     public static interface LoginPanelListener {
 
-        void onOffline();
+	void onOffline();
 
-        void onOnline();
+	void onOnline();
 
-        void onUserChanged(UserChatOptions generateUserChatOptions);
+	void onUserChanged(UserChatOptions generateUserChatOptions);
 
     }
 
@@ -53,72 +53,74 @@ public class EmiteDemoLoginPanel {
     private String release;
 
     public EmiteDemoLoginPanel(final LoginPanelListener listener) {
-        release = "not-specified";
-        final Panel panel = new Panel();
-        panel.setBorder(false);
-        panel.setPaddings(15);
+	release = "not-specified";
+	final Panel panel = new Panel();
+	panel.setBorder(false);
+	panel.setPaddings(15);
 
-        final FormPanel formPanel = new FormPanel();
-        formPanel.setFrame(true);
-        formPanel.setTitle("Some external Login Form");
-        formPanel.setButtonAlign(Position.LEFT);
+	final FormPanel formPanel = new FormPanel();
+	formPanel.setFrame(true);
+	formPanel.setTitle("Some external Login Form");
+	formPanel.setButtonAlign(Position.LEFT);
 
-        formPanel.setWidth(320);
-        formPanel.setLabelWidth(75);
+	formPanel.setWidth(320);
+	formPanel.setLabelWidth(75);
 
-        fieldJid = new TextField("Jabber id", "jid", 200);
-        fieldJid.setAllowBlank(false);
-        formPanel.add(fieldJid);
+	fieldJid = new TextField("Jabber id", "jid", 200);
+	fieldJid.setAllowBlank(false);
+	formPanel.add(fieldJid);
 
-        fieldPassw = new TextField("Password", "last", 200);
-        fieldPassw.setAllowBlank(false);
-        fieldPassw.setPassword(true);
-        formPanel.add(fieldPassw);
+	fieldPassw = new TextField("Password", "last", 200);
+	fieldPassw.setAllowBlank(false);
+	fieldPassw.setPassword(true);
+	formPanel.add(fieldPassw);
 
-        Button onlineBtn = new Button("Go online");
-        onlineBtn.addListener(new ButtonListenerAdapter() {
-            public void onClick(final Button button, final EventObject e) {
-                listener.onOnline();
-            }
-        });
+	final Button onlineBtn = new Button("Go online");
+	onlineBtn.addListener(new ButtonListenerAdapter() {
+	    @Override
+	    public void onClick(final Button button, final EventObject e) {
+		listener.onOnline();
+	    }
+	});
 
-        Button offlineBtn = new Button("Go offline");
-        offlineBtn.addListener(new ButtonListenerAdapter() {
-            public void onClick(final Button button, final EventObject e) {
-                listener.onOffline();
-            }
-        });
+	final Button offlineBtn = new Button("Go offline");
+	offlineBtn.addListener(new ButtonListenerAdapter() {
+	    @Override
+	    public void onClick(final Button button, final EventObject e) {
+		listener.onOffline();
+	    }
+	});
 
-        formPanel.addButton(onlineBtn);
-        formPanel.addButton(offlineBtn);
+	formPanel.addButton(onlineBtn);
+	formPanel.addButton(offlineBtn);
 
-        fieldJid.addListener(new FieldListenerAdapter() {
-            @Override
-            public void onChange(final Field field, final Object newVal, final Object oldVal) {
-                listener.onUserChanged(getUserChatOptions());
-            }
-        });
+	fieldJid.addListener(new FieldListenerAdapter() {
+	    @Override
+	    public void onChange(final Field field, final Object newVal, final Object oldVal) {
+		listener.onUserChanged(getUserChatOptions());
+	    }
+	});
 
-        fieldPassw.addListener(new FieldListenerAdapter() {
-            @Override
-            public void onChange(final Field field, final Object newVal, final Object oldVal) {
-                listener.onUserChanged(getUserChatOptions());
-            }
-        });
-        panel.add(formPanel);
+	fieldPassw.addListener(new FieldListenerAdapter() {
+	    @Override
+	    public void onChange(final Field field, final Object newVal, final Object oldVal) {
+		listener.onUserChanged(getUserChatOptions());
+	    }
+	});
+	panel.add(formPanel);
 
-        RootPanel.get().add(panel);
+	RootPanel.get().add(panel);
     }
 
     public UserChatOptions getUserChatOptions() {
-        final String resource = "emiteui-" + new Date().getTime() + "-" + release;
-        return new UserChatOptions(fieldJid.getRawValue(), fieldPassw.getRawValue(), resource, "blue",
-                XRosterManager.DEF_SUBSCRIPTION_MODE, true);
+	final String resource = "emiteui-" + new Date().getTime() + "-" + release;
+	return new UserChatOptions(fieldJid.getRawValue(), fieldPassw.getRawValue(), resource, "blue",
+		SubscriptionMode.autoAcceptAll, true);
     }
 
     public void setInitalData(final String djid, final String pass, final String relVer) {
-        this.release = relVer;
-        fieldPassw.setValue(pass);
-        fieldJid.setValue(djid);
+	this.release = relVer;
+	fieldPassw.setValue(pass);
+	fieldJid.setValue(djid);
     }
 }

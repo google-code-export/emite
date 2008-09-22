@@ -22,15 +22,16 @@
 package com.calclab.emite.im.client;
 
 import com.calclab.emite.core.client.xmpp.session.InitialPresence;
-import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.LoadOnSession;
+import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.presence.PresenceManagerImpl;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
-import com.calclab.emite.im.client.xold_roster.XRosterManagerImpl;
+import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.im.client.roster.RosterImpl;
+import com.calclab.emite.im.client.roster.SubscriptionManager;
+import com.calclab.emite.im.client.roster.SubscriptionManagerImpl;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.ioc.module.AbstractModule;
 import com.calclab.suco.client.ioc.module.Factory;
@@ -61,25 +62,25 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
     public void onLoad() {
 	container.removeProvider(InitialPresence.class);
 
-	register(LoadOnSession.class, new Factory<XRoster>(XRoster.class) {
+	register(LoadOnSession.class, new Factory<Roster>(Roster.class) {
 	    @Override
-	    public XRoster create() {
-		return new XRoster();
+	    public Roster create() {
+		return new RosterImpl($(Session.class));
 	    }
 	}, new Factory<ChatManager>(ChatManager.class) {
 	    @Override
 	    public ChatManagerImpl create() {
 		return new ChatManagerImpl($(Session.class));
 	    }
-	}, new Factory<XRosterManager>(XRosterManager.class) {
+	}, new Factory<SubscriptionManager>(SubscriptionManager.class) {
 	    @Override
-	    public XRosterManager create() {
-		return new XRosterManagerImpl($(Session.class), $(XRoster.class));
+	    public SubscriptionManager create() {
+		return new SubscriptionManagerImpl($(Session.class), $(Roster.class));
 	    }
 	}, new Factory<PresenceManager>(PresenceManager.class) {
 	    @Override
 	    public PresenceManager create() {
-		return new PresenceManagerImpl($(Session.class), $(XRosterManager.class));
+		return new PresenceManagerImpl($(Session.class), $(Roster.class));
 	    }
 	});
 

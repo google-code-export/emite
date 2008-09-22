@@ -2,44 +2,45 @@ package com.calclab.emite.j2se.swing.roster;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
-import java.util.Collection;
-
 import com.calclab.emite.core.client.xmpp.session.Session;
-import com.calclab.emite.core.client.xmpp.stanzas.Presence;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emite.im.client.xold_roster.XRoster;
-import com.calclab.emite.im.client.xold_roster.XRosterManager;
+import com.calclab.emite.im.client.roster.SubscriptionManager;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.client.listener.Listener2;
 
 public class RosterControl {
 
-    public RosterControl(final Session session, final XRosterManager rosterManager, final XRoster xRoster,
+    public RosterControl(final Session session, final Roster roster, final SubscriptionManager subscriptionManager,
 	    final RosterPanel rosterPanel) {
 
 	rosterPanel.onAddRosterItem(new Listener2<String, String>() {
 	    public void onEvent(final String jid, final String name) {
-		rosterManager.requestAddItem(uri(jid), name, null);
+		roster.addItem(uri(jid), name);
 	    }
 	});
 
 	rosterPanel.onRemoveItem(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
-		rosterManager.requestRemoveItem(item.getJID());
+		roster.removeItem(item.getJID());
 	    }
 	});
 
-	xRoster.onItemChanged(new Listener<RosterItem>() {
+	roster.onItemAdded(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
+		rosterPanel.addItem(item.getName(), item);
+	    }
+	});
+
+	roster.onItemUpdated(new Listener<RosterItem>() {
+	    public void onEvent(final RosterItem parameter) {
 		rosterPanel.refresh();
 	    }
 	});
-	xRoster.onRosterChanged(new Listener<Collection<RosterItem>>() {
-	    public void onEvent(final Collection<RosterItem> items) {
-		rosterPanel.clear();
-		for (final RosterItem item : items) {
-		    rosterPanel.add(item.getName(), item);
-		}
+
+	roster.onItemRemoved(new Listener<RosterItem>() {
+	    public void onEvent(final RosterItem parameter) {
 	    }
 	});
 
@@ -51,14 +52,20 @@ public class RosterControl {
 	    }
 	});
 
-	rosterManager.onSubscriptionRequested(new Listener<Presence>() {
-	    public void onEvent(final Presence presence) {
-		final String message = presence.getFromAsString() + " want to add you to his/her roster. Accept?";
+	subscriptionManager.onSubscriptionRequested(new Listener<XmppURI>() {
+	    public void onEvent(final XmppURI uri) {
+		final String message = uri.toString() + " want to add you to his/her roster. Accept?";
 		if (rosterPanel.isConfirmed(message)) {
-		    rosterManager.acceptSubscription(presence);
+		    subscriptionManager.approveSubscriptionRequest(uri);
+		} else {
+		    subscriptionManager.refuseSubscriptionRequest(uri);
 		}
 	    }
 	});
-    }
 
+	subscriptionManager.onSubscriptionRequested(new Listener<XmppURI>() {
+	    public void onEvent(final XmppURI uri) {
+	    }
+	});
+    }
 }

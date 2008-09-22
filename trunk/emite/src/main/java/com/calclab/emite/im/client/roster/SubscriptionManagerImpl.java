@@ -34,12 +34,20 @@ public class SubscriptionManagerImpl implements SubscriptionManager {
 	});
     }
 
+    public void approveSubscriptionRequest(final XmppURI jid) {
+	session.send(new Presence(Type.subscribed, session.getCurrentUser(), jid.getJID()));
+    }
+
     public void cancelSubscription(final XmppURI jid) {
 	session.send(new Presence(Type.unsubscribe, session.getCurrentUser(), jid.getJID()));
     }
 
     public void onSubscriptionRequested(final Listener<XmppURI> listener) {
 	onSubscriptionRequested.add(listener);
+    }
+
+    public void refuseSubscriptionRequest(final XmppURI jid) {
+	session.send(new Presence(Type.unsubscribed, session.getCurrentUser(), jid.getJID()));
     }
 
     public void requestSubscribe(final XmppURI jid) {
