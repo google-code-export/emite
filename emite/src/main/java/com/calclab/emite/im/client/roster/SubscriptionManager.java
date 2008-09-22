@@ -1,7 +1,7 @@
 package com.calclab.emite.im.client.roster;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener2;
 
 /**
  * Manager presence subscriptions between users. Also, it take cares of
@@ -17,8 +17,10 @@ public interface SubscriptionManager {
      * 
      * @param jid
      *            the other entity's JID
+     * @param nick
+     *            the desired roster nick
      */
-    public void approveSubscriptionRequest(XmppURI jid);
+    public void approveSubscriptionRequest(XmppURI jid, String nick);
 
     /**
      * Cancels a previously-granted subscription
@@ -33,9 +35,10 @@ public interface SubscriptionManager {
      * request to subscribe to the current logged in user's presence)
      * 
      * @param listener
-     *            the listener to be called
+     *            the listener to be called (with the jid of the entity and the
+     *            nick name)
      */
-    public void onSubscriptionRequested(Listener<XmppURI> listener);
+    public void onSubscriptionRequested(Listener2<XmppURI, String> listener);
 
     /**
      * Refuse a previously subscription request stanza

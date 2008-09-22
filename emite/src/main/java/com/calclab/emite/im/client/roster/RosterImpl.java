@@ -49,29 +49,15 @@ public class RosterImpl implements Roster {
 
 	session.onIQ(new Listener<IQ>() {
 	    public void onEvent(final IQ iq) {
-		final IPacket query = iq.getFirstChild(ROSTER_QUERY_FILTER);
-		if (query != null) {
-		    for (final IPacket child : query.getChildren()) {
-			handle(RosterItem.parse(child));
+		if (IQ.isSet(iq)) {
+		    final IPacket query = iq.getFirstChild(ROSTER_QUERY_FILTER);
+		    if (query != null) {
+			for (final IPacket child : query.getChildren()) {
+			    handleRosterIQSet(RosterItem.parse(child));
+			}
 		    }
+		    session.send(new IQ(Type.result).With("id", iq.getId()));
 		}
-	    }
-
-	    private void handle(final RosterItem item) {
-		final RosterItem old = findByJID(item.getJID());
-		if (old == null) {
-		    addItem(item);
-		    onItemAdded.fire(item);
-		} else {
-		    removeItem(old);
-		    if (item.getSubscriptionState() == SubscriptionState.remove) {
-			onItemRemoved.fire(item);
-		    } else {
-			addItem(item);
-			onItemUpdated.fire(item);
-		    }
-		}
-
 	    }
 
 	});
@@ -163,6 +149,23 @@ public class RosterImpl implements Roster {
 	    public void onEvent(final IPacket parameter) {
 	    }
 	});
+    }
+
+    private void handleRosterIQSet(final RosterItem item) {
+	final RosterItem old = findByJID(item.getJID());
+	if (old == null) {
+	    addItem(item);
+	    onItemAdded.fire(item);
+	} else {
+	    removeItem(old);
+	    if (item.getSubscriptionState() == SubscriptionState.remove) {
+		onItemRemoved.fire(item);
+	    } else {
+		addItem(item);
+		onItemUpdated.fire(item);
+	    }
+	}
+
     }
 
     private void removeItem(final RosterItem item) {

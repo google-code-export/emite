@@ -2,6 +2,8 @@ package com.calclab.emite.j2se.swing.roster;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
+import java.util.Collection;
+
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.roster.Roster;
@@ -24,6 +26,15 @@ public class RosterControl {
 	rosterPanel.onRemoveItem(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
 		roster.removeItem(item.getJID());
+	    }
+	});
+
+	roster.onRosterRetrieved(new Listener<Collection<RosterItem>>() {
+	    public void onEvent(final Collection<RosterItem> items) {
+		rosterPanel.clear();
+		for (final RosterItem item : items) {
+		    rosterPanel.addItem(item.getName(), item);
+		}
 	    }
 	});
 
@@ -52,20 +63,16 @@ public class RosterControl {
 	    }
 	});
 
-	subscriptionManager.onSubscriptionRequested(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI uri) {
+	subscriptionManager.onSubscriptionRequested(new Listener2<XmppURI, String>() {
+	    public void onEvent(final XmppURI uri, final String nick) {
 		final String message = uri.toString() + " want to add you to his/her roster. Accept?";
 		if (rosterPanel.isConfirmed(message)) {
-		    subscriptionManager.approveSubscriptionRequest(uri);
+		    subscriptionManager.approveSubscriptionRequest(uri, nick);
 		} else {
 		    subscriptionManager.refuseSubscriptionRequest(uri);
 		}
 	    }
 	});
 
-	subscriptionManager.onSubscriptionRequested(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI uri) {
-	    }
-	});
     }
 }

@@ -22,7 +22,7 @@
 package com.calclab.emite.im.client;
 
 import com.calclab.emite.core.client.xmpp.session.InitialPresence;
-import com.calclab.emite.core.client.xmpp.session.LoadOnSession;
+import com.calclab.emite.core.client.xmpp.session.SessionComponent;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
@@ -62,7 +62,7 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
     public void onLoad() {
 	container.removeProvider(InitialPresence.class);
 
-	register(LoadOnSession.class, new Factory<Roster>(Roster.class) {
+	register(SessionComponent.class, new Factory<Roster>(Roster.class) {
 	    @Override
 	    public Roster create() {
 		return new RosterImpl($(Session.class));

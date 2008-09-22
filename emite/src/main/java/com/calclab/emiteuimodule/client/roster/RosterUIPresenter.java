@@ -44,6 +44,7 @@ import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem.UserGridMenuItemListener;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener2;
 
 public class RosterUIPresenter {
 
@@ -152,8 +153,8 @@ public class RosterUIPresenter {
 	onOpenChat.add(listener);
     }
 
-    public void onPresenceAccepted(final XmppURI jid) {
-	subscriptionManager.approveSubscriptionRequest(jid);
+    public void onPresenceAccepted(final XmppURI jid, final String nick) {
+	subscriptionManager.approveSubscriptionRequest(jid, nick);
     }
 
     public void onPresenceNotAccepted(final XmppURI jid) {
@@ -361,11 +362,11 @@ public class RosterUIPresenter {
 	});
 
 	// FIXME: new Roster impl
-	subscriptionManager.onSubscriptionRequested(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI jid) {
+	subscriptionManager.onSubscriptionRequested(new Listener2<XmppURI, String>() {
+	    public void onEvent(final XmppURI jid, final String nick) {
 		Log.info("Manual accept/reject");
 		onUserAlert.fire("");
-		view.confirmSusbscriptionRequest(jid);
+		view.confirmSusbscriptionRequest(jid, nick);
 	    }
 	});
 

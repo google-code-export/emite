@@ -60,7 +60,7 @@ public class LoginControl {
 	loginPanel.addConfiguration(new ConnectionConfiguration("admin @ local openfire",
 		"http://localhost:5280/http-bind/", "localhost", "admin", "easyeasy"));
 	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ local ejabberd",
-		"http://localhost:5280/http-bind/", "localhost", "dani", "dani"));
+		"http://localhost:5280/http-bind/", "localhost", "test1", "test1"));
 	loginPanel.addConfiguration(new ConnectionConfiguration("dani @ emite demo",
 		"http://emite.ourproject.org/proxy", "emitedemo.ourproject.org", "dani", "dani"));
 	loginPanel.addConfiguration(new ConnectionConfiguration("test1 @ jetty proxy",
