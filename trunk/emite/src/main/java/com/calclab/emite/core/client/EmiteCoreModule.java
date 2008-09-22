@@ -8,7 +8,7 @@ import com.calclab.emite.core.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.core.client.xmpp.sasl.SASLManager;
 import com.calclab.emite.core.client.xmpp.session.InitialPresence;
 import com.calclab.emite.core.client.xmpp.session.Session;
-import com.calclab.emite.core.client.xmpp.session.LoadOnSession;
+import com.calclab.emite.core.client.xmpp.session.SessionComponent;
 import com.calclab.emite.core.client.xmpp.session.SessionImpl;
 import com.calclab.emite.core.client.xmpp.session.IMSessionManager;
 import com.calclab.suco.client.Suco;
@@ -25,7 +25,7 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 
     @Override
     public void onLoad() {
-	registerDecorator(LoadOnSession.class, new LoadOnSession());
+	registerDecorator(SessionComponent.class, new SessionComponent());
 
 	register(Singleton.class, new Factory<Services>(Services.class) {
 	    @Override
@@ -55,7 +55,7 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 	    @Override
 	    public void onAfterCreated(final Session session) {
 		Logger.debug("Creating Session grouped objects...");
-		$(LoadOnSession.class).createAll();
+		$(SessionComponent.class).createAll();
 	    }
 	}, new Factory<ResourceBindingManager>(ResourceBindingManager.class) {
 	    @Override
@@ -68,7 +68,7 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 		return new SASLManager($(Connection.class));
 	    }
 	});
-	register(LoadOnSession.class, new Factory<InitialPresence>(InitialPresence.class) {
+	register(SessionComponent.class, new Factory<InitialPresence>(InitialPresence.class) {
 	    @Override
 	    public InitialPresence create() {
 		return new InitialPresence($(Session.class));

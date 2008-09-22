@@ -29,27 +29,28 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import com.calclab.emite.j2se.swing.chat.ConversationsPanel;
+import com.calclab.emite.j2se.swing.log.LogPanel;
 import com.calclab.emite.j2se.swing.login.LoginPanel;
 import com.calclab.emite.j2se.swing.roster.RosterPanel;
 
 public class SwingClient {
-    private final JPanel root;
-    private final JLabel status;
-    private final JTabbedPane tabs;
 
     public SwingClient(final JFrame frame, final LoginPanel loginPanel, final RosterPanel rosterPanel,
-	    final ConversationsPanel conversationsPanel) {
+	    final ConversationsPanel conversationsPanel, final LogPanel logPanel) {
 
-	root = new JPanel(new BorderLayout());
+	final JPanel root = new JPanel(new BorderLayout());
 	addXmppListeners();
 
-	status = new JLabel("emite test client");
+	final JLabel status = new JLabel("emite test client");
 
 	root.add(loginPanel, BorderLayout.NORTH);
 	root.add(conversationsPanel, BorderLayout.CENTER);
-	root.add(status, BorderLayout.SOUTH);
+	final JPanel south = new JPanel(new BorderLayout());
+	south.add(status, BorderLayout.NORTH);
+	south.add(logPanel, BorderLayout.CENTER);
+	root.add(south, BorderLayout.SOUTH);
 
-	tabs = new JTabbedPane();
+	final JTabbedPane tabs = new JTabbedPane();
 	tabs.add("chats", rosterPanel);
 
 	root.add(tabs, BorderLayout.EAST);

@@ -68,14 +68,14 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
 	super.confDropInPanel(panel, dropGridConfiguration);
     }
 
-    public void confirmSusbscriptionRequest(final XmppURI jid) {
+    public void confirmSusbscriptionRequest(final XmppURI jid, final String nick) {
 	MessageBox.confirm(i18n.t("Confirm"), i18n.t("[%s] want to add you as a buddy. Do you want to permit?", jid
 		.getJID().toString()), new MessageBox.ConfirmCallback() {
 	    public void execute(final String btnID) {
 		if (btnID.equals("yes")) {
 		    DeferredCommand.addCommand(new Command() {
 			public void execute() {
-			    presenter.onPresenceAccepted(jid);
+			    presenter.onPresenceAccepted(jid, nick);
 			}
 		    });
 		} else {

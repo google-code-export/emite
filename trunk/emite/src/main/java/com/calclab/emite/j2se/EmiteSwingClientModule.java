@@ -35,6 +35,8 @@ import com.calclab.emite.j2se.swing.FrameControl;
 import com.calclab.emite.j2se.swing.SwingClient;
 import com.calclab.emite.j2se.swing.chat.ConversationControl;
 import com.calclab.emite.j2se.swing.chat.ConversationsPanel;
+import com.calclab.emite.j2se.swing.log.LogControl;
+import com.calclab.emite.j2se.swing.log.LogPanel;
 import com.calclab.emite.j2se.swing.login.LoginControl;
 import com.calclab.emite.j2se.swing.login.LoginPanel;
 import com.calclab.emite.j2se.swing.roster.AddRosterItemPanel;
@@ -66,7 +68,7 @@ public class EmiteSwingClientModule extends AbstractModule {
 	    @Override
 	    public SwingClient create() {
 		return new SwingClient($(JFrame.class), $(LoginPanel.class), $(RosterPanel.class),
-			$(ConversationsPanel.class));
+			$(ConversationsPanel.class), $(LogPanel.class));
 	    }
 	});
 
@@ -82,7 +84,18 @@ public class EmiteSwingClientModule extends AbstractModule {
 	    }
 	});
 
-	register(Singleton.class, new Factory<LoginPanel>(LoginPanel.class) {
+	register(Singleton.class, new Factory<LogPanel>(LogPanel.class) {
+	    @Override
+	    public LogPanel create() {
+		return new LogPanel();
+	    }
+
+	    @Override
+	    public void onAfterCreated(final LogPanel instance) {
+		new LogControl($(Connection.class), instance);
+	    }
+
+	}, new Factory<LoginPanel>(LoginPanel.class) {
 	    @Override
 	    public LoginPanel create() {
 		return new LoginPanel($(JFrame.class));

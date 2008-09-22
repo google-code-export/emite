@@ -30,8 +30,12 @@ public class IQ extends BasicStanza {
 
     private static final String NAME = "iq";
 
-    public static boolean isSuccess(final IPacket received) {
-	return received.hasAttribute(TYPE, "result");
+    public static boolean isSet(final IPacket iq) {
+	return iq.hasAttribute(TYPE, "set");
+    }
+
+    public static boolean isSuccess(final IPacket iq) {
+	return iq.hasAttribute(TYPE, "result");
     }
 
     public IQ(final IPacket stanza) {
