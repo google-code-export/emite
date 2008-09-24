@@ -24,7 +24,6 @@ package com.calclab.emiteuimodule.client.utils;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 

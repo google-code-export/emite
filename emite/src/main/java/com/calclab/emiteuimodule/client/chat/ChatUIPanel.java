@@ -23,7 +23,7 @@ package com.calclab.emiteuimodule.client.chat;
 
 import org.ourproject.kune.platf.client.ui.HorizontalLine;
 
-import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
+import com.calclab.emiteuimodule.client.utils.ChatIconDescriptor;
 import com.calclab.emiteuimodule.client.utils.ChatTextFormatter;
 import com.calclab.emiteuimodule.client.utils.ChatUIUtils;
 import com.google.gwt.dom.client.Element;

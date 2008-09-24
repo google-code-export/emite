@@ -26,6 +26,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
 
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.session.SessionComponent;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.SubscriptionManager;
@@ -39,7 +40,9 @@ import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.sound.SoundModule;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.emiteuimodule.client.status.StatusUIModule;
-import com.calclab.suco.client.ioc.decorator.NoDecoration;
+import com.calclab.emiteuimodule.client.subscription.SubscriptionUI;
+import com.calclab.emiteuimodule.client.subscription.SubscriptionUIPanel;
+import com.calclab.emiteuimodule.client.subscription.SubscriptionUIPresenter;
 import com.calclab.suco.client.ioc.decorator.Singleton;
 import com.calclab.suco.client.ioc.module.AbstractModule;
 import com.calclab.suco.client.ioc.module.Factory;
@@ -52,22 +55,29 @@ public class EmiteUIModule extends AbstractModule {
 
     @Override
     public void onLoad() {
-	register(Singleton.class, new Factory<I18nTranslationService>(I18nTranslationService.class) {
-	    @Override
-	    public I18nTranslationService create() {
-		return new I18nTranslationServiceMocked();
-	    }
-	}, new Factory<QuickTipsHelper>(QuickTipsHelper.class) {
-	    @Override
-	    public QuickTipsHelper create() {
-		return new QuickTipsHelper();
+
+	if (!container.hasProvider(I18nTranslationService.class)) {
+	    register(Singleton.class, new Factory<I18nTranslationService>(I18nTranslationService.class) {
+		@Override
+		public I18nTranslationService create() {
+		    return new I18nTranslationServiceMocked();
+		}
+	    });
+	}
+
+	register(SessionComponent.class, new Factory<SubscriptionUI>(SubscriptionUI.class) {
+	    public SubscriptionUI create() {
+		final SubscriptionUIPresenter presenter = new SubscriptionUIPresenter($(SubscriptionManager.class));
+		final SubscriptionUIPanel panel = new SubscriptionUIPanel(presenter, $(I18nTranslationService.class));
+		presenter.init(panel);
+		return presenter;
 	    }
 	});
 
-	register(Singleton.class, new Factory<AutoSubscriber>(AutoSubscriber.class) {
+	register(Singleton.class, new Factory<QuickTipsHelper>(QuickTipsHelper.class) {
 	    @Override
-	    public AutoSubscriber create() {
-		return new AutoSubscriber($(SubscriptionManager.class));
+	    public QuickTipsHelper create() {
+		return new QuickTipsHelper();
 	    }
 	});
 
@@ -87,7 +97,7 @@ public class EmiteUIModule extends AbstractModule {
 	    }
 	});
 
-	register(NoDecoration.class, new Factory<EmiteUIDialog>(EmiteUIDialog.class) {
+	register(Singleton.class, new Factory<EmiteUIDialog>(EmiteUIDialog.class) {
 	    @Override
 	    public EmiteUIDialog create() {
 		return new EmiteUIDialog($(Connection.class), $(Session.class), $(ChatManager.class),

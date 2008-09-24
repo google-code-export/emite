@@ -22,7 +22,7 @@
 package com.calclab.emiteuimodule.client.users;
 
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
+import com.calclab.emiteuimodule.client.utils.ChatIconDescriptor;
 
 public class ChatUserUI extends AbstractChatUser {
 

@@ -31,8 +31,6 @@ import com.calclab.emiteuimodule.client.users.UserGridListener;
 import com.calclab.emiteuimodule.client.users.UserGridMenu;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 import com.calclab.emiteuimodule.client.users.UserGridPanel;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 
@@ -66,27 +64,6 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
     @Override
     public void confDropInPanel(final Panel panel, final DropGridConfiguration dropGridConfiguration) {
 	super.confDropInPanel(panel, dropGridConfiguration);
-    }
-
-    public void confirmSusbscriptionRequest(final XmppURI jid, final String nick) {
-	MessageBox.confirm(i18n.t("Confirm"), i18n.t("[%s] want to add you as a buddy. Do you want to permit?", jid
-		.getJID().toString()), new MessageBox.ConfirmCallback() {
-	    public void execute(final String btnID) {
-		if (btnID.equals("yes")) {
-		    DeferredCommand.addCommand(new Command() {
-			public void execute() {
-			    presenter.onPresenceAccepted(jid, nick);
-			}
-		    });
-		} else {
-		    DeferredCommand.addCommand(new Command() {
-			public void execute() {
-			    presenter.onPresenceNotAccepted(jid);
-			}
-		    });
-		}
-	    }
-	});
     }
 
     public void informRosterItemRemoved(final ChatUserUI user) {

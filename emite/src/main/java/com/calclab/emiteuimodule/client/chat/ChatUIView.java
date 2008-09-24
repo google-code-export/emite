@@ -23,7 +23,7 @@ package com.calclab.emiteuimodule.client.chat;
 
 import org.ourproject.kune.platf.client.View;
 
-import com.calclab.emiteuimodule.client.roster.ChatIconDescriptor;
+import com.calclab.emiteuimodule.client.utils.ChatIconDescriptor;
 
 public interface ChatUIView extends View {
 

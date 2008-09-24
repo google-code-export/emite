@@ -34,11 +34,11 @@ import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.xep.muc.client.RoomManager;
-import com.calclab.emiteuimodule.client.AutoSubscriber;
 import com.calclab.emiteuimodule.client.SubscriptionMode;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
+import com.calclab.emiteuimodule.client.subscription.SubscriptionUI;
 import com.calclab.suco.client.ioc.Provider;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
@@ -59,12 +59,11 @@ public class StatusUIPresenter implements StatusUI {
     private final Event<SubscriptionMode> onUserSubscriptionModeChanged;
     private final Provider<ChatManager> chatManagerProvider;
     private final Provider<RoomManager> roomManagerProvider;
-
-    private final AutoSubscriber subscriber;
+    private final SubscriptionUI subscriber;
 
     public StatusUIPresenter(final Session session, final PresenceManager presenceManager, final Roster roster,
-	    final AutoSubscriber subscriber, final Provider<ChatManager> chatManager,
-	    final Provider<RoomManager> roomManager, final I18nTranslationService i18n) {
+	    final Provider<ChatManager> chatManager, final Provider<RoomManager> roomManager,
+	    final SubscriptionUI subscriber, final I18nTranslationService i18n) {
 	this.session = session;
 	this.presenceManager = presenceManager;
 	this.subscriber = subscriber;
