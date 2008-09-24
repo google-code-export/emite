@@ -64,6 +64,13 @@ public class EmiteUIModule extends AbstractModule {
 	    }
 	});
 
+	register(Singleton.class, new Factory<AutoSubscriber>(AutoSubscriber.class) {
+	    @Override
+	    public AutoSubscriber create() {
+		return new AutoSubscriber($(SubscriptionManager.class));
+	    }
+	});
+
 	$(QuickTipsHelper.class);
 
 	install(new StatusUIModule(), new SoundModule(), new RoomUIModule());
