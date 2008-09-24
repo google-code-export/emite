@@ -42,34 +42,18 @@ import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem.UserGridMenuItemListener;
+import com.calclab.emiteuimodule.client.utils.ChatIconDescriptor;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
-import com.calclab.suco.client.listener.Listener2;
 
 public class RosterUIPresenter {
-
-    public static interface RosterPresenceListener {
-
-	void onCancelSubscriptor(XmppURI userURI);
-
-	void onOpenChat(XmppURI userURI);
-
-	void onRequestRemoveItem(XmppURI userURI);
-
-	void onRequestSubscribe(XmppURI userURI);
-
-	void onRequestUnsubscribe(XmppURI userURI);
-
-    }
 
     private RosterUIView view;
     private final HashMap<XmppURI, ChatUserUI> rosterMap;
     private final I18nTranslationService i18n;
     private final AvatarProvider avatarProvider;
     private boolean showUnavailableItems;
-    private RosterPresenceListener listener;
     private final Event<XmppURI> onOpenChat;
-    private final Event<String> onUserAlert;
     private final Roster roster;
     private final SubscriptionManager subscriptionManager;
 
@@ -82,30 +66,6 @@ public class RosterUIPresenter {
 	rosterMap = new HashMap<XmppURI, ChatUserUI>();
 	showUnavailableItems = false;
 	this.onOpenChat = new Event<XmppURI>("onOpenChat");
-	this.onUserAlert = new Event<String>("onUserAlert");
-
-	// FIXME: User signals...
-	listener = new RosterPresenceListener() {
-	    public void onCancelSubscriptor(final XmppURI userURI) {
-		subscriptionManager.cancelSubscription(userURI);
-	    }
-
-	    public void onOpenChat(final XmppURI userURI) {
-		onOpenChat.fire(userURI);
-	    }
-
-	    public void onRequestRemoveItem(final XmppURI userURI) {
-		roster.removeItem(userURI);
-	    }
-
-	    public void onRequestSubscribe(final XmppURI userURI) {
-		subscriptionManager.requestSubscribe(userURI);
-	    }
-
-	    public void onRequestUnsubscribe(final XmppURI userURI) {
-		subscriptionManager.unsubscribe(userURI);
-	    }
-	};
     }
 
     public void clearRoster() {
@@ -153,24 +113,8 @@ public class RosterUIPresenter {
 	onOpenChat.add(listener);
     }
 
-    public void onPresenceAccepted(final XmppURI jid, final String nick) {
-	subscriptionManager.approveSubscriptionRequest(jid, nick);
-    }
-
-    public void onPresenceNotAccepted(final XmppURI jid) {
-	subscriptionManager.refuseSubscriptionRequest(jid);
-    }
-
-    public void onUserAlert(final Listener<String> listener) {
-	onUserAlert.add(listener);
-    }
-
     public void openChat(final XmppURI userURI) {
-	listener.onOpenChat(userURI);
-    }
-
-    public void setListener(final RosterPresenceListener listener) {
-	this.listener = listener;
+	onOpenChat.fire(userURI);
     }
 
     public void showUnavailableRosterItems(final boolean show) {
@@ -265,7 +209,7 @@ public class RosterUIPresenter {
 	return new UserGridMenuItem<XmppURI>("del-icon",
 		i18n.t("Stop to show when I'm connected or not to this buddy"), new UserGridMenuItemListener() {
 		    public void onAction() {
-			listener.onCancelSubscriptor(userURI);
+			subscriptionManager.cancelSubscription(userURI);
 		    }
 		});
     }
@@ -302,7 +246,7 @@ public class RosterUIPresenter {
 	return new UserGridMenuItem<XmppURI>("cancel-icon", i18n.t("Remove this buddy"),
 		new UserGridMenuItemListener() {
 		    public void onAction() {
-			listener.onRequestRemoveItem(userURI);
+			roster.removeItem(userURI);
 		    }
 		});
     }
@@ -311,7 +255,7 @@ public class RosterUIPresenter {
 	return new UserGridMenuItem<XmppURI>("newchat-icon", i18n.t("Start a chat with this buddy"),
 		new UserGridMenuItemListener() {
 		    public void onAction() {
-			listener.onOpenChat(userURI);
+			openChat(userURI);
 		    }
 		});
     }
@@ -320,7 +264,7 @@ public class RosterUIPresenter {
 	return new UserGridMenuItem<XmppURI>("add-icon", i18n.t("Request to see when this buddy is connected or not"),
 		new UserGridMenuItemListener() {
 		    public void onAction() {
-			listener.onRequestSubscribe(userURI);
+			subscriptionManager.requestSubscribe(userURI);
 		    }
 		});
     }
@@ -329,13 +273,12 @@ public class RosterUIPresenter {
 	return new UserGridMenuItem<XmppURI>("del-icon", i18n.t("Stop to see when this buddy is connected or not"),
 		new UserGridMenuItemListener() {
 		    public void onAction() {
-			listener.onRequestUnsubscribe(userURI);
+			subscriptionManager.unsubscribe(userURI);
 		    }
 		});
     }
 
     private void createXmppListeners() {
-
 	roster.onItemUpdated(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
 		final ChatUserUI user = rosterMap.get(item.getJID());
@@ -360,41 +303,6 @@ public class RosterUIPresenter {
 		refreshRoster(roster.getItems());
 	    }
 	});
-
-	// FIXME: new Roster impl
-	subscriptionManager.onSubscriptionRequested(new Listener2<XmppURI, String>() {
-	    public void onEvent(final XmppURI jid, final String nick) {
-		Log.info("Manual accept/reject");
-		onUserAlert.fire("");
-		view.confirmSusbscriptionRequest(jid, nick);
-	    }
-	});
-
-	// xRosterManager.onSubscriptionRequested(new Listener<Presence>() {
-	// public void onEvent(final Presence presence) {
-	// switch (xRosterManager.getSubscriptionMode()) {
-	// case autoAcceptAll:
-	// Log.info("Accepting because we are auto accepting");
-	// break;
-	// case autoRejectAll:
-	// Log.info("Rejecting because we are auto rejecting");
-	// break;
-	// default:
-	// Log.info("Manual accept/reject");
-	// onUserAlert.fire("");
-	// view.confirmSusbscriptionRequest(presence);
-	// break;
-	// }
-	// }
-	// });
-
-	// subscriptionManager.onUnsubscribedReceived(new Listener<XmppURI>() {
-	// public void onEvent(final XmppURI userUnsubscribed) {
-	// Log.info("UNSUBS RECEIVED");
-	// view.showMessageAboutUnsuscription(userUnsubscribed);
-	// }
-	// });
-
     }
 
     private boolean isAvailable(final RosterItem item) {

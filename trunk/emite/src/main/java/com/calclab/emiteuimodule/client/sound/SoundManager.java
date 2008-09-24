@@ -3,8 +3,9 @@ package com.calclab.emiteuimodule.client.sound;
 import com.allen_sauer.gwt.voices.client.Sound;
 import com.allen_sauer.gwt.voices.client.SoundController;
 import com.calclab.emiteuimodule.client.room.RoomUIManager;
-import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
+import com.calclab.emiteuimodule.client.subscription.SubscriptionUI;
 import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener0;
 
 public class SoundManager {
 
@@ -13,7 +14,7 @@ public class SoundManager {
     private boolean soundEnabled;
     private SoundPanel soundPanel;
 
-    public SoundManager(final RosterUIPresenter rosterUIPresenter, final RoomUIManager roomUIManager) {
+    public SoundManager(final SubscriptionUI subsUI, final RoomUIManager roomUIManager) {
 	configureSound();
 	if (roomUIManager != null) {
 	    roomUIManager.onUserAlert(new Listener<String>() {
@@ -22,9 +23,9 @@ public class SoundManager {
 		}
 	    });
 	}
-	if (rosterUIPresenter != null) {
-	    rosterUIPresenter.onUserAlert(new Listener<String>() {
-		public void onEvent(final String parameter) {
+	if (subsUI != null) {
+	    subsUI.onUserAlert(new Listener0() {
+		public void onEvent() {
 		    click();
 		}
 	    });

@@ -19,6 +19,7 @@ import com.calclab.emite.im.client.roster.SubscriptionState;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.users.ChatUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
+import com.calclab.emiteuimodule.client.utils.ChatIconDescriptor;
 
 public class RosterUIPresenterTest {
 

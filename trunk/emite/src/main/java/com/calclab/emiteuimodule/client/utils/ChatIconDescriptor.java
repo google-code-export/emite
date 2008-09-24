@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.calclab.emiteuimodule.client.roster;
+package com.calclab.emiteuimodule.client.utils;
 
 public enum ChatIconDescriptor {
     available, away, chat, dnd, xa, unknown, newmessage, offline, chatsmall, chatnewmessagesmall, roomsmall, roomnewmessagesmall

@@ -31,8 +31,6 @@ public interface RosterUIView {
 
     public void clearRoster();
 
-    public void confirmSusbscriptionRequest(final XmppURI presence, String nick);
-
     public void informRosterItemRemoved(final ChatUserUI user);
 
     public void removeRosterItem(final ChatUserUI user);
