@@ -14,7 +14,12 @@ DIR=$1
   fi
 
 # DO
-PACKAGE=`echo $DIR | cut -d "/" -f 4- | sed 's/\//\./g'`
+PACKAGE=`echo $DIR | cut -d "/" -f 4- | sed 's/\//\./g' | sed 's/.$//g'`
+
+if [[ ! -d $DIR ]]
+then
+  mkdir $DIR
+fi
 
 cat <<EOF > $DIR/${NAME}.java
 package $PACKAGE;
@@ -71,17 +76,19 @@ EOF
 
 
 cat <<EOF
-// If you use a Factory, paste this
+// If you use a Module, paste this
 package $PACKAGE;
 
 import $PACKAGE.${NAME}Presenter;
 import $PACKAGE.${NAME}Panel;
 import $PACKAGE.${NAME};
 
-public ${NAME} create${NAME}() {
-${NAME}Presenter presenter = new ${NAME}Presenter();
-${NAME}Panel panel = new ${NAME}Panel(presenter);
-presenter.init(panel);
-return presenter;
-}
+register(Singleton.class, new Factory<${NAME}>(${NAME}.class) {
+    public ${NAME} create() {
+	final ${NAME}Presenter presenter = new ${NAME}Presenter();
+	final ${NAME}Panel panel = new ${NAME}Panel(presenter, ws);
+	presenter.init(panel);
+	return presenter;
+    }
+});
 EOF
