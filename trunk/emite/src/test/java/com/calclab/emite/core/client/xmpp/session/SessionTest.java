@@ -117,7 +117,7 @@ public class SessionTest {
 
 	final XmppURI uri = uri("name@domain/resource");
 	sessionCreatedEvent.fire(uri);
-	MockListener.verifyCalledWith(onStateChanged, State.loggedIn, State.ready);
+	MockListener.verifyCalledWith(onStateChanged, State.loggedIn);
     }
 
     @Test

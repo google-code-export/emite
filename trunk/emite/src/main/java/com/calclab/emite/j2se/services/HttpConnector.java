@@ -48,28 +48,59 @@ public class HttpConnector {
 
     }
 
-    private final ExecutorService pool;
+    private final ExecutorService sendService;
+    private final ExecutorService receiveService;
 
     public HttpConnector() {
-	pool = Executors.newFixedThreadPool(1);
+	sendService = Executors.newFixedThreadPool(2);
+	receiveService = Executors.newFixedThreadPool(1);
     }
 
     public synchronized void send(final String httpBase, final String xml, final ConnectorCallback callback)
 	    throws ConnectorException {
-	final String id = HttpConnectorID.getNext();
-	Logger.debug("Connector [{0}] send: {1}", id, xml);
-	final HttpClientParams params = new HttpClientParams();
-	params.setConnectionManagerTimeout(10000);
-	final HttpClient client = new HttpClient(params);
 
-	final Runnable process = new Runnable() {
+	sendService.execute(createSendAction(httpBase, xml, callback));
+    }
+
+    protected void debug(final String pattern, final Object... arguments) {
+	final String msg = MessageFormat.format(pattern, arguments);
+	Log.debug(msg);
+    }
+
+    private Runnable createResponseAction(final String xml, final ConnectorCallback callback, final String id,
+	    final int status, final String response) {
+	final Runnable runnable = new Runnable() {
 	    public void run() {
+		if (status == HttpStatus.SC_OK) {
+		    System.out.println("RECEIVED: " + response);
+		    Logger.debug("Connector [{0}] receive: {1}", id, response);
+		    callback.onResponseReceived(status, response);
+		} else {
+		    Logger.debug("Connector [{0}] bad status: {1}", id, status);
+		    callback.onError(xml, new Exception("bad http status " + status));
+		}
+
+	    }
+
+	};
+	return runnable;
+    }
+
+    private Runnable createSendAction(final String httpBase, final String xml, final ConnectorCallback callback) {
+	return new Runnable() {
+	    public void run() {
+		final String id = HttpConnectorID.getNext();
+		Logger.debug("Connector [{0}] send: {1}", id, xml);
+		final HttpClientParams params = new HttpClientParams();
+		params.setConnectionManagerTimeout(10000);
+		final HttpClient client = new HttpClient(params);
 		int status = 0;
 		String response = null;
 		final PostMethod post = new PostMethod(httpBase);
 
 		try {
 		    post.setRequestEntity(new StringRequestEntity(xml, "text/xml", "utf-8"));
+		    System.out.println("SENDING: " + xml);
 		    status = client.executeMethod(post);
 		    response = post.getResponseBodyAsString();
 		} catch (final Exception e) {
@@ -79,23 +110,8 @@ public class HttpConnector {
 		    post.releaseConnection();
 		}
 
-		if (status == HttpStatus.SC_OK) {
-		    System.out.println("RECEIVED: " + response);
-		    Logger.debug("Connector [{0}] receive: {1}", id, response);
-		    callback.onResponseReceived(post.getStatusCode(), response);
-		} else {
-		    Logger.debug("Connector [{0}] bad status: {1}", id, status);
-		    callback.onError(xml, new Exception("bad http status " + status));
-		}
+		receiveService.execute(createResponseAction(xml, callback, id, status, response));
 	    }
 	};
-
-	pool.execute(process);
     }
-
-    protected void debug(final String pattern, final Object... arguments) {
-	final String msg = MessageFormat.format(pattern, arguments);
-	Log.debug(msg);
-    }
-
 }
