@@ -102,7 +102,7 @@ public class PresenceManagerImpl implements PresenceManager {
      * @param userURI
      */
     private void logOut(final XmppURI userURI) {
-	final Presence presence = new Presence(Type.unavailable, userURI, userURI.getHostURI());
+	final Presence presence = new Presence(Type.unavailable, userURI, null);
 	broadcastPresence(presence);
     }
 

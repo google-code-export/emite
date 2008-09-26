@@ -75,8 +75,9 @@ public class Room extends AbstractChat implements Chat {
 	    }
 	});
 
-	final Presence presence = new Presence(null, session.getCurrentUser(), roomURI);
+	final Presence presence = new Presence(null, null, roomURI);
 	presence.addChild("x", "http://jabber.org/protocol/muc");
+	presence.setPriority(0);
 	session.send(presence);
 
     }

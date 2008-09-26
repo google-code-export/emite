@@ -96,13 +96,11 @@ public abstract class AbstractChat implements Chat {
     }
 
     public void send(final Message message) {
-	if (state == State.ready) {
-	    message.setFrom(session.getCurrentUser());
-	    message.setTo(other);
-	    onBeforeSend.fire(message);
-	    session.send(message);
-	    onMessageSent.fire(message);
-	}
+	message.setFrom(session.getCurrentUser());
+	message.setTo(other);
+	onBeforeSend.fire(message);
+	session.send(message);
+	onMessageSent.fire(message);
     }
 
     @SuppressWarnings("unchecked")
