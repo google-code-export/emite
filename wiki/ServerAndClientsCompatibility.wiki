@@ -7,9 +7,10 @@ Emite Xmpp servers compatibility matrix:
 || openfire || 3.5.0 || no || BOSH bug in server || ||
 || openfire || 3.5.1 || yes || Some [http://www.igniterealtime.org/community/message/169420 openfire issue], [http://code.google.com/p/emite/issues/detail?id=6&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary%20Component #6] cause problems of connectivity || Under test in our demo ||
 || jabberd  || 1.4.3 || no || Protocol compatibility issue || ||
-|| ejabberd  || 2.0.0 || yes ||  || ||
+|| ejabberd  || 2.0.0 || yes || roster problems (not only with emite) || upgrade to 2.0.2 ||
+|| ejabberd  || 2.0.2 || yes ||  || ||
 || tigase   || ? || ? || Not tested || ||
-|| ejabberd || ? || ? || Not tested || ||
+
 
 
 == Clients ===
