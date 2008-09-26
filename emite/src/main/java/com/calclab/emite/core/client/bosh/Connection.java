@@ -27,6 +27,6 @@ public interface Connection {
 
     public abstract void send(final IPacket packet);
 
-    public abstract void setSettings(Bosh3Settings settings);
+    public abstract void setSettings(BoshSettings settings);
 
 }

@@ -17,7 +17,7 @@ public class ConnectionTestHelper {
 
     public ConnectionTestHelper() {
 	xmler = new TigaseXMLService();
-	connection = mock(Bosh3Connection.class);
+	connection = mock(BoshConnection.class);
     }
 
     public Connection getConnection() {

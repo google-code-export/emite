@@ -3,7 +3,7 @@ package com.calclab.emite.browser.client;
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.core.client.bosh.Bosh3Settings;
+import com.calclab.emite.core.client.bosh.BoshSettings;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.bosh.StreamSettings;
 import com.calclab.emite.core.client.xmpp.session.Session;
@@ -44,7 +44,7 @@ public class PageController {
 	final String httpBase = assist.getMeta(PARAM_HTTPBASE, true);
 	final String host = assist.getMeta(PARAM_HOST, true);
 	Log.debug("CONNECTION PARAMS: " + httpBase + ", " + host);
-	connection.setSettings(new Bosh3Settings(httpBase, host));
+	connection.setSettings(new BoshSettings(httpBase, host));
     }
 
     private void pauseConnection() {

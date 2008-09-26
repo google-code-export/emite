@@ -70,7 +70,7 @@ public class Room extends AbstractChat implements Chat {
 	    public void onEvent(final Presence presence) {
 		final XmppURI occupantURI = presence.getFrom();
 		if (roomURI.equalsNoResource(occupantURI)) {
-		    changePresence(occupantURI, presence);
+		    handlePresence(occupantURI, presence);
 		}
 	    }
 	});
@@ -207,7 +207,7 @@ public class Room extends AbstractChat implements Chat {
 	return "ROOM: " + other;
     }
 
-    private void changePresence(final XmppURI occupantURI, final Presence presence) {
+    private void handlePresence(final XmppURI occupantURI, final Presence presence) {
 	if (presence.hasAttribute("type", "unavailable")) {
 	    this.removeOccupant(occupantURI);
 	} else {
@@ -233,7 +233,7 @@ public class Room extends AbstractChat implements Chat {
     }
 
     private void requestCreateInstantRoom() {
-	final IQ iq = new IQ(IQ.Type.set, this.getOtherURI());
+	final IQ iq = new IQ(IQ.Type.set, this.getOtherURI().getJID());
 	iq.addQuery("http://jabber.org/protocol/muc#owner").addChild("x", "jabber:x:data").With("type", "submit");
 	session.sendIQ("rooms", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {

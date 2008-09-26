@@ -52,7 +52,7 @@ public class HttpConnector {
     private final ExecutorService receiveService;
 
     public HttpConnector() {
-	sendService = Executors.newFixedThreadPool(2);
+	sendService = Executors.newCachedThreadPool();
 	receiveService = Executors.newFixedThreadPool(1);
     }
 

@@ -11,16 +11,16 @@ import com.calclab.emite.testing.IsPacketLike;
 public class Bosh3ConnectionTests {
 
     private final MockServices services;
-    private final Bosh3Connection connection;
+    private final BoshConnection connection;
 
     public Bosh3ConnectionTests() {
 	services = new MockServices();
-	connection = new Bosh3Connection(services);
+	connection = new BoshConnection(services);
     }
 
     @Test
     public void shouldSendInitialBody() {
-	connection.setSettings(new Bosh3Settings("httpBase", "localhost"));
+	connection.setSettings(new BoshSettings("httpBase", "localhost"));
 	connection.connect();
 	assertEquals(1, services.requestSentCount());
 	final IsPacketLike matcher = IsPacketLike.build("<body to='localhost' "
