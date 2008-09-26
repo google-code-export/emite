@@ -29,7 +29,7 @@ public class RoomUserUI extends AbstractChatUser {
     private final Occupant occupant;
 
     public RoomUserUI(final Occupant occupant, final String color) {
-        super("images/person-def.gif", occupant.getUri(), occupant.getUri().getResource(), color);
+        super("images/person-def.gif", occupant.getURI(), occupant.getURI().getResource(), color);
         this.occupant = occupant;
     }
 

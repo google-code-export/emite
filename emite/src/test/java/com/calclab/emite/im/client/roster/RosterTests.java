@@ -40,7 +40,7 @@ public class RosterTests {
 	session.receives("<iq type='set' from='someone@domain' id='theId'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='MyFriend'><group>Group1</group><group>Group2</group>"
 		+ "</item></query></iq>");
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
 	assertEquals(1, roster.getItems().size());
 	final RosterItem item = asList(roster.getItems()).get(0);
 	assertEquals("friend@domain", item.getJID().toString());
@@ -73,7 +73,7 @@ public class RosterTests {
 
 	shouldRequestRosterOnLogin();
 	session.answer(new IQ(Type.error));
-	MockListener.verifyNotCalled(listener);
+	assertTrue(listener.isNotCalled());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class RosterTests {
 
 	shouldRequestRosterOnLogin();
 	session.answer(serverRoster());
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class RosterTests {
 	session.receives("<presence from='friend@domain' />");
 	final RosterItem item = roster.getItemByJID(uri("friend@domain"));
 	assertEquals(Presence.Type.available, item.getPresence().getType());
-	MockListener.verifyCalledWithSame(listener, item);
+	assertTrue(listener.isCalledWithSame(item));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class RosterTests {
 	assertEquals(Presence.Type.available, item.getPresence().getType());
 	assertEquals(Presence.Show.dnd, item.getPresence().getShow());
 	assertEquals("message", item.getPresence().getStatus());
-	MockListener.verifyCalledWithSame(listener, item);
+	assertTrue(listener.isCalledWithSame(item));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class RosterTests {
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' subscription='remove' name='MyFriend'><group>Group1</group>"
 		+ "</item></query></iq>");
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
 	assertEquals(0, roster.getItems().size());
 	assertEquals(0, roster.getGroups().size());
     }
@@ -205,7 +205,7 @@ public class RosterTests {
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='Friend2'><group>HH1</group><group>HH2</group>"
 		+ "</item></query></iq>");
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
 	assertEquals(1, roster.getItems().size());
 	assertEquals(2, roster.getGroups().size());
 	assertTrue(roster.getGroups().contains("HH1"));

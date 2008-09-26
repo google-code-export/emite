@@ -55,7 +55,7 @@ public class Occupant {
 	return role;
     }
 
-    public XmppURI getUri() {
+    public XmppURI getURI() {
 	return uri;
     }
 

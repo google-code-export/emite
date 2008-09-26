@@ -191,4 +191,8 @@ public interface Session {
      */
     public abstract void sendIQ(final String category, final IQ iq, final Listener<IPacket> listener);
 
+    /**
+     * Presence managers should call this method when initial presence is sent
+     */
+    public void setReady();
 }

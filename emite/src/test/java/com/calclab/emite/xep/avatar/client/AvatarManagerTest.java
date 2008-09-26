@@ -1,6 +1,7 @@
 package com.calclab.emite.xep.avatar.client;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -57,6 +58,6 @@ public class AvatarManagerTest {
 	session.answer("<iq from='juliet@capulet.com' to='romeo@montague.net/orchard' type='result'>"
 		+ "<vCard xmlns='vcard-temp'><PHOTO><TYPE>image/jpeg</TYPE>"
 		+ "<BINVAL>Base64-encoded-avatar-file-here!</BINVAL></PHOTO></vCard></iq>");
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
     }
 }

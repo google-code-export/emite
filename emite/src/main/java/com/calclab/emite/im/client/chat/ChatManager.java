@@ -27,12 +27,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.listener.Listener;
 
 /**
- * <p>
- * The ChatManager is the object that allows you to chat with other people and
- * mantain different conversations.
- * </p>
- * 
- * 
+ * The ChatManager helps you to maintain more than one chat at same time. If you
+ * only want to have one chat, use Chat directly
  */
 public interface ChatManager {
 

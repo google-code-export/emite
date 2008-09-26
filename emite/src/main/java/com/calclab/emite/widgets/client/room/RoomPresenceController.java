@@ -72,7 +72,7 @@ public class RoomPresenceController {
 
 	room.onOccupantModified(new Listener<Occupant>() {
 	    public void onEvent(final Occupant occupant) {
-		final OccupantPanel occupantUI = occupantsUIByXmpp.get(occupant.getUri());
+		final OccupantPanel occupantUI = occupantsUIByXmpp.get(occupant.getURI());
 		if (occupantUI == null) {
 		    addNewOccupant(occupant);
 		} else {

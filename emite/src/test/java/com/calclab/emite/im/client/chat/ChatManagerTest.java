@@ -2,6 +2,7 @@ package com.calclab.emite.im.client.chat;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	final MockListener<Chat> listener = addOnChatCreatedListener();
 	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 1"));
 	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
-	MockListener.verifyCalled(listener, 1);
+	assertTrue(listener.isCalledOnce());
     }
 
     @Test
@@ -38,15 +39,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	final MockListener<State> listener = new MockListener<State>();
 	chat.onStateChanged(listener);
 	session.logout();
-	MockListener.verifyCalledWith(listener, State.locked);
-    }
-
-    @Test
-    public void shouldReuseChatIfNotResouceSpecified() {
-	final MockListener<Chat> listener = addOnChatCreatedListener();
-	session.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
-	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
-	MockListener.verifyCalled(listener, 1);
+	assertTrue(listener.isCalledWithEquals(State.locked));
     }
 
     @Test
@@ -57,16 +50,25 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	session.receives("<message type='chat' id='purplee8b92642' to='user@domain' "
 		+ "from='someone@domain'><x xmlns='jabber:x:event'/><active"
 		+ "xmlns='http://jabber.org/protocol/chatstates'/></message>");
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
+    }
+
+    @Test
+    public void shouldReuseChatIfNotResouceSpecified() {
+	final MockListener<Chat> listener = addOnChatCreatedListener();
+	session.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
+	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
+	assertTrue(listener.isCalledOnce());
     }
 
     @Test
     public void shouldUseSameRoomWhenAnswering() {
 	final MockListener<Chat> listener = addOnChatCreatedListener();
 	final Chat chat = manager.openChat(uri("someone@domain"), null, null);
-	MockListener.verifyCalledWithSame(listener, chat);
+	assertTrue(listener.isCalledOnce());
+	assertTrue(listener.isCalledWithSame(chat));
 	session.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer").Thread(chat.getThread()));
-	MockListener.verifyCalled(listener, 1);
+	assertTrue(listener.isCalledOnce());
     }
 
     @Override

@@ -24,6 +24,7 @@ public class ComentaController {
 	    public void onEvent(final Map<String, String> properties) {
 		final XmppURI roomURI = XmppURI.uri(properties.get("room"));
 		if (roomURI == null) {
+		    widget.showStatus("Room not specified or not valid.", "error");
 		    throw new RuntimeException("room property not specified or not valid.");
 		}
 		createRoom(XmppURI.uri(roomURI.getNode(), roomURI.getHost(), generateNick()));
@@ -41,10 +42,7 @@ public class ComentaController {
 		widget.showStatus(state.toString(), "");
 		switch (state) {
 		case ready:
-		    widget.showStatus("Entering " + room.getOtherURI().getNode() + "...", "");
-		    break;
-
-		default:
+		    widget.showStatus("Entering " + room.getOtherURI().getNode() + "...", "info");
 		    break;
 		}
 	    }
@@ -57,8 +55,14 @@ public class ComentaController {
 
 	room.onStateChanged(new Listener<Chat.State>() {
 	    public void onEvent(final State state) {
-		widget.showStatus(room.getOtherURI().getNode(), "green");
-		widget.setEnabled(state == State.ready);
+		final boolean isReady = state == State.ready;
+		if (isReady) {
+		    widget.setEnabled(true);
+		    widget.showStatus(room.getOtherURI().getNode(), "ready");
+		} else {
+		    widget.setEnabled(false);
+		    widget.showStatus("waiting for room...", "info");
+		}
 	    }
 	});
 

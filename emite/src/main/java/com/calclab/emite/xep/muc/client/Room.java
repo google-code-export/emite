@@ -45,7 +45,7 @@ import com.calclab.suco.client.listener.Listener2;
 public class Room extends AbstractChat implements Chat {
     private static final PacketMatcher ROOM_CREATED = MatcherFactory.byNameAndXMLNS("x",
 	    "http://jabber.org/protocol/muc#user");
-    private final HashMap<XmppURI, Occupant> occupants;
+    private final HashMap<XmppURI, Occupant> occupantsByURI;
     private final Event<Occupant> onOccupantModified;
     private final Event<Collection<Occupant>> onOccupantsChanged;
     private final Event2<Occupant, String> onSubjectChanged;
@@ -60,7 +60,7 @@ public class Room extends AbstractChat implements Chat {
      */
     public Room(final Session session, final XmppURI roomURI) {
 	super(session, roomURI);
-	this.occupants = new HashMap<XmppURI, Occupant>();
+	this.occupantsByURI = new HashMap<XmppURI, Occupant>();
 	this.onOccupantModified = new Event<Occupant>("room:onOccupantModified");
 	this.onOccupantsChanged = new Event<Collection<Occupant>>("room:onOccupantsChanged");
 	this.onSubjectChanged = new Event2<Occupant, String>("room:onSubjectChanged");
@@ -75,6 +75,14 @@ public class Room extends AbstractChat implements Chat {
 	    }
 	});
 
+	session.onStateChanged(new Listener<Session.State>() {
+	    public void onEvent(final Session.State state) {
+		if (Session.State.loggingOut == state) {
+		    close();
+		}
+	    }
+	});
+
 	final Presence presence = new Presence(null, null, roomURI);
 	presence.addChild("x", "http://jabber.org/protocol/muc");
 	presence.setPriority(0);
@@ -83,31 +91,44 @@ public class Room extends AbstractChat implements Chat {
     }
 
     /**
-     * In order to exit a multi-user chat room, an occupant sends a presence
-     * stanza of type "unavailable" to the <room@service/nick> it is currently
-     * using in the room.
+     * Exit and locks the current room. This is done automatically when the
+     * session logouts
      * 
      * @see http://www.xmpp.org/extensions/xep-0045.html#exit
      */
     public void close() {
-	session.send(new Presence(Type.unavailable, getFromURI(), getOtherURI()));
-	setState(State.locked);
-    }
-
-    public Occupant findOccupant(final XmppURI uri) {
-	return occupants.get(uri);
+	if (state == State.ready) {
+	    session.send(new Presence(Type.unavailable, getFromURI(), getOtherURI()));
+	    setState(State.locked);
+	}
     }
 
     public String getID() {
 	return other.toString();
     }
 
+    public Occupant getOccupantByURI(final XmppURI uri) {
+	return occupantsByURI.get(uri);
+    }
+
     public Object getOccupantsCount() {
-	return occupants.size();
+	return occupantsByURI.size();
     }
 
     public String getThread() {
 	return other.getNode();
+    }
+
+    /**
+     * To check if is an echo message
+     * 
+     * @param message
+     * @return true if this message is a room echo
+     */
+    public boolean isComingFromMe(final Message message) {
+	final String myNick = other.getResource();
+	final String messageNick = message.getFrom().getResource();
+	return myNick.equals(messageNick);
     }
 
     public void onOccupantModified(final Listener<Occupant> listener) {
@@ -127,7 +148,7 @@ public class Room extends AbstractChat implements Chat {
 	final String subject = message.getSubject();
 	if (subject != null) {
 	    onBeforeReceive.fire(message);
-	    onSubjectChanged.fire(occupants.get(message.getFrom()), subject);
+	    onSubjectChanged.fire(occupantsByURI.get(message.getFrom()), subject);
 	}
 	if (message.getBody() != null) {
 	    super.receive(message);
@@ -135,14 +156,15 @@ public class Room extends AbstractChat implements Chat {
     }
 
     public void removeOccupant(final XmppURI uri) {
-	final Occupant occupant = occupants.remove(uri);
+	final Occupant occupant = occupantsByURI.remove(uri);
 	if (occupant != null) {
-	    onOccupantsChanged.fire(occupants.values());
+	    onOccupantsChanged.fire(occupantsByURI.values());
 	}
     }
 
     @Override
     public void send(final Message message) {
+	message.setTo(getOtherURI().getJID());
 	message.setType(Message.Type.groupchat);
 	super.send(message);
     }
@@ -169,11 +191,11 @@ public class Room extends AbstractChat implements Chat {
     }
 
     public Occupant setOccupantPresence(final XmppURI uri, final String affiliation, final String role) {
-	Occupant occupant = findOccupant(uri);
+	Occupant occupant = getOccupantByURI(uri);
 	if (occupant == null) {
 	    occupant = new Occupant(uri, affiliation, role);
-	    occupants.put(occupant.getUri(), occupant);
-	    onOccupantsChanged.fire(occupants.values());
+	    occupantsByURI.put(occupant.getURI(), occupant);
+	    onOccupantsChanged.fire(occupantsByURI.values());
 	} else {
 	    occupant.setAffiliation(affiliation);
 	    occupant.setRole(role);
@@ -220,8 +242,9 @@ public class Room extends AbstractChat implements Chat {
 		if (isNewRoom(child)) {
 		    requestCreateInstantRoom();
 		} else {
-		    if (state != State.ready)
+		    if (state != State.ready) {
 			this.setState(Chat.State.ready);
+		    }
 		}
 	    }
 	}

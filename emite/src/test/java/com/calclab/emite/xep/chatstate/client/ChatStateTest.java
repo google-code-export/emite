@@ -1,6 +1,7 @@
 package com.calclab.emite.xep.chatstate.client;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class ChatStateTest {
 	final Message message = new Message(MYSELF, OTHER, null);
 	message.addChild("gone", ChatStateManager.XMLNS);
 	chatStateManager.onMessageReceived(chat, message);
-	MockListener.verifyCalledWith(stateListener, ChatState.gone);
+	assertTrue(stateListener.isCalledWithEquals(ChatState.gone));
     }
 
     @Test
@@ -40,7 +41,7 @@ public class ChatStateTest {
 	final Message message = new Message(MYSELF, OTHER, null);
 	message.addChild("composing", ChatStateManager.XMLNS);
 	chatStateManager.onMessageReceived(chat, message);
-	MockListener.verifyCalledWith(stateListener, ChatState.composing);
+	assertTrue(stateListener.isCalledWithEquals(ChatState.composing));
     }
 
     @Test
@@ -48,7 +49,7 @@ public class ChatStateTest {
 	final Message message = new Message(MYSELF, OTHER, null);
 	message.addChild("cha:composing", ChatStateManager.XMLNS);
 	chatStateManager.onMessageReceived(chat, message);
-	MockListener.verifyCalledWith(stateListener, ChatState.composing);
+	assertTrue(stateListener.isCalledWithEquals(ChatState.composing));
     }
 
     @Test
@@ -56,7 +57,7 @@ public class ChatStateTest {
 	final Message message = new Message(MYSELF, OTHER.getJID(), null);
 	message.addChild("cha:composing", ChatStateManager.XMLNS);
 	chatStateManager.onMessageReceived(chat, message);
-	MockListener.verifyCalledWith(stateListener, ChatState.composing);
+	assertTrue(stateListener.isCalledWithEquals(ChatState.composing));
     }
 
 }

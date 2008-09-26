@@ -3,6 +3,7 @@ package com.calclab.emite.im.client.presence;
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -53,7 +54,7 @@ public class PresenceManagerTest {
 	final MockListener<Presence> listener = new MockListener<Presence>();
 	manager.onOwnPresenceChanged(listener);
 	manager.setOwnPresence(Presence.build("status", Show.away));
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
 	assertEquals("status", listener.getValue(0).getStatus());
 	assertEquals(Show.away, listener.getValue(0).getShow());
     }

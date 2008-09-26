@@ -2,6 +2,7 @@ package com.calclab.emite.core.client.xmpp.session;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.argThat;
@@ -26,7 +27,6 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.testing.listener.EventTester;
-import com.calclab.suco.testing.listener.EventTester0;
 import com.calclab.suco.testing.listener.MockListener;
 
 public class SessionTest {
@@ -37,7 +37,6 @@ public class SessionTest {
     private ConnectionTestHelper helper;
     private Connection connection;
     private IMSessionManager iMSessionManager;
-    private SessionReadyManager readyManager;
 
     @Before
     public void beforeTest() {
@@ -47,8 +46,7 @@ public class SessionTest {
 	bindingManager = mock(ResourceBindingManager.class);
 	iMSessionManager = mock(IMSessionManager.class);
 	connection = helper.connection;
-	readyManager = mock(SessionReadyManager.class);
-	session = new SessionImpl(connection, saslManager, bindingManager, iMSessionManager, readyManager);
+	session = new SessionImpl(connection, saslManager, bindingManager, iMSessionManager);
 
     }
 
@@ -66,7 +64,7 @@ public class SessionTest {
 	final EventTester<IPacket> onStanza = new EventTester<IPacket>();
 	verify(helper.connection).onStanzaReceived(argThat(onStanza));
 	onStanza.fire(new Packet("message"));
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
     }
 
     @Test
@@ -77,7 +75,7 @@ public class SessionTest {
 	final EventTester<IPacket> onStanza = new EventTester<IPacket>();
 	verify(helper.connection).onStanzaReceived(argThat(onStanza));
 	onStanza.fire(new Packet("presence"));
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
     }
 
     @SuppressWarnings("unchecked")
@@ -117,7 +115,7 @@ public class SessionTest {
 	session.onStateChanged(onStateChanged);
 
 	createSession(uri("name@domain/resource"));
-	MockListener.verifyCalledWith(onStateChanged, State.loggedIn);
+	assertTrue(onStateChanged.isCalledWithEquals(State.loggedIn));
     }
 
     @Test
@@ -125,9 +123,7 @@ public class SessionTest {
 	session.send(new Message("the Message", "other@domain"));
 	verify(connection, never()).send((IPacket) anyObject());
 	createSession(uri("name@domain/resource"));
-	final EventTester0 event = new EventTester0();
-	verify(readyManager).onSessionReady(event.getListener());
-	event.fire();
+	session.setReady();
 	verify(connection).send((IPacket) anyObject());
     }
 

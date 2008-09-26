@@ -30,7 +30,7 @@ public class RoomControl extends ChatControl {
 	});
 	roomPanel.onSend(new Listener<String>() {
 	    public void onEvent(final String text) {
-		room.send(new Message(text));
+		roomPanel.showOutMessage(text);
 		roomPanel.clearMessage();
 	    }
 	});
@@ -53,7 +53,9 @@ public class RoomControl extends ChatControl {
 
 	room.onMessageSent(new Listener<Message>() {
 	    public void onEvent(final Message message) {
-		roomPanel.showOutMessage(message.getBody());
+		if (!room.isComingFromMe(message)) {
+		    roomPanel.showOutMessage(message.getBody());
+		}
 	    }
 	});
 
