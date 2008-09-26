@@ -191,10 +191,4 @@ public interface Session {
      */
     public abstract void sendIQ(final String category, final IQ iq, final Listener<IPacket> listener);
 
-    /**
-     * Sets the session in ready state (only if current state is loggedIn).
-     * Usually you dont need to call this
-     */
-    public void setReady();
-
 }

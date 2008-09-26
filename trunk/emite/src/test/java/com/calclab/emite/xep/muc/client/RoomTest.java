@@ -66,7 +66,7 @@ public class RoomTest extends AbstractChatTest {
 	session.receives("<presence to='user@domain/res' from='room@domain/nick'>"
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<item affiliation='owner' role='moderator'/><status code='201'/></x></presence>");
-	session.verifyIQSent("<iq to='room@domain/nick' type='set'>"
+	session.verifyIQSent("<iq to='room@domain' type='set'>"
 		+ "<query xmlns='http://jabber.org/protocol/muc#owner'>"
 		+ "<x xmlns='jabber:x:data' type='submit'/></query></iq>");
 	session.answerSuccess();

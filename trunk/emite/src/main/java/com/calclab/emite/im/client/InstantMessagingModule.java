@@ -21,9 +21,9 @@
  */
 package com.calclab.emite.im.client;
 
-import com.calclab.emite.core.client.xmpp.session.InitialPresence;
-import com.calclab.emite.core.client.xmpp.session.SessionComponent;
 import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.session.SessionComponent;
+import com.calclab.emite.core.client.xmpp.session.SessionReadyManager;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
 import com.calclab.emite.im.client.presence.PresenceManager;
@@ -45,9 +45,14 @@ import com.google.gwt.core.client.EntryPoint;
  * This module exports the following components:
  * </p>
  * <ul>
- * <li>ChatManager: PURPOSE-FIXME</li>
- * <li>RosterManager: FIXME purpose...</li>
- * <li>PresenceManager: FIXME purpose</li>
+ * <li>ChatManager: A facade that simplifies one to one chats</li>
+ * <li>RosterManager: represents the user's roster. Can add, remove and update
+ * roster items.</li>
+ * <li>SubscriptionManager: handle all the presence subscription uses.
+ * Automatically subscribes the presence of the roster items, so users usually
+ * doesnt need to interact with this component directly.
+ * <li>PresenceManager: handles user presence and takes care about initial
+ * presence</li>
  * </ul>
  * 
  * @see http://www.xmpp.org/rfcs/rfc3921.html
@@ -60,7 +65,7 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
 
     @Override
     public void onLoad() {
-	container.removeProvider(InitialPresence.class);
+	container.removeProvider(SessionReadyManager.class);
 
 	register(SessionComponent.class, new Factory<Roster>(Roster.class) {
 	    @Override
@@ -81,6 +86,11 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
 	    @Override
 	    public PresenceManager create() {
 		return new PresenceManagerImpl($(Session.class), $(Roster.class));
+	    }
+	}, new Factory<SessionReadyManager>(SessionReadyManager.class) {
+	    @Override
+	    public SessionReadyManager create() {
+		return (SessionReadyManager) $(PresenceManager.class);
 	    }
 	});
 
