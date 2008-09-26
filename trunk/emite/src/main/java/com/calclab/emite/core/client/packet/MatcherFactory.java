@@ -21,7 +21,11 @@
  */
 package com.calclab.emite.core.client.packet;
 
+import java.util.HashMap;
+
 public class MatcherFactory {
+
+    private static HashMap<String, PacketMatcher> byName = new HashMap<String, PacketMatcher>();
 
     public static final PacketMatcher ANY = new PacketMatcher() {
 	public boolean matches(final IPacket packet) {
@@ -30,11 +34,16 @@ public class MatcherFactory {
     };
 
     public static PacketMatcher byName(final String nodeName) {
-	return new PacketMatcher() {
-	    public boolean matches(final IPacket packet) {
-		return nodeName.equals(packet.getName());
-	    }
-	};
+	PacketMatcher matcher = byName.get(nodeName);
+	if (matcher == null) {
+	    matcher = new PacketMatcher() {
+		public boolean matches(final IPacket packet) {
+		    return nodeName.equals(packet.getName());
+		}
+	    };
+	    byName.put(nodeName, matcher);
+	}
+	return matcher;
     }
 
     public static PacketMatcher byNameAndXMLNS(final String nodeName, final String nodeXmls) {

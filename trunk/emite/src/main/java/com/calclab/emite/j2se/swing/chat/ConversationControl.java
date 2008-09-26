@@ -38,7 +38,6 @@ public class ConversationControl {
 		final Room room = (Room) chat;
 		final RoomPanel roomPanel = conversationsPanel.createRoomPanel(roomManager, room);
 		roomPanel.clearMessage();
-
 	    }
 	});
 

@@ -1,0 +1,183 @@
+
+****** TEST 1 ADDS TEST2 TO THE ROSTER
+
+SEND:
+<iq type="set" id="aac0a" >
+<query xmlns="jabber:iq:roster">
+<item jid="test2@localhost" />
+</query>
+</iq>
+<presence type="subscribe" to="test2@localhost" >
+<nick xmlns="http://jabber.org/protocol/nick">test1</nick>
+</presence>
+
+RECEIVES:
+<iq from="test1@localhost/mandarine" type="set" to="test1@localhost/mandarine" id="push" >
+<query xmlns="jabber:iq:roster">
+<item subscription="none" ask="subscribe" jid="test2@localhost" />
+</query>
+</iq>
+
+SEND:
+<iq type="result" to="test1@localhost/mandarine" id="push" /
+
+RECEIVES:
+<iq from="test1@localhost/mandarine" type="set" to="test1@localhost/mandarine" id="push" >
+<query xmlns="jabber:iq:roster">
+<item subscription="none" ask="subscribe" jid="test2@localhost" />
+</query>
+</iq>
+
+SEND:
+<iq type="result" to="test1@localhost/mandarine" id="push" />
+
+RECEIVES:
+<iq from="test1@localhost/mandarine" type="result" to="test1@localhost/mandarine" id="aac0a" />
+<iq from="test1@localhost/mandarine" type="result" xml:lang="en" to="test1@localhost/mandarine" id="push" />
+<iq from="test1@localhost/mandarine" type="result" xml:lang="en" to="test1@localhost/mandarine" id="push"
+
+**** TEST2 RECEIVES INVITATION:
+<presence from="test1@localhost" type="subscribe" xml:lang="en" to="test2@localhost/mandarine" >
+<nick xmlns="http://jabber.org/protocol/nick">test1</nick>
+</presence>
+
+**** TEST2 ACCEPTS THE SUBSCRIPTION
+
+SEND:
+<presence type="subscribed" to="test1@localhost" />
+<iq type="set" id="aacaa" >
+<query xmlns="jabber:iq:roster">
+<item name="test1" jid="test1@localhost" />
+</query>
+</iq>
+<presence type="subscribe" to="test1@localhost" >
+<nick xmlns="http://jabber.org/protocol/nick">test2</nick>
+</presence>
+
+RECEIVES:
+<iq from="test2@localhost/mandarine" type="set" to="test2@localhost/mandarine" id="push" >
+<query xmlns="jabber:iq:roster">
+<item subscription="none" name="test1" jid="test1@localhost" />
+</query>
+</iq>
+
+SEND:
+<iq type="result" to="test2@localhost/mandarine" id="push" />
+
+RECEIVES:
+<iq from="test2@localhost/mandarine" type="result" to="test2@localhost/mandarine" id="aacaa" />
+
+<iq from="test2@localhost/mandarine" type="set" to="test2@localhost/mandarine" id="push" >
+<query xmlns="jabber:iq:roster">
+<item subscription="none" ask="subscribe" name="test1" jid="test1@localhost" />
+</query>
+</iq>
+
+SEND:
+<iq type="result" to="test2@localhost/mandarine" id="push" />
+
+RECEIVES:
+<iq from="test2@localhost/mandarine" type="set" to="test2@localhost/mandarine" id="push" >
+<query xmlns="jabber:iq:roster">
+<item subscription="from" ask="subscribe" name="test1" jid="test1@localhost" />
+</query>
+</iq>
+
+SEND:
+<iq type="result" to="test2@localhost/mandarine" id="push" />
+
+RECEIVES:
+<iq from="test2@localhost/mandarine" type="result" xml:lang="en" to="test2@localhost/mandarine" id="push" />
+<iq from="test2@localhost/mandarine" type="result" xml:lang="en" to="test2@localhost/mandarine" id="push" />
+<iq from="test2@localhost/mandarine" type="result" xml:lang="en" to="test2@localhost/mandarine" id="push" />
+
+*** TEST1 RECEIVES:
+<iq from="test1@localhost/mandarine" type="set" to="test1@localhost/mandarine" id="push" >
+<query xmlns="jabber:iq:roster">
+<item subscription="none" ask="subscribe" jid="test2@localhost" />
+</query>
+</iq>
+
+SEND:
+<iq type="result" to="test1@localhost/mandarine" id="push" />
+
+RECEIVES:
+<presence from="test2@localhost" type="subscribe" xml:lang="en" to="test1@localhost/mandarine" >
+<nick xmlns="http://jabber.org/protocol/nick">test2</nick>
+</presence>
+
+
+<iq from="test1@localhost/mandarine" type="set" to="test1@localhost/mandarine" id="push" >
+<query xmlns="jabber:iq:roster">
+<item subscription="to" jid="test2@localhost" />
+</query>
+</iq>
+
+SEND:
+<iq type="result" to="test1@localhost/mandarine" id="push" />
+
+RECEIVES:
+<presence from="test2@localhost" type="subscribed" xml:lang="en" to="test1@localhost/mandarine" />
+<presence from="test2@localhost/mandarine" xml:lang="en" to="test1@localhost/mandarine" >
+<priority>5</priority>
+<c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html" />
+</presence>
+<iq from="test1@localhost/mandarine" type="result" xml:lang="en" to="test1@localhost/mandarine" id="push" />
+<iq from="test1@localhost/mandarine" type="result" xml:lang="en" to="test1@localhost/mandarine" id="push" />
+
+*** TEST1: AUTHORIZES SUBSCRIPTION
+
+SEND:
+<iq type="set" id="aac2a" >
+<query xmlns="jabber:iq:roster">
+<item jid="test2@localhost" />
+</query>
+</iq>
+<presence type="subscribe" to="test2@localhost" >
+<nick xmlns="http://jabber.org/protocol/nick">test1</nick>
+</presence>
+<presence type="subscribed" to="test2@localhost" />
+
+RECEIVE:
+<iq from="test1@localhost/mandarine" type="set" to="test1@localhost/mandarine" id="push" >
+<query xmlns="jabber:iq:roster">
+<item subscription="to" jid="test2@localhost" />
+</query>
+</iq>
+
+SEND:
+<iq type="result" to="test1@localhost/mandarine" id="push" />
+
+RECEIVES:
+<iq from="test1@localhost/mandarine" type="result" to="test1@localhost/mandarine" id="aac2a" />
+<iq from="test1@localhost/mandarine" type="set" to="test1@localhost/mandarine" id="push" >
+<query xmlns="jabber:iq:roster">
+<item subscription="both" jid="test2@localhost" />
+</query>
+</iq>
+
+SEND:
+<iq type="result" to="test1@localhost/mandarine" id="push" />
+
+RECEIVES:
+<iq from="test1@localhost/mandarine" type="result" xml:lang="en" to="test1@localhost/mandarine" id="push" />
+<iq from="test1@localhost/mandarine" type="result" xml:lang="en" to="test1@localhost/mandarine" id="push" />
+
+**** TEST2:
+RECEIVES:
+<iq from="test2@localhost/mandarine" type="set" to="test2@localhost/mandarine" id="push" >
+<query xmlns="jabber:iq:roster">
+<item subscription="both" name="test1" jid="test1@localhost" />
+</query>
+</iq>
+
+SEND:
+<iq type="result" to="test2@localhost/mandarine" id="push" />
+
+RECEIVES:
+<presence from="test1@localhost" type="subscribed" xml:lang="en" to="test2@localhost/mandarine" />
+<presence from="test1@localhost/mandarine" xml:lang="en" to="test2@localhost/mandarine" >
+<priority>5</priority>
+<c xmlns="http://jabber.org/protocol/caps" node="http://psi-im.org/caps" ver="0.11-dev-rev8" ext="cs ep-notify html" />
+</presence>
+<iq from="test2@localhost/mandarine" type="result" xml:lang="en" to="test2@localhost/mandarine" id="push" />
