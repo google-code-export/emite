@@ -26,6 +26,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.testing.listener.EventTester;
+import com.calclab.suco.testing.listener.EventTester0;
 import com.calclab.suco.testing.listener.MockListener;
 
 public class SessionTest {
@@ -36,6 +37,7 @@ public class SessionTest {
     private ConnectionTestHelper helper;
     private Connection connection;
     private IMSessionManager iMSessionManager;
+    private SessionReadyManager readyManager;
 
     @Before
     public void beforeTest() {
@@ -45,7 +47,8 @@ public class SessionTest {
 	bindingManager = mock(ResourceBindingManager.class);
 	iMSessionManager = mock(IMSessionManager.class);
 	connection = helper.connection;
-	session = new SessionImpl(connection, saslManager, bindingManager, iMSessionManager);
+	readyManager = mock(SessionReadyManager.class);
+	session = new SessionImpl(connection, saslManager, bindingManager, iMSessionManager, readyManager);
 
     }
 
@@ -109,14 +112,11 @@ public class SessionTest {
 
     @Test
     public void shouldLoginWhenSessionCreated() {
-	final EventTester<XmppURI> sessionCreatedEvent = new EventTester<XmppURI>();
-	sessionCreatedEvent.mock(iMSessionManager).onSessionCreated(sessionCreatedEvent.getListener());
 
 	final MockListener<State> onStateChanged = new MockListener<State>();
 	session.onStateChanged(onStateChanged);
 
-	final XmppURI uri = uri("name@domain/resource");
-	sessionCreatedEvent.fire(uri);
+	createSession(uri("name@domain/resource"));
 	MockListener.verifyCalledWith(onStateChanged, State.loggedIn);
     }
 
@@ -124,13 +124,10 @@ public class SessionTest {
     public void shouldQueueOutcomingStanzas() {
 	session.send(new Message("the Message", "other@domain"));
 	verify(connection, never()).send((IPacket) anyObject());
-	final EventTester<XmppURI> sessionCreatedEvent = new EventTester<XmppURI>();
-	sessionCreatedEvent.mock(iMSessionManager).onSessionCreated(sessionCreatedEvent.getListener());
-	sessionCreatedEvent.fire(uri("user@domain"));
-	// FIXME: weird!!! error in test
-	// final IPacket expected = new Message(uri("user@domain"),
-	// uri("other@domain"), "theMessage");
-	// verify(connection).send(argThat(new IsPacketLike(expected)));
+	createSession(uri("name@domain/resource"));
+	final EventTester0 event = new EventTester0();
+	verify(readyManager).onSessionReady(event.getListener());
+	event.fire();
 	verify(connection).send((IPacket) anyObject());
     }
 
@@ -145,5 +142,11 @@ public class SessionTest {
 
     @Test
     public void shouldStopAndDisconnectWhenLoggedOut() {
+    }
+
+    private void createSession(final XmppURI uri) {
+	final EventTester<XmppURI> sessionCreatedEvent = new EventTester<XmppURI>();
+	sessionCreatedEvent.mock(iMSessionManager).onSessionCreated(sessionCreatedEvent.getListener());
+	sessionCreatedEvent.fire(uri);
     }
 }

@@ -35,6 +35,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener0;
 import com.calclab.suco.client.log.Logger;
 
 /**
@@ -49,7 +50,8 @@ public class SessionImpl extends AbstractSession implements Session {
     private final ArrayList<IPacket> queuedStanzas;
 
     public SessionImpl(final Connection connection, final SASLManager saslManager,
-	    final ResourceBindingManager bindingManager, final IMSessionManager iMSessionManager) {
+	    final ResourceBindingManager bindingManager, final IMSessionManager iMSessionManager,
+	    final SessionReadyManager readyManager) {
 	this.connection = connection;
 	state = State.disconnected;
 	this.iqManager = new IQManager();
@@ -108,6 +110,12 @@ public class SessionImpl extends AbstractSession implements Session {
 		setLoggedIn(uri);
 	    }
 
+	});
+
+	readyManager.onSessionReady(new Listener0() {
+	    public void onEvent() {
+		setState(State.ready);
+	    }
 	});
 
     }
@@ -172,12 +180,6 @@ public class SessionImpl extends AbstractSession implements Session {
 	final String id = iqManager.register(category, listener);
 	iq.setAttribute("id", id);
 	send(iq);
-    }
-
-    public void setReady() {
-	if (state == State.loggedIn) {
-	    setState(State.ready);
-	}
     }
 
     void setState(final Session.State newState) {

@@ -4,24 +4,29 @@ import java.util.Collection;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.session.SessionReadyManager;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.suco.client.listener.Event;
+import com.calclab.suco.client.listener.Event0;
 import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.listener.Listener0;
 import com.calclab.suco.client.log.Logger;
 
-public class PresenceManagerImpl implements PresenceManager {
+public class PresenceManagerImpl implements PresenceManager, SessionReadyManager {
     private Presence ownPresence;
     private final Event<Presence> onOwnPresenceChanged;
     private final Session session;
+    private final Event0 onSessionReady;
 
     public PresenceManagerImpl(final Session session, final Roster roster) {
 	this.session = session;
 	this.ownPresence = new Presence(Type.unavailable, null, null);
 	this.onOwnPresenceChanged = new Event<Presence>("presenceManager:onOwnPresenceChanged");
+	this.onSessionReady = new Event0("presenceManager:sessionReady");
 
 	// Upon connecting to the server and becoming an active resource, a
 	// client SHOULD request the roster before sending initial presence
@@ -30,7 +35,7 @@ public class PresenceManagerImpl implements PresenceManager {
 		Logger.debug("Sending initial presence");
 		final Presence initialPresence = new Presence(session.getCurrentUser());
 		broadcastPresence(initialPresence);
-		session.setReady();
+		onSessionReady.fire();
 	    }
 	});
 
@@ -69,6 +74,10 @@ public class PresenceManagerImpl implements PresenceManager {
 
     public void onOwnPresenceChanged(final Listener<Presence> listener) {
 	onOwnPresenceChanged.add(listener);
+    }
+
+    public void onSessionReady(final Listener0 listener) {
+	onSessionReady.add(listener);
     }
 
     /**
