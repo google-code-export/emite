@@ -25,7 +25,7 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 
     @Override
     public void onLoad() {
-	registerDecorator(SessionComponent.class, new SessionComponent());
+	registerDecorator(SessionComponent.class, new SessionComponent(container));
 
 	register(Singleton.class, new Factory<Services>(Services.class) {
 	    @Override

@@ -159,7 +159,7 @@ public class SessionImpl extends AbstractSession implements Session {
     }
 
     public void send(final IPacket packet) {
-	if (state == State.loggedIn || state == State.ready) {
+	if (state == State.loggedIn || state == State.ready || state == State.loggingOut) {
 	    packet.setAttribute("from", userURI.toString());
 	    connection.send(packet);
 	} else {

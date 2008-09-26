@@ -91,13 +91,25 @@ public class RosterTests {
 	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
 	roster.onItemUpdated(listener);
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
-		+ "<item jid='friend@domain' name='MyFriend'><group>Group1</group><group>Group2</group>"
-		+ "</item></query></iq>");
-	final RosterItem item = roster.getItemByJID(uri("friend@domain"));
-	assertNotNull(item);
-	assertEquals(Presence.Type.unavailable, item.getPresence().getType());
+		+ "<item jid='friend@domain' name='MyFriend' /></query></iq>");
 	session.receives("<presence from='friend@domain' />");
+	final RosterItem item = roster.getItemByJID(uri("friend@domain"));
 	assertEquals(Presence.Type.available, item.getPresence().getType());
+	MockListener.verifyCalledWithSame(listener, item);
+    }
+
+    @Test
+    public void shouldHandleRosterItemsPresences() {
+	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
+	roster.onItemUpdated(listener);
+	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
+		+ "<item jid='friend@domain' name='MyFriend' /></query></iq>");
+	session.receives("<presence from='friend@domain'>"
+		+ "<show>dnd</show><status>message</status><priority>3</priority></presence>");
+	final RosterItem item = roster.getItemByJID(uri("friend@domain"));
+	assertEquals(Presence.Type.available, item.getPresence().getType());
+	assertEquals(Presence.Show.dnd, item.getPresence().getShow());
+	assertEquals("message", item.getPresence().getStatus());
 	MockListener.verifyCalledWithSame(listener, item);
     }
 
@@ -139,13 +151,13 @@ public class RosterTests {
 
     @Test
     public void shouldRequestUpdateItem() {
-	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
+	session.receives("<iq type='set' id='theId'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='MyFriend'><group>Group1</group><group>Group2</group>"
 		+ "</item></query></iq>");
 	final RosterItem item = roster.getItemByJID(uri("friend@domain"));
 	assertNotNull(item);
 	roster.updateItem(uri("no@one"), "name", "group");
-	session.verifyNotSent("<iq/>");
+	session.verifySent("<iq type='result' id='theId' />");
 	roster.updateItem(uri("friend@domain"), "MyOldFriend", "Group1", "Group3");
 	session.verifyIQSent("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='MyOldFriend'><group>Group1</group><group>Group3</group>"
@@ -171,6 +183,15 @@ public class RosterTests {
 	assertTrue(groups.contains("Friends"));
 	assertTrue(groups.contains("X"));
 	assertTrue(groups.contains("Work"));
+    }
+
+    @Test
+    public void shouldSetPresenceUnavailableOnRosterReception() {
+	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
+		+ "<item jid='friend@domain' name='MyFriend' /></query></iq>");
+	final RosterItem item = roster.getItemByJID(uri("friend@domain"));
+	assertNotNull(item);
+	assertEquals(Presence.Type.unavailable, item.getPresence().getType());
     }
 
     @Test
