@@ -34,16 +34,16 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 
+/**
+ * Represents a item in the Roster
+ */
 public class RosterItem {
 
     private static final PacketMatcher GROUP_FILTER = MatcherFactory.byName("group");
 
     static RosterItem parse(final IPacket packet) {
-	final String jid = packet.getAttribute("jid");
-	final XmppURI uri = uri(jid);
-	final Type ask = parseAsk(packet.getAttribute("ask"));
-	final RosterItem item = new RosterItem(uri, null, packet.getAttribute("name"), ask);
-	item.setSubscription(packet.getAttribute("subscription"));
+	final RosterItem item = new RosterItem(uri(packet.getAttribute("jid")), parseSubscriptionState(packet
+		.getAttribute("subscription")), packet.getAttribute("name"), parseAsk(packet.getAttribute("ask")));
 	final List<? extends IPacket> groups = packet.getChildren(GROUP_FILTER);
 
 	String groupName;
@@ -55,17 +55,25 @@ public class RosterItem {
     }
 
     private static Type parseAsk(final String ask) {
-	Type type = null;
-	if (ask != null) {
-	    try {
-		type = Presence.Type.valueOf(ask);
-	    } catch (final IllegalArgumentException e) {
-
-	    }
+	Type type;
+	try {
+	    type = Presence.Type.valueOf(ask);
+	} catch (final Exception e) {
+	    type = null;
 	}
 	return type;
-
     }
+
+    private static SubscriptionState parseSubscriptionState(final String state) {
+	SubscriptionState subscriptionState;
+	try {
+	    subscriptionState = SubscriptionState.valueOf(state);
+	} catch (final Exception e) {
+	    subscriptionState = null;
+	}
+	return subscriptionState;
+    }
+
     private final ArrayList<String> groups;
     private final XmppURI jid;
     private final String name;
@@ -74,8 +82,6 @@ public class RosterItem {
     private SubscriptionState subscriptionState;
     private final Type ask;
 
-    // FIXME: should be not public -- wait until old roster implementation is
-    // deleted
     public RosterItem(final XmppURI jid, final SubscriptionState subscriptionState, final String name, final Type ask) {
 	this.ask = ask;
 	this.jid = jid.getJID();
@@ -114,15 +120,6 @@ public class RosterItem {
 	    this.presence = new Presence(Type.unavailable, null, null).With(Show.away);
 	} else {
 	    this.presence = presence;
-	}
-    }
-
-    @Deprecated
-    public void setSubscription(final String value) {
-	try {
-	    this.subscriptionState = SubscriptionState.valueOf(value);
-	} catch (final Exception e) {
-	    this.subscriptionState = null;
 	}
     }
 
