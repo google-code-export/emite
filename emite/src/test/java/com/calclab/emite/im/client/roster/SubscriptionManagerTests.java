@@ -23,6 +23,19 @@ public class SubscriptionManagerTests {
     private SubscriptionManager manager;
     private Roster roster;
 
+    @Test
+    public void addRosterStep1_shouldSendSubscriptionRequestOnNewRosterItem() {
+	final EventTester<RosterItem> event = new EventTester<RosterItem>();
+	verify(roster).onItemAdded(argThat(event));
+
+	// only NONE subscription
+	event.fire(new RosterItem(uri("name@domain"), SubscriptionState.both, "TheName", null));
+	session.verifyNotSent("<presence />");
+
+	event.fire(new RosterItem(uri("name@domain"), SubscriptionState.none, "TheName", Type.subscribe));
+	session.verifySent("<presence from='user@local' to='name@domain' type='subscribe'/>");
+    }
+
     @Before
     public void beforeTests() {
 	session = new MockedSession();
@@ -34,7 +47,7 @@ public class SubscriptionManagerTests {
     @Test
     public void shouldApproveSubscriptionRequestsAndAddItemToTheRosterIfNotThere() {
 	final XmppURI otherEntityJID = XmppURI.jid("other@domain");
-	stub(roster.findByJID(eq(otherEntityJID))).toReturn(null);
+	stub(roster.getItemByJID(eq(otherEntityJID))).toReturn(null);
 
 	manager.approveSubscriptionRequest(otherEntityJID, "nick");
 	verify(roster).addItem(eq(otherEntityJID), eq("nick"));
@@ -59,33 +72,6 @@ public class SubscriptionManagerTests {
     @Test
     public void shouldSendSubscriptionRequest() {
 	manager.requestSubscribe(uri("name@domain/RESOURCE"));
-	session.verifySent("<presence from='user@local' to='name@domain' type='subscribe'/>");
-    }
-
-    /**
-     * Step 2: As a result, the user's server (1) MUST initiate a roster push
-     * for the new roster item to all available resources associated with this
-     * user that have requested the roster, setting the 'subscription' attribute
-     * to a value of "none"
-     * 
-     * Step 3: If the user wants to request a subscription to the contact's
-     * presence information, the user's client MUST send a presence stanza of
-     * type='subscribe' to the contact:
-     */
-    @Test
-    public void shouldSendSubscriptionRequestOnNewRosterItem() {
-	final EventTester<RosterItem> event = new EventTester<RosterItem>();
-	verify(roster).onItemAdded(argThat(event));
-
-	// only NONE subscription
-	event.fire(new RosterItem(uri("name@domain"), SubscriptionState.both, "TheName", null));
-	session.verifyNotSent("<presence />");
-
-	// only if ASK is null
-	event.fire(new RosterItem(uri("name@domain"), SubscriptionState.none, "TheName", Type.subscribe));
-	session.verifyNotSent("<presence />");
-
-	event.fire(new RosterItem(uri("name@domain"), SubscriptionState.none, "TheName", null));
 	session.verifySent("<presence from='user@local' to='name@domain' type='subscribe'/>");
     }
 

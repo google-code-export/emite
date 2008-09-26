@@ -121,7 +121,7 @@ public class RosterUIPresenter {
 	showUnavailableItems = show;
 	for (final Iterator<XmppURI> iterator = rosterMap.keySet().iterator(); iterator.hasNext();) {
 	    final XmppURI jid = iterator.next();
-	    final RosterItem item = roster.findByJID(jid);
+	    final RosterItem item = roster.getItemByJID(jid);
 	    final ChatUserUI user = rosterMap.get(jid);
 	    if (item == null) {
 		Log.error("Trying to update a ui roster item not in roster");

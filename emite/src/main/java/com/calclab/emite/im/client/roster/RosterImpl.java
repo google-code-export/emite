@@ -11,6 +11,7 @@ import com.calclab.emite.core.client.packet.MatcherFactory;
 import com.calclab.emite.core.client.packet.PacketMatcher;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
 import com.calclab.suco.client.listener.Event;
@@ -47,6 +48,16 @@ public class RosterImpl implements Roster {
 	    }
 	});
 
+	session.onPresence(new Listener<Presence>() {
+	    public void onEvent(final Presence presence) {
+		final RosterItem item = getItemByJID(presence.getFrom());
+		if (item != null) {
+		    item.getPresence().setType(Presence.Type.available);
+		    onItemUpdated.fire(item);
+		}
+	    }
+	});
+
 	session.onIQ(new Listener<IQ>() {
 	    public void onEvent(final IQ iq) {
 		if (IQ.isSet(iq)) {
@@ -56,7 +67,7 @@ public class RosterImpl implements Roster {
 			    handleRosterIQSet(RosterItem.parse(child));
 			}
 		    }
-		    session.send(new IQ(Type.result).With("id", iq.getId()));
+		    session.send(new IQ(Type.result).With("to", iq.getFromAsString()).With("id", iq.getId()));
 		}
 	    }
 
@@ -64,17 +75,17 @@ public class RosterImpl implements Roster {
     }
 
     public void addItem(final XmppURI jid, final String name, final String... groups) {
-	if (findByJID(jid) == null) {
+	if (getItemByJID(jid) == null) {
 	    addOrUpdateItem(jid, name, null, groups);
 	}
     }
 
-    public RosterItem findByJID(final XmppURI jid) {
-	return itemsByJID.get(jid.getJID());
-    }
-
     public Set<String> getGroups() {
 	return itemsByGroup.keySet();
+    }
+
+    public RosterItem getItemByJID(final XmppURI jid) {
+	return itemsByJID.get(jid.getJID());
     }
 
     public Collection<RosterItem> getItems() {
@@ -102,7 +113,7 @@ public class RosterImpl implements Roster {
     }
 
     public void removeItem(final XmppURI uri) {
-	final RosterItem item = findByJID(uri.getJID());
+	final RosterItem item = getItemByJID(uri.getJID());
 	if (item != null) {
 	    final IQ iq = new IQ(Type.set);
 	    final IPacket itemNode = iq.addQuery("jabber:iq:roster").addChild("item", null);
@@ -115,7 +126,7 @@ public class RosterImpl implements Roster {
     }
 
     public void updateItem(final XmppURI jid, final String name, final String... groups) {
-	final RosterItem oldItem = findByJID(jid);
+	final RosterItem oldItem = getItemByJID(jid);
 	if (oldItem != null) {
 	    final String newName = name == null ? oldItem.getName() : name;
 	    addOrUpdateItem(jid, newName, oldItem.getSubscriptionState(), groups);
@@ -152,7 +163,7 @@ public class RosterImpl implements Roster {
     }
 
     private void handleRosterIQSet(final RosterItem item) {
-	final RosterItem old = findByJID(item.getJID());
+	final RosterItem old = getItemByJID(item.getJID());
 	if (old == null) {
 	    addItem(item);
 	    onItemAdded.fire(item);

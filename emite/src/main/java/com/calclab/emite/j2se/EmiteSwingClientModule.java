@@ -42,7 +42,6 @@ import com.calclab.emite.j2se.swing.login.LoginPanel;
 import com.calclab.emite.j2se.swing.roster.AddRosterItemPanel;
 import com.calclab.emite.j2se.swing.roster.RosterControl;
 import com.calclab.emite.j2se.swing.roster.RosterPanel;
-import com.calclab.emite.xep.disco.client.DiscoveryModule;
 import com.calclab.emite.xep.muc.client.MUCModule;
 import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.suco.client.Suco;
@@ -54,7 +53,7 @@ public class EmiteSwingClientModule extends AbstractModule {
 
     public static void main(final String args[]) {
 	Suco.install(new EmiteCoreModule(), new J2SEServicesModule(), new InstantMessagingModule(), new MUCModule(),
-		new DiscoveryModule(), new EmiteSwingClientModule());
+		new EmiteSwingClientModule());
 	Suco.get(SwingClient.class);
     }
 

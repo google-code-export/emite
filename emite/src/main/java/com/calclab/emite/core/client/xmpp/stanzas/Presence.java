@@ -23,6 +23,9 @@ package com.calclab.emite.core.client.xmpp.stanzas;
 
 import com.calclab.emite.core.client.packet.IPacket;
 
+/**
+ * A Presence stanza
+ */
 public class Presence extends BasicStanza {
 
     /**
@@ -120,11 +123,6 @@ public class Presence extends BasicStanza {
 	return presence;
     }
 
-    public static Object parseType(final String attribute) {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
     public Presence() {
 	this(null, null, null);
     }
@@ -213,6 +211,10 @@ public class Presence extends BasicStanza {
 
     public void setStatus(final String statusMessage) {
 	setTextToChild("status", statusMessage);
+    }
+
+    public void setType(final Type type) {
+	setType(type.toString());
     }
 
     public Presence With(final Show value) {

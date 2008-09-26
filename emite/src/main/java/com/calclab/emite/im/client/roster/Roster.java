@@ -38,7 +38,7 @@ public interface Roster {
      *            the JID of the item (resource is ignored)
      * @return the item if found in roster, null otherwise
      */
-    RosterItem findByJID(XmppURI jid);
+    RosterItem getItemByJID(XmppURI jid);
 
     Set<String> getGroups();
 

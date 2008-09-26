@@ -34,7 +34,7 @@ public class SubscriptionManagerImpl implements SubscriptionManager {
 
 	roster.onItemAdded(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
-		if (item.getSubscriptionState() == SubscriptionState.none && item.getAsk() == null) {
+		if (item.getSubscriptionState() == SubscriptionState.none && item.getAsk() == Type.subscribe) {
 		    requestSubscribe(item.getJID());
 		    item.setSubscriptionState(SubscriptionState.nonePendingIn);
 		} else if (item.getSubscriptionState() == SubscriptionState.from) {
@@ -47,7 +47,7 @@ public class SubscriptionManagerImpl implements SubscriptionManager {
 
     public void approveSubscriptionRequest(final XmppURI jid, String nick) {
 	nick = nick != null ? nick : jid.getNode();
-	final RosterItem item = roster.findByJID(jid);
+	final RosterItem item = roster.getItemByJID(jid);
 	if (item == null) {
 	    // add the item to the roster
 	    roster.addItem(jid, nick);

@@ -35,7 +35,6 @@ import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 
 public class RosterUIPanel extends UserGridPanel implements RosterUIView {
-    private final RosterUIPresenter presenter;
     private final I18nTranslationService i18n;
 
     public RosterUIPanel(final I18nTranslationService i18n, final RosterUIPresenter presenter) {
@@ -48,7 +47,6 @@ public class RosterUIPanel extends UserGridPanel implements RosterUIView {
 		    }
 		});
 	this.i18n = i18n;
-	this.presenter = presenter;
     }
 
     public void addRosterItem(final ChatUserUI user, final UserGridMenuItemList menuItemList) {
