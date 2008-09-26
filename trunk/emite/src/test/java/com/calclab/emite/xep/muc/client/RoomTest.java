@@ -4,6 +4,7 @@ import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
@@ -47,8 +48,8 @@ public class RoomTest extends AbstractChatTest {
 	room.onOccupantsChanged(listener);
 	final XmppURI uri = uri("room@domain/name");
 	final Occupant occupant = room.setOccupantPresence(uri, "aff", "role");
-	MockListener.verifyCalled(listener, 1);
-	final Occupant result = room.findOccupant(uri);
+	assertTrue(listener.isCalledOnce());
+	final Occupant result = room.getOccupantByURI(uri);
 	assertEquals(occupant, result);
     }
 
@@ -70,7 +71,14 @@ public class RoomTest extends AbstractChatTest {
 		+ "<query xmlns='http://jabber.org/protocol/muc#owner'>"
 		+ "<x xmlns='jabber:x:data' type='submit'/></query></iq>");
 	session.answerSuccess();
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
+    }
+
+    @Test
+    public void shouldExitAndLockTheRoomWhenLoggedOut() {
+	session.logout();
+	assertEquals(Chat.State.locked, room.getState());
+	session.verifySent("<presence from='user@domain/res' to='room@domain/nick' type='unavailable'/>");
     }
 
     @Test
@@ -79,7 +87,7 @@ public class RoomTest extends AbstractChatTest {
 	room.onMessageReceived(listener);
 	final Message message = new Message(uri("someone@domain/res"), uri("room@domain"), "message");
 	room.receive(message);
-	MockListener.verifyCalledWith(listener, message);
+	assertTrue(listener.isCalledWithEquals(message));
     }
 
     @Test
@@ -89,11 +97,11 @@ public class RoomTest extends AbstractChatTest {
 	final MockListener2<Occupant, String> subjectListener = new MockListener2<Occupant, String>();
 	room.onSubjectChanged(subjectListener);
 
-	room.receive(new Message(uri("someone@domain/res"), uri("room@domain"), null).Subject("the subject"));
+	final XmppURI occupantURI = uri("someone@domain/res");
+	room.receive(new Message(occupantURI, uri("room@domain"), null).Subject("the subject"));
 	assertEquals(1, subjectListener.getCalledTimes());
-	// FIXME
-	// verify(listener).onSubjectChanged(userURI.getResource(),
-	// "the subject");
+	final Occupant occupant = room.getOccupantByURI(occupantURI);
+	assertTrue(subjectListener.isCalledWithSame(occupant, "the subject"));
 	assertEquals(0, messageListener.getCalledTimes());
     }
 
@@ -107,7 +115,7 @@ public class RoomTest extends AbstractChatTest {
 	room.removeOccupant(uri);
 	assertEquals(0, room.getOccupantsCount());
 	assertEquals(2, listener.getCalledTimes());
-	assertNull(room.findOccupant(uri));
+	assertNull(room.getOccupantByURI(uri));
     }
 
     @Test

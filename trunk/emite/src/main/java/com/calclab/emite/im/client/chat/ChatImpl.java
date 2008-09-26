@@ -82,6 +82,7 @@ public class ChatImpl extends AbstractChat {
     public void send(final Message message) {
 	message.setThread(thread);
 	message.setType(Type.chat);
+	message.setTo(other);
 	super.send(message);
     }
 

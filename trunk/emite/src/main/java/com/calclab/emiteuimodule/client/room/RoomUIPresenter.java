@@ -121,7 +121,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 	    final Occupant occupant = iterator.next();
 	    final RoomUserUI roomUserUI = genRoomUser(occupant);
 	    roomUserListUI.addUser(roomUserUI, createUserMenu(roomUserUI));
-	    if (occupant.getUri().getResource().equals(currentUserAlias)) {
+	    if (occupant.getURI().getResource().equals(currentUserAlias)) {
 		if (occupant.getRole().equals(Role.moderator)) {
 		    view.setSubjectEditable(true);
 		    isSubjectEditable = true;
@@ -163,7 +163,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
     }
 
     private RoomUserUI genRoomUser(final Occupant occupant) {
-	final RoomUserUI roomUserUI = new RoomUserUI(occupant, super.getColor(occupant.getUri().getResource()));
+	final RoomUserUI roomUserUI = new RoomUserUI(occupant, super.getColor(occupant.getURI().getResource()));
 	return roomUserUI;
     }
 }

@@ -3,6 +3,7 @@ package com.calclab.emite.im.client.chat;
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public abstract class AbstractChatManagerTest {
 	final MockListener<Chat> listener = new MockListener<Chat>();
 	manager.onChatClosed(listener);
 	manager.close(chat);
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
     }
 
     @Test
@@ -45,7 +46,7 @@ public abstract class AbstractChatManagerTest {
 	final MockListener<Chat> listener = new MockListener<Chat>();
 	manager.onChatCreated(listener);
 	manager.openChat(uri("other@domain"), null, null);
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
     }
 
     @Test
@@ -54,7 +55,7 @@ public abstract class AbstractChatManagerTest {
 	final MockListener<State> listener = new MockListener<State>();
 	chat.onStateChanged(listener);
 	session.logout();
-	MockListener.verifyCalledWith(listener, State.locked);
+	assertTrue(listener.isCalledWithEquals(State.locked));
     }
 
     @Test

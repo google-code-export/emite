@@ -21,9 +21,9 @@
  */
 package com.calclab.emite.im.client;
 
+import com.calclab.emite.core.client.xmpp.session.SessionReady;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.SessionComponent;
-import com.calclab.emite.core.client.xmpp.session.SessionReadyManager;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
 import com.calclab.emite.im.client.presence.PresenceManager;
@@ -65,7 +65,7 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
 
     @Override
     public void onLoad() {
-	container.removeProvider(SessionReadyManager.class);
+	container.removeProvider(SessionReady.class);
 
 	register(SessionComponent.class, new Factory<Roster>(Roster.class) {
 	    @Override
@@ -86,11 +86,6 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
 	    @Override
 	    public PresenceManager create() {
 		return new PresenceManagerImpl($(Session.class), $(Roster.class));
-	    }
-	}, new Factory<SessionReadyManager>(SessionReadyManager.class) {
-	    @Override
-	    public SessionReadyManager create() {
-		return (SessionReadyManager) $(PresenceManager.class);
 	    }
 	});
 

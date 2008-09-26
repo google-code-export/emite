@@ -1,5 +1,7 @@
 package com.calclab.emite.im.client.chat;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
@@ -23,7 +25,7 @@ public abstract class AbstractChatTest {
 	chat.onBeforeReceive(interceptor);
 	final Message message = new Message("body");
 	chat.receive(message);
-	MockListener.verifyCalledWithSame(interceptor, message);
+	assertTrue(interceptor.isCalledWithSame(message));
     }
 
     @Test
@@ -33,7 +35,7 @@ public abstract class AbstractChatTest {
 	chat.onBeforeSend(interceptor);
 	final Message message = new Message("body");
 	chat.send(message);
-	MockListener.verifyCalledWithSame(interceptor, message);
+	assertTrue(interceptor.isCalledWithSame(message));
     }
 
     @Test

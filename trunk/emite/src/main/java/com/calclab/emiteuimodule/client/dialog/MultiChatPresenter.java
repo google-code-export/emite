@@ -483,7 +483,7 @@ public class MultiChatPresenter {
 
 		room.onOccupantModified(new Listener<Occupant>() {
 		    public void onEvent(final Occupant occupant) {
-			Log.info("Room occupant changed (" + occupant.getUri() + ")");
+			Log.info("Room occupant changed (" + occupant.getURI() + ")");
 			roomUI.onOccupantModified(occupant);
 		    }
 		});

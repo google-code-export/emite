@@ -1,6 +1,7 @@
 package com.calclab.emite.core.client.xmpp.resource;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class ResourceBindingManagerTest {
 	helper.simulateReception("<iq type='result' id='bind-resource'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>"
 		+ "<jid>somenode@example.com/someresource</jid></bind></iq>");
 
-	MockListener.verifyCalledWith(onBindedListener, uri("somenode@example.com/someresource"));
+	assertTrue(onBindedListener.isCalledWithEquals(uri("somenode@example.com/someresource")));
 
     }
 

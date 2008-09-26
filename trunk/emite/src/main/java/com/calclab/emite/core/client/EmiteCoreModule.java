@@ -6,12 +6,11 @@ import com.calclab.emite.core.client.services.Services;
 import com.calclab.emite.core.client.services.gwt.GWTServices;
 import com.calclab.emite.core.client.xmpp.resource.ResourceBindingManager;
 import com.calclab.emite.core.client.xmpp.sasl.SASLManager;
-import com.calclab.emite.core.client.xmpp.session.InitialPresence;
+import com.calclab.emite.core.client.xmpp.session.SessionReady;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.SessionComponent;
 import com.calclab.emite.core.client.xmpp.session.SessionImpl;
 import com.calclab.emite.core.client.xmpp.session.IMSessionManager;
-import com.calclab.emite.core.client.xmpp.session.SessionReadyManager;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.ioc.decorator.Singleton;
 import com.calclab.suco.client.ioc.module.AbstractModule;
@@ -49,7 +48,7 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 	    @Override
 	    public Session create() {
 		final SessionImpl session = new SessionImpl($(Connection.class), $(SASLManager.class),
-			$(ResourceBindingManager.class), $(IMSessionManager.class), $(SessionReadyManager.class));
+			$(ResourceBindingManager.class), $(IMSessionManager.class));
 		return session;
 	    }
 
@@ -69,10 +68,10 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 		return new SASLManager($(Connection.class));
 	    }
 	});
-	register(SessionComponent.class, new Factory<SessionReadyManager>(SessionReadyManager.class) {
+	register(SessionComponent.class, new Factory<SessionReady>(SessionReady.class) {
 	    @Override
-	    public SessionReadyManager create() {
-		return new InitialPresence($(Session.class));
+	    public SessionReady create() {
+		return new SessionReady($(Session.class));
 	    }
 	});
 

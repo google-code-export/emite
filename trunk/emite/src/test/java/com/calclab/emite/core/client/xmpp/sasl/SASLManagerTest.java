@@ -2,6 +2,7 @@ package com.calclab.emite.core.client.xmpp.sasl;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class SASLManagerTest {
     public void shouldHandleSuccessWhenAuthorizationSent() {
 	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("me@domain"), "password"));
 	helper.simulateReception("<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"/>");
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
 	assertSame(AuthorizationTransaction.State.succeed, listener.getValue(0).getState());
     }
 
@@ -35,7 +36,7 @@ public class SASLManagerTest {
     public void shouldHanonStanzadleFailure() {
 	manager.sendAuthorizationRequest(new AuthorizationTransaction(uri("node@domain"), "password"));
 	helper.simulateReception("<failure xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><not-authorized/></failure>");
-	MockListener.verifyCalled(listener);
+	assertTrue(listener.isCalledOnce());
 	assertSame(AuthorizationTransaction.State.failed, listener.getValue(0).getState());
     }
 
