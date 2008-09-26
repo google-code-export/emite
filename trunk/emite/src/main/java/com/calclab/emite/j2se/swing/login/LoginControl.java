@@ -1,6 +1,6 @@
 package com.calclab.emite.j2se.swing.login;
 
-import com.calclab.emite.core.client.bosh.Bosh3Settings;
+import com.calclab.emite.core.client.bosh.BoshSettings;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
@@ -14,7 +14,7 @@ public class LoginControl {
 	loginPanel.onLogin(new Listener<LoginParams>() {
 	    public void onEvent(final LoginParams p) {
 		final String resource = "emite-swing";
-		connection.setSettings(new Bosh3Settings(p.httpBase, p.domain));
+		connection.setSettings(new BoshSettings(p.httpBase, p.domain));
 		XmppURI uri;
 		String password = p.password;
 		if ("anonymous".equals(p.userName)) {

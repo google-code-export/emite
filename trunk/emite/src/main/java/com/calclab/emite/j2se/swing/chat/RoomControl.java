@@ -3,6 +3,7 @@ package com.calclab.emite.j2se.swing.chat;
 import java.util.Collection;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.xep.muc.client.Occupant;
 import com.calclab.emite.xep.muc.client.Room;
 import com.calclab.emite.xep.muc.client.RoomManager;
@@ -14,6 +15,13 @@ public class RoomControl extends ChatControl {
 
     public RoomControl(final RoomManager roomManager, final Room room, final RoomPanel roomPanel) {
 	super(roomManager, room, roomPanel);
+
+	room.onStateChanged(new Listener<Chat.State>() {
+	    public void onEvent(final Chat.State state) {
+		roomPanel.showIcomingMessage(null, "Room is now: " + state.toString());
+	    }
+
+	});
 
 	roomPanel.onClose(new Listener0() {
 	    public void onEvent() {

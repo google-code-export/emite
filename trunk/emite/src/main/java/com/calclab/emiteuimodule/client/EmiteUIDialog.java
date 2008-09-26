@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.core.client.bosh.Bosh3Settings;
+import com.calclab.emite.core.client.bosh.BoshSettings;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
@@ -218,7 +218,7 @@ public class EmiteUIDialog {
 
     public void start(final UserChatOptions userChatOptions, final String httpBase, final String host,
 	    final String roomHost, final AvatarProvider avatarProvider, final String emiteDialogTitle) {
-	connection.setSettings(new Bosh3Settings(httpBase, host));
+	connection.setSettings(new BoshSettings(httpBase, host));
 	statusUI.setCurrentUserChatOptions(userChatOptions);
 	roomUIManager.setRoomHostDefault(roomHost);
 	multiChatDialog = createChatDialog(new MultiChatCreationParam(emiteDialogTitle, roomHost, avatarProvider,

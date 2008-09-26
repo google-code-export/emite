@@ -1,6 +1,6 @@
 package com.calclab.emite.core.client;
 
-import com.calclab.emite.core.client.bosh.Bosh3Connection;
+import com.calclab.emite.core.client.bosh.BoshConnection;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.services.Services;
 import com.calclab.emite.core.client.services.gwt.GWTServices;
@@ -37,7 +37,7 @@ public class EmiteCoreModule extends AbstractModule implements EntryPoint {
 	register(Singleton.class, new Factory<Connection>(Connection.class) {
 	    @Override
 	    public Connection create() {
-		return new Bosh3Connection($(Services.class));
+		return new BoshConnection($(Services.class));
 	    }
 	}, new Factory<IMSessionManager>(IMSessionManager.class) {
 	    @Override

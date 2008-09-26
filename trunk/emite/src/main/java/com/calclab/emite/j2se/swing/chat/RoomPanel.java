@@ -100,7 +100,12 @@ public class RoomPanel extends ChatPanel {
 
     @Override
     public void showIcomingMessage(final String from, final String body) {
-	final String name = from.substring(from.indexOf('/') + 1);
+	String name;
+	if (from == null) {
+	    name = "";
+	} else {
+	    name = from.substring(from.indexOf('/') + 1);
+	}
 	super.showIcomingMessage(name, body);
     }
 

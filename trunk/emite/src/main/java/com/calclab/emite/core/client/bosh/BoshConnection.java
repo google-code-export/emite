@@ -14,7 +14,7 @@ import com.calclab.suco.client.listener.Event0;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.client.log.Logger;
 
-public class Bosh3Connection implements Connection {
+public class BoshConnection implements Connection {
     private int activeConnections;
     private Packet body;
     private final Services services;
@@ -27,10 +27,10 @@ public class Bosh3Connection implements Connection {
     private final Event<IPacket> onStanzaReceived;
     private final Event<IPacket> onStanzaSent;
     private boolean shouldCollectResponses;
-    private Bosh3Settings userSettings;
+    private BoshSettings userSettings;
     private int errors;
 
-    public Bosh3Connection(final Services services) {
+    public BoshConnection(final Services services) {
 	this.services = services;
 	this.onError = new Event<String>("bosh:onError");
 	this.onDisconnected = new Event<String>("bosh:onDisconnected");
@@ -145,7 +145,7 @@ public class Bosh3Connection implements Connection {
 	onStanzaSent.fire(packet);
     }
 
-    public void setSettings(final Bosh3Settings settings) {
+    public void setSettings(final BoshSettings settings) {
 	this.userSettings = settings;
     }
 
@@ -180,12 +180,13 @@ public class Bosh3Connection implements Connection {
 	}
     }
 
-    private void createInitialBody(final Bosh3Settings userSettings) {
+    private void createInitialBody(final BoshSettings userSettings) {
 	this.body = new Packet("body");
 	body.setAttribute("content", "text/xml; charset=utf-8");
 	body.setAttribute("xmlns", "http://jabber.org/protocol/httpbind");
 	body.setAttribute("xmlns:xmpp", "urn:xmpp:xbosh");
-	body.setAttribute("xmpp:version", userSettings.version);
+	body.setAttribute("ver", userSettings.version);
+	body.setAttribute("xmpp:version", "1.0");
 	body.setAttribute("xml:lang", "en");
 	body.setAttribute("ack", "1");
 	body.setAttribute("secure", "true");
