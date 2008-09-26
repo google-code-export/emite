@@ -23,44 +23,48 @@ package com.calclab.emite.j2se.swing;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 import com.calclab.emite.j2se.swing.chat.ConversationsPanel;
 import com.calclab.emite.j2se.swing.log.LogPanel;
 import com.calclab.emite.j2se.swing.login.LoginPanel;
+import com.calclab.emite.j2se.swing.rooms.RoomsPanel;
 import com.calclab.emite.j2se.swing.roster.RosterPanel;
 
-public class SwingClient {
+public class ClientPanel extends JPanel {
+    private static final long serialVersionUID = 1L;
+    private final JTabbedPane tabs;
 
-    public SwingClient(final JFrame frame, final LoginPanel loginPanel, final RosterPanel rosterPanel,
-	    final ConversationsPanel conversationsPanel, final LogPanel logPanel) {
+    public ClientPanel(final LoginPanel loginPanel, final RosterPanel rosterPanel,
+	    final ConversationsPanel conversationsPanel, final LogPanel logPanel, final RoomsPanel roomsPanel) {
 
-	final JPanel root = new JPanel(new BorderLayout());
-	addXmppListeners();
+	super(new BorderLayout());
 
 	final JLabel status = new JLabel("emite test client");
 
-	root.add(loginPanel, BorderLayout.NORTH);
-	root.add(conversationsPanel, BorderLayout.CENTER);
-	final JPanel south = new JPanel(new BorderLayout());
-	south.add(status, BorderLayout.NORTH);
-	south.add(logPanel, BorderLayout.CENTER);
-	root.add(south, BorderLayout.SOUTH);
+	final JSplitPane horizontalSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+	horizontalSplit.add(conversationsPanel, JSplitPane.LEFT);
+	tabs = new JTabbedPane();
+	tabs.add("roster", rosterPanel);
+	tabs.add("rooms", roomsPanel);
+	horizontalSplit.add(tabs, JSplitPane.RIGHT);
+	horizontalSplit.setDividerLocation(600);
 
-	final JTabbedPane tabs = new JTabbedPane();
-	tabs.add("chats", rosterPanel);
+	final JSplitPane verticalSpit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+	verticalSpit.add(horizontalSplit, JSplitPane.TOP);
+	verticalSpit.add(logPanel, JSplitPane.BOTTOM);
 
-	root.add(tabs, BorderLayout.EAST);
-
-	frame.setContentPane(root);
+	this.add(loginPanel, BorderLayout.NORTH);
+	this.add(verticalSpit, BorderLayout.CENTER);
+	this.add(status, BorderLayout.SOUTH);
 
     }
 
-    private void addXmppListeners() {
-
+    public void showTabs(final boolean showTabs) {
+	tabs.setVisible(showTabs);
     }
 
 }

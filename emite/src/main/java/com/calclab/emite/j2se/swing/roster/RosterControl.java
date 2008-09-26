@@ -17,6 +17,8 @@ public class RosterControl {
     public RosterControl(final Session session, final Roster roster, final SubscriptionManager subscriptionManager,
 	    final RosterPanel rosterPanel) {
 
+	rosterPanel.setEnabled(false);
+
 	rosterPanel.onAddRosterItem(new Listener2<String, String>() {
 	    public void onEvent(final String jid, final String name) {
 		roster.addItem(uri(jid), name);
@@ -57,6 +59,7 @@ public class RosterControl {
 
 	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final Session.State current) {
+		rosterPanel.setEnabled(current == Session.State.ready);
 		if (current == Session.State.disconnected) {
 		    rosterPanel.clear();
 		}

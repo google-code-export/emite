@@ -31,14 +31,17 @@ import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.SubscriptionManager;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
+import com.calclab.emite.j2se.swing.ClientControl;
 import com.calclab.emite.j2se.swing.FrameControl;
-import com.calclab.emite.j2se.swing.SwingClient;
+import com.calclab.emite.j2se.swing.ClientPanel;
 import com.calclab.emite.j2se.swing.chat.ConversationControl;
 import com.calclab.emite.j2se.swing.chat.ConversationsPanel;
 import com.calclab.emite.j2se.swing.log.LogControl;
 import com.calclab.emite.j2se.swing.log.LogPanel;
 import com.calclab.emite.j2se.swing.login.LoginControl;
 import com.calclab.emite.j2se.swing.login.LoginPanel;
+import com.calclab.emite.j2se.swing.rooms.RoomsControl;
+import com.calclab.emite.j2se.swing.rooms.RoomsPanel;
 import com.calclab.emite.j2se.swing.roster.AddRosterItemPanel;
 import com.calclab.emite.j2se.swing.roster.RosterControl;
 import com.calclab.emite.j2se.swing.roster.RosterPanel;
@@ -54,7 +57,7 @@ public class EmiteSwingClientModule extends AbstractModule {
     public static void main(final String args[]) {
 	Suco.install(new EmiteCoreModule(), new J2SEServicesModule(), new InstantMessagingModule(), new MUCModule(),
 		new EmiteSwingClientModule());
-	Suco.get(SwingClient.class);
+	Suco.get(JFrame.class).setVisible(true);
     }
 
     public EmiteSwingClientModule() {
@@ -63,11 +66,16 @@ public class EmiteSwingClientModule extends AbstractModule {
 
     @Override
     protected void onLoad() {
-	register(Singleton.class, new Factory<SwingClient>(SwingClient.class) {
+	register(Singleton.class, new Factory<ClientPanel>(ClientPanel.class) {
 	    @Override
-	    public SwingClient create() {
-		return new SwingClient($(JFrame.class), $(LoginPanel.class), $(RosterPanel.class),
-			$(ConversationsPanel.class), $(LogPanel.class));
+	    public ClientPanel create() {
+		return new ClientPanel($(LoginPanel.class), $(RosterPanel.class), $(ConversationsPanel.class),
+			$(LogPanel.class), $(RoomsPanel.class));
+	    }
+
+	    @Override
+	    public void onAfterCreated(final ClientPanel instance) {
+		new ClientControl($(Session.class), instance);
 	    }
 	});
 
@@ -79,7 +87,7 @@ public class EmiteSwingClientModule extends AbstractModule {
 
 	    @Override
 	    public void onAfterCreated(final JFrame instance) {
-		new FrameControl($(Session.class), instance);
+		new FrameControl($(Session.class), $(ClientPanel.class), instance);
 	    }
 	});
 
@@ -121,6 +129,18 @@ public class EmiteSwingClientModule extends AbstractModule {
 	    @Override
 	    public void onAfterCreated(final RosterPanel instance) {
 		new RosterControl($(Session.class), $(Roster.class), $(SubscriptionManager.class), instance);
+	    }
+
+	}, new Factory<RoomsPanel>(RoomsPanel.class) {
+	    @Override
+	    public RoomsPanel create() {
+		final RoomsPanel panel = new RoomsPanel($(JFrame.class));
+		return panel;
+	    }
+
+	    @Override
+	    public void onAfterCreated(final RoomsPanel instance) {
+		new RoomsControl($(Session.class), instance, $(RoomManager.class));
 	    }
 
 	}, new Factory<ConversationsPanel>(ConversationsPanel.class) {
