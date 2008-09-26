@@ -22,6 +22,8 @@
 package com.calclab.emite.j2se.services;
 
 import java.text.MessageFormat;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -46,7 +48,10 @@ public class HttpConnector {
 
     }
 
+    private final ExecutorService pool;
+
     public HttpConnector() {
+	pool = Executors.newFixedThreadPool(1);
     }
 
     public synchronized void send(final String httpBase, final String xml, final ConnectorCallback callback)
@@ -75,6 +80,7 @@ public class HttpConnector {
 		}
 
 		if (status == HttpStatus.SC_OK) {
+		    System.out.println("RECEIVED: " + response);
 		    Logger.debug("Connector [{0}] receive: {1}", id, response);
 		    callback.onResponseReceived(post.getStatusCode(), response);
 		} else {
@@ -83,8 +89,8 @@ public class HttpConnector {
 		}
 	    }
 	};
-	new Thread(process).start();
 
+	pool.execute(process);
     }
 
     protected void debug(final String pattern, final Object... arguments) {

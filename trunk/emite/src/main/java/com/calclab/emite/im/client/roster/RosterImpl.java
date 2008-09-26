@@ -52,7 +52,7 @@ public class RosterImpl implements Roster {
 	    public void onEvent(final Presence presence) {
 		final RosterItem item = getItemByJID(presence.getFrom());
 		if (item != null) {
-		    item.getPresence().setType(Presence.Type.available);
+		    item.setPresence(presence);
 		    onItemUpdated.fire(item);
 		}
 	    }
