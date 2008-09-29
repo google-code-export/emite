@@ -1,6 +1,6 @@
 package com.calclab.emite.widgets.client.chat;
 
-import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.widgets.client.base.EmiteWidget;
 import com.calclab.emite.widgets.client.base.GWTExtensibleWidget;
 import com.calclab.suco.client.listener.Event;
@@ -67,8 +67,8 @@ public abstract class GWTAbstractChatWidget extends GWTExtensibleWidget implemen
 	onSendMessage.add(listener);
     }
 
-    public void setChat(final Chat chat) {
-	controller.setChat(chat);
+    public void setChat(final Conversation conversation) {
+	controller.setChat(conversation);
     }
 
     public void setController(final AbstractChatController controller) {

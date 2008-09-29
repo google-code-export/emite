@@ -46,5 +46,8 @@
         <servlet-name>Proxy</servlet-name>
         <url-pattern>/com.calclab.emite.widgets.comenta.Comenta/proxy</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>Proxy</servlet-name>
+        <url-pattern>/com.calclab.emite.widgets.habla.Habla/proxy</url-pattern>
+    </servlet-mapping>
 </web-app>

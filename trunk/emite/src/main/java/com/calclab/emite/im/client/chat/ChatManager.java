@@ -32,14 +32,14 @@ import com.calclab.suco.client.listener.Listener;
  */
 public interface ChatManager {
 
-    public void close(Chat chat);
+    public void close(Conversation conversation);
 
-    public Collection<? extends Chat> getChats();
+    public Collection<? extends Conversation> getChats();
 
-    public void onChatClosed(Listener<Chat> listener);
+    public void onChatClosed(Listener<Conversation> listener);
 
-    public void onChatCreated(Listener<Chat> listener);
+    public void onChatCreated(Listener<Conversation> listener);
 
-    public <T> Chat openChat(final XmppURI xmppURI, Class<T> dataType, T dataValue);
+    public <T> Conversation openChat(final XmppURI xmppURI, Class<T> dataType, T dataValue);
 
 }

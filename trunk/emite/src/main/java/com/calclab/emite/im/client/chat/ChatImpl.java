@@ -25,6 +25,7 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Message.Type;
+import com.calclab.suco.client.listener.Listener;
 
 /**
  * <p>
@@ -37,16 +38,23 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message.Type;
  * in one chat.
  * </p>
  * 
- * @see Chat
+ * @see Conversation
  */
 public class ChatImpl extends AbstractChat {
     protected final String thread;
     private final String id;
 
-    ChatImpl(final Session session, final XmppURI other, final String thread) {
+    public ChatImpl(final Session session, final XmppURI other, final String thread) {
 	super(session, other);
 	this.thread = thread;
 	this.id = generateChatID();
+	session.onStateChanged(new Listener<Session.State>() {
+	    public void onEvent(final Session.State state) {
+		setState(getStateFromSessionState(state));
+	    }
+
+	});
+	setState(getStateFromSessionState(session.getState()));
     }
 
     @Override
@@ -93,6 +101,16 @@ public class ChatImpl extends AbstractChat {
 
     private String generateChatID() {
 	return "chat: " + other.toString() + "-" + thread;
+    }
+
+    private State getStateFromSessionState(final Session.State state) {
+	switch (state) {
+	case loggedIn:
+	case ready:
+	    return State.ready;
+	default:
+	    return State.locked;
+	}
     }
 
 }

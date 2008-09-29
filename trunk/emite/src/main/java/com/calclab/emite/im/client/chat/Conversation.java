@@ -26,15 +26,14 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.listener.Listener;
 
 /**
- * A conversation between two users
+ * Defines a xmpp conversation. This interface is implemented by Chat and Room
  * 
- * @author dani
- * 
+ * @see Chat, Room
  */
-public interface Chat {
+public interface Conversation {
 
     /**
-     * Possible chat states.
+     * Possible conversation states.
      * 
      */
     public static enum State {
@@ -51,6 +50,7 @@ public interface Chat {
 
     public State getState();
 
+    @Deprecated
     public String getThread();
 
     public void onBeforeReceive(Listener<Message> listener);
@@ -85,6 +85,7 @@ public interface Chat {
      * @param message
      *            the message
      */
+    @Deprecated
     public void receive(Message message);
 
     /**

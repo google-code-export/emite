@@ -29,7 +29,7 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
-import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.roster.Roster;
@@ -195,10 +195,10 @@ public class StatusUIPresenter implements StatusUI {
 
     protected void onUserColorChanged(final String color) {
 	assert userChatOptions != null;
-	for (final Chat chat : chatManagerProvider.get().getChats()) {
-	    setChatColor(chat, color);
+	for (final Conversation conversation : chatManagerProvider.get().getChats()) {
+	    setChatColor(conversation, color);
 	}
-	for (final Chat room : roomManagerProvider.get().getChats()) {
+	for (final Conversation room : roomManagerProvider.get().getChats()) {
 	    setChatColor(room, color);
 	}
 	userChatOptions.setColor(color);
@@ -246,8 +246,8 @@ public class StatusUIPresenter implements StatusUI {
 	view.setLoadingVisible(true);
     }
 
-    private void setChatColor(final Chat chat, final String color) {
-	final ChatUI chatUI = chat.getData(ChatUI.class);
+    private void setChatColor(final Conversation conversation, final String color) {
+	final ChatUI chatUI = conversation.getData(ChatUI.class);
 	if (chatUI != null) {
 	    chatUI.setCurrentUserColor(color);
 	}

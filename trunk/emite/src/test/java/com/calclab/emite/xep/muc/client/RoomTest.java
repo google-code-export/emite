@@ -15,8 +15,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.AbstractChat;
 import com.calclab.emite.im.client.chat.AbstractChatTest;
-import com.calclab.emite.im.client.chat.Chat;
-import com.calclab.emite.im.client.chat.Chat.State;
+import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Conversation.State;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.listener.MockListener;
 import com.calclab.suco.testing.listener.MockListener2;
@@ -62,7 +62,7 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldCreateInstantRooms() {
-	final MockListener<State> listener = new MockListener<Chat.State>();
+	final MockListener<State> listener = new MockListener<Conversation.State>();
 	room.onStateChanged(listener);
 	session.receives("<presence to='user@domain/res' from='room@domain/nick'>"
 		+ "<x xmlns='http://jabber.org/protocol/muc#user'>"
@@ -77,7 +77,7 @@ public class RoomTest extends AbstractChatTest {
     @Test
     public void shouldExitAndLockTheRoomWhenLoggedOut() {
 	session.logout();
-	assertEquals(Chat.State.locked, room.getState());
+	assertEquals(Conversation.State.locked, room.getState());
 	session.verifySent("<presence from='user@domain/res' to='room@domain/nick' type='unavailable'/>");
     }
 

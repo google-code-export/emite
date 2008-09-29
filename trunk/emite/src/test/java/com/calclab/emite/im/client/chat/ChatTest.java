@@ -1,13 +1,16 @@
 package com.calclab.emite.im.client.chat;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.im.client.chat.Chat.State;
+import com.calclab.emite.im.client.chat.Conversation.State;
 import com.calclab.emite.testing.MockedSession;
+import com.calclab.suco.testing.listener.MockListener;
 
 public class ChatTest extends AbstractChatTest {
     private ChatImpl chat;
@@ -17,7 +20,6 @@ public class ChatTest extends AbstractChatTest {
     public void beforeTests() {
 	session = new MockedSession("self@domain/res");
 	chat = new ChatImpl(session, uri("other@domain/other"), "theThread");
-	chat.setState(State.ready);
     }
 
     @Override
@@ -47,6 +49,22 @@ public class ChatTest extends AbstractChatTest {
 		Message.Type.groupchat));
 	session.verifySent("<message from='self@domain/res' to='other@domain/other' type='chat'>"
 		+ "<body>this is the body</body><thread>theThread</thread></message>");
+    }
+
+    @Test
+    public void shouldSetStateUsingSessionState() {
+	final ChatImpl aChat = new ChatImpl(session, uri("someone@domain"), null);
+	final MockListener<State> listener = new MockListener<State>();
+	aChat.onStateChanged(listener);
+
+	assertEquals(Conversation.State.ready, aChat.getState());
+	session.logout();
+	session.login(uri("self@domain/res"), "");
+	assertTrue(listener.isCalledWithSame(Conversation.State.locked, Conversation.State.ready));
+	listener.clear();
+	session.logout();
+	session.login(uri("differentUser@domain"), "");
+	assertTrue(listener.isCalledWithSame(Conversation.State.locked));
     }
 
     @Test
