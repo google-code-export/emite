@@ -11,6 +11,8 @@ import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.suco.client.listener.Listener;
 
 public class ComentaController {
+    private static final String CONSONANTES = "bcdfghjklmnpqrstwxyz";
+    private static final String VOCALES = "aeiuo";
     private final ComentaWidget widget;
     private Conversation room;
 
@@ -57,7 +59,8 @@ public class ComentaController {
 		final boolean isReady = state == State.ready;
 		if (isReady) {
 		    widget.setEnabled(true);
-		    widget.showStatus(room.getURI().getNode(), "ready");
+		    final XmppURI uri = room.getURI();
+		    widget.showStatus("You are " + uri.getResource() + " in " + uri.getNode(), "ready");
 		} else {
 		    widget.setEnabled(false);
 		    widget.showStatus("waiting for room...", "info");
@@ -74,6 +77,11 @@ public class ComentaController {
     }
 
     private String generateNick() {
-	return "dani";
+	return select(CONSONANTES) + select(VOCALES) + select(VOCALES) + select(CONSONANTES) + select(VOCALES);
+    }
+
+    private String select(final String posibilities) {
+	final int pos = (int) (Math.random() * posibilities.length());
+	return posibilities.substring(pos, pos + 1);
     }
 }
