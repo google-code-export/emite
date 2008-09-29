@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -18,6 +19,7 @@ public class ComentaWidget extends AbsolutePanel implements HasProperties {
     private final HTML output;
     private final TextArea input;
     private final Label status;
+    private final ScrollPanel scroll;
 
     public ComentaWidget() {
 	this.onSetProperties = new Event<Map<String, String>>("comenta:onSetProperty");
@@ -25,6 +27,7 @@ public class ComentaWidget extends AbsolutePanel implements HasProperties {
 
 	this.status = new Label();
 	this.output = new HTML();
+	this.scroll = new ScrollPanel(output);
 	this.input = new TextArea();
 	input.addKeyboardListener(new KeyboardListener() {
 	    public void onKeyDown(final Widget sender, final char keyCode, final int modifiers) {
@@ -32,8 +35,9 @@ public class ComentaWidget extends AbsolutePanel implements HasProperties {
 
 	    public void onKeyPress(final Widget sender, final char keyCode, final int modifiers) {
 		if (keyCode == 13) {
-		    onMessage.fire(input.getText());
-		    input.setText("");
+		    onMessage.fire(input.getText().trim());
+		    input.setText(null);
+		    input.setCursorPos(1);
 		    input.setFocus(true);
 		}
 	    }
@@ -71,6 +75,7 @@ public class ComentaWidget extends AbsolutePanel implements HasProperties {
 	final String user = name != null ? "<span class=\"" + userClass + "\">" + name + "</span>: " : "";
 	final String line = "<div>" + user + body + "</div>";
 	output.setHTML(output.getHTML() + line);
+	scroll.scrollToBottom();
     }
 
     public void showStatus(final String message, final String cssClass) {
@@ -94,8 +99,8 @@ public class ComentaWidget extends AbsolutePanel implements HasProperties {
 	add(middle, 0, 31);
 	middle.setPixelSize(width, height - 85);
 	middle.setStylePrimaryName("middle");
-	add(output, 0, 32);
-	output.setPixelSize(100, 100);
+	add(scroll, 0, 32);
+	scroll.setPixelSize(width, height - 85);
 
 	final Label bottom = new Label();
 	add(bottom, 0, height - 51);
