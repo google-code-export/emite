@@ -128,7 +128,7 @@ public class MultiChatPresenter {
 	final ChatUI chatUIalreadyOpened = getChatUI(conversation);
 	logIfChatAlreadyOpened(chatUIalreadyOpened);
 	final ChatStateManager chatStateManager = stateManager.getChatState(conversation);
-	final ChatUI chatUI = chatUIalreadyOpened == null ? factory.createChatUI(conversation.getOtherURI(), userChatOptions
+	final ChatUI chatUI = chatUIalreadyOpened == null ? factory.createChatUI(conversation.getURI(), userChatOptions
 		.getUserJid().getNode(), userChatOptions.getColor(), chatStateManager) : chatUIalreadyOpened;
 	if (chatUIalreadyOpened == null) {
 	    addCommonChatEvents(conversation, chatUI);
@@ -139,7 +139,7 @@ public class MultiChatPresenter {
 	    });
 	    chatUI.onUserDrop(new Listener<XmppURI>() {
 		public void onEvent(final XmppURI userURI) {
-		    if (!conversation.getOtherURI().equals(userURI)) {
+		    if (!conversation.getURI().equals(userURI)) {
 			joinChat(userURI);
 		    }
 		}
@@ -153,7 +153,7 @@ public class MultiChatPresenter {
 	final ChatUI chatUIalreadyOpened = getChatUI(conversation);
 	logIfChatAlreadyOpened(chatUIalreadyOpened);
 	// FIXME userCO.getUserJid ... etc
-	final RoomUI roomUI = (RoomUI) (chatUIalreadyOpened == null ? factory.createRoomUI(conversation.getOtherURI(),
+	final RoomUI roomUI = (RoomUI) (chatUIalreadyOpened == null ? factory.createRoomUI(conversation.getURI(),
 		userChatOptions.getUserJid().getNode(), userChatOptions.getColor(), i18n) : chatUIalreadyOpened);
 	if (chatUIalreadyOpened == null) {
 	    addCommonChatEvents(conversation, roomUI);
@@ -352,7 +352,7 @@ public class MultiChatPresenter {
 	if (roomUI == null) {
 	    Log.warn("Message received in an inexistent roomUI");
 	} else {
-	    if (fromURI.getResource() == null && fromURI.getNode().equals(conversation.getOtherURI().getNode())) {
+	    if (fromURI.getResource() == null && fromURI.getNode().equals(conversation.getURI().getNode())) {
 		// Info messsage from room
 		roomUI.addInfoMessage(message.getBody());
 	    } else {

@@ -23,6 +23,7 @@ package com.calclab.emite.core.client.services.gwt;
 
 import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.emite.core.client.packet.gwt.GWTPacket;
+import com.calclab.suco.client.log.Logger;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
@@ -35,8 +36,10 @@ public class GWTXMLService {
     }
 
     public static IPacket toXML(final String xml) {
+	xml.replace("\n", "");
 	final Document parsed = XMLParser.parse(xml);
 	final Node body = parsed.getChildNodes().item(0);
+	Logger.debug("Node: {0}", body.toString());
 	return new GWTPacket((Element) body);
     }
 

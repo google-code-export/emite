@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Helper class to serialize a packet to string
+ * Helper class to build a nice packet representation
  */
 public class PacketRenderer {
     public static String toString(final IPacket packet) {

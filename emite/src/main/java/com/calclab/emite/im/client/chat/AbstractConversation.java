@@ -29,9 +29,9 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
 
-public abstract class AbstractChat implements Conversation {
+public abstract class AbstractConversation implements Conversation {
 
-    protected final XmppURI other;
+    protected final XmppURI uri;
     protected State state;
     protected final Event<State> onStateChanged;
     protected final Event<Message> onBeforeReceive;
@@ -41,9 +41,9 @@ public abstract class AbstractChat implements Conversation {
     private final Event<Message> onMessageReceived;
     private final Event<Message> onBeforeSend;
 
-    public AbstractChat(final Session session, final XmppURI other) {
+    public AbstractConversation(final Session session, final XmppURI uri) {
 	this.session = session;
-	this.other = other;
+	this.uri = uri;
 	this.data = new HashMap<Class<?>, Object>();
 	this.state = Conversation.State.locked;
 	this.onStateChanged = new Event<State>("chat:onStateChanged");
@@ -58,16 +58,12 @@ public abstract class AbstractChat implements Conversation {
 	return (T) data.get(type);
     }
 
-    public XmppURI getFromURI() {
-	return session.getCurrentUser();
-    }
-
-    public XmppURI getOtherURI() {
-	return other;
-    }
-
     public State getState() {
 	return state;
+    }
+
+    public XmppURI getURI() {
+	return uri;
     }
 
     public void onBeforeReceive(final Listener<Message> listener) {
@@ -90,11 +86,6 @@ public abstract class AbstractChat implements Conversation {
 	onStateChanged.add(listener);
     }
 
-    public void receive(final Message message) {
-	onBeforeReceive.fire(message);
-	onMessageReceived.fire(message);
-    }
-
     public void send(final Message message) {
 	message.setFrom(session.getCurrentUser());
 	onBeforeSend.fire(message);
@@ -105,6 +96,11 @@ public abstract class AbstractChat implements Conversation {
     @SuppressWarnings("unchecked")
     public <T> T setData(final Class<T> type, final T value) {
 	return (T) data.put(type, value);
+    }
+
+    protected void receive(final Message message) {
+	onBeforeReceive.fire(message);
+	onMessageReceived.fire(message);
     }
 
     protected void setState(final State state) {

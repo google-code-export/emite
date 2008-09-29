@@ -24,7 +24,6 @@ package com.calclab.emite.im.client.chat;
 import java.util.Collection;
 import java.util.HashSet;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
@@ -44,7 +43,6 @@ public class ChatManagerImpl implements ChatManager {
     protected final Event<Conversation> onChatCreated;
     protected Event<Conversation> onChatClosed;
     protected final Session session;
-    private XmppURI lastLoggedInUser;
 
     public ChatManagerImpl(final Session session) {
 	this.session = session;
@@ -58,21 +56,11 @@ public class ChatManagerImpl implements ChatManager {
 	    }
 	});
 
-	session.onStateChanged(new Listener<Session.State>() {
-	    public void onEvent(final Session.State state) {
-		if (state == Session.State.loggedIn) {
-		    unlockChatsIfSameResource(session.getCurrentUser());
-		} else if (state == Session.State.disconnected) {
-		    lockAllChats();
-		}
-	    }
-	});
-
     }
 
     public void close(final Conversation conversation) {
 	conversations.remove(conversation);
-	((AbstractChat) conversation).setState(State.locked);
+	((AbstractConversation) conversation).setState(State.locked);
 	onChatClosed.fire(conversation);
     }
 
@@ -104,15 +92,20 @@ public class ChatManagerImpl implements ChatManager {
 	switch (type) {
 	case chat:
 	case normal:
-	    onChatMessageReceived(message);
+	    final XmppURI from = message.getFrom();
+	    final String thread = message.getThread();
+
+	    Conversation conversation = findChat(from, thread);
+	    if (conversation == null) {
+		conversation = createChat(from, thread, null, null);
+	    }
 	    break;
-	case error:
-	    Log.warn("Error message received: " + message.toString());
 	}
     }
 
-    private <T> Conversation createChat(final XmppURI toURI, final String thread, final Class<T> extraType, final T extraData) {
-	final ChatImpl chat = new ChatImpl(session, toURI, thread);
+    private <T> Conversation createChat(final XmppURI toURI, final String thread, final Class<T> extraType,
+	    final T extraData) {
+	final Chat chat = new Chat(session, toURI, thread);
 	if (extraType != null) {
 	    chat.setData(extraType, extraData);
 	}
@@ -140,7 +133,7 @@ public class ChatManagerImpl implements ChatManager {
 		    return conversation;
 		}
 	    } else {
-		final XmppURI chatTargetURI = conversation.getOtherURI();
+		final XmppURI chatTargetURI = conversation.getURI();
 		if (from.hasResource() && from.equals(chatTargetURI)) {
 		    selected = conversation;
 		} else if (from.equalsNoResource(chatTargetURI)) {
@@ -150,32 +143,6 @@ public class ChatManagerImpl implements ChatManager {
 	}
 
 	return selected;
-    }
-
-    private void lockAllChats() {
-	for (final Conversation conversation : conversations) {
-	    ((AbstractChat) conversation).setState(State.locked);
-	}
-    }
-
-    private void onChatMessageReceived(final Message message) {
-	final XmppURI from = message.getFrom();
-	final String thread = message.getThread();
-
-	Conversation conversation = findChat(from, thread);
-	if (conversation == null) {
-	    conversation = createChat(from, thread, null, null);
-	}
-	conversation.receive(message);
-    }
-
-    private void unlockChatsIfSameResource(final XmppURI uri) {
-	if (uri.equalsNoResource(lastLoggedInUser)) {
-	    for (final Conversation conversation : conversations) {
-		((AbstractChat) conversation).setState(State.ready);
-	    }
-	}
-	this.lastLoggedInUser = uri;
     }
 
 }

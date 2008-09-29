@@ -5,17 +5,15 @@ import java.util.Map;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.Conversation;
-import com.calclab.emite.im.client.chat.ChatImpl;
 import com.calclab.suco.client.listener.Listener;
 
 public class HablaController {
-    private final Session session;
     private final HablaWidget widget;
-    private Conversation conversation;
+    private Conversation chat;
 
-    public HablaController(final Session session, final HablaWidget widget) {
-	this.session = session;
+    public HablaController(final Session session, final ChatManager chatManager, final HablaWidget widget) {
 	this.widget = widget;
 	widget.setEnabled(false);
 
@@ -26,14 +24,14 @@ public class HablaController {
 		    widget.showStatus("JID not specified or not valid.", "error");
 		    throw new RuntimeException("JID property not specified or not valid.");
 		}
-		openChat(jid);
+		openChat(chatManager, jid);
 	    }
 	});
 
 	widget.onMessage(new Listener<String>() {
 	    public void onEvent(final String messageBody) {
 		widget.show("me", messageBody);
-		conversation.send(new Message(messageBody));
+		chat.send(new Message(messageBody));
 	    }
 	});
 
@@ -48,16 +46,16 @@ public class HablaController {
 	});
     }
 
-    private void openChat(final XmppURI jid) {
+    private void openChat(final ChatManager chatManager, final XmppURI jid) {
 	final String name = jid.getNode();
-	conversation = new ChatImpl(session, jid, null);
-	conversation.onStateChanged(new Listener<Conversation.State>() {
+	chat = chatManager.openChat(jid, null, null);
+	chat.onStateChanged(new Listener<Conversation.State>() {
 	    public void onEvent(final Conversation.State state) {
 		widget.setEnabled(state == Conversation.State.ready);
 	    }
 	});
 
-	conversation.onMessageReceived(new Listener<Message>() {
+	chat.onMessageReceived(new Listener<Message>() {
 	    public void onEvent(final Message message) {
 		widget.show(name, message.getBody());
 	    }

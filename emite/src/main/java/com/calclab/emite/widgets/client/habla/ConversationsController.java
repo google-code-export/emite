@@ -27,7 +27,7 @@ public class ConversationsController {
 		    chatWidget = chatWidgetFactory.get();
 		    chatWidget.getController().setChat(conversation);
 		    chats.put(conversation.getID(), chatWidget);
-		    widget.add(conversation.getOtherURI().toString(), chatWidget);
+		    widget.add(conversation.getURI().toString(), chatWidget);
 		}
 	    }
 	});

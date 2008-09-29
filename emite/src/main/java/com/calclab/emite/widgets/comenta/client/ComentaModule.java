@@ -2,6 +2,7 @@ package com.calclab.emite.widgets.comenta.client;
 
 import com.calclab.emite.browser.client.DomAssist;
 import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.ioc.decorator.Singleton;
 import com.calclab.suco.client.ioc.module.AbstractModule;
@@ -29,7 +30,7 @@ public class ComentaModule extends AbstractModule implements EntryPoint {
 
 	    @Override
 	    public void onAfterCreated(final ComentaWidget instance) {
-		new ComentaController($(Session.class), instance);
+		new ComentaController($(Session.class), $(RoomManager.class), instance);
 	    }
 	});
     }

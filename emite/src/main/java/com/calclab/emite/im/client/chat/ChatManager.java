@@ -27,8 +27,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.listener.Listener;
 
 /**
- * The ChatManager helps you to maintain more than one chat at same time. If you
- * only want to have one chat, use Chat directly
+ * The ChatManager takes care of creation of chats.
  */
 public interface ChatManager {
 

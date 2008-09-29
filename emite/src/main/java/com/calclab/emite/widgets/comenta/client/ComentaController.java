@@ -7,27 +7,26 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.Conversation.State;
-import com.calclab.emite.xep.muc.client.Room;
+import com.calclab.emite.xep.muc.client.RoomManager;
 import com.calclab.suco.client.listener.Listener;
 
 public class ComentaController {
     private final ComentaWidget widget;
-    private final Session session;
-    private Room room;
+    private Conversation room;
 
-    public ComentaController(final Session session, final ComentaWidget widget) {
-	this.session = session;
+    public ComentaController(final Session session, final RoomManager roomManager, final ComentaWidget widget) {
 	this.widget = widget;
 	widget.setEnabled(false);
 
 	widget.onSetProperties(new Listener<Map<String, String>>() {
 	    public void onEvent(final Map<String, String> properties) {
-		final XmppURI roomURI = XmppURI.uri(properties.get("room"));
-		if (roomURI == null) {
+		final XmppURI roomJID = XmppURI.uri(properties.get("room"));
+		if (roomJID == null) {
 		    widget.showStatus("Room not specified or not valid.", "error");
 		    throw new RuntimeException("room property not specified or not valid.");
 		}
-		createRoom(XmppURI.uri(roomURI.getNode(), roomURI.getHost(), generateNick()));
+		final XmppURI roomURI = XmppURI.uri(roomJID.getNode(), roomJID.getHost(), generateNick());
+		createRoom(roomManager, roomURI);
 	    }
 	});
 
@@ -42,7 +41,7 @@ public class ComentaController {
 		widget.showStatus(state.toString(), "");
 		switch (state) {
 		case ready:
-		    widget.showStatus("Entering " + room.getOtherURI().getNode() + "...", "info");
+		    widget.showStatus("Entering " + room.getURI().getNode() + "...", "info");
 		    break;
 		}
 	    }
@@ -50,15 +49,15 @@ public class ComentaController {
 
     }
 
-    private void createRoom(final XmppURI roomURI) {
-	room = new Room(session, roomURI);
+    private void createRoom(final RoomManager roomManager, final XmppURI roomURI) {
+	room = roomManager.openChat(roomURI, null, null);
 
 	room.onStateChanged(new Listener<Conversation.State>() {
 	    public void onEvent(final State state) {
 		final boolean isReady = state == State.ready;
 		if (isReady) {
 		    widget.setEnabled(true);
-		    widget.showStatus(room.getOtherURI().getNode(), "ready");
+		    widget.showStatus(room.getURI().getNode(), "ready");
 		} else {
 		    widget.setEnabled(false);
 		    widget.showStatus("waiting for room...", "info");

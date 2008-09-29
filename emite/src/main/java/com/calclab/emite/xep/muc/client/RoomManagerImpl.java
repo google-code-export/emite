@@ -53,7 +53,7 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
 
     @Override
     public void close(final Conversation whatToClose) {
-	final Room room = rooms.remove(whatToClose.getOtherURI().getJID());
+	final Room room = rooms.remove(whatToClose.getURI().getJID());
 	if (room != null) {
 	    room.close();
 	    super.close(room);

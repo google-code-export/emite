@@ -135,7 +135,7 @@ public class ChatStateManager {
     }
 
     private void sendStateMessage(final ChatState chatState) {
-	final Message message = new Message(conversation.getFromURI(), conversation.getOtherURI(), null).Thread(conversation.getThread());
+	final Message message = new Message(null, conversation.getURI(), null).Thread(conversation.getThread());
 	message.addChild(chatState.toString(), XMLNS);
 	conversation.send(message);
     }
