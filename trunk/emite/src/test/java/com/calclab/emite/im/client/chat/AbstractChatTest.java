@@ -16,11 +16,11 @@ public abstract class AbstractChatTest {
 	session = new MockedSession();
     }
 
-    public abstract AbstractChat getChat();
+    public abstract AbstractConversation getChat();
 
     @Test
     public void shouldInterceptIncomingMessages() {
-	final AbstractChat chat = getChat();
+	final AbstractConversation chat = getChat();
 	final MockListener<Message> interceptor = new MockListener<Message>();
 	chat.onBeforeReceive(interceptor);
 	final Message message = new Message("body");
@@ -30,7 +30,7 @@ public abstract class AbstractChatTest {
 
     @Test
     public void shouldInterceptOutcomingMessages() {
-	final AbstractChat chat = getChat();
+	final AbstractConversation chat = getChat();
 	final MockListener<Message> interceptor = new MockListener<Message>();
 	chat.onBeforeSend(interceptor);
 	final Message message = new Message("body");
@@ -40,7 +40,7 @@ public abstract class AbstractChatTest {
 
     @Test
     public void shouldNotSendMessagesWhenStatusIsNotReady() {
-	final AbstractChat chat = getChat();
+	final AbstractConversation chat = getChat();
 	chat.setState(State.locked);
 	chat.send(new Message("a message"));
 	session.verifyNotSent("<message />");

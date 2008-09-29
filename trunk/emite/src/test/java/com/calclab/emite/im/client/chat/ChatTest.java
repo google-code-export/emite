@@ -8,28 +8,62 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Conversation.State;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.listener.MockListener;
 
 public class ChatTest extends AbstractChatTest {
-    private ChatImpl chat;
+    private static final XmppURI CHAT_URI = uri("other@domain/other");
+    private static final XmppURI USER_URI = uri("self@domain/res");
+    private Chat chat;
     private MockedSession session;
 
     @Before
     public void beforeTests() {
-	session = new MockedSession("self@domain/res");
-	chat = new ChatImpl(session, uri("other@domain/other"), "theThread");
+	session = new MockedSession(USER_URI);
+	chat = new Chat(session, CHAT_URI, "theThread");
     }
 
     @Override
-    public AbstractChat getChat() {
+    public AbstractConversation getChat() {
 	return chat;
     }
 
     @Test
+    public void shouldBeReadyIfSessionLogedIn() {
+	final Chat aChat = new Chat(session, uri("someone@domain"), null);
+	assertEquals(Conversation.State.ready, aChat.getState());
+    }
+
+    @Test
+    public void shouldLockIfLogout() {
+	final MockListener<State> listener = new MockListener<State>();
+	chat.onStateChanged(listener);
+	session.logout();
+	session.login(USER_URI, "");
+	assertTrue(listener.isCalledWithSame(Conversation.State.locked, Conversation.State.ready));
+    }
+
+    @Test
+    public void shouldLockIfReLoginWithDifferentJID() {
+	session.logout();
+	session.login(uri("differentUser@domain"), "");
+	assertEquals(Conversation.State.locked, chat.getState());
+
+    }
+
+    @Test
+    public void shouldReceiveMessages() {
+	final MockListener<Message> messageReceived = new MockListener<Message>();
+	chat.onMessageReceived(messageReceived);
+	session.receives(new Message(CHAT_URI, USER_URI, "the body"));
+	assertTrue("should receive messages", messageReceived.isCalled(1));
+    }
+
+    @Test
     public void shouldSendNoThreadWhenNotSpecified() {
-	final AbstractChat noThreadChat = new ChatImpl(session, uri("other@domain/other"), null);
+	final AbstractConversation noThreadChat = new Chat(session, CHAT_URI, null);
 	noThreadChat.setState(State.ready);
 	noThreadChat.send(new Message("the message"));
 	session.verifySent("<message from='self@domain/res' to='other@domain/other' "
@@ -52,19 +86,10 @@ public class ChatTest extends AbstractChatTest {
     }
 
     @Test
-    public void shouldSetStateUsingSessionState() {
-	final ChatImpl aChat = new ChatImpl(session, uri("someone@domain"), null);
-	final MockListener<State> listener = new MockListener<State>();
-	aChat.onStateChanged(listener);
-
-	assertEquals(Conversation.State.ready, aChat.getState());
+    public void shouldUnlockIfReloginWithSameJID() {
 	session.logout();
-	session.login(uri("self@domain/res"), "");
-	assertTrue(listener.isCalledWithSame(Conversation.State.locked, Conversation.State.ready));
-	listener.clear();
-	session.logout();
-	session.login(uri("differentUser@domain"), "");
-	assertTrue(listener.isCalledWithSame(Conversation.State.locked));
+	session.login(XmppURI.uri(USER_URI.getNode(), USER_URI.getHost(), "different_resource"), "");
+	assertEquals(Conversation.State.ready, chat.getState());
     }
 
     @Test

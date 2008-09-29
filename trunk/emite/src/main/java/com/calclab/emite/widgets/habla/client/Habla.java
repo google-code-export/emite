@@ -3,11 +3,8 @@ package com.calclab.emite.widgets.habla.client;
 import java.util.ArrayList;
 
 import com.calclab.emite.browser.client.DomAssist;
-import com.calclab.emite.browser.client.HasProperties;
-import com.calclab.emite.widgets.comenta.client.ComentaWidget;
 import com.calclab.suco.client.ioc.Provider;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class Habla {

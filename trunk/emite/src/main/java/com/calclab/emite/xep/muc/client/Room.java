@@ -35,14 +35,19 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
-import com.calclab.emite.im.client.chat.AbstractChat;
+import com.calclab.emite.im.client.chat.AbstractConversation;
 import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Event2;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.client.listener.Listener2;
 
-public class Room extends AbstractChat implements Conversation {
+/**
+ * A Room implementation. You can create rooms using RoomManager
+ * 
+ * @see RoomManager
+ */
+public class Room extends AbstractConversation implements Conversation {
     private static final PacketMatcher ROOM_CREATED = MatcherFactory.byNameAndXMLNS("x",
 	    "http://jabber.org/protocol/muc#user");
     private final HashMap<XmppURI, Occupant> occupantsByURI;
@@ -58,7 +63,7 @@ public class Room extends AbstractChat implements Conversation {
      * @param roomURI
      *            the room uri with the nick specified in the resource part
      */
-    public Room(final Session session, final XmppURI roomURI) {
+    Room(final Session session, final XmppURI roomURI) {
 	super(session, roomURI);
 	this.occupantsByURI = new HashMap<XmppURI, Occupant>();
 	this.onOccupantModified = new Event<Occupant>("room:onOccupantModified");
@@ -77,7 +82,8 @@ public class Room extends AbstractChat implements Conversation {
 
 	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final Session.State state) {
-		if (Session.State.loggingOut == state) {
+		if (Session.State.loggedIn == state) {
+		} else if (Session.State.loggingOut == state) {
 		    close();
 		}
 	    }
@@ -98,13 +104,13 @@ public class Room extends AbstractChat implements Conversation {
      */
     public void close() {
 	if (state == State.ready) {
-	    session.send(new Presence(Type.unavailable, getFromURI(), getOtherURI()));
+	    session.send(new Presence(Type.unavailable, null, getURI()));
 	    setState(State.locked);
 	}
     }
 
     public String getID() {
-	return other.toString();
+	return uri.toString();
     }
 
     public Occupant getOccupantByURI(final XmppURI uri) {
@@ -116,7 +122,7 @@ public class Room extends AbstractChat implements Conversation {
     }
 
     public String getThread() {
-	return other.getNode();
+	return uri.getNode();
     }
 
     /**
@@ -126,7 +132,7 @@ public class Room extends AbstractChat implements Conversation {
      * @return true if this message is a room echo
      */
     public boolean isComingFromMe(final Message message) {
-	final String myNick = other.getResource();
+	final String myNick = uri.getResource();
 	final String messageNick = message.getFrom().getResource();
 	return myNick.equals(messageNick);
     }
@@ -143,18 +149,6 @@ public class Room extends AbstractChat implements Conversation {
 	onSubjectChanged.add(listener);
     }
 
-    @Override
-    public void receive(final Message message) {
-	final String subject = message.getSubject();
-	if (subject != null) {
-	    onBeforeReceive.fire(message);
-	    onSubjectChanged.fire(occupantsByURI.get(message.getFrom()), subject);
-	}
-	if (message.getBody() != null) {
-	    super.receive(message);
-	}
-    }
-
     public void removeOccupant(final XmppURI uri) {
 	final Occupant occupant = occupantsByURI.remove(uri);
 	if (occupant != null) {
@@ -164,7 +158,7 @@ public class Room extends AbstractChat implements Conversation {
 
     @Override
     public void send(final Message message) {
-	message.setTo(getOtherURI().getJID());
+	message.setTo(getURI().getJID());
 	message.setType(Message.Type.groupchat);
 	super.send(message);
     }
@@ -181,7 +175,7 @@ public class Room extends AbstractChat implements Conversation {
     public void sendInvitationTo(final String userJid, final String reasonText) {
 	final BasicStanza message = new BasicStanza("message", null);
 	message.setFrom(session.getCurrentUser());
-	message.setTo(other);
+	message.setTo(uri);
 	final IPacket x = message.addChild("x", "http://jabber.org/protocol/muc#user");
 	final IPacket invite = x.addChild("invite", null);
 	invite.setAttribute("to", userJid);
@@ -204,11 +198,6 @@ public class Room extends AbstractChat implements Conversation {
 	return occupant;
     }
 
-    @Override
-    public void setState(final State state) {
-	super.setState(state);
-    }
-
     /**
      * http://www.xmpp.org/extensions/xep-0045.html#subject-mod
      * 
@@ -217,7 +206,7 @@ public class Room extends AbstractChat implements Conversation {
     public void setSubject(final String subjectText) {
 	final BasicStanza message = new BasicStanza("message", null);
 	message.setFrom(session.getCurrentUser());
-	message.setTo(other);
+	message.setTo(uri);
 	message.setType(Message.Type.groupchat.toString());
 	final IPacket subject = message.addChild("subject", null);
 	subject.setText(subjectText);
@@ -226,7 +215,19 @@ public class Room extends AbstractChat implements Conversation {
 
     @Override
     public String toString() {
-	return "ROOM: " + other;
+	return "ROOM: " + uri;
+    }
+
+    @Override
+    protected void receive(final Message message) {
+	final String subject = message.getSubject();
+	if (subject != null) {
+	    onBeforeReceive.fire(message);
+	    onSubjectChanged.fire(occupantsByURI.get(message.getFrom()), subject);
+	}
+	if (message.getBody() != null) {
+	    super.receive(message);
+	}
     }
 
     private void handlePresence(final XmppURI occupantURI, final Presence presence) {
@@ -256,7 +257,7 @@ public class Room extends AbstractChat implements Conversation {
     }
 
     private void requestCreateInstantRoom() {
-	final IQ iq = new IQ(IQ.Type.set, this.getOtherURI().getJID());
+	final IQ iq = new IQ(IQ.Type.set, this.getURI().getJID());
 	iq.addQuery("http://jabber.org/protocol/muc#owner").addChild("x", "jabber:x:data").With("type", "submit");
 	session.sendIQ("rooms", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {

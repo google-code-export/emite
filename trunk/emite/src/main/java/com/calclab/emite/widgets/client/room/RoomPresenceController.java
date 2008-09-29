@@ -57,7 +57,7 @@ public class RoomPresenceController {
     }
 
     private boolean isOurRoom(final Conversation conversation) {
-	return conversation.getOtherURI().equalsNoResource(room);
+	return conversation.getURI().equalsNoResource(room);
     }
 
     private void listenToRoomOccupants(final Room room) {

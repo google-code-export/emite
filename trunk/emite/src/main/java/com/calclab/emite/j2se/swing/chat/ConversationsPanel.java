@@ -52,14 +52,14 @@ public class ConversationsPanel extends JPanel {
     public ChatPanel createChat(final ChatManager chatManager, final Conversation conversation) {
 	final ChatPanel panel = new ChatPanel();
 	new ChatControl(chatManager, conversation, panel);
-	return addChat(conversation.getOtherURI().toString(), conversation.getID(), panel);
+	return addChat(conversation.getURI().toString(), conversation.getID(), panel);
     }
 
     public RoomPanel createRoomPanel(final RoomManager roomManager, final Room room) {
 
 	final RoomPanel panel = new RoomPanel();
 	new RoomControl(roomManager, room, panel);
-	return (RoomPanel) addChat(room.getOtherURI().toString(), room.getID(), panel);
+	return (RoomPanel) addChat(room.getURI().toString(), room.getID(), panel);
     }
 
     private ChatPanel addChat(final String title, final String id, final ChatPanel panel) {

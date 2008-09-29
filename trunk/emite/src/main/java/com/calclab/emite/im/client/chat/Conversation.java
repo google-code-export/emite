@@ -26,7 +26,9 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.listener.Listener;
 
 /**
- * Defines a xmpp conversation. This interface is implemented by Chat and Room
+ * Defines a xmpp conversation.
+ * 
+ * This interface is implemented by Chat and Room.
  * 
  * @see Chat, Room
  */
@@ -34,7 +36,6 @@ public interface Conversation {
 
     /**
      * Possible conversation states.
-     * 
      */
     public static enum State {
 	ready, locked
@@ -42,16 +43,22 @@ public interface Conversation {
 
     public <T> T getData(Class<T> type);
 
-    public XmppURI getFromURI();
-
     public String getID();
-
-    public XmppURI getOtherURI();
 
     public State getState();
 
     @Deprecated
     public String getThread();
+
+    /**
+     * Returns this conversation URI. If this conversation is a normal chat, the
+     * uri is the JID of the other side user. If this conversation is a room,
+     * the uri is a room URI in the form of
+     * roomName@domainOfRoomService/userNickName
+     * 
+     * @return the conversation's URI
+     */
+    public XmppURI getURI();
 
     public void onBeforeReceive(Listener<Message> listener);
 
@@ -78,15 +85,6 @@ public interface Conversation {
      * @param listener
      */
     public void onStateChanged(Listener<State> listener);
-
-    /**
-     * To make this chat receive a message
-     * 
-     * @param message
-     *            the message
-     */
-    @Deprecated
-    public void receive(Message message);
 
     /**
      * To make this chat send a message

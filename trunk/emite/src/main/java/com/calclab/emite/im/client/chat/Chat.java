@@ -40,21 +40,29 @@ import com.calclab.suco.client.listener.Listener;
  * 
  * @see Conversation
  */
-public class ChatImpl extends AbstractChat {
+public class Chat extends AbstractConversation {
     protected final String thread;
     private final String id;
+    private XmppURI user;
 
-    public ChatImpl(final Session session, final XmppURI other, final String thread) {
+    Chat(final Session session, final XmppURI other, final String thread) {
 	super(session, other);
 	this.thread = thread;
 	this.id = generateChatID();
+	setStateFromSessionState(session);
 	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final Session.State state) {
-		setState(getStateFromSessionState(state));
+		setStateFromSessionState(session);
 	    }
 
 	});
-	setState(getStateFromSessionState(session.getState()));
+	session.onMessage(new Listener<Message>() {
+	    public void onEvent(final Message message) {
+		if (message.getFrom().equals(uri)) {
+		    receive(message);
+		}
+	    }
+	});
     }
 
     @Override
@@ -65,7 +73,7 @@ public class ChatImpl extends AbstractChat {
 	if (this == obj) {
 	    return true;
 	}
-	final ChatImpl other = (ChatImpl) obj;
+	final Chat other = (Chat) obj;
 	return id.equals(other.id);
     }
 
@@ -81,7 +89,7 @@ public class ChatImpl extends AbstractChat {
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + (other == null ? 0 : other.hashCode());
+	result = prime * result + (uri == null ? 0 : uri.hashCode());
 	result = prime * result + (thread == null ? 0 : thread.hashCode());
 	return result;
     }
@@ -90,7 +98,7 @@ public class ChatImpl extends AbstractChat {
     public void send(final Message message) {
 	message.setThread(thread);
 	message.setType(Type.chat);
-	message.setTo(other);
+	message.setTo(uri);
 	super.send(message);
     }
 
@@ -100,16 +108,22 @@ public class ChatImpl extends AbstractChat {
     }
 
     private String generateChatID() {
-	return "chat: " + other.toString() + "-" + thread;
+	return "chat: " + uri.toString() + "-" + thread;
     }
 
-    private State getStateFromSessionState(final Session.State state) {
-	switch (state) {
+    private void setStateFromSessionState(final Session session) {
+	switch (session.getState()) {
 	case loggedIn:
 	case ready:
-	    return State.ready;
+	    final XmppURI currentUser = session.getCurrentUser();
+	    if (this.user == null) {
+		this.user = currentUser;
+	    }
+	    setState(currentUser.equalsNoResource(user) ? State.ready : State.locked);
+	    break;
 	default:
-	    return State.locked;
+	    setState(State.locked);
+	    break;
 	}
     }
 

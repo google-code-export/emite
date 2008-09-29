@@ -59,7 +59,7 @@ public class RoomController extends AbstractChatController {
 
     @Override
     protected boolean isOurChat(final Conversation conversation) {
-	return chatJID.equalsNoResource(conversation.getOtherURI());
+	return chatJID.equalsNoResource(conversation.getURI());
     }
 
     void setRoomJID(final String roomName) {

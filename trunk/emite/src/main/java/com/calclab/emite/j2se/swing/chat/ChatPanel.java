@@ -43,6 +43,7 @@ public class ChatPanel extends JPanel {
     private final JTextField fieldBody;
     private final Event0 onClose;
     private final Event<String> onSend;
+    private final JPanel sendPanel;
 
     public ChatPanel() {
 	super(new BorderLayout());
@@ -73,13 +74,12 @@ public class ChatPanel extends JPanel {
 	final JPanel panel = new JPanel(new BorderLayout());
 	panel.add(fieldBody);
 
-	final JPanel buttons = new JPanel();
-	buttons.add(btnSend);
-	buttons.add(btnClose);
+	sendPanel = new JPanel();
+	sendPanel.add(btnSend);
+	sendPanel.add(btnClose);
 
-	panel.add(buttons, BorderLayout.EAST);
+	panel.add(sendPanel, BorderLayout.EAST);
 	add(panel, BorderLayout.SOUTH);
-
     }
 
     public void clearMessage() {
@@ -93,6 +93,12 @@ public class ChatPanel extends JPanel {
 
     public void onSend(final Listener<String> listener) {
 	onSend.add(listener);
+    }
+
+    @Override
+    public void setEnabled(final boolean enabled) {
+	sendPanel.setVisible(enabled);
+	super.setEnabled(enabled);
     }
 
     public void showIcomingMessage(final String from, final String body) {

@@ -51,7 +51,7 @@ public class ChatControllerTest extends AbstractChatControllerTest {
 
     private Conversation createMockChat(final String chatURI) {
 	final Conversation conversation = mock(Conversation.class);
-	stub(conversation.getOtherURI()).toReturn(uri(chatURI));
+	stub(conversation.getURI()).toReturn(uri(chatURI));
 	return conversation;
     }
 
