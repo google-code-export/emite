@@ -36,13 +36,13 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.chat.AbstractChat;
-import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Event2;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.client.listener.Listener2;
 
-public class Room extends AbstractChat implements Chat {
+public class Room extends AbstractChat implements Conversation {
     private static final PacketMatcher ROOM_CREATED = MatcherFactory.byNameAndXMLNS("x",
 	    "http://jabber.org/protocol/muc#user");
     private final HashMap<XmppURI, Occupant> occupantsByURI;
@@ -243,7 +243,7 @@ public class Room extends AbstractChat implements Chat {
 		    requestCreateInstantRoom();
 		} else {
 		    if (state != State.ready) {
-			this.setState(Chat.State.ready);
+			this.setState(Conversation.State.ready);
 		    }
 		}
 	    }
@@ -261,7 +261,7 @@ public class Room extends AbstractChat implements Chat {
 	session.sendIQ("rooms", iq, new Listener<IPacket>() {
 	    public void onEvent(final IPacket received) {
 		if (IQ.isSuccess(received)) {
-		    setState(Chat.State.ready);
+		    setState(Conversation.State.ready);
 		}
 	    }
 	});

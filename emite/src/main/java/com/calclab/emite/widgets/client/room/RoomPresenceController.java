@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.widgets.client.room.RoomPresenceWidget.OccupantPanel;
 import com.calclab.emite.xep.muc.client.Occupant;
 import com.calclab.emite.xep.muc.client.Room;
@@ -32,18 +32,18 @@ public class RoomPresenceController {
     public void setWidget(final RoomPresenceWidget widget) {
 	this.widget = widget;
 	widget.setController(this);
-	manager.onChatCreated(new Listener<Chat>() {
-	    public void onEvent(final Chat chat) {
-		if (isOurRoom(chat)) {
-		    listenToRoomOccupants((Room) chat);
+	manager.onChatCreated(new Listener<Conversation>() {
+	    public void onEvent(final Conversation conversation) {
+		if (isOurRoom(conversation)) {
+		    listenToRoomOccupants((Room) conversation);
 		}
 	    }
 
 	});
 
-	manager.onChatClosed(new Listener<Chat>() {
-	    public void onEvent(final Chat chat) {
-		if (isOurRoom(chat)) {
+	manager.onChatClosed(new Listener<Conversation>() {
+	    public void onEvent(final Conversation conversation) {
+		if (isOurRoom(conversation)) {
 		    widget.clearOccupants();
 		}
 	    }
@@ -56,8 +56,8 @@ public class RoomPresenceController {
 	return occupantUI;
     }
 
-    private boolean isOurRoom(final Chat chat) {
-	return chat.getOtherURI().equalsNoResource(room);
+    private boolean isOurRoom(final Conversation conversation) {
+	return conversation.getOtherURI().equalsNoResource(room);
     }
 
     private void listenToRoomOccupants(final Room room) {

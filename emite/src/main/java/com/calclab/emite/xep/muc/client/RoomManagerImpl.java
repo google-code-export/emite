@@ -32,7 +32,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Stanza;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
@@ -52,7 +52,7 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
     }
 
     @Override
-    public void close(final Chat whatToClose) {
+    public void close(final Conversation whatToClose) {
 	final Room room = rooms.remove(whatToClose.getOtherURI().getJID());
 	if (room != null) {
 	    room.close();
@@ -73,7 +73,7 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
 		room.setData(dataType, dataValue);
 	    }
 	    rooms.put(roomURI.getJID(), room);
-	    chats.add(room);
+	    conversations.add(room);
 	    onChatCreated.fire(room);
 	} else {
 	    room.setData(dataType, dataValue);

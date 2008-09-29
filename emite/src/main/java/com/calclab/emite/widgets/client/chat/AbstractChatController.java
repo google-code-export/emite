@@ -4,14 +4,14 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.suco.client.listener.Listener;
 
 public abstract class AbstractChatController {
 
     protected AbstractChatWidget widget;
-    protected Chat chat;
+    protected Conversation conversation;
     protected final Session session;
     protected final ChatManager manager;
 
@@ -20,15 +20,15 @@ public abstract class AbstractChatController {
 	this.manager = manager;
     }
 
-    public void setChat(final Chat chat) {
-	this.chat = chat;
-	chat.onMessageReceived(new Listener<Message>() {
+    public void setChat(final Conversation conversation) {
+	this.conversation = conversation;
+	conversation.onMessageReceived(new Listener<Message>() {
 	    public void onEvent(final Message message) {
 		widget.write(getFromUserName(message), message.getBody());
 	    }
 	});
 
-	chat.onMessageSent(new Listener<Message>() {
+	conversation.onMessageSent(new Listener<Message>() {
 	    public void onEvent(final Message message) {
 		widget.write("me", message.getBody());
 	    }
@@ -51,11 +51,11 @@ public abstract class AbstractChatController {
 	    }
 	});
 
-	manager.onChatCreated(new Listener<Chat>() {
-	    public void onEvent(final Chat chat) {
-		if (isOurChat(chat)) {
+	manager.onChatCreated(new Listener<Conversation>() {
+	    public void onEvent(final Conversation conversation) {
+		if (isOurChat(conversation)) {
 		    widget.write(null, "chat ready.");
-		    setChat(chat);
+		    setChat(conversation);
 		    widget.setInputEnabled(true);
 		}
 	    }
@@ -63,12 +63,12 @@ public abstract class AbstractChatController {
 
 	widget.onSendMessage(new Listener<String>() {
 	    public void onEvent(final String body) {
-		chat.send(new Message(body));
+		conversation.send(new Message(body));
 	    }
 	});
     }
 
-    protected abstract boolean isOurChat(Chat chat);
+    protected abstract boolean isOurChat(Conversation conversation);
 
     protected void setWidget(final AbstractChatWidget widget) {
 	this.widget = widget;
@@ -80,7 +80,7 @@ public abstract class AbstractChatController {
 	// the listener onChatCreated is called before manager.openChat
 	final XmppURI chatURI = getChatURI();
 	if (chatURI != null) {
-	    if (chat == null) {
+	    if (conversation == null) {
 		widget.write(null, "opening chat...");
 		manager.openChat(chatURI, null, null);
 	    } else {

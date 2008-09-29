@@ -23,7 +23,7 @@ package com.calclab.emite.xep.chatstate.client;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
 
@@ -44,7 +44,7 @@ public class ChatStateManager {
 
     private ChatState ownState;
     private ChatState otherState;
-    private final Chat chat;
+    private final Conversation conversation;
     private NegotiationStatus negotiationStatus;
     private final Event<ChatState> onChatStateChanged;
 
@@ -72,13 +72,13 @@ public class ChatStateManager {
 	}
     };
 
-    public ChatStateManager(final Chat chat) {
-	this.chat = chat;
+    public ChatStateManager(final Conversation conversation) {
+	this.conversation = conversation;
 	this.onChatStateChanged = new Event<ChatState>("chatStateManager:onChatStateChanged");
 	negotiationStatus = NegotiationStatus.notStarted;
-	chat.onMessageReceived(new Listener<Message>() {
+	conversation.onMessageReceived(new Listener<Message>() {
 	    public void onEvent(final Message message) {
-		onMessageReceived(chat, message);
+		onMessageReceived(conversation, message);
 	    }
 	});
     }
@@ -114,7 +114,7 @@ public class ChatStateManager {
 	}
     }
 
-    protected void onMessageReceived(final Chat chat, final Message message) {
+    protected void onMessageReceived(final Conversation conversation, final Message message) {
 	for (int i = 0; i < ChatState.values().length; i++) {
 	    final ChatState chatState = ChatState.values()[i];
 	    final String typeSt = chatState.toString();
@@ -135,8 +135,8 @@ public class ChatStateManager {
     }
 
     private void sendStateMessage(final ChatState chatState) {
-	final Message message = new Message(chat.getFromURI(), chat.getOtherURI(), null).Thread(chat.getThread());
+	final Message message = new Message(conversation.getFromURI(), conversation.getOtherURI(), null).Thread(conversation.getThread());
 	message.addChild(chatState.toString(), XMLNS);
-	chat.send(message);
+	conversation.send(message);
     }
 }

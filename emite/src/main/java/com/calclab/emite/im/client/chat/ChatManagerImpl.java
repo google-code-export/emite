@@ -29,7 +29,7 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Message.Type;
-import com.calclab.emite.im.client.chat.Chat.State;
+import com.calclab.emite.im.client.chat.Conversation.State;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Listener;
 
@@ -40,17 +40,17 @@ import com.calclab.suco.client.listener.Listener;
  * 
  */
 public class ChatManagerImpl implements ChatManager {
-    protected final HashSet<Chat> chats;
-    protected final Event<Chat> onChatCreated;
-    protected Event<Chat> onChatClosed;
+    protected final HashSet<Conversation> conversations;
+    protected final Event<Conversation> onChatCreated;
+    protected Event<Conversation> onChatClosed;
     protected final Session session;
     private XmppURI lastLoggedInUser;
 
     public ChatManagerImpl(final Session session) {
 	this.session = session;
-	this.onChatCreated = new Event<Chat>("chatManager:onChatCreated");
-	this.onChatClosed = new Event<Chat>("chatManager:onChatClosed");
-	this.chats = new HashSet<Chat>();
+	this.onChatCreated = new Event<Conversation>("chatManager:onChatCreated");
+	this.onChatClosed = new Event<Conversation>("chatManager:onChatClosed");
+	this.conversations = new HashSet<Conversation>();
 
 	session.onMessage(new Listener<Message>() {
 	    public void onEvent(final Message message) {
@@ -70,33 +70,33 @@ public class ChatManagerImpl implements ChatManager {
 
     }
 
-    public void close(final Chat chat) {
-	chats.remove(chat);
-	((AbstractChat) chat).setState(State.locked);
-	onChatClosed.fire(chat);
+    public void close(final Conversation conversation) {
+	conversations.remove(conversation);
+	((AbstractChat) conversation).setState(State.locked);
+	onChatClosed.fire(conversation);
     }
 
-    public Collection<? extends Chat> getChats() {
-	return chats;
+    public Collection<? extends Conversation> getChats() {
+	return conversations;
     }
 
-    public void onChatClosed(final Listener<Chat> listener) {
+    public void onChatClosed(final Listener<Conversation> listener) {
 	onChatClosed.add(listener);
     }
 
-    public void onChatCreated(final Listener<Chat> listener) {
+    public void onChatCreated(final Listener<Conversation> listener) {
 	onChatCreated.add(listener);
     }
 
-    public <T> Chat openChat(final XmppURI toURI, final Class<T> extraType, final T extraData) {
-	Chat chat = findChat(toURI, null);
-	if (chat == null) {
+    public <T> Conversation openChat(final XmppURI toURI, final Class<T> extraType, final T extraData) {
+	Conversation conversation = findChat(toURI, null);
+	if (conversation == null) {
 	    final String thread = String.valueOf(Math.random() * 1000000);
-	    chat = createChat(toURI, thread, extraType, extraData);
+	    conversation = createChat(toURI, thread, extraType, extraData);
 	} else {
-	    chat.setData(extraType, extraData);
+	    conversation.setData(extraType, extraData);
 	}
-	return chat;
+	return conversation;
     }
 
     protected void eventMessage(final Message message) {
@@ -111,14 +111,14 @@ public class ChatManagerImpl implements ChatManager {
 	}
     }
 
-    private <T> Chat createChat(final XmppURI toURI, final String thread, final Class<T> extraType, final T extraData) {
+    private <T> Conversation createChat(final XmppURI toURI, final String thread, final Class<T> extraType, final T extraData) {
 	final ChatImpl chat = new ChatImpl(session, toURI, thread);
 	if (extraType != null) {
 	    chat.setData(extraType, extraData);
 	}
-	chats.add(chat);
+	conversations.add(chat);
 	onChatCreated.fire(chat);
-	chat.setState(Chat.State.ready);
+	chat.setState(Conversation.State.ready);
 	return chat;
     }
 
@@ -131,20 +131,20 @@ public class ChatManagerImpl implements ChatManager {
      * @return
      */
 
-    private Chat findChat(final XmppURI from, final String thread) {
-	Chat selected = null;
+    private Conversation findChat(final XmppURI from, final String thread) {
+	Conversation selected = null;
 
-	for (final Chat chat : chats) {
+	for (final Conversation conversation : conversations) {
 	    if (thread != null) {
-		if (thread.equals(chat.getThread())) {
-		    return chat;
+		if (thread.equals(conversation.getThread())) {
+		    return conversation;
 		}
 	    } else {
-		final XmppURI chatTargetURI = chat.getOtherURI();
+		final XmppURI chatTargetURI = conversation.getOtherURI();
 		if (from.hasResource() && from.equals(chatTargetURI)) {
-		    selected = chat;
+		    selected = conversation;
 		} else if (from.equalsNoResource(chatTargetURI)) {
-		    selected = chat;
+		    selected = conversation;
 		}
 	    }
 	}
@@ -153,8 +153,8 @@ public class ChatManagerImpl implements ChatManager {
     }
 
     private void lockAllChats() {
-	for (final Chat chat : chats) {
-	    ((AbstractChat) chat).setState(State.locked);
+	for (final Conversation conversation : conversations) {
+	    ((AbstractChat) conversation).setState(State.locked);
 	}
     }
 
@@ -162,17 +162,17 @@ public class ChatManagerImpl implements ChatManager {
 	final XmppURI from = message.getFrom();
 	final String thread = message.getThread();
 
-	Chat chat = findChat(from, thread);
-	if (chat == null) {
-	    chat = createChat(from, thread, null, null);
+	Conversation conversation = findChat(from, thread);
+	if (conversation == null) {
+	    conversation = createChat(from, thread, null, null);
 	}
-	chat.receive(message);
+	conversation.receive(message);
     }
 
     private void unlockChatsIfSameResource(final XmppURI uri) {
 	if (uri.equalsNoResource(lastLoggedInUser)) {
-	    for (final Chat chat : chats) {
-		((AbstractChat) chat).setState(State.ready);
+	    for (final Conversation conversation : conversations) {
+		((AbstractChat) conversation).setState(State.ready);
 	    }
 	}
 	this.lastLoggedInUser = uri;

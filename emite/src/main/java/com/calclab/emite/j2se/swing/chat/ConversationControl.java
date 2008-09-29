@@ -1,7 +1,7 @@
 package com.calclab.emite.j2se.swing.chat;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.j2se.swing.roster.RosterPanel;
 import com.calclab.emite.xep.muc.client.Room;
@@ -20,31 +20,31 @@ public class ConversationControl {
 	    }
 	});
 
-	chatManager.onChatCreated(new Listener<Chat>() {
-	    public void onEvent(final Chat chat) {
-		final ChatPanel chatPanel = conversationsPanel.createChat(chatManager, chat);
+	chatManager.onChatCreated(new Listener<Conversation>() {
+	    public void onEvent(final Conversation conversation) {
+		final ChatPanel chatPanel = conversationsPanel.createChat(chatManager, conversation);
 		chatPanel.clearMessage();
 	    }
 	});
 
-	chatManager.onChatClosed(new Listener<Chat>() {
-	    public void onEvent(final Chat chat) {
-		conversationsPanel.close(chat.getID());
+	chatManager.onChatClosed(new Listener<Conversation>() {
+	    public void onEvent(final Conversation conversation) {
+		conversationsPanel.close(conversation.getID());
 	    }
 	});
 
-	roomManager.onChatCreated(new Listener<Chat>() {
-	    public void onEvent(final Chat chat) {
-		final Room room = (Room) chat;
+	roomManager.onChatCreated(new Listener<Conversation>() {
+	    public void onEvent(final Conversation conversation) {
+		final Room room = (Room) conversation;
 		final RoomPanel roomPanel = conversationsPanel.createRoomPanel(roomManager, room);
 		roomPanel.clearMessage();
 		roomPanel.showIcomingMessage(null, "The room is " + room.getState().toString());
 	    }
 	});
 
-	roomManager.onChatClosed(new Listener<Chat>() {
-	    public void onEvent(final Chat chat) {
-		conversationsPanel.close(chat.getID());
+	roomManager.onChatClosed(new Listener<Conversation>() {
+	    public void onEvent(final Conversation conversation) {
+		conversationsPanel.close(conversation.getID());
 	    }
 	});
 

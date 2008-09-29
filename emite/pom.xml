@@ -37,7 +37,7 @@
     <dependency>
       <groupId>com.calclab</groupId>
       <artifactId>suco</artifactId>
-      <version>0.5.06</version>
+      <version>0.5.07</version>
     </dependency>
     <dependency>
       <groupId>com.allen_sauer.gwt.log.gwt-log
@@ -129,6 +129,16 @@
         </gwt.run>
         <gwt.compile>
           com.calclab.emite.widgets.comenta.Comenta
+        </gwt.compile>
+      </properties>
+    </profile>
+    <profile>
+      <id>habla</id>
+      <properties>
+        <gwt.run>com.calclab.emite.widgets.habla.Habla/Habla.html?log_level=DEBUG
+        </gwt.run>
+        <gwt.compile>
+          com.calclab.emite.widgets.comenta.Habla
         </gwt.compile>
       </properties>
     </profile>

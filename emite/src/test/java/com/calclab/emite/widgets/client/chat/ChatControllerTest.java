@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.suco.client.listener.Listener;
 import com.calclab.suco.testing.listener.EventTester;
@@ -35,28 +35,28 @@ public class ChatControllerTest extends AbstractChatControllerTest {
 
     @Test
     public void shouldAttacheToOwnChat() {
-	final Chat chat = createMockChat("user@domain/resource");
+	final Conversation conversation = createMockChat("user@domain/resource");
 	controller.setChatJID("user@domain");
-	mockOnChatCreated().fire(chat);
-	verify(chat, times(1)).onMessageReceived((Listener<Message>) anyObject());
+	mockOnChatCreated().fire(conversation);
+	verify(conversation, times(1)).onMessageReceived((Listener<Message>) anyObject());
     }
 
     @Test
     public void shouldNotAttachToAnyChat() {
-	final Chat chat = createMockChat("admin@domain");
+	final Conversation conversation = createMockChat("admin@domain");
 	controller.setChatJID("user@domain");
-	mockOnChatCreated().fire(chat);
-	verify(chat, times(0)).onMessageReceived((Listener<Message>) anyObject());
+	mockOnChatCreated().fire(conversation);
+	verify(conversation, times(0)).onMessageReceived((Listener<Message>) anyObject());
     }
 
-    private Chat createMockChat(final String chatURI) {
-	final Chat chat = mock(Chat.class);
-	stub(chat.getOtherURI()).toReturn(uri(chatURI));
-	return chat;
+    private Conversation createMockChat(final String chatURI) {
+	final Conversation conversation = mock(Conversation.class);
+	stub(conversation.getOtherURI()).toReturn(uri(chatURI));
+	return conversation;
     }
 
-    private EventTester<Chat> mockOnChatCreated() {
-	final EventTester<Chat> tester = new EventTester<Chat>();
+    private EventTester<Conversation> mockOnChatCreated() {
+	final EventTester<Conversation> tester = new EventTester<Conversation>();
 	tester.mock(manager).onChatCreated(tester.getListener());
 	return tester;
     }

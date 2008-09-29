@@ -39,7 +39,7 @@ public class MockedSession extends AbstractSession {
 	xmler = new TigaseXMLService();
 	sent = new ArrayList<IPacket>();
 	if (user != null) {
-	    this.currentUser = user;
+	    setLoggedIn(user);
 	}
     }
 
@@ -73,6 +73,7 @@ public class MockedSession extends AbstractSession {
 
     public void logout() {
 	setState(Session.State.loggingOut);
+	currentUser = null;
 	setState(Session.State.disconnected);
     }
 
@@ -126,7 +127,6 @@ public class MockedSession extends AbstractSession {
     public void setLoggedIn(final XmppURI userURI) {
 	this.currentUser = userURI;
 	setState(State.loggedIn);
-	setState(State.ready);
     }
 
     public void setReady() {

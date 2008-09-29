@@ -5,8 +5,8 @@ import java.util.Map;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.Chat;
-import com.calclab.emite.im.client.chat.Chat.State;
+import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Conversation.State;
 import com.calclab.emite.xep.muc.client.Room;
 import com.calclab.suco.client.listener.Listener;
 
@@ -53,7 +53,7 @@ public class ComentaController {
     private void createRoom(final XmppURI roomURI) {
 	room = new Room(session, roomURI);
 
-	room.onStateChanged(new Listener<Chat.State>() {
+	room.onStateChanged(new Listener<Conversation.State>() {
 	    public void onEvent(final State state) {
 		final boolean isReady = state == State.ready;
 		if (isReady) {

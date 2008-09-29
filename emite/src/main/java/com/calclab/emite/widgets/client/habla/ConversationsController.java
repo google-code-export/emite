@@ -2,7 +2,7 @@ package com.calclab.emite.widgets.client.habla;
 
 import java.util.HashMap;
 
-import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.widgets.client.chat.ChatWidget;
 import com.calclab.suco.client.ioc.Provider;
@@ -20,14 +20,14 @@ public class ConversationsController {
     }
 
     public void setWidget(final ConversationsWidget widget) {
-	manager.onChatCreated(new Listener<Chat>() {
-	    public void onEvent(final Chat chat) {
-		ChatWidget chatWidget = chats.get(chat.getID());
+	manager.onChatCreated(new Listener<Conversation>() {
+	    public void onEvent(final Conversation conversation) {
+		ChatWidget chatWidget = chats.get(conversation.getID());
 		if (chatWidget == null) {
 		    chatWidget = chatWidgetFactory.get();
-		    chatWidget.getController().setChat(chat);
-		    chats.put(chat.getID(), chatWidget);
-		    widget.add(chat.getOtherURI().toString(), chatWidget);
+		    chatWidget.getController().setChat(conversation);
+		    chats.put(conversation.getID(), chatWidget);
+		    widget.add(conversation.getOtherURI().toString(), chatWidget);
 		}
 	    }
 	});
