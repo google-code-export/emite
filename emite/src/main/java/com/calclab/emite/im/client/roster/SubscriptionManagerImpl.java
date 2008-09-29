@@ -34,7 +34,8 @@ public class SubscriptionManagerImpl implements SubscriptionManager {
 
 	roster.onItemAdded(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
-		if (item.getSubscriptionState() == SubscriptionState.none && item.getAsk() == Type.subscribe) {
+		if (item.getSubscriptionState() == SubscriptionState.none) {
+		    // && item.getAsk() == Type.subscribe) {
 		    requestSubscribe(item.getJID());
 		    item.setSubscriptionState(SubscriptionState.nonePendingIn);
 		} else if (item.getSubscriptionState() == SubscriptionState.from) {

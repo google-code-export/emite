@@ -164,10 +164,10 @@ public class RosterImpl implements Roster {
 
     private void handleRosterIQSet(final RosterItem item) {
 	final RosterItem old = getItemByJID(item.getJID());
-	if (old == null) {
+	if (old == null) { // new item
 	    addItem(item);
 	    onItemAdded.fire(item);
-	} else {
+	} else { // update or remove
 	    removeItem(old);
 	    if (item.getSubscriptionState() == SubscriptionState.remove) {
 		onItemRemoved.fire(item);
