@@ -1,4 +1,5 @@
 #summary This is a basic example on how to use emite
+#labels Featured,Phase-Design
 
 = 1. Basic example =
 You can find this example in the emite source code (com.calclab.examples.emite.basics)
