@@ -1,0 +1,11 @@
+<module>
+  <inherits name="com.google.gwt.user.User" />
+  <inherits name="com.calclab.emite.core.EmiteCore" />
+  <inherits name="com.calclab.emite.im.EmiteIM" />
+
+
+  <entry-point
+    class="com.calclab.examples.emite.basics.client.EmiteBasicsEntryPoint" />
+
+
+</module>

@@ -56,8 +56,8 @@ public class Message extends BasicStanza {
      * @param to
      *            the message recipient
      */
-    public Message(final String body, final String to) {
-	this(null, XmppURI.uri(to), body, Type.chat);
+    public Message(final String body, final XmppURI toURI) {
+	this(null, toURI, body, Type.chat);
     }
 
     /**
