@@ -142,6 +142,16 @@
         </gwt.compile>
       </properties>
     </profile>
+    <profile>
+      <id>basics</id>
+      <properties>
+        <gwt.run>com.calclab.examples.emite.basics.Basics/Basics.html?log_level=DEBUG
+        </gwt.run>
+        <gwt.compile>
+          com.calclab.examples.emite.basics.Basics
+        </gwt.compile>
+      </properties>
+    </profile>
   </profiles>
 
   <pluginRepositories>

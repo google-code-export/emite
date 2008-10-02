@@ -120,7 +120,7 @@ public class SessionTest {
 
     @Test
     public void shouldQueueOutcomingStanzas() {
-	session.send(new Message("the Message", "other@domain"));
+	session.send(new Message("the Message", uri("other@domain")));
 	verify(connection, never()).send((IPacket) anyObject());
 	createSession(uri("name@domain/resource"));
 	session.setReady();
