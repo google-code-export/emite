@@ -1,75 +1,82 @@
+#summary How to add new functionallity to emite
 #labels Featured,Phase-Implementation
 
-Extend emite its an easy task. You can use the emite object to subscribe, publish events or send stanzas.
+Emite has a highly modular architectured (based on [http://suco.googlecode.com Suco]), so add new functionallity is an easy task.
 
-=== Write the components ===
-Components are simple objects implementing Installable interface. Normally they have a dependency (in the constructor) with emite. A simple Echo component would be like this:
+Here is an example of how to build an Echo module (you can find this example in emite source code)
+
+=== Write the component/s ===
+Components are simple POJOS with dependencies in the constructor. A simple Echo component would be like this:
 {{{
-public class Echo implements Installable {
-
-  private final Emite emite;
-
-  public Echo(final Emite emite) {
-    this.emite = emite;
-  }
-
-  public void install() {
-    emite.subscribe(Matchers.when("message"), new PacketListener() {
-      public void handle(final IPacket received) {
-        echo(new Message(received));
-      }
-    });
-  }
-
-  private void echo(final Message message) {
-    // exchange the from and to...
-    final Message response = new Message(message.getToURI(), message.getFromURI(), message.getBody());
-    emite.send(response);
-  }
+/**
+ * Echo respond to any incoming message with the same message body.
+ */
+public class Echo {
+    public Echo(final Session session) {
+	session.onMessage(new Listener<Message>() {
+	    public void onEvent(final Message incoming) {
+		session.send(new Message(incoming.getBody(), incoming.getFrom()));
+	    }
+	});
+    }
 }
 }}}
 
-=== Write a module ===
-We should pack several related components in a module: just a class with a couple of static methods.
-We use the container to register objects, but also to retrieve other components previously registered (the dependencies). Here we need the emite component from the !CoreModule:
+=== Write a suco module ===
+A suco module is a place where one or more components are registered. We can use the $ method to retrieve the dependencies. 
+
+Normally the modules also implements the gwt's !EntryPoint interface to ensure the suco module is loaded when the gwt module is loaded.
+
 {{{
-public class EchoModule {
+public class EchoModule extends AbstractModule implements EntryPoint {
+    /**
+     * Called by GWT when this module is loaded in a browser
+     */
+    public void onModuleLoad() {
+	// install this module in suco
+	Suco.install(this);
+    }
 
-  public static final String COMPONENT_ECHO = "echo:echo";
-
-  public static Echo getEcho(final Container container) {
-    return (Echo) container.get(COMPONENT_ECHO);
-  }
-
-  public static void load(final Container container) {
-    final Emite emite = CoreModule.getEmite(container);
-    final Echo echo = new Echo(emite);
-    container.register(COMPONENT_ECHO, echo);
-  }
+    /**
+     * Called by Suco when this module is installed in Suco
+     */
+    @Override
+    protected void onInstall() {
+	// The SessionComponent decorator take care of calling the factories
+	// when a Session is created (see Suco for more info)
+	register(SessionComponent.class, new Factory<Echo>(Echo.class) {
+	    @Override
+	    public Echo create() {
+		return new Echo($(Session.class));
+	    }
+	});
+    }
 }
 }}}
 
-=== Use the module ===
-You can install the module in a container. The xmpp is a container preloaded with three modules (!CoreModule, !XMPPModule and !InstantMessagingModule).
-{{{
-final Xmpp xmpp = Xmpp.create(new BoshOptions("/http-base"));
-EchoModule.install(xmpp);
-}}}
 
+=== Testing the component/s ===
+Testing is a important part of emite, so we've created the !MockedSession object that allows easily testing of our emite modules. It provides a couple of handy methods:
+  # {{{receives}}} method to simulate an incoming stanza
+  # {{{verifySent}}} method to verify an outcoming stanza
 
-=== Testing the components ===
-There is a special handy class EmiteTestHelper that implements Emite interface and also provides
-  # {{{receives}}} method to simulate an incoming event or stanza
-  # {{{verifyXXX}}} family methods to verify the behaviour of our components
-All the testing infraestrcture is based on JUnit and Mockito, so you can use all tools they provide. Emite library have hundred of test; they are one of the fastest way to learn how emite works. Here is our test:
+All the testing infraestrcture is based on JUnit and Mockito, so you can use all tools they provide. Emite library have hundred of test; they are one of the fastest way to learn how emite works. Here is how could be the test for the Echo component:
 {{{
-public class EchoTest {
-  @Test
-  public void shouldAnswer() {
-    final EmiteTestHelper emite = new EmiteTestHelper();
-    emite.install(new Echo(emite));
-    emite.receives("<message from='contact@domain' to='me@domain'><body>Hello!</body></message>");
-    emite.verifySent("<message from='me@domain' to='contact@domain'><body>Hello!</body></message>");
-  }
+public class EchoTests {
+    private MockedSession session;
+
+    @Before
+    public void beforeTests() {
+	session = new MockedSession();
+	new Echo(session);
+    }
+
+    @Test
+    public void shouldEcho() {
+	// simulates a reception
+	session.receives("<message from='someone@domain'><body>Hello!</body></message>");
+	// verifies the expected output stanza
+	session.verifySent("<message to='someone@domain'><body>Hello!</body></message>");
+    }
 }
 }}}
