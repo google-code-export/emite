@@ -3,7 +3,7 @@
 
 ==Basic concepts==
 
-===Emite modules===
+=== Emite modules ===
 Emite is divided in modules. Each module registers a series of components inside a container
 (using the Suco library http://suco.googlecode.com).
 You can access the any registered component using the Suco facade. For example, to retrieve
@@ -28,20 +28,20 @@ Currently the following modules are completely developed:
   * InstantMessaging: com.calclab.emite.im.EmiteIM
   * Multi-user chats: com.calclab.emite.xep.muc.EmiteMUC
 
-===Callbacks===
+=== Asynchronous ===
 Because the asynchronous nature of xmpp communications, you usually perform actions in two stages:
-first you send a request and then you listen for that request to complete. To attach a listener
-(callback) to a component use the onXXX methods of that component.
+first you send a request and then you listen for that request to complete. To attach a listener to a component use the onXXX methods of that component.
 
 
-For example, to perform a login you usually write this code:
+For example, to perform a login you can write this code:
 {{{
   Session session = Suco.get(Session.class);
 
-  // attach a callback to the LoggedIn event
-  session.onLoggedIn(Callback<XmppURI>() {
-    public void onEvent(XmppURI user) {
-      // some code here
+  session.onStateChanged(new Listener<Session.State>() {
+    public void onEvent(Session.State state) {
+      if (state == Session.State.ready) {
+        // now we're logged in
+      }
     }
   });
 
@@ -50,18 +50,17 @@ For example, to perform a login you usually write this code:
   // at this point, the login process is not completed!
 }}}
 
-===Packets===
+=== Packets ===
 Xmpp communications are xml intensive. IPacket is a interface to query a xml response. Also you can
 use the Packet class (or any of its child classes: Presence, Message, IQ) to create xml in a friendly way:
 
 {{{
   Session session = Suco.get(Session.class);
+  session.login(XmppURI.uri("me@domain", "myPassword");
   Message message = new Message("send this");
   session.send(message);
 }}}
 
-this is not exaclty valid code: for example, you should wait until the session is ready
-(and you know when is ready attaching a callback to the session)
 
 
 == Core module ==
