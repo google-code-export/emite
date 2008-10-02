@@ -1,7 +1,8 @@
-#labels Featured,Phase-Design
+#labels Phase-Design
 _work in progress_
 
 ==how it works==
+
 
 This is a document to describe the internals of emite and to get used quickier with 
 the source code. It's not about how to use the library: for this see UserManual
@@ -14,30 +15,23 @@ the container design is heavily inspired (copied, as far as we can inside gwt en
  
 the module register the components using a Provider interface. That allows to lazy-creating the components and the ability to create scopes (singleton, unscoped and session are the built-in scopes. more can be added). Here is an example: 
 {{{
-public class EchoModule implements Module {
-
-    public Class<?> getType() {
-	return EchoModule.class;
-    }
-
-    public void onLoad(final ModuleBuilder builder) {
-	builder.registerProvider(Echo.class, new Provider<Echo>() {
+public class EchoModule implements SucoModule {
+    protected void onInstall(Container container) {
+	container.register(Echo.class, new Provider<Echo>() {
 	    public Echo get() {
-		return new Echo(builder.getInstance(Emite.class));
+		return new Echo(container.getInstance(Session.class));
 	    }
-
-	}, SessionScope.class);
+	});
     }
 }
 }}}
 
-The !EchoModule is a module (implements Module) that register a Echo(.class) component using a Provider<Echo> interface. Inside the provider we can use the !ModuleBuilder to resolve the component dependencies. In this case, Echo component *depends* on Emite(.class) component.
+The !EchoModule is a module (implements SucoModule interface) that register a Echo(.class) component using a Provider<Echo> interface. In this case, Echo component *depends* on Emite(.class) component.
 
 === current modules ===
 
-*emite library*
-  * !ServicesModule: implements !HttpConnections. Two implementations provided: a GWT implementation to use inside browsers and a J2SE module to use emite in desktop (i.e. swing) applications. Currently the J2SE module is for testing purposes only. 
-  * !CoreModule: implements BOSH and xmpp stanzas specification
+*emite library* 
+  * !CoreModule: implements BOSH connection (including authentication) and xmpp stanzas specification.
   * !InstantMessagingModule: implements instant messaging xmpp specification (sessions, presence, roster)
 
 *library extensions*
@@ -48,13 +42,14 @@ The !EchoModule is a module (implements Module) that register a Echo(.class) com
 *emite user interfaces*
   * !EmiteUIModule: implements a full featured chat/rooms using gwt-ext
   * !SwingModule: implements a basic featured swing client for testing purposes only
+  * Comenta widget: a simple widget to join a room
 
   
-=== slot/signals ===
+=== event/listeners ===
 
-instead of listeners, emite uses a slot/signal to implement the publisher/observer pattern. using slots, objects can receive notifications from other objects. 
+emite uses a event/listener system of Suco to implement the publisher/observer pattern. using listeners, objects can receive notifications from other objects; using events, objects can publish notifications to other objects. 
 
-every observable object have some onXXXX methods that allows add receive signals from them. For example, Session objects have the following onXXX methods:
+every object that fire events, have some onXXXX methods that allows add listeners to this event. For example, Session objects have the following onXXX methods:
 {{{
 class Session {
   ...
@@ -69,20 +64,11 @@ if we want to write a component that knows when a message arrives we will do the
 {{{
 class MyComponent {
   public MyComponent(Session session) {
-    session.onMessage(new Slot<Message>() {
-       public void event(Message message) {
+    session.onMessage(new Listener<Message>() {
+       public void onEvent(Message message) {
           System.out.println ("A message arrived: " + message);
        }
     }
   }
 }
 }}}
-
-=== scopes ===
-
-if you look carefully to the !EchoModule example you can see the way we _inject_ the session object in the Echo component's constructor.
-Also, we use !SessionScope scope. This has a very important implication: the Echo module is created when the Session is created so it will receive the session signals.
-
-=== sending messages ===
-TODO (see Emite.class)
-
