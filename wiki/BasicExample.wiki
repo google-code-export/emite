@@ -115,7 +115,7 @@ public class EmiteBasicsEntryPoint implements EntryPoint {
 }
 }}}
 
-= 1.3 The html =
+== 1.3 The html ==
 {{{
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -136,8 +136,8 @@ public class EmiteBasicsEntryPoint implements EntryPoint {
 </html>
 }}}
 
-= 2. Use the BrowserModule =
-The BrowserModule can improve the example in two ways: auto-configure the connection settings using html, and gracefully logout before the page closes.
+= 2. Use the !BrowserModule =
+The !BrowserModule can improve the example in two ways: auto-configure the connection settings using html, and gracefully logout before the page closes.
 
 == 2.1 The gwt module ==
 We add the emite Browser module:
@@ -159,7 +159,7 @@ We add the emite Browser module:
 == 2.2 The code ==
 We just have to remove the two lines that configures the connection.
 
-== 2.3 The html
+== 2.3 The html ==
 Now we specify the connection params and the onClose policy.
 {{{
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
