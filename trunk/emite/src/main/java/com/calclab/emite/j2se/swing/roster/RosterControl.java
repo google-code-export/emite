@@ -46,7 +46,7 @@ public class RosterControl {
 	    }
 	});
 
-	roster.onItemUpdated(new Listener<RosterItem>() {
+	roster.onItemChanged(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem parameter) {
 		rosterPanel.refresh();
 	    }

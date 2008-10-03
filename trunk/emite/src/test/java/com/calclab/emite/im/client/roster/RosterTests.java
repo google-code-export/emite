@@ -89,7 +89,7 @@ public class RosterTests {
     @Test
     public void shouldHandleInitialPresence() {
 	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
-	roster.onItemUpdated(listener);
+	roster.onItemChanged(listener);
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='MyFriend' /></query></iq>");
 	session.receives("<presence from='friend@domain' />");
@@ -101,7 +101,7 @@ public class RosterTests {
     @Test
     public void shouldHandleRosterItemsPresences() {
 	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
-	roster.onItemUpdated(listener);
+	roster.onItemChanged(listener);
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='MyFriend' /></query></iq>");
 	session.receives("<presence from='friend@domain'>"
@@ -197,7 +197,7 @@ public class RosterTests {
     @Test
     public void shouldUpdateItem() {
 	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
-	roster.onItemUpdated(listener);
+	roster.onItemChanged(listener);
 
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='Friend1'><group>GG1</group><group>GG2</group>"

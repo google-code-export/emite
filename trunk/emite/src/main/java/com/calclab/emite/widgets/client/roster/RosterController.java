@@ -43,7 +43,7 @@ public class RosterController {
 	setItems(roster.getItems());
 
 	// FIXME: new roster implementation
-	roster.onItemUpdated(new Listener<RosterItem>() {
+	roster.onItemChanged(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
 		Log.debug("(widget) Roster item updated: " + item);
 	    }
