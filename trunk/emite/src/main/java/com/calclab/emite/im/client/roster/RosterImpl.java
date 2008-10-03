@@ -26,7 +26,7 @@ public class RosterImpl implements Roster {
 
     private final Event<Collection<RosterItem>> onRosterReady;
     private final Event<RosterItem> onItemAdded;
-    private final Event<RosterItem> onItemUpdated;
+    private final Event<RosterItem> onItemChanged;
     private final Event<RosterItem> onItemRemoved;
 
     public RosterImpl(final Session session) {
@@ -35,7 +35,7 @@ public class RosterImpl implements Roster {
 	itemsByGroup = new HashMap<String, List<RosterItem>>();
 
 	this.onItemAdded = new Event<RosterItem>("roster:onItemAdded");
-	this.onItemUpdated = new Event<RosterItem>("roster:onItemUpdated");
+	this.onItemChanged = new Event<RosterItem>("roster:onItemChanged");
 	this.onItemRemoved = new Event<RosterItem>("roster:onItemRemoved");
 
 	this.onRosterReady = new Event<Collection<RosterItem>>("roster:onRosterReady");
@@ -53,7 +53,7 @@ public class RosterImpl implements Roster {
 		final RosterItem item = getItemByJID(presence.getFrom());
 		if (item != null) {
 		    item.setPresence(presence);
-		    onItemUpdated.fire(item);
+		    onItemChanged.fire(item);
 		}
 	    }
 	});
@@ -100,12 +100,17 @@ public class RosterImpl implements Roster {
 	onItemAdded.add(listener);
     }
 
+    public void onItemChanged(final Listener<RosterItem> listener) {
+	onItemChanged.add(listener);
+    }
+
     public void onItemRemoved(final Listener<RosterItem> listener) {
 	onItemRemoved.add(listener);
     }
 
+    @Deprecated
     public void onItemUpdated(final Listener<RosterItem> listener) {
-	onItemUpdated.add(listener);
+	onItemChanged(listener);
     }
 
     public void onRosterRetrieved(final Listener<Collection<RosterItem>> listener) {
@@ -173,7 +178,7 @@ public class RosterImpl implements Roster {
 		onItemRemoved.fire(item);
 	    } else {
 		addItem(item);
-		onItemUpdated.fire(item);
+		onItemChanged.fire(item);
 	    }
 	}
 
