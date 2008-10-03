@@ -279,7 +279,7 @@ public class RosterUIPresenter {
     }
 
     private void createXmppListeners() {
-	roster.onItemUpdated(new Listener<RosterItem>() {
+	roster.onItemChanged(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
 		final ChatUserUI user = rosterMap.get(item.getJID());
 		if (user == null) {

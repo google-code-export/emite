@@ -83,7 +83,7 @@ public class EmiteBasicsEntryPoint implements EntryPoint {
 	});
 	// we can track changes in roster items (i.e. roster presence changes)
 	// using Roster.onItemUpdated
-	roster.onItemUpdated(new Listener<RosterItem>() {
+	roster.onItemChanged(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
 		print("Roster item changed:" + item);
 	    }
