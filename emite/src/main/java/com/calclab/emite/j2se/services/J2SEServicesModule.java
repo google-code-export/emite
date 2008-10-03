@@ -28,9 +28,9 @@ import com.calclab.emite.core.client.services.ScheduledAction;
 import com.calclab.emite.core.client.services.Services;
 import com.calclab.suco.client.ioc.Container;
 import com.calclab.suco.client.ioc.Provider;
-import com.calclab.suco.client.ioc.module.Module;
+import com.calclab.suco.client.ioc.module.SucoModule;
 
-public class J2SEServicesModule implements Services, Module {
+public class J2SEServicesModule implements Services, SucoModule {
     private final HttpConnector connector;
 
     private final ThreadScheduler scheduler;
@@ -46,7 +46,7 @@ public class J2SEServicesModule implements Services, Module {
 	return scheduler.getCurrentTime();
     }
 
-    public void onLoad(final Container container) {
+    public void onInstall(final Container container) {
 	container.removeProvider(Services.class);
 	container.registerProvider(null, Services.class, new Provider<Services>() {
 	    public Services get() {
