@@ -1,5 +1,7 @@
 package com.calclab.emiteuimodule.client;
 
-public enum SubscriptionMode {
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+public enum SubscriptionMode implements IsSerializable {
     manual, autoAcceptAll, autoRejectAll
 }

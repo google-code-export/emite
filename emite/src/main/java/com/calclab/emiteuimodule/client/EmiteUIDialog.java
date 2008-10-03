@@ -30,6 +30,7 @@ import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
@@ -70,11 +71,12 @@ public class EmiteUIDialog {
 	this.roomUIManager = roomUIManager;
     }
 
-    public void chat(final XmppURI otherUserURI) {
+    public Conversation chat(final XmppURI otherUserURI) {
 	if (session.isLoggedIn()) {
-	    chatManager.openChat(otherUserURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	    return chatManager.openChat(otherUserURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
 	} else {
 	    Log.error("To start a chat you need to be 'online'.");
+	    return null;
 	}
     }
 
@@ -86,6 +88,11 @@ public class EmiteUIDialog {
     public void collapse() {
 	checkIfDialogIsStarted();
 	multiChatDialog.collapse();
+    }
+
+    public void destroy() {
+	checkIfDialogIsStarted();
+	multiChatDialog.destroy();
     }
 
     public void expand() {
@@ -115,11 +122,12 @@ public class EmiteUIDialog {
 	return multiChatDialog.isVisible();
     }
 
-    public void joinRoom(final XmppURI roomURI) {
+    public Conversation joinRoom(final XmppURI roomURI) {
 	if (session.isLoggedIn()) {
-	    roomManager.openChat(roomURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	    return roomManager.openChat(roomURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
 	} else {
 	    Log.error("To join a chatroom you need to be 'online'.");
+	    return null;
 	}
     }
 
