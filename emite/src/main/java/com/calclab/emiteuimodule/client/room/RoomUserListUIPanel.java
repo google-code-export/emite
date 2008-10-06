@@ -40,6 +40,7 @@ import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 
 public class RoomUserListUIPanel extends UserGridPanel implements View {
 
+    private static final String ROOM_USERLIST_ID = "emite-ruluip-l-";
     private final String moderatorLabel;
     private final String visitorLabel;
     private final String participantLabel;
@@ -47,75 +48,76 @@ public class RoomUserListUIPanel extends UserGridPanel implements View {
     private final I18nTranslationService i18n;
 
     public RoomUserListUIPanel(final I18nTranslationService i18n, final RoomUIPresenter presenter) {
-        super(i18n.t("Nobody in this room"),
-                new DragGridConfiguration("none", "Room users drag & drop in development"), new UserGridListener() {
-                    public void onDoubleClick(final XmppURI userJid) {
-                        // Nothing (at this moment) ...
-                    }
-                });
-        this.i18n = i18n;
-        this.presenter = presenter;
-        moderatorLabel = i18n.t("Moderator");
-        participantLabel = i18n.t("Participant");
-        visitorLabel = i18n.t("Visitor");
-        createUserListBottomBar();
+	super(i18n.t("Nobody in this room"),
+		new DragGridConfiguration("none", "Room users drag & drop in development"), new UserGridListener() {
+		    public void onDoubleClick(final XmppURI userJid) {
+			// Nothing (at this moment) ...
+		    }
+		});
+	this.i18n = i18n;
+	this.presenter = presenter;
+	this.setId(ROOM_USERLIST_ID + presenter.getOtherAlias());
+	moderatorLabel = i18n.t("Moderator");
+	participantLabel = i18n.t("Participant");
+	visitorLabel = i18n.t("Visitor");
+	createUserListBottomBar();
     }
 
     public void addUser(final RoomUserUI roomUser, final UserGridMenuItemList menuItemList) {
-        final UserGridMenu menu = new UserGridMenu();
-        menu.setMenuItemList(menuItemList);
-        super.addUser(roomUser, menu, formatUserType(roomUser.getRole()));
+	final UserGridMenu menu = new UserGridMenu();
+	menu.setMenuItemList(menuItemList);
+	super.addUser(roomUser, menu, formatUserType(roomUser.getRole()));
     }
 
     public View getView() {
-        return this;
+	return this;
     }
 
     public void removeAllUsers() {
-        super.removeAllUsers();
+	super.removeAllUsers();
     }
 
     public void removeUser(final RoomUserUI roomUser) {
-        super.removeUser(roomUser);
+	super.removeUser(roomUser);
     }
 
     public void updateUser(final RoomUserUI roomUser, final UserGridMenuItemList menuItemList) {
-        // FIXME Make a updateUser
-        super.removeUser(roomUser);
-        this.addUser(roomUser, menuItemList);
+	// FIXME Make a updateUser
+	super.removeUser(roomUser);
+	this.addUser(roomUser, menuItemList);
     }
 
     private void createUserListBottomBar() {
-        final ToolbarButton inviteUserToGroupChat = new ToolbarButton();
-        inviteUserToGroupChat.setIcon("images/group_add.gif");
-        inviteUserToGroupChat.setCls("x-btn-icon");
-        inviteUserToGroupChat.setTooltip(i18n.t("Invite another user to this chat room"));
-        inviteUserToGroupChat.addListener(new ButtonListenerAdapter() {
-            private InviteToRoomPanel inviteToRoomDialog;
+	final ToolbarButton inviteUserToGroupChat = new ToolbarButton();
+	inviteUserToGroupChat.setIcon("images/group_add.gif");
+	inviteUserToGroupChat.setCls("x-btn-icon");
+	inviteUserToGroupChat.setTooltip(i18n.t("Invite another user to this chat room"));
+	inviteUserToGroupChat.addListener(new ButtonListenerAdapter() {
+	    private InviteToRoomPanel inviteToRoomDialog;
 
-            public void onClick(final Button button, final EventObject e) {
-                if (inviteToRoomDialog == null) {
-                    inviteToRoomDialog = new InviteToRoomPanel(i18n, presenter);
-                }
-                inviteToRoomDialog.show();
-            }
-        });
-        final Toolbar bottomToolbar = new Toolbar();
-        bottomToolbar.addButton(inviteUserToGroupChat);
-        super.setBottomToolbar(bottomToolbar);
+	    public void onClick(final Button button, final EventObject e) {
+		if (inviteToRoomDialog == null) {
+		    inviteToRoomDialog = new InviteToRoomPanel(i18n, presenter);
+		}
+		inviteToRoomDialog.show();
+	    }
+	});
+	final Toolbar bottomToolbar = new Toolbar();
+	bottomToolbar.addButton(inviteUserToGroupChat);
+	super.setBottomToolbar(bottomToolbar);
     }
 
     private String formatUserType(final Role role) {
-        switch (role) {
-        case moderator:
-            return moderatorLabel;
-        case participant:
-            return participantLabel;
-        case visitor:
-            return visitorLabel;
-        default:
-            return "";
-        }
+	switch (role) {
+	case moderator:
+	    return moderatorLabel;
+	case participant:
+	    return participantLabel;
+	case visitor:
+	    return visitorLabel;
+	default:
+	    return "";
+	}
     }
 
 }

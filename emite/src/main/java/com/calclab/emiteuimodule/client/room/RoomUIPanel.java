@@ -39,6 +39,7 @@ import com.gwtext.client.widgets.layout.FitLayout;
 
 public class RoomUIPanel extends ChatUIPanel implements RoomUIView {
 
+    private static final String ROOM_SUBJECT = "emite-ruip-s-";
     private final RoomUIPresenter presenter;
     private final I18nTranslationService i18n;
     private EditableIconLabel subject;
@@ -131,6 +132,7 @@ public class RoomUIPanel extends ChatUIPanel implements RoomUIView {
 	subject.setClickToRenameLabel(i18n.t("Click to rename this room"));
 	subject.setRenameDialogLabel(i18n.t("Write a new subject for this room"));
 	subject.setRenameDialogTitle(i18n.t("Change the subject"));
+	subject.ensureDebugId(ROOM_SUBJECT + presenter.getOtherAlias());
 	final Panel subjectPanel = new Panel();
 	subjectPanel.add(subject);
 	subjectPanel.setBorder(false);

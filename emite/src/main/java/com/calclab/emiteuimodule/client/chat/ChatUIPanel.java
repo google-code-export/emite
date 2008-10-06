@@ -44,6 +44,8 @@ import com.gwtext.client.widgets.layout.BorderLayoutData;
 
 public class ChatUIPanel extends Panel implements ChatUIView {
 
+    private static final String CHAT_PANEL_ID = "emite-cuip-c-";
+
     public static String genQuickTipLabel(final String labelText, final String tipTitle, final String tipText,
 	    final AbstractImagePrototype icon) {
 	String tipHtml = "<span style=\"vertical-align: middle;\" ext:qtip=\"" + tipText + "\"";
@@ -79,6 +81,7 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 	childPanel.setAutoScroll(false);
 	childPanel.setBorder(false);
 	childPanel.setPaddings(5);
+	childPanel.setId(CHAT_PANEL_ID + presenter.getOtherAlias());
 	conversationPanel.add(childPanel);
 	add(conversationPanel, centerData);
 	addStyleName("emite-ChatPanel-Conversation");

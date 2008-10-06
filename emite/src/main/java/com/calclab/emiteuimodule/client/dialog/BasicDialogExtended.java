@@ -24,6 +24,7 @@ package com.calclab.emiteuimodule.client.dialog;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.gwtext.client.core.EventObject;
+import com.gwtext.client.core.Ext;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
@@ -34,6 +35,13 @@ public class BasicDialogExtended extends BasicDialog {
     public BasicDialogExtended(final String title, final boolean modal, final boolean autoscroll, final int width,
 	    final int heigth, final String icon, final String firstButtonTitle, final String cancelButtonTitle,
 	    final BasicDialogListener listener) {
+	this(title, modal, autoscroll, width, heigth, icon, firstButtonTitle, Ext.generateId(), cancelButtonTitle, Ext
+		.generateId(), listener);
+    }
+
+    public BasicDialogExtended(final String title, final boolean modal, final boolean autoscroll, final int width,
+	    final int heigth, final String icon, final String firstButtonTitle, final String firstButtonId,
+	    final String cancelButtonTitle, final String cancelButtonId, final BasicDialogListener listener) {
 	super(title, modal, autoscroll, width, heigth);
 	setLayout(new FitLayout());
 	setCollapsible(false);
@@ -49,6 +57,7 @@ public class BasicDialogExtended extends BasicDialog {
 	});
 
 	firstButton.setTabIndex(3);
+	firstButton.setId(firstButtonId);
 
 	final Button cancel = new Button(cancelButtonTitle);
 	cancel.addListener(new ButtonListenerAdapter() {
@@ -57,9 +66,8 @@ public class BasicDialogExtended extends BasicDialog {
 		listener.onCancelButtonClick();
 	    }
 	});
-
 	cancel.setTabIndex(4);
-
+	cancel.setId(cancelButtonId);
 	addButton(firstButton);
 	addButton(cancel);
     }
