@@ -48,6 +48,11 @@ public class EmiteDemoLoginPanel {
 
     }
 
+    private static final String FIELD_JID_ID = "EmiteDemoLoginPanel-field-jid";
+    private static final String FIELD_PASSW_ID = "EmiteDemoLoginPanel-field-passwd";
+    private static final String BUTTON_ONLINE_ID = "EmiteDemoLoginPanel-online-button";
+    private static final String BUTTON_OFFLINE_ID = "EmiteDemoLoginPanel-offline-button";
+
     private final TextField fieldJid;
     private final TextField fieldPassw;
     private String release;
@@ -68,11 +73,13 @@ public class EmiteDemoLoginPanel {
 
 	fieldJid = new TextField("Jabber id", "jid", 200);
 	fieldJid.setAllowBlank(false);
+	fieldJid.setId(FIELD_JID_ID);
 	formPanel.add(fieldJid);
 
 	fieldPassw = new TextField("Password", "last", 200);
 	fieldPassw.setAllowBlank(false);
 	fieldPassw.setPassword(true);
+	fieldPassw.setId(FIELD_PASSW_ID);
 	formPanel.add(fieldPassw);
 
 	final Button onlineBtn = new Button("Go online");
@@ -91,6 +98,8 @@ public class EmiteDemoLoginPanel {
 	    }
 	});
 
+	onlineBtn.setId(BUTTON_ONLINE_ID);
+	offlineBtn.setId(BUTTON_OFFLINE_ID);
 	formPanel.addButton(onlineBtn);
 	formPanel.addButton(offlineBtn);
 

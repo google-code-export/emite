@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.gwtext.client.widgets.Panel;
 
 public class MultiChatPanelInfoTab extends Panel {
+    private static final String INFO_LABEL_ID = "MultiChatPanel-InfoLabel";
     private final Label infoLabel;
 
     public MultiChatPanelInfoTab(final String title) {
@@ -35,6 +36,7 @@ public class MultiChatPanelInfoTab extends Panel {
 	setHeader(false);
 	setClosable(false);
 	infoLabel = new Label();
+	infoLabel.ensureDebugId(INFO_LABEL_ID);
 	add(infoLabel);
 	setPaddings(7);
     }

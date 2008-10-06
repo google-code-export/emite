@@ -97,6 +97,12 @@
       <version>1.2</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.openqa.selenium.client-drivers</groupId>
+      <artifactId>selenium-java-client-driver</artifactId>
+      <version>1.0-beta-1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <!-- USE PROFILES WITH gwt:gwt. Example: mvn gwt:gwt -P widgets -->
@@ -180,6 +186,32 @@
       <url>http://www.gwt-ext.com/maven2/
       </url>
     </repository>
+    <repository>
+      <id>openqa.org</id>
+      <name>Openqa Release Repository</name>
+      <url>http://archiva.openqa.org/repository/releases</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+    <repository>
+      <id>openqa.org</id>
+      <name>Openqa Snapshot Repository</name>
+      <url>http://archiva.openqa.org/repository/snapshots</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>ignore</checksumPolicy>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
   </repositories>
   <build>
     <plugins>
@@ -233,6 +265,21 @@
             </connector>
           </connectors>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>selenium-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start-server</goal>
+            </goals>
+            <configuration>
+              <background>true</background>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
