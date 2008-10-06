@@ -1,6 +1,7 @@
 <module>
   <!-- other inherited modules, such as com.google.gwt.user.User -->
   <inherits name="com.google.gwt.user.User" />
+  <inherits name="com.google.gwt.user.Debug"/>
 
   <inherits name="com.calclab.emite.core.EmiteCore" />
   <inherits name="com.calclab.emite.im.EmiteIM" />

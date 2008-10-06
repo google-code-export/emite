@@ -50,6 +50,8 @@ import com.gwtext.client.widgets.menu.event.ColorMenuListener;
 
 public class StatusUIPanel extends Toolbar implements StatusUIView {
 
+    private static final String CHECK_ITEM_ID_PREFIX = "StatusUIPanel-checkItem-";
+    private static final String CLOSE_ALL_OPTION_ID = "StatusUIPanel-closeAll-option";
     private final Menu statusMenu;
     private CheckItem onlineMenuItem;
     private CheckItem offlineMenuItem;
@@ -219,6 +221,7 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 		confirmCloseAll();
 	    }
 	});
+	closeAllOption.setId(CLOSE_ALL_OPTION_ID);
 	return closeAllOption;
     }
 
@@ -286,6 +289,7 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 	    });
 	    break;
 	}
+	checkItem.setId(CHECK_ITEM_ID_PREFIX + ownStatus.toString());
 	return checkItem;
     }
 

@@ -72,6 +72,9 @@ import com.gwtext.client.widgets.layout.FormLayout;
 public class MultiChatPanel {
 
     private static final int TIMEVISIBLE = 3000;
+    private static final String SEND_BUTTON_ID = "MultiChatPanel-SendButton";
+    private static final String INPUT_ID = "MultiChatPanel-InputArea";
+    private static final String EMOTICON_BUTTON_ID = "MultiChatPanel-emoticonButton";
     private final RosterUIPanel rosterUIPanel;
     private Window dialog;
     private Button sendBtn;
@@ -397,6 +400,7 @@ public class MultiChatPanel {
 	    }
 	};
 	input.addListener(inputMainListener);
+	input.setId(INPUT_ID);
 	inputForm.add(input);
 	return inputForm;
     }
@@ -413,7 +417,7 @@ public class MultiChatPanel {
 		showEmoticonPalette(e.getXY()[0], e.getXY()[1]);
 	    }
 	});
-
+	emoticonButton.setId(EMOTICON_BUTTON_ID);
 	inputToolbar.addButton(emoticonButton);
 	inputToolbar.addSeparator();
 	bottomChatNotification = new Label();
@@ -439,6 +443,7 @@ public class MultiChatPanel {
 		doSend(e, false);
 	    }
 	});
+	sendBtn.setId(SEND_BUTTON_ID);
 	dialog.addButton(sendBtn);
 	dialog.setLayout(new BorderLayout());
 
