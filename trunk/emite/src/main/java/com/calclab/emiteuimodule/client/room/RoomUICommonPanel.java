@@ -21,6 +21,8 @@ public class RoomUICommonPanel implements RoomUICommonPanelView {
 	}
     }
 
+    private static final String JRB_ID = "emite-ruicp-jrb";
+
     private final JoinRoomToolbarButton joinRoomButton;
     private final I18nTranslationService i18n;
     private final RoomUIManager presenter;
@@ -36,6 +38,7 @@ public class RoomUICommonPanel implements RoomUICommonPanelView {
 		presenter.onJoinRoom();
 	    }
 	});
+	joinRoomButton.setId(JRB_ID);
 	statusUI.addButtonItem(joinRoomButton);
     }
 

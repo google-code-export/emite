@@ -36,6 +36,10 @@ import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 
 public class JoinRoomPanel {
 
+    private static final String ROOM_HOST_NAME_ID = "emite-jrp-rhm";
+    private static final String ROOM_NAME_ID = "emite-jrp-rm";
+    private static final String CANCEL_ID = "emite-jrp-cb";
+    private static final String JOIN_ID = "emite-jrp-jb";
     private final I18nTranslationService i18n;
     private final RoomUIManager presenter;
     private BasicDialogExtended dialog;
@@ -57,7 +61,7 @@ public class JoinRoomPanel {
     public void show() {
 	if (dialog == null) {
 	    dialog = new BasicDialogExtended(i18n.t("Join a chat room"), false, false, 330, 160, "chat-icon", i18n
-		    .tWithNT("Join", "used in button"), i18n.tWithNT("Cancel", "used in button"),
+		    .tWithNT("Join", "used in button"), JOIN_ID, i18n.tWithNT("Cancel", "used in button"), CANCEL_ID,
 		    new BasicDialogListener() {
 			public void onCancelButtonClick() {
 			    dialog.hide();
@@ -91,6 +95,7 @@ public class JoinRoomPanel {
 	roomName.setValidationEvent(false);
 	roomName.setRegex("^[a-z0-9_\\-]+$");
 	roomName.setRegexText(i18n.t("Can only contain characters, numbers, and dashes"));
+	roomName.setId(ROOM_NAME_ID);
 	formPanel.add(roomName);
 
 	roomHostName = new TextField(i18n.t("Room Server Name"), "jid", 150);
@@ -100,6 +105,7 @@ public class JoinRoomPanel {
 	roomHostName.setValue(roomHost);
 	final ToolTip fieldToolTip = new ToolTip(i18n.t("Something like 'conference.jabber.org'."));
 	fieldToolTip.applyTo(roomHostName);
+	roomHostName.setId(ROOM_HOST_NAME_ID);
 	formPanel.add(roomHostName);
 
 	dialog.add(formPanel);
