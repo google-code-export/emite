@@ -17,17 +17,17 @@ import com.google.gwt.core.client.EntryPoint;
 public class PrivacyListsModule extends AbstractModule implements EntryPoint {
 
     public void onModuleLoad() {
+	Suco.install(this);
+    }
+
+    @Override
+    protected void onInstall() {
 	register(SessionComponent.class, new Factory<PrivacyListsManager>(PrivacyListsManager.class) {
 	    @Override
 	    public PrivacyListsManager create() {
 		return new PrivacyListsManager($(Session.class));
 	    }
 	});
-    }
-
-    @Override
-    protected void onLoad() {
-	Suco.install(this);
     }
 
 }
