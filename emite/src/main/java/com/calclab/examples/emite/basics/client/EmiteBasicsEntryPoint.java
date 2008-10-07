@@ -25,11 +25,8 @@ public class EmiteBasicsEntryPoint implements EntryPoint {
 	initOutput();
 
 	// Suco is a facade that give access to every emite component we need
-	// ******** 0. Configure connection settings *********
-	final Connection connection = Suco.get(Connection.class);
-	connection.setSettings(new BoshSettings("proxy", "localhost"));
-	// ...but there's a module, BrowserModule, that allows to configure
-	// the connections settings in the html directly
+
+	// configureConnection(); // we use Browser emite module
 
 	// ******** 1. Session *********
 	// Session is the emite component that allows us to login/logout among
@@ -88,6 +85,14 @@ public class EmiteBasicsEntryPoint implements EntryPoint {
 		print("Roster item changed:" + item);
 	    }
 	});
+    }
+
+    protected void configureConnection() {
+	// ******** 0. Configure connection settings *********
+	final Connection connection = Suco.get(Connection.class);
+	connection.setSettings(new BoshSettings("proxy", "localhost"));
+	// ...but there's a module, BrowserModule, that allows to configure
+	// the connections settings in the html directly
     }
 
     private void initOutput() {

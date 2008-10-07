@@ -19,6 +19,7 @@ public class PageController {
     private static final String PARAM_PASSWORD = "emite.password";
     private static final String PARAM_JID = "emite.user";
     private static final String PARAM_CLOSE = "emite.onClose";
+    private static final String PARAM_OPEN = "emite.onOpen";
     private static final String PARAM_PAUSE = "emite.pause";
     private final DomAssist assist;
     private final Connection connection;
@@ -35,7 +36,8 @@ public class PageController {
 	final String onCloseAction = assist.getMeta(PARAM_CLOSE, "pause");
 	prepareOnCloseAction(onCloseAction);
 	configureConnection();
-	prepareOnOpenAction(onCloseAction);
+	final String onOpenAction = assist.getMeta(PARAM_OPEN, "resume");
+	prepareOnOpenAction(onOpenAction);
 	Log.debug("PageController - done.");
     }
 
@@ -84,29 +86,13 @@ public class PageController {
 	});
     }
 
-    private void prepareOnOpenAction(final String onCloseAction) {
+    private void prepareOnOpenAction(final String onOpenAction) {
 	Log.debug("PageController - configuring opening action...");
-	final boolean shouldResume = "pause".equals(assist.getMeta(PARAM_CLOSE, "pause"));
-	final String pause = Cookies.getCookie(PARAM_PAUSE);
-	if (shouldResume && pause != null) {
-	    resumeConnection(pause);
-	} else {
+	if ("resume".equals(onOpenAction)) {
+	    tryToResume();
+	} else if ("login".equals(onOpenAction)) {
 	    tryToLogin();
 	}
-    }
-
-    private void resumeConnection(final String pause) {
-	Log.debug("Resume session: " + pause);
-	Cookies.removeCookie(PARAM_PAUSE);
-	final SerializableMap map = SerializableMap.restore(pause);
-	final StreamSettings stream = new StreamSettings();
-	stream.rid = Integer.parseInt(map.get("rid"));
-	stream.sid = map.get("sid");
-	stream.wait = map.get("wait");
-	stream.inactivity = map.get("inactivity");
-	stream.maxPause = map.get("maxPause");
-	final XmppURI user = uri(map.get("user"));
-	session.resume(user, stream);
     }
 
     private void tryToLogin() {
@@ -122,6 +108,23 @@ public class PageController {
 	    }
 	} else {
 	    Log.debug("No action perfomer on open.");
+	}
+    }
+
+    private void tryToResume() {
+	final String pause = Cookies.getCookie(PARAM_PAUSE);
+	if (pause != null) {
+	    Log.debug("Resume session: " + pause);
+	    Cookies.removeCookie(PARAM_PAUSE);
+	    final SerializableMap map = SerializableMap.restore(pause);
+	    final StreamSettings stream = new StreamSettings();
+	    stream.rid = Integer.parseInt(map.get("rid"));
+	    stream.sid = map.get("sid");
+	    stream.wait = map.get("wait");
+	    stream.inactivity = map.get("inactivity");
+	    stream.maxPause = map.get("maxPause");
+	    final XmppURI user = uri(map.get("user"));
+	    session.resume(user, stream);
 	}
     }
 }
