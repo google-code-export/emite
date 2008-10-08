@@ -17,7 +17,7 @@ public class EmiteUISeleniumLoginLogoutTest extends TestCase {
 	try {
 	    selenium.open("/gwt/com.calclab.emiteui.EmiteUI/EmiteUI.html");
 	} catch (UnsupportedOperationException e) {
-	    fail("Seems that selenium server is not running; run before: 'java -jar selenium-server.jar -port 4441' ");
+	    fail("Seems that selenium server is not running; run before: 'mvn selenium:start-server -Dport=4441' ");
 	}
 	selenium.click("EmiteDemoLoginPanel-online-button");
 	for (int second = 0;; second++) {
