@@ -7,6 +7,10 @@ import com.thoughtworks.selenium.DefaultSelenium;
 public abstract class EmiteUISeleniumLoginLogoutTest extends TestCase {
 
     protected DefaultSelenium createSeleniumClient(String url) throws Exception {
+	// return new DefaultSelenium("localhost", 4441,
+	// "*firefox /usr/lib/firefox-3.0.3/firefox", url);
+
+	// this is a problem... platform dependence ...
 	return new DefaultSelenium("localhost", 4441, "*firefox /usr/lib/firefox/firefox-2-bin", url);
     }
 
@@ -17,7 +21,7 @@ public abstract class EmiteUISeleniumLoginLogoutTest extends TestCase {
 	try {
 	    selenium.open("/gwt/com.calclab.emiteui.EmiteUI/EmiteUI.html");
 	} catch (UnsupportedOperationException e) {
-	    fail("Seems that selenium server is not running; run before: 'mvn selenium:start-server -Dport=4441' ");
+	    fail("Seems that selenium server is not running; run before: 'mvn selenium:start-server' ");
 	}
 	selenium.click("EmiteDemoLoginPanel-online-button");
 	for (int second = 0;; second++) {

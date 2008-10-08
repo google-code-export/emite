@@ -10,6 +10,10 @@
   </description>
   <name>emite xmpp</name>
   <url>http://emite.googlecode.com</url>
+  <issueManagement>
+    <system>google code issues list</system>
+    <url>http://code.google.com/p/emite/issues/list</url>
+  </issueManagement>
   <dependencies>
 
     <!--  gwt -->
@@ -76,11 +80,6 @@
       <artifactId>kune-core</artifactId>
       <version>0.0.4</version>
     </dependency>
-    <!--
-      <dependency> <groupId>com.extjs</groupId>
-      <artifactId>gxt</artifactId> <version>1.0-beta2</version>
-      </dependency>
-    -->
 
     <!--  TESTING -->
     <dependency>
@@ -266,9 +265,13 @@
           </connectors>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>selenium-maven-plugin</artifactId>
+        <configuration>
+          <port>4441</port>
+        </configuration>
         <executions>
           <execution>
             <phase>pre-integration-test</phase>
@@ -281,6 +284,29 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!--
+            Skip the normal tests, we'll run them in the integration-test
+            phase
+          -->
+          <skip>true</skip>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <skip>false</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -302,7 +328,7 @@
             </configuration>
           </execution>
 
-         <!--  build emite-im -->
+          <!--  build emite-im -->
           <execution>
             <id>im</id>
             <phase>package</phase>
@@ -317,7 +343,7 @@
             </configuration>
           </execution>
 
-         <!--  build emite-xep -->
+          <!--  build emite-xep -->
           <execution>
             <id>xep</id>
             <phase>package</phase>
@@ -347,7 +373,7 @@
             </configuration>
           </execution>
 
-            <!--  build proxies jar -->
+          <!--  build proxies jar -->
           <execution>
             <id>proxies</id>
             <phase>package</phase>
