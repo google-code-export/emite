@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 import com.thoughtworks.selenium.DefaultSelenium;
 
-public class EmiteUISeleniumLoginLogoutTest extends TestCase {
+public abstract class EmiteUISeleniumLoginLogoutTest extends TestCase {
 
     protected DefaultSelenium createSeleniumClient(String url) throws Exception {
 	return new DefaultSelenium("localhost", 4441, "*firefox /usr/lib/firefox/firefox-2-bin", url);
