@@ -292,7 +292,7 @@
             Skip the normal tests, we'll run them in the integration-test
             phase
           -->
-          <skip>true</skip>
+          <skip>false</skip>
         </configuration>
         <executions>
           <execution>
