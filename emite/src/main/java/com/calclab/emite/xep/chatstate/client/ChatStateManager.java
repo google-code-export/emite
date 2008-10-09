@@ -33,11 +33,11 @@ import com.calclab.suco.client.listener.Listener;
  */
 public class ChatStateManager {
     public static enum ChatState {
-	active, composing, pause, inactive, gone
+        active, composing, pause, inactive, gone
     }
 
     public static enum NegotiationStatus {
-	notStarted, started, rejected, accepted
+        notStarted, started, rejected, accepted
     }
 
     public static final String XMLNS = "http://jabber.org/protocol/chatstates";
@@ -49,94 +49,94 @@ public class ChatStateManager {
     private final Event<ChatState> onChatStateChanged;
 
     final Listener<Message> doBeforeSend = new Listener<Message>() {
-	public void onEvent(final Message message) {
-	    switch (negotiationStatus) {
-	    case notStarted:
-		negotiationStatus = NegotiationStatus.started;
-	    case accepted:
-		boolean alreadyWithState = false;
-		for (int i = 0; i < ChatState.values().length; i++) {
-		    if (message.hasChild(ChatState.values()[i].toString())) {
-			alreadyWithState = true;
-		    }
-		}
-		if (!alreadyWithState) {
-		    message.addChild(ChatState.active.toString(), XMLNS);
-		}
-		break;
-	    case rejected:
-	    case started:
-		// do nothing
-		break;
-	    }
-	}
+        public void onEvent(final Message message) {
+            switch (negotiationStatus) {
+            case notStarted:
+                negotiationStatus = NegotiationStatus.started;
+            case accepted:
+                boolean alreadyWithState = false;
+                for (int i = 0; i < ChatState.values().length; i++) {
+                    if (message.hasChild(ChatState.values()[i].toString())) {
+                        alreadyWithState = true;
+                    }
+                }
+                if (!alreadyWithState) {
+                    message.addChild(ChatState.active.toString(), XMLNS);
+                }
+                break;
+            case rejected:
+            case started:
+                // do nothing
+                break;
+            }
+        }
     };
 
     public ChatStateManager(final Conversation conversation) {
-	this.conversation = conversation;
-	this.onChatStateChanged = new Event<ChatState>("chatStateManager:onChatStateChanged");
-	negotiationStatus = NegotiationStatus.notStarted;
-	conversation.onMessageReceived(new Listener<Message>() {
-	    public void onEvent(final Message message) {
-		onMessageReceived(conversation, message);
-	    }
-	});
+        this.conversation = conversation;
+        this.onChatStateChanged = new Event<ChatState>("chatStateManager:onChatStateChanged");
+        negotiationStatus = NegotiationStatus.notStarted;
+        conversation.onMessageReceived(new Listener<Message>() {
+            public void onEvent(final Message message) {
+                onMessageReceived(conversation, message);
+            }
+        });
     }
 
     public NegotiationStatus getNegotiationStatus() {
-	return negotiationStatus;
+        return negotiationStatus;
     }
 
     public ChatState getOtherState() {
-	return otherState;
+        return otherState;
     }
 
     public ChatState getOwnState() {
-	return ownState;
+        return ownState;
     }
 
     public void onChatStateChanged(final Listener<ChatState> listener) {
-	onChatStateChanged.add(listener);
+        onChatStateChanged.add(listener);
     }
 
     public void setOwnState(final ChatState chatState) {
-	// From XEP: a client MUST NOT send a second instance of any given
-	// standalone notification (i.e., a standalone notification MUST be
-	// followed by a different state, not repetition of the same state).
-	// However, every content message SHOULD contain an <active/>
-	// notification.
-	if (negotiationStatus.equals(NegotiationStatus.accepted)) {
-	    if (ownState == null || !ownState.equals(chatState)) {
-		this.ownState = chatState;
-		Log.info("Setting own status to: " + chatState.toString());
-		sendStateMessage(chatState);
-	    }
-	}
+        // From XEP: a client MUST NOT send a second instance of any given
+        // standalone notification (i.e., a standalone notification MUST be
+        // followed by a different state, not repetition of the same state).
+        // However, every content message SHOULD contain an <active/>
+        // notification.
+        if (negotiationStatus.equals(NegotiationStatus.accepted)) {
+            if (ownState == null || !ownState.equals(chatState)) {
+                this.ownState = chatState;
+                Log.info("Setting own status to: " + chatState.toString());
+                sendStateMessage(chatState);
+            }
+        }
     }
 
     protected void onMessageReceived(final Conversation conversation, final Message message) {
-	for (int i = 0; i < ChatState.values().length; i++) {
-	    final ChatState chatState = ChatState.values()[i];
-	    final String typeSt = chatState.toString();
-	    if (message.hasChild(typeSt) || message.hasChild("cha:" + typeSt)) {
-		otherState = chatState;
-		if (negotiationStatus.equals(NegotiationStatus.notStarted)) {
-		    sendStateMessage(ChatState.active);
-		}
-		if (chatState.equals(ChatState.gone)) {
-		    negotiationStatus = NegotiationStatus.notStarted;
-		} else {
-		    negotiationStatus = NegotiationStatus.accepted;
-		}
-		Log.info("Receiver other chat status: " + typeSt);
-		onChatStateChanged.fire(chatState);
-	    }
-	}
+        for (int i = 0; i < ChatState.values().length; i++) {
+            final ChatState chatState = ChatState.values()[i];
+            final String typeSt = chatState.toString();
+            if (message.hasChild(typeSt) || message.hasChild("cha:" + typeSt)) {
+                otherState = chatState;
+                if (negotiationStatus.equals(NegotiationStatus.notStarted)) {
+                    sendStateMessage(ChatState.active);
+                }
+                if (chatState.equals(ChatState.gone)) {
+                    negotiationStatus = NegotiationStatus.notStarted;
+                } else {
+                    negotiationStatus = NegotiationStatus.accepted;
+                }
+                Log.info("Receiver other chat status: " + typeSt);
+                onChatStateChanged.fire(chatState);
+            }
+        }
     }
 
     private void sendStateMessage(final ChatState chatState) {
-	final Message message = new Message(null, conversation.getURI(), null).Thread(conversation.getThread());
-	message.addChild(chatState.toString(), XMLNS);
-	conversation.send(message);
+        final Message message = new Message(null, conversation.getURI(), null);
+        message.addChild(chatState.toString(), XMLNS);
+        conversation.send(message);
     }
 }
