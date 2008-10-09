@@ -43,7 +43,7 @@ public class MUCModule extends AbstractModule implements EntryPoint {
     }
 
     @Override
-    protected void onLoad() {
+    protected void onInstall() {
 	register(SessionComponent.class, new Factory<RoomManager>(RoomManager.class) {
 	    @Override
 	    public RoomManager create() {

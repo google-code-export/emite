@@ -40,7 +40,7 @@ public class EmiteWidgetsModule extends AbstractModule {
     }
 
     @Override
-    protected void onLoad() {
+    protected void onInstall() {
 	register(Singleton.class, new Factory<WidgetsRegistry>(WidgetsRegistry.class) {
 	    @Override
 	    public WidgetsRegistry create() {

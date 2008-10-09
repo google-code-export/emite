@@ -33,7 +33,7 @@ public class DemoModule extends AbstractModule {
     }
 
     @Override
-    public void onLoad() {
+    public void onInstall() {
 	register(Singleton.class, new Factory<DemoParameters>(DemoParameters.class) {
 	    @Override
 	    public DemoParameters create() {

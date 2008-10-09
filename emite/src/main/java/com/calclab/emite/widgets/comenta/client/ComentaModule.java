@@ -16,7 +16,7 @@ public class ComentaModule extends AbstractModule implements EntryPoint {
     }
 
     @Override
-    protected void onLoad() {
+    protected void onInstall() {
 	register(Singleton.class, new Factory<Comenta>(Comenta.class) {
 	    @Override
 	    public Comenta create() {

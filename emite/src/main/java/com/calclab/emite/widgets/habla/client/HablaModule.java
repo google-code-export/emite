@@ -17,7 +17,7 @@ public class HablaModule extends AbstractModule implements EntryPoint {
     }
 
     @Override
-    protected void onLoad() {
+    protected void onInstall() {
 	register(Singleton.class, new Factory<Habla>(Habla.class) {
 	    @Override
 	    public Habla create() {

@@ -40,7 +40,7 @@ public class ChatStateModule extends AbstractModule implements EntryPoint {
     }
 
     @Override
-    public void onLoad() {
+    public void onInstall() {
 	register(SessionComponent.class, new Factory<StateManager>(StateManager.class) {
 	    @Override
 	    public StateManager create() {

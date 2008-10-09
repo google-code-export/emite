@@ -64,7 +64,7 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
     }
 
     @Override
-    public void onLoad() {
+    public void onInstall() {
 	container.removeProvider(SessionReady.class);
 
 	register(SessionComponent.class, new Factory<Roster>(Roster.class) {

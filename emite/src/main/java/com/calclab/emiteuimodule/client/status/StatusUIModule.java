@@ -19,7 +19,7 @@ public class StatusUIModule extends AbstractModule {
     }
 
     @Override
-    public void onLoad() {
+    public void onInstall() {
 	register(Singleton.class, new Factory<StatusUI>(StatusUI.class) {
 	    @Override
 	    public StatusUI create() {

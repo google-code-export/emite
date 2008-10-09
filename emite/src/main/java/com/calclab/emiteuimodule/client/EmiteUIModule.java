@@ -54,7 +54,7 @@ public class EmiteUIModule extends AbstractModule {
     }
 
     @Override
-    public void onLoad() {
+    public void onInstall() {
 
 	if (!container.hasProvider(I18nTranslationService.class)) {
 	    register(Singleton.class, new Factory<I18nTranslationService>(I18nTranslationService.class) {
@@ -66,6 +66,7 @@ public class EmiteUIModule extends AbstractModule {
 	}
 
 	register(SessionComponent.class, new Factory<SubscriptionUI>(SubscriptionUI.class) {
+	    @Override
 	    public SubscriptionUI create() {
 		final SubscriptionUIPresenter presenter = new SubscriptionUIPresenter($(SubscriptionManager.class));
 		final SubscriptionUIPanel panel = new SubscriptionUIPanel(presenter, $(I18nTranslationService.class));

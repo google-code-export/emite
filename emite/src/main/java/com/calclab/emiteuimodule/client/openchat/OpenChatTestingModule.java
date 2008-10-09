@@ -13,7 +13,7 @@ public class OpenChatTestingModule extends AbstractModule {
     }
 
     @Override
-    public void onLoad() {
+    public void onInstall() {
 	final OpenChatTestingPresenter presenter = new OpenChatTestingPresenter($(ChatManager.class), $(StatusUI.class));
 	final OpenChatTestingPanel panel = new OpenChatTestingPanel(presenter, $(StatusUI.class),
 		$(I18nTranslationService.class));
