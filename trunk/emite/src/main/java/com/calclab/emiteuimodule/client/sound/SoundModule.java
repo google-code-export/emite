@@ -15,7 +15,7 @@ public class SoundModule extends AbstractModule {
     }
 
     @Override
-    public void onLoad() {
+    public void onInstall() {
 	register(Singleton.class, new Factory<SoundManager>(SoundManager.class) {
 	    @Override
 	    public SoundManager create() {

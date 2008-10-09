@@ -23,7 +23,7 @@ public class BrowserModule extends AbstractModule implements EntryPoint {
     }
 
     @Override
-    protected void onLoad() {
+    protected void onInstall() {
 	register(Singleton.class, new Factory<DomAssist>(DomAssist.class) {
 	    @Override
 	    public DomAssist create() {

@@ -44,7 +44,7 @@ public class DiscoveryModule extends AbstractModule {
     }
 
     @Override
-    public void onLoad() {
+    public void onInstall() {
 	register(SessionComponent.class, new Factory<DiscoveryManager>(DiscoveryManager.class) {
 	    @Override
 	    public DiscoveryManager create() {

@@ -65,7 +65,7 @@ public class EmiteSwingClientModule extends AbstractModule {
     }
 
     @Override
-    protected void onLoad() {
+    protected void onInstall() {
 	register(Singleton.class, new Factory<ClientPanel>(ClientPanel.class) {
 	    @Override
 	    public ClientPanel create() {

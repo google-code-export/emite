@@ -45,7 +45,7 @@ public class AvatarModule extends AbstractModule implements EntryPoint {
     }
 
     @Override
-    public void onLoad() {
+    public void onInstall() {
 	register(Singleton.class, new Factory<AvatarManager>(AvatarManager.class) {
 	    @Override
 	    public AvatarManager create() {
