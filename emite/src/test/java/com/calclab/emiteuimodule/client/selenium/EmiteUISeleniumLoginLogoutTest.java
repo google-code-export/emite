@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 import com.thoughtworks.selenium.DefaultSelenium;
 
-public class EmiteUISeleniumLoginLogoutTest extends TestCase {
+public abstract class EmiteUISeleniumLoginLogoutTest extends TestCase {
 
     public void testOnlineAndOffline() throws Exception {
         final DefaultSelenium selenium = createSeleniumClient("http://localhost:4444/");
