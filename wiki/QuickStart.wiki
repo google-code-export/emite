@@ -13,7 +13,7 @@ You need a running xmpp server with Http Binding connection enabled. See our [ht
 == Environment setup ==
 
   # install maven2 version 2.0.7 or over (http://maven.apache.org)
-  # download GWT *version 1.5*. Currently, our version 0.2.0 is compatible with gwt-1.5M1 (due a gwt-ext issue). Our 0.2.1 version supports gwt-1.5M2 (using a [http://www.gwt-ext.com/builds/gwt-ext/2008-04-17/ development version] of gwt-ext) and in version >= 0.2.7 we are using gwt-1.5rc.
+  # download GWT *version 1.5.2*. Currently, our version 0.2.0 is compatible with gwt-1.5M1 (due a gwt-ext issue). Our 0.2.1 version supports gwt-1.5M2 (using a [http://www.gwt-ext.com/builds/gwt-ext/2008-04-17/ development version] of gwt-ext) and in version >= 0.2.7 we are using gwt-1.5rc.
   # create or modify the maven {{{~/.m2/settings.xml}}} file to use the proper distribution of gwt (see Appendix A)
   # configure your server Http Binding Service to listen at {{{http://localhost:5280/http-bind/}}} or tweak the web.xml file of emite to change this values
 
@@ -43,7 +43,7 @@ There are other ways, but the fastest is to use maven2:
     <dependency>
       <groupId>com.calclab</groupId>
       <artifactId>emite</artifactId>
-      <version>0.2.0</version>
+      <version>0.3.0</version>
     </dependency>
   </dependencies>
 </project>
@@ -236,4 +236,3 @@ Some orientative apache configuration for emite (using a proxy for both html/js 
 You can change also the 5280 port with your xmpp server bosh port.
 
 Apache applies its {{{Timeout}}} directive to BOSH/http-bind connections made through mod_proxy and kills such connections after the Timeout expires. In order to prevent this please remove the Timeout directive from your httpd.conf file, or use a higger value.
-
