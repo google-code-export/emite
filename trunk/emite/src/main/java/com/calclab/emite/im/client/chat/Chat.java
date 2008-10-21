@@ -49,6 +49,7 @@ public class Chat extends AbstractConversation {
 	super(session, other);
 	this.thread = thread;
 	this.id = generateChatID();
+
 	setStateFromSessionState(session);
 	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final Session.State state) {
@@ -58,7 +59,8 @@ public class Chat extends AbstractConversation {
 	});
 	session.onMessage(new Listener<Message>() {
 	    public void onEvent(final Message message) {
-		if (message.getFrom().equals(uri)) {
+		final XmppURI from = message.getFrom();
+		if ((!uri.hasResource() && from.equalsNoResource(uri)) || from.equals(uri)) {
 		    receive(message);
 		}
 	    }
