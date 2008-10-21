@@ -57,6 +57,7 @@ public class EmiteUIDialog {
     private final AvatarManager avatarManager;
     private final Connection connection;
     private final RoomUIManager roomUIManager;
+    private final Roster roster;
 
     public EmiteUIDialog(final Connection connection, final Session session, final ChatManager chatManager,
 	    final EmiteUIFactory factory, final RoomManager roomManager, final Roster roster,
@@ -66,6 +67,7 @@ public class EmiteUIDialog {
 	this.chatManager = chatManager;
 	this.factory = factory;
 	this.roomManager = roomManager;
+	this.roster = roster;
 	this.avatarManager = avatarManager;
 	this.statusUI = statusUI;
 	this.roomUIManager = roomUIManager;
@@ -73,7 +75,9 @@ public class EmiteUIDialog {
 
     public Conversation chat(final XmppURI otherUserURI) {
 	if (session.isLoggedIn()) {
-	    return chatManager.openChat(otherUserURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	    final RosterItem item = roster.getItemByJID(otherUserURI);
+	    final XmppURI uri = item != null ? item.getXmppURI() : otherUserURI;
+	    return chatManager.openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
 	} else {
 	    Log.error("To start a chat you need to be 'online'.");
 	    return null;

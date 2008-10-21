@@ -34,6 +34,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.roster.Roster;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager;
 import com.calclab.emite.xep.chatstate.client.StateManager;
@@ -227,7 +228,10 @@ public class MultiChatPresenter {
     }
 
     public void joinChat(final XmppURI userURI) {
-	final Conversation conversation = chatManager.openChat(userURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	final RosterItem item = roster.getItemByJID(userURI.getJID());
+	final XmppURI uri = item != null ? item.getXmppURI() : userURI;
+	final Conversation conversation = chatManager.openChat(uri, ChatUIStartedByMe.class,
+		new ChatUIStartedByMe(true));
 	final ChatUI chatUI = getChatUI(conversation);
 	if (chatUI != null && !chatUI.isDocked()) {
 	    // Bug 94

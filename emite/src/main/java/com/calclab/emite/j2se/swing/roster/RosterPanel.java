@@ -36,7 +36,6 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.suco.client.listener.Event;
 import com.calclab.suco.client.listener.Event2;
@@ -51,7 +50,7 @@ public class RosterPanel extends JPanel {
     private DefaultListModel model;
     private final Event2<String, String> onAddRosterItem;
     private final Event<RosterItem> onRemoveItem;
-    private final Event<XmppURI> onStartChat;
+    private final Event<RosterItem> onStartChat;
     private final JFrame frame;
     private final AddRosterItemPanel addRosterPanel;
 
@@ -61,7 +60,7 @@ public class RosterPanel extends JPanel {
 	this.addRosterPanel = addRosterPanel;
 	this.onAddRosterItem = new Event2<String, String>("roster:onAddRosterItem");
 	this.onRemoveItem = new Event<RosterItem>("roster:onRemoveItem");
-	this.onStartChat = new Event<XmppURI>("roster:onStartChat");
+	this.onStartChat = new Event<RosterItem>("roster:onStartChat");
 	init();
 	initAddPanel();
     }
@@ -87,7 +86,7 @@ public class RosterPanel extends JPanel {
 	onRemoveItem.add(listener);
     }
 
-    public void onStartChat(final Listener<XmppURI> listener) {
+    public void onStartChat(final Listener<RosterItem> listener) {
 	onStartChat.add(listener);
     }
 
@@ -109,7 +108,7 @@ public class RosterPanel extends JPanel {
 		final Object value = list.getSelectedValue();
 		if (value != null) {
 		    final RosterItemWrapper wrapper = (RosterItemWrapper) value;
-		    onStartChat.fire(wrapper.item.getJID());
+		    onStartChat.fire(wrapper.item);
 		}
 	    }
 	});

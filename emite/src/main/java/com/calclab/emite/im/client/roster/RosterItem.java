@@ -99,6 +99,12 @@ public class RosterItem {
 	return groups;
     }
 
+    /**
+     * Obtain the JID of the roster item
+     * 
+     * @see getXmppURI
+     * @return the jid
+     */
     public XmppURI getJID() {
 	return jid;
     }
@@ -113,6 +119,16 @@ public class RosterItem {
 
     public SubscriptionState getSubscriptionState() {
 	return subscriptionState;
+    }
+
+    /**
+     * This method returns the full uri of the given item if present (if
+     * presence is available) or the jid if presence is not available
+     * 
+     * @return the uri of this item
+     */
+    public XmppURI getXmppURI() {
+	return presence.getFrom() != null ? presence.getFrom() : jid;
     }
 
     public void setPresence(final Presence presence) {

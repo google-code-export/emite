@@ -259,13 +259,13 @@ public class UserGridPanel extends Panel {
 	// store.setGroupField("industry");
 	// store.load();
 
-	Renderer iconRender = new Renderer() {
+	final Renderer iconRender = new Renderer() {
 	    public String render(final Object value, final CellMetadata cellMetadata, final Record record,
 		    final int rowIndex, final int colNum, final Store store) {
 		return Format.format("<img src=\"{0}\">", new String[] { record.getAsString(IMG) });
 	    }
 	};
-	Renderer userAliasRender = new Renderer() {
+	final Renderer userAliasRender = new Renderer() {
 	    public String render(final Object value, final CellMetadata cellMetadata, final Record record,
 		    final int rowIndex, final int colNum, final Store store) {
 		return Format
@@ -278,7 +278,7 @@ public class UserGridPanel extends Panel {
 						.getAsString(STATUSTEXT)), record.getAsString(JID) });
 	    }
 	};
-	Renderer userStatusRender = new Renderer() {
+	final Renderer userStatusRender = new Renderer() {
 	    public String render(final Object value, final CellMetadata cellMetadata, final Record record,
 		    final int rowIndex, final int colNum, final Store store) {
 		return Format.format("{0}", new String[] { record.getAsString(STATUSIMG) });
@@ -340,7 +340,9 @@ public class UserGridPanel extends Panel {
     }
 
     private void doLayoutIfNeeded() {
-	// http://groups.google.com/group/gwt-ext/browse_thread/thread/6def43c434147596/69e487525d4c68e9?hl=en&lnk=gst&q=dolayout#69e487525d4c68e9
+	// http://groups.google.com/group/gwt-ext/browse_thread/thread/6d
+	// ef43c434147596
+	// /69e487525d4c68e9?hl=en&lnk=gst&q=dolayout#69e487525d4c68e9
 	// You should only explicitly call doLayout() if you add a child
 	// component to a parent Container after the container has been
 	// rendered.
