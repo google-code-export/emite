@@ -58,7 +58,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	final MockListener<Conversation> listener = addOnChatCreatedListener();
 	session.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
 	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
-	assertTrue(listener.isCalledOnce());
+	assertTrue(listener.isCalled(2));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	assertTrue(listener.isCalledOnce());
 	assertTrue(listener.isCalledWithSame(conversation));
 	session.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer"));
-	assertTrue(listener.isCalledOnce());
+	assertTrue(listener.isCalled(2));
     }
 
     @Override
