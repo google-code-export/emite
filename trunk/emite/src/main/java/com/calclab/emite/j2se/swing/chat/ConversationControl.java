@@ -1,8 +1,8 @@
 package com.calclab.emite.j2se.swing.chat;
 
-import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.j2se.swing.roster.RosterPanel;
 import com.calclab.emite.xep.muc.client.Room;
 import com.calclab.emite.xep.muc.client.RoomInvitation;
@@ -14,9 +14,9 @@ public class ConversationControl {
     public ConversationControl(final ChatManager chatManager, final RoomManager roomManager,
 	    final RosterPanel rosterPanel, final ConversationsPanel conversationsPanel) {
 
-	rosterPanel.onStartChat(new Listener<XmppURI>() {
-	    public void onEvent(final XmppURI parameter) {
-		chatManager.openChat(parameter, null, null);
+	rosterPanel.onStartChat(new Listener<RosterItem>() {
+	    public void onEvent(final RosterItem item) {
+		chatManager.openChat(item.getXmppURI(), null, null);
 	    }
 	});
 

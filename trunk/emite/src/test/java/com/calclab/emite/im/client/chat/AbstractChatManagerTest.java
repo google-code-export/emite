@@ -1,7 +1,6 @@
 package com.calclab.emite.im.client.chat;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;

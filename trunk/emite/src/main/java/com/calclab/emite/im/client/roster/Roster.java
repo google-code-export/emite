@@ -22,11 +22,11 @@ public interface Roster {
      * done.
      * 
      * @param jid
-     *                the user JID (resource ignored)
+     *            the user JID (resource ignored)
      * @param name
-     *                the item name
+     *            the item name
      * @param groups
-     *                the groups you want to put the groups in
+     *            the groups you want to put the groups in
      */
     void addItem(XmppURI jid, String name, String... groups);
 
@@ -37,7 +37,7 @@ public interface Roster {
      * given)
      * 
      * @param jid
-     *                the JID of the item (resource is ignored)
+     *            the JID of the item (resource is ignored)
      * @return the item if found in roster, null otherwise
      */
     RosterItem getItemByJID(XmppURI jid);
@@ -89,8 +89,8 @@ public interface Roster {
      * Add a listener to receive the Roster when ready
      * 
      * @param listener
-     *                a listener that receives the roster as collection of
-     *                RosterItems
+     *            a listener that receives the roster as collection of
+     *            RosterItems
      */
     void onRosterRetrieved(Listener<Collection<RosterItem>> listener);
 
@@ -99,8 +99,7 @@ public interface Roster {
      * really removed from roster
      * 
      * @param uri
-     *                the jid (resource ignored) of the roster item to be
-     *                removed
+     *            the jid (resource ignored) of the roster item to be removed
      */
     void removeItem(XmppURI uri);
 
@@ -110,11 +109,11 @@ public interface Roster {
      * (you should use SubscriptionManager instead)
      * 
      * @param jid
-     *                the roster item jid to be updated
+     *            the roster item jid to be updated
      * @param name
-     *                the new name or the old one if null
+     *            the new name or the old one if null
      * @param groups
-     *                the new groups (ALWAYS overriden)
+     *            the new groups (ALWAYS overriden)
      */
     void updateItem(XmppURI jid, String name, String... groups);
 
