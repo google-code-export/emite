@@ -52,7 +52,6 @@ public class RosterTests {
     @Before
     public void beforeTests() {
 	session = new MockedSession();
-
 	roster = new RosterImpl(session);
     }
 
@@ -100,10 +99,11 @@ public class RosterTests {
 
     @Test
     public void shouldHandleRosterItemsPresences() {
-	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
-	roster.onItemChanged(listener);
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='MyFriend' /></query></iq>");
+
+	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
+	roster.onItemChanged(listener);
 	session.receives("<presence from='friend@domain'>"
 		+ "<show>dnd</show><status>message</status><priority>3</priority></presence>");
 	final RosterItem item = roster.getItemByJID(uri("friend@domain"));

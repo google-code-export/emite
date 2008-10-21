@@ -67,7 +67,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	final Conversation conversation = manager.openChat(uri("someone@domain"), null, null);
 	assertTrue(listener.isCalledOnce());
 	assertTrue(listener.isCalledWithSame(conversation));
-	session.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer").Thread(conversation.getThread()));
+	session.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer"));
 	assertTrue(listener.isCalledOnce());
     }
 

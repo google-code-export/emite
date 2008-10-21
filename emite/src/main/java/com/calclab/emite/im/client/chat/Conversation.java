@@ -47,9 +47,6 @@ public interface Conversation {
 
     public State getState();
 
-    @Deprecated
-    public String getThread();
-
     /**
      * Returns this conversation URI. If this conversation is a normal chat, the
      * uri is the JID of the other side user. If this conversation is a room,

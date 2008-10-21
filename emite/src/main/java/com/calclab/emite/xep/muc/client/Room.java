@@ -121,10 +121,6 @@ public class Room extends AbstractConversation implements Conversation {
 	return occupantsByURI.size();
     }
 
-    public String getThread() {
-	return uri.getNode();
-    }
-
     /**
      * To check if is an echo message
      * 

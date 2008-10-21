@@ -24,12 +24,6 @@ public abstract class AbstractChatManagerTest {
     }
 
     @Test
-    public void everyChatOpenedByUserShouldHaveThread() {
-	final Conversation conversation = manager.openChat(uri("other@domain/resource"), null, null);
-	assertNotNull(conversation.getThread());
-    }
-
-    @Test
     public void shouldEventWhenAChatIsClosed() {
 	final Conversation conversation = manager.openChat(uri("other@domain/resource"), null, null);
 	final MockListener<Conversation> listener = new MockListener<Conversation>();
