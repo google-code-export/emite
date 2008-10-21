@@ -43,8 +43,10 @@ public class ChatManagerImpl implements ChatManager {
     protected final Event<Conversation> onChatCreated;
     protected Event<Conversation> onChatClosed;
     protected final Session session;
+    private final boolean ignoreResource;
 
     public ChatManagerImpl(final Session session) {
+	this.ignoreResource = true;
 	this.session = session;
 	this.onChatCreated = new Event<Conversation>("chatManager:onChatCreated");
 	this.onChatClosed = new Event<Conversation>("chatManager:onChatClosed");
@@ -77,7 +79,7 @@ public class ChatManagerImpl implements ChatManager {
     }
 
     public <T> Conversation openChat(final XmppURI toURI, final Class<T> extraType, final T extraData) {
-	Conversation conversation = findChat(toURI, null);
+	Conversation conversation = findChat(toURI);
 	if (conversation == null) {
 	    final String thread = String.valueOf(Math.random() * 1000000);
 	    conversation = createChat(toURI, thread, extraType, extraData);
@@ -95,7 +97,7 @@ public class ChatManagerImpl implements ChatManager {
 	    final XmppURI from = message.getFrom();
 	    final String thread = message.getThread();
 
-	    Conversation conversation = findChat(from, thread);
+	    Conversation conversation = findChat(from);
 	    if (conversation == null) {
 		conversation = createChat(from, thread, null, null);
 	    }
@@ -116,32 +118,20 @@ public class ChatManagerImpl implements ChatManager {
     }
 
     /**
-     * We choose a chat by the thread, if no thread specified we look for the
-     * same XmppURI, and if no resource specified we look for the same node@domain
-     * 
-     * @param from
-     * @param thread
-     * @return
+     * Find a chat using the given uri.
      */
 
-    private Conversation findChat(final XmppURI from, final String thread) {
+    private Conversation findChat(final XmppURI uri) {
 	Conversation selected = null;
 
 	for (final Conversation conversation : conversations) {
-	    if (thread != null) {
-		if (thread.equals(conversation.getThread())) {
-		    return conversation;
-		}
-	    } else {
-		final XmppURI chatTargetURI = conversation.getURI();
-		if (from.hasResource() && from.equals(chatTargetURI)) {
-		    selected = conversation;
-		} else if (from.equalsNoResource(chatTargetURI)) {
-		    selected = conversation;
-		}
+	    final XmppURI chatTargetURI = conversation.getURI();
+	    if (!ignoreResource && uri.hasResource() && uri.equals(chatTargetURI)) {
+		selected = conversation;
+	    } else if (uri.equalsNoResource(chatTargetURI)) {
+		selected = conversation;
 	    }
 	}
-
 	return selected;
     }
 
