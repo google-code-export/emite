@@ -45,85 +45,85 @@ public class RosterItemPanel {
     private TextField jid;
 
     public RosterItemPanel(final I18nTranslationService i18n, final MultiChatPresenter presente) {
-        this.i18n = i18n;
-        this.presenter = presente;
+	this.i18n = i18n;
+	this.presenter = presente;
     }
 
     public void reset() {
-        formPanel.getForm().reset();
+	formPanel.getForm().reset();
     }
 
     public void show() {
-        if (dialog == null) {
-            dialog = new BasicDialogExtended(i18n.t("Add a new buddy"), false, false, 330, 200, "useradd-icon", i18n
-                    .tWithNT("Add", "used in button"), i18n.tWithNT("Cancel", "used in button"),
-                    new BasicDialogListener() {
+	if (dialog == null) {
+	    dialog = new BasicDialogExtended(i18n.t("Add a new buddy"), false, false, 330, 220, "useradd-icon", i18n
+		    .tWithNT("Add", "used in button"), i18n.tWithNT("Cancel", "used in button"),
+		    new BasicDialogListener() {
 
-                        public void onCancelButtonClick() {
-                            dialog.hide();
-                            reset();
-                        }
+			public void onCancelButtonClick() {
+			    dialog.hide();
+			    reset();
+			}
 
-                        public void onFirstButtonClick() {
-                            doAddItem();
-                        }
+			public void onFirstButtonClick() {
+			    doAddItem();
+			}
 
-                        private void doAddItem() {
-                            // FIXME duplicate code
-                            name.validate();
-                            jid.validate();
-                            if (formPanel.getForm().isValid()) {
-                                DeferredCommand.addCommand(new Command() {
-                                    public void execute() {
-                                        presenter.addRosterItem(name.getValueAsString(), jid.getValueAsString());
-                                        reset();
-                                    }
-                                });
-                                dialog.hide();
-                            }
-                        }
-                    });
-            dialog.setResizable(false);
-            createForm();
+			private void doAddItem() {
+			    // FIXME duplicate code
+			    name.validate();
+			    jid.validate();
+			    if (formPanel.getForm().isValid()) {
+				DeferredCommand.addCommand(new Command() {
+				    public void execute() {
+					presenter.addRosterItem(name.getValueAsString(), jid.getValueAsString());
+					reset();
+				    }
+				});
+				dialog.hide();
+			    }
+			}
+		    });
+	    dialog.setResizable(false);
+	    createForm();
 
-            // TODO define a UI Extension Point here
-        }
-        dialog.show();
-        name.focus();
+	    // TODO define a UI Extension Point here
+	}
+	dialog.show();
+	name.focus();
     }
 
     private void createForm() {
-        formPanel = new FormPanel();
-        formPanel.setFrame(true);
-        formPanel.setAutoScroll(false);
+	formPanel = new FormPanel();
+	formPanel.setFrame(true);
+	formPanel.setAutoScroll(false);
 
-        formPanel.setWidth(333);
-        formPanel.setLabelWidth(100);
-        formPanel.setPaddings(10);
+	formPanel.setWidth(333);
+	formPanel.setLabelWidth(100);
+	formPanel.setPaddings(10);
 
-        final Label label = new Label();
-        label.setHtml("<p>" + i18n.t("Please fill this form with the info of your new buddy:") + "</p><br/>");
-        label.setWidth(270);
-        label.setHeight(40);
-        formPanel.add(label);
+	final Label label = new Label();
+	label.setHtml("<p>" + i18n.t("Please fill this form with the info of your new buddy:") + "</p><br/>");
+	label.setWidth(270);
+	label.setHeight(40);
+	formPanel.add(label);
 
-        name = new TextField(i18n.t("Buddy Nickname"), "name", 150);
-        name.setAllowBlank(false);
-        name.setValidationEvent(false);
-        formPanel.add(name);
+	name = new TextField(i18n.t("Buddy Nickname"), "name", 150);
+	name.setAllowBlank(false);
+	name.setValidationEvent(false);
+	formPanel.add(name);
 
-        jid = new TextField(i18n.t("Buddy Jabber Id"), "jid", 150);
-        jid.setAllowBlank(false);
-        jid.setValidationEvent(false);
-        jid.setRegex(TextUtils.EMAIL_REGEXP);
-        jid.setRegexText(i18n.t("A Jabber Id is something like 'someone@example.com'"));
-        // jid.setVtype(VType.EMAIL);
-        final ToolTip fieldToolTip = new ToolTip(i18n.t("Note that the 'Jabber Id' sometimes is the same as the email "
-                + "(in gmail accounts for instance)."));
-        fieldToolTip.applyTo(jid);
-        formPanel.add(jid);
+	jid = new TextField(i18n.t("Buddy Jabber Id"), "jid", 150);
+	jid.setAllowBlank(false);
+	jid.setValidationEvent(false);
+	jid.setRegex(TextUtils.EMAIL_REGEXP);
+	jid.setRegexText(i18n.t("A Jabber Id is something like 'someone@example.com'"));
+	// jid.setVtype(VType.EMAIL);
+	final ToolTip fieldToolTip = new ToolTip(i18n.t("Note that the 'Jabber Id' sometimes is the same as the email "
+		+ "(in gmail accounts for instance)."));
+	fieldToolTip.applyTo(jid);
+	formPanel.add(jid);
 
-        dialog.add(formPanel);
+	dialog.add(formPanel);
     }
 
 }

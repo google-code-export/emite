@@ -60,7 +60,7 @@ public class JoinRoomPanel {
 
     public void show() {
 	if (dialog == null) {
-	    dialog = new BasicDialogExtended(i18n.t("Join a chat room"), false, false, 330, 160, "chat-icon", i18n
+	    dialog = new BasicDialogExtended(i18n.t("Join a chat room"), false, false, 330, 180, "chat-icon", i18n
 		    .tWithNT("Join", "used in button"), JOIN_ID, i18n.tWithNT("Cancel", "used in button"), CANCEL_ID,
 		    new BasicDialogListener() {
 			public void onCancelButtonClick() {
@@ -110,6 +110,7 @@ public class JoinRoomPanel {
 
 	dialog.add(formPanel);
 	roomName.addListener(new FieldListenerAdapter() {
+	    @Override
 	    public void onSpecialKey(final Field field, final EventObject e) {
 		if (e.getKey() == 13) {
 		    doJoin();

@@ -43,77 +43,77 @@ public class InviteToRoomPanel {
     private TextField reason;
 
     public InviteToRoomPanel(final I18nTranslationService i18n, final RoomUIPresenter presenter) {
-        this.i18n = i18n;
-        this.presenter = presenter;
+	this.i18n = i18n;
+	this.presenter = presenter;
     }
 
     public void reset() {
-        formPanel.getForm().reset();
+	formPanel.getForm().reset();
     }
 
     public void show() {
-        if (dialog == null) {
-            dialog = new BasicDialogExtended(i18n.t("Invite someone to this room"), false, false, 330, 160,
-                    "chat-icon", i18n.tWithNT("Invite", "used in button"), i18n.tWithNT("Cancel", "used in button"),
-                    new BasicDialogListener() {
+	if (dialog == null) {
+	    dialog = new BasicDialogExtended(i18n.t("Invite someone to this room"), false, false, 330, 180,
+		    "chat-icon", i18n.tWithNT("Invite", "used in button"), i18n.tWithNT("Cancel", "used in button"),
+		    new BasicDialogListener() {
 
-                        public void onCancelButtonClick() {
-                            dialog.hide();
-                            reset();
-                        }
+			public void onCancelButtonClick() {
+			    dialog.hide();
+			    reset();
+			}
 
-                        public void onFirstButtonClick() {
-                            jid.validate();
-                            reason.validate();
-                            if (formPanel.getForm().isValid()) {
-                                DeferredCommand.addCommand(new Command() {
-                                    public void execute() {
-                                        presenter.onInviteUserRequested(XmppURI.jid(jid.getValueAsString()), reason
-                                                .getValueAsString());
-                                        reset();
-                                    }
-                                });
-                                dialog.hide();
-                            }
-                        }
+			public void onFirstButtonClick() {
+			    jid.validate();
+			    reason.validate();
+			    if (formPanel.getForm().isValid()) {
+				DeferredCommand.addCommand(new Command() {
+				    public void execute() {
+					presenter.onInviteUserRequested(XmppURI.jid(jid.getValueAsString()), reason
+						.getValueAsString());
+					reset();
+				    }
+				});
+				dialog.hide();
+			    }
+			}
 
-                    });
-            dialog.setResizable(false);
-            createForm();
+		    });
+	    dialog.setResizable(false);
+	    createForm();
 
-            // TODO define a UI Extension Point here
-        }
-        dialog.show();
-        jid.focus();
+	    // TODO define a UI Extension Point here
+	}
+	dialog.show();
+	jid.focus();
     }
 
     private void createForm() {
-        formPanel = new FormPanel();
-        formPanel.setFrame(true);
-        formPanel.setAutoScroll(false);
+	formPanel = new FormPanel();
+	formPanel.setFrame(true);
+	formPanel.setAutoScroll(false);
 
-        formPanel.setWidth(333);
-        formPanel.setLabelWidth(100);
-        formPanel.setPaddings(10);
+	formPanel.setWidth(333);
+	formPanel.setLabelWidth(100);
+	formPanel.setPaddings(10);
 
-        jid = new TextField(i18n.t("Invite to (some Jabber Id)"), "jid", 150);
-        jid.setAllowBlank(false);
-        jid.setRegex(TextUtils.EMAIL_REGEXP);
-        jid.setRegexText(i18n.t("A Jabber Id is something like 'someone@example.com'"));
-        // jid.setVtype(VType.EMAIL);
-        jid.setValidationEvent(false);
-        final ToolTip fieldToolTip = new ToolTip(i18n.t("Note that the 'Jabber Id' sometimes is the same as the email "
-                + "(in gmail accounts for instance)."));
-        fieldToolTip.applyTo(jid);
-        jid.setValidateOnBlur(false);
-        formPanel.add(jid);
+	jid = new TextField(i18n.t("Invite to (some Jabber Id)"), "jid", 150);
+	jid.setAllowBlank(false);
+	jid.setRegex(TextUtils.EMAIL_REGEXP);
+	jid.setRegexText(i18n.t("A Jabber Id is something like 'someone@example.com'"));
+	// jid.setVtype(VType.EMAIL);
+	jid.setValidationEvent(false);
+	final ToolTip fieldToolTip = new ToolTip(i18n.t("Note that the 'Jabber Id' sometimes is the same as the email "
+		+ "(in gmail accounts for instance)."));
+	fieldToolTip.applyTo(jid);
+	jid.setValidateOnBlur(false);
+	formPanel.add(jid);
 
-        reason = new TextField(i18n.t("Invitation reason"), "jid", 150);
-        reason.setAllowBlank(false);
-        reason.setValidationEvent(false);
-        reason.setValue(presenter.getReasonText());
-        formPanel.add(reason);
+	reason = new TextField(i18n.t("Invitation reason"), "jid", 150);
+	reason.setAllowBlank(false);
+	reason.setValidationEvent(false);
+	reason.setValue(presenter.getReasonText());
+	formPanel.add(reason);
 
-        dialog.add(formPanel);
+	dialog.add(formPanel);
     }
 }

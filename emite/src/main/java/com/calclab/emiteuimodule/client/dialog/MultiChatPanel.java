@@ -360,7 +360,7 @@ public class MultiChatPanel {
 	};
 	input.addKeyPressListener(inputKeyPressListener);
 	final FieldListenerAdapter inputMainListener = new FieldListenerAdapter() {
-	    private Timer stillFocusedTimer = new Timer() {
+	    private final Timer stillFocusedTimer = new Timer() {
 		@Override
 		public void run() {
 		    if (inputFocused) {
@@ -369,7 +369,7 @@ public class MultiChatPanel {
 		}
 	    };
 
-	    private Timer stillUnfocusedTimer = new Timer() {
+	    private final Timer stillUnfocusedTimer = new Timer() {
 		@Override
 		public void run() {
 		    if (!inputFocused) {
@@ -435,6 +435,7 @@ public class MultiChatPanel {
 	dialog.setButtonAlign(Position.LEFT);
 	dialog.setBorder(false);
 	dialog.setCollapsible(true);
+	dialog.setMinimizable(true);
 	dialog.setIconCls("e-icon");
 	sendBtn = new Button(i18n.tWithNT("Send", "used in button"));
 	sendBtn.addListener(new ButtonListenerAdapter() {
@@ -536,8 +537,14 @@ public class MultiChatPanel {
 
     private void createListeners() {
 	dialog.addListener(new WindowListenerAdapter() {
+	    @Override
 	    public void onMaximize(final Window source) {
 		Log.info("onMax");
+	    }
+
+	    @Override
+	    public void onMinimize(final Window source) {
+		dialog.hide();
 	    }
 
 	    @Override
@@ -566,6 +573,7 @@ public class MultiChatPanel {
 	});
 
 	eastPanel.addListener(new PanelListenerAdapter() {
+	    @Override
 	    public void onExpand(final Panel panel) {
 		// Log.debug("Expand roster");
 		if (eastPanel.isRendered()) {
