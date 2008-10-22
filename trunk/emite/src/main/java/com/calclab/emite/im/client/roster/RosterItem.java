@@ -121,16 +121,6 @@ public class RosterItem {
 	return subscriptionState;
     }
 
-    /**
-     * This method returns the full uri of the given item if present (if
-     * presence is available) or the jid if presence is not available
-     * 
-     * @return the uri of this item
-     */
-    public XmppURI getXmppURI() {
-	return presence.getFrom() != null ? presence.getFrom() : jid;
-    }
-
     public void setPresence(final Presence presence) {
 	if (presence == null) {
 	    this.presence = new Presence(Type.unavailable, null, null).With(Show.away);

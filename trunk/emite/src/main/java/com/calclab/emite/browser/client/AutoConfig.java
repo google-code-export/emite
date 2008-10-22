@@ -12,7 +12,20 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
 
-public class PageController {
+/**
+ * This class object auto-configures some emite components and behaviours based
+ * on some html parameters. All the parameters are specified in meta tags. For
+ * example: <code>
+ * &pre;meta id="emite.host" content="localhost" /&pre;
+ * </code> The currently supported parameters are:
+ * <ul>
+ * <li>emite.httpBase: the proxy relative location, for example: 'proxy'</li>
+ * <li>emite.host: the bosh server host, for example 'emitedemo.org'</li>
+ * <li>emite.onClose: the desired operation to perform when the page is closed.
+ * Posible values are: logout and pause</li>
+ * 
+ */
+public class AutoConfig {
 
     private static final String PARAM_HOST = "emite.host";
     private static final String PARAM_HTTPBASE = "emite.httpBase";
@@ -25,13 +38,13 @@ public class PageController {
     private final Connection connection;
     private final Session session;
 
-    public PageController(final Connection connection, final Session session, final DomAssist assist) {
+    public AutoConfig(final Connection connection, final Session session, final DomAssist assist) {
 	this.connection = connection;
 	this.session = session;
 	this.assist = assist;
     }
 
-    public void init() {
+    public void run() {
 	Log.debug("PageController - initializing...");
 	final String onCloseAction = assist.getMeta(PARAM_CLOSE, "pause");
 	prepareOnCloseAction(onCloseAction);

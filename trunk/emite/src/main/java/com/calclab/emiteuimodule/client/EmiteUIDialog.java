@@ -31,7 +31,6 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.Conversation;
-import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.muc.client.RoomManager;
@@ -57,17 +56,15 @@ public class EmiteUIDialog {
     private final AvatarManager avatarManager;
     private final Connection connection;
     private final RoomUIManager roomUIManager;
-    private final Roster roster;
 
     public EmiteUIDialog(final Connection connection, final Session session, final ChatManager chatManager,
-	    final EmiteUIFactory factory, final RoomManager roomManager, final Roster roster,
-	    final AvatarManager avatarManager, final StatusUI statusUI, final RoomUIManager roomUIManager) {
+	    final EmiteUIFactory factory, final RoomManager roomManager, final AvatarManager avatarManager,
+	    final StatusUI statusUI, final RoomUIManager roomUIManager) {
 	this.connection = connection;
 	this.session = session;
 	this.chatManager = chatManager;
 	this.factory = factory;
 	this.roomManager = roomManager;
-	this.roster = roster;
 	this.avatarManager = avatarManager;
 	this.statusUI = statusUI;
 	this.roomUIManager = roomUIManager;
@@ -75,9 +72,7 @@ public class EmiteUIDialog {
 
     public Conversation chat(final XmppURI otherUserURI) {
 	if (session.isLoggedIn()) {
-	    final RosterItem item = roster.getItemByJID(otherUserURI);
-	    final XmppURI uri = item != null ? item.getXmppURI() : otherUserURI;
-	    return chatManager.openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	    return chatManager.openChat(otherUserURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
 	} else {
 	    Log.error("To start a chat you need to be 'online'.");
 	    return null;
