@@ -60,7 +60,7 @@ public class Chat extends AbstractConversation {
 	session.onMessage(new Listener<Message>() {
 	    public void onEvent(final Message message) {
 		final XmppURI from = message.getFrom();
-		if ((!uri.hasResource() && from.equalsNoResource(uri)) || from.equals(uri)) {
+		if (from.equalsNoResource(uri)) {
 		    receive(message);
 		}
 	    }

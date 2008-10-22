@@ -1,7 +1,7 @@
 package com.calclab.emite.widgets.client;
 
 import com.calclab.emite.browser.client.DomAssist;
-import com.calclab.emite.browser.client.PageController;
+import com.calclab.emite.browser.client.AutoConfig;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.im.client.chat.ChatManager;
@@ -49,7 +49,7 @@ public class EmiteWidgetsModule extends AbstractModule {
 	}, new Factory<AutoDeploy>(AutoDeploy.class) {
 	    @Override
 	    public AutoDeploy create() {
-		return new AutoDeploy($(WidgetsRegistry.class), $(PageController.class), $(DomAssist.class));
+		return new AutoDeploy($(WidgetsRegistry.class), $(AutoConfig.class), $(DomAssist.class));
 	    }
 	});
 

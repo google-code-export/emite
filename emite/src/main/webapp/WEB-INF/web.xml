@@ -54,4 +54,8 @@
         <servlet-name>Proxy</servlet-name>
         <url-pattern>/com.calclab.examples.emite.basics.Basics/proxy</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Proxy</servlet-name>
+        <url-pattern>/com.calclab.emite.hablar.Hablar/proxy</url-pattern>
+    </servlet-mapping>
 </web-app>

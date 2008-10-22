@@ -19,7 +19,7 @@ public class BrowserModule extends AbstractModule implements EntryPoint {
 
     public void onModuleLoad() {
 	Suco.install(this);
-	Suco.get(PageController.class).init();
+	Suco.get(AutoConfig.class).run();
     }
 
     @Override
@@ -29,10 +29,10 @@ public class BrowserModule extends AbstractModule implements EntryPoint {
 	    public DomAssist create() {
 		return new DomAssist();
 	    }
-	}, new Factory<PageController>(PageController.class) {
+	}, new Factory<AutoConfig>(AutoConfig.class) {
 	    @Override
-	    public PageController create() {
-		return new PageController($(Connection.class), $(Session.class), $(DomAssist.class));
+	    public AutoConfig create() {
+		return new AutoConfig($(Connection.class), $(Session.class), $(DomAssist.class));
 	    }
 	});
     }

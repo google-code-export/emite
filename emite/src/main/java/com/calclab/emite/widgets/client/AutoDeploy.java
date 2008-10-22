@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.browser.client.DomAssist;
-import com.calclab.emite.browser.client.PageController;
+import com.calclab.emite.browser.client.AutoConfig;
 import com.calclab.emite.widgets.client.base.EmiteWidget;
 import com.calclab.suco.client.ioc.Provider;
 import com.google.gwt.dom.client.Element;
@@ -15,7 +15,7 @@ public class AutoDeploy {
     private final DomAssist domAssist;
     private final WidgetsRegistry registry;
 
-    public AutoDeploy(final WidgetsRegistry registry, final PageController controller, final DomAssist domAssist) {
+    public AutoDeploy(final WidgetsRegistry registry, final AutoConfig controller, final DomAssist domAssist) {
 	this.registry = registry;
 	this.domAssist = domAssist;
 

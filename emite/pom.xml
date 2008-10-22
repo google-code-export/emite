@@ -157,6 +157,16 @@
         </gwt.compile>
       </properties>
     </profile>
+     <profile>
+      <id>hablar</id>
+      <properties>
+        <gwt.run>com.calclab.emite.hablar.Hablar/Hablar.html?log_level=DEBUG
+        </gwt.run>
+        <gwt.compile>
+          com.calclab.emite.hablar.Hablar
+        </gwt.compile>
+      </properties>
+    </profile>
   </profiles>
 
   <pluginRepositories>

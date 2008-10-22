@@ -39,6 +39,8 @@ public interface ChatManager {
 
     public void onChatCreated(Listener<Conversation> listener);
 
+    public void openChat(XmppURI jid);
+
     public <T> Conversation openChat(final XmppURI xmppURI, Class<T> dataType, T dataValue);
 
 }

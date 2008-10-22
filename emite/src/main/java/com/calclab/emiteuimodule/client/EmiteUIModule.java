@@ -102,8 +102,8 @@ public class EmiteUIModule extends AbstractModule {
 	    @Override
 	    public EmiteUIDialog create() {
 		return new EmiteUIDialog($(Connection.class), $(Session.class), $(ChatManager.class),
-			$(EmiteUIFactory.class), $(RoomManager.class), $(Roster.class), $(AvatarManager.class),
-			$(StatusUI.class), $(RoomUIManager.class));
+			$(EmiteUIFactory.class), $(RoomManager.class), $(AvatarManager.class), $(StatusUI.class),
+			$(RoomUIManager.class));
 	    }
 	});
 

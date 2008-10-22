@@ -16,7 +16,7 @@ public class ConversationControl {
 
 	rosterPanel.onStartChat(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
-		chatManager.openChat(item.getXmppURI(), null, null);
+		chatManager.openChat(item.getJID(), null, null);
 	    }
 	});
 

@@ -76,6 +76,10 @@ public class ChatManagerImpl implements ChatManager {
 	onChatCreated.add(listener);
     }
 
+    public void openChat(final XmppURI jid) {
+	openChat(jid, null, null);
+    }
+
     public <T> Conversation openChat(final XmppURI toURI, final Class<T> extraType, final T extraData) {
 	Conversation conversation = findChat(toURI);
 	if (conversation == null) {
@@ -119,7 +123,7 @@ public class ChatManagerImpl implements ChatManager {
     private Conversation findChat(final XmppURI uri) {
 	for (final Conversation conversation : conversations) {
 	    final XmppURI chatTargetURI = conversation.getURI();
-	    if (uri.equals(chatTargetURI)) {
+	    if (uri.equalsNoResource(chatTargetURI)) {
 		return conversation;
 	    }
 	}
