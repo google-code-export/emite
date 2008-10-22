@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.allen_sauer.gwt.log.client.Log;
-
 /**
  * Serves pages which are fetched from another HTTP-Server useful for going thru
  * firewalls and other trickery...
@@ -35,15 +33,17 @@ import com.allen_sauer.gwt.log.client.Log;
  * Not Modified answer does not go thru the servelet in the backward direction.
  * It could be that the HttpServletResponse does hava some sideeffects which are
  * not helpfull in this special situation. This type of request is currently
- * avoided by removing all "If-" requests. <br /> <b>Note:</b> This servlet is
- * actually buggy. It is buggy since it does not solve all problems, it only
- * solves the problems I needed to solve. Many thanks to Thorsten Gast the
- * creator of dirjack for pointing at least some bugs.
+ * avoided by removing all "If-" requests. <br />
+ * <b>Note:</b> This servlet is actually buggy. It is buggy since it does not
+ * solve all problems, it only solves the problems I needed to solve. Many
+ * thanks to Thorsten Gast the creator of dirjack for pointing at least some
+ * bugs.
  * 
  * @author <a href="mailto:frank -at- spieleck.de">Frank Nestel</a>.
  */
 
 public class ProxyServlet extends HttpServlet {
+
     /**
      * "Official" HTTP line end
      */
@@ -85,7 +85,7 @@ public class ProxyServlet extends HttpServlet {
     protected String remoteServer;
 
     public ProxyServlet() {
-	Log.debug("Proxy Servlet created.");
+	log("Proxy Servlet created.");
     }
 
     /**
@@ -151,7 +151,9 @@ public class ProxyServlet extends HttpServlet {
      */
     @Override
     public void log(final String msg) {
-	Log.debug("PROXY: " + msg);
+	// gwt-log uses std error (and is better for clients or for remote use
+	// -also from clients-)
+	System.out.println("[PROXY] " + msg);
     }
 
     /**
@@ -370,7 +372,7 @@ public class ProxyServlet extends HttpServlet {
 		    final String value = line.substring(i);
 		    log("<" + head + ">=<" + value + ">");
 		    if (head.equalsIgnoreCase("Location")) {
-			//res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY
+			// res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY
 			// );
 			// res.setHeader(head, value );
 			log("Location cutted: " + value);
