@@ -23,7 +23,6 @@ package com.calclab.emiteuimodule.client.roster;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
@@ -119,8 +118,7 @@ public class RosterUIPresenter {
 
     public void showUnavailableRosterItems(final boolean show) {
 	showUnavailableItems = show;
-	for (final Iterator<XmppURI> iterator = rosterMap.keySet().iterator(); iterator.hasNext();) {
-	    final XmppURI jid = iterator.next();
+	for (XmppURI jid : rosterMap.keySet()) {
 	    final RosterItem item = roster.getItemByJID(jid);
 	    final ChatUserUI user = rosterMap.get(jid);
 	    if (item == null) {
@@ -205,6 +203,19 @@ public class RosterUIPresenter {
 	user.setVisible(mustShow);
     }
 
+    private void addRosterItem(final RosterItem item) {
+	logRosterItem("Adding", item);
+	final ChatUserUI user = new ChatUserUI(avatarProvider.getAvatarURL(item.getJID()), item, "black");
+	updateUserWithRosterItem(user, item);
+	if (showUnavailableItems || isAvailable(item)) {
+	    user.setVisible(true);
+	    view.addRosterItem(user, createMenuItemList(item));
+	} else {
+	    user.setVisible(false);
+	}
+	rosterMap.put(user.getURI(), user);
+    }
+
     private UserGridMenuItem<XmppURI> createCancelSubscriptorBuddyMenuItem(final XmppURI userURI) {
 	return new UserGridMenuItem<XmppURI>("del-icon",
 		i18n.t("Stop to show when I'm connected or not to this buddy"), new UserGridMenuItemListener() {
@@ -279,6 +290,12 @@ public class RosterUIPresenter {
     }
 
     private void createXmppListeners() {
+	roster.onRosterRetrieved(new Listener<Collection<RosterItem>>() {
+	    public void onEvent(Collection<RosterItem> parameter) {
+		refreshRoster(parameter);
+	    }
+	});
+
 	roster.onItemChanged(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
 		final ChatUserUI user = rosterMap.get(item.getJID());
@@ -294,13 +311,20 @@ public class RosterUIPresenter {
 	});
 
 	roster.onItemAdded(new Listener<RosterItem>() {
-	    public void onEvent(final RosterItem parameter) {
-		refreshRoster(roster.getItems());
+	    public void onEvent(final RosterItem item) {
+		addRosterItem(item);
 	    }
 	});
 	roster.onItemRemoved(new Listener<RosterItem>() {
-	    public void onEvent(final RosterItem parameter) {
-		refreshRoster(roster.getItems());
+	    public void onEvent(final RosterItem item) {
+		final ChatUserUI user = rosterMap.get(item.getJID());
+		if (user == null) {
+		    Log.error("Trying to delete a user is not in roster: " + item.getJID() + " ----> Roster: "
+			    + rosterMap);
+		} else {
+		    logRosterItem("Removing", item);
+		    view.removeRosterItem(user);
+		}
 	    }
 	});
     }
@@ -352,16 +376,7 @@ public class RosterUIPresenter {
 	rosterMap.clear();
 	view.clearRoster();
 	for (final RosterItem item : rosterItems) {
-	    logRosterItem("Adding", item);
-	    final ChatUserUI user = new ChatUserUI(avatarProvider.getAvatarURL(item.getJID()), item, "black");
-	    updateUserWithRosterItem(user, item);
-	    if (showUnavailableItems || isAvailable(item)) {
-		user.setVisible(true);
-		view.addRosterItem(user, createMenuItemList(item));
-	    } else {
-		user.setVisible(false);
-	    }
-	    rosterMap.put(user.getURI(), user);
+	    addRosterItem(item);
 	}
     }
 

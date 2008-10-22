@@ -17,26 +17,26 @@ public abstract class AbstractChatManagerTest {
 
     @Before
     public void beforeTests() {
-	session = new MockedSession();
-	manager = createChatManager();
-	session.login(MYSELF, null);
+        session = new MockedSession();
+        manager = createChatManager();
+        session.login(MYSELF, null);
     }
 
     @Test
     public void shouldEventWhenAChatIsClosed() {
-	final Conversation conversation = manager.openChat(uri("other@domain/resource"), null, null);
-	final MockListener<Conversation> listener = new MockListener<Conversation>();
-	manager.onChatClosed(listener);
-	manager.close(conversation);
-	assertTrue(listener.isCalledOnce());
+        final Conversation conversation = manager.openChat(uri("other@domain/resource"), null, null);
+        final MockListener<Conversation> listener = new MockListener<Conversation>();
+        manager.onChatClosed(listener);
+        manager.close(conversation);
+        assertTrue(listener.isCalledOnce());
     }
 
     @Test
     public void shouldEventWhenChatCreated() {
-	final MockListener<Conversation> listener = new MockListener<Conversation>();
-	manager.onChatCreated(listener);
-	manager.openChat(uri("other@domain"), null, null);
-	assertTrue(listener.isCalledOnce());
+        final MockListener<Conversation> listener = new MockListener<Conversation>();
+        manager.onChatCreated(listener);
+        manager.openChat(uri("other@domain"), null, null);
+        assertTrue(listener.isCalledOnce());
     }
 
     protected abstract ChatManagerImpl createChatManager();
