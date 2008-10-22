@@ -36,48 +36,49 @@ import com.gwtext.client.widgets.form.Label;
 public class EmiteDemoUI {
 
     public static interface EmiteDemoChatIconListener {
-        void onClick();
+	void onClick();
     }
 
     private final DemoParameters params;
 
     public EmiteDemoUI(final DemoParameters params) {
-        this.params = params;
+	this.params = params;
     }
 
     public void createChatIcon(final EmiteDemoChatIconListener listener) {
-        PushButton icon = new PushButton(new Image("images/e-icon.gif"), new ClickListener() {
-            public void onClick(Widget arg0) {
-                listener.onClick();
-            }
-        });
-        RootPanel.get().add(icon, 320, 15);
+	PushButton icon = new PushButton(new Image("images/e-icon.gif"), new ClickListener() {
+	    public void onClick(Widget arg0) {
+		listener.onClick();
+	    }
+	});
+	icon.setTitle("Click to show/hide dialog");
+	RootPanel.get().add(icon, 320, 15);
     }
 
     public void createInfoPanel() {
-        final String info = params.getInfo("info not found");
-        if (info.length() > 0) {
-            final Panel infoPanel = new Panel();
-            infoPanel.setHeader(false);
-            infoPanel.setClosable(false);
-            infoPanel.setBorder(false);
-            infoPanel.setPaddings(15);
-            final FormPanel formPanel = new FormPanel();
-            formPanel.setFrame(true);
-            formPanel.setTitle("Info", "info-icon");
-            formPanel.setWidth(320);
-            final Label infoLabel = new Label();
-            infoLabel.setHtml(TextUtils.unescape(info));
-            formPanel.add(infoLabel);
-            infoPanel.add(formPanel);
-            RootPanel.get().add(infoPanel);
-        }
+	final String info = params.getInfo("info not found");
+	if (info.length() > 0) {
+	    final Panel infoPanel = new Panel();
+	    infoPanel.setHeader(false);
+	    infoPanel.setClosable(false);
+	    infoPanel.setBorder(false);
+	    infoPanel.setPaddings(15);
+	    final FormPanel formPanel = new FormPanel();
+	    formPanel.setFrame(true);
+	    formPanel.setTitle("Info", "info-icon");
+	    formPanel.setWidth(320);
+	    final Label infoLabel = new Label();
+	    infoLabel.setHtml(TextUtils.unescape(info));
+	    formPanel.add(infoLabel);
+	    infoPanel.add(formPanel);
+	    RootPanel.get().add(infoPanel);
+	}
     }
 
     public EmiteDemoLoginPanel createLoginPanel(final LoginPanelListener loginPanelListener) {
-        final EmiteDemoLoginPanel emiteDemoLoginPanel = new EmiteDemoLoginPanel(loginPanelListener);
-        emiteDemoLoginPanel.setInitalData(params.getJID(), params.getPassword(), params.getRelease());
-        return emiteDemoLoginPanel;
+	final EmiteDemoLoginPanel emiteDemoLoginPanel = new EmiteDemoLoginPanel(loginPanelListener);
+	emiteDemoLoginPanel.setInitalData(params.getJID(), params.getPassword(), params.getRelease());
+	return emiteDemoLoginPanel;
     }
 
 }

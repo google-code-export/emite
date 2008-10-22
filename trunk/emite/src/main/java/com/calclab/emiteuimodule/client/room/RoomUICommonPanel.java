@@ -43,9 +43,12 @@ public class RoomUICommonPanel implements RoomUICommonPanelView {
     }
 
     public void roomJoinConfirm(final XmppURI invitor, final XmppURI roomURI, final String reason) {
-	MessageBox.confirm(i18n.t("Join to chat room [%s]?", roomURI.getJID().toString()), i18n.t(
-		"[%s] are inviting you to join this room: ", invitor.getJID().toString())
-		+ TextUtils.escape(reason), new MessageBox.ConfirmCallback() {
+	XmppURI jid = invitor == null ? null : invitor.getJID();
+	String escape = TextUtils.escape(reason);
+	MessageBox.confirm(i18n.t("Join to chat room [%s]?", roomURI.getJID().toString()), (jid != null ? i18n.t(
+		"[%s] are inviting you to join this room: ", jid.toString()) : i18n
+		.t("Someone are inviting you to join this room: "))
+		+ (escape == null ? "" : escape), new MessageBox.ConfirmCallback() {
 	    public void execute(final String btnID) {
 		if (btnID.equals("yes")) {
 		    DeferredCommand.addCommand(new Command() {
