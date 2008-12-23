@@ -1,66 +1,10 @@
 #summary How to make TDD with emite, and how to do some specific tests
 #labels Phase-Implementation
 
-_*This is only a draft!*_
-
 == Basic Tests ==
 
-TODO
+Most of the emite lib is developed with test, then a good start is to see other tests like PresenceManagerTest.
 
-== Testing of signals/slots ==
+== Testing of listeners/events ==
 
-Two technics. Imagine this two classes:
-
-Class A to test (with a signal):
-
-{{{
-class A {
-  void onMyActionSlot (slot) { this.onEvent.add(slot); }
-  void myAction() { ... this.onEvent.fire(...) }
-  ...
-}
-}}}
-
-Class B to a slot that listen to Class A events:
-
-{{{
-class B {
-  public B(A a) {
-    a.onEvent(new Slot() { // slot code ... } }
- }
- ...
-}
-}}}
-
-Things to test:
-
-1. The signal is fired when myAction is called (very easy):
-
-{{{
-a = new A();
-slot = mock(Slot.class);
-a.onMyAction(slot);
-a.myAction();
-verify(slot, times(1)).onEvent(anyObject());
-}}}
-
-2. Test what happens in B when A fire the signal. A little bit more tricky. We use stubs. The first is to test that B is using the signal:
-
-{{{
-a = mock(A.class);
-signal = new SignalTester();
-b = new B(a);
-verify(a).onMyAction(argThat(signal));
-}}}
-
-With this, we are verifying that
-  * a.onMyaction is executed
-  * argThat(signal) has two goals:
-    # be sure that the slot is sended
-    # Catch the slot: after the verification is made when can do something like:
-
-{{{
-signal.fire(...);
-}}}
-
-and test the slot code in B.
+See [http://code.google.com/p/suco/wiki/TestingSucoEventsExample Testing Suco Events].
