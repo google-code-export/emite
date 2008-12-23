@@ -11,7 +11,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Conversation.State;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.testing.events.MockedListener;
 
 public class ChatTest extends AbstractChatTest {
     private static final XmppURI CHAT_URI = uri("other@domain/other");
@@ -38,7 +38,7 @@ public class ChatTest extends AbstractChatTest {
 
     @Test
     public void shouldLockIfLogout() {
-	final MockListener<State> listener = new MockListener<State>();
+	final MockedListener<State> listener = new MockedListener<State>();
 	chat.onStateChanged(listener);
 	session.logout();
 	session.login(USER_URI, "");
@@ -55,7 +55,7 @@ public class ChatTest extends AbstractChatTest {
 
     @Test
     public void shouldReceiveMessages() {
-	final MockListener<Message> messageReceived = new MockListener<Message>();
+	final MockedListener<Message> messageReceived = new MockedListener<Message>();
 	chat.onMessageReceived(messageReceived);
 	session.receives(new Message(CHAT_URI, USER_URI, "the body"));
 	assertTrue("should receive messages", messageReceived.isCalled(1));

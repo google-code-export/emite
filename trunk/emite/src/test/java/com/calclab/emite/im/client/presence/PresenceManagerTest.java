@@ -1,15 +1,14 @@
 package com.calclab.emite.im.client.presence;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.suco.testing.events.Eventito.anyListener;
+import static com.calclab.suco.testing.events.Eventito.fire;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,23 +18,19 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.listener.EventTester;
-import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.testing.events.MockedListener;
 
 public class PresenceManagerTest {
 
     private PresenceManager manager;
     private MockedSession session;
     private Roster roster;
-    private EventTester<Collection<RosterItem>> onRosterReady;
 
     @Before
     public void beforeTest() {
 	session = new MockedSession();
 	roster = mock(Roster.class);
-	onRosterReady = new EventTester<Collection<RosterItem>>();
 	manager = new PresenceManagerImpl(session, roster);
-	verify(roster).onRosterRetrieved(argThat(onRosterReady));
     }
 
     @Test
@@ -51,7 +46,7 @@ public class PresenceManagerTest {
     @Test
     public void shouldEventOwnPresence() {
 	session.setLoggedIn(uri("myself@domain"));
-	final MockListener<Presence> listener = new MockListener<Presence>();
+	final MockedListener<Presence> listener = new MockedListener<Presence>();
 	manager.onOwnPresenceChanged(listener);
 	manager.setOwnPresence(Presence.build("status", Show.away));
 	assertTrue(listener.isCalledOnce());
@@ -71,10 +66,12 @@ public class PresenceManagerTest {
 	session.verifySent("<presence from='myself@domain' type='unavailable' />");
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldSendInitialPresenceAfterRosterReady() {
 	session.setLoggedIn(uri("myself@domain"));
-	onRosterReady.fire(new ArrayList<RosterItem>());
+
+	fire(new ArrayList<RosterItem>()).when(roster).onRosterRetrieved(anyListener());
 	session.verifySent("<presence from='myself@domain'></presence>");
     }
 

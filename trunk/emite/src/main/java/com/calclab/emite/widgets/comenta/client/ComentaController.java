@@ -8,7 +8,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.Conversation.State;
 import com.calclab.emite.xep.muc.client.RoomManager;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Listener;
 
 public class ComentaController {
     private static final String CONSONANTES = "bcdfghjklmnpqrstwxyz";

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.packet.IPacket;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Listener;
 
 /**
  * Handles IQ listeners and generates uniqe ids based on category strings. Used

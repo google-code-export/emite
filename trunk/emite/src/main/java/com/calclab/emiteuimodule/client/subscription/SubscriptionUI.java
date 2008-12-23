@@ -1,7 +1,7 @@
 package com.calclab.emiteuimodule.client.subscription;
 
 import com.calclab.emiteuimodule.client.SubscriptionMode;
-import com.calclab.suco.client.listener.Listener0;
+import com.calclab.suco.client.events.Listener0;
 
 public interface SubscriptionUI {
 

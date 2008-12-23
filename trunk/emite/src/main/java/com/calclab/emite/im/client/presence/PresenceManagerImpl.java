@@ -9,8 +9,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.suco.client.listener.Event;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Event;
+import com.calclab.suco.client.events.Listener;
 import com.calclab.suco.client.log.Logger;
 
 public class PresenceManagerImpl implements PresenceManager {

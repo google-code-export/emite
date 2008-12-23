@@ -1,12 +1,13 @@
 package com.calclab.emite.im.client.roster;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.suco.testing.events.Eventito.anyListener;
+import static com.calclab.suco.testing.events.Eventito.fire;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +15,7 @@ import org.junit.Test;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.listener.EventTester;
-import com.calclab.suco.testing.listener.MockListener2;
+import com.calclab.suco.testing.events.MockedListener2;
 
 public class SubscriptionManagerTests {
 
@@ -23,16 +23,17 @@ public class SubscriptionManagerTests {
     private SubscriptionManager manager;
     private Roster roster;
 
+    @SuppressWarnings("unchecked")
     @Test
     public void addRosterStep1_shouldSendSubscriptionRequestOnNewRosterItem() {
-	final EventTester<RosterItem> event = new EventTester<RosterItem>();
-	verify(roster).onItemAdded(argThat(event));
 
 	// only NONE subscription
-	event.fire(new RosterItem(uri("name@domain"), SubscriptionState.both, "TheName", null));
+	fire(new RosterItem(uri("name@domain"), SubscriptionState.both, "TheName", null)).when(roster).onItemAdded(
+		anyListener());
 	session.verifyNotSent("<presence />");
 
-	event.fire(new RosterItem(uri("name@domain"), SubscriptionState.none, "TheName", Type.subscribe));
+	fire(new RosterItem(uri("name@domain"), SubscriptionState.none, "TheName", Type.subscribe)).when(roster)
+		.onItemAdded(anyListener());
 	session.verifySent("<presence from='user@local' to='name@domain' type='subscribe'/>");
     }
 
@@ -47,7 +48,7 @@ public class SubscriptionManagerTests {
     @Test
     public void shouldApproveSubscriptionRequestsAndAddItemToTheRosterIfNotThere() {
 	final XmppURI otherEntityJID = XmppURI.jid("other@domain");
-	stub(roster.getItemByJID(eq(otherEntityJID))).toReturn(null);
+	when(roster.getItemByJID(eq(otherEntityJID))).thenReturn(null);
 
 	manager.approveSubscriptionRequest(otherEntityJID, "nick");
 	verify(roster).addItem(eq(otherEntityJID), eq("nick"));
@@ -63,7 +64,7 @@ public class SubscriptionManagerTests {
 
     @Test
     public void shouldFireSubscriptionRequests() {
-	final MockListener2<XmppURI, String> listener = new MockListener2<XmppURI, String>();
+	final MockedListener2<XmppURI, String> listener = new MockedListener2<XmppURI, String>();
 	manager.onSubscriptionRequested(listener);
 	session.receives("<presence to='user@local' from='friend@domain' type='subscribe' />");
 	assertEquals(1, listener.getCalledTimes());

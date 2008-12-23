@@ -17,7 +17,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.testing.events.MockedListener;
 
 public class RosterTests {
 
@@ -34,7 +34,7 @@ public class RosterTests {
 
     @Test
     public void addRosterStep2_shouldAddItemFireListenerAndSendResponse() {
-	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
+	final MockedListener<RosterItem> listener = new MockedListener<RosterItem>();
 	roster.onItemAdded(listener);
 
 	session.receives("<iq type='set' from='someone@domain' id='theId'><query xmlns='jabber:iq:roster'>"
@@ -67,7 +67,7 @@ public class RosterTests {
 
     @Test
     public void shouldFireEventOnlyWhenRosterReady() {
-	final MockListener<Collection<RosterItem>> listener = new MockListener<Collection<RosterItem>>();
+	final MockedListener<Collection<RosterItem>> listener = new MockedListener<Collection<RosterItem>>();
 	roster.onRosterRetrieved(listener);
 
 	shouldRequestRosterOnLogin();
@@ -77,7 +77,7 @@ public class RosterTests {
 
     @Test
     public void shouldFireEventWhenRosterReady() {
-	final MockListener<Collection<RosterItem>> listener = new MockListener<Collection<RosterItem>>();
+	final MockedListener<Collection<RosterItem>> listener = new MockedListener<Collection<RosterItem>>();
 	roster.onRosterRetrieved(listener);
 
 	shouldRequestRosterOnLogin();
@@ -87,7 +87,7 @@ public class RosterTests {
 
     @Test
     public void shouldHandleInitialPresence() {
-	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
+	final MockedListener<RosterItem> listener = new MockedListener<RosterItem>();
 	roster.onItemChanged(listener);
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='MyFriend' /></query></iq>");
@@ -102,7 +102,7 @@ public class RosterTests {
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='MyFriend' /></query></iq>");
 
-	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
+	final MockedListener<RosterItem> listener = new MockedListener<RosterItem>();
 	roster.onItemChanged(listener);
 	session.receives("<presence from='friend@domain'>"
 		+ "<show>dnd</show><status>message</status><priority>3</priority></presence>");
@@ -115,7 +115,7 @@ public class RosterTests {
 
     @Test
     public void shouldRemoveItems() {
-	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
+	final MockedListener<RosterItem> listener = new MockedListener<RosterItem>();
 	roster.onItemRemoved(listener);
 
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
@@ -196,7 +196,7 @@ public class RosterTests {
 
     @Test
     public void shouldUpdateItem() {
-	final MockListener<RosterItem> listener = new MockListener<RosterItem>();
+	final MockedListener<RosterItem> listener = new MockedListener<RosterItem>();
 	roster.onItemChanged(listener);
 
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"

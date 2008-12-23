@@ -1,8 +1,8 @@
 package com.calclab.emite.widgets.client.login;
 
 import com.calclab.emite.widgets.client.base.EmiteWidget;
-import com.calclab.suco.client.listener.Event0;
-import com.calclab.suco.client.listener.Event2;
+import com.calclab.suco.client.events.Event0;
+import com.calclab.suco.client.events.Event2;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;

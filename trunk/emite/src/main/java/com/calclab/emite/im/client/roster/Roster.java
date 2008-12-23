@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Listener;
 
 /**
  * Implements Roster management.

@@ -29,8 +29,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Message.Type;
 import com.calclab.emite.im.client.chat.Conversation.State;
-import com.calclab.suco.client.listener.Event;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Event;
+import com.calclab.suco.client.events.Listener;
 
 /**
  * Default ChatManager implementation. Use ChatManager interface instead

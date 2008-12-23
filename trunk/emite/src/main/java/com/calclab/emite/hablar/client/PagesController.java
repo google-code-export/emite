@@ -6,8 +6,8 @@ import com.calclab.emite.hablar.client.pages.ConversationController;
 import com.calclab.emite.hablar.client.pages.ConversationPage;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.Conversation;
-import com.calclab.suco.client.listener.Listener;
-import com.calclab.suco.client.listener.Listener0;
+import com.calclab.suco.client.events.Listener;
+import com.calclab.suco.client.events.Listener0;
 
 public class PagesController {
     public PagesController(final Session session, final ChatManager chatManager, final PagesContainer view) {

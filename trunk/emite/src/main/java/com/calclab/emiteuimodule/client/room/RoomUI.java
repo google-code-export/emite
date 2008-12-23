@@ -26,8 +26,8 @@ import java.util.Collection;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.xep.muc.client.Occupant;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
-import com.calclab.suco.client.listener.Listener;
-import com.calclab.suco.client.listener.Listener2;
+import com.calclab.suco.client.events.Listener;
+import com.calclab.suco.client.events.Listener2;
 
 public interface RoomUI extends ChatUI {
 

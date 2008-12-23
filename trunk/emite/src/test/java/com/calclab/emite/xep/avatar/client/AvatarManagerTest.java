@@ -10,8 +10,8 @@ import org.mockito.Mockito;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.client.listener.Listener;
-import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.client.events.Listener;
+import com.calclab.suco.testing.events.MockedListener;
 
 public class AvatarManagerTest {
     private AvatarManager avatarManager;
@@ -49,7 +49,7 @@ public class AvatarManagerTest {
 
     @Test
     public void verifySendVcardRequest() {
-	final MockListener<AvatarVCard> listener = new MockListener<AvatarVCard>();
+	final MockedListener<AvatarVCard> listener = new MockedListener<AvatarVCard>();
 	avatarManager.onVCardReceived(listener);
 
 	session.setLoggedIn(uri("romeo@montague.net/orchard"));

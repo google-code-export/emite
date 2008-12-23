@@ -11,14 +11,14 @@ import com.calclab.emite.im.client.chat.ChatManagerImpl;
 import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager.ChatState;
-import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.testing.events.MockedListener;
 
 public class ChatStateManagerTest {
     private static final XmppURI MYSELF = uri("self@domain/res");
     private static final XmppURI OTHER = uri("other@domain/other");
 
     private ChatManagerImpl chatManager;
-    private MockListener<ChatState> stateListener;
+    private MockedListener<ChatState> stateListener;
     private Conversation conversation;
     private ChatStateManager chatStateManager;
     private MockedSession session;
@@ -31,7 +31,7 @@ public class ChatStateManagerTest {
         final StateManager stateManager = new StateManager(chatManager);
         conversation = chatManager.openChat(OTHER, null, null);
         chatStateManager = stateManager.getChatState(conversation);
-        stateListener = new MockListener<ChatState>();
+        stateListener = new MockedListener<ChatState>();
         chatStateManager.onChatStateChanged(stateListener);
     }
 

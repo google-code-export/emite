@@ -40,8 +40,8 @@ import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
 import com.calclab.emiteuimodule.client.subscription.SubscriptionUI;
 import com.calclab.suco.client.ioc.Provider;
-import com.calclab.suco.client.listener.Event;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Event;
+import com.calclab.suco.client.events.Listener;
 
 public class StatusUIPresenter implements StatusUI {
 

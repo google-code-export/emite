@@ -9,7 +9,7 @@ import com.calclab.emite.widgets.client.room.RoomPresenceWidget.OccupantPanel;
 import com.calclab.emite.xep.muc.client.Occupant;
 import com.calclab.emite.xep.muc.client.Room;
 import com.calclab.emite.xep.muc.client.RoomManager;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Listener;
 
 public class RoomPresenceController {
 

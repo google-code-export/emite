@@ -9,18 +9,18 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.bosh.ConnectionTestHelper;
 import com.calclab.emite.core.client.packet.Packet;
-import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.testing.events.MockedListener;
 
 public class SASLManagerTest {
     private SASLManager manager;
-    private MockListener<AuthorizationTransaction> listener;
+    private MockedListener<AuthorizationTransaction> listener;
     private ConnectionTestHelper helper;
 
     @Before
     public void beforeTests() {
 	helper = new ConnectionTestHelper();
 	manager = new SASLManager(helper.getConnection());
-	listener = new MockListener<AuthorizationTransaction>();
+	listener = new MockedListener<AuthorizationTransaction>();
 	manager.onAuthorized(listener);
     }
 

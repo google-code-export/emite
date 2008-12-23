@@ -18,8 +18,8 @@ import com.calclab.emite.im.client.chat.AbstractChatTest;
 import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.Conversation.State;
 import com.calclab.emite.testing.MockedSession;
-import com.calclab.suco.testing.listener.MockListener;
-import com.calclab.suco.testing.listener.MockListener2;
+import com.calclab.suco.testing.events.MockedListener;
+import com.calclab.suco.testing.events.MockedListener2;
 
 public class RoomTest extends AbstractChatTest {
 
@@ -43,7 +43,7 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldAddOccupantAndFireListeners() {
-	final MockListener<Collection<Occupant>> listener = new MockListener<Collection<Occupant>>();
+	final MockedListener<Collection<Occupant>> listener = new MockedListener<Collection<Occupant>>();
 	room.onOccupantsChanged(listener);
 	final XmppURI uri = uri("room@domain/name");
 	final Occupant occupant = room.setOccupantPresence(uri, "aff", "role");
@@ -61,7 +61,7 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldCreateInstantRooms() {
-	final MockListener<State> stateChanged = new MockListener<Conversation.State>();
+	final MockedListener<State> stateChanged = new MockedListener<Conversation.State>();
 	room.onStateChanged(stateChanged);
 	openInstantRoom(roomURI);
 	assertTrue(stateChanged.isCalledOnce());
@@ -77,7 +77,7 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldFireListenersWhenMessage() {
-	final MockListener<Message> listener = new MockListener<Message>();
+	final MockedListener<Message> listener = new MockedListener<Message>();
 	room.onMessageReceived(listener);
 	final Message message = new Message(uri("someone@domain/res"), uri("room@domain"), "message");
 	room.receive(message);
@@ -86,9 +86,9 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldFireListenersWhenSubjectChange() {
-	final MockListener<Message> messageListener = new MockListener<Message>();
+	final MockedListener<Message> messageListener = new MockedListener<Message>();
 	room.onMessageReceived(messageListener);
-	final MockListener2<Occupant, String> subjectListener = new MockListener2<Occupant, String>();
+	final MockedListener2<Occupant, String> subjectListener = new MockedListener2<Occupant, String>();
 	room.onSubjectChanged(subjectListener);
 
 	final XmppURI occupantURI = uri("someone@domain/res");
@@ -101,7 +101,7 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldRemoveOccupant() {
-	final MockListener<Collection<Occupant>> listener = new MockListener<Collection<Occupant>>();
+	final MockedListener<Collection<Occupant>> listener = new MockedListener<Collection<Occupant>>();
 	room.onOccupantsChanged(listener);
 	final XmppURI uri = uri("room@domain/name");
 	room.setOccupantPresence(uri, "owner", "participant");
@@ -127,7 +127,7 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldUpdateOccupantAndFireListeners() {
-	final MockListener<Occupant> listener = new MockListener<Occupant>();
+	final MockedListener<Occupant> listener = new MockedListener<Occupant>();
 	room.onOccupantModified(listener);
 	final XmppURI uri = uri("room@domain/name");
 	final Occupant occupant = room.setOccupantPresence(uri, "owner", "participant");

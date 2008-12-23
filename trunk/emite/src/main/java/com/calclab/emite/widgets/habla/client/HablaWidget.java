@@ -3,8 +3,8 @@ package com.calclab.emite.widgets.habla.client;
 import java.util.Map;
 
 import com.calclab.emite.browser.client.HasProperties;
-import com.calclab.suco.client.listener.Event;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Event;
+import com.calclab.suco.client.events.Listener;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.KeyboardListener;

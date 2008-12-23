@@ -34,10 +34,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.calclab.suco.client.listener.Event0;
-import com.calclab.suco.client.listener.Event2;
-import com.calclab.suco.client.listener.Listener0;
-import com.calclab.suco.client.listener.Listener2;
+import com.calclab.suco.client.events.Event0;
+import com.calclab.suco.client.events.Event2;
+import com.calclab.suco.client.events.Listener0;
+import com.calclab.suco.client.events.Listener2;
 
 @SuppressWarnings("serial")
 public class AddRosterItemPanel extends JPanel {
