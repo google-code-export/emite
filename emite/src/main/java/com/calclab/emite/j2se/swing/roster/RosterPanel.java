@@ -37,11 +37,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.suco.client.listener.Event;
-import com.calclab.suco.client.listener.Event2;
-import com.calclab.suco.client.listener.Listener;
-import com.calclab.suco.client.listener.Listener0;
-import com.calclab.suco.client.listener.Listener2;
+import com.calclab.suco.client.events.Event;
+import com.calclab.suco.client.events.Event2;
+import com.calclab.suco.client.events.Listener;
+import com.calclab.suco.client.events.Listener0;
+import com.calclab.suco.client.events.Listener2;
 
 @SuppressWarnings("serial")
 public class RosterPanel extends JPanel {

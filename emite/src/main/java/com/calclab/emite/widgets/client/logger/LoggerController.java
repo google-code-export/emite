@@ -3,8 +3,8 @@ package com.calclab.emite.widgets.client.logger;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.packet.IPacket;
-import com.calclab.suco.client.listener.Listener;
-import com.calclab.suco.client.listener.Listener0;
+import com.calclab.suco.client.events.Listener;
+import com.calclab.suco.client.events.Listener0;
 
 public class LoggerController {
     private final Connection connection;

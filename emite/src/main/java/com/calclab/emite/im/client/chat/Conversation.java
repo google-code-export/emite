@@ -23,7 +23,7 @@ package com.calclab.emite.im.client.chat;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Listener;
 
 /**
  * Defines a xmpp conversation.

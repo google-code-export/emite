@@ -2,7 +2,7 @@ package com.calclab.examples.emite.echo.client;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Listener;
 
 /**
  * Echo respond to any incoming message with the same message body.

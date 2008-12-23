@@ -34,8 +34,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Stanza;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManagerImpl;
-import com.calclab.suco.client.listener.Event;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Event;
+import com.calclab.suco.client.events.Listener;
 
 public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
     private static final PacketMatcher FILTER_X = MatcherFactory.byNameAndXMLNS("x",

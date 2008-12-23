@@ -11,12 +11,12 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager.ChatState;
-import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.testing.events.MockedListener;
 
 public class ChatStateTest {
     private static final XmppURI MYSELF = uri("self@domain/res");
     private static final XmppURI OTHER = uri("other@domain/otherRes");
-    private MockListener<ChatState> stateListener;
+    private MockedListener<ChatState> stateListener;
     private Chat chat;
     private ChatStateManager chatStateManager;
 
@@ -24,7 +24,7 @@ public class ChatStateTest {
     public void aaCreate() {
 	chat = Mockito.mock(Chat.class);
 	chatStateManager = new ChatStateManager(chat);
-	stateListener = new MockListener<ChatState>();
+	stateListener = new MockedListener<ChatState>();
 	chatStateManager.onChatStateChanged(stateListener);
     }
 

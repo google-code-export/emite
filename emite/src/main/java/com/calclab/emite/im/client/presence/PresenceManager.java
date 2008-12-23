@@ -22,7 +22,7 @@
 package com.calclab.emite.im.client.presence;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Listener;
 
 public interface PresenceManager {
     Presence getOwnPresence();

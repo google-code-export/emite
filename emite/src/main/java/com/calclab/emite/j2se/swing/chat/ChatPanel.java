@@ -31,10 +31,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.calclab.suco.client.listener.Event;
-import com.calclab.suco.client.listener.Event0;
-import com.calclab.suco.client.listener.Listener;
-import com.calclab.suco.client.listener.Listener0;
+import com.calclab.suco.client.events.Event;
+import com.calclab.suco.client.events.Event0;
+import com.calclab.suco.client.events.Listener;
+import com.calclab.suco.client.events.Listener0;
 
 @SuppressWarnings("serial")
 public class ChatPanel extends JPanel {

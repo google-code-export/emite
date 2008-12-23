@@ -41,7 +41,7 @@
     <dependency>
       <groupId>com.calclab</groupId>
       <artifactId>suco</artifactId>
-      <version>0.5.13</version>
+      <version>0.5.2</version>
     </dependency>
     <dependency>
       <groupId>com.allen_sauer.gwt.log.gwt-log
@@ -90,12 +90,11 @@
         <scope>test</scope>
       -->
     </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.2</version>
-      <scope>test</scope>
-    </dependency>
+    <!-- suco already have this
+      <dependency> <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId> <version>1.2</version>
+      <scope>test</scope> </dependency>
+    -->
     <dependency>
       <groupId>org.openqa.selenium.client-drivers</groupId>
       <artifactId>selenium-java-client-driver</artifactId>
@@ -157,7 +156,7 @@
         </gwt.compile>
       </properties>
     </profile>
-     <profile>
+    <profile>
       <id>hablar</id>
       <properties>
         <gwt.run>com.calclab.emite.hablar.Hablar/Hablar.html?log_level=DEBUG

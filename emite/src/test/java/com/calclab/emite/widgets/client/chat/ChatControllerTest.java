@@ -1,9 +1,11 @@
 package com.calclab.emite.widgets.client.chat;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.suco.testing.events.Eventito.anyListener;
+import static com.calclab.suco.testing.events.Eventito.fire;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -12,10 +14,9 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.suco.client.listener.Listener;
-import com.calclab.suco.testing.listener.EventTester;
+import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.suco.client.events.Listener;
 
 @SuppressWarnings("unchecked")
 public class ChatControllerTest extends AbstractChatControllerTest {
@@ -37,7 +38,7 @@ public class ChatControllerTest extends AbstractChatControllerTest {
     public void shouldAttacheToOwnChat() {
 	final Conversation conversation = createMockChat("user@domain/resource");
 	controller.setChatJID("user@domain");
-	mockOnChatCreated().fire(conversation);
+	mockOnChatCreated(conversation);
 	verify(conversation, times(1)).onMessageReceived((Listener<Message>) anyObject());
     }
 
@@ -45,20 +46,18 @@ public class ChatControllerTest extends AbstractChatControllerTest {
     public void shouldNotAttachToAnyChat() {
 	final Conversation conversation = createMockChat("admin@domain");
 	controller.setChatJID("user@domain");
-	mockOnChatCreated().fire(conversation);
+	mockOnChatCreated(conversation);
 	verify(conversation, times(0)).onMessageReceived((Listener<Message>) anyObject());
     }
 
     private Conversation createMockChat(final String chatURI) {
 	final Conversation conversation = mock(Conversation.class);
-	stub(conversation.getURI()).toReturn(uri(chatURI));
+	when(conversation.getURI()).thenReturn(uri(chatURI));
 	return conversation;
     }
 
-    private EventTester<Conversation> mockOnChatCreated() {
-	final EventTester<Conversation> tester = new EventTester<Conversation>();
-	tester.mock(manager).onChatCreated(tester.getListener());
-	return tester;
+    private void mockOnChatCreated(final Conversation conversation) {
+	fire(conversation).when(manager).onChatCreated(anyListener());
     }
 
 }

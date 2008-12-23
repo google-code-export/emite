@@ -5,9 +5,9 @@ import org.ourproject.kune.platf.client.View;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.roster.SubscriptionManager;
 import com.calclab.emiteuimodule.client.SubscriptionMode;
-import com.calclab.suco.client.listener.Event0;
-import com.calclab.suco.client.listener.Listener0;
-import com.calclab.suco.client.listener.Listener2;
+import com.calclab.suco.client.events.Event0;
+import com.calclab.suco.client.events.Listener0;
+import com.calclab.suco.client.events.Listener2;
 
 public class SubscriptionUIPresenter implements SubscriptionUI {
 

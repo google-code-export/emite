@@ -22,7 +22,7 @@
 package com.calclab.emite.xep.muc.client;
 
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Listener;
 
 /**
  * RoomManager

@@ -9,9 +9,9 @@ import com.calclab.emite.core.client.services.ConnectorCallback;
 import com.calclab.emite.core.client.services.ConnectorException;
 import com.calclab.emite.core.client.services.ScheduledAction;
 import com.calclab.emite.core.client.services.Services;
-import com.calclab.suco.client.listener.Event;
-import com.calclab.suco.client.listener.Event0;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Event;
+import com.calclab.suco.client.events.Event0;
+import com.calclab.suco.client.events.Listener;
 import com.calclab.suco.client.log.Logger;
 
 public class BoshConnection implements Connection {

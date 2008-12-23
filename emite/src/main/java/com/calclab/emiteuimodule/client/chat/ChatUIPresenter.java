@@ -27,8 +27,8 @@ import org.ourproject.kune.platf.client.View;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.utils.ChatIconDescriptor;
-import com.calclab.suco.client.listener.Event;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Event;
+import com.calclab.suco.client.events.Listener;
 
 public class ChatUIPresenter implements ChatUI {
 

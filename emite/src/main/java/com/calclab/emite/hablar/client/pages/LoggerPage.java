@@ -1,7 +1,7 @@
 package com.calclab.emite.hablar.client.pages;
 
-import com.calclab.suco.client.listener.Event0;
-import com.calclab.suco.client.listener.Listener0;
+import com.calclab.suco.client.events.Event0;
+import com.calclab.suco.client.events.Listener0;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;

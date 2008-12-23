@@ -8,13 +8,13 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.im.client.chat.Conversation.State;
-import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.testing.events.MockedListener;
 
 public class ChatManagerTest extends AbstractChatManagerTest {
 
     @Test
     public void managerShouldCreateOneChatForSameResource() {
-	final MockListener<Conversation> listener = addOnChatCreatedListener();
+	final MockedListener<Conversation> listener = addOnChatCreatedListener();
 	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 1"));
 	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
 	assertTrue(listener.isCalledOnce());
@@ -36,7 +36,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldCloseChatWhenLoggedOut() {
 	final Conversation conversation = manager.openChat(uri("name@domain/resouce"), null, null);
-	final MockListener<State> listener = new MockListener<State>();
+	final MockedListener<State> listener = new MockedListener<State>();
 	conversation.onStateChanged(listener);
 	session.logout();
 	assertTrue(listener.isCalledWithEquals(State.locked));
@@ -45,7 +45,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldEventIncommingMessages() {
 	final Conversation conversation = manager.openChat(uri("someone@domain"), null, null);
-	final MockListener<Message> listener = new MockListener<Message>();
+	final MockedListener<Message> listener = new MockedListener<Message>();
 	conversation.onMessageReceived(listener);
 	session.receives("<message type='chat' id='purplee8b92642' to='user@domain' "
 		+ "from='someone@domain'><x xmlns='jabber:x:event'/><active"
@@ -55,7 +55,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 
     @Test
     public void shouldReuseChatIfNotResouceSpecified() {
-	final MockListener<Conversation> listener = addOnChatCreatedListener();
+	final MockedListener<Conversation> listener = addOnChatCreatedListener();
 	session.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
 	session.receives(new Message(uri("source@domain/resource1"), MYSELF, "message 2"));
 	assertTrue(listener.isCalled(2));
@@ -63,7 +63,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 
     @Test
     public void shouldUseSameRoomWhenAnswering() {
-	final MockListener<Conversation> listener = addOnChatCreatedListener();
+	final MockedListener<Conversation> listener = addOnChatCreatedListener();
 	final Conversation conversation = manager.openChat(uri("someone@domain"), null, null);
 	assertTrue(listener.isCalledOnce());
 	assertTrue(listener.isCalledWithSame(conversation));
@@ -77,8 +77,8 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	return chatManagerDefault;
     }
 
-    private MockListener<Conversation> addOnChatCreatedListener() {
-	final MockListener<Conversation> listener = new MockListener<Conversation>();
+    private MockedListener<Conversation> addOnChatCreatedListener() {
+	final MockedListener<Conversation> listener = new MockedListener<Conversation>();
 	manager.onChatCreated(listener);
 	return listener;
     }

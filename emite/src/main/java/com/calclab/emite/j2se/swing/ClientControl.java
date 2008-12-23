@@ -2,7 +2,7 @@ package com.calclab.emite.j2se.swing;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Listener;
 
 public class ClientControl {
     public ClientControl(final Session session, final ClientPanel clientPanel) {

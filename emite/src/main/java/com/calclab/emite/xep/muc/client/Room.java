@@ -37,10 +37,10 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.chat.AbstractConversation;
 import com.calclab.emite.im.client.chat.Conversation;
-import com.calclab.suco.client.listener.Event;
-import com.calclab.suco.client.listener.Event2;
-import com.calclab.suco.client.listener.Listener;
-import com.calclab.suco.client.listener.Listener2;
+import com.calclab.suco.client.events.Event;
+import com.calclab.suco.client.events.Event2;
+import com.calclab.suco.client.events.Listener;
+import com.calclab.suco.client.events.Listener2;
 
 /**
  * A Room implementation. You can create rooms using RoomManager

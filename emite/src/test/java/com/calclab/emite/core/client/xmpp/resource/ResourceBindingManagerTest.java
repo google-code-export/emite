@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.calclab.emite.core.client.bosh.ConnectionTestHelper;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.testing.events.MockedListener;
 
 public class ResourceBindingManagerTest {
     private ResourceBindingManager manager;
@@ -23,7 +23,7 @@ public class ResourceBindingManagerTest {
 
     @Test
     public void shouldEventIfBindedSucceed() {
-	final MockListener<XmppURI> onBindedListener = new MockListener<XmppURI>();
+	final MockedListener<XmppURI> onBindedListener = new MockedListener<XmppURI>();
 	manager.onBinded(onBindedListener);
 	helper.simulateReception("<iq type='result' id='bind-resource'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>"
 		+ "<jid>somenode@example.com/someresource</jid></bind></iq>");

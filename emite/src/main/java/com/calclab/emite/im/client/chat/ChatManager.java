@@ -24,7 +24,7 @@ package com.calclab.emite.im.client.chat;
 import java.util.Collection;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.listener.Listener;
+import com.calclab.suco.client.events.Listener;
 
 /**
  * The ChatManager takes care of creation of chats.

@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.calclab.emite.core.client.packet.IPacket;
-import com.calclab.suco.client.listener.Event0;
-import com.calclab.suco.client.listener.Listener0;
+import com.calclab.suco.client.events.Event0;
+import com.calclab.suco.client.events.Listener0;
 
 @SuppressWarnings("serial")
 public class LogPanel extends JPanel {

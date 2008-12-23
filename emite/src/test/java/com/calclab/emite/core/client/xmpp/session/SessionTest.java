@@ -1,11 +1,12 @@
 package com.calclab.emite.core.client.xmpp.session;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+import static com.calclab.suco.testing.events.Eventito.anyListener;
+import static com.calclab.suco.testing.events.Eventito.fire;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -25,9 +26,8 @@ import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.suco.client.listener.Listener;
-import com.calclab.suco.testing.listener.EventTester;
-import com.calclab.suco.testing.listener.MockListener;
+import com.calclab.suco.client.events.Listener;
+import com.calclab.suco.testing.events.MockedListener;
 
 public class SessionTest {
 
@@ -56,25 +56,23 @@ public class SessionTest {
 	verify(helper.connection).connect();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldEventMessages() {
-	final MockListener<Message> listener = new MockListener<Message>();
+	final MockedListener<Message> listener = new MockedListener<Message>();
 	session.onMessage(listener);
 
-	final EventTester<IPacket> onStanza = new EventTester<IPacket>();
-	verify(helper.connection).onStanzaReceived(argThat(onStanza));
-	onStanza.fire(new Packet("message"));
+	fire(new Packet("message")).when(helper.connection).onStanzaReceived(anyListener());
 	assertTrue(listener.isCalledOnce());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldEventPresences() {
-	final MockListener<Presence> listener = new MockListener<Presence>();
+	final MockedListener<Presence> listener = new MockedListener<Presence>();
 	session.onPresence(listener);
 
-	final EventTester<IPacket> onStanza = new EventTester<IPacket>();
-	verify(helper.connection).onStanzaReceived(argThat(onStanza));
-	onStanza.fire(new Packet("presence"));
+	fire(new Packet("presence")).when(helper.connection).onStanzaReceived(anyListener());
 	assertTrue(listener.isCalledOnce());
     }
 
@@ -87,21 +85,20 @@ public class SessionTest {
 	verify(listener).onEvent(same(Session.State.ready));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldHandleFailedAuthorizationResult() {
-	final EventTester<AuthorizationTransaction> onAuthorized = new EventTester<AuthorizationTransaction>();
-	verify(saslManager).onAuthorized(argThat(onAuthorized));
-	onAuthorized.fire(new AuthorizationTransaction(uri("node@domain"), "password",
-		AuthorizationTransaction.State.failed));
+	fire(new AuthorizationTransaction(uri("node@domain"), "password", AuthorizationTransaction.State.failed)).when(
+		saslManager).onAuthorized(anyListener());
 	verify(helper.connection).disconnect();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldHandleSucceedAuthorizationResult() {
-	final EventTester<AuthorizationTransaction> onAuthorized = new EventTester<AuthorizationTransaction>();
-	verify(saslManager).onAuthorized(argThat(onAuthorized));
-	onAuthorized.fire(new AuthorizationTransaction(uri("node@domain/resource"), "password",
-		AuthorizationTransaction.State.succeed));
+	fire(
+		new AuthorizationTransaction(uri("node@domain/resource"), "password",
+			AuthorizationTransaction.State.succeed)).when(saslManager).onAuthorized(anyListener());
 
 	assertEquals(Session.State.authorized, session.getState());
 	verify(helper.connection).restartStream();
@@ -111,7 +108,7 @@ public class SessionTest {
     @Test
     public void shouldLoginWhenSessionCreated() {
 
-	final MockListener<State> onStateChanged = new MockListener<State>();
+	final MockedListener<State> onStateChanged = new MockedListener<State>();
 	session.onStateChanged(onStateChanged);
 
 	createSession(uri("name@domain/resource"));
@@ -127,12 +124,11 @@ public class SessionTest {
 	verify(connection).send((IPacket) anyObject());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldRequestSessionWhenBinded() {
-	final EventTester<XmppURI> bindEvent = new EventTester<XmppURI>();
-	bindEvent.mock(bindingManager).onBinded(bindEvent.getListener());
 	final XmppURI uri = uri("name@domain/resource");
-	bindEvent.fire(uri);
+	fire(uri).when(bindingManager).onBinded(anyListener());
 	verify(iMSessionManager).requestSession(same(uri));
     }
 
@@ -140,9 +136,8 @@ public class SessionTest {
     public void shouldStopAndDisconnectWhenLoggedOut() {
     }
 
+    @SuppressWarnings("unchecked")
     private void createSession(final XmppURI uri) {
-	final EventTester<XmppURI> sessionCreatedEvent = new EventTester<XmppURI>();
-	sessionCreatedEvent.mock(iMSessionManager).onSessionCreated(sessionCreatedEvent.getListener());
-	sessionCreatedEvent.fire(uri);
+	fire(uri).when(iMSessionManager).onSessionCreated(anyListener());
     }
 }

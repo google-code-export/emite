@@ -68,8 +68,6 @@ public class RosterUIPresenterTest {
 	rosterUI = new RosterUIPresenter(roster, rosterManager, i18n, avatarProvider);
 	rosterUI.init(rosterUIView);
 
-	// Stubs
-	Mockito.stub(rosterUI.getView()).toReturn(rosterUIView);
     }
 
     @Test
