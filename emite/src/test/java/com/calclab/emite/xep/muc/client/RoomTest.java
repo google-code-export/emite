@@ -13,8 +13,8 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.AbstractConversation;
 import com.calclab.emite.im.client.chat.AbstractChatTest;
+import com.calclab.emite.im.client.chat.AbstractConversation;
 import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.Conversation.State;
 import com.calclab.emite.testing.MockedSession;
@@ -115,7 +115,7 @@ public class RoomTest extends AbstractChatTest {
     @Test
     public void shouldSendRoomInvitation() {
 	room.sendInvitationTo("otherUser@domain/resource", "this is the reason");
-	session.verifySent("<message from='" + userURI + "' to='" + roomURI
+	session.verifySent("<message from='" + userURI + "' to='" + roomURI.getJID()
 		+ "'><x xmlns='http://jabber.org/protocol/muc#user'>"
 		+ "<invite to='otherUser@domain/resource'><reason>this is the reason</reason></invite></x></message>");
     }

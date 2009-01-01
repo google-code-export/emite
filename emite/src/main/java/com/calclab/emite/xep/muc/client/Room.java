@@ -171,7 +171,7 @@ public class Room extends AbstractConversation implements Conversation {
     public void sendInvitationTo(final String userJid, final String reasonText) {
 	final BasicStanza message = new BasicStanza("message", null);
 	message.setFrom(session.getCurrentUser());
-	message.setTo(uri);
+	message.setTo(getURI().getJID());
 	final IPacket x = message.addChild("x", "http://jabber.org/protocol/muc#user");
 	final IPacket invite = x.addChild("invite", null);
 	invite.setAttribute("to", userJid);
