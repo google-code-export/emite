@@ -212,13 +212,9 @@ public class MultiChatPanel {
     }
 
     public void setBottomInfoMessage(final String message) {
-	DeferredCommand.addCommand(new Command() {
-	    public void execute() {
-		bottomInfoMessage.setText(message);
-		bottomInfoMessage.setVisible(true);
-		renderSouthPanelIfNeeded();
-	    }
-	});
+	bottomInfoMessage.setText(message);
+	bottomInfoMessage.setVisible(true);
+	renderSouthPanelIfNeeded();
     }
 
     public void setEmoticonButtonEnabled(final boolean enabled) {

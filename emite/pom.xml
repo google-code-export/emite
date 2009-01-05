@@ -249,11 +249,11 @@
           <generateGettersAndSetters>false</generateGettersAndSetters>
           <generatePropertyChangeSupport>true
           </generatePropertyChangeSupport>
-          <!-- suggested by karlcpp, thx for the feedback -->
-          <extraJvmArgs>-Xmx512m</extraJvmArgs>
         </configuration>
         <executions>
           <execution>
+          <!-- suggested by karlcpp, thx for the feedback 
+          <extraJvmArgs>-Xmx512m</extraJvmArgs> -->
             <goals>
             </goals>
           </execution>
