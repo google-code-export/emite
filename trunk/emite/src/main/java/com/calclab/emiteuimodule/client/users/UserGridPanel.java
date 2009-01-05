@@ -122,9 +122,8 @@ public class UserGridPanel extends Panel {
 		if (dragData instanceof GridDragData) {
 		    final GridDragData gridDragData = (GridDragData) dragData;
 		    final Record[] records = gridDragData.getSelections();
-		    for (int i = 0; i < records.length; i++) {
-			dropGridConfiguration.getListener().onDrop(
-				XmppURI.jid(records[i].getAsString(UserGridPanel.JID)));
+		    for (Record record : records) {
+			dropGridConfiguration.getListener().onDrop(XmppURI.jid(record.getAsString(UserGridPanel.JID)));
 		    }
 		}
 		return true;
@@ -218,8 +217,8 @@ public class UserGridPanel extends Panel {
 		if (dragData instanceof GridDragData) {
 		    final GridDragData gridDragData = (GridDragData) dragData;
 		    final Record[] records = gridDragData.getSelections();
-		    for (int i = 0; i < records.length; i++) {
-			dropGridConfiguration.getListener().onDrop(XmppURI.jid(records[i].getAsString(JID)));
+		    for (Record record : records) {
+			dropGridConfiguration.getListener().onDrop(XmppURI.jid(record.getAsString(JID)));
 		    }
 		}
 		return true;
@@ -262,7 +261,8 @@ public class UserGridPanel extends Panel {
 	final Renderer iconRender = new Renderer() {
 	    public String render(final Object value, final CellMetadata cellMetadata, final Record record,
 		    final int rowIndex, final int colNum, final Store store) {
-		return Format.format("<img src=\"{0}\">", new String[] { record.getAsString(IMG) });
+		return Format.format("<img src=\"{0}\" style=\"width: 16px; height: 16px;\">", new String[] { record
+			.getAsString(IMG) });
 	    }
 	};
 	final Renderer userAliasRender = new Renderer() {
