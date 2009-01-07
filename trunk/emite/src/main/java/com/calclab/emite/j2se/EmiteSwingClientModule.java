@@ -32,9 +32,9 @@ import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.SubscriptionManager;
 import com.calclab.emite.j2se.services.J2SEServicesModule;
 import com.calclab.emite.j2se.swing.ClientControl;
-import com.calclab.emite.j2se.swing.FrameControl;
 import com.calclab.emite.j2se.swing.ClientPanel;
-import com.calclab.emite.j2se.swing.chat.ConversationControl;
+import com.calclab.emite.j2se.swing.FrameControl;
+import com.calclab.emite.j2se.swing.chat.ConversationsControl;
 import com.calclab.emite.j2se.swing.chat.ConversationsPanel;
 import com.calclab.emite.j2se.swing.log.LogControl;
 import com.calclab.emite.j2se.swing.log.LogPanel;
@@ -151,7 +151,7 @@ public class EmiteSwingClientModule extends AbstractModule {
 
 	    @Override
 	    public void onAfterCreated(final ConversationsPanel instance) {
-		new ConversationControl($(ChatManager.class), $(RoomManager.class), $(RosterPanel.class), instance);
+		new ConversationsControl($(ChatManager.class), $(RoomManager.class), $(RosterPanel.class), instance);
 	    }
 	});
     }

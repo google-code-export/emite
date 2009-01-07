@@ -30,6 +30,5 @@ import com.calclab.suco.client.events.Listener;
  * @see ChatManager
  */
 public interface RoomManager extends ChatManager {
-
     void onInvitationReceived(Listener<RoomInvitation> listener);
 }
