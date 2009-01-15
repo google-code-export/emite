@@ -544,8 +544,20 @@ public class MultiChatPanel {
 	    }
 
 	    @Override
+	    public void onMove(final BoxComponent component, final int x, final int y) {
+		checkPosition(component, x, y);
+	    }
+
+	    @Override
 	    public void onShow(final Component component) {
 		focusInput();
+		checkPosition(dialog, component.getAbsoluteLeft(), component.getAbsoluteTop());
+	    }
+
+	    private void checkPosition(final BoxComponent component, final int x, final int y) {
+		if (y < 0) {
+		    component.setPagePosition(x, 0);
+		}
 	    }
 	});
 
