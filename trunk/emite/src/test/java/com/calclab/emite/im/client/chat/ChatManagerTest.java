@@ -27,6 +27,16 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     }
 
     @Test
+    public void roomInvitationsShouldDontFireOnChatCreated() {
+	final MockedListener<Conversation> listener = addOnChatCreatedListener();
+	session.receives("<message to=\"" + MYSELF
+		+ "\" from=\"someroom@domain\"><x xmlns=\"http://jabber.org/protocol/muc#user\">"
+		+ "<invite from=\"someone@localhost\"><reason>Join to our conversation</reason></invite>"
+		+ "</x><x jid=\"someroom@domain\" xmlns=\"jabber:x:conference\" /></message>");
+	assertTrue(listener.isNotCalled());
+    }
+
+    @Test
     public void shouldBlockChatWhenClosingIt() {
 	final Conversation conversation = manager.openChat(uri("other@domain/resource"), null, null);
 	manager.close(conversation);
