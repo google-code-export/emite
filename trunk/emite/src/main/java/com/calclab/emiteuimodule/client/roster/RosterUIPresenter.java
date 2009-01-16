@@ -291,7 +291,7 @@ public class RosterUIPresenter {
 
     private void createXmppListeners() {
 	roster.onRosterRetrieved(new Listener<Collection<RosterItem>>() {
-	    public void onEvent(Collection<RosterItem> parameter) {
+	    public void onEvent(final Collection<RosterItem> parameter) {
 		refreshRoster(parameter);
 	    }
 	});

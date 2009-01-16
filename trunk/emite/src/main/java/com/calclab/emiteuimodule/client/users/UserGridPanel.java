@@ -62,7 +62,7 @@ import com.gwtext.client.widgets.layout.FitLayout;
 public class UserGridPanel extends Panel {
     public static final String USER_GROUP_DD = "userGroupDD";
     public static final String JID = "jid";
-    public static final int DEFAULT_INITIAL_WIDTH = 150;
+    public static final int DEFAULT_INITIAL_WIDTH = 120;
     private static final String ALIAS = "alias";
     private static final String COLOR = "color";
     private static final String IMG = "img";

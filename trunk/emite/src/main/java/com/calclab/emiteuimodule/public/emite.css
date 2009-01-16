@@ -114,13 +114,36 @@
   background-image: url(images/forbidden.gif) !important;
 }
 
+.chat-icon {
+  background-image: url(images/chat-small.gif) !important;
+}
+
+.chat-h-icon {
+  background-image: url(images/chat-small-new.gif) !important;
+}
+
+.room-icon {
+  background-image: url(images/room-small.gif) !important;
+}
+
+.room-h-icon {
+  background-image: url(images/room-small-new.gif) !important;
+}
+
+.e-tab-title {
+  padding-left: 20px;
+  background-position: 0 -1px;
+  background-repeat: no-repeat;
+  height: 14px;
+}
+
 .vamiddle {
   vertical-align: middle;
 }
 
 .e-notif-composing {
   color: green;
-  font-style: italic;
+  /* font-style: italic; */
 }
 
 .e-notif-inactive {
@@ -133,6 +156,14 @@
 
 .e-notif-gone {
   color: maroon;
+}
+
+.e-status-normal {
+  color: black;
+}
+
+.e-status-blocked {
+  color: gray;
 }
 
 .kune-EditableLabel {

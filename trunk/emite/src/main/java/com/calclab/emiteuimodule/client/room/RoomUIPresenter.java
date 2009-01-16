@@ -22,7 +22,6 @@
 package com.calclab.emiteuimodule.client.room;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.ourproject.kune.platf.client.View;
 import org.ourproject.kune.platf.client.services.I18nTranslationService;
@@ -35,7 +34,6 @@ import com.calclab.emiteuimodule.client.users.RoomUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItemList;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem.UserGridMenuItemListener;
-import com.calclab.emiteuimodule.client.utils.ChatIconDescriptor;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Event2;
 import com.calclab.suco.client.events.Listener;
@@ -55,8 +53,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 
     public RoomUIPresenter(final I18nTranslationService i18n, final XmppURI otherURI, final String currentUserAlias,
 	    final String currentUserColor) {
-	super(otherURI, currentUserAlias, currentUserColor, ChatIconDescriptor.roomsmall,
-		ChatIconDescriptor.roomnewmessagesmall);
+	super(otherURI, currentUserAlias, currentUserColor, "room-icon", "room-h-icon");
 	this.i18n = i18n;
 	this.currentUserAlias = currentUserAlias;
 	this.lastInvitationReasonText = i18n.t("Join to our conversation");
@@ -78,6 +75,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 	return lastInvitationReasonText;
     }
 
+    @Override
     public View getView() {
 	return view;
     }
@@ -117,8 +115,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 
     public void onOccupantsChanged(final Collection<Occupant> users) {
 	roomUserListUI.removeAllUsers();
-	for (final Iterator<Occupant> iterator = users.iterator(); iterator.hasNext();) {
-	    final Occupant occupant = iterator.next();
+	for (Occupant occupant : users) {
 	    final RoomUserUI roomUserUI = genRoomUser(occupant);
 	    roomUserListUI.addUser(roomUserUI, createUserMenu(roomUserUI));
 	    if (occupant.getURI().getResource().equals(currentUserAlias)) {

@@ -31,8 +31,9 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Conversation.State;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager;
@@ -50,10 +51,10 @@ import com.calclab.emiteuimodule.client.room.RoomUI;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;
-import com.calclab.suco.client.ioc.Provider;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 import com.calclab.suco.client.events.Listener2;
+import com.calclab.suco.client.ioc.Provider;
 
 public class MultiChatPresenter {
 
@@ -314,14 +315,11 @@ public class MultiChatPresenter {
 	}
     }
 
-    protected void onCurrentUserSend(final String message, final boolean withEnter) {
+    protected void onCurrentUserSend(final String message) {
 	final boolean isEmpty = message == null || message.equals("");
 	if (!isEmpty) {
 	    view.clearInputText();
 	    currentChat.onCurrentUserSend(message);
-	}
-	if (!withEnter) {
-	    view.focusInput();
 	}
     }
 
@@ -367,7 +365,7 @@ public class MultiChatPresenter {
 	    public void onEvent(final ChatUI parameter) {
 		view.setInputText(chatUI.getSavedInput());
 		currentChat = chatUI;
-		updateViewWithChatStatus(conversation, chatUI);
+		updateViewWithChatStatus(conversation.getState(), chatUI);
 		view.setBottomChatNotification(chatUI.getSavedChatNotification());
 	    }
 	});
@@ -414,8 +412,26 @@ public class MultiChatPresenter {
 	conversation.onStateChanged(new Listener<com.calclab.emite.im.client.chat.Conversation.State>() {
 	    public void onEvent(final com.calclab.emite.im.client.chat.Conversation.State parameter) {
 		final ChatUI chatUI = getChatUI(conversation);
-		if (chatUI != null && chatUI.equals(currentChat)) {
-		    updateViewWithChatStatus(conversation, chatUI);
+		if (chatUI != null) {
+		    State state = conversation.getState();
+		    if (chatUI.equals(currentChat)) {
+			updateViewWithChatStatus(state, chatUI);
+		    }
+		    updateStateTitle(chatUI, state);
+		}
+	    }
+
+	    private void updateStateTitle(final ChatUI chatUI, final State state) {
+		switch (state) {
+		case locked:
+		    Log.info("Chat locked:" + chatUI.getChatTitle());
+		    chatUI.setChatTitleTextCls("e-status-blocked");
+		    break;
+		case ready:
+		default:
+		    Log.info("Chat unlocked:" + chatUI.getChatTitle());
+		    chatUI.setChatTitleTextCls("e-status-normal");
+		    break;
 		}
 	    }
 	});
@@ -504,7 +520,6 @@ public class MultiChatPresenter {
 			} else {
 			    roomUI.addInfoMessage(i18n.t("Subject changed to: ") + newSubject);
 			}
-
 		    }
 		});
 
@@ -599,7 +614,6 @@ public class MultiChatPresenter {
     }
 
     private void setInputEnabled(final boolean enabled) {
-	view.setSendEnabled(enabled);
 	view.setInputEditable(enabled);
 	view.setEmoticonButtonEnabled(enabled);
 	view.focusInput();
@@ -611,15 +625,13 @@ public class MultiChatPresenter {
 	view.setShowUnavailableItemsButtonPressed(this.getUserChatOptions().isUnavailableRosterItemsVisible());
     }
 
-    private void updateViewWithChatStatus(final Conversation conversation, final ChatUI chatUI) {
-	switch (conversation.getState()) {
+    private void updateViewWithChatStatus(final State state, final ChatUI chatUI) {
+	switch (state) {
 	case locked:
-	    // Log.info("Chat locked:" + chat.getID());
 	    setInputEnabled(false);
 	    chatUI.clearSavedChatNotification();
 	    break;
 	case ready:
-	    // Log.info("Chat unlocked:" + chat.getID());
 	    setInputEnabled(true);
 	    break;
 	}

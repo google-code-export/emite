@@ -147,13 +147,13 @@ public class ProxyServlet extends HttpServlet {
     }
 
     /**
-     * Capture awaay the standard servlet log ..
+     * Capture away the standard servlet log ..
      */
     @Override
     public void log(final String msg) {
 	// gwt-log uses std error (and is better for clients or for remote use
 	// -also from clients-)
-	System.out.println("[PROXY] " + msg);
+	// System.out.println("[PROXY] " + msg);
     }
 
     /**
