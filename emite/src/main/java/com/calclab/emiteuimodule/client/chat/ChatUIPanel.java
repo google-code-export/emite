@@ -23,17 +23,11 @@ package com.calclab.emiteuimodule.client.chat;
 
 import org.ourproject.kune.platf.client.ui.HorizontalLine;
 
-import com.calclab.emiteuimodule.client.utils.ChatIconDescriptor;
 import com.calclab.emiteuimodule.client.utils.ChatTextFormatter;
-import com.calclab.emiteuimodule.client.utils.ChatUIUtils;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.RegionPosition;
@@ -45,28 +39,10 @@ import com.gwtext.client.widgets.layout.BorderLayoutData;
 public class ChatUIPanel extends Panel implements ChatUIView {
 
     private static final String CHAT_PANEL_ID = "emite-cuip-c-";
-
-    public static String genQuickTipLabel(final String labelText, final String tipTitle, final String tipText,
-	    final AbstractImagePrototype icon) {
-	String tipHtml = "<span style=\"vertical-align: middle;\" ext:qtip=\"" + tipText + "\"";
-	if (tipTitle != null && tipTitle.length() > 0) {
-	    tipHtml += " ext:qtitle=\"" + tipTitle + "\"";
-	}
-	tipHtml += ">";
-	final Image iconImg = new Image();
-	icon.applyTo(iconImg);
-	iconImg.setStyleName("vamiddle");
-	// setQuickTip(iconImg, tipText, tipTitle);
-	tipHtml += iconImg.toString();
-	tipHtml += "&nbsp;";
-	tipHtml += labelText;
-	tipHtml += "</span>";
-	return tipHtml;
-    }
-
     private final Panel childPanel;
     private final Panel conversationPanel;
     private Element scrollableElement;
+    private final ChatUITitle chatTitle;
 
     public ChatUIPanel(final ChatUIPresenter presenter) {
 	setLayout(new BorderLayout());
@@ -96,6 +72,7 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 		presenter.onDeactivated();
 	    }
 	});
+	chatTitle = new ChatUITitle();
     }
 
     public void addDelimiter(final String datetime) {
@@ -125,14 +102,20 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 	addWidget(messageHtml);
     }
 
-    public void setChatTitle(final String chatTitle, final String tip, final ChatIconDescriptor iconId) {
-	DeferredCommand.addCommand(new Command() {
-	    public void execute() {
-		// FIXME try to do this with css (with gwt-ext don't works)
-		setTitle(genQuickTipLabel(chatTitle, "", tip, ChatUIUtils.getIcon(iconId)));
-		postChatTitle();
-	    }
-	});
+    public void setChatIconCls(final String iconCls) {
+	chatTitle.setIconCls(iconCls);
+	updateTitle();
+    }
+
+    public void setChatTitle(final String title, final String tip) {
+	chatTitle.setTitle(title);
+	chatTitle.setTip(tip);
+	updateTitle();
+    }
+
+    public void setChatTitleTextCls(final String textCls) {
+	chatTitle.setTextCls(textCls);
+	updateTitle();
     }
 
     private void addWidget(final Widget widget) {
@@ -154,7 +137,7 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 
     private void postChatTitle() {
 	if (super.isRendered()) {
-	    super.doLayout();
+	    super.doLayout(false);
 	}
     }
 
@@ -163,6 +146,11 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 	    getScrollableElement().setScrollTop(childPanel.getOffsetHeight());
 	    // Log.info("Offset: " + childPanel.getOffsetHeight());
 	}
+    }
+
+    private void updateTitle() {
+	setTitle(chatTitle.toHtml());
+	postChatTitle();
     }
 
 }

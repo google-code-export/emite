@@ -29,6 +29,11 @@ import com.calclab.suco.client.events.Listener;
 
 public class ChatStatePresenter {
 
+    private static final String E_NOTIF_PAUSE = "e-notif-pause";
+    private static final String E_NOTIF_INACTIVE = "e-notif-inactive";
+    private static final String E_NOTIF_COMPOSING = "e-notif-composing";
+    private static final String E_NOTIF_GONE = "e-notif-gone";
+
     private static final int CANCEL_TIMER = -1;
     private static final int MILLISECONS_TO_PAUSE = 5000;
     private static final int MILLISECONS_TO_INACTIVE = 30000;
@@ -69,23 +74,27 @@ public class ChatStatePresenter {
 
 		case gone:
 		    chatUI.setSavedChatNotification(formatNotification(otherAlias, "finished the conversation",
-			    "e-notif-gone"));
+			    E_NOTIF_GONE));
+		    chatUI.setChatTitleTextCls(E_NOTIF_GONE);
 		    chatUI.showMessageEventInfo();
 		    break;
 
 		case composing:
-		    chatUI.setSavedChatNotification(formatNotification(otherAlias, "is writing", "e-notif-composing"));
+		    chatUI.setSavedChatNotification(formatNotification(otherAlias, "is writing", E_NOTIF_COMPOSING));
+		    chatUI.setChatTitleTextCls(E_NOTIF_COMPOSING);
 		    chatUI.showMessageEventInfo();
 		    break;
 
 		case inactive:
 		    // FIXME: this kind of messages only for tests ...
-		    chatUI.setSavedChatNotification(formatNotification(otherAlias, "is inactive", "e-notif-inactive"));
+		    chatUI.setSavedChatNotification(formatNotification(otherAlias, "is inactive", E_NOTIF_INACTIVE));
+		    chatUI.setChatTitleTextCls(E_NOTIF_INACTIVE);
 		    chatUI.showMessageEventInfo();
 		    break;
 
 		case pause:
-		    chatUI.setSavedChatNotification(formatNotification(otherAlias, "stop to write", "e-notif-pause"));
+		    chatUI.setSavedChatNotification(formatNotification(otherAlias, "stop to write", E_NOTIF_PAUSE));
+		    chatUI.setChatTitleTextCls(E_NOTIF_PAUSE);
 		    chatUI.showMessageEventInfo();
 		    break;
 

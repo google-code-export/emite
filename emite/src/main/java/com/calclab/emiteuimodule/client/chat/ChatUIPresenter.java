@@ -26,7 +26,6 @@ import java.util.HashMap;
 import org.ourproject.kune.platf.client.View;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emiteuimodule.client.utils.ChatIconDescriptor;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 
@@ -55,8 +54,8 @@ public class ChatUIPresenter implements ChatUI {
     // isActive is maintained because Rooms have no ChatState support currently
     private boolean isActive;
     private boolean alreadyHightlighted;
-    private final ChatIconDescriptor unhighIcon;
-    private final ChatIconDescriptor highIcon;
+    private final String unhighIcon;
+    private final String highIcon;
     private boolean docked;
     private ChatUIEventListenerCollection eventListenerCollection;
     private final String currentUserAlias;
@@ -64,12 +63,11 @@ public class ChatUIPresenter implements ChatUI {
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor) {
 	// Def Constructor for chats
-	this(otherURI, currentUserAlias, currentUserColor, ChatIconDescriptor.chatsmall,
-		ChatIconDescriptor.chatnewmessagesmall);
+	this(otherURI, currentUserAlias, currentUserColor, "chat-icon", "chat-h-icon");
     }
 
     public ChatUIPresenter(final XmppURI otherURI, final String currentUserAlias, final String currentUserColor,
-	    final ChatIconDescriptor unhighIcon, final ChatIconDescriptor highIcon) {
+	    final String unhighIcon, final String highIcon) {
 	this.otherURI = otherURI;
 	this.currentUserAlias = currentUserAlias;
 	this.unhighIcon = unhighIcon;
@@ -164,7 +162,7 @@ public class ChatUIPresenter implements ChatUI {
     }
 
     public void highLightChatTitle() {
-	view.setChatTitle(chatTitle, otherURI.toString(), highIcon);
+	view.setChatIconCls(highIcon);
 	alreadyHightlighted = true;
 	onHighLight.fire(this);
     }
@@ -172,6 +170,7 @@ public class ChatUIPresenter implements ChatUI {
     public void init(final ChatUIView view) {
 	this.view = view;
 	isActive = true;
+	view.setChatTitle(chatTitle, otherURI.toString());
 	unHighLightChatTitle();
     }
 
@@ -255,6 +254,10 @@ public class ChatUIPresenter implements ChatUI {
 	savedInput = inputText;
     }
 
+    public void setChatTitleTextCls(final String textCls) {
+	view.setChatTitleTextCls(textCls);
+    }
+
     public void setCurrentUserColor(final String color) {
 	setUserColor(currentUserAlias, color);
     }
@@ -272,7 +275,7 @@ public class ChatUIPresenter implements ChatUI {
     }
 
     public void unHighLightChatTitle() {
-	view.setChatTitle(chatTitle, otherURI.toString(), unhighIcon);
+	view.setChatIconCls(unhighIcon);
 	alreadyHightlighted = false;
 	onUnHighLight.fire(this);
     }

@@ -72,12 +72,10 @@ import com.gwtext.client.widgets.layout.FormLayout;
 public class MultiChatPanel {
 
     private static final int TIMEVISIBLE = 3000;
-    private static final String SEND_BUTTON_ID = "MultiChatPanel-SendButton";
     private static final String INPUT_ID = "MultiChatPanel-InputArea";
     private static final String EMOTICON_BUTTON_ID = "MultiChatPanel-emoticonButton";
     private final RosterUIPanel rosterUIPanel;
     private Window dialog;
-    private Button sendBtn;
     private final MultiChatPresenter presenter;
     private TextArea input;
     private final HashMap<String, ChatUI> panelIdToChat;
@@ -165,7 +163,12 @@ public class MultiChatPanel {
     }
 
     public void focusInput() {
-	input.focus();
+	new Timer() {
+	    @Override
+	    public void run() {
+		input.focus();
+	    }
+	}.schedule(50);
     }
 
     public String getInputText() {
@@ -270,14 +273,6 @@ public class MultiChatPanel {
 	    if (eastPanel.isRendered()) {
 		eastPanel.doLayout(false);
 	    }
-	}
-    }
-
-    public void setSendEnabled(final boolean enabled) {
-	if (enabled) {
-	    sendBtn.enable();
-	} else {
-	    sendBtn.disable();
 	}
     }
 
@@ -391,7 +386,7 @@ public class MultiChatPanel {
 	    @Override
 	    public void onSpecialKey(final Field field, final EventObject e) {
 		if (e.getKey() == 13) {
-		    doSend(e, true);
+		    doSend(e);
 		}
 	    }
 	};
@@ -427,21 +422,12 @@ public class MultiChatPanel {
     }
 
     private void createLayout(final StatusUI statusUI) {
-	dialog = new BasicDialog(chatDialogTitle, false, false, 600, 415, 300, 300);
+	dialog = new BasicDialog(chatDialogTitle, false, false, 450, 315, 200, 200);
 	dialog.setButtonAlign(Position.LEFT);
 	dialog.setBorder(false);
-	dialog.setCollapsible(true);
+	dialog.setCollapsible(false);
 	dialog.setMinimizable(true);
 	dialog.setIconCls("e-icon");
-	sendBtn = new Button(i18n.tWithNT("Send", "used in button"));
-	sendBtn.addListener(new ButtonListenerAdapter() {
-	    @Override
-	    public void onClick(final Button button, final EventObject e) {
-		doSend(e, false);
-	    }
-	});
-	sendBtn.setId(SEND_BUTTON_ID);
-	dialog.addButton(sendBtn);
 	dialog.setLayout(new BorderLayout());
 
 	final Panel northPanel = new Panel();
@@ -452,9 +438,9 @@ public class MultiChatPanel {
 	dialog.add(northPanel, northData);
 
 	southPanel = new Panel();
-	southPanel.setHeight(75);
 	southPanel.setTopToolbar(createInputToolBar());
 	southPanel.add(createInputPanel());
+	southPanel.setHeight(75);
 	southPanel.setBorder(false);
 	final BorderLayoutData southData = new BorderLayoutData(RegionPosition.SOUTH);
 	southData.setSplit(true);
@@ -518,6 +504,7 @@ public class MultiChatPanel {
 		setAttribute("enableDragDrop", true, true);
 	    }
 	};
+	centerPanel.setHeader(true);
 	centerPanel.setBorder(false);
 	centerPanel.setEnableTabScroll(true);
 	centerPanel.setAutoScroll(false);
@@ -623,10 +610,10 @@ public class MultiChatPanel {
 	});
     }
 
-    private void doSend(final EventObject e, final boolean withEnter) {
+    private void doSend(final EventObject e) {
 	final String inputText = getInputText();
 	e.stopEvent();
-	presenter.onCurrentUserSend(inputText, withEnter);
+	presenter.onCurrentUserSend(inputText);
     }
 
     private void ifRenderedDoLayout() {

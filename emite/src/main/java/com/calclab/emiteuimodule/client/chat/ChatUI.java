@@ -92,6 +92,8 @@ public interface ChatUI {
 
     void saveInput(String inputText);
 
+    void setChatTitleTextCls(String textCls);
+
     void setCurrentUserColor(String color);
 
     void setDocked(boolean docked);
