@@ -103,7 +103,7 @@ public class EmiteUIModule extends AbstractModule {
 	    public EmiteUIDialog create() {
 		return new EmiteUIDialog($(Connection.class), $(Session.class), $(ChatManager.class),
 			$(EmiteUIFactory.class), $(RoomManager.class), $(AvatarManager.class), $(StatusUI.class),
-			$(RoomUIManager.class));
+			$(RoomUIManager.class), $(Roster.class));
 	    }
 	});
 

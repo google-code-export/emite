@@ -31,6 +31,7 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.muc.client.RoomManager;
@@ -56,10 +57,11 @@ public class EmiteUIDialog {
     private final AvatarManager avatarManager;
     private final Connection connection;
     private final RoomUIManager roomUIManager;
+    private final Roster roster;
 
     public EmiteUIDialog(final Connection connection, final Session session, final ChatManager chatManager,
 	    final EmiteUIFactory factory, final RoomManager roomManager, final AvatarManager avatarManager,
-	    final StatusUI statusUI, final RoomUIManager roomUIManager) {
+	    final StatusUI statusUI, final RoomUIManager roomUIManager, final Roster roster) {
 	this.connection = connection;
 	this.session = session;
 	this.chatManager = chatManager;
@@ -68,6 +70,11 @@ public class EmiteUIDialog {
 	this.avatarManager = avatarManager;
 	this.statusUI = statusUI;
 	this.roomUIManager = roomUIManager;
+	this.roster = roster;
+    }
+
+    public void addBuddie(final XmppURI buddieJid, final String name, final String... groups) {
+	roster.addItem(buddieJid, name, groups);
     }
 
     public Conversation chat(final XmppURI otherUserURI) {
@@ -141,13 +148,16 @@ public class EmiteUIDialog {
     }
 
     public void onRosterChanged(final Listener<Collection<RosterItem>> listener) {
-	// FIXME: new Roster
-	// roster.onRosterChanged(listener);
-    }
-
-    public void onRosterItemChanged(final Listener<RosterItem> listener) {
-	// FIXME: new Roster
-	// xRoster.onItemChanged(listener);
+	// For external use: only a summarize RosterChanged event
+	roster.onRosterRetrieved(listener);
+	Listener<RosterItem> changeListener = new Listener<RosterItem>() {
+	    public void onEvent(final RosterItem parameter) {
+		listener.onEvent(roster.getItems());
+	    }
+	};
+	roster.onItemAdded(changeListener);
+	roster.onItemChanged(changeListener);
+	roster.onItemRemoved(changeListener);
     }
 
     public void onShowUnavailableRosterItemsChanged(final Listener<Boolean> listener) {

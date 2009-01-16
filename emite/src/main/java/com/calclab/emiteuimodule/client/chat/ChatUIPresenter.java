@@ -30,9 +30,6 @@ import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 
 public class ChatUIPresenter implements ChatUI {
-
-    // FIXME: this in Chat or new ChatState module, here only a listener
-
     private static final String[] USERCOLORS = { "green", "navy", "black", "grey", "olive", "teal", "blue", "lime",
 	    "purple", "fuchsia", "maroon", "red" };
     final Event<String> onCurrentUserSend;
@@ -106,7 +103,7 @@ public class ChatUIPresenter implements ChatUI {
 
     public void addMessage(final XmppURI fromURI, final String body) {
 	final String node = fromURI.getNode() != null ? fromURI.getNode() : fromURI.toString();
-	final String alias = fromURI.equals(otherURI) ? getOtherAlias() : node;
+	final String alias = fromURI.equalsNoResource(otherURI) ? getOtherAlias() : node;
 	addMessage(alias, body);
     }
 
