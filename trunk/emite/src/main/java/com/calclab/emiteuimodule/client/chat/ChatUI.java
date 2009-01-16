@@ -28,6 +28,9 @@ import com.calclab.suco.client.events.Listener;
 
 public interface ChatUI {
 
+    String STYLE_BLOCKED = "e-status-blocked";
+    String STYLE_NORMAL = "e-status-normal";
+
     public void onActivate(final Listener<ChatUI> listener);
 
     public void onChatNotificationClear(final Listener<ChatUI> listener);

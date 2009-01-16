@@ -409,11 +409,10 @@ public class MultiChatPresenter {
     }
 
     private void addStateListener(final Conversation conversation) {
-	conversation.onStateChanged(new Listener<com.calclab.emite.im.client.chat.Conversation.State>() {
-	    public void onEvent(final com.calclab.emite.im.client.chat.Conversation.State parameter) {
+	conversation.onStateChanged(new Listener<State>() {
+	    public void onEvent(final State state) {
 		final ChatUI chatUI = getChatUI(conversation);
 		if (chatUI != null) {
-		    State state = conversation.getState();
 		    if (chatUI.equals(currentChat)) {
 			updateViewWithChatStatus(state, chatUI);
 		    }
@@ -446,7 +445,6 @@ public class MultiChatPresenter {
     private void checkThereAreChats() {
 	if (openedChats >= 1) {
 	    statusUI.setCloseAllOptionEnabled(true);
-	    setInputEnabled(true);
 	    view.setInfoPanelVisible(false);
 	}
     }
@@ -566,6 +564,7 @@ public class MultiChatPresenter {
 	    chatUI.setDocked(true);
 	    currentChat = chatUI;
 	    view.addChat(chatUI);
+	    updateViewWithChatStatus(conversation.getState(), chatUI);
 	    checkThereAreChats();
 	    if (!isChatStartedByMe(conversation)) {
 		chatUI.highLightChatTitle();
@@ -616,7 +615,9 @@ public class MultiChatPresenter {
     private void setInputEnabled(final boolean enabled) {
 	view.setInputEditable(enabled);
 	view.setEmoticonButtonEnabled(enabled);
-	view.focusInput();
+	if (enabled && view.isVisible()) {
+	    view.focusInput();
+	}
     }
 
     private void setUnavailableRosterItemVisibility() {
