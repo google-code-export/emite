@@ -29,6 +29,7 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.xep.muc.client.Occupant;
 import com.calclab.emite.xep.muc.client.Occupant.Role;
+import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.chat.ChatUIPresenter;
 import com.calclab.emiteuimodule.client.users.RoomUserUI;
 import com.calclab.emiteuimodule.client.users.UserGridMenuItem;
@@ -84,6 +85,7 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 	super.init(view);
 	this.view = view;
 	this.roomUserListUI = roomUserListUI;
+	view.setChatTitleTextCls(ChatUI.STYLE_BLOCKED);
 	addInfoMessage(i18n.t("Opening chat room..."));
     }
 

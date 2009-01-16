@@ -422,7 +422,7 @@ public class MultiChatPanel {
     }
 
     private void createLayout(final StatusUI statusUI) {
-	dialog = new BasicDialog(chatDialogTitle, false, false, 450, 315, 200, 200);
+	dialog = new BasicDialog(chatDialogTitle, false, false, 470, 315, 200, 200);
 	dialog.setButtonAlign(Position.LEFT);
 	dialog.setBorder(false);
 	dialog.setCollapsible(false);

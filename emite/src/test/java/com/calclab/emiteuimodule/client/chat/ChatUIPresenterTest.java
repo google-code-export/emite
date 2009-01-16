@@ -18,6 +18,7 @@ public class ChatUIPresenterTest {
 	chatUI = new ChatUIPresenter(otherUri, "luther", "black");
 	view = Mockito.mock(ChatUIView.class);
 	chatUI.init(view);
+	Mockito.verify(view, Mockito.times(1)).setChatTitle(otherUri.getNode(), otherUri.toString());
     }
 
     @Test
@@ -62,12 +63,10 @@ public class ChatUIPresenterTest {
     }
 
     private void verifyHightLightTimes(final int times) {
-	Mockito.verify(view, Mockito.times(times)).setChatTitle(otherUri.getNode(), otherUri.toString());
 	Mockito.verify(view, Mockito.times(times)).setChatIconCls("chat-h-icon");
     }
 
     private void verifyUnHightLightTimes(final int times) {
-	Mockito.verify(view, Mockito.times(times)).setChatTitle(otherUri.getNode(), otherUri.toString());
 	Mockito.verify(view, Mockito.times(times)).setChatIconCls("chat-icon");
     }
 }
