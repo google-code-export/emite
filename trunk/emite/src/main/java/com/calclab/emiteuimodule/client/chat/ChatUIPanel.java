@@ -31,13 +31,14 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.RegionPosition;
+import com.gwtext.client.util.Format;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.layout.BorderLayout;
 import com.gwtext.client.widgets.layout.BorderLayoutData;
 
 public class ChatUIPanel extends Panel implements ChatUIView {
-
+    private static final int MAX_TITLE_LENGTH = 12;
     private static final String CHAT_PANEL_ID = "emite-cuip-c-";
     private final Panel childPanel;
     private final Panel conversationPanel;
@@ -108,7 +109,7 @@ public class ChatUIPanel extends Panel implements ChatUIView {
     }
 
     public void setChatTitle(final String title, final String tip) {
-	chatTitle.setTitle(title);
+	chatTitle.setTitle(Format.ellipsis(title, MAX_TITLE_LENGTH));
 	chatTitle.setTip(tip);
 	updateTitle();
     }
