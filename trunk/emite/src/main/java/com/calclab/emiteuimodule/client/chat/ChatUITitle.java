@@ -1,5 +1,9 @@
 package com.calclab.emiteuimodule.client.chat;
 
+import org.ourproject.kune.platf.client.ui.KuneUiUtils;
+
+import com.google.gwt.user.client.ui.HTML;
+
 public class ChatUITitle {
     private String title;
     private String tip;
@@ -50,8 +54,10 @@ public class ChatUITitle {
     }
 
     public String toHtml() {
-	// TODO use DOM
-	return "<span class=\"e-tab-title " + iconCls + " " + textCls + "\" ext:qtip=\"" + tip + "\">" + title
-		+ "</span>";
+	HTML titleHtml = new HTML(title);
+	titleHtml.addStyleName(iconCls);
+	titleHtml.addStyleName("e-tab-title");
+	KuneUiUtils.setQuickTip(titleHtml, tip);
+	return titleHtml.getHTML();
     }
 }

@@ -29,8 +29,8 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
-import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.xep.muc.client.RoomManager;
@@ -39,9 +39,9 @@ import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
 import com.calclab.emiteuimodule.client.status.OwnPresence.OwnStatus;
 import com.calclab.emiteuimodule.client.subscription.SubscriptionUI;
-import com.calclab.suco.client.ioc.Provider;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
+import com.calclab.suco.client.ioc.Provider;
 
 public class StatusUIPresenter implements StatusUI {
 
@@ -220,15 +220,12 @@ public class StatusUIPresenter implements StatusUI {
 	    session.login(XmppURI.uri(userJid.getNode(), userJid.getHost(), userChatOptions.getResource()),
 		    userChatOptions.getUserPassword());
 	    break;
-	case authorized:
-	case connecting:
-	case ready:
-	    presenceManager.setOwnPresence(Presence.build(statusText, status));
-	    break;
 	case error:
 	    view.setLoadingVisible(false);
 	    Log.error("Trying to set status and whe have a internal error");
+	    break;
 	}
+	presenceManager.setOwnPresence(Presence.build(statusText, status));
     }
 
     private void onAfterLogin() {
