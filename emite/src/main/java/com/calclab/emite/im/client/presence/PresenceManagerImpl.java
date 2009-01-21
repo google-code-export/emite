@@ -14,13 +14,14 @@ import com.calclab.suco.client.events.Listener;
 import com.calclab.suco.client.log.Logger;
 
 public class PresenceManagerImpl implements PresenceManager {
+    private static final Presence INITIAL_PRESENCE = new Presence(Type.unavailable, null, null);
     private Presence ownPresence;
     private final Event<Presence> onOwnPresenceChanged;
     private final Session session;
 
     public PresenceManagerImpl(final Session session, final Roster roster) {
 	this.session = session;
-	this.ownPresence = new Presence(Type.unavailable, null, null);
+	this.ownPresence = INITIAL_PRESENCE;
 	this.onOwnPresenceChanged = new Event<Presence>("presenceManager:onOwnPresenceChanged");
 
 	// Upon connecting to the server and becoming an active resource, a
@@ -28,7 +29,8 @@ public class PresenceManagerImpl implements PresenceManager {
 	roster.onRosterRetrieved(new Listener<Collection<RosterItem>>() {
 	    public void onEvent(final Collection<RosterItem> parameter) {
 		Logger.debug("Sending initial presence");
-		final Presence initialPresence = new Presence(session.getCurrentUser());
+		Presence initialPresence = ownPresence != INITIAL_PRESENCE ? ownPresence : new Presence(session
+			.getCurrentUser());
 		broadcastPresence(initialPresence);
 		session.setReady();
 	    }
