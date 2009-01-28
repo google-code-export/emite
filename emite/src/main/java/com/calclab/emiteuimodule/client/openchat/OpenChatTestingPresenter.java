@@ -10,7 +10,7 @@ public class OpenChatTestingPresenter {
     private final ChatManager chatManager;
     private final StatusUI statusUI;
 
-    public OpenChatTestingPresenter(ChatManager chatManager, StatusUI statusUI) {
+    public OpenChatTestingPresenter(final ChatManager chatManager, final StatusUI statusUI) {
 	this.chatManager = chatManager;
 	this.statusUI = statusUI;
     }
@@ -29,7 +29,7 @@ public class OpenChatTestingPresenter {
 	});
     }
 
-    public void onOpenChat(XmppURI uri) {
+    public void onOpenChat(final XmppURI uri) {
 	chatManager.openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
     }
 

@@ -13,6 +13,9 @@ import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 import com.calclab.suco.client.log.Logger;
 
+/**
+ * @see PresenceManager
+ */
 public class PresenceManagerImpl implements PresenceManager {
     private static final Presence INITIAL_PRESENCE = new Presence(Type.unavailable, null, null);
     private Presence ownPresence;

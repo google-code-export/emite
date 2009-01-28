@@ -37,8 +37,7 @@ import com.calclab.suco.client.events.Listener;
 /**
  * Default ChatManager implementation. Use ChatManager interface instead
  * 
- * @author dani
- * 
+ * @see ChatManager
  */
 public class ChatManagerImpl implements ChatManager {
     protected final HashSet<Conversation> conversations;
@@ -78,8 +77,8 @@ public class ChatManagerImpl implements ChatManager {
 	onChatCreated.add(listener);
     }
 
-    public void openChat(final XmppURI jid) {
-	openChat(jid, null, null);
+    public Conversation openChat(final XmppURI jid) {
+	return openChat(jid, null, null);
     }
 
     public <T> Conversation openChat(final XmppURI toURI, final Class<T> extraType, final T extraData) {
