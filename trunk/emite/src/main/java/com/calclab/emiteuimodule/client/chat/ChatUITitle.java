@@ -55,7 +55,9 @@ public class ChatUITitle {
 
     public String toHtml() {
 	HTML titleHtml = new HTML(title);
-	titleHtml.addStyleName(iconCls);
+	if (iconCls != null && iconCls.length() > 0) {
+	    titleHtml.addStyleName(iconCls);
+	}
 	titleHtml.addStyleName("e-tab-title");
 	KuneUiUtils.setQuickTip(titleHtml, tip);
 	return titleHtml.getHTML();
