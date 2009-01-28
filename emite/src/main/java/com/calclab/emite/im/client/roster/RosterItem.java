@@ -122,11 +122,6 @@ public class RosterItem {
 	return name;
     }
 
-    @Deprecated
-    public Presence getPresence() {
-	return null;
-    }
-
     public Presence.Show getShow() {
 	return show;
     }
@@ -179,16 +174,6 @@ public class RosterItem {
 	this.groups.clear();
 	for (final String group : groups) {
 	    addGroup(group);
-	}
-    }
-
-    @Deprecated
-    void setPresence(final Presence presence) {
-	if (presence.getShow() != Show.notSpecified) {
-	    setShow(presence.getShow());
-	}
-	if (presence.getStatus() != null) {
-	    setStatus(presence.getStatus());
 	}
     }
 
