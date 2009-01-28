@@ -52,6 +52,8 @@ public class PresenceManagerImpl implements PresenceManager {
 	    public void onEvent(final Session.State state) {
 		if (state == Session.State.loggingOut) {
 		    logOut(session.getCurrentUser());
+		} else if (state == Session.State.disconnected) {
+		    ownPresence = INITIAL_PRESENCE;
 		}
 	    }
 	});

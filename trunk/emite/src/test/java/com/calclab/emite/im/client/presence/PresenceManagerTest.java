@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.testing.MockedSession;
@@ -57,6 +58,15 @@ public class PresenceManagerTest {
     @Test
     public void shouldHavePresenceEvenLoggedOut() {
 	assertNotNull(manager.getOwnPresence());
+    }
+
+    @Test
+    public void shouldResetOwnPresenceWhenLoggedOut() {
+	session.setLoggedIn(uri("myself@domain"));
+	manager.setOwnPresence(Presence.build("status", Show.away));
+	assertEquals("status", manager.getOwnPresence().getStatus());
+	session.logout();
+	assertEquals(Type.unavailable, manager.getOwnPresence().getType());
     }
 
     @Test
