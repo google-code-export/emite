@@ -1,5 +1,0 @@
-<module>
-  <inherits name="com.calclab.emite.Emite" />
-  <entry-point class="com.calclab.blackboard.client.BlackboardEntryPoint" />
-  <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
-</module>
