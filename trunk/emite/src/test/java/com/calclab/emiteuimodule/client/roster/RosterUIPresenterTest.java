@@ -29,19 +29,19 @@ public class RosterUIPresenterTest {
 
     @Test
     public void availablePresenceMustReturnOnline() {
-	final RosterItem item = createRosterItem(SubscriptionState.both, Show.notSpecified);
+	RosterItem item = createRosterItem(SubscriptionState.both, Show.notSpecified, true);
 	assertEquals("Online", rosterUI.formatRosterItemStatusText(item));
     }
 
     @Test
     public void availableTypeMustShowApropiateIcon() {
 	final String statusText = "Some status text";
-	assertEquals(ChatIconDescriptor.available, getPresenceIcon(Show.notSpecified, null));
-	assertEquals(ChatIconDescriptor.offline, getPresenceIcon(Show.away, null));
-	assertEquals(ChatIconDescriptor.chat, getPresenceIcon(Show.chat, statusText));
-	assertEquals(ChatIconDescriptor.xa, getPresenceIcon(Show.xa, statusText));
-	assertEquals(ChatIconDescriptor.away, getPresenceIcon(Show.away, statusText));
-	assertEquals(ChatIconDescriptor.offline, getPresenceIcon(Show.unknown, statusText));
+	assertEquals(ChatIconDescriptor.available, getPresenceIcon(Show.notSpecified, null, true));
+	assertEquals(ChatIconDescriptor.offline, getPresenceIcon(null, null, false));
+	assertEquals(ChatIconDescriptor.chat, getPresenceIcon(Show.chat, statusText, true));
+	assertEquals(ChatIconDescriptor.xa, getPresenceIcon(Show.xa, statusText, true));
+	assertEquals(ChatIconDescriptor.away, getPresenceIcon(Show.away, statusText, true));
+	assertEquals(ChatIconDescriptor.unknown, getPresenceIcon(Show.unknown, statusText, true));
 	// assertEquals(ChatIconDescriptor.unknown,
 	// getPresenceIcon(Type.unavailable, Show.unknown, null));
     }
@@ -90,6 +90,7 @@ public class RosterUIPresenterTest {
 	// Show.notSpecified, "Nothing"));
 	rosterItem.setShow(Show.notSpecified);
 	rosterItem.setStatus("Nothing");
+	rosterItem.setAvailable(true);
 	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
 	user.setVisible(false);
 	rosterUI.refreshRosterItemInView(rosterItem, user, false);
@@ -100,15 +101,15 @@ public class RosterUIPresenterTest {
     public void nullStatusTextMustReturnSpace() {
 	// space? yes, a gwt-ext issue
 	assertEquals(rosterUI.getDefaultStatusText(true, Show.dnd), rosterUI
-		.formatRosterItemStatusText(createRosterItem(SubscriptionState.both, Show.dnd, null)));
+		.formatRosterItemStatusText(createRosterItem(SubscriptionState.both, Show.dnd, null, true)));
 	assertEquals(rosterUI.getDefaultStatusText(true, Show.dnd), rosterUI
-		.formatRosterItemStatusText(createRosterItem(SubscriptionState.both, Show.dnd, "null")));
+		.formatRosterItemStatusText(createRosterItem(SubscriptionState.both, Show.dnd, "null", true)));
     }
 
     @Test
     public void unavailablePresenceMustReturnOffline() {
 	assertEquals("Offline", rosterUI.formatRosterItemStatusText(createRosterItem(SubscriptionState.both,
-		Show.unknown)));
+		Show.unknown, false)));
     }
 
     @Test
@@ -129,6 +130,7 @@ public class RosterUIPresenterTest {
 	// Show.notSpecified, "Nothing"));
 	rosterItem.setShow(Show.notSpecified);
 	rosterItem.setStatus("Nothing");
+	rosterItem.setAvailable(true);
 	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
 	user.setVisible(true);
 	rosterUI.refreshRosterItemInView(rosterItem, user, false);
@@ -159,27 +161,30 @@ public class RosterUIPresenterTest {
 	Mockito.verify(rosterUIView).updateRosterItem(Mockito.eq(user), (UserGridMenuItemList) Mockito.anyObject());
     }
 
-    private RosterItem createRosterItem(final SubscriptionState subs) {
-	final RosterItem item = new RosterItem(otherUri, subs, "other", null);
+    private RosterItem createRosterItem(final SubscriptionState subs, final boolean available) {
+	RosterItem item = new RosterItem(otherUri, subs, "other", null);
+	item.setAvailable(available);
 	return item;
     }
 
-    private RosterItem createRosterItem(final SubscriptionState subs, final Show show) {
-	final RosterItem item = createRosterItem(subs);
+    private RosterItem createRosterItem(final SubscriptionState subs, final Show show, final boolean available) {
+	RosterItem item = createRosterItem(subs, available);
 	item.setShow(show);
 	return item;
     }
 
-    private RosterItem createRosterItem(final SubscriptionState subs, final Show show, final String status) {
-	final RosterItem item = createRosterItem(subs, show);
+    private RosterItem createRosterItem(final SubscriptionState subs, final Show show, final String status,
+	    final boolean available) {
+	RosterItem item = createRosterItem(subs, show, available);
 	item.setStatus(status);
 	return item;
     }
 
-    private ChatIconDescriptor getPresenceIcon(final Show show, final String status) {
-	final RosterItem item = new RosterItem(otherUri, SubscriptionState.both, "someone", null);
+    private ChatIconDescriptor getPresenceIcon(final Show show, final String status, final boolean available) {
+	RosterItem item = new RosterItem(otherUri, SubscriptionState.both, "someone", null);
 	item.setShow(show);
 	item.setStatus(status);
+	item.setAvailable(available);
 	return rosterUI.getPresenceIcon(item);
     }
 }
