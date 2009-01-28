@@ -24,10 +24,30 @@ package com.calclab.emite.im.client.presence;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.suco.client.events.Listener;
 
+/**
+ * Handles the user's presence state. Provides event to know when it changes.
+ * 
+ * Its responsable of send the initial presence after session login.
+ * 
+ * @see http://xmpp.org/rfcs/rfc3921.html#presence
+ */
 public interface PresenceManager {
+    /**
+     * Get the current user's presence
+     * 
+     * @return
+     */
     Presence getOwnPresence();
 
+    /**
+     * Add a litener to the own's-presence-changed event
+     * 
+     * @param listener
+     */
     void onOwnPresenceChanged(Listener<Presence> listener);
 
+    /**
+     * Change the current user presence
+     */
     void setOwnPresence(Presence presence);
 }

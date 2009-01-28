@@ -27,10 +27,19 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.events.Listener;
 
 /**
- * The ChatManager takes care of creation of chats.
+ * Create and manage chat conversations.
+ * 
+ * There are one implementation for one-to-one conversations (ChatManagerImpl)
+ * and many-to-many conversations (RoomManagerImpl)
  */
 public interface ChatManager {
 
+    /**
+     * Close the given conversation. If a conversation is closed, a new
+     * onChatCreated event will be throw when opened
+     * 
+     * @param conversation
+     */
     public void close(Conversation conversation);
 
     public Collection<? extends Conversation> getChats();
@@ -39,8 +48,26 @@ public interface ChatManager {
 
     public void onChatCreated(Listener<Conversation> listener);
 
-    public void openChat(XmppURI jid);
+    /**
+     * Same as openChat(uri, null, null);
+     * 
+     * @see openChat
+     */
+    public Conversation openChat(XmppURI uri);
 
-    public <T> Conversation openChat(final XmppURI xmppURI, Class<T> dataType, T dataValue);
+    // FIXME: no está nada claro...
+    /**
+     * Get the Conversation associatted to the given uri. If the conversation
+     * does not exist, it creates a new one and send the onChatCreated event to
+     * the listeners.
+     * 
+     * 
+     * @param <T>
+     * @param uri
+     * @param dataType
+     * @param dataValue
+     * @return
+     */
+    public <T> Conversation openChat(final XmppURI uri, Class<T> dataType, T dataValue);
 
 }

@@ -18,6 +18,9 @@ import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 
+/**
+ * @see Roster
+ */
 public class RosterImpl implements Roster {
 
     private static final PacketMatcher ROSTER_QUERY_FILTER = MatcherFactory.byNameAndXMLNS("query", "jabber:iq:roster");

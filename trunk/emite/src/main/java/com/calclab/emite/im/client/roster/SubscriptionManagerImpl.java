@@ -11,6 +11,9 @@ import com.calclab.suco.client.events.Event2;
 import com.calclab.suco.client.events.Listener;
 import com.calclab.suco.client.events.Listener2;
 
+/**
+ * @see SubscriptionManager
+ */
 public class SubscriptionManagerImpl implements SubscriptionManager {
     protected static final PacketMatcher FILTER_NICK = MatcherFactory.byNameAndXMLNS("nick",
 	    "http://jabber.org/protocol/nick");
