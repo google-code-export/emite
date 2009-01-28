@@ -167,7 +167,7 @@ public class RosterUIPresenter {
 	    case notSpecified:
 		return ChatIconDescriptor.available;
 	    case unknown:
-		return ChatIconDescriptor.offline;
+		return ChatIconDescriptor.unknown;
 	    }
 	} else {
 	    return ChatIconDescriptor.offline;
