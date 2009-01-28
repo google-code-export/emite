@@ -118,7 +118,7 @@ public class RosterUIPresenter {
 
     public void showUnavailableRosterItems(final boolean show) {
 	showUnavailableItems = show;
-	for (XmppURI jid : rosterMap.keySet()) {
+	for (final XmppURI jid : rosterMap.keySet()) {
 	    final RosterItem item = roster.getItemByJID(jid);
 	    final ChatUserUI user = rosterMap.get(jid);
 	    if (item == null) {
@@ -188,7 +188,7 @@ public class RosterUIPresenter {
     }
 
     void refreshRosterItemInView(final RosterItem item, final ChatUserUI user, final boolean showUnavailable) {
-	final boolean mustShow = isAvailable(item) || showUnavailable;
+	final boolean mustShow = item.isAvailable() || showUnavailable;
 	if (mustShow) {
 	    if (user.getVisible()) {
 		view.updateRosterItem(user, createMenuItemList(item));
@@ -207,7 +207,7 @@ public class RosterUIPresenter {
 	logRosterItem("Adding", item);
 	final ChatUserUI user = new ChatUserUI(avatarProvider.getAvatarURL(item.getJID()), item, "black");
 	updateUserWithRosterItem(user, item);
-	if (showUnavailableItems || isAvailable(item)) {
+	if (showUnavailableItems || item.isAvailable()) {
 	    user.setVisible(true);
 	    view.addRosterItem(user, createMenuItemList(item));
 	} else {
@@ -226,11 +226,10 @@ public class RosterUIPresenter {
     }
 
     private UserGridMenuItemList createMenuItemList(final RosterItem item) {
-	return createMenuItemList(item.getJID(), item.getPresence(), item.getSubscriptionState());
+	return createMenuItemList(item.getJID(), item.getSubscriptionState());
     }
 
-    private UserGridMenuItemList createMenuItemList(final XmppURI userURI, final Presence presence,
-	    final SubscriptionState subscriptionState) {
+    private UserGridMenuItemList createMenuItemList(final XmppURI userURI, final SubscriptionState subscriptionState) {
 	final UserGridMenuItemList itemList = new UserGridMenuItemList();
 	itemList.addItem(createStartChatMenuItem(userURI));
 	switch (subscriptionState) {
@@ -329,7 +328,9 @@ public class RosterUIPresenter {
 	});
     }
 
-    private boolean isAvailable(final RosterItem item) {
+    // FIXME: remove this method
+    @Deprecated
+    private boolean isAvailable_NOTUSED(final RosterItem item) {
 	final Presence presence = item.getPresence();
 	switch (presence.getType()) {
 	case available:
@@ -355,21 +356,10 @@ public class RosterUIPresenter {
 	return false;
     }
 
-    private void logPresence(final Presence presence, final String subTitle) {
-	Log.info("Presence: type: " + presence.getType() + ", from: " + presence.getFromAsString() + ", show: "
-		+ presence.getShow().toString() + ", status: " + presence.getStatus() + " (" + subTitle + ")");
-    }
-
     private void logRosterItem(final String operation, final RosterItem item) {
 	final String name = item.getName();
-	final Presence presence = item.getPresence();
 	Log.info(operation + " roster item: " + item.getJID() + ", name: " + name + ", subsc: "
 		+ item.getSubscriptionState());
-	if (presence != null) {
-	    logPresence(presence, "processed after RosterChanged or RosterItemChanged");
-	} else {
-	    Log.info("with null presence");
-	}
     }
 
     private void refreshRoster(final Collection<RosterItem> rosterItems) {

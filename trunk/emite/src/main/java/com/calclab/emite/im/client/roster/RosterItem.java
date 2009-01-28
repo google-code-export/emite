@@ -41,6 +41,13 @@ public class RosterItem {
 
     private static final PacketMatcher GROUP_FILTER = MatcherFactory.byName("group");
 
+    /**
+     * Create a new RosterItem based on given a <item> stanza
+     * 
+     * @param packet
+     *            the stanza
+     * @return a new roster item instance
+     */
     static RosterItem parse(final IPacket packet) {
 	final RosterItem item = new RosterItem(uri(packet.getAttribute("jid")), parseSubscriptionState(packet
 		.getAttribute("subscription")), packet.getAttribute("name"), parseAsk(packet.getAttribute("ask")));
@@ -77,7 +84,8 @@ public class RosterItem {
     private final ArrayList<String> groups;
     private final XmppURI jid;
     private final String name;
-    private Presence presence;
+    private String status;
+    private Presence.Show show;
 
     private SubscriptionState subscriptionState;
     private final Type ask;
@@ -88,7 +96,8 @@ public class RosterItem {
 	this.subscriptionState = subscriptionState;
 	this.name = name;
 	this.groups = new ArrayList<String>();
-	setPresence(null);
+	this.show = Show.unknown;
+	this.status = null;
     }
 
     public Type getAsk() {
@@ -113,20 +122,33 @@ public class RosterItem {
 	return name;
     }
 
+    @Deprecated
     public Presence getPresence() {
-	return presence;
+	return null;
+    }
+
+    public Presence.Show getShow() {
+	return show;
+    }
+
+    public String getStatus() {
+	return status;
     }
 
     public SubscriptionState getSubscriptionState() {
 	return subscriptionState;
     }
 
-    public void setPresence(final Presence presence) {
-	if (presence == null) {
-	    this.presence = new Presence(Type.unavailable, null, null).With(Show.away);
-	} else {
-	    this.presence = presence;
-	}
+    public boolean isAvailable() {
+	return show != Show.unknown;
+    }
+
+    public void setShow(final Presence.Show show) {
+	this.show = show;
+    }
+
+    public void setStatus(final String status) {
+	this.status = status;
     }
 
     public void setSubscriptionState(final SubscriptionState state) {
@@ -138,9 +160,10 @@ public class RosterItem {
     }
 
     /**
-     * Add the item as child of the given stanza
+     * Creates a new <item> stanza and appends to the parent
      * 
      * @param parent
+     *            the parent stanza to append the child to
      * @return the child stanza created
      */
     IPacket addStanzaTo(final IPacket parent) {
@@ -156,6 +179,16 @@ public class RosterItem {
 	this.groups.clear();
 	for (final String group : groups) {
 	    addGroup(group);
+	}
+    }
+
+    @Deprecated
+    void setPresence(final Presence presence) {
+	if (presence.getShow() != Show.notSpecified) {
+	    setShow(presence.getShow());
+	}
+	if (presence.getStatus() != null) {
+	    setStatus(presence.getStatus());
 	}
     }
 

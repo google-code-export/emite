@@ -1,6 +1,5 @@
 package com.calclab.emite.hablar.client.pages.roster;
 
-import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -43,8 +42,7 @@ public class RosterItemView extends FlowPanel {
 
     public void setItem(final RosterItem item) {
 	this.item = item;
-	final Show s = item.getPresence().getShow();
-	show.setHTML("<b>" + s + "</b>");
+	show.setHTML("<b>" + item.getShow() + "</b>");
 	jid.setText(item.getJID().toString());
     }
 
