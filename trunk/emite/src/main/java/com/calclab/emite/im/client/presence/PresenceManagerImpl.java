@@ -29,7 +29,7 @@ public class PresenceManagerImpl implements PresenceManager {
 	roster.onRosterRetrieved(new Listener<Collection<RosterItem>>() {
 	    public void onEvent(final Collection<RosterItem> parameter) {
 		Logger.debug("Sending initial presence");
-		Presence initialPresence = ownPresence != INITIAL_PRESENCE ? ownPresence : new Presence(session
+		final Presence initialPresence = ownPresence != INITIAL_PRESENCE ? ownPresence : new Presence(session
 			.getCurrentUser());
 		broadcastPresence(initialPresence);
 		session.setReady();
@@ -38,14 +38,12 @@ public class PresenceManagerImpl implements PresenceManager {
 
 	session.onPresence(new Listener<Presence>() {
 	    public void onEvent(final Presence presence) {
-		switch (presence.getType()) {
-		case probe:
+		final Type type = presence.getType();
+		if (type == Type.probe) {
 		    session.send(ownPresence);
-		    break;
-		case error:
-		    // FIXME: what should we do?
+		} else if (type == Type.error) {
+		    // FIXME: what should we do
 		    Log.warn("Error presence!!!");
-		    break;
 		}
 	    }
 	});

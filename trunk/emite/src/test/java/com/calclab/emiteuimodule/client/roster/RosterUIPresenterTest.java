@@ -29,7 +29,7 @@ public class RosterUIPresenterTest {
 
     @Test
     public void availablePresenceMustReturnOnline() {
-	RosterItem item = createRosterItem(SubscriptionState.both, Show.notSpecified);
+	final RosterItem item = createRosterItem(SubscriptionState.both, Show.notSpecified);
 	assertEquals("Online", rosterUI.formatRosterItemStatusText(item));
     }
 
@@ -99,10 +99,10 @@ public class RosterUIPresenterTest {
     @Test
     public void nullStatusTextMustReturnSpace() {
 	// space? yes, a gwt-ext issue
-	assertEquals(rosterUI.getDefaultStatusText(true, Show.dnd), rosterUI.formatRosterItemStatusText(createRosterItem(
-		SubscriptionState.both, Show.dnd, null)));
-	assertEquals(rosterUI.getDefaultStatusText(true, Show.dnd), rosterUI.formatRosterItemStatusText(createRosterItem(
-		SubscriptionState.both, Show.dnd, "null")));
+	assertEquals(rosterUI.getDefaultStatusText(true, Show.dnd), rosterUI
+		.formatRosterItemStatusText(createRosterItem(SubscriptionState.both, Show.dnd, null)));
+	assertEquals(rosterUI.getDefaultStatusText(true, Show.dnd), rosterUI
+		.formatRosterItemStatusText(createRosterItem(SubscriptionState.both, Show.dnd, "null")));
     }
 
     @Test
@@ -160,24 +160,24 @@ public class RosterUIPresenterTest {
     }
 
     private RosterItem createRosterItem(final SubscriptionState subs) {
-	RosterItem item = new RosterItem(otherUri, subs, "other", null);
+	final RosterItem item = new RosterItem(otherUri, subs, "other", null);
 	return item;
     }
 
     private RosterItem createRosterItem(final SubscriptionState subs, final Show show) {
-	RosterItem item = createRosterItem(subs);
+	final RosterItem item = createRosterItem(subs);
 	item.setShow(show);
 	return item;
     }
 
     private RosterItem createRosterItem(final SubscriptionState subs, final Show show, final String status) {
-	RosterItem item = createRosterItem(subs, show);
+	final RosterItem item = createRosterItem(subs, show);
 	item.setStatus(status);
 	return item;
     }
 
     private ChatIconDescriptor getPresenceIcon(final Show show, final String status) {
-	RosterItem item = new RosterItem(otherUri, SubscriptionState.both, "someone", null);
+	final RosterItem item = new RosterItem(otherUri, SubscriptionState.both, "someone", null);
 	item.setShow(show);
 	item.setStatus(status);
 	return rosterUI.getPresenceIcon(item);
