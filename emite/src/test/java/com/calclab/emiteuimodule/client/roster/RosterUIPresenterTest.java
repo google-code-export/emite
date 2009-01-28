@@ -99,9 +99,9 @@ public class RosterUIPresenterTest {
     @Test
     public void nullStatusTextMustReturnSpace() {
 	// space? yes, a gwt-ext issue
-	assertEquals(rosterUI.getShowText(true, Show.dnd), rosterUI.formatRosterItemStatusText(createRosterItem(
+	assertEquals(rosterUI.getDefaultStatusText(true, Show.dnd), rosterUI.formatRosterItemStatusText(createRosterItem(
 		SubscriptionState.both, Show.dnd, null)));
-	assertEquals(rosterUI.getShowText(true, Show.dnd), rosterUI.formatRosterItemStatusText(createRosterItem(
+	assertEquals(rosterUI.getDefaultStatusText(true, Show.dnd), rosterUI.formatRosterItemStatusText(createRosterItem(
 		SubscriptionState.both, Show.dnd, "null")));
     }
 
