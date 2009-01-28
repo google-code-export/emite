@@ -55,9 +55,7 @@ public class RosterImpl implements Roster {
 		if (item != null) {
 		    Show showReceived = presence.getShow();
 		    item.setShow(showReceived == null ? Show.notSpecified : showReceived);
-		    if (presence.getStatus() != null) {
-			item.setStatus(presence.getStatus());
-		    }
+		    item.setStatus(presence.getStatus());
 		    onItemChanged.fire(item);
 		}
 	    }

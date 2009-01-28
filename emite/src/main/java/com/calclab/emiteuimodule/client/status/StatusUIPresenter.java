@@ -212,7 +212,7 @@ public class StatusUIPresenter implements StatusUI {
 	onUserSubscriptionModeChanged.fire(subscriptionMode);
     }
 
-    private void loginIfnecessary(final Show status, final String statusText) {
+    private void loginIfnecessary(final Show show, final String statusText) {
 	assert userChatOptions != null;
 	final XmppURI userJid = userChatOptions.getUserJid();
 	switch (session.getState()) {
@@ -225,7 +225,7 @@ public class StatusUIPresenter implements StatusUI {
 	    Log.error("Trying to set status and whe have a internal error");
 	    break;
 	}
-	presenceManager.setOwnPresence(Presence.build(statusText, status));
+	presenceManager.setOwnPresence(Presence.build(statusText, show));
     }
 
     private void onAfterLogin() {
