@@ -17,7 +17,7 @@ public class RosterItemWrapper {
     @Override
     public String toString() {
 	String value = item.getJID() + "(name: " + name + ")";
-	value += " - presence: " + item.getPresence();
+	value += " - show: " + item.getShow() + " - status: " + item.getStatus();
 	value += " - state: " + item.getSubscriptionState();
 	value += " - ask: " + item.getAsk();
 	return value;

@@ -77,7 +77,10 @@ public class RosterUIPresenterTest {
 
     @Test
     public void novisibleItemAvailableMustAdd() {
-	rosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
+	// rosterItem.setPresence(createPresence(Type.available,
+	// Show.notSpecified, "Nothing"));
+	rosterItem.setShow(Show.notSpecified);
+	rosterItem.setStatus("Nothing");
 	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
 	user.setVisible(false);
 	rosterUI.refreshRosterItemInView(rosterItem, user, true);
@@ -86,7 +89,10 @@ public class RosterUIPresenterTest {
 
     @Test
     public void novisibleItemAvailableMustAddwithNotShowUnavailable() {
-	rosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
+	// rosterItem.setPresence(createPresence(Type.available,
+	// Show.notSpecified, "Nothing"));
+	rosterItem.setShow(Show.notSpecified);
+	rosterItem.setStatus("Nothing");
 	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
 	user.setVisible(false);
 	rosterUI.refreshRosterItemInView(rosterItem, user, false);
@@ -113,7 +119,10 @@ public class RosterUIPresenterTest {
 
     @Test
     public void visibleItemAvailableMustUpdate() {
-	rosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
+	// rosterItem.setPresence(createPresence(Type.available,
+	// Show.notSpecified, "Nothing"));
+	rosterItem.setShow(Show.notSpecified);
+	rosterItem.setStatus("Nothing");
 	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
 	user.setVisible(true);
 	rosterUI.refreshRosterItemInView(rosterItem, user, true);
@@ -122,7 +131,10 @@ public class RosterUIPresenterTest {
 
     @Test
     public void visibleItemAvailableMustUpdateWithNotShowUnavailable() {
-	rosterItem.setPresence(createPresence(Type.available, Show.notSpecified, "Nothing"));
+	// rosterItem.setPresence(createPresence(Type.available,
+	// Show.notSpecified, "Nothing"));
+	rosterItem.setShow(Show.notSpecified);
+	rosterItem.setStatus("Nothing");
 	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
 	user.setVisible(true);
 	rosterUI.refreshRosterItemInView(rosterItem, user, false);
@@ -131,7 +143,10 @@ public class RosterUIPresenterTest {
 
     @Test
     public void visibleItemUnavailableMustRemoveWithNotShowAvailable() {
-	rosterItem.setPresence(createPresence(Type.unavailable, Show.notSpecified, "Nothing"));
+	// rosterItem.setPresence(createPresence(Type.unavailable,
+	// Show.notSpecified, "Nothing"));
+	rosterItem.setShow(Show.unknown);
+	rosterItem.setStatus("Nothing");
 	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
 	user.setVisible(true);
 	rosterUI.refreshRosterItemInView(rosterItem, user, false);
@@ -140,7 +155,10 @@ public class RosterUIPresenterTest {
 
     @Test
     public void visibleItemUnavailableMustUpdate() {
-	rosterItem.setPresence(createPresence(Type.unavailable, Show.notSpecified, "Nothing"));
+	// rosterItem.setPresence(createPresence(Type.unavailable,
+	// Show.notSpecified, "Nothing"));
+	rosterItem.setShow(Show.notSpecified);
+	rosterItem.setStatus("Nothing");
 	final ChatUserUI user = new ChatUserUI("", rosterItem, "black");
 	user.setVisible(true);
 	rosterUI.refreshRosterItemInView(rosterItem, user, true);
