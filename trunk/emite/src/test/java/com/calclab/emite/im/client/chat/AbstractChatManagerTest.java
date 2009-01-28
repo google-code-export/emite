@@ -12,31 +12,32 @@ import com.calclab.suco.testing.events.MockedListener;
 
 public abstract class AbstractChatManagerTest {
     protected static final XmppURI MYSELF = uri("self@domain");
+    protected static final XmppURI OTHER = uri("other@domain");
     protected ChatManagerImpl manager;
     protected MockedSession session;
 
     @Before
     public void beforeTests() {
-        session = new MockedSession();
-        manager = createChatManager();
-        session.login(MYSELF, null);
+	session = new MockedSession();
+	manager = createChatManager();
+	session.login(MYSELF, null);
     }
 
     @Test
     public void shouldEventWhenAChatIsClosed() {
-        final Conversation conversation = manager.openChat(uri("other@domain/resource"), null, null);
-        final MockedListener<Conversation> listener = new MockedListener<Conversation>();
-        manager.onChatClosed(listener);
-        manager.close(conversation);
-        assertTrue(listener.isCalledOnce());
+	final Conversation conversation = manager.openChat(uri("other@domain/resource"), null, null);
+	final MockedListener<Conversation> listener = new MockedListener<Conversation>();
+	manager.onChatClosed(listener);
+	manager.close(conversation);
+	assertTrue(listener.isCalledOnce());
     }
 
     @Test
     public void shouldEventWhenChatCreated() {
-        final MockedListener<Conversation> listener = new MockedListener<Conversation>();
-        manager.onChatCreated(listener);
-        manager.openChat(uri("other@domain"), null, null);
-        assertTrue(listener.isCalledOnce());
+	final MockedListener<Conversation> listener = new MockedListener<Conversation>();
+	manager.onChatCreated(listener);
+	manager.openChat(OTHER, null, null);
+	assertTrue(listener.isCalledOnce());
     }
 
     protected abstract ChatManagerImpl createChatManager();

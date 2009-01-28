@@ -8,9 +8,22 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.im.client.chat.Conversation.State;
+import com.calclab.emite.xep.chatstate.client.ChatStateManager;
 import com.calclab.suco.testing.events.MockedListener;
 
 public class ChatManagerTest extends AbstractChatManagerTest {
+
+    @Test
+    public void chatStateDontFireOnChatCreatedButMustAfterOpenChat() {
+	final Message message = new Message(OTHER, MYSELF, null);
+	message.addChild("gone", ChatStateManager.XMLNS);
+
+	final MockedListener<Conversation> listener = addOnChatCreatedListener();
+	session.receives(message);
+	assertTrue(listener.isNotCalled());
+	manager.openChat(OTHER);
+	assertTrue(listener.isCalled());
+    }
 
     @Test
     public void managerShouldCreateOneChatForSameResource() {
@@ -30,10 +43,22 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     public void roomInvitationsShouldDontFireOnChatCreated() {
 	final MockedListener<Conversation> listener = addOnChatCreatedListener();
 	session.receives("<message to='" + MYSELF
-		+ "' from='someroom@domain'><x xmlns='http://jabber.org/protocol/muc#user'>"
-		+ "<invite from='someone@localhost'><reason>Join to our conversation</reason></invite>"
+		+ "' from='someroom@domain'><x xmlns='http://jabber.org/protocol/muc#user'>" + "<invite from='" + OTHER
+		+ "'><reason>Join to our conversation</reason></invite>"
 		+ "</x><x jid='someroom@domain' xmlns='jabber:x:conference' /></message>");
 	assertTrue(listener.isNotCalled());
+    }
+
+    @Test
+    public void roomInvitationsShouldDontFireOnChatCreatedButMustAfterOpenChat() {
+	final MockedListener<Conversation> listener = addOnChatCreatedListener();
+	session.receives("<message to='" + MYSELF
+		+ "' from='someroom@domain'><x xmlns='http://jabber.org/protocol/muc#user'>" + "<invite from='" + OTHER
+		+ "'><reason>Join to our conversation</reason></invite>"
+		+ "</x><x jid='someroom@domain' xmlns='jabber:x:conference' /></message>");
+	assertTrue(listener.isNotCalled());
+	manager.openChat(OTHER);
+	assertTrue(listener.isCalled());
     }
 
     @Test
