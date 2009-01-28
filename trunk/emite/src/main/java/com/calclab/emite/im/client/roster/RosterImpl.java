@@ -14,6 +14,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 
@@ -52,7 +53,12 @@ public class RosterImpl implements Roster {
 	    public void onEvent(final Presence presence) {
 		final RosterItem item = getItemByJID(presence.getFrom());
 		if (item != null) {
-		    item.setPresence(presence);
+		    if (presence.getShow() != Show.notSpecified) {
+			item.setShow(presence.getShow());
+		    }
+		    if (presence.getStatus() != null) {
+			item.setStatus(presence.getStatus());
+		    }
 		    onItemChanged.fire(item);
 		}
 	    }
