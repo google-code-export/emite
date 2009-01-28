@@ -28,10 +28,8 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.packet.TextUtils;
-import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
-import com.calclab.emite.core.client.xmpp.stanzas.Presence.Type;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.im.client.roster.SubscriptionManager;
@@ -72,7 +70,7 @@ public class RosterUIPresenter {
 	view.clearRoster();
     }
 
-    public String getShowText(final Type type, final Show show) {
+    public String getShowText(final boolean isAvailable, final Show show) {
 	String textLabel = "";
 	switch (show) {
 	case chat:
@@ -86,9 +84,10 @@ public class RosterUIPresenter {
 	    textLabel = i18n.t("Don't disturb");
 	    break;
 	case notSpecified:
-	    if (type.equals(Type.available)) {
+	case unknown:
+	    if (isAvailable) {
 		textLabel = i18n.t("Online");
-	    } else if (type.equals(Type.unavailable)) {
+	    } else {
 		textLabel = i18n.t("Offline");
 	    }
 	}
@@ -129,35 +128,53 @@ public class RosterUIPresenter {
 	}
     }
 
-    String formatRosterItemStatusText(final RosterItem item, final SubscriptionState subscriptionState) {
-	final String statusText = item.getStatus() != null ? item.getStatus() : "";
-	// FIXME
-	/*
-	 * if (presence != null) { final Show show = presence.getShow(); if
-	 * (statusText.equals("")) { statusText +=
-	 * getShowText(presence.getType(), show); } } if (subscriptionState !=
-	 * null) { switch (subscriptionState) { case none: statusText += " " +
-	 * i18n.t("(you cannot see your buddy status, your buddy neither)");
-	 * break; case to: statusText += " " +
-	 * i18n.t("(your buddy cannot see your status)"); break; case from:
-	 * statusText += " " + i18n.t("(you cannot see your buddy status)");
-	 * break; case both: break; } }
-	 */
+    String formatRosterItemStatusText(final RosterItem item) {
+	String itemStatus = item.getStatus();
+	String statusText = itemStatus == null || itemStatus.equals("null") ? "" : itemStatus;
+	final Show show = item.getShow();
+	statusText += getShowText(item.isAvailable(), show);
+	SubscriptionState subscriptionState = item.getSubscriptionState();
+	if (subscriptionState != null) {
+	    switch (subscriptionState) {
+	    case none:
+		statusText += " " + i18n.t("(you cannot see your buddy status, your buddy neither)");
+		break;
+	    case to:
+		statusText += " " + i18n.t("(your buddy cannot see your status)");
+		break;
+	    case from:
+		statusText += " " + i18n.t("(you cannot see your buddy status)");
+		break;
+	    case both:
+		break;
+	    }
+	}
 	return statusText.equals("") ? " " : TextUtils.escape(statusText);
     }
 
     ChatIconDescriptor getPresenceIcon(final RosterItem item) {
-	return item.isAvailable() ? ChatIconDescriptor.available : ChatIconDescriptor.away;
-	// FIXME
-	/*
-	 * switch (presence.getType()) { case available: switch
-	 * (presence.getShow()) { case chat: case away: case dnd: case xa:
-	 * return ChatIconDescriptor.valueOf(presence.getShow().toString());
-	 * case notSpecified: case unknown: return ChatIconDescriptor.available;
-	 * } case unavailable: switch (presence.getShow()) { case away: case
-	 * notSpecified: return ChatIconDescriptor.offline; case unknown: return
-	 * ChatIconDescriptor.unknown; } } return ChatIconDescriptor.unknown;
-	 */
+	Show show = item.getShow();
+	if (item.isAvailable()) {
+	    switch (show) {
+	    case chat:
+	    case away:
+	    case dnd:
+	    case xa:
+		return ChatIconDescriptor.valueOf(show.toString());
+	    case notSpecified:
+	    case unknown:
+		return ChatIconDescriptor.available;
+	    }
+	} else {
+	    switch (show) {
+	    case away:
+	    case notSpecified:
+		return ChatIconDescriptor.offline;
+	    case unknown:
+		return ChatIconDescriptor.unknown;
+	    }
+	}
+	return ChatIconDescriptor.unknown;
     }
 
     void refreshRosterItemInView(final RosterItem item, final ChatUserUI user, final boolean showUnavailable) {
@@ -301,34 +318,6 @@ public class RosterUIPresenter {
 	});
     }
 
-    // FIXME: remove this method
-    @Deprecated
-    private boolean isAvailable_NOTUSED(final RosterItem item) {
-	final Presence presence = null; // item.getPresence();
-	switch (presence.getType()) {
-	case available:
-	    switch (presence.getShow()) {
-	    case chat:
-	    case away:
-	    case dnd:
-	    case xa:
-	    case notSpecified:
-		return true;
-	    case unknown:
-		return false;
-	    }
-	case unavailable:
-	    switch (presence.getShow()) {
-	    case away:
-	    case notSpecified:
-		return false;
-	    case unknown:
-		return false;
-	    }
-	}
-	return false;
-    }
-
     private void logRosterItem(final String operation, final RosterItem item) {
 	final String name = item.getName();
 	Log.info(operation + " roster item: " + item.getJID() + ", name: " + name + ", subsc: "
@@ -345,7 +334,7 @@ public class RosterUIPresenter {
 
     private void updateUserWithRosterItem(final ChatUserUI user, final RosterItem item) {
 	user.setStatusIcon(getPresenceIcon(item));
-	user.setStatusText(formatRosterItemStatusText(item, item.getSubscriptionState()));
+	user.setStatusText(formatRosterItemStatusText(item));
     }
 
 }
