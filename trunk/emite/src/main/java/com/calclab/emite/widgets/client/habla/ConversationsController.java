@@ -2,11 +2,11 @@ package com.calclab.emite.widgets.client.habla;
 
 import java.util.HashMap;
 
-import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.ChatManager;
+import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.widgets.client.chat.ChatWidget;
-import com.calclab.suco.client.ioc.Provider;
 import com.calclab.suco.client.events.Listener;
+import com.calclab.suco.client.ioc.Provider;
 
 public class ConversationsController {
     private final ChatManager manager;

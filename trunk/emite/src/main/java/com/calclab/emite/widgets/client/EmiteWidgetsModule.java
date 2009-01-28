@@ -1,7 +1,7 @@
 package com.calclab.emite.widgets.client;
 
-import com.calclab.emite.browser.client.DomAssist;
 import com.calclab.emite.browser.client.AutoConfig;
+import com.calclab.emite.browser.client.DomAssist;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.im.client.chat.ChatManager;

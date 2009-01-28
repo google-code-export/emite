@@ -5,9 +5,9 @@ import static com.calclab.suco.testing.events.Eventito.anyListener;
 import static com.calclab.suco.testing.events.Eventito.fire;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
