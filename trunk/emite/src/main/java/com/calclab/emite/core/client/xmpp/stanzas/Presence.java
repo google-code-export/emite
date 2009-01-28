@@ -63,6 +63,7 @@ public class Presence extends BasicStanza {
 	 * MUST have one of the following values:
 	 * </p>
 	 */
+	@Deprecated
 	available,
 	/**
 	 * error -- An error has occurred regarding processing or delivery of a

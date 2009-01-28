@@ -156,22 +156,16 @@ public class RosterUIPresenter {
 	Show show = item.getShow();
 	if (item.isAvailable()) {
 	    switch (show) {
-	    case chat:
 	    case away:
+		return ChatIconDescriptor.away;
+	    case chat:
 	    case dnd:
 	    case xa:
 		return ChatIconDescriptor.valueOf(show.toString());
 	    case notSpecified:
-	    case unknown:
 		return ChatIconDescriptor.available;
-	    }
-	} else {
-	    switch (show) {
-	    case away:
-	    case notSpecified:
-		return ChatIconDescriptor.offline;
 	    case unknown:
-		return ChatIconDescriptor.unknown;
+		return ChatIconDescriptor.offline;
 	    }
 	}
 	return ChatIconDescriptor.unknown;
