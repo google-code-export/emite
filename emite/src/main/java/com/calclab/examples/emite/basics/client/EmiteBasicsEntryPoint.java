@@ -1,5 +1,7 @@
 package com.calclab.examples.emite.basics.client;
 
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+
 import java.util.Collection;
 
 import com.calclab.emite.core.client.bosh.BoshSettings;
@@ -15,7 +17,6 @@ import com.calclab.suco.client.events.Listener;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
-import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.*;
 
 public class EmiteBasicsEntryPoint implements EntryPoint {
 

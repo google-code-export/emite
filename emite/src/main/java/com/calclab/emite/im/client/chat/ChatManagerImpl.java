@@ -24,6 +24,8 @@ package com.calclab.emite.im.client.chat;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.calclab.emite.core.client.packet.IPacket;
+import com.calclab.emite.core.client.packet.NoPacket;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
@@ -90,16 +92,25 @@ public class ChatManagerImpl implements ChatManager {
 	return conversation;
     }
 
+    /**
+     * Template method. Should be protected to be overriden by Room Manager
+     * Currently it filters all the Messages without body. (see issue #114)
+     * 
+     * @param message
+     */
     protected void eventMessage(final Message message) {
 	final Type type = message.getType();
 	switch (type) {
 	case chat:
 	case normal:
-	    final XmppURI from = message.getFrom();
+	    final IPacket body = message.getFirstChild("body");
+	    if (body != NoPacket.INSTANCE) {
+		final XmppURI from = message.getFrom();
 
-	    Conversation conversation = findChat(from);
-	    if (conversation == null) {
-		conversation = createChat(from, null, null);
+		Conversation conversation = findChat(from);
+		if (conversation == null) {
+		    conversation = createChat(from, null, null);
+		}
 	    }
 	    break;
 	}

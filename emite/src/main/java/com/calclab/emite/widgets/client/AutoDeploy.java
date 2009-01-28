@@ -3,8 +3,8 @@ package com.calclab.emite.widgets.client;
 import java.util.ArrayList;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.calclab.emite.browser.client.DomAssist;
 import com.calclab.emite.browser.client.AutoConfig;
+import com.calclab.emite.browser.client.DomAssist;
 import com.calclab.emite.widgets.client.base.EmiteWidget;
 import com.calclab.suco.client.ioc.Provider;
 import com.google.gwt.dom.client.Element;
