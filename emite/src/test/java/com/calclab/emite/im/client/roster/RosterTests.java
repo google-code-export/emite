@@ -16,7 +16,6 @@ import org.junit.Test;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
-import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.events.MockedListener;
 
@@ -88,15 +87,14 @@ public class RosterTests {
 
     @Test
     public void shouldHandleInitialPresence() {
-	final MockedListener<RosterItem> listener = new MockedListener<RosterItem>();
-	roster.onItemChanged(listener);
 	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
 		+ "<item jid='friend@domain' name='MyFriend' /></query></iq>");
+	final MockedListener<RosterItem> listener = new MockedListener<RosterItem>();
+	roster.onItemChanged(listener);
 	session.receives("<presence from='friend@domain' />");
 	final RosterItem item = roster.getItemByJID(uri("friend@domain"));
-	assertEquals(Show.unknown, item.getShow());
-	assertEquals(null, item.getStatus());
 	assertTrue(listener.isCalledWithSame(item));
+	assertEquals(true, item.isAvailable());
     }
 
     @Test
@@ -112,6 +110,19 @@ public class RosterTests {
 	assertEquals(Presence.Show.dnd, item.getShow());
 	assertEquals("message", item.getStatus());
 	assertTrue(listener.isCalledWithSame(item));
+    }
+
+    @Test
+    public void shouldHandleUnavailablePresence() {
+	session.receives("<iq type='set'><query xmlns='jabber:iq:roster'>"
+		+ "<item jid='friend@domain' name='MyFriend' /></query></iq>");
+	final MockedListener<RosterItem> listener = new MockedListener<RosterItem>();
+	roster.onItemChanged(listener);
+	session.receives("<presence type='unavailable' from='friend@domain' />");
+	final RosterItem item = roster.getItemByJID(uri("friend@domain"));
+	assertTrue(listener.isCalledWithSame(item));
+	assertEquals(false, item.isAvailable());
+
     }
 
     @Test

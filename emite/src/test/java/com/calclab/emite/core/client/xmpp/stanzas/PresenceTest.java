@@ -43,7 +43,7 @@ public class PresenceTest {
     @Test
     public void shouldGetType() {
 	Presence presence = new Presence();
-	assertEquals(Type.available, presence.getType());
+	assertEquals(null, presence.getType());
 	presence = new Presence(new Packet("presence").With("type", Type.probe.toString()));
 	assertEquals(Type.probe, presence.getType());
 	presence = new Presence(new Packet("presence").With("type", "not valid"));
