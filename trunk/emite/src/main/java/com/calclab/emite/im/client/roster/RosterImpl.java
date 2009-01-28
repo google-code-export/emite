@@ -53,9 +53,8 @@ public class RosterImpl implements Roster {
 	    public void onEvent(final Presence presence) {
 		final RosterItem item = getItemByJID(presence.getFrom());
 		if (item != null) {
-		    if (presence.getShow() != Show.notSpecified) {
-			item.setShow(presence.getShow());
-		    }
+		    Show showReceived = presence.getShow();
+		    item.setShow(showReceived == null ? Show.notSpecified : showReceived);
 		    if (presence.getStatus() != null) {
 			item.setStatus(presence.getStatus());
 		    }

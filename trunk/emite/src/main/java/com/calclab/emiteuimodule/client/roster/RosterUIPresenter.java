@@ -70,7 +70,7 @@ public class RosterUIPresenter {
 	view.clearRoster();
     }
 
-    public String getShowText(final boolean isAvailable, final Show show) {
+    public String getDefaultStatusText(final boolean isAvailable, final Show show) {
 	String textLabel = "";
 	switch (show) {
 	case chat:
@@ -131,8 +131,10 @@ public class RosterUIPresenter {
     String formatRosterItemStatusText(final RosterItem item) {
 	String itemStatus = item.getStatus();
 	String statusText = itemStatus == null || itemStatus.equals("null") ? "" : itemStatus;
-	final Show show = item.getShow();
-	statusText += getShowText(item.isAvailable(), show);
+	if (statusText.equals("")) {
+	    // Don't have status, ok use default status
+	    statusText += getDefaultStatusText(item.isAvailable(), item.getShow());
+	}
 	SubscriptionState subscriptionState = item.getSubscriptionState();
 	if (subscriptionState != null) {
 	    switch (subscriptionState) {
@@ -167,6 +169,8 @@ public class RosterUIPresenter {
 	    case unknown:
 		return ChatIconDescriptor.offline;
 	    }
+	} else {
+	    return ChatIconDescriptor.offline;
 	}
 	return ChatIconDescriptor.unknown;
     }
@@ -315,7 +319,7 @@ public class RosterUIPresenter {
     private void logRosterItem(final String operation, final RosterItem item) {
 	final String name = item.getName();
 	Log.info(operation + " roster item: " + item.getJID() + ", name: " + name + ", subsc: "
-		+ item.getSubscriptionState());
+		+ item.getSubscriptionState() + ", show: " + item.getShow() + ", status: " + item.getStatus());
     }
 
     private void refreshRoster(final Collection<RosterItem> rosterItems) {
