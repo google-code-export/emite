@@ -63,8 +63,6 @@ public class Presence extends BasicStanza {
 	 * MUST have one of the following values:
 	 * </p>
 	 */
-	@Deprecated
-	available,
 	/**
 	 * error -- An error has occurred regarding processing or delivery of a
 	 * previously-sent presence stanza.
@@ -187,15 +185,15 @@ public class Presence extends BasicStanza {
     }
 
     /**
-     * Get the presence's type
+     * Get the presence's type. If null returned, available (state) is supposed
      * 
-     * @return The type, never null
+     * @return The type, can return null (means available)
      * @see http://www.xmpp.org/rfcs/rfc3921.html#presence
      */
     public Type getType() {
 	final String type = getAttribute(BasicStanza.TYPE);
 	try {
-	    return type != null ? Type.valueOf(type) : Type.available;
+	    return type != null ? Type.valueOf(type) : null;
 	} catch (final IllegalArgumentException e) {
 	    return Type.error;
 	}

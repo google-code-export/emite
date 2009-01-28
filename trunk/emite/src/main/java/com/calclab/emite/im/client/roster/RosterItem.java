@@ -89,6 +89,7 @@ public class RosterItem {
 
     private SubscriptionState subscriptionState;
     private final Type ask;
+    private boolean isAvailable;
 
     public RosterItem(final XmppURI jid, final SubscriptionState subscriptionState, final String name, final Type ask) {
 	this.ask = ask;
@@ -97,6 +98,7 @@ public class RosterItem {
 	this.name = name;
 	this.groups = new ArrayList<String>();
 	this.show = Show.unknown;
+	this.isAvailable = false;
 	this.status = null;
     }
 
@@ -135,7 +137,11 @@ public class RosterItem {
     }
 
     public boolean isAvailable() {
-	return show != Show.unknown;
+	return isAvailable;
+    }
+
+    public void setAvailable(final boolean isAvailable) {
+	this.isAvailable = isAvailable;
     }
 
     public void setShow(final Presence.Show show) {
