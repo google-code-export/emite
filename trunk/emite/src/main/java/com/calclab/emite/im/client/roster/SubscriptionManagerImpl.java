@@ -63,7 +63,7 @@ public class SubscriptionManagerImpl implements SubscriptionManager {
     }
 
     public void cancelSubscription(final XmppURI jid) {
-	session.send(new Presence(Type.unsubscribe, session.getCurrentUser(), jid.getJID()));
+	session.send(new Presence(Type.unsubscribed, session.getCurrentUser(), jid.getJID()));
     }
 
     public void onSubscriptionRequested(final Listener2<XmppURI, String> listener) {

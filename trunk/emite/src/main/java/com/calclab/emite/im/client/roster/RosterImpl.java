@@ -190,14 +190,22 @@ public class RosterImpl implements Roster {
 	    onItemAdded.fire(item);
 	} else { // update or remove
 	    removeItem(old);
-	    if (item.getSubscriptionState() == SubscriptionState.remove) {
+	    switch (item.getSubscriptionState()) {
+	    case remove:
+		// Dani: to discuss remove (now I think is buggy)
 		onItemRemoved.fire(item);
-	    } else {
+		break;
+	    case to:
+	    case both:
+		// already subscribed, preserve available/show/status
+		item.setAvailable(old.isAvailable());
+		item.setShow(old.getShow());
+		item.setStatus(old.getStatus());
+	    default:
 		addItem(item);
 		onItemChanged.fire(item);
 	    }
 	}
-
     }
 
     private void removeItem(final RosterItem item) {
