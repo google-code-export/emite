@@ -319,7 +319,8 @@ public class RosterUIPresenter {
     private void logRosterItem(final String operation, final RosterItem item) {
 	final String name = item.getName();
 	Log.info(operation + " roster item: " + item.getJID() + ", name: " + name + ", subsc: "
-		+ item.getSubscriptionState() + ", show: " + item.getShow() + ", status: " + item.getStatus());
+		+ item.getSubscriptionState() + ", available: " + item.isAvailable() + ", show: " + item.getShow()
+		+ ", status: " + item.getStatus());
     }
 
     private void refreshRoster(final Collection<RosterItem> rosterItems) {
