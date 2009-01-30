@@ -97,6 +97,24 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     }
 
     @Test
+    public void shouldOpenDifferentsChatsForDifferentDomains() {
+	final Chat chatCom = manager.open(uri("COM@domain.com"));
+	final MockedListener<Message> listenerCom = new MockedListener<Message>();
+	chatCom.onMessageReceived(listenerCom);
+	assertTrue("com listener empty", listenerCom.isCalled(0));
+
+	final Chat chatOrg = manager.open(uri("ORG@domain.org"));
+	final MockedListener<Message> listenerOrg = new MockedListener<Message>();
+	chatOrg.onMessageReceived(listenerOrg);
+	assertTrue("org listener empty", listenerOrg.isCalled(0));
+
+	session.receives(new Message(uri("COM@domain.com"), MYSELF, "message com 2"));
+	assertTrue("com has one message", listenerCom.isCalled(1));
+	assertTrue("org has no message", listenerOrg.isCalled(0));
+
+    }
+
+    @Test
     public void shouldReuseChatIfNotResouceSpecified() {
 	final MockedListener<Chat> listener = addOnChatCreatedListener();
 	session.receives(new Message(uri("source@domain"), MYSELF, "message 1"));
@@ -105,7 +123,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     }
 
     @Test
-    public void shouldUseSameRoomWhenAnswering() {
+    public void shouldReuseChatWhenAnsweringWithDifferentResources() {
 	final MockedListener<Chat> listener = addOnChatCreatedListener();
 	final Chat chat = manager.open(uri("someone@domain"));
 	assertTrue(listener.isCalledOnce());
