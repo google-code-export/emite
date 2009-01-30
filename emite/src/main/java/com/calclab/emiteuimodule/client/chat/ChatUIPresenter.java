@@ -146,6 +146,10 @@ public class ChatUIPresenter implements ChatUI {
 	return otherAlias;
     }
 
+    public XmppURI getOtherURI() {
+	return otherURI;
+    }
+
     public ChatNotification getSavedChatNotification() {
 	return savedChatNotification;
     }
