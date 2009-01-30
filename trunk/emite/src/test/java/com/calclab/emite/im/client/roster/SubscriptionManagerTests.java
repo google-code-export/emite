@@ -59,7 +59,7 @@ public class SubscriptionManagerTests {
     @Test
     public void shouldCancelSubscription() {
 	manager.cancelSubscription(uri("friend@domain"));
-	session.verifySent("<presence from='user@local' to='friend@domain' type='unsubscribe' />");
+	session.verifySent("<presence from='user@local' to='friend@domain' type='unsubscribed' />");
     }
 
     @Test
