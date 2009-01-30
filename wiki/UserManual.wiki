@@ -97,7 +97,7 @@ You already seen a example of how to login into a session.
 
 This module register the following components:
   * A !ChatManager that helps to use different conversations at the same time
-  * A !Roster component to manage the user's contacts
+  * A Roster component to manage the user's contacts
   * A !PresenceManager to change your own presence
   * A !PresenceSubscriptionManager that handles (automatically or not, you can choose ;-) ) the subscription issues
 
