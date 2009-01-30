@@ -26,6 +26,7 @@ import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.events.Listener;
 import com.google.gwt.core.client.EntryPoint;
@@ -33,7 +34,8 @@ import com.google.gwt.core.client.GWT;
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 
 /**
- * A example of how to use the Emite Core funciontallity.
+ * A example of how to use the Emite Core funciontallity. A GWT program that
+ * send a (surpise!) hello world message and receives messages and presence
  * 
  */
 public class EmiteCoreExample implements EntryPoint {
@@ -74,6 +76,16 @@ public class EmiteCoreExample implements EntryPoint {
 		GWT.log("Messaged received from " + message.getFrom() + ":" + message.getBody(), null);
 	    }
 	});
+
+	/*
+	 * We show (log) every incoming presence stanzas
+	 */
+	session.onPresence(new Listener<Presence>() {
+	    public void onEvent(final Presence presence) {
+		GWT.log("Presence received from " + presence.getFrom() + ": " + presence.toString(), null);
+	    }
+	});
+
 	session.login(uri("myJID@myDomain.org"), "myPassword");
     }
 
