@@ -4,7 +4,7 @@ import javax.swing.JOptionPane;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.j2se.swing.roster.RosterPanel;
 import com.calclab.emite.xep.muc.client.Room;
@@ -23,31 +23,31 @@ public class ConversationsControl {
 	    }
 	});
 
-	chatManager.onChatCreated(new Listener<Conversation>() {
-	    public void onEvent(final Conversation conversation) {
-		final ChatPanel chatPanel = conversationsPanel.createChat(chatManager, conversation);
+	chatManager.onChatCreated(new Listener<Chat>() {
+	    public void onEvent(final Chat chat) {
+		final ChatPanel chatPanel = conversationsPanel.createChat(chatManager, chat);
 		chatPanel.clearMessage();
 	    }
 	});
 
-	chatManager.onChatClosed(new Listener<Conversation>() {
-	    public void onEvent(final Conversation conversation) {
-		conversationsPanel.close(conversation.getID());
+	chatManager.onChatClosed(new Listener<Chat>() {
+	    public void onEvent(final Chat chat) {
+		conversationsPanel.close(chat.getID());
 	    }
 	});
 
-	roomManager.onChatCreated(new Listener<Conversation>() {
-	    public void onEvent(final Conversation conversation) {
-		final Room room = (Room) conversation;
+	roomManager.onChatCreated(new Listener<Chat>() {
+	    public void onEvent(final Chat chat) {
+		final Room room = (Room) chat;
 		final RoomPanel roomPanel = conversationsPanel.createRoomPanel(roomManager, room);
 		roomPanel.clearMessage();
 		roomPanel.showIcomingMessage(null, "The room is " + room.getState().toString());
 	    }
 	});
 
-	roomManager.onChatClosed(new Listener<Conversation>() {
-	    public void onEvent(final Conversation conversation) {
-		conversationsPanel.close(conversation.getID());
+	roomManager.onChatClosed(new Listener<Chat>() {
+	    public void onEvent(final Chat chat) {
+		conversationsPanel.close(chat.getID());
 	    }
 	});
 

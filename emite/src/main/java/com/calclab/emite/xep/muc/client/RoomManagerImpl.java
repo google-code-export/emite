@@ -33,7 +33,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Stanza;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.PairChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 
@@ -53,7 +53,7 @@ public class RoomManagerImpl extends PairChatManager implements RoomManager {
     }
 
     @Override
-    public void close(final Conversation whatToClose) {
+    public void close(final Chat whatToClose) {
 	final Room room = rooms.remove(whatToClose.getURI().getJID());
 	if (room != null) {
 	    room.close();
@@ -71,7 +71,7 @@ public class RoomManagerImpl extends PairChatManager implements RoomManager {
 	if (room == null) {
 	    room = new Room(session, roomURI, session.getCurrentUser());
 	    rooms.put(roomURI.getJID(), room);
-	    conversations.add(room);
+	    chats.add(room);
 	    onChatCreated.fire(room);
 	}
 	return room;

@@ -15,8 +15,8 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.AbstractChatTest;
 import com.calclab.emite.im.client.chat.AbstractChat;
-import com.calclab.emite.im.client.chat.Conversation;
-import com.calclab.emite.im.client.chat.Conversation.State;
+import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.Chat.State;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.events.MockedListener;
 import com.calclab.suco.testing.events.MockedListener2;
@@ -61,7 +61,7 @@ public class RoomTest extends AbstractChatTest {
 
     @Test
     public void shouldCreateInstantRooms() {
-	final MockedListener<State> stateChanged = new MockedListener<Conversation.State>();
+	final MockedListener<State> stateChanged = new MockedListener<Chat.State>();
 	room.onStateChanged(stateChanged);
 	openInstantRoom(roomURI);
 	assertTrue(stateChanged.isCalledOnce());
@@ -71,7 +71,7 @@ public class RoomTest extends AbstractChatTest {
     public void shouldExitAndLockTheRoomWhenLoggedOut() {
 	openInstantRoom(roomURI);
 	session.logout();
-	assertEquals(Conversation.State.locked, room.getState());
+	assertEquals(Chat.State.locked, room.getState());
 	session.verifySent("<presence to='room@domain/nick' type='unavailable'/>");
     }
 

@@ -23,7 +23,7 @@ package com.calclab.emite.xep.chatstate.client;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.suco.client.events.Listener;
 
 /**
@@ -39,38 +39,38 @@ public class StateManager {
 
     public StateManager(final ChatManager chatManager) {
 
-	chatManager.onChatCreated(new Listener<Conversation>() {
-	    public void onEvent(final Conversation conversation) {
-		getChatState(conversation);
+	chatManager.onChatCreated(new Listener<Chat>() {
+	    public void onEvent(final Chat chat) {
+		getChatState(chat);
 	    }
 	});
 
-	chatManager.onChatClosed(new Listener<Conversation>() {
-	    public void onEvent(final Conversation conversation) {
-		Log.debug("Removing chat state to chat: " + conversation.getID());
-		final ChatStateManager chatStateManager = conversation.getData(ChatStateManager.class);
+	chatManager.onChatClosed(new Listener<Chat>() {
+	    public void onEvent(final Chat chat) {
+		Log.debug("Removing chat state to chat: " + chat.getID());
+		final ChatStateManager chatStateManager = chat.getData(ChatStateManager.class);
 		if (chatStateManager != null && chatStateManager.getOtherState() != ChatStateManager.ChatState.gone) {
 		    // We are closing, then we send the gone state
 		    chatStateManager.setOwnState(ChatStateManager.ChatState.gone);
 		}
-		conversation.setData(ChatStateManager.class, null);
+		chat.setData(ChatStateManager.class, null);
 	    }
 	});
     }
 
-    public ChatStateManager getChatState(final Conversation conversation) {
-	ChatStateManager chatStateManager = conversation.getData(ChatStateManager.class);
+    public ChatStateManager getChatState(final Chat chat) {
+	ChatStateManager chatStateManager = chat.getData(ChatStateManager.class);
 	if (chatStateManager == null) {
-	    chatStateManager = createChatState(conversation);
+	    chatStateManager = createChatState(chat);
 	}
 	return chatStateManager;
     }
 
-    private ChatStateManager createChatState(final Conversation conversation) {
-	Log.debug("Adding chat state to chat: " + conversation.getID());
-	final ChatStateManager chatStateManager = new ChatStateManager(conversation);
-	conversation.setData(ChatStateManager.class, chatStateManager);
-	conversation.onBeforeSend(chatStateManager.doBeforeSend);
+    private ChatStateManager createChatState(final Chat chat) {
+	Log.debug("Adding chat state to chat: " + chat.getID());
+	final ChatStateManager chatStateManager = new ChatStateManager(chat);
+	chat.setData(ChatStateManager.class, chatStateManager);
+	chat.onBeforeSend(chatStateManager.doBeforeSend);
 	return chatStateManager;
     }
 

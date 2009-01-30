@@ -6,12 +6,12 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.suco.client.events.Listener;
 
 public class HablaController {
     private final HablaWidget widget;
-    private Conversation chat;
+    private Chat chat;
 
     public HablaController(final Session session, final ChatManager chatManager, final HablaWidget widget) {
 	this.widget = widget;
@@ -49,9 +49,9 @@ public class HablaController {
     private void openChat(final ChatManager chatManager, final XmppURI jid) {
 	final String name = jid.getNode();
 	chat = chatManager.open(jid);
-	chat.onStateChanged(new Listener<Conversation.State>() {
-	    public void onEvent(final Conversation.State state) {
-		widget.setEnabled(state == Conversation.State.ready);
+	chat.onStateChanged(new Listener<Chat.State>() {
+	    public void onEvent(final Chat.State state) {
+		widget.setEnabled(state == Chat.State.ready);
 	    }
 	});
 

@@ -29,7 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.xep.muc.client.Room;
 import com.calclab.emite.xep.muc.client.RoomManager;
 
@@ -49,10 +49,10 @@ public class ConversationsPanel extends JPanel {
 	tabs.remove(panels.get(id));
     }
 
-    public ChatPanel createChat(final ChatManager chatManager, final Conversation conversation) {
+    public ChatPanel createChat(final ChatManager chatManager, final Chat chat) {
 	final ChatPanel panel = new ChatPanel();
-	new ChatControl(chatManager, conversation, panel);
-	return addChat(conversation.getURI().toString(), conversation.getID(), panel);
+	new ChatControl(chatManager, chat, panel);
+	return addChat(chat.getURI().toString(), chat.getID(), panel);
     }
 
     public RoomPanel createRoomPanel(final RoomManager roomManager, final Room room) {

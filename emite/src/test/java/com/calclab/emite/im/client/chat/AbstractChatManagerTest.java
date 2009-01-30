@@ -25,22 +25,22 @@ public abstract class AbstractChatManagerTest {
 
     @Test
     public void shouldBeInitiatedByMeIfIOpenAChat() {
-	final Conversation conversation = manager.open(uri("other@domain/resource"));
-	assertTrue(conversation.isInitiatedByMe());
+	final Chat chat = manager.open(uri("other@domain/resource"));
+	assertTrue(chat.isInitiatedByMe());
     }
 
     @Test
     public void shouldEventWhenAChatIsClosed() {
-	final Conversation conversation = manager.open(uri("other@domain/resource"));
-	final MockedListener<Conversation> listener = new MockedListener<Conversation>();
+	final Chat chat = manager.open(uri("other@domain/resource"));
+	final MockedListener<Chat> listener = new MockedListener<Chat>();
 	manager.onChatClosed(listener);
-	manager.close(conversation);
+	manager.close(chat);
 	assertTrue(listener.isCalledOnce());
     }
 
     @Test
     public void shouldEventWhenChatCreated() {
-	final MockedListener<Conversation> listener = new MockedListener<Conversation>();
+	final MockedListener<Chat> listener = new MockedListener<Chat>();
 	manager.onChatCreated(listener);
 	manager.open(OTHER);
 	assertTrue(listener.isCalledOnce());
