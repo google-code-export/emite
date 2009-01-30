@@ -82,7 +82,7 @@ public abstract class AbstractChatController {
 	if (chatURI != null) {
 	    if (conversation == null) {
 		widget.write(null, "opening chat...");
-		manager.openChat(chatURI, null, null);
+		manager.openChat(chatURI);
 	    } else {
 		widget.setInputEnabled(true);
 	    }

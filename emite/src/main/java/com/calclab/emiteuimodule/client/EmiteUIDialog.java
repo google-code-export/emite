@@ -150,7 +150,7 @@ public class EmiteUIDialog {
     public void onRosterChanged(final Listener<Collection<RosterItem>> listener) {
 	// For external use: only a summarize RosterChanged event
 	roster.onRosterRetrieved(listener);
-	Listener<RosterItem> changeListener = new Listener<RosterItem>() {
+	final Listener<RosterItem> changeListener = new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem parameter) {
 		listener.onEvent(roster.getItems());
 	    }

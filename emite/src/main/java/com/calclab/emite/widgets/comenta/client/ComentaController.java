@@ -52,7 +52,7 @@ public class ComentaController {
     }
 
     private void createRoom(final RoomManager roomManager, final XmppURI roomURI) {
-	room = roomManager.openChat(roomURI, null, null);
+	room = roomManager.openChat(roomURI);
 
 	room.onStateChanged(new Listener<Conversation.State>() {
 	    public void onEvent(final State state) {

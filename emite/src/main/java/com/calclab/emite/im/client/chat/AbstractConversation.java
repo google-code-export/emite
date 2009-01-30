@@ -40,10 +40,12 @@ public abstract class AbstractConversation implements Conversation {
     private final Event<Message> onMessageSent;
     private final Event<Message> onMessageReceived;
     private final Event<Message> onBeforeSend;
+    private final XmppURI starter;
 
-    public AbstractConversation(final Session session, final XmppURI uri) {
+    public AbstractConversation(final Session session, final XmppURI uri, final XmppURI starter) {
 	this.session = session;
 	this.uri = uri;
+	this.starter = starter;
 	this.data = new HashMap<Class<?>, Object>();
 	this.state = Conversation.State.locked;
 	this.onStateChanged = new Event<State>("chat:onStateChanged");
@@ -64,6 +66,10 @@ public abstract class AbstractConversation implements Conversation {
 
     public XmppURI getURI() {
 	return uri;
+    }
+
+    public boolean isInitiatedByMe() {
+	return starter.equals(session.getCurrentUser());
     }
 
     public void onBeforeReceive(final Listener<Message> listener) {

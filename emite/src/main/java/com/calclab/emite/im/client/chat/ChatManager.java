@@ -68,6 +68,7 @@ public interface ChatManager {
      * @param dataValue
      * @return
      */
+    @Deprecated
     public <T> Conversation openChat(final XmppURI uri, Class<T> dataType, T dataValue);
 
 }

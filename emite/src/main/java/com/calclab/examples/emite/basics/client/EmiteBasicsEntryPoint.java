@@ -56,7 +56,7 @@ public class EmiteBasicsEntryPoint implements EntryPoint {
 	// ******** 2. ChatManager *********
 	// ... but probably you prefer to use the a powerful abstraction: Chat
 	final ChatManager chatManager = Suco.get(ChatManager.class);
-	final Conversation chat = chatManager.openChat(uri("test2@localhost"), null, null);
+	final Conversation chat = chatManager.openChat(uri("test2@localhost"));
 	// with chats you don't have to specify the recipient
 	chat.send(new Message("Hello test2"));
 	// and you only receive messages from the entity you specified

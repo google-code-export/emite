@@ -25,7 +25,7 @@ public abstract class AbstractChatManagerTest {
 
     @Test
     public void shouldEventWhenAChatIsClosed() {
-	final Conversation conversation = manager.openChat(uri("other@domain/resource"), null, null);
+	final Conversation conversation = manager.openChat(uri("other@domain/resource"));
 	final MockedListener<Conversation> listener = new MockedListener<Conversation>();
 	manager.onChatClosed(listener);
 	manager.close(conversation);
@@ -36,7 +36,7 @@ public abstract class AbstractChatManagerTest {
     public void shouldEventWhenChatCreated() {
 	final MockedListener<Conversation> listener = new MockedListener<Conversation>();
 	manager.onChatCreated(listener);
-	manager.openChat(OTHER, null, null);
+	manager.openChat(OTHER);
 	assertTrue(listener.isCalledOnce());
     }
 

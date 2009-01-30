@@ -21,7 +21,7 @@ public class RoomsControl {
 
 	roomsPanel.onOpenRoom(new Listener<String>() {
 	    public void onEvent(final String roomURI) {
-		manager.openChat(XmppURI.uri(roomURI), null, null);
+		manager.openChat(XmppURI.uri(roomURI));
 	    }
 	});
     }

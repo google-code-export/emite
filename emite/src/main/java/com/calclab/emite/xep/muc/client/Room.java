@@ -63,8 +63,8 @@ public class Room extends AbstractConversation implements Conversation {
      * @param roomURI
      *            the room uri with the nick specified in the resource part
      */
-    Room(final Session session, final XmppURI roomURI) {
-	super(session, roomURI);
+    Room(final Session session, final XmppURI roomURI, final XmppURI starter) {
+	super(session, roomURI, starter);
 	this.occupantsByURI = new HashMap<XmppURI, Occupant>();
 	this.onOccupantModified = new Event<Occupant>("room:onOccupantModified");
 	this.onOccupantsChanged = new Event<Collection<Occupant>>("room:onOccupantsChanged");

@@ -19,7 +19,7 @@ public class ConversationsControl {
 
 	rosterPanel.onStartChat(new Listener<RosterItem>() {
 	    public void onEvent(final RosterItem item) {
-		chatManager.openChat(item.getJID(), null, null);
+		chatManager.openChat(item.getJID());
 	    }
 	});
 
@@ -58,7 +58,7 @@ public class ConversationsControl {
 		if (nickName != null) {
 		    final XmppURI roomURI = invitation.getRoomURI();
 		    final XmppURI jid = XmppURI.uri(roomURI.getNode(), roomURI.getHost(), nickName);
-		    roomManager.openChat(jid, null, null);
+		    roomManager.openChat(jid);
 		}
 	    }
 	});

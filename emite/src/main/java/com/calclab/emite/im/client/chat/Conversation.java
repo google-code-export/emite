@@ -41,6 +41,16 @@ public interface Conversation {
 	ready, locked
     }
 
+    /**
+     * Get the associated object of class 'type'
+     * 
+     * @param <T>
+     *            the class (key) of the associated object
+     * @param type
+     *            the class object itself
+     * @return the associated object if any, null otherwise
+     * @see setData
+     */
     public <T> T getData(Class<T> type);
 
     public String getID();
@@ -57,12 +67,22 @@ public interface Conversation {
      */
     public XmppURI getURI();
 
+    /**
+     * Allows to know if a chat is initiated by the current user
+     * 
+     * @return Return true if you started the conversation. False otherwise
+     */
+    public boolean isInitiatedByMe();
+
     public void onBeforeReceive(Listener<Message> listener);
 
     /**
-     * Allows to modify the message just before send it
+     * A listener to know when a message is going to be sent. It allows the
+     * listener to modify the message just before send it (a kind of interceptor
+     * in aop programming)
      * 
-     * @param messageInterceptor
+     * @param listener
+     *            the listener
      */
     public void onBeforeSend(Listener<Message> listener);
 
@@ -73,6 +93,12 @@ public interface Conversation {
      */
     public void onMessageReceived(Listener<Message> listener);
 
+    /**
+     * Attach a listener to know when a message has been sent
+     * 
+     * @param listener
+     *            the listener to the events
+     */
     public void onMessageSent(Listener<Message> listener);
 
     /**
@@ -93,6 +119,18 @@ public interface Conversation {
      */
     public void send(Message message);
 
+    /**
+     * Associate a object to this conversation.
+     * 
+     * @param <T>
+     *            the class of the object
+     * @param type
+     *            the class object itself
+     * @param data
+     *            the object you want to associate
+     * @return the object associated
+     * @see getData
+     */
     public <T> T setData(Class<T> type, T data);
 
 }

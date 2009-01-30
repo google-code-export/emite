@@ -45,8 +45,8 @@ public class Chat extends AbstractConversation {
     private final String id;
     private XmppURI user;
 
-    Chat(final Session session, final XmppURI other, final String thread) {
-	super(session, other);
+    Chat(final Session session, final XmppURI other, final XmppURI starter, final String thread) {
+	super(session, other, starter);
 	this.thread = thread;
 	this.id = generateChatID();
 
