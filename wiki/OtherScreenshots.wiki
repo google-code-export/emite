@@ -6,7 +6,7 @@ http://emite.googlecode.com/svn/wiki/emite-0.4.5.png
 
  * Multi-chat room in action:
 
-http://emite.googlecode.com/svn/wiki/emite-muc1.png
+http://emite.googlecode.com/svn/wiki//muc-0.4.5.png
 
 == Old ones ==
 
