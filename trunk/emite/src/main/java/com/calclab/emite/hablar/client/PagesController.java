@@ -3,7 +3,7 @@ package com.calclab.emite.hablar.client;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.suco.client.events.Listener;
 
 public class PagesController {
@@ -21,8 +21,8 @@ public class PagesController {
 	    }
 	});
 
-	chatManager.onChatCreated(new Listener<Conversation>() {
-	    public void onEvent(final Conversation conversation) {
+	chatManager.onChatCreated(new Listener<Chat>() {
+	    public void onEvent(final Chat chat) {
 	    }
 	});
 

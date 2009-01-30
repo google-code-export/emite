@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.im.client.chat.Conversation.State;
+import com.calclab.emite.im.client.chat.Chat.State;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.events.MockedListener;
 

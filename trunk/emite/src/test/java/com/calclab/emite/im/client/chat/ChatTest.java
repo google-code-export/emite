@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.Conversation.State;
+import com.calclab.emite.im.client.chat.Chat.State;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.suco.testing.events.MockedListener;
 
@@ -33,7 +33,7 @@ public class ChatTest extends AbstractChatTest {
     @Test
     public void shouldBeReadyIfSessionLogedIn() {
 	final PairChat aChat = new PairChat(session, uri("someone@domain"), USER_URI, null);
-	assertEquals(Conversation.State.ready, aChat.getState());
+	assertEquals(Chat.State.ready, aChat.getState());
     }
 
     @Test
@@ -42,14 +42,14 @@ public class ChatTest extends AbstractChatTest {
 	pairChat.onStateChanged(listener);
 	session.logout();
 	session.login(USER_URI, "");
-	assertTrue(listener.isCalledWithSame(Conversation.State.locked, Conversation.State.ready));
+	assertTrue(listener.isCalledWithSame(Chat.State.locked, Chat.State.ready));
     }
 
     @Test
     public void shouldLockIfReLoginWithDifferentJID() {
 	session.logout();
 	session.login(uri("differentUser@domain"), "");
-	assertEquals(Conversation.State.locked, pairChat.getState());
+	assertEquals(Chat.State.locked, pairChat.getState());
 
     }
 
@@ -89,7 +89,7 @@ public class ChatTest extends AbstractChatTest {
     public void shouldUnlockIfReloginWithSameJID() {
 	session.logout();
 	session.login(XmppURI.uri(USER_URI.getNode(), USER_URI.getHost(), "different_resource"), "");
-	assertEquals(Conversation.State.ready, pairChat.getState());
+	assertEquals(Chat.State.ready, pairChat.getState());
     }
 
     @Test

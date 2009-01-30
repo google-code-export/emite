@@ -4,7 +4,7 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 
 public class ChatController extends AbstractChatController {
 
@@ -40,8 +40,8 @@ public class ChatController extends AbstractChatController {
     }
 
     @Override
-    protected boolean isOurChat(final Conversation conversation) {
-	return chatJID.equalsNoResource(conversation.getURI());
+    protected boolean isOurChat(final Chat chat) {
+	return chatJID.equalsNoResource(chat.getURI());
     }
 
 }

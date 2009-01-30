@@ -9,7 +9,7 @@ import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.suco.client.Suco;
@@ -56,7 +56,7 @@ public class EmiteBasicsEntryPoint implements EntryPoint {
 	// ******** 2. ChatManager *********
 	// ... but probably you prefer to use the a powerful abstraction: Chat
 	final ChatManager chatManager = Suco.get(ChatManager.class);
-	final Conversation chat = chatManager.open(uri("test2@localhost"));
+	final Chat chat = chatManager.open(uri("test2@localhost"));
 	// with chats you don't have to specify the recipient
 	chat.send(new Message("Hello test2"));
 	// and you only receive messages from the entity you specified

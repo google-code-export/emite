@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.PairChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.testing.MockedSession;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager.ChatState;
 import com.calclab.suco.testing.events.MockedListener;
@@ -19,7 +19,7 @@ public class ChatStateManagerTest {
 
     private PairChatManager chatManager;
     private MockedListener<ChatState> stateListener;
-    private Conversation conversation;
+    private Chat chat;
     private ChatStateManager chatStateManager;
     private MockedSession session;
 
@@ -29,8 +29,8 @@ public class ChatStateManagerTest {
 	chatManager = new PairChatManager(session);
 	session.setLoggedIn(MYSELF);
 	final StateManager stateManager = new StateManager(chatManager);
-	conversation = chatManager.open(OTHER);
-	chatStateManager = stateManager.getChatState(conversation);
+	chat = chatManager.open(OTHER);
+	chatStateManager = stateManager.getChatState(chat);
 	stateListener = new MockedListener<ChatState>();
 	chatStateManager.onChatStateChanged(stateListener);
     }
@@ -38,7 +38,7 @@ public class ChatStateManagerTest {
     @Test
     public void closeChatWithoutStartConversationMustNotThrowNPE() {
 	// This was throwing a NPE:
-	chatManager.close(conversation);
+	chatManager.close(chat);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class ChatStateManagerTest {
 
     @Test
     public void shouldStartStateAfterNegotiation() {
-	conversation.send(new Message("test message"));
+	chat.send(new Message("test message"));
 	session.receives("<message from='other@domain/other' to='self@domain/res' type='chat'>"
 		+ "<active xmlns='http://jabber.org/protocol/chatstates'/></message>");
 	final Message message = new Message(MYSELF, OTHER, "test message");
@@ -102,15 +102,15 @@ public class ChatStateManagerTest {
 
     @Test
     public void shouldStartStateNegotiation() {
-	conversation.send(new Message("test message"));
-	conversation.send(new Message("test message"));
+	chat.send(new Message("test message"));
+	chat.send(new Message("test message"));
 	session.verifySent("<message><active xmlns='http://jabber.org/protocol/chatstates' /></message>");
     }
 
     @Test
     public void shouldStartStateNegotiationOnce() {
-	conversation.send(new Message("message1"));
-	conversation.send(new Message("message2"));
+	chat.send(new Message("message1"));
+	chat.send(new Message("message2"));
 	session.verifySent("<message><body>message1</body><active /></message>");
 	session.verifySent("<message><body>message2</body></message>");
 	session.verifyNotSent("<message><body>message2</body><active /></message>");

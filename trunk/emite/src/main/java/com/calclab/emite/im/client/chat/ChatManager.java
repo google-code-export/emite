@@ -29,7 +29,7 @@ import com.calclab.suco.client.events.Listener;
 /**
  * Create and manage chat conversations.
  * 
- * There are one implementation for one-to-one conversations (ChatManagerImpl)
+ * There are one implementation for one-to-one conversations (PairChatManager)
  * and many-to-many conversations (RoomManagerImpl)
  */
 public interface ChatManager {
@@ -38,15 +38,15 @@ public interface ChatManager {
      * Close the given conversation. If a conversation is closed, a new
      * onChatCreated event will be throw when opened
      * 
-     * @param conversation
+     * @param chat
      */
-    public void close(Conversation conversation);
+    public void close(Chat chat);
 
-    public Collection<? extends Conversation> getChats();
+    public Collection<? extends Chat> getChats();
 
-    public void onChatClosed(Listener<Conversation> listener);
+    public void onChatClosed(Listener<Chat> listener);
 
-    public void onChatCreated(Listener<Conversation> listener);
+    public void onChatCreated(Listener<Chat> listener);
 
     /**
      * Get a chat associated to the given uri. If the chat is previouly created,
@@ -57,6 +57,6 @@ public interface ChatManager {
      *            the uri we want to chat to
      * @return the Chat object
      */
-    public Conversation open(XmppURI uri);
+    public Chat open(XmppURI uri);
 
 }

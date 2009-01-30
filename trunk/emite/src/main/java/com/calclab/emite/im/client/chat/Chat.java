@@ -26,13 +26,13 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.events.Listener;
 
 /**
- * Defines a xmpp conversation.
+ * Defines a xmpp chat.
  * 
- * This interface is implemented by Chat and Room.
+ * This interface is implemented by PairChat and Room.
  * 
- * @see Chat, Room
+ * @see PairChat, Room
  */
-public interface Conversation {
+public interface Chat {
 
     /**
      * Possible conversation states.

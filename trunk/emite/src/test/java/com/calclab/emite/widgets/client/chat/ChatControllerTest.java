@@ -15,7 +15,7 @@ import org.junit.Test;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.suco.client.events.Listener;
 
 @SuppressWarnings("unchecked")
@@ -36,28 +36,28 @@ public class ChatControllerTest extends AbstractChatControllerTest {
 
     @Test
     public void shouldAttacheToOwnChat() {
-	final Conversation conversation = createMockChat("user@domain/resource");
+	final Chat chat = createMockChat("user@domain/resource");
 	controller.setChatJID("user@domain");
-	mockOnChatCreated(conversation);
-	verify(conversation, times(1)).onMessageReceived((Listener<Message>) anyObject());
+	mockOnChatCreated(chat);
+	verify(chat, times(1)).onMessageReceived((Listener<Message>) anyObject());
     }
 
     @Test
     public void shouldNotAttachToAnyChat() {
-	final Conversation conversation = createMockChat("admin@domain");
+	final Chat chat = createMockChat("admin@domain");
 	controller.setChatJID("user@domain");
-	mockOnChatCreated(conversation);
-	verify(conversation, times(0)).onMessageReceived((Listener<Message>) anyObject());
+	mockOnChatCreated(chat);
+	verify(chat, times(0)).onMessageReceived((Listener<Message>) anyObject());
     }
 
-    private Conversation createMockChat(final String chatURI) {
-	final Conversation conversation = mock(Conversation.class);
-	when(conversation.getURI()).thenReturn(uri(chatURI));
-	return conversation;
+    private Chat createMockChat(final String chatURI) {
+	final Chat chat = mock(Chat.class);
+	when(chat.getURI()).thenReturn(uri(chatURI));
+	return chat;
     }
 
-    private void mockOnChatCreated(final Conversation conversation) {
-	fire(conversation).when(manager).onChatCreated(anyListener());
+    private void mockOnChatCreated(final Chat chat) {
+	fire(chat).when(manager).onChatCreated(anyListener());
     }
 
 }

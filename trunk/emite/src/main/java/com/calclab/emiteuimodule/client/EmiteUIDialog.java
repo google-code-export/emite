@@ -30,7 +30,7 @@ import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
@@ -76,7 +76,7 @@ public class EmiteUIDialog {
 	roster.addItem(buddieJid, name, groups);
     }
 
-    public Conversation chat(final XmppURI otherUserURI) {
+    public Chat chat(final XmppURI otherUserURI) {
 	if (session.isLoggedIn()) {
 	    return chatManager.open(otherUserURI);
 	} else {
@@ -127,7 +127,7 @@ public class EmiteUIDialog {
 	return multiChatDialog.isVisible();
     }
 
-    public Conversation joinRoom(final XmppURI roomURI) {
+    public Chat joinRoom(final XmppURI roomURI) {
 	if (session.isLoggedIn()) {
 	    return roomManager.open(roomURI);
 	} else {

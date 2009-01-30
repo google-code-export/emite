@@ -38,7 +38,7 @@ import com.calclab.suco.client.events.Listener;
  * in one chat.
  * </p>
  * 
- * @see Conversation
+ * @see Chat
  */
 public class PairChat extends AbstractChat {
     protected final String thread;

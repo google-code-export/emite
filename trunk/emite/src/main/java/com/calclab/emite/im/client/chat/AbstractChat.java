@@ -29,7 +29,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 
-public abstract class AbstractChat implements Conversation {
+public abstract class AbstractChat implements Chat {
 
     protected final XmppURI uri;
     protected State state;
@@ -47,7 +47,7 @@ public abstract class AbstractChat implements Conversation {
 	this.uri = uri;
 	this.starter = starter;
 	this.data = new HashMap<Class<?>, Object>();
-	this.state = Conversation.State.locked;
+	this.state = Chat.State.locked;
 	this.onStateChanged = new Event<State>("chat:onStateChanged");
 	this.onMessageSent = new Event<Message>("chat:onMessageSent");
 	this.onMessageReceived = new Event<Message>("chat:onMessageReceived");

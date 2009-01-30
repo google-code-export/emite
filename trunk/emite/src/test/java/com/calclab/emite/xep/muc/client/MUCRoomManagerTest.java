@@ -15,7 +15,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.IQ.Type;
 import com.calclab.emite.im.client.chat.AbstractChatManagerTest;
 import com.calclab.emite.im.client.chat.PairChatManager;
-import com.calclab.emite.im.client.chat.Conversation;
+import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.xep.muc.client.Occupant.Affiliation;
 import com.calclab.emite.xep.muc.client.Occupant.Role;
 import com.calclab.suco.testing.events.MockedListener;
@@ -49,9 +49,9 @@ public class MUCRoomManagerTest extends AbstractChatManagerTest {
 
     @Test
     public void shouldFireChatMessages() {
-	final Conversation conversation = manager.open(uri("room@rooms.domain/user"));
+	final Chat chat = manager.open(uri("room@rooms.domain/user"));
 	final MockedListener<Message> listener = new MockedListener<Message>();
-	conversation.onMessageReceived(listener);
+	chat.onMessageReceived(listener);
 	session.receives("<message from='room@rooms.domain/other' to='user@domain/resource' "
 		+ "type='groupchat'><body>the message body</body></message>");
 	assertTrue(listener.isCalledOnce());
