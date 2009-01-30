@@ -25,7 +25,7 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.SessionComponent;
 import com.calclab.emite.core.client.xmpp.session.SessionReady;
 import com.calclab.emite.im.client.chat.ChatManager;
-import com.calclab.emite.im.client.chat.ChatManagerImpl;
+import com.calclab.emite.im.client.chat.PairChatManager;
 import com.calclab.emite.im.client.presence.PresenceManager;
 import com.calclab.emite.im.client.presence.PresenceManagerImpl;
 import com.calclab.emite.im.client.roster.Roster;
@@ -74,8 +74,8 @@ public class InstantMessagingModule extends AbstractModule implements EntryPoint
 	    }
 	}, new Factory<ChatManager>(ChatManager.class) {
 	    @Override
-	    public ChatManagerImpl create() {
-		return new ChatManagerImpl($(Session.class));
+	    public PairChatManager create() {
+		return new PairChatManager($(Session.class));
 	    }
 	}, new Factory<SubscriptionManager>(SubscriptionManager.class) {
 	    @Override

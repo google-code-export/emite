@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.PairChat;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager.ChatState;
 import com.calclab.suco.testing.events.MockedListener;
 
@@ -17,13 +17,13 @@ public class ChatStateTest {
     private static final XmppURI MYSELF = uri("self@domain/res");
     private static final XmppURI OTHER = uri("other@domain/otherRes");
     private MockedListener<ChatState> stateListener;
-    private Chat chat;
+    private PairChat pairChat;
     private ChatStateManager chatStateManager;
 
     @Before
     public void aaCreate() {
-	chat = Mockito.mock(Chat.class);
-	chatStateManager = new ChatStateManager(chat);
+	pairChat = Mockito.mock(PairChat.class);
+	chatStateManager = new ChatStateManager(pairChat);
 	stateListener = new MockedListener<ChatState>();
 	chatStateManager.onChatStateChanged(stateListener);
     }
@@ -32,7 +32,7 @@ public class ChatStateTest {
     public void shouldFireGone() {
 	final Message message = new Message(MYSELF, OTHER, null);
 	message.addChild("gone", ChatStateManager.XMLNS);
-	chatStateManager.onMessageReceived(chat, message);
+	chatStateManager.onMessageReceived(pairChat, message);
 	assertTrue(stateListener.isCalledWithEquals(ChatState.gone));
     }
 
@@ -40,7 +40,7 @@ public class ChatStateTest {
     public void shouldFireOtherCompossing() {
 	final Message message = new Message(MYSELF, OTHER, null);
 	message.addChild("composing", ChatStateManager.XMLNS);
-	chatStateManager.onMessageReceived(chat, message);
+	chatStateManager.onMessageReceived(pairChat, message);
 	assertTrue(stateListener.isCalledWithEquals(ChatState.composing));
     }
 
@@ -48,7 +48,7 @@ public class ChatStateTest {
     public void shouldFireOtherCompossingAsGmailDo() {
 	final Message message = new Message(MYSELF, OTHER, null);
 	message.addChild("cha:composing", ChatStateManager.XMLNS);
-	chatStateManager.onMessageReceived(chat, message);
+	chatStateManager.onMessageReceived(pairChat, message);
 	assertTrue(stateListener.isCalledWithEquals(ChatState.composing));
     }
 
@@ -56,7 +56,7 @@ public class ChatStateTest {
     public void shouldFireOtherCompossingToWithoutResource() {
 	final Message message = new Message(MYSELF, OTHER.getJID(), null);
 	message.addChild("cha:composing", ChatStateManager.XMLNS);
-	chatStateManager.onMessageReceived(chat, message);
+	chatStateManager.onMessageReceived(pairChat, message);
 	assertTrue(stateListener.isCalledWithEquals(ChatState.composing));
     }
 

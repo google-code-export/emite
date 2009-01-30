@@ -57,6 +57,6 @@ public interface ChatManager {
      *            the uri we want to chat to
      * @return the Chat object
      */
-    public Conversation openChat(XmppURI uri);
+    public Conversation open(XmppURI uri);
 
 }

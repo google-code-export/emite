@@ -13,7 +13,7 @@ import com.calclab.suco.testing.events.MockedListener;
 public abstract class AbstractChatManagerTest {
     protected static final XmppURI MYSELF = uri("self@domain");
     protected static final XmppURI OTHER = uri("other@domain");
-    protected ChatManagerImpl manager;
+    protected PairChatManager manager;
     protected MockedSession session;
 
     @Before
@@ -25,13 +25,13 @@ public abstract class AbstractChatManagerTest {
 
     @Test
     public void shouldBeInitiatedByMeIfIOpenAChat() {
-	final Conversation conversation = manager.openChat(uri("other@domain/resource"));
+	final Conversation conversation = manager.open(uri("other@domain/resource"));
 	assertTrue(conversation.isInitiatedByMe());
     }
 
     @Test
     public void shouldEventWhenAChatIsClosed() {
-	final Conversation conversation = manager.openChat(uri("other@domain/resource"));
+	final Conversation conversation = manager.open(uri("other@domain/resource"));
 	final MockedListener<Conversation> listener = new MockedListener<Conversation>();
 	manager.onChatClosed(listener);
 	manager.close(conversation);
@@ -42,9 +42,9 @@ public abstract class AbstractChatManagerTest {
     public void shouldEventWhenChatCreated() {
 	final MockedListener<Conversation> listener = new MockedListener<Conversation>();
 	manager.onChatCreated(listener);
-	manager.openChat(OTHER);
+	manager.open(OTHER);
 	assertTrue(listener.isCalledOnce());
     }
 
-    protected abstract ChatManagerImpl createChatManager();
+    protected abstract PairChatManager createChatManager();
 }

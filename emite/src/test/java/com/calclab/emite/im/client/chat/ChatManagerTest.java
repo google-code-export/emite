@@ -22,7 +22,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	final MockedListener<Conversation> listener = addOnChatCreatedListener();
 	session.receives(message);
 	assertTrue(listener.isNotCalled());
-	manager.openChat(OTHER);
+	manager.open(OTHER);
 	assertTrue(listener.isCalled());
     }
 
@@ -36,7 +36,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 
     @Test
     public void oneToOneChatsAreAlwaysReadyWhenCreated() {
-	final Conversation conversation = manager.openChat(uri("other@domain/resource"));
+	final Conversation conversation = manager.open(uri("other@domain/resource"));
 	assertSame(Conversation.State.ready, conversation.getState());
     }
 
@@ -58,27 +58,27 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 		+ "'><reason>Join to our conversation</reason></invite>"
 		+ "</x><x jid='someroom@domain' xmlns='jabber:x:conference' /></message>");
 	assertTrue(listener.isNotCalled());
-	manager.openChat(OTHER);
+	manager.open(OTHER);
 	assertTrue(listener.isCalled());
     }
 
     @Test
     public void shouldBeInitiatedByOtherIfMessageArrives() {
 	session.receives("<message to='" + MYSELF + "' from='someone@domain'><body>the body</body></message>");
-	final Conversation chat = manager.openChat(uri("someone@domain"));
+	final Conversation chat = manager.open(uri("someone@domain"));
 	assertFalse(chat.isInitiatedByMe());
     }
 
     @Test
     public void shouldBlockChatWhenClosingIt() {
-	final Conversation conversation = manager.openChat(uri("other@domain/resource"));
+	final Conversation conversation = manager.open(uri("other@domain/resource"));
 	manager.close(conversation);
 	assertSame(Conversation.State.locked, conversation.getState());
     }
 
     @Test
     public void shouldCloseChatWhenLoggedOut() {
-	final Conversation conversation = manager.openChat(uri("name@domain/resouce"));
+	final Conversation conversation = manager.open(uri("name@domain/resouce"));
 	final MockedListener<State> listener = new MockedListener<State>();
 	conversation.onStateChanged(listener);
 	session.logout();
@@ -87,7 +87,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 
     @Test
     public void shouldEventIncommingMessages() {
-	final Conversation conversation = manager.openChat(uri("someone@domain"));
+	final Conversation conversation = manager.open(uri("someone@domain"));
 	final MockedListener<Message> listener = new MockedListener<Message>();
 	conversation.onMessageReceived(listener);
 	session.receives("<message type='chat' id='purplee8b92642' to='user@domain' "
@@ -107,7 +107,7 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     @Test
     public void shouldUseSameRoomWhenAnswering() {
 	final MockedListener<Conversation> listener = addOnChatCreatedListener();
-	final Conversation conversation = manager.openChat(uri("someone@domain"));
+	final Conversation conversation = manager.open(uri("someone@domain"));
 	assertTrue(listener.isCalledOnce());
 	assertTrue(listener.isCalledWithSame(conversation));
 	session.receives(new Message(uri("someone@domain/resource"), MYSELF, "answer"));
@@ -115,8 +115,8 @@ public class ChatManagerTest extends AbstractChatManagerTest {
     }
 
     @Override
-    protected ChatManagerImpl createChatManager() {
-	final ChatManagerImpl chatManagerDefault = new ChatManagerImpl(session);
+    protected PairChatManager createChatManager() {
+	final PairChatManager chatManagerDefault = new PairChatManager(session);
 	return chatManagerDefault;
     }
 

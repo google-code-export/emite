@@ -78,7 +78,7 @@ public class EmiteUIDialog {
 
     public Conversation chat(final XmppURI otherUserURI) {
 	if (session.isLoggedIn()) {
-	    return chatManager.openChat(otherUserURI);
+	    return chatManager.open(otherUserURI);
 	} else {
 	    Log.error("To start a chat you need to be 'online'.");
 	    return null;
@@ -129,7 +129,7 @@ public class EmiteUIDialog {
 
     public Conversation joinRoom(final XmppURI roomURI) {
 	if (session.isLoggedIn()) {
-	    return roomManager.openChat(roomURI);
+	    return roomManager.open(roomURI);
 	} else {
 	    Log.error("To join a chatroom you need to be 'online'.");
 	    return null;
