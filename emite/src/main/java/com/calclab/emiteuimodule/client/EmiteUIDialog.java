@@ -35,7 +35,6 @@ import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.muc.client.RoomManager;
-import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.dialog.MultiChatPresenter;
 import com.calclab.emiteuimodule.client.params.AvatarProvider;
 import com.calclab.emiteuimodule.client.params.MultiChatCreationParam;
@@ -79,7 +78,7 @@ public class EmiteUIDialog {
 
     public Conversation chat(final XmppURI otherUserURI) {
 	if (session.isLoggedIn()) {
-	    return chatManager.openChat(otherUserURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	    return chatManager.openChat(otherUserURI);
 	} else {
 	    Log.error("To start a chat you need to be 'online'.");
 	    return null;
@@ -130,7 +129,7 @@ public class EmiteUIDialog {
 
     public Conversation joinRoom(final XmppURI roomURI) {
 	if (session.isLoggedIn()) {
-	    return roomManager.openChat(roomURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	    return roomManager.openChat(roomURI);
 	} else {
 	    Log.error("To join a chatroom you need to be 'online'.");
 	    return null;

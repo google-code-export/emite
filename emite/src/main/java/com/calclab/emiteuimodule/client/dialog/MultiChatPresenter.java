@@ -45,7 +45,6 @@ import com.calclab.emiteuimodule.client.EmiteUIFactory;
 import com.calclab.emiteuimodule.client.UserChatOptions;
 import com.calclab.emiteuimodule.client.chat.ChatNotification;
 import com.calclab.emiteuimodule.client.chat.ChatUI;
-import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.params.MultiChatCreationParam;
 import com.calclab.emiteuimodule.client.room.RoomUI;
 import com.calclab.emiteuimodule.client.roster.RosterUIPresenter;
@@ -55,6 +54,7 @@ import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 import com.calclab.suco.client.events.Listener2;
 import com.calclab.suco.client.ioc.Provider;
+import com.google.gwt.core.client.GWT;
 
 public class MultiChatPresenter {
 
@@ -228,8 +228,7 @@ public class MultiChatPresenter {
     }
 
     public void joinChat(final XmppURI userURI) {
-	final Conversation conversation = chatManager.openChat(userURI, ChatUIStartedByMe.class, new ChatUIStartedByMe(
-		true));
+	final Conversation conversation = chatManager.openChat(userURI);
 	final ChatUI chatUI = getChatUI(conversation);
 	if (chatUI != null && !chatUI.isDocked()) {
 	    // Bug 94
@@ -583,8 +582,9 @@ public class MultiChatPresenter {
     }
 
     private boolean isChatStartedByMe(final Conversation conversation) {
-	final ChatUIStartedByMe chatUIData = conversation.getData(ChatUIStartedByMe.class);
-	return chatUIData != null && chatUIData.isStartedByMe();
+	// FIXME remove log
+	GWT.log("Started by me " + conversation.isInitiatedByMe(), null);
+	return conversation.isInitiatedByMe();
     }
 
     private void logIfChatAlreadyOpened(final ChatUI chatUIalreadyOpened) {
