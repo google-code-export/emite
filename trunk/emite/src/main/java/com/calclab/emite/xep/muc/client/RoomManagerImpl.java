@@ -38,6 +38,7 @@ import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 
 public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
+
     private static final PacketMatcher FILTER_X = MatcherFactory.byNameAndXMLNS("x",
 	    "http://jabber.org/protocol/muc#user");
     private static final PacketMatcher FILTER_INVITE = MatcherFactory.byName("invite");
@@ -65,18 +66,13 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
     }
 
     @Override
-    public <T> Room openChat(final XmppURI roomURI, final java.lang.Class<T> dataType, final T dataValue) {
+    public Room openChat(final XmppURI roomURI) {
 	Room room = rooms.get(roomURI.getJID());
 	if (room == null) {
 	    room = new Room(session, roomURI, session.getCurrentUser());
-	    if (dataType != null) {
-		room.setData(dataType, dataValue);
-	    }
 	    rooms.put(roomURI.getJID(), room);
 	    conversations.add(room);
 	    onChatCreated.fire(room);
-	} else {
-	    room.setData(dataType, dataValue);
 	}
 	return room;
     }

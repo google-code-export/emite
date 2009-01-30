@@ -49,26 +49,14 @@ public interface ChatManager {
     public void onChatCreated(Listener<Conversation> listener);
 
     /**
-     * Same as openChat(uri, null, null);
+     * Get a chat associated to the given uri. If the chat is previouly created,
+     * it just returns it. If not, it creates a new Chat object and then return
+     * it.
      * 
-     * @see openChat
+     * @param uri
+     *            the uri we want to chat to
+     * @return the Chat object
      */
     public Conversation openChat(XmppURI uri);
-
-    // FIXME: no está nada claro...
-    /**
-     * Get the Conversation associatted to the given uri. If the conversation
-     * does not exist, it creates a new one and send the onChatCreated event to
-     * the listeners.
-     * 
-     * 
-     * @param <T>
-     * @param uri
-     * @param dataType
-     * @param dataValue
-     * @return
-     */
-    @Deprecated
-    public <T> Conversation openChat(final XmppURI uri, Class<T> dataType, T dataValue);
 
 }

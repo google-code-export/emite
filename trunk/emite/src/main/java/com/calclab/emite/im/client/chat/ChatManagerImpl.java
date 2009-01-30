@@ -77,17 +77,10 @@ public class ChatManagerImpl implements ChatManager {
 	onChatCreated.add(listener);
     }
 
-    public Conversation openChat(final XmppURI jid) {
-	return createChat(jid, session.getCurrentUser(), null, null);
-    }
-
-    @Deprecated
-    public <T> Conversation openChat(final XmppURI toURI, final Class<T> extraType, final T extraData) {
-	Conversation conversation = findChat(toURI);
+    public Conversation openChat(final XmppURI uri) {
+	Conversation conversation = findChat(uri);
 	if (conversation == null) {
-	    conversation = createChat(toURI, session.getCurrentUser(), extraType, extraData);
-	} else {
-	    conversation.setData(extraType, extraData);
+	    conversation = createChat(uri, session.getCurrentUser());
 	}
 	return conversation;
     }
@@ -109,7 +102,7 @@ public class ChatManagerImpl implements ChatManager {
 
 		Conversation conversation = findChat(from);
 		if (conversation == null) {
-		    conversation = createChat(from, from, null, null);
+		    conversation = createChat(from, from);
 		}
 	    }
 	    break;
@@ -120,12 +113,8 @@ public class ChatManagerImpl implements ChatManager {
 	return null;
     }
 
-    private <T> Conversation createChat(final XmppURI toURI, final XmppURI starterURI, final Class<T> extraType,
-	    final T extraData) {
+    private <T> Conversation createChat(final XmppURI toURI, final XmppURI starterURI) {
 	final Chat chat = new Chat(session, toURI, starterURI, null);
-	if (extraType != null) {
-	    chat.setData(extraType, extraData);
-	}
 	conversations.add(chat);
 	onChatCreated.fire(chat);
 	chat.setState(Conversation.State.ready);

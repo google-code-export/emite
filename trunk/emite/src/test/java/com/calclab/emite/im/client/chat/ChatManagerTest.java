@@ -1,6 +1,7 @@
 package com.calclab.emite.im.client.chat;
 
 import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -59,6 +60,13 @@ public class ChatManagerTest extends AbstractChatManagerTest {
 	assertTrue(listener.isNotCalled());
 	manager.openChat(OTHER);
 	assertTrue(listener.isCalled());
+    }
+
+    @Test
+    public void shouldBeInitiatedByOtherIfMessageArrives() {
+	session.receives("<message to='" + MYSELF + "' from='someone@domain'><body>the body</body></message>");
+	final Conversation chat = manager.openChat(uri("someone@domain"));
+	assertFalse(chat.isInitiatedByMe());
     }
 
     @Test

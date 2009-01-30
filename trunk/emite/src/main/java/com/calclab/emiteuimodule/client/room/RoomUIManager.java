@@ -6,7 +6,6 @@ import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.xep.muc.client.RoomInvitation;
 import com.calclab.emite.xep.muc.client.RoomManager;
-import com.calclab.emiteuimodule.client.chat.ChatUIStartedByMe;
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
@@ -53,7 +52,7 @@ public class RoomUIManager {
 
     public void joinRoom(final String roomName, final String serverName) {
 	final XmppURI uri = XmppURI.uri(roomName, serverName, session.getCurrentUser().getNode());
-	roomManager.openChat(uri, ChatUIStartedByMe.class, new ChatUIStartedByMe(true));
+	roomManager.openChat(uri);
     }
 
     public void onJoinRoom() {
