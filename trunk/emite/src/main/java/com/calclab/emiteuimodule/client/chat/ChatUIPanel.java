@@ -39,7 +39,7 @@ import com.gwtext.client.widgets.layout.BorderLayoutData;
 
 public class ChatUIPanel extends Panel implements ChatUIView {
     private static final int MAX_TITLE_LENGTH = 12;
-    private static final String CHAT_PANEL_ID = "emite-cuip-c-";
+    // private static final String CHAT_PANEL_ID = "emite-cuip-c-";
     private final Panel childPanel;
     private final Panel conversationPanel;
     private Element scrollableElement;
@@ -58,7 +58,8 @@ public class ChatUIPanel extends Panel implements ChatUIView {
 	childPanel.setAutoScroll(false);
 	childPanel.setBorder(false);
 	childPanel.setPaddings(5);
-	childPanel.setId(CHAT_PANEL_ID + presenter.getOtherAlias());
+	// FIXME: we have to test that the id generated is correct:
+	// childPanel.setId(CHAT_PANEL_ID + presenter.getOtherURI().toString());
 	conversationPanel.add(childPanel);
 	add(conversationPanel, centerData);
 	addStyleName("emite-ChatPanel-Conversation");
