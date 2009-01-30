@@ -52,7 +52,7 @@ public class RoomUIManager {
 
     public void joinRoom(final String roomName, final String serverName) {
 	final XmppURI uri = XmppURI.uri(roomName, serverName, session.getCurrentUser().getNode());
-	roomManager.openChat(uri);
+	roomManager.open(uri);
     }
 
     public void onJoinRoom() {

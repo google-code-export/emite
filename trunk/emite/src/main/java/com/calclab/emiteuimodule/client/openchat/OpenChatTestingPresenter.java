@@ -29,7 +29,7 @@ public class OpenChatTestingPresenter {
     }
 
     public void onOpenChat(final XmppURI uri) {
-	chatManager.openChat(uri);
+	chatManager.open(uri);
     }
 
 }

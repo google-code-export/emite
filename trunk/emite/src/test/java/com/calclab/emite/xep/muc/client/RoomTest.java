@@ -14,7 +14,7 @@ import org.junit.Test;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.AbstractChatTest;
-import com.calclab.emite.im.client.chat.AbstractConversation;
+import com.calclab.emite.im.client.chat.AbstractChat;
 import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.emite.im.client.chat.Conversation.State;
 import com.calclab.emite.testing.MockedSession;
@@ -37,7 +37,7 @@ public class RoomTest extends AbstractChatTest {
     }
 
     @Override
-    public AbstractConversation getChat() {
+    public AbstractChat getChat() {
 	return room;
     }
 

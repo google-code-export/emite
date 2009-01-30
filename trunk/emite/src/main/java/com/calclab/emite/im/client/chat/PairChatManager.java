@@ -39,13 +39,13 @@ import com.calclab.suco.client.events.Listener;
  * 
  * @see ChatManager
  */
-public class ChatManagerImpl implements ChatManager {
+public class PairChatManager implements ChatManager {
     protected final HashSet<Conversation> conversations;
     protected final Event<Conversation> onChatCreated;
     protected Event<Conversation> onChatClosed;
     protected final Session session;
 
-    public ChatManagerImpl(final Session session) {
+    public PairChatManager(final Session session) {
 	this.session = session;
 	this.onChatCreated = new Event<Conversation>("chatManager:onChatCreated");
 	this.onChatClosed = new Event<Conversation>("chatManager:onChatClosed");
@@ -61,7 +61,7 @@ public class ChatManagerImpl implements ChatManager {
 
     public void close(final Conversation conversation) {
 	conversations.remove(conversation);
-	((AbstractConversation) conversation).setState(State.locked);
+	((AbstractChat) conversation).setState(State.locked);
 	onChatClosed.fire(conversation);
     }
 
@@ -77,7 +77,7 @@ public class ChatManagerImpl implements ChatManager {
 	onChatCreated.add(listener);
     }
 
-    public Conversation openChat(final XmppURI uri) {
+    public Conversation open(final XmppURI uri) {
 	Conversation conversation = findChat(uri);
 	if (conversation == null) {
 	    conversation = createChat(uri, session.getCurrentUser());
@@ -114,11 +114,11 @@ public class ChatManagerImpl implements ChatManager {
     }
 
     private <T> Conversation createChat(final XmppURI toURI, final XmppURI starterURI) {
-	final Chat chat = new Chat(session, toURI, starterURI, null);
-	conversations.add(chat);
-	onChatCreated.fire(chat);
-	chat.setState(Conversation.State.ready);
-	return chat;
+	final PairChat pairChat = new PairChat(session, toURI, starterURI, null);
+	conversations.add(pairChat);
+	onChatCreated.fire(pairChat);
+	pairChat.setState(Conversation.State.ready);
+	return pairChat;
     }
 
     /**

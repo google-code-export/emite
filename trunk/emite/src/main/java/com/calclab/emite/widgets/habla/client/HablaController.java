@@ -48,7 +48,7 @@ public class HablaController {
 
     private void openChat(final ChatManager chatManager, final XmppURI jid) {
 	final String name = jid.getNode();
-	chat = chatManager.openChat(jid);
+	chat = chatManager.open(jid);
 	chat.onStateChanged(new Listener<Conversation.State>() {
 	    public void onEvent(final Conversation.State state) {
 		widget.setEnabled(state == Conversation.State.ready);

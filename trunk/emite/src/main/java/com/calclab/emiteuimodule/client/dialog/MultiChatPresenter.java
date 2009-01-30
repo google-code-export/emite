@@ -228,7 +228,7 @@ public class MultiChatPresenter {
     }
 
     public void joinChat(final XmppURI userURI) {
-	final Conversation conversation = chatManager.openChat(userURI);
+	final Conversation conversation = chatManager.open(userURI);
 	final ChatUI chatUI = getChatUI(conversation);
 	if (chatUI != null && !chatUI.isDocked()) {
 	    // Bug 94

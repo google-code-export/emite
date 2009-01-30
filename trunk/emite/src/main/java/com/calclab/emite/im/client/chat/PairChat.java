@@ -40,12 +40,12 @@ import com.calclab.suco.client.events.Listener;
  * 
  * @see Conversation
  */
-public class Chat extends AbstractConversation {
+public class PairChat extends AbstractChat {
     protected final String thread;
     private final String id;
     private XmppURI user;
 
-    Chat(final Session session, final XmppURI other, final XmppURI starter, final String thread) {
+    PairChat(final Session session, final XmppURI other, final XmppURI starter, final String thread) {
 	super(session, other, starter);
 	this.thread = thread;
 	this.id = generateChatID();
@@ -75,7 +75,7 @@ public class Chat extends AbstractConversation {
 	if (this == obj) {
 	    return true;
 	}
-	final Chat other = (Chat) obj;
+	final PairChat other = (PairChat) obj;
 	return id.equals(other.id);
     }
 

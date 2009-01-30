@@ -32,12 +32,12 @@ import com.calclab.emite.core.client.xmpp.stanzas.BasicStanza;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.Stanza;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.ChatManagerImpl;
+import com.calclab.emite.im.client.chat.PairChatManager;
 import com.calclab.emite.im.client.chat.Conversation;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 
-public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
+public class RoomManagerImpl extends PairChatManager implements RoomManager {
 
     private static final PacketMatcher FILTER_X = MatcherFactory.byNameAndXMLNS("x",
 	    "http://jabber.org/protocol/muc#user");
@@ -66,7 +66,7 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
     }
 
     @Override
-    public Room openChat(final XmppURI roomURI) {
+    public Room open(final XmppURI roomURI) {
 	Room room = rooms.get(roomURI.getJID());
 	if (room == null) {
 	    room = new Room(session, roomURI, session.getCurrentUser());

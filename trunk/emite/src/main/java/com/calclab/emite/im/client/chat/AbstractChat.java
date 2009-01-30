@@ -29,7 +29,7 @@ import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 
-public abstract class AbstractConversation implements Conversation {
+public abstract class AbstractChat implements Conversation {
 
     protected final XmppURI uri;
     protected State state;
@@ -42,7 +42,7 @@ public abstract class AbstractConversation implements Conversation {
     private final Event<Message> onBeforeSend;
     private final XmppURI starter;
 
-    public AbstractConversation(final Session session, final XmppURI uri, final XmppURI starter) {
+    public AbstractChat(final Session session, final XmppURI uri, final XmppURI starter) {
 	this.session = session;
 	this.uri = uri;
 	this.starter = starter;

@@ -102,7 +102,7 @@ public class RosterController {
     private void addItem(final RosterItem item) {
 	final RosterItemView itemView = new RosterItemView(item, new RosterItemViewListener() {
 	    public void onAction(final RosterItemView view) {
-		manager.openChat(item.getJID());
+		manager.open(item.getJID());
 	    }
 	});
 	view.addItem(itemView);
