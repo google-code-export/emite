@@ -22,7 +22,7 @@ public class ChatTest extends AbstractChatTest {
     @Before
     public void beforeTests() {
 	session = new MockedSession(USER_URI);
-	chat = new Chat(session, CHAT_URI, "theThread");
+	chat = new Chat(session, CHAT_URI, USER_URI, "theThread");
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ChatTest extends AbstractChatTest {
 
     @Test
     public void shouldBeReadyIfSessionLogedIn() {
-	final Chat aChat = new Chat(session, uri("someone@domain"), null);
+	final Chat aChat = new Chat(session, uri("someone@domain"), USER_URI, null);
 	assertEquals(Conversation.State.ready, aChat.getState());
     }
 
@@ -63,7 +63,7 @@ public class ChatTest extends AbstractChatTest {
 
     @Test
     public void shouldSendNoThreadWhenNotSpecified() {
-	final AbstractConversation noThreadChat = new Chat(session, CHAT_URI, null);
+	final AbstractConversation noThreadChat = new Chat(session, CHAT_URI, USER_URI, null);
 	noThreadChat.setState(State.ready);
 	noThreadChat.send(new Message("the message"));
 	session.verifySent("<message from='self@domain/res' to='other@domain/other' "

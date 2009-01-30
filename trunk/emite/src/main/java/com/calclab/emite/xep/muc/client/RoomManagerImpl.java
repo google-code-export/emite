@@ -68,7 +68,7 @@ public class RoomManagerImpl extends ChatManagerImpl implements RoomManager {
     public <T> Room openChat(final XmppURI roomURI, final java.lang.Class<T> dataType, final T dataValue) {
 	Room room = rooms.get(roomURI.getJID());
 	if (room == null) {
-	    room = new Room(session, roomURI);
+	    room = new Room(session, roomURI, session.getCurrentUser());
 	    if (dataType != null) {
 		room.setData(dataType, dataValue);
 	    }
