@@ -31,8 +31,8 @@ import org.ourproject.kune.platf.client.services.I18nTranslationService;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.Chat.State;
 import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
@@ -171,7 +171,7 @@ public class MultiChatPresenter {
 	    roomUI.onInviteUserRequested(new Listener2<XmppURI, String>() {
 		public void onEvent(final XmppURI userJid, final String reasonText) {
 		    ((Room) chat).sendInvitationTo(userJid.toString(), reasonText);
-		    view.setBottomInfoMessage(i18n.t("Invitation sended"));
+		    view.setBottomInfoMessage(i18n.t("Invitation sent"));
 		}
 	    });
 	    roomUI.onModifySubjectRequested(new Listener<String>() {
