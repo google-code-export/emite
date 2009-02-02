@@ -189,7 +189,7 @@ public class StatusUIPanel extends Toolbar implements StatusUIView {
 	}
 
 	String icon = ChatUIUtils.getOwnStatusIcon(ownPresence.getStatus()).getHTML();
-	icon = icon.replaceFirst("<img ", "<img ext:qtip=\"" + ownStatusText + "\" ");
+	statusButton.setTooltip(ownStatusText);
 	statusButton.setText(icon);
     }
 
