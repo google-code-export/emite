@@ -9,7 +9,8 @@ Emite Xmpp servers compatibility matrix:
 || openfire || 3.6.0a || yes || || ||
 || jabberd  || 1.4.3 || no || Protocol compatibility issue || ||
 || ejabberd  || 2.0.0 || yes || roster problems (not only with emite) || upgrade to 2.0.2 ||
-|| ejabberd  || 2.0.2 || yes ||  || ||
+|| ejabberd  || 2.0.2 || yes ||  || [https://support.process-one.net/browse/EJAB-724;jsessionid=7DA6E5F568CA3368182DC577B8EFAFD9?page=com.atlassian.jira.ext.fisheye%3Afisheye-issuepanel some bosh issues] ||
+|| ejabberd  || 2.0.3 || yes ||  || ||
 || tigase   || ? || ? || Not tested || ||
 
 
