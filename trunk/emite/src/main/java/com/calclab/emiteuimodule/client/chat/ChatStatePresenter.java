@@ -68,8 +68,9 @@ public class ChatStatePresenter {
 		final String otherAlias = chatUI.getOtherAlias();
 		switch (state) {
 		case active:
-		    chatUI.setSavedChatNotification(new ChatNotification());
-		    chatUI.clearMessageEventInfo();
+		    chatUI.setSavedChatNotification(formatNotification(otherAlias, "is active", E_NOTIF_PAUSE));
+		    chatUI.setChatTitleTextCls(E_NOTIF_PAUSE);
+		    chatUI.showMessageEventInfo();
 		    break;
 
 		case gone:
@@ -86,10 +87,9 @@ public class ChatStatePresenter {
 		    break;
 
 		case inactive:
-		    // FIXME: this kind of messages only for tests ...
-		    chatUI.setSavedChatNotification(formatNotification(otherAlias, "is inactive", E_NOTIF_INACTIVE));
+		    chatUI.setSavedChatNotification(new ChatNotification());
 		    chatUI.setChatTitleTextCls(E_NOTIF_INACTIVE);
-		    chatUI.showMessageEventInfo();
+		    chatUI.clearMessageEventInfo();
 		    break;
 
 		case pause:
