@@ -13,8 +13,8 @@ import org.junit.Test;
 
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.AbstractChatTest;
 import com.calclab.emite.im.client.chat.AbstractChat;
+import com.calclab.emite.im.client.chat.AbstractChatTest;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.im.client.chat.Chat.State;
 import com.calclab.emite.testing.MockedSession;
@@ -55,7 +55,7 @@ public class RoomTest extends AbstractChatTest {
     @Test
     public void shouldChangeSubject() {
 	room.setSubject("Some subject");
-	session.verifySent("<message type=\"groupchat\" from=\"" + userURI + "\" to=\"" + room.getURI()
+	session.verifySent("<message type=\"groupchat\" from=\"" + userURI + "\" to=\"" + room.getURI().getJID()
 		+ "\"><subject>Some subject</subject></message></body>");
     }
 

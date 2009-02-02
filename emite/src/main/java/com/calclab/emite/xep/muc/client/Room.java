@@ -202,7 +202,7 @@ public class Room extends AbstractChat implements Chat {
     public void setSubject(final String subjectText) {
 	final BasicStanza message = new BasicStanza("message", null);
 	message.setFrom(session.getCurrentUser());
-	message.setTo(uri);
+	message.setTo(getURI().getJID());
 	message.setType(Message.Type.groupchat.toString());
 	final IPacket subject = message.addChild("subject", null);
 	subject.setText(subjectText);
