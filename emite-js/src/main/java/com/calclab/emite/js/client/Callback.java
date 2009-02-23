@@ -10,5 +10,5 @@ import org.timepedia.exporter.client.Exportable;
 @ExportClosure
 public interface Callback extends Exportable {
     @Export
-    public void onEvent(String param);
+    public void onEvent(Object param);
 }
