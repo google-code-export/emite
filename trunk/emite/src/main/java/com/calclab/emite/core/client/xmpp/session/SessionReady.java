@@ -33,7 +33,9 @@ public class SessionReady {
     public SessionReady(final Session session) {
 	session.onStateChanged(new Listener<State>() {
 	    public void onEvent(final State state) {
-		session.setReady();
+		if (state == State.loggedIn) {
+		    session.setReady();
+		}
 	    }
 	});
     }
