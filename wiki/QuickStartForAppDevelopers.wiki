@@ -6,11 +6,6 @@ The following is intended to describe a minimal number of steps for setting up a
 
 = Tutorial =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
-
 == Create a New GWT Project and Application Stubs ==
  # The steps in this first section follow the pattern for creating stub files for new GWT projects for import into Eclipse.  See Google's GWT tutorial for more information on these steps.  Start by downloading and installing GWT version 1.5.3 or newer.  (Note that in this section, example commands are shown for a Linux environment and would need to be adjusted slightly for Windows or other environments.)
  # Start by creating a temporary working directory which will be used as a temporary home for the stub files created by the GWT creator scripts.
