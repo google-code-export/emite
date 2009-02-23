@@ -7,8 +7,12 @@ The following is intended to describe a minimal number of steps for setting up a
 
 = Tutorial =
 
+== Pre-Steps ==
+ # Download the latest and greatest emite jarfile (v0.4.6 at the time of this writing.)
+ # Download the latest and greatest [http://code.google.com/p/suco/ Suco project] jarfile (v0.6.0 at the time of this writing) as it is a key dependency of emite and is being developed in parallel by the same guys developing emite.
+
 == Create a New GWT Project and Application Stubs ==
- # The steps in this first section follow the pattern for creating stub files for new GWT projects for import into [http://eclipse.org Eclipse].  See [http://code.google.com/webtoolkit/gettingstarted.html Google's GWT tutorial] for more information on these steps.  Start by downloading and installing GWT version 1.5.3 or newer.  (Note that in this section, example commands are shown for a Linux environment and would need to be adjusted slightly for Windows or other environments.)
+ # The steps in this first section follow the pattern for creating stub files for new GWT projects for import into [http://eclipse.org Eclipse].  See [http://code.google.com/webtoolkit/gettingstarted.html Google's GWT tutorial] for more information on these steps.  Start by downloading and installing [http://code.google.com/webtoolkit/ GWT] version 1.5.3 or newer.  (Note that in this section, example commands are shown for a Linux environment and would need to be adjusted slightly for Windows or other environments.)
  # Start by creating a temporary working directory which will be used as a temporary home for the stub files created by the GWT creator scripts.
 {{{
 gwt-linux-1.5.3> mkdir tmp/ ; cd tmp
