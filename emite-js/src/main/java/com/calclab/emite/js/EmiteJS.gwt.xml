@@ -4,7 +4,6 @@
   <entry-point class="com.calclab.emite.js.client.EmiteJSEntryPoint" />
   <inherits name='org.timepedia.exporter.Exporter' />
 
-  <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet"/>
   <set-property name="export" value="yes" />
 
   <extend-property name="log_level" values="DEBUG,INFO,OFF" />

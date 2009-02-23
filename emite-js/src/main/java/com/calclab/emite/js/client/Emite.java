@@ -1,5 +1,7 @@
 package com.calclab.emite.js.client;
 
+import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
+
 import org.timepedia.exporter.client.Export;
 import org.timepedia.exporter.client.ExportPackage;
 import org.timepedia.exporter.client.Exportable;
@@ -11,9 +13,7 @@ import com.calclab.emite.core.client.services.Services;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.suco.client.Suco;
-import com.calclab.suco.client.listener.Listener;
-
-import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.*;
+import com.calclab.suco.client.events.Listener;
 
 @Export
 @ExportPackage("emitexmpp")
@@ -25,6 +25,10 @@ public class Emite implements Exportable {
 	Log.debug("Emite facade!");
 	this.session = Suco.get(Session.class);
 	this.services = Suco.get(Services.class);
+    }
+
+    public String getState() {
+	return session.getState().toString();
     }
 
     public void log(final String message) {
@@ -40,16 +44,21 @@ public class Emite implements Exportable {
     }
 
     public void onReceive(final Callback callback) {
+	Log.debug("Adding receive callback: " + callback);
 	Suco.get(Connection.class).onStanzaReceived(new Listener<IPacket>() {
 	    public void onEvent(final IPacket stanza) {
-		callback.onEvent(services.toString(stanza));
+		final String xml = services.toString(stanza);
+		Log.debug("Callback received: " + xml);
+		callback.onEvent(xml);
 	    }
 	});
     }
 
-    public void onStatusChaned(final Callback callback) {
+    public void onStateChanged(final Callback callback) {
+	Log.debug("Adding state callback" + callback);
 	session.onStateChanged(new Listener<State>() {
 	    public void onEvent(final State state) {
+		Log.debug("Callback state: " + state);
 		callback.onEvent(state.toString());
 	    }
 	});
