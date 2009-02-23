@@ -89,6 +89,10 @@ public class GWTPacket extends AbstractPacket {
 	return element.getChildNodes().getLength();
     }
 
+    public Element getElement() {
+	return element;
+    }
+
     @Override
     public IPacket getFirstChild(final String childName) {
 	final NodeList nodes = element.getElementsByTagName(childName);

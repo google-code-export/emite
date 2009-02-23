@@ -101,7 +101,6 @@ public final class PacketTestSuite {
 	shouldScapeText(helper);
     }
 
-
     private static void shouldNeverReturnNullWhenGetChildren(final HelperExtended helper) {
 	helper.log("- shouldNeverReturnNullWhenGetChildren");
 	final IPacket packet = helper.createPacket("root");
