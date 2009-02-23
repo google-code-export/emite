@@ -2,12 +2,12 @@
 
 = Introduction =
 
-The following is intended to describe a minimal number of steps for setting up a new development environment where one can develop, test, and debug new GWT applications which use the emite jarfile.  In particular, it uses Eclipse v3.4 for a Java development environment, a local ejabberd v2.0.3 Jabber server, and the latest GWT development toolkit and emite project jarfiles.  This tutorial assumes some degree of familiarity with Java IDEs (especially Eclipse), high-level concepts around how the Jabber/XMPP protocol and Jabber servers work, and the concepts behind Google's GWT toolkit.
+The following is intended to describe a minimal number of steps for setting up a new development environment where one can develop, test, and debug new [http://code.google.com/webtoolkit/ GWT] applications which use the emite jarfile.  In particular, it uses [http://eclipse.org Eclipse] v3.4 for a Java development environment, a local [http://www.ejabberd.im ejabberd] v2.0.3 Jabber server, and the latest GWT development toolkit and emite project jarfiles.  This tutorial assumes some degree of familiarity with Java IDEs (especially Eclipse), high-level concepts around how the Jabber/XMPP protocol and Jabber servers work, and the concepts behind Google's GWT toolkit.
 
 = Tutorial =
 
 == Create a New GWT Project and Application Stubs ==
- # The steps in this first section follow the pattern for creating stub files for new GWT projects for import into [http://eclipse.org Eclipse].  See Google's GWT tutorial for more information on these steps.  Start by downloading and installing GWT version 1.5.3 or newer.  (Note that in this section, example commands are shown for a Linux environment and would need to be adjusted slightly for Windows or other environments.)
+ # The steps in this first section follow the pattern for creating stub files for new GWT projects for import into [http://eclipse.org Eclipse].  See [http://code.google.com/webtoolkit/gettingstarted.html Google's GWT tutorial] for more information on these steps.  Start by downloading and installing GWT version 1.5.3 or newer.  (Note that in this section, example commands are shown for a Linux environment and would need to be adjusted slightly for Windows or other environments.)
  # Start by creating a temporary working directory which will be used as a temporary home for the stub files created by the GWT creator scripts.
 {{{
   gwt-linux-1.5.3> mkdir tmp/ ; cd tmp
