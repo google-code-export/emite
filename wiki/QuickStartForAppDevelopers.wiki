@@ -118,7 +118,7 @@ src="com.example.fresh.MyApplication.nocache.js"
      ]}
   ]}
 }}}
-  Requests from the GWT + emite application will be proxied through the proxy server and sent to an address that includes the name of the application module.  This configuration setting tells the ejabberd server map any incoming request to {{{/http-bind/com.example.fresh.MyApplication/proxy}}} to the mod_http_bind service that it provides.  This request pattern and how it is built is a somewhat subtle subject which must be handled correctly in order for your application to successfully talk to the jabber server. (Note the absence of the mention of "client" in the com.example.blahblahblah above.)
+  Requests from the GWT + emite application will be proxied through the proxy server and sent to an address that includes the name of the application module.  This configuration setting tells the ejabberd server to map any incoming request to {{{/http-bind/com.example.fresh.MyApplication/proxy}}} to the mod_http_bind service that it provides.  This request pattern and how it is built is a somewhat subtle subject which must be handled correctly in order for your application to successfully talk to the jabber server. (Note the absence of the mention of "client" in the com.example.blahblahblah above.)
  # Start (or stop and start again) the ejabberd server so that the configuration modifications take effect.
  # Register the test1 and test2 users on your ejabberd server with the following 2 commands:
 {{{
