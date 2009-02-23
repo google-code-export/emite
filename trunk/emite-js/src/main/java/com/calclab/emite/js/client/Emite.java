@@ -9,11 +9,13 @@ import org.timepedia.exporter.client.Exportable;
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.packet.IPacket;
+import com.calclab.emite.core.client.packet.gwt.GWTPacket;
 import com.calclab.emite.core.client.services.Services;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.suco.client.Suco;
 import com.calclab.suco.client.events.Listener;
+import com.google.gwt.xml.client.Element;
 
 @Export
 @ExportPackage("emitexmpp")
@@ -44,12 +46,10 @@ public class Emite implements Exportable {
     }
 
     public void onReceive(final Callback callback) {
-	Log.debug("Adding receive callback: " + callback);
 	Suco.get(Connection.class).onStanzaReceived(new Listener<IPacket>() {
 	    public void onEvent(final IPacket stanza) {
-		final String xml = services.toString(stanza);
-		Log.debug("Callback received: " + xml);
-		callback.onEvent(xml);
+		Element element = ((GWTPacket) stanza).getElement();
+		callback.onEvent(element);
 	    }
 	});
     }

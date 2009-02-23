@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Emite JS - Status demo example - 0.4.6.1.003</html>
+        <title>Emite JS - Send messages demo example - 0.4.6.1.003</html>
         <script src="lib/com.calclab.emite.js.EmiteJS.nocache.js"></script>
 
         <!-- Emite connection configuration -->
@@ -24,18 +24,26 @@
               emite.logout();
             }
 
-            show_state = function() {
-              var state = emite.getState();
-              $("#output").prepend("<p>The current state is: " + state + "</p>");
+            ping = function() {
+              if (emite.isRunning) {
+                var msg = "ping! " + new Date();
+                emite.send("<message to='test2@localhost'><body>" + msg + "</body></message>");
+                $("#output").prepend("<p>" + msg + "</p>");
+              }
             }
-
 
             $(window).load(function() {
               emite = new emitexmpp.Emite();
+              emite.isRunning = false;
 
-              // add a listener to receive state changes
               emite.onStateChanged(function(message) {
-                $("#output").prepend("<p>State changed to: " + message + "</p>");
+                if (message == 'ready') {
+                  emite.isRunning = true;
+                  ping();
+                  setInterval("ping()", 3000);
+                } else if (message == 'disconnected') {
+                  emite.isRunning = false;
+                }
               });
 
 
@@ -47,14 +55,13 @@
         </script>
     </head>
     <body>
-        <h1>Status demo</h1>
-        <p>How to know the current connection status</p>
+        <h1>Send demo</h1>
+        <p>How to send stanzas</p>
         <div id="loading">loading...</div>
         <div id="controls" style="display: none">
-        <input type="button" onClick="connect();" value="Connect" />
-        <input type="button" onClick="disconnect();" value ="Disconnect" />
-        <input type="button" onClick="show_state();" value ="Show current state" />
-        <input type="button" onClick="$('#output').empty();" value="Clear" />
+            <input type="button" onClick="connect();" value="Connect" />
+            <input type="button" onClick="disconnect();" value ="Disconnect" />
+            <input type="button" onClick="$('#output').empty();" value="Clear" />
         </div>
         <div id="output" style="float: left; border: 1px solid #c00; padding: 0.5em 1em; margin-top: 1em;"></div>
     </body>

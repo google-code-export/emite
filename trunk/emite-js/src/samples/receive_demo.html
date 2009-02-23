@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Emite JS - Status demo example - 0.4.6.1.003</html>
+        <title>Emite JS - Receive messages demo example - 0.4.6.1.003</html>
         <script src="lib/com.calclab.emite.js.EmiteJS.nocache.js"></script>
 
         <!-- Emite connection configuration -->
@@ -16,7 +16,7 @@
             connect = function() {
               emite.log("This message will appear in firebug's console...");
               emite.log("connecting...");
-              emite.login("test1@localhost/emitejs", "test1");
+              emite.login("test2@localhost/emitejs", "test2");
             };
 
             disconnect = function() {
@@ -24,20 +24,19 @@
               emite.logout();
             }
 
-            show_state = function() {
-              var state = emite.getState();
-              $("#output").prepend("<p>The current state is: " + state + "</p>");
-            }
-
 
             $(window).load(function() {
-              emite = new emitexmpp.Emite();
+                emite = new emitexmpp.Emite();
 
-              // add a listener to receive state changes
-              emite.onStateChanged(function(message) {
-                $("#output").prepend("<p>State changed to: " + message + "</p>");
-              });
-
+                emite.onReceive(function(stanza) {
+                    $("#output").prepend("<p>stanza received!</p>");
+                    $s = stanza;
+                    console.log("NAME: " + (typeof stanza));
+                    if (stanza.tagName == 'message') {
+                      var body = stanza.getElementsByTagName("body");
+                      console.log(body);
+                    }
+                });
 
                 $("#loading").hide();
                 $("#controls").show();
@@ -47,14 +46,13 @@
         </script>
     </head>
     <body>
-        <h1>Status demo</h1>
-        <p>How to know the current connection status</p>
+        <h1>Receive demo</h1>
+        <p>How to receive stanzas</p>
         <div id="loading">loading...</div>
         <div id="controls" style="display: none">
-        <input type="button" onClick="connect();" value="Connect" />
-        <input type="button" onClick="disconnect();" value ="Disconnect" />
-        <input type="button" onClick="show_state();" value ="Show current state" />
-        <input type="button" onClick="$('#output').empty();" value="Clear" />
+            <input type="button" onClick="connect();" value="Connect" />
+            <input type="button" onClick="disconnect();" value ="Disconnect" />
+            <input type="button" onClick="$('#output').empty();" value="Clear" />
         </div>
         <div id="output" style="float: left; border: 1px solid #c00; padding: 0.5em 1em; margin-top: 1em;"></div>
     </body>
