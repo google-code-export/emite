@@ -29,7 +29,7 @@ tmp> ../applicationCreator -eclipse MyApplication com.example.fresh.client.MyApp
 {{{
 emite-0.4.6.jar (provides core emite functionality, but has dependencies on other jars)
 gwt-log-2.5.3.jar (referenced by emite jarfile for logging functionality)
-gwt-servlet.jar (used in development for a proxy servlet, but you likely won't use this in production later)
+gwt-servlet.jar (used in development for a proxy servlet, but you likely will not use this in production later)
 suco-0.6.0.jar (referenced by emite jarfile providing an abstraction layer used by emite)
 }}}
 
