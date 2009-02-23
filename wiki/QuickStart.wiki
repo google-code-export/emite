@@ -49,7 +49,7 @@ There are other ways, but the fastest is to use maven2:
 </project>
 }}}
 
-See Appendix C for more pom.xml configuration options. You can also take a look to http://emite.googlecode.com/svn/trunk/blackboard/ for an example of an application that uses Emite library.
+See Appendix C for more pom.xml configuration options. 
 
   # Create a new gwt project with the current gwt module dependencies:
 {{{
