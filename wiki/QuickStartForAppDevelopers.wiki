@@ -86,7 +86,7 @@ final Message message = new Message("hello world!", uri("test2@localhost"));
 <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet" />
 }}}
   The first 3 lines tell GWT to make use of relevant parts of emite in the compiled application.  The 4th line instantiates the proxy servlet mentioned before which will, in its default configuration, redirect all incoming requests to its url (at 'proxy/' relative to the url where the compiled application itself is hosted, which in practice is a semi-randomly chosen port at execution time on localhost) to port 5280 on localhost.
- # Find this text in your GWT application's public html file (allowing for differences between your naming and mine):
+ # Find this text in your GWT application's public html file (allowing for differences between your naming and the name of the {{{MyApplication}}} in this example):
 {{{
 src="com.example.fresh.MyApplication.nocache.js"
 }}}
@@ -108,7 +108,7 @@ src="com.example.fresh.MyApplication.nocache.js"
   This loads the HTTP-Bind functionality that is built and included with ejabberd v2.0 and above, though it is not enabled by default. Emite will communicate to the jabber server via HTTP-Bind.
  # Modify the ejabberd.cfg configuration file to modify the grouping of lines that begin "{5280, ejabberd_http" with the following text (near the end of the "listen" section):
 {{{
-    {5280, ejabberd_http, [
+  {5280, ejabberd_http, [
      http_poll,
      web_admin,
      {request_handlers, [
@@ -128,3 +128,7 @@ ejabberdctl register test2 localhost test2
 == Run the Example App ==
  # Start your favorite Jabber client application and log into your local ejabberd server as user {{{test2@localhost}}}.
  # Run your new GWT application in hosted mode by hitting the green Run button in the Eclipse IDE.  This should launch the GWT Browser and run your application in hosted mode.  If all goes well, you will receive a message in your Jabber client sent from {{{test1@localhost}}} to {{{test2@localhost}}}.
+
+= Further Thoughts =
+ * Try the above with the BasicExample instead of the EmiteCoreExample to see a nicer looking UI.
+ * Try activating the {{{mod_http_fileserver}}} module in the local ejabberd installation, then compile your GWT application into javascript, and deploy it as a web page served by ejabberd's little built-in httpd server.  This is not recommended for production deployments, but for further development and testing it can be very convenient.
