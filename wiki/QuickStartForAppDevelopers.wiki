@@ -91,10 +91,6 @@ final Message message = new Message("hello world!", uri("test2@localhost"));
 <servlet path="/proxy" class="de.spieleck.servlets.ProxyServlet" />
 }}}
   The first 3 lines tell GWT to make use of relevant parts of emite in the compiled application.  The 4th line instantiates the proxy servlet mentioned before which will, in its default configuration, redirect all incoming requests to its url (at 'proxy/' relative to the url where the compiled application itself is hosted, which in practice is a semi-randomly chosen port at execution time on localhost) to port 5280 on localhost.
- # Find this text in your GWT application's public html file (allowing for differences between your naming and the name of the {{{MyApplication}}} in this example):
-{{{
-src="com.example.fresh.MyApplication.nocache.js"
-}}}
  # Insert the following 4 lines into your GWT application's public html file just below the {{{<title>}}} tag line:
 {{{
 <meta name="gwt:property" content="locale=en">
