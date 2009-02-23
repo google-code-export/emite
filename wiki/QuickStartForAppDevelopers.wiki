@@ -27,10 +27,10 @@ tmp> ../applicationCreator -eclipse MyApplication com.example.fresh.client.MyApp
  # Select Import -> Existing Projects into Workspace, then select directory containing the new GWT project (i.e. that tmp/ directory) and leave the checkbox on to copy files into your workspace.
  # Go to the project's Properties -> Java Build Path -> Libraries -> Add External JARs and select the following libraries to be added (you will need to navigate to the appropriate directory to find these files):
 {{{
-emite-0.4.6.jar (provides core emite functionality, but has dependencies on other jars)
-gwt-log-2.5.3.jar (referenced by emite jarfile for logging functionality)
-gwt-servlet.jar (used in development for a proxy servlet, but you likely will not use this in production later)
-suco-0.6.0.jar (referenced by emite jarfile providing an abstraction layer used by emite)
+emite-0.4.6.jar   # provides core emite functionality, but has dependencies on other jars
+gwt-log-2.5.3.jar # referenced by emite jarfile for logging functionality
+gwt-servlet.jar   # used in development for a proxy servlet, but you likely will not use this in production later
+suco-0.6.0.jar    # referenced by emite jarfile providing an abstraction layer used by emite
 }}}
 
 == Adapt the Emite "Core" Example ==
