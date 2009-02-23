@@ -1,4 +1,5 @@
 #summary Tutorial outlining minimal steps for setting up a full dev environment for creating GWT applications on top of emite.
+#labels Featured,Phase-Deploy
 
 = Introduction =
 
@@ -126,7 +127,7 @@ ejabberdctl register test2 localhost test2
 }}}
 
 == Run the Example App ==
- # Start your favorite Jabber client application and log into your local ejabberd server as user {{{test2@localhost}}}.
+ # Start your favorite Jabber client application and log into your local ejabberd server as user {{{test2@localhost}}} (whose password was set as: _test2_).
  # Run your new GWT application in hosted mode by hitting the green Run button in the Eclipse IDE.  This should launch the GWT Browser and run your application in hosted mode.  If all goes well, you will receive a message in your Jabber client sent from {{{test1@localhost}}} to {{{test2@localhost}}}.
 
 = Further Thoughts =
