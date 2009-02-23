@@ -33,7 +33,7 @@ The following is intended to describe a minimal number of steps for setting up a
 }}}
 
 == Adapt the Emite "Core" Example ==
- # Copy-paste the contents of the EmiteCoreExample class's source code (contents only, not the class declaration as you probably want to keep the class declaration in your stub) into your new {{{MyApplication}}} class that implements EntryPoint.  You could replace your stub java file with the EmiteCoreExample java file, but you would then need to modify it to adhere to your project/application naming which can be a bit more confusing.
+ # Copy-paste the contents of the EmiteCoreExample class's source code (contents only, not the class declaration as you probably want to keep the class declaration in your stub) into your new {{{MyApplication}}} class that implements {{{EntryPoint}}}.  You could replace your stub java file with the EmiteCoreExample java file, but you would then need to modify it to adhere to your project/application naming which can be a bit more confusing.
  # Use the Eclipse IDE to resolve most missing dependencies with the appropriate import statements (which will largely pull from the emite-related jarfiles we added to the project in the prior section). With Eclipse's help, we added the following import statements:
 {{{
   import com.calclab.emite.core.client.bosh.BoshSettings;
@@ -77,7 +77,7 @@ The following is intended to describe a minimal number of steps for setting up a
 {{{
   final Message message = new Message("hello world!", uri("test2@localhost"));
 }}}
-  This will result in the sending of a message to a test2@localhost user which will also be registered on your locally installed jabber server (seen in later steps).
+  This will result in the sending of a message to a {{{test2@localhost}}} user which will also be registered on your locally installed jabber server (seen in later steps).
  # Insert the following 4 lines in your GWT application's gwt.xml file just after the "Other module inherits" comment line:
 {{{
   <inherits name='com.calclab.emite.core.EmiteCore'/>
