@@ -22,6 +22,7 @@
 package com.calclab.emite.core.client.xmpp.session;
 
 import com.calclab.emite.core.client.xmpp.session.Session.State;
+import com.calclab.emite.core.client.xmpp.stanzas.Presence;
 import com.calclab.suco.client.events.Listener;
 
 /**
@@ -34,6 +35,7 @@ public class SessionReady {
 	session.onStateChanged(new Listener<State>() {
 	    public void onEvent(final State state) {
 		if (state == State.loggedIn) {
+		    session.send(new Presence());
 		    session.setReady();
 		}
 	    }
