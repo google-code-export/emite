@@ -100,7 +100,7 @@ The following is intended to describe a minimal number of steps for setting up a
   These lines, respectively, set the locale, the url for the proxy (remember the single origin rules for javascript code in most browsers), the name of the host (potentially also convenient to change here when deploying into production), and an instruction to log off from the jabber server upon closing of the browser window.
 
 == Configure Local ejabberd Server ==
- # Download and install ejabberd (v2.0.3 at the time of this writing) locally following instructions at http://www.ejabberd.im (and verify that your installation was successful before proceeding by connecting to it with your favorite jabber client software.)  There are many options for downloading binary or source code packages for ejabberd -- the choice is totally up to you.
+ # Download and install [http://www.ejabberd.im ejabberd] (v2.0.3 at the time of this writing) locally following instructions at the [http://www.ejabberd.im ejabberd website] (and verify that your installation was successful before proceeding by connecting to it with your favorite jabber client software.)  There are many options for downloading binary or source code packages for ejabberd -- the choice is totally up to you.
  # Modify the ejabberd.cfg configuration file (found in the directories where you installed ejabberd) to add the following text to the middle of the "modules" section:
 {{{
   {mod_http_bind, []},
