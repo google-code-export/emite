@@ -17,23 +17,21 @@
     </dependency>
     <dependency>
       <groupId>com.calclab</groupId>
+      <artifactId>suco</artifactId>
+      <version>0.5.2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.calclab</groupId>
       <artifactId>emite</artifactId>
       <classifier>core</classifier>
-      <version>0.4.1</version>
+      <version>0.4.6.1</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>com.calclab</groupId>
       <artifactId>emite</artifactId>
       <classifier>browser</classifier>
-      <version>0.4.1</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>com.calclab</groupId>
-      <artifactId>emite</artifactId>
-      <classifier>proxies</classifier>
-      <version>0.4.1</version>
+      <version>0.4.6.1</version>
       <type>jar</type>
     </dependency>
     <dependency>
@@ -120,14 +118,15 @@
         <jdk>1</jdk>
       </activation>
       <properties>
-        <gwt.version>1.5.2</gwt.version>
-        <gwt.style>OBF</gwt.style>
+        <gwt.version>1.5.3</gwt.version>
+        <gwt.style>PRETTY</gwt.style>
       </properties>
     </profile>
     <profile>
-      <id>debug</id>
+      <id>production</id>
       <properties>
-        <gwt.style>PRETTY</gwt.style>
+        <gwt.style>OBF</gwt.style>
+        <gwt.version>1.5.3</gwt.version>
       </properties>
     </profile>
   </profiles>
