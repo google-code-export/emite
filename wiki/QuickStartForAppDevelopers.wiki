@@ -7,22 +7,22 @@ The following is intended to describe a minimal number of steps for setting up a
 = Tutorial =
 
 == Create a New GWT Project and Application Stubs ==
- # The steps in this first section follow the pattern for creating stub files for new GWT projects for import into Eclipse.  See Google's GWT tutorial for more information on these steps.  Start by downloading and installing GWT version 1.5.3 or newer.  (Note that in this section, example commands are shown for a Linux environment and would need to be adjusted slightly for Windows or other environments.)
+ # The steps in this first section follow the pattern for creating stub files for new GWT projects for import into [http://eclipse.org Eclipse].  See Google's GWT tutorial for more information on these steps.  Start by downloading and installing GWT version 1.5.3 or newer.  (Note that in this section, example commands are shown for a Linux environment and would need to be adjusted slightly for Windows or other environments.)
  # Start by creating a temporary working directory which will be used as a temporary home for the stub files created by the GWT creator scripts.
 {{{
   gwt-linux-1.5.3> mkdir tmp/ ; cd tmp
 }}}
- # Use the GWT script to create a new project.  Note that the name of your project can be almost anything.  In this tutorial, we will name our project "MyApplication" and thus in this and later steps you may wish to replace references to "MyApplication" with the unique name for your project.
+ # Use the GWT script to create a new project.  Note that the name of your project can be almost anything.  In this tutorial, we will name our project {{{MyApplication}}} and thus in this and later steps you may wish to replace references to {{{MyApplication}}} with the unique name for your project.
 {{{
   tmp> ../projectCreator -eclipse MyApplication
 }}}
- # Use the GWT script to create stub files for your new application. Pay special attention to the name for your package as its name will be used in whole or in part in later steps.  Also, you probably will want to replace references to "com.example.fresh.client.MyApplication" with your own unique package name.
+ # Use the GWT script to create stub files for your new application. Pay special attention to the name for your package as its name will be used in whole or in part in later steps.  Also, you probably will want to replace references to {{{com.example.fresh.client.MyApplication}}} with your own unique package name.
 {{{
   tmp> ../applicationCreator -eclipse MyApplication com.example.fresh.client.MyApplication
 }}}
 
 == Configure for Eclipse 3.4 ==
- # Download and install the latest release of the Eclipse Java development environment (v3.4.1 at the time of this writing).
+ # Download and install the latest release of the [http://eclipse.org Eclipse] Java development environment (v3.4.1 at the time of this writing).
  # Select Import -> Existing Projects into Workspace, then select directory containing the new GWT project (i.e. that tmp/ directory) and leave the checkbox on to copy files into your workspace.
  # Go to the project's Properties -> Java Build Path -> Libraries -> Add External JARs and select the following libraries to be added (you will need to navigate to the appropriate directory to find these files):
 {{{
@@ -33,7 +33,7 @@ The following is intended to describe a minimal number of steps for setting up a
 }}}
 
 == Adapt the Emite "Core" Example ==
- # Copy-paste the contents of the EmiteCoreExample class's source code (contents only, not the class declaration as you probably want to keep the class declaration in your stub) into your new MyApplication class that implements EntryPoint.  You could replace your stub java file with the EmiteCoreExample java file, but you would then need to modify it to adhere to your project/application naming which can be a bit more confusing.
+ # Copy-paste the contents of the EmiteCoreExample class's source code (contents only, not the class declaration as you probably want to keep the class declaration in your stub) into your new {{{MyApplication}}} class that implements EntryPoint.  You could replace your stub java file with the EmiteCoreExample java file, but you would then need to modify it to adhere to your project/application naming which can be a bit more confusing.
  # Use the Eclipse IDE to resolve most missing dependencies with the appropriate import statements (which will largely pull from the emite-related jarfiles we added to the project in the prior section). With Eclipse's help, we added the following import statements:
 {{{
   import com.calclab.emite.core.client.bosh.BoshSettings;
@@ -118,7 +118,7 @@ mod_http_bind},
      ]}
   ]}
 }}}
-  Requests from the GWT + emite application will be proxied through the proxy server and sent to an address that includes the name of the application module.  This configuration setting tells the ejabberd server map any incoming request to "/http-bind/com.example.fresh.MyApplication/proxy" to the mod_http_bind service that it provides.  This request pattern and how it is built is a somewhat subtle subject which must be handled correctly in order for your application to successfully talk to the jabber server.
+  Requests from the GWT + emite application will be proxied through the proxy server and sent to an address that includes the name of the application module.  This configuration setting tells the ejabberd server map any incoming request to {{{/http-bind/com.example.fresh.MyApplication/proxy}}} to the mod_http_bind service that it provides.  This request pattern and how it is built is a somewhat subtle subject which must be handled correctly in order for your application to successfully talk to the jabber server.
  # Start (or stop and start again) the ejabberd server so that the configuration modifications take effect.
  # Register the test1 and test2 users on your ejabberd server with the following 2 commands:
 {{{
@@ -127,5 +127,5 @@ mod_http_bind},
 }}}
 
 == Run the Example App ==
- # Start your favorite Jabber client application and log into your local ejabberd server as user "test2@localhost".
- # Run your new GWT application in hosted mode by hitting the green Run button in the Eclipse IDE.  This should launch the GWT Browser and run your application in hosted mode.  If all goes well, you will receive a message in your Jabber client sent from test1@localhost to test2@localhost.
+ # Start your favorite Jabber client application and log into your local ejabberd server as user {{{test2@localhost}}}.
+ # Run your new GWT application in hosted mode by hitting the green Run button in the Eclipse IDE.  This should launch the GWT Browser and run your application in hosted mode.  If all goes well, you will receive a message in your Jabber client sent from {{{test1@localhost}}} to {{{test2@localhost}}}.
