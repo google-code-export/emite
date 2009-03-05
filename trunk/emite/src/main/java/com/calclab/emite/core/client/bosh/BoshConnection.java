@@ -50,6 +50,7 @@ public class BoshConnection implements Connection {
     private boolean shouldCollectResponses;
     private BoshSettings userSettings;
     private int errors;
+    private final Event<String> onResponse;
 
     public BoshConnection(final Services services) {
 	this.services = services;
@@ -57,6 +58,7 @@ public class BoshConnection implements Connection {
 	this.onDisconnected = new Event<String>("bosh:onDisconnected");
 	this.onConnected = new Event0("bosh:onConnected");
 	this.onStanzaReceived = new Event<IPacket>("bosh:onReceived");
+	this.onResponse = new Event<String>("bosh:onResponse");
 	this.onStanzaSent = new Event<IPacket>("bosh:onSent");
 	this.errors = 0;
 
@@ -84,6 +86,7 @@ public class BoshConnection implements Connection {
 			running = false;
 			onError.fire("Bad status: " + statusCode);
 		    } else {
+			onResponse.fire(content);
 			final IPacket response = services.toXML(content);
 			if (response != null && "body".equals(response.getName())) {
 			    handleResponse(response);
@@ -123,6 +126,10 @@ public class BoshConnection implements Connection {
 
     public void onError(final Listener<String> listener) {
 	onError.add(listener);
+    }
+
+    public void onResponse(final Listener<String> listener) {
+	onResponse.add(listener);
     }
 
     public void onStanzaReceived(final Listener<IPacket> listener) {

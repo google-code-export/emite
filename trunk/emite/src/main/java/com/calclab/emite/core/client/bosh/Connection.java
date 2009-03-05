@@ -34,6 +34,8 @@ public interface Connection {
 
     public abstract void onError(final Listener<String> listener);
 
+    public abstract void onResponse(final Listener<String> listener);
+
     public abstract void onStanzaReceived(final Listener<IPacket> listener);
 
     public abstract void onStanzaSent(final Listener<IPacket> listener);
