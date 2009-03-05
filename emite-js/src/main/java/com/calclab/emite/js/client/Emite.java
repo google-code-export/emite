@@ -48,7 +48,7 @@ public class Emite implements Exportable {
     public void onReceive(final Callback callback) {
 	Suco.get(Connection.class).onStanzaReceived(new Listener<IPacket>() {
 	    public void onEvent(final IPacket stanza) {
-		Element element = ((GWTPacket) stanza).getElement();
+		final Element element = ((GWTPacket) stanza).getElement();
 		callback.onEvent(element);
 	    }
 	});
