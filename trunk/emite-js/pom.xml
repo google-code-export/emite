@@ -24,7 +24,7 @@
       <groupId>com.calclab</groupId>
       <artifactId>emite</artifactId>
       <classifier>core</classifier>
-      <version>0.4.6.1</version>
+      <version>0.4.6.2</version>
       <type>jar</type>
     </dependency>
     <dependency>
