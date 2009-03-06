@@ -21,6 +21,7 @@ How emite talk with other clients:
 
 || *Xmpp Client* || *Compatible?* || *Know Issues* || *Notes ||
 || pidjin || yes || || ||
+|| gajim || yes || || ||
 || psi || yes || || ||
 || audium || yes || || ||
 || gmail (web) || yes ||  || ||
