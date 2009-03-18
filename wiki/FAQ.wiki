@@ -46,6 +46,10 @@ Well you can use a proxy to resend the bosh petitions, to another server. But yo
 
 Sorry, initially we only support PLAIN authentication. Be carefully then with your accounts info.
 
+== How can I translate emiteui to other language ==
+
+As we use emite in other applications that must be translated as a whole (both server and client side), we cannot only use GWT i18n stuff. Then to translate emite we suggest you to use [http://google-web-toolkit.googlecode.com/svn/javadoc/1.5/com/google/gwt/i18n/client/ConstantsWithLookup.html#getString(java.lang.String) ConstantsWithLookup] or [http://google-web-toolkit.googlecode.com/svn/javadoc/1.5/com/google/gwt/i18n/client/Dictionary.html Dictionary] in your code. 
+
 == Do you will support in the future XEP-XXXX or _foo_ feature? ==
 
 Maybe, see our [http://code.google.com/p/emite/issues/list issue/enhancement list]. Emite is very modular and easy to extend, patches are welcome.
