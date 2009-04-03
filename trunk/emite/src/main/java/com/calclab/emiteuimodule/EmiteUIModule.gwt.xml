@@ -11,7 +11,7 @@
 
   <inherits name="com.allen_sauer.gwt.log.gwt-log" />
   <inherits name='com.allen_sauer.gwt.voices.gwt-voices'/>
-  <inherits name="org.ourproject.kune.platf.Kune-Platform" />
+  <inherits name="org.ourproject.kune.platf.KunePlatform" />
 
   <public path="public" />
   <entry-point

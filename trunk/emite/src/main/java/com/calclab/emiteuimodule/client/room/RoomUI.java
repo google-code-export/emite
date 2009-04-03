@@ -33,17 +33,19 @@ public interface RoomUI extends ChatUI {
 
     void askInvitation(XmppURI userURI);
 
+    String getSubject();
+
     boolean isSubjectEditable();
 
     void onInviteUserRequested(Listener2<XmppURI, String> param);
 
     void onModifySubjectRequested(Listener<String> newSubject);
 
-    void onModifySubjectRequested(String newSubject);
-
     void onOccupantModified(Occupant occupant);
 
     void onOccupantsChanged(Collection<Occupant> users);
+
+    void requestModifySubject(String oldSubject, String newSubject);
 
     void setSubject(String newSubject);
 

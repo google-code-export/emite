@@ -24,8 +24,9 @@ package com.calclab.emiteuimodule.client.room;
 import java.util.Collection;
 
 import org.ourproject.kune.platf.client.View;
-import org.ourproject.kune.platf.client.services.I18nTranslationService;
+import org.ourproject.kune.platf.client.i18n.I18nTranslationService;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.xep.muc.client.Occupant;
 import com.calclab.emite.xep.muc.client.Occupant.Role;
@@ -76,6 +77,10 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 	return lastInvitationReasonText;
     }
 
+    public String getSubject() {
+	return view.getSubject();
+    }
+
     @Override
     public View getView() {
 	return view;
@@ -106,10 +111,6 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 	onModifySubjectRequested.add(listener);
     }
 
-    public void onModifySubjectRequested(final String newSubject) {
-	onModifySubjectRequested.fire(newSubject);
-    }
-
     public void onOccupantModified(final Occupant occupant) {
 	final RoomUserUI roomUserUI = genRoomUser(occupant);
 	roomUserListUI.updateUser(roomUserUI, createUserMenu(roomUserUI));
@@ -134,6 +135,15 @@ public class RoomUIPresenter extends ChatUIPresenter implements RoomUI {
 		    isSubjectEditable = false;
 		}
 	    }
+	}
+    }
+
+    public void requestModifySubject(final String oldSubject, final String newSubject) {
+	if (newSubject == null || newSubject.equals("")) {
+	    Log.info("Subject empty");
+	    view.setSubject(oldSubject);
+	} else {
+	    onModifySubjectRequested.fire(newSubject);
 	}
     }
 

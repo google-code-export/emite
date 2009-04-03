@@ -21,8 +21,9 @@
  */
 package com.calclab.emiteuimodule.client;
 
-import org.ourproject.kune.platf.client.services.I18nTranslationService;
-import org.ourproject.kune.platf.client.services.I18nTranslationServiceMocked;
+import org.ourproject.kune.platf.client.i18n.I18nTranslationService;
+import org.ourproject.kune.platf.client.i18n.I18nTranslationServiceMocked;
+import org.ourproject.kune.platf.client.ui.QuickTipsHelper;
 
 import com.calclab.emite.core.client.bosh.Connection;
 import com.calclab.emite.core.client.xmpp.session.Session;
@@ -33,7 +34,6 @@ import com.calclab.emite.im.client.roster.SubscriptionManager;
 import com.calclab.emite.xep.avatar.client.AvatarManager;
 import com.calclab.emite.xep.chatstate.client.StateManager;
 import com.calclab.emite.xep.muc.client.RoomManager;
-import com.calclab.emiteuimodule.client.dialog.QuickTipsHelper;
 import com.calclab.emiteuimodule.client.room.RoomUIManager;
 import com.calclab.emiteuimodule.client.room.RoomUIModule;
 import com.calclab.emiteuimodule.client.sound.SoundManager;
@@ -75,12 +75,14 @@ public class EmiteUIModule extends AbstractModule {
 	    }
 	});
 
-	register(Singleton.class, new Factory<QuickTipsHelper>(QuickTipsHelper.class) {
-	    @Override
-	    public QuickTipsHelper create() {
-		return new QuickTipsHelper();
-	    }
-	});
+	if (!container.hasProvider(QuickTipsHelper.class)) {
+	    register(Singleton.class, new Factory<QuickTipsHelper>(QuickTipsHelper.class) {
+		@Override
+		public QuickTipsHelper create() {
+		    return new QuickTipsHelper();
+		}
+	    });
+	}
 
 	$(QuickTipsHelper.class);
 

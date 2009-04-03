@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteuimodule.client.roster;
 
-import org.ourproject.kune.platf.client.services.I18nTranslationService;
+import org.ourproject.kune.platf.client.i18n.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.calclab.emite.core.client.packet.TextUtils;

@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteuimodule.client.openchat;
 
-import org.ourproject.kune.platf.client.services.I18nTranslationService;
+import org.ourproject.kune.platf.client.i18n.I18nTranslationService;
 
 import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emiteuimodule.client.status.StatusUI;

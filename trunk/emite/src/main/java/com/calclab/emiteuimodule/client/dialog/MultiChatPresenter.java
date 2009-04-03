@@ -26,7 +26,7 @@ import static com.calclab.emite.core.client.xmpp.stanzas.XmppURI.uri;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.ourproject.kune.platf.client.services.I18nTranslationService;
+import org.ourproject.kune.platf.client.i18n.I18nTranslationService;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
@@ -54,7 +54,6 @@ import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 import com.calclab.suco.client.events.Listener2;
 import com.calclab.suco.client.ioc.Provider;
-import com.google.gwt.core.client.GWT;
 
 public class MultiChatPresenter {
 
@@ -263,11 +262,6 @@ public class MultiChatPresenter {
 		currentChat.onInputUnFocus();
 	    }
 	}
-    }
-
-    public void onModifySubjectRequested(final String newSubject) {
-	final RoomUI roomUI = (RoomUI) currentChat;
-	roomUI.onModifySubjectRequested(newSubject);
     }
 
     public void onShowUnavailableRosterItemsChanged(final Listener<Boolean> listener) {
@@ -509,7 +503,10 @@ public class MultiChatPresenter {
 		});
 
 		room.onSubjectChanged(new Listener2<Occupant, String>() {
-		    public void onEvent(final Occupant occupant, final String newSubject) {
+		    public void onEvent(final Occupant occupant, String newSubject) {
+			if (newSubject.equals("")) {
+			    newSubject = i18n.t("This room has no subject");
+			}
 			roomUI.setSubject(newSubject);
 			if (occupant != null) {
 			    roomUI.addInfoMessage(i18n.t("[%s] has changed the subject to: ", occupant.getNick())
@@ -582,8 +579,6 @@ public class MultiChatPresenter {
     }
 
     private boolean isChatStartedByMe(final Chat chat) {
-	// FIXME remove log
-	GWT.log("Started by me " + chat.isInitiatedByMe(), null);
 	return chat.isInitiatedByMe();
     }
 

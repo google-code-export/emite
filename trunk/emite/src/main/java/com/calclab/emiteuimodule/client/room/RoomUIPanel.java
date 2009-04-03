@@ -21,13 +21,13 @@
  */
 package com.calclab.emiteuimodule.client.room;
 
-import org.ourproject.kune.platf.client.services.I18nTranslationService;
-import org.ourproject.kune.platf.client.ui.EditableClickListener;
-import org.ourproject.kune.platf.client.ui.EditableIconLabel;
+import org.ourproject.kune.platf.client.i18n.I18nTranslationService;
+import org.ourproject.kune.platf.client.ui.IconLabelEditable;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emiteuimodule.client.chat.ChatUIPanel;
 import com.calclab.emiteuimodule.client.users.UserGridPanel;
+import com.calclab.suco.client.events.Listener2;
 import com.gwtext.client.core.RegionPosition;
 import com.gwtext.client.widgets.BoxComponent;
 import com.gwtext.client.widgets.MessageBox;
@@ -42,7 +42,7 @@ public class RoomUIPanel extends ChatUIPanel implements RoomUIView {
     private static final String ROOM_SUBJECT = "emite-ruip-s-";
     private final RoomUIPresenter presenter;
     private final I18nTranslationService i18n;
-    private EditableIconLabel subject;
+    private IconLabelEditable subject;
 
     public RoomUIPanel(final I18nTranslationService i18n, final RoomUserListUIPanel roomUserListUIPanel,
 	    final RoomUIPresenter presenter) {
@@ -120,18 +120,19 @@ public class RoomUIPanel extends ChatUIPanel implements RoomUIView {
     }
 
     private Panel createSubjectPanel() {
-	subject = new EditableIconLabel(i18n.t("Welcome to this room"), new EditableClickListener() {
-	    public void onEdited(final String text) {
-		presenter.onModifySubjectRequested(text);
+	subject = new IconLabelEditable(i18n.t("Welcome to this room"));
+	subject.onEdit(new Listener2<String, String>() {
+	    public void onEvent(final String oldName, final String newName) {
+		presenter.requestModifySubject(oldName, newName);
 	    }
 	});
-	subject.setHeight("27");
+	subject.setHeight("25");
 	subject.addStyleName("x-panel-header");
 	subject.addStyleName("x-panel-header-noborder");
 	subject.addStyleName("x-unselectable");
+	subject.addStyleName("e-ui-room");
+	subject.setWidth("100%");
 	subject.setClickToRenameLabel(i18n.t("Click to rename this room"));
-	subject.setRenameDialogLabel(i18n.t("Write a new subject for this room"));
-	subject.setRenameDialogTitle(i18n.t("Change the subject"));
 	subject.ensureDebugId(ROOM_SUBJECT + presenter.getOtherAlias());
 	final Panel subjectPanel = new Panel();
 	subjectPanel.add(subject);

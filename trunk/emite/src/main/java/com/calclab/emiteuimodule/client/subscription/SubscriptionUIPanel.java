@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteuimodule.client.subscription;
 
-import org.ourproject.kune.platf.client.services.I18nTranslationService;
+import org.ourproject.kune.platf.client.i18n.I18nTranslationService;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.google.gwt.user.client.Command;
