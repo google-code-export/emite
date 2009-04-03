@@ -23,7 +23,7 @@ package com.calclab.emiteuimodule.client.dialog;
 
 import java.util.HashMap;
 
-import org.ourproject.kune.platf.client.services.I18nTranslationService;
+import org.ourproject.kune.platf.client.i18n.I18nTranslationService;
 import org.ourproject.kune.platf.client.ui.dialogs.BasicDialog;
 
 import com.allen_sauer.gwt.log.client.Log;

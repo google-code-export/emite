@@ -21,7 +21,7 @@
  */
 package com.calclab.emiteuimodule.client.chat;
 
-import org.ourproject.kune.platf.client.services.I18nTranslationService;
+import org.ourproject.kune.platf.client.i18n.I18nTranslationService;
 
 import com.calclab.emite.xep.chatstate.client.ChatStateManager;
 import com.calclab.emite.xep.chatstate.client.ChatStateManager.ChatState;

@@ -27,8 +27,8 @@ do
   fi
 
   echo "private final Event$EVENTPARAM $EVENTNAME;"
-  echo "public void $EVENTNAME(final Listener$EVENTPARAM slot) {
-  	$EVENTNAME.add(slot);
+  echo "public void $EVENTNAME(final Listener$EVENTPARAM listener) {
+  	$EVENTNAME.add(listener);
       }"
   echo ""
   echo "this.$EVENTNAME = new Event$EVENTPARAM(\"$EVENTNAME\");"

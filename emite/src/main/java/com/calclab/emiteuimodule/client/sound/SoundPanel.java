@@ -22,7 +22,7 @@
 package com.calclab.emiteuimodule.client.sound;
 
 import org.ourproject.kune.platf.client.View;
-import org.ourproject.kune.platf.client.services.I18nTranslationService;
+import org.ourproject.kune.platf.client.i18n.I18nTranslationService;
 
 import com.calclab.emiteuimodule.client.status.StatusUI;
 import com.gwtext.client.widgets.menu.CheckItem;
