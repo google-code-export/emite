@@ -40,15 +40,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="287.90305"
-     inkscape:cy="988.25404"
+     inkscape:cx="306.90305"
+     inkscape:cy="691.25404"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1270"
-     inkscape:window-height="773"
+     inkscape:window-width="1280"
+     inkscape:window-height="1001"
      inkscape:window-x="1280"
-     inkscape:window-y="25"
+     inkscape:window-y="0"
      showguides="true"
      inkscape:guide-bbox="true">
     <sodipodi:guide
@@ -403,6 +403,40 @@
              y="234.07225"
              id="tspan2780">xmpp &amp; gwt</tspan></text>
       </g>
+    </g>
+    <g
+       id="g2456"
+       inkscape:export-filename="/home/vjrj/proyectos/dev/emite/emite/img/icon84.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       transform="matrix(2.625,0,0,2.625,-1384.3261,-323.20223)">
+      <text
+         inkscape:export-ydpi="89.910126"
+         inkscape:export-xdpi="89.910126"
+         inkscape:export-filename="/home/vjrj/proyectos/ourproject.org/kune/dev/emite/emite/img/icon32.png"
+         sodipodi:linespacing="125%"
+         id="text2458"
+         y="217.39227"
+         x="646.84418"
+         style="font-size:18.69519234px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Emblem;-inkscape-font-specification:Emblem Bold"
+         xml:space="preserve"><tspan
+           dy="0 0 -0.45157132"
+           y="217.39227"
+           x="646.84418"
+           id="tspan2460"
+           sodipodi:role="line"><tspan
+   id="tspan2462"
+   style="fill:#ff6600">((</tspan>e<tspan
+   dy="0.45157132"
+   id="tspan2464"
+   style="fill:#ff6600">))</tspan></tspan></text>
+      <rect
+         y="195.64359"
+         x="647.74329"
+         height="32"
+         width="32"
+         id="rect2466"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
     </g>
   </g>
 </svg>

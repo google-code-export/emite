@@ -24,11 +24,11 @@ package com.calclab.emiteui.client.demo;
 import com.calclab.emite.core.client.packet.TextUtils;
 import com.calclab.emiteui.client.DemoParameters;
 import com.calclab.emiteui.client.demo.EmiteDemoLoginPanel.LoginPanelListener;
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.Label;
@@ -46,8 +46,8 @@ public class EmiteDemoUI {
     }
 
     public void createChatIcon(final EmiteDemoChatIconListener listener) {
-	PushButton icon = new PushButton(new Image("images/e-icon.gif"), new ClickListener() {
-	    public void onClick(Widget arg0) {
+	final PushButton icon = new PushButton(new Image("images/e-icon.gif"), new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		listener.onClick();
 	    }
 	});

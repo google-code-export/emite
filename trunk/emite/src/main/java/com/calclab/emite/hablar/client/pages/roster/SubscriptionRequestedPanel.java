@@ -22,12 +22,12 @@
 package com.calclab.emite.hablar.client.pages.roster;
 
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class SubscriptionRequestedPanel extends VerticalPanel {
 
@@ -42,14 +42,14 @@ public class SubscriptionRequestedPanel extends VerticalPanel {
 
 	add(new Label(nick + " (" + jid.toString() + ") wants to subscribe to your presence."));
 	final FlowPanel flow = new FlowPanel();
-	final Button btnAccept = new Button("Accept", new ClickListener() {
-	    public void onClick(final Widget arg0) {
+	final Button btnAccept = new Button("Accept", new ClickHandler() {
+	    public void onClick(final ClickEvent event) {
 		listener.accepted(SubscriptionRequestedPanel.this, jid, nick);
 	    }
 	});
 	flow.add(btnAccept);
-	final Button btnReject = new Button("Reject", new ClickListener() {
-	    public void onClick(final Widget arg0) {
+	final Button btnReject = new Button("Reject", new ClickHandler() {
+	    public void onClick(final ClickEvent event) {
 		listener.rejected(SubscriptionRequestedPanel.this, jid);
 	    }
 	});

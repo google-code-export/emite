@@ -21,13 +21,13 @@
  */
 package com.calclab.emiteuimodule.client.utils.emoticons;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class EmoticonPalettePanel extends Composite {
     private static final int PALETTE_ROWS = 5;
@@ -85,9 +85,10 @@ public class EmoticonPalettePanel extends Composite {
 	 * Oo 0_0 >:o >:-o >:O >:-O X( X-( x( x-( :@ <_< (bandit) " + ":(> :\">
 	 * :*> :-$ :$ B) B-) 8) :'( ='( :-d :d :-D :D :d =D =-D =) =-) " + "(L)
 	 * (h) (H) :-* :* (LOL) lol :-X :-xX :x (wubya) (wubyou) (wub) (:) " +
-	 * "(ph33r) (ph34r) >_< :| =| :-| :( =( =-( :-( :& :-& =] (-.-) |) |-) " +
-	 * "I-) I-| :-O :O :-o :o :-0 =-O =-o =o =O :P =P =p :-P :p :-p :b :-\\ " +
-	 * ":-/ :/ :\\ :s :-S :-s :S (woot) (w00t) (wOOt) :-\" ;) ;-) ;>
+	 * "(ph33r) (ph34r) >_< :| =| :-| :( =( =-( :-( :& :-& =] (-.-) |) |-) "
+	 * +
+	 * "I-) I-| :-O :O :-o :o :-0 =-O =-o =o =O :P =P =p :-P :p :-p :b :-\\ "
+	 * + ":-/ :/ :\\ :s :-S :-s :S (woot) (w00t) (wOOt) :-\" ;) ;-) ;>
 	 * (wizard) :? :-) :)", listener));
 	 */
     }
@@ -103,9 +104,9 @@ public class EmoticonPalettePanel extends Composite {
 	    final EmoticonPaletteListener listener) {
 	final Image img = new Image();
 	imageProto.applyTo(img);
-	img.addClickListener(new ClickListener() {
+	img.addClickHandler(new ClickHandler() {
 
-	    public void onClick(final Widget arg0) {
+	    public void onClick(final ClickEvent event) {
 		listener.onEmoticonSelected(emoticonText);
 	    }
 	});

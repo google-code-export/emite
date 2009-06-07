@@ -26,13 +26,13 @@ import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Event0;
 import com.calclab.suco.client.events.Listener;
 import com.calclab.suco.client.events.Listener0;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class RosterView extends PageView {
     private final VerticalPanel list;
@@ -91,8 +91,8 @@ public class RosterView extends PageView {
 	final FlowPanel newContactPanel = getToolbar();
 	final TextBox fieldAddContact = new TextBox();
 	newContactPanel.add(fieldAddContact);
-	final Button btnAddContact = new Button("add", new ClickListener() {
-	    public void onClick(final Widget arg0) {
+	final Button btnAddContact = new Button("add", new ClickHandler() {
+	    public void onClick(final ClickEvent event) {
 		onAddItem.fire(fieldAddContact.getText());
 		fieldAddContact.setText("");
 	    }

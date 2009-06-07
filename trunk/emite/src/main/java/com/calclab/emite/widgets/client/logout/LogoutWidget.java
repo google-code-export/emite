@@ -23,11 +23,11 @@ package com.calclab.emite.widgets.client.logout;
 
 import com.calclab.emite.widgets.client.base.EmiteWidget;
 import com.calclab.suco.client.events.Event0;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
 
 public class LogoutWidget extends HorizontalPanel implements EmiteWidget {
 
@@ -39,8 +39,8 @@ public class LogoutWidget extends HorizontalPanel implements EmiteWidget {
 	setStylePrimaryName("emite-LogoutWidget");
 	this.onLogout = new Event0("widgets:logout:onLogout");
 	this.label = new Label();
-	this.button = new Button("logout", new ClickListener() {
-	    public void onClick(final Widget sender) {
+	this.button = new Button("logout", new ClickHandler() {
+	    public void onClick(final ClickEvent event) {
 		onLogout.fire();
 	    }
 	});

@@ -39,53 +39,53 @@ import com.google.gwt.user.client.DeferredCommand;
 public class EmiteUIEntryPoint implements EntryPoint {
 
     public void onModuleLoad() {
-	Log.setUncaughtExceptionHandler();
-	DeferredCommand.addCommand(new Command() {
-	    public void execute() {
-		onModuleLoadCont();
-	    }
-	});
+        Log.setUncaughtExceptionHandler();
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                onModuleLoadCont();
+            }
+        });
     }
 
     public void onModuleLoadCont() {
-	Suco.install(new EmiteUIModule(), new DemoModule());
-	final EmiteUIDialog emiteUIDialog = Suco.get(EmiteUIDialog.class);
-	final EmiteDemoUI demo = Suco.get(EmiteDemoUI.class);
+        Suco.install(new EmiteUIModule(), new DemoModule());
+        final EmiteUIDialog emiteUIDialog = Suco.get(EmiteUIDialog.class);
+        final EmiteDemoUI demo = Suco.get(EmiteDemoUI.class);
 
-	final EmiteDemoLoginPanel emiteDemoLoginPanel = demo.createLoginPanel(new LoginPanelListener() {
-	    public void onOffline() {
-		emiteUIDialog.show(OwnStatus.offline);
-	    }
+        final EmiteDemoLoginPanel emiteDemoLoginPanel = demo.createLoginPanel(new LoginPanelListener() {
+            public void onOffline() {
+                emiteUIDialog.show(OwnStatus.offline);
+            }
 
-	    public void onOnline() {
-		emiteUIDialog.show(OwnStatus.online);
-	    }
+            public void onOnline() {
+                emiteUIDialog.show(OwnStatus.online);
+            }
 
-	    public void onUserChanged(final UserChatOptions userChatOptions) {
-		emiteUIDialog.refreshUserInfo(userChatOptions);
-	    }
-	});
+            public void onUserChanged(final UserChatOptions userChatOptions) {
+                emiteUIDialog.refreshUserInfo(userChatOptions);
+            }
+        });
 
-	demo.createChatIcon(new EmiteDemoChatIconListener() {
+        demo.createChatIcon(new EmiteDemoChatIconListener() {
 
-	    public void onClick() {
-		if (emiteUIDialog.isVisible()) {
-		    emiteUIDialog.hide();
-		} else {
-		    emiteUIDialog.show();
-		}
-	    }
-	});
-	demo.createInfoPanel();
+            public void onClick() {
+                if (emiteUIDialog.isVisible()) {
+                    emiteUIDialog.hide();
+                } else {
+                    emiteUIDialog.show();
+                }
+            }
+        });
+        demo.createInfoPanel();
 
-	final DemoParameters params = Suco.get(DemoParameters.class);
-	final UserChatOptions userChatOptions = emiteDemoLoginPanel.getUserChatOptions();
-	emiteUIDialog.start(userChatOptions, params.getHttpBase(), params.getHost(), params.getRoomHost());
-	emiteUIDialog.show(OwnStatus.offline);
-	// here you can do:
-	// emiteUIDialog.hide();
-	// or
-	// emiteUIDialog.collapse();
+        final DemoParameters params = Suco.get(DemoParameters.class);
+        final UserChatOptions userChatOptions = emiteDemoLoginPanel.getUserChatOptions();
+        emiteUIDialog.start(userChatOptions, params.getHttpBase(), params.getHost(), params.getRoomHost());
+        emiteUIDialog.show(OwnStatus.offline);
+        // here you can do:
+        // emiteUIDialog.hide();
+        // or
+        // emiteUIDialog.collapse();
     }
 
 }

@@ -26,11 +26,13 @@ import com.calclab.emite.widgets.client.base.EmiteWidget;
 import com.calclab.emite.widgets.client.base.GWTExtensibleWidget;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,23 +48,17 @@ public abstract class GWTAbstractChatWidget extends GWTExtensibleWidget implemen
 	this.onSendMessage = new Event<String>("widgets:room:sendMessage");
 	this.area = new TextArea();
 	this.input = new TextBox();
-	input.addKeyboardListener(new KeyboardListener() {
-	    public void onKeyDown(final Widget sender, final char keyCode, final int modifiers) {
-	    }
 
-	    public void onKeyPress(final Widget sender, final char keyCode, final int modifiers) {
-		if (keyCode == 13) {
+	input.addKeyPressHandler(new KeyPressHandler() {
+	    public void onKeyPress(final KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == 13) {
 		    sendMessage();
 		}
 	    }
-
-	    public void onKeyUp(final Widget sender, final char keyCode, final int modifiers) {
-	    }
-
 	});
 
-	this.send = new Button("send", new ClickListener() {
-	    public void onClick(final Widget sender) {
+	this.send = new Button("send", new ClickHandler() {
+	    public void onClick(final ClickEvent event) {
 		sendMessage();
 	    }
 	});

@@ -22,11 +22,11 @@
 package com.calclab.emite.hablar.client.pages.roster;
 
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.Widget;
 
 public class RosterItemView extends FlowPanel {
     public static interface RosterItemViewListener {
@@ -48,8 +48,8 @@ public class RosterItemView extends FlowPanel {
 	add(jid);
 	add(menu);
 
-	jid.addClickListener(new ClickListener() {
-	    public void onClick(final Widget arg0) {
+	jid.addClickHandler(new ClickHandler() {
+	    public void onClick(final ClickEvent event) {
 		listener.onAction(RosterItemView.this);
 	    }
 	});

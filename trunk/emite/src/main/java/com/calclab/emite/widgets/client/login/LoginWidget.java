@@ -24,13 +24,13 @@ package com.calclab.emite.widgets.client.login;
 import com.calclab.emite.widgets.client.base.EmiteWidget;
 import com.calclab.suco.client.events.Event0;
 import com.calclab.suco.client.events.Event2;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Simple login widget
@@ -56,12 +56,13 @@ public class LoginWidget extends VerticalPanel implements EmiteWidget {
 	this.onLogout = new Event0("widgets:login:onLogout");
 	this.jid = new TextBox();
 	this.password = new PasswordTextBox();
-	this.button = new Button("login", new ClickListener() {
-	    public void onClick(final Widget arg0) {
-		if (isConnected)
+	this.button = new Button("login", new ClickHandler() {
+	    public void onClick(final ClickEvent event) {
+		if (isConnected) {
 		    onLogout.fire();
-		else
+		} else {
 		    onLogin.fire(jid.getText(), password.getText());
+		}
 	    }
 	});
 	this.status = new Label();
