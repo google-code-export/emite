@@ -23,14 +23,14 @@ package com.calclab.emite.widgets.client.logger;
 
 import com.calclab.emite.widgets.client.base.EmiteWidget;
 import com.calclab.suco.client.events.Event0;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class LoggerWidget extends DockPanel implements EmiteWidget {
     public static final String ERROR = "error";
@@ -43,8 +43,8 @@ public class LoggerWidget extends DockPanel implements EmiteWidget {
     public LoggerWidget() {
 	this.onClear = new Event0("widgets.logger:onClear");
 	content = new VerticalPanel();
-	final Button clear = new Button("clear", new ClickListener() {
-	    public void onClick(final Widget sender) {
+	final Button clear = new Button("clear", new ClickHandler() {
+	    public void onClick(final ClickEvent event) {
 		onClear.fire();
 	    }
 	});

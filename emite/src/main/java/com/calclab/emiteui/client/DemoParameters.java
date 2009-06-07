@@ -34,41 +34,41 @@ public class DemoParameters {
     private static final String GWT_PROPERTY_RELEASE = "emite:demo:version";
 
     public String getHost() {
-	return getGwtMetaProperty(GWT_PROPERTY_HOST, null);
+        return getGwtMetaProperty(GWT_PROPERTY_HOST, null);
     }
 
     public String getHttpBase() {
-	return getGwtMetaProperty(GWT_PROPERTY_HTTPBASE, null);
+        return getGwtMetaProperty(GWT_PROPERTY_HTTPBASE, null);
     }
 
     public String getInfo(final String defaultVal) {
-	return getGwtMetaProperty(GWT_PROPERTY_INFOHTML, null);
+        return getGwtMetaProperty(GWT_PROPERTY_INFOHTML, null);
     }
 
     public String getJID() {
-	return getGwtMetaProperty(GWT_PROPERTY_JID, null);
+        return getGwtMetaProperty(GWT_PROPERTY_JID, null);
     }
 
     public String getPassword() {
-	return getGwtMetaProperty(GWT_PROPERTY_PASSWD, null);
+        return getGwtMetaProperty(GWT_PROPERTY_PASSWD, null);
     }
 
     public String getRelease() {
-	return getGwtMetaProperty(GWT_PROPERTY_RELEASE, null);
+        return getGwtMetaProperty(GWT_PROPERTY_RELEASE, null);
     }
 
     public String getRoomHost() {
-	return getGwtMetaProperty(GWT_PROPERTY_ROOMHOST, null);
+        return getGwtMetaProperty(GWT_PROPERTY_ROOMHOST, null);
     }
 
     private String getGwtMetaProperty(final String property, final String optionalValue) {
-	String value = DOM.getElementProperty(DOM.getElementById(property), "content");
-	if (value == null && optionalValue == null) {
-	    throw new RuntimeException("Property: " + property + " not found!");
-	} else {
-	    value = value != null ? value : optionalValue;
-	    Log.debug("Property => " + property + ": " + value);
-	    return value;
-	}
+        String value = DOM.getElementProperty(DOM.getElementById(property), "content");
+        if (value == null && optionalValue == null) {
+            throw new RuntimeException("Property: " + property + " not found!");
+        } else {
+            value = value != null ? value : optionalValue;
+            Log.debug("Property => " + property + ": " + value);
+            return value;
+        }
     }
 }

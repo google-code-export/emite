@@ -26,12 +26,12 @@ import java.util.Map;
 import com.calclab.emite.browser.client.HasProperties;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.Widget;
 
 public class HablaWidget extends AbsolutePanel implements HasProperties {
     private final Event<Map<String, String>> onSetProperties;
@@ -47,21 +47,14 @@ public class HablaWidget extends AbsolutePanel implements HasProperties {
 	this.status = new Label();
 	this.output = new HTML();
 	this.input = new TextArea();
-	input.addKeyboardListener(new KeyboardListener() {
-	    public void onKeyDown(final Widget sender, final char keyCode, final int modifiers) {
-	    }
-
-	    public void onKeyPress(final Widget sender, final char keyCode, final int modifiers) {
-		if (keyCode == 13) {
+	input.addKeyPressHandler(new KeyPressHandler() {
+	    public void onKeyPress(final KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == 13) {
 		    onMessage.fire(input.getText());
 		    input.setText("");
 		    input.setFocus(true);
 		}
 	    }
-
-	    public void onKeyUp(final Widget sender, final char keyCode, final int modifiers) {
-	    }
-
 	});
 
 	initLayout();
