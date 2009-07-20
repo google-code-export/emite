@@ -78,7 +78,7 @@
       <groupId>com.allen_sauer.gwt.log.gwt-log
       </groupId>
       <artifactId>gwt-log</artifactId>
-      <version>2.5.3</version>
+      <version>2.6.2</version>
     </dependency>
     <dependency>
       <groupId>com.allen_sauer.gwt.voices.gwt-voices
@@ -151,7 +151,7 @@
     <profile>
       <id>emiteui</id>
       <properties>
-        <gwt.run>emiteui/EmiteUI.html?log_level=DEBUG
+        <gwt.run>com.calclab.emiteui.EmiteUI/EmiteUI.html?log_leve=DEBUG
         </gwt.run>
         <gwt.compile>
           com.calclab.emiteui.EmiteUI
