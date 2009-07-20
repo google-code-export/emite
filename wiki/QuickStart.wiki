@@ -19,7 +19,7 @@ You need a running xmpp server with Http Binding connection enabled. See our [ht
 == Run the example from the sources ==
 
   # check out the code: {{{svn checkout http://emite.googlecode.com/svn/trunk/emite emite}}}
-  # inside the emite directory type {{{mvn  com.totsp.gwt:maven-googlewebtlkit2-plugin:gwt -P emiteui}}} to run emite  UI (a gwt-ext emite front end) using the GWTShell ...
+  # inside the emite directory type {{{mvn -P emiteui com.totsp.gwt:maven-googlewebtoolkit2-plugin:gwt}}} to run emite  UI (a gwt-ext emite front end) using the GWTShell ...
  
 
 == Using Eclipse ==
