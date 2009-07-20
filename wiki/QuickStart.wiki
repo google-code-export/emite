@@ -13,15 +13,13 @@ You need a running xmpp server with Http Binding connection enabled. See our [ht
 == Environment setup ==
 
   # install maven2 version 2.0.7 or over (http://maven.apache.org)
-  # download GWT *version 1.5.3*. Currently, our version 0.2.0 is compatible with gwt-1.5M1 (due a gwt-ext issue). Our 0.2.1 version supports gwt-1.5M2 (using a [http://www.gwt-ext.com/builds/gwt-ext/2008-04-17/ development version] of gwt-ext) and in version > 0.3.0 we are using gwt-1.5.3.
-  # create or modify the maven {{{~/.m2/settings.xml}}} file to use the proper distribution of gwt (see Appendix A)
   # configure your server Http Binding Service to listen at {{{http://localhost:5280/http-bind/}}} or tweak the web.xml file of emite to change this values
 
 == Run the example from the sources ==
 
   # check out the code: {{{svn checkout http://emite.googlecode.com/svn/trunk/ emite}}}
-  # inside the emite directory type {{{mvn gwt:gwt}}} to run emite using the GWTShell ...
-  # ... or type {{{./script/server.sh}}} to compile the sources to javascript, and start a jetty server with a proxy installed, and run the example looking at: {{{http://localhost:4444/gwt/EmiteUI.html}}}
+  # inside the emite directory type {{{mvn  com.totsp.gwt:maven-googlewebtlkit2-plugin:gwt -P emiteui}} to run emite  UI (a gwt-ext emite front end) using the GWTShell ...
+ 
 
 == Using Eclipse ==
 
@@ -43,7 +41,7 @@ There are other ways, but the fastest is to use maven2:
     <dependency>
       <groupId>com.calclab</groupId>
       <artifactId>emite</artifactId>
-      <version>0.3.0</version>
+      <version>0.4.7</version>
     </dependency>
   </dependencies>
 </project>
@@ -65,6 +63,8 @@ Also, if you want *to use the ui you have to configure the connection settings i
 
 
 == Appendix A: Configuration of maven ==
+
+*IMPORTANT!! THIS IS NOT NEEDED WITH gwt-maven 2.0RC*
 
 Example of maven .m2/settings.xml to work with gwt-maven plugin:
 
