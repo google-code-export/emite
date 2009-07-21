@@ -13,13 +13,13 @@ You need a running xmpp server with Http Binding connection enabled. See our [ht
 == Environment setup ==
 
   # install maven2 version 2.0.7 or over (http://maven.apache.org)
-  # *remove settings.xml in ~/.m2 folder if you used maven2-gwt-plugin version < 2.0 before*
+  # *remove previous configuration in settings.xml in ~/.m2 folder if you used emite and maven2-gwt-plugin version < 2.0 before*
   # configure your server Http Binding Service to listen at {{{http://localhost:5280/http-bind/}}} or tweak the web.xml file of emite to change this values
 
 == Run the example from the sources ==
 
   # check out the code: {{{svn checkout http://emite.googlecode.com/svn/trunk/emite emite}}}
-  # inside the emite directory type {{{mvn -P emiteui com.totsp.gwt:maven-googlewebtoolkit2-plugin:gwt}}} to run emite  UI (a gwt-ext emite front end) using the GWTShell ...
+  # inside the emite directory type {{{mvn -P emiteui gwt-maven:gwt}}} to run emite  UI (a gwt-ext emite front end) using the GWTShell ...
  
 
 == Using Eclipse ==
