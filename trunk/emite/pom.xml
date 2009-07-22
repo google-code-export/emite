@@ -84,7 +84,7 @@
       <groupId>com.allen_sauer.gwt.voices.gwt-voices
       </groupId>
       <artifactId>gwt-voices</artifactId>
-      <version>1.5.5</version>
+      <version>1.6.0</version>
     </dependency>
 
     <!--  swing client -->
