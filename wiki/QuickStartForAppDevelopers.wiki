@@ -126,6 +126,11 @@ ejabberdctl register test1 localhost test1
 ejabberdctl register test2 localhost test2
 }}}
 
+
+==(Alternative) Configure Openfire server ==
+
+Enable "HTTP Bind Settings" (using the configuration console at localhost:9090) and check the port is not used by other service in your machine (we use 5280 as default, if not change the web.xml accordly)
+
 == Run the Example App ==
  # Start your favorite Jabber client application and log into your local ejabberd server as user {{{test2@localhost}}} (whose password was set as: _test2_).
  # Run your new GWT application in hosted mode by hitting the green Run button in the Eclipse IDE.  This should launch the GWT Browser and run your application in hosted mode.  If all goes well, you will receive a message in your Jabber client sent from {{{test1@localhost}}} to {{{test2@localhost}}}.
