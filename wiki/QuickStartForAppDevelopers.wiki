@@ -1,6 +1,8 @@
 #summary Tutorial outlining minimal steps for setting up a full dev environment for creating GWT applications on top of emite.
 #labels Featured,Phase-Deploy
 
+*update: added a mini section for openfire configuration*
+
 = Introduction =
 
 The following is intended to describe a minimal number of steps for setting up a new development environment where one can develop, test, and debug new [http://code.google.com/webtoolkit/ GWT] applications which use the emite jarfile.  In particular, it uses [http://eclipse.org Eclipse] v3.4 for a Java development environment, a local [http://www.ejabberd.im ejabberd] v2.0.3 Jabber server, and the latest GWT development toolkit and emite project jarfiles.  This tutorial assumes some degree of familiarity with Java IDEs (especially Eclipse), high-level concepts around how the Jabber/XMPP protocol and Jabber servers work, and the concepts behind Google's GWT toolkit.
