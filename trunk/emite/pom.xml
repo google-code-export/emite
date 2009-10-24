@@ -11,7 +11,11 @@
   <name>emite xmpp</name>
   <url>http://emite.googlecode.com</url>
   <properties>
-    <gwtVersion>1.7.0</gwtVersion>
+    <!--
+      See for available versions:
+      http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/
+    -->
+    <gwtVersion>2.0.0-ms1</gwtVersion>
   </properties>
   <issueManagement>
     <system>google code issues list</system>
@@ -30,7 +34,6 @@
   </developers>
   <dependencies>
 
-
     <!--  GWT deps (from central repo) -->
     <dependency>
       <groupId>com.google.gwt</groupId>
@@ -48,15 +51,6 @@
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
       <version>${gwtVersion}</version>
-      <classifier>${platform}-libs</classifier>
-      <type>zip</type>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-dev</artifactId>
-      <version>${gwtVersion}</version>
-      <classifier>${platform}</classifier>
       <scope>provided</scope>
     </dependency>
 
@@ -99,7 +93,6 @@
       <version>2.3.0-SNAPSHOT</version>
     </dependency>
 
-
     <!--  ui -->
     <dependency>
       <groupId>com.gwtext</groupId>
@@ -141,61 +134,43 @@
       <id>widgets</id>
       <properties>
         <gwt.run>
-          com.calclab.emite.widgets.demo.EmiteWidgetsDemo/WidgetsShowCase.html?log_level=DEBUG
-        </gwt.run>
-        <gwt.compile>
-          com.calclab.emite.widgets.demo.EmiteWidgetsDemo
-        </gwt.compile>
+          com.calclab.emite.widgets.demo.EmiteWidgetsDemo/WidgetsShowCase.html?log_level=DEBUG </gwt.run>
+        <gwt.compile> com.calclab.emite.widgets.demo.EmiteWidgetsDemo </gwt.compile>
       </properties>
     </profile>
     <profile>
       <id>emiteui</id>
       <properties>
-        <gwt.run>com.calclab.emiteui.EmiteUI/EmiteUI.html?log_leve=DEBUG
-        </gwt.run>
-        <gwt.compile>
-          com.calclab.emiteui.EmiteUI
-        </gwt.compile>
+        <gwt.run>com.calclab.emiteui.EmiteUI/EmiteUI.html?log_leve=DEBUG </gwt.run>
+        <gwt.compile> com.calclab.emiteui.EmiteUI </gwt.compile>
       </properties>
     </profile>
     <profile>
       <id>comenta</id>
       <properties>
-        <gwt.run>com.calclab.emite.widgets.comenta.Comenta/Comenta.html?log_level=DEBUG
-        </gwt.run>
-        <gwt.compile>
-          com.calclab.emite.widgets.comenta.Comenta
-        </gwt.compile>
+        <gwt.run>com.calclab.emite.widgets.comenta.Comenta/Comenta.html?log_level=DEBUG </gwt.run>
+        <gwt.compile> com.calclab.emite.widgets.comenta.Comenta </gwt.compile>
       </properties>
     </profile>
     <profile>
       <id>habla</id>
       <properties>
-        <gwt.run>com.calclab.emite.widgets.habla.Habla/Habla.html?log_level=DEBUG
-        </gwt.run>
-        <gwt.compile>
-          com.calclab.emite.widgets.comenta.Habla
-        </gwt.compile>
+        <gwt.run>com.calclab.emite.widgets.habla.Habla/Habla.html?log_level=DEBUG </gwt.run>
+        <gwt.compile> com.calclab.emite.widgets.comenta.Habla </gwt.compile>
       </properties>
     </profile>
     <profile>
       <id>basics</id>
       <properties>
-        <gwt.run>com.calclab.examples.emite.basics.Basics/Basics.html?log_level=DEBUG
-        </gwt.run>
-        <gwt.compile>
-          com.calclab.examples.emite.basics.Basics
-        </gwt.compile>
+        <gwt.run>com.calclab.examples.emite.basics.Basics/Basics.html?log_level=DEBUG </gwt.run>
+        <gwt.compile> com.calclab.examples.emite.basics.Basics </gwt.compile>
       </properties>
     </profile>
     <profile>
       <id>hablar</id>
       <properties>
-        <gwt.run>com.calclab.emite.hablar.Hablar/Hablar.html?log_level=DEBUG
-        </gwt.run>
-        <gwt.compile>
-          com.calclab.emite.hablar.Hablar
-        </gwt.compile>
+        <gwt.run>com.calclab.emite.hablar.Hablar/Hablar.html?log_level=DEBUG </gwt.run>
+        <gwt.compile> com.calclab.emite.hablar.Hablar </gwt.compile>
       </properties>
     </profile>
     <!--  profiles (with activation per platform) -->
@@ -236,7 +211,6 @@
       </activation>
     </profile>
   </profiles>
-
   <pluginRepositories>
     <pluginRepository>
       <id>kune-maven</id>
@@ -322,8 +296,7 @@
           <generatorDestinationPackage>
           </generatorDestinationPackage>
           <generateGettersAndSetters>false</generateGettersAndSetters>
-          <generatePropertyChangeSupport>true
-          </generatePropertyChangeSupport>
+          <generatePropertyChangeSupport>true </generatePropertyChangeSupport>
           <!-- suggested by karlcpp, thx for the feedback  -->
           <extraJvmArgs>-Xmx512m</extraJvmArgs>
         </configuration>
@@ -474,33 +447,9 @@
           <dependentWarExcludes> **/*.class</dependentWarExcludes>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>unpack</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>com.google.gwt</groupId>
-                  <artifactId>gwt-dev</artifactId>
-                  <version>${gwtVersion}</version>
-                  <classifier>${platform}-libs</classifier>
-                  <type>zip</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${settings.localRepository}/com/google/gwt/gwt-dev/${gwtVersion}</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
+    <outputDirectory>war/WEB-INF/classes</outputDirectory>
+    <testOutputDirectory>war/WEB-INF/test-classes</testOutputDirectory>
     <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>
     <resources>
