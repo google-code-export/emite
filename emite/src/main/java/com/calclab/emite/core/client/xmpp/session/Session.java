@@ -76,7 +76,12 @@ public interface Session {
 	 * We are loggin out. Last oportunity to send stanzas (i.e: last
 	 * presence). session.getCurrentUser() returns the current user;
 	 */
-	loggingOut
+	loggingOut,
+	/**
+	 * We are resuming a session. When resuming a session you only receive
+	 * "resuming" and "ready" (not loggedIn)
+	 */
+	resume
     }
 
     public static XmppURI ANONYMOUS = SASLManager.ANONYMOUS;

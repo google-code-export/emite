@@ -65,15 +65,27 @@ public class AutoConfig {
 	this.connection = connection;
 	this.session = session;
 	this.assist = assist;
+	initialize();
     }
 
-    public void run() {
-	Log.debug("PageController - initializing...");
-	final String onCloseAction = assist.getMeta(PARAM_CLOSE, "pause");
-	prepareOnCloseAction(onCloseAction);
-	configureConnection();
-	prepareOnOpenAction();
-	Log.debug("PageController - done.");
+    /**
+     * Try to login with the meta parameters of the html page
+     * 
+     * @return true if the logging process started (some user JID founded)
+     */
+    public boolean login() {
+	final String userJID = assist.getMeta(PARAM_JID, false);
+	final String password = assist.getMeta(PARAM_PASSWORD, false);
+	if (userJID != null) {
+	    Log.debug("Loging in...");
+	    if ("anonymous".equals(userJID.toLowerCase())) {
+		session.login(Session.ANONYMOUS, null);
+	    } else {
+		final XmppURI jid = uri(userJID);
+		session.login(jid, password);
+	    }
+	}
+	return userJID != null;
     }
 
     private void configureConnection() {
@@ -82,6 +94,15 @@ public class AutoConfig {
 	final String host = assist.getMeta(PARAM_HOST, true);
 	Log.debug("CONNECTION PARAMS: " + httpBase + ", " + host);
 	connection.setSettings(new BoshSettings(httpBase, host));
+    }
+
+    private void initialize() {
+	Log.debug("PageController - initializing...");
+	final String onCloseAction = assist.getMeta(PARAM_CLOSE, "pause");
+	prepareOnCloseAction(onCloseAction);
+	configureConnection();
+	prepareOnOpenAction();
+	Log.debug("PageController - done.");
     }
 
     private void pauseConnection() {
@@ -97,8 +118,8 @@ public class AutoConfig {
 	    map.put("maxPause", stream.maxPause);
 	    map.put("user", user);
 	    final String serialized = map.serialize();
-	    Log.debug("Pausing session: " + serialized);
 	    Cookies.setCookie(PAUSE_COOKIE, serialized);
+	    Log.debug("Pausing session: " + serialized);
 	}
     }
 
@@ -122,30 +143,10 @@ public class AutoConfig {
 	Log.debug("PageController - trying to resume...");
 	if (!tryToResume()) {
 	    Log.debug("PageController - no session found. Trying to login");
-	    if (!tryToLogin()) {
+	    if (!login()) {
 		Log.debug("PageController - No action perfomer on open.");
 	    }
 	}
-    }
-
-    /**
-     * Try to auto login
-     * 
-     * @return true if some XmppID found
-     */
-    private boolean tryToLogin() {
-	final String userJID = assist.getMeta(PARAM_JID, false);
-	final String password = assist.getMeta(PARAM_PASSWORD, false);
-	if (userJID != null) {
-	    Log.debug("Loging in...");
-	    if ("anonymous".equals(userJID.toLowerCase())) {
-		session.login(Session.ANONYMOUS, null);
-	    } else {
-		final XmppURI jid = uri(userJID);
-		session.login(jid, password);
-	    }
-	}
-	return userJID != null;
     }
 
     /**

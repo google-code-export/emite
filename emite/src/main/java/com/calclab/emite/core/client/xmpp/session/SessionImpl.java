@@ -149,11 +149,12 @@ public class SessionImpl extends AbstractSession implements Session {
     }
 
     public StreamSettings pause() {
-	return state == State.ready ? connection.pause() : null;
+	return connection.pause();
     }
 
     public void resume(final XmppURI userURI, final StreamSettings settings) {
 	this.userURI = userURI;
+	setState(State.resume);
 	connection.resume(settings);
 	setState(State.ready);
     }
@@ -190,7 +191,7 @@ public class SessionImpl extends AbstractSession implements Session {
 
     private void disconnect() {
 	connection.disconnect();
-	setState(Session.State.disconnected);
+	setState(State.disconnected);
     }
 
     private void sendQueuedStanzas() {

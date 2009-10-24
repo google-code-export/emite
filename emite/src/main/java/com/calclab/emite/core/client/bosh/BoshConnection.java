@@ -82,7 +82,9 @@ public class BoshConnection implements Connection {
 		errors = 0;
 		activeConnections--;
 		if (running) {
-		    if (statusCode != 200) {
+		    // TODO: check if is the same code in other than FF and make
+		    // tests
+		    if (statusCode != 200 && statusCode != 0) {
 			running = false;
 			onError.fire("Bad status: " + statusCode);
 		    } else {
@@ -113,10 +115,12 @@ public class BoshConnection implements Connection {
     }
 
     public void disconnect() {
+	Log.debug("BoshConnection - Disconnected called.");
 	createBody();
 	body.setAttribute("type", "terminate");
 	sendBody();
 	running = false;
+	stream.sid = null;
 	onDisconnected.fire("logged out");
     }
 
@@ -141,10 +145,13 @@ public class BoshConnection implements Connection {
     }
 
     public StreamSettings pause() {
-	createBody();
-	body.setAttribute("pause", stream.maxPause);
-	sendBody();
-	return stream;
+	if (stream.sid != null) {
+	    createBody();
+	    body.setAttribute("pause", stream.maxPause);
+	    sendBody();
+	    return stream;
+	}
+	return null;
     }
 
     public void removeOnStanzaReceived(final Listener<IPacket> listener) {
@@ -226,6 +233,7 @@ public class BoshConnection implements Connection {
 
     private void handleResponse(final IPacket response) {
 	if (isTerminate(response.getAttribute("type"))) {
+	    stream.sid = null;
 	    onDisconnected.fire("disconnected by server");
 	} else {
 	    if (stream.sid == null) {
