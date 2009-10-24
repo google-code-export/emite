@@ -21,7 +21,6 @@
  */
 package com.calclab.emite.hablar.client;
 
-import com.calclab.emite.browser.client.AutoConfig;
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.hablar.client.pages.roster.RosterView;
 import com.calclab.emite.im.client.chat.ChatManager;
@@ -38,7 +37,6 @@ public class HablarModule extends AbstractModule implements EntryPoint {
 	Suco.install(this);
 	final PagesContainer widget = Suco.get(PagesContainer.class);
 	RootPanel.get("hablar").add(widget);
-	Suco.get(AutoConfig.class).run();
     }
 
     @Override

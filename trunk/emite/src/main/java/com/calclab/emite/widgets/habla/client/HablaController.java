@@ -23,11 +23,13 @@ package com.calclab.emite.widgets.habla.client;
 
 import java.util.Map;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.calclab.emite.core.client.xmpp.session.Session;
+import com.calclab.emite.core.client.xmpp.session.Session.State;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
-import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.emite.im.client.chat.Chat;
+import com.calclab.emite.im.client.chat.ChatManager;
 import com.calclab.suco.client.events.Listener;
 
 public class HablaController {
@@ -35,6 +37,7 @@ public class HablaController {
     private Chat chat;
 
     public HablaController(final Session session, final ChatManager chatManager, final HablaWidget widget) {
+	Log.debug("Creating Habla controller");
 	this.widget = widget;
 	widget.setEnabled(false);
 
@@ -58,13 +61,11 @@ public class HablaController {
 
 	session.onStateChanged(new Listener<Session.State>() {
 	    public void onEvent(final Session.State state) {
-		widget.showStatus(state.toString(), "");
-		switch (state) {
-		case ready:
-		    break;
-		}
+		setState(state);
 	    }
 	});
+	// AutoConfig starts before I do!!
+	setState(session.getState());
     }
 
     private void openChat(final ChatManager chatManager, final XmppURI jid) {
@@ -81,6 +82,16 @@ public class HablaController {
 		widget.show(name, message.getBody());
 	    }
 	});
+    }
+
+    private void setState(final Session.State state) {
+	Log.debug("Hablar state: " + state);
+	widget.showStatus(state.toString(), "");
+	switch (state) {
+	case ready:
+	    break;
+	}
+	widget.setEnabled(state == State.ready);
     }
 
 }
