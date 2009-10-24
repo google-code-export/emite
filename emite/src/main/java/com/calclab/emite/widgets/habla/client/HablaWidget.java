@@ -23,7 +23,6 @@ package com.calclab.emite.widgets.habla.client;
 
 import java.util.Map;
 
-import com.calclab.emite.browser.client.HasProperties;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -33,7 +32,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 
-public class HablaWidget extends AbsolutePanel implements HasProperties {
+public class HablaWidget extends AbsolutePanel {
     private final Event<Map<String, String>> onSetProperties;
     private final Event<String> onMessage;
     private final HTML output;
