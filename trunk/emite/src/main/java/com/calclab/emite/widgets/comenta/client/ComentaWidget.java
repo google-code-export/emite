@@ -23,7 +23,6 @@ package com.calclab.emite.widgets.comenta.client;
 
 import java.util.Map;
 
-import com.calclab.emite.browser.client.HasProperties;
 import com.calclab.suco.client.events.Event;
 import com.calclab.suco.client.events.Listener;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -34,7 +33,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextArea;
 
-public class ComentaWidget extends AbsolutePanel implements HasProperties {
+public class ComentaWidget extends AbsolutePanel {
     private final Event<Map<String, String>> onSetProperties;
     private final Event<String> onMessage;
     private final HTML output;

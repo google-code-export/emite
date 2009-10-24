@@ -23,6 +23,10 @@ package com.calclab.emite.browser.client;
 
 import java.util.HashMap;
 
+/**
+ * An extension to provide serialize/restore from HashMap to String in order to
+ * store information in the browser's cookies.
+ */
 @SuppressWarnings("serial")
 public class SerializableMap extends HashMap<String, String> {
 

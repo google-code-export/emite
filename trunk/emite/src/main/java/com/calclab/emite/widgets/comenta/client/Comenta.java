@@ -42,7 +42,7 @@ public class Comenta {
 	for (final Element element : elements) {
 	    // domAssist.clearElement(element);
 	    final ComentaWidget widget = widgetProvider.get();
-	    domAssist.setProperties(element, widget);
+	    widget.setProperties(domAssist.getProperties(element, widget.getPropertyNames(), "data-"));
 	    RootPanel.get(element.getId()).add(widget);
 	}
     }

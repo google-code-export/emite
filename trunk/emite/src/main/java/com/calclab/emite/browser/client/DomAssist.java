@@ -32,8 +32,8 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.DOM;
 
 /**
- * A helper class to perform typical dom manipulations related with widgets
- * 
+ * A helper class to perform typical DOM manipulations related with elements and
+ * its properties
  */
 public class DomAssist {
 
@@ -101,8 +101,9 @@ public class DomAssist {
 	    value = element.getPropertyString("content");
 	    Log.debug("Meta: " + id + ": " + value);
 	}
-	if (isRequired && value == null)
+	if (isRequired && value == null) {
 	    throw new RuntimeException("Required meta-attribute " + id + " not found.");
+	}
 
 	return value;
     }
@@ -123,27 +124,35 @@ public class DomAssist {
     }
 
     /**
-     * Ask the widget for all the property names and get the values from the
-     * element. Always call the widget.setProperties method
+     * Given an DOM element and a list of parameters, returns a HashMap with the
+     * paramName associated to the value of this parameter defined in the
+     * element.
      * 
-     * Given the properties [name, color] the element should be:
-     * <code>&lt;div data-name="name value" data-color="color value" /&gt;</code>
+     * The optional prefix is added to the paramName before extracting the
+     * value.
      * 
      * @param element
-     * @param widget
+     *            the element to be inspected
+     * @param paramNames
+     *            the desired paramNames
+     * @param prefix
+     *            The string added as prefix to the paramName before get the
+     *            value. It can be null
+     * @return a HashMap that associates each paramName with the value in the
+     *         element (or null if nothing found)
      */
-    public void setProperties(final Element element, final HasProperties widget) {
-	final String[] paramNames = widget.getPropertyNames();
+    public HashMap<String, String> getProperties(final Element element, final String[] paramNames, final String prefix) {
+	final String before = (prefix == null ? "" : prefix);
 	final HashMap<String, String> properties = new HashMap<String, String>();
 	if (paramNames != null) {
 	    for (final String name : paramNames) {
 		Log.debug("Param name of widget: " + name);
-		final String value = element.getAttribute("data-" + name);
+		final String value = element.getAttribute(before + name);
 		Log.debug("Value: " + value);
 		properties.put(name, value);
 	    }
 	}
-	widget.setProperties(properties);
+	return properties;
     }
 
 }
