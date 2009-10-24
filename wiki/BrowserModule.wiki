@@ -1,0 +1,14 @@
+#summary This page documents the features of BrowserModule module
+#labels Phase-Support,Phase-Design
+
+= Introduction =
+
+In order to remove the (bosh) configurations from the source code and to reduce the boiler plate code, some of the parameters and behaviours of the Emite library can be specified using <meta> tags inside html files.
+
+
+== BoshConfiguration ==
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
