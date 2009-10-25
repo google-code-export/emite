@@ -48,3 +48,8 @@ ssh $DESTHOST "md5sum $POM > $POM.md5"
 
 ssh ${EXTRA}ourproject.org "chgrp -R kune $DIRDEST"
 ssh ${EXTRA}ourproject.org "chmod -R g+w $DIRDEST"
+
+org.wave-protocol
+
+#      mvn deploy:deploy-file -DgroupId=XXXXXXX -DartifactId=XXXXXXX -Dversion=XXXXXXX -Dpackaging=jar -Dfile=/path/to/file -Durl=[url] -DrepositoryId=[id]
+

@@ -12,10 +12,10 @@
   <url>http://emite.googlecode.com</url>
   <properties>
     <!--
-      See for available versions:
+      Available versions:
       http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/
     -->
-    <gwtVersion>2.0.0-ms1</gwtVersion>
+    <gwt.version>2.0.0-ms1</gwt.version>
   </properties>
   <issueManagement>
     <system>google code issues list</system>
@@ -34,23 +34,17 @@
   </developers>
   <dependencies>
 
-    <!--  GWT deps (from central repo) -->
+    <!-- GWT dependencies (from maven "central" repo) -->
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-servlet</artifactId>
-      <version>${gwtVersion}</version>
-      <scope>runtime</scope>
+      <version>${gwt.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
-      <version>${gwtVersion}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-dev</artifactId>
-      <version>${gwtVersion}</version>
+      <version>${gwt.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -66,7 +60,7 @@
     <dependency>
       <groupId>com.calclab</groupId>
       <artifactId>suco</artifactId>
-      <version>0.6.1</version>
+      <version>0.6.4</version>
     </dependency>
     <dependency>
       <groupId>com.allen_sauer.gwt.log.gwt-log
@@ -128,87 +122,50 @@
     </dependency>
   </dependencies>
 
-  <!-- USE PROFILES WITH gwt:gwt. Example: mvn gwt:gwt -P widgets -->
+  <!-- USE PROFILES WITH gwt:run. Example: mvn gwt:run -P widgets -->
   <profiles>
     <profile>
       <id>widgets</id>
       <properties>
-        <gwt.run>
-          com.calclab.emite.widgets.demo.EmiteWidgetsDemo/WidgetsShowCase.html?log_level=DEBUG </gwt.run>
-        <gwt.compile> com.calclab.emite.widgets.demo.EmiteWidgetsDemo </gwt.compile>
+        <profiles.gwt.run>
+          com.calclab.emite.widgets.demo.EmiteWidgetsDemo/WidgetsShowCase.html?log_level=DEBUG</profiles.gwt.run>
+        <gwt.module> com.calclab.emite.widgets.demo.EmiteWidgetsDemo </gwt.module>
       </properties>
     </profile>
     <profile>
       <id>emiteui</id>
       <properties>
-        <gwt.run>com.calclab.emiteui.EmiteUI/EmiteUI.html?log_leve=DEBUG </gwt.run>
-        <gwt.compile> com.calclab.emiteui.EmiteUI </gwt.compile>
+        <profiles.gwt.run>com.calclab.emiteui.EmiteUI/EmiteUI.html?log_level=DEBUG</profiles.gwt.run>
+        <gwt.module> com.calclab.emiteui.EmiteUI </gwt.module>
       </properties>
     </profile>
     <profile>
       <id>comenta</id>
       <properties>
-        <gwt.run>com.calclab.emite.widgets.comenta.Comenta/Comenta.html?log_level=DEBUG </gwt.run>
-        <gwt.compile> com.calclab.emite.widgets.comenta.Comenta </gwt.compile>
+        <profiles.gwt.run>com.calclab.emite.widgets.comenta.Comenta/Comenta.html?log_level=DEBUG</profiles.gwt.run>
+        <gwt.module> com.calclab.emite.widgets.comenta.Comenta </gwt.module>
       </properties>
     </profile>
     <profile>
       <id>habla</id>
       <properties>
-        <gwt.run>com.calclab.emite.widgets.habla.Habla/Habla.html?log_level=DEBUG </gwt.run>
-        <gwt.compile> com.calclab.emite.widgets.comenta.Habla </gwt.compile>
+        <profiles.gwt.run>com.calclab.emite.widgets.habla.Habla/Habla.html?log_level=DEBUG</profiles.gwt.run>
+        <gwt.module> com.calclab.emite.widgets.comenta.Habla </gwt.module>
       </properties>
     </profile>
     <profile>
       <id>basics</id>
       <properties>
-        <gwt.run>com.calclab.examples.emite.basics.Basics/Basics.html?log_level=DEBUG </gwt.run>
-        <gwt.compile> com.calclab.examples.emite.basics.Basics </gwt.compile>
+        <profiles.gwt.run>com.calclab.examples.emite.basics.Basics/Basics.html?log_level=DEBUG</profiles.gwt.run>
+        <gwt.module> com.calclab.examples.emite.basics.Basics </gwt.module>
       </properties>
     </profile>
     <profile>
       <id>hablar</id>
       <properties>
-        <gwt.run>com.calclab.emite.hablar.Hablar/Hablar.html?log_level=DEBUG </gwt.run>
-        <gwt.compile> com.calclab.emite.hablar.Hablar </gwt.compile>
+        <profiles.gwt.run>com.calclab.emite.hablar.Hablar/Hablar.html?log_level=DEBUG</profiles.gwt.run>
+        <gwt.module> com.calclab.emite.hablar.Hablar </gwt.module>
       </properties>
-    </profile>
-    <!--  profiles (with activation per platform) -->
-    <profile>
-      <id>gwt-dev-windows</id>
-      <properties>
-        <platform>windows</platform>
-      </properties>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <os>
-          <family>windows</family>
-        </os>
-      </activation>
-    </profile>
-    <profile>
-      <id>gwt-dev-mac</id>
-      <properties>
-        <platform>mac</platform>
-      </properties>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <os>
-          <family>mac</family>
-        </os>
-      </activation>
-    </profile>
-    <profile>
-      <id>gwt-dev-linux</id>
-      <properties>
-        <platform>linux</platform>
-      </properties>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <os>
-          <name>linux</name>
-        </os>
-      </activation>
     </profile>
   </profiles>
   <pluginRepositories>
@@ -218,14 +175,26 @@
       </url>
     </pluginRepository>
     <pluginRepository>
-      <id>gwt-maven</id>
-      <url> http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+      <id>Codehaus Snapshots</id>
+      <url>http://snapshots.repository.codehaus.org/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>  <!-- Workaround for MNG-2974, see note below -->
+      </releases>
     </pluginRepository>
   </pluginRepositories>
   <repositories>
     <repository>
-      <id>gwt-maven</id>
-      <url> http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+      <id>Codehaus Snapshots</id>
+      <url>http://snapshots.repository.codehaus.org/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
     </repository>
     <repository>
       <id>kune-maven</id>
@@ -274,38 +243,30 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>com.totsp.gwt</groupId>
-        <artifactId>maven-googlewebtoolkit2-plugin
-        </artifactId>
-        <version>2.0-RC1</version>
-        <configuration>
-          <!-- <logLevel>INFO</logLevel> -->
-          <!--<style>OBF</style>-->
-          <!--<style>PRETTY</style>-->
-          <style>OBF</style>
-          <logLevel>INFO</logLevel>
-          <noServer>false</noServer>
-          <extraJvmArgs>-Xmx512m</extraJvmArgs>
-          <gwtVersion>${gwtVersion}</gwtVersion>
-          <runTarget>${gwt.run}</runTarget>
-          <compileTargets>
-            <compileTarget>${gwt.compile}</compileTarget>
-          </compileTargets>
-          <generatorRootClasses>
-          </generatorRootClasses>
-          <generatorDestinationPackage>
-          </generatorDestinationPackage>
-          <generateGettersAndSetters>false</generateGettersAndSetters>
-          <generatePropertyChangeSupport>true </generatePropertyChangeSupport>
-          <!-- suggested by karlcpp, thx for the feedback  -->
-          <extraJvmArgs>-Xmx512m</extraJvmArgs>
-        </configuration>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <!-- http://mojo.codehaus.org/gwt-maven-plugin/index.html -->
+        <version>1.2-SNAPSHOT</version>
         <executions>
           <execution>
+            <configuration>
+              <!-- <extraJvmArgs>-Xmx512M</extraJvmArgs> -->
+              <soyc>false</soyc>
+              <style>OBF</style>
+            </configuration>
             <goals>
+              <!-- gwt:* goals to be executed during build -->
+              <goal>compile</goal>
+              <!--
+                http://mojo.codehaus.org/gwt-maven-plugin/user-guide/library.html
+              -->
+              <goal>resources</goal>
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <runTarget>${profiles.gwt.run}</runTarget>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
