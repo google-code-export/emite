@@ -8,4 +8,5 @@
   <extend-property name="log_level" values="DEBUG,INFO,OFF" />
   <set-property name="log_DivLogger" value="DISABLED" />
   <set-property name="log_FirebugLogger" value="ENABLED" />
+  <set-configuration-property name="log_pattern" value="%d [%-5p] %m%n" />
 </module>
