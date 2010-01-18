@@ -1,0 +1,45 @@
+#summary Selenium Tests
+#labels Phase-Implementation,Phase-QA
+
+= Introduction =
+
+Furthermore our conventional JUnit tests, we are using Selenium + TestNG to test our funcionality in a real Browser. 
+
+= Setting up =
+
+Create a new profile in your Firefox 3.5:
+{{{
+$ firefox -ProfileManager --no-remote
+}}}
+call it "selenium" (see SeleniumConstants.FIREFOX_PROFILE_NAME).
+
+Install the GWT plugin:
+http://gwt.google.com/samples/MissingPlugin/MissingPlugin.html
+
+Additional setup if you want to have a profile capable of receive test petitions from other machines:
+
+http://code.google.com/intl/es-ES/webtoolkit/doc/latest/DevGuideTestingRemoteTesting.html#Firefox_Profile
+
+Install other plugins in this firefox profile that maybe you wan to use, for example some recomended (but not necessary) plugins for development: firebug, and the Selenium IDE.
+
+Close a run again firefox with the same problem: 
+{{{
+$ firefox -P selenium -no-remote
+}}}
+and check that the GWT plugin is installed and enabled correctly.
+
+Install the TestNG Plugin for eclipse (optional, but needed to run the Selenium tests from the UI):
+ http://beust.com/eclipse/
+
+Configure a test user in your server (username: test1@localhost, password: test1)
+
+= Running =
+
+Click in the "com.calclab.hablar.client.selenium" package of test directory, and in RunAs, click in "as TestNG test".
+
+More info:
+http://testng.org/doc/documentation-main.html#running-testng
+
+= Developing =
+
+We follow the [http://code.google.com/p/selenium/wiki/PageObjects PageObject] and [http://code.google.com/p/selenium/wiki/PageFactory PageFactory] patterns with a little complication because we'll need also i18n support.
