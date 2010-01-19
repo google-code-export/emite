@@ -35,7 +35,9 @@ Configure a test user in your server (we use username: test1@localhost, password
 
 = Running =
 
-Right click in the "com.calclab.hablar.client.selenium" package of the test directory, and in `Run as`, click in `TestNG test`.
+First of all, you need the OOPHM (by now only works with Hablar.html) running.
+
+Later, right click in the "com.calclab.hablar.client.selenium" package of the test directory, and in `Run as`, click in `TestNG test`.
 
 More info:
 http://testng.org/doc/documentation-main.html#running-testng
