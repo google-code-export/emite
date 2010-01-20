@@ -1,0 +1,11 @@
+war/hablar
+war/WEB-INF/classes
+icons/
+test-output/
+war/HablarBasic/
+war/HablarSearch/
+war/HablarChat/
+war/HablarSignals/
+war/HablarRoster/
+war/HablarLogin/
+
