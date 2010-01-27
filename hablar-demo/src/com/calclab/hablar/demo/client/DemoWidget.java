@@ -71,4 +71,14 @@ public class DemoWidget extends Composite implements DemoView {
 	return userName;
     }
 
+    @Override
+    public void setLoginEnabled(boolean enabled) {
+	login.setEnabled(enabled);
+    }
+
+    @Override
+    public void setLogoutEnabled(boolean enabled) {
+	logout.setEnabled(enabled);
+    }
+
 }

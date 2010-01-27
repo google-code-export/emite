@@ -54,6 +54,8 @@ public class DemoPresenter {
     }
 
     private void showState(State state) {
+	view.setLoginEnabled(state == State.disconnected);
+	view.setLogoutEnabled(state == State.ready);
 	view.getState().setText("Session: " + state);
     }
 
