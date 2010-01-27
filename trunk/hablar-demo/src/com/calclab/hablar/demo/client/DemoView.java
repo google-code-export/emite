@@ -21,4 +21,8 @@ public interface DemoView {
 
     HasText getUserName();
 
+    void setLoginEnabled(boolean enabled);
+
+    void setLogoutEnabled(boolean enabled);
+
 }
