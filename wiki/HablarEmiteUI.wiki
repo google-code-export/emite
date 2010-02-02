@@ -3,7 +3,7 @@
 
 = Introduction =
 
-Hablar (talk in Spanish) is the a new Emite user interface builded using GWT widgets and UIBinder GWT2.0 feature.
+_Hablar_ is the a new Emite user interface builded using GWT widgets and UIBinder GWT2.0 feature.
 
 Hablar is build using the MVP pattern and its composed of several modules that can be optional included to create a customized user interface.
 
@@ -48,7 +48,7 @@ Basically what you need is create a !HablarWidget and install the desired module
   HablarEditBuddy.install(hablar);
 }}}
 
-The modules should be included in your .gwt.xml file.
+The modules must be also included in your .gwt.xml file.
 
 Hablar widget is UIBinder compatible. Here's an example:
 {{{
@@ -99,4 +99,4 @@ The big Hablar.gwt.xml module has a lot of options configurable via html tags:
 
 = Integration in HTML pages without any GWT knowledge =
 
-TODO
+When finished, a zip file with instructions will be in the download section. Currenlty you have to use the gwt compiler with Hablar module in order to have the deliverable.
