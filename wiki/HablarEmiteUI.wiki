@@ -9,6 +9,11 @@ Hablar is build using the MVP pattern and its composed of several modules that c
 
 Currently is only in svn repository under trunk/hablar
 
+= Screenshots =
+
+[http://emite.googlecode.com http://emite.googlecode.com/svn/wiki/hablar-roster.png] 
+[http://emite.googlecode.com http://emite.googlecode.com/svn/wiki/hablar-chat.png]
+
 = Features =
 
 Hablar is composed of different modules that can be included or not. Each module gives the user interface a unique group of xmpp features. Two different layouts are selectable (accordion and tabs)
