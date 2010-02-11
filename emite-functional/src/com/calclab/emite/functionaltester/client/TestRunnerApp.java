@@ -1,8 +1,9 @@
 package com.calclab.emite.functionaltester.client;
 
 import com.calclab.emite.functionaltester.client.tests.ConnectionTestSuite;
-import com.calclab.emite.functionaltester.client.tests.SearchTestSuite;
 import com.calclab.emite.functionaltester.client.tests.DiscoveryTestSuite;
+import com.calclab.emite.functionaltester.client.tests.RosterTestSuite;
+import com.calclab.emite.functionaltester.client.tests.SearchTestSuite;
 import com.calclab.emite.functionaltester.client.tests.VCardTestSuite;
 import com.calclab.emite.functionaltester.client.ui.TestRunnerPanel;
 import com.google.gwt.core.client.EntryPoint;
@@ -21,6 +22,7 @@ public class TestRunnerApp implements EntryPoint {
 	runner.addTestSuite("Search", new SearchTestSuite());
 	runner.addTestSuite("Disco", new DiscoveryTestSuite());
 	runner.addTestSuite("VCard", new VCardTestSuite());
+	runner.addTestSuite("Roster", new RosterTestSuite());
 	RootLayoutPanel.get().add(runner);
     }
 
