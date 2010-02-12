@@ -1,3 +1,3 @@
-#Wed Jan 27 10:28:37 CET 2010
+#Fri Feb 12 10:24:57 CET 2010
 eclipse.preferences.version=1
-jarsExcludedFromWebInfLib=/home/dani/Emite/hablardemo/lib/emite-0.5.0.jar|/home/dani/Emite/hablardemo/lib/hablar-snapshot.jar|/home/dani/Emite/hablardemo/lib/suco-0.7.0.jar
+jarsExcludedFromWebInfLib=/home/dani/Emite/hablardemo/lib/hablar-snapshot.jar|/home/dani/Emite/hablardemo/lib/suco-0.7.0.jar|/Users/dani/Emite/hablar-demo/lib/emite-snapshot.jar

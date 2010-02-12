@@ -1,6 +1,6 @@
 package com.calclab.hablar.demo.client;
 
-import com.calclab.hablar.basic.client.ui.HablarWidget;
+import com.calclab.hablar.core.client.HablarWidget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DemoWidget extends Composite implements DemoView {
+public class DemoWidget extends Composite implements DemoDisplay {
 
     interface DemoWidgetUiBinder extends UiBinder<Widget, DemoWidget> {
     }
@@ -42,7 +42,7 @@ public class DemoWidget extends Composite implements DemoView {
     }
 
     @Override
-    public HablarWidget getHablar() {
+    public HablarWidget getHablarWidget() {
 	return hablar;
     }
 
@@ -72,12 +72,12 @@ public class DemoWidget extends Composite implements DemoView {
     }
 
     @Override
-    public void setLoginEnabled(boolean enabled) {
+    public void setLoginEnabled(final boolean enabled) {
 	login.setEnabled(enabled);
     }
 
     @Override
-    public void setLogoutEnabled(boolean enabled) {
+    public void setLogoutEnabled(final boolean enabled) {
 	logout.setEnabled(enabled);
     }
 
