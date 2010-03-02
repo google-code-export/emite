@@ -1,5 +1,6 @@
 package com.calclab.hablar.html.client;
 
+
 import com.calclab.hablar.HablarComplete;
 import com.calclab.hablar.HablarConfig;
 import com.calclab.hablar.console.client.HablarConsole;
@@ -8,7 +9,12 @@ import com.calclab.hablar.core.client.HablarWidget;
 import com.calclab.hablar.login.client.HablarLogin;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -54,6 +60,20 @@ public class HablarHtml implements EntryPoint {
     }
 
     private void onModuleLoadCont() {
+	
+
+	if (System.currentTimeMillis() > 0) {
+	    GWT.log("JODER!");
+	    DockLayoutPanel p = new DockLayoutPanel(Unit.PX);
+	    p.addStyleName("probando");
+	    FlowPanel l = new FlowPanel();
+	    p.add(l);
+	    Button b = new Button();
+	    l.add(b);
+	    RootLayoutPanel.get().add(p);
+	    return;
+	}
+	
 	final HablarConfig config = HablarConfig.getFromMeta();
 	final HtmlConfig htmlConfig = HtmlConfig.getFromMeta();
 	htmlConfig.hasLogger = true;
@@ -61,7 +81,7 @@ public class HablarHtml implements EntryPoint {
 	final Hablar hablar = widget.getHablar();
 
 	HablarComplete.install(hablar, config);
-
+	
 	if (htmlConfig.hasLogger) {
 	    HablarConsole.install(hablar);
 	}
