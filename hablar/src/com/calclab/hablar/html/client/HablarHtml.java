@@ -1,5 +1,6 @@
 package com.calclab.hablar.html.client;
 
+
 import com.calclab.hablar.HablarComplete;
 import com.calclab.hablar.HablarConfig;
 import com.calclab.hablar.console.client.HablarConsole;
@@ -54,6 +55,7 @@ public class HablarHtml implements EntryPoint {
     }
 
     private void onModuleLoadCont() {
+	
 	final HablarConfig config = HablarConfig.getFromMeta();
 	final HtmlConfig htmlConfig = HtmlConfig.getFromMeta();
 	htmlConfig.hasLogger = true;
@@ -61,7 +63,7 @@ public class HablarHtml implements EntryPoint {
 	final Hablar hablar = widget.getHablar();
 
 	HablarComplete.install(hablar, config);
-
+	
 	if (htmlConfig.hasLogger) {
 	    HablarConsole.install(hablar);
 	}
