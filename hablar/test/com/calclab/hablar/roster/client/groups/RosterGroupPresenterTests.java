@@ -1,7 +1,6 @@
 package com.calclab.hablar.roster.client.groups;
 
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -24,12 +23,12 @@ public class RosterGroupPresenterTests {
 
     @Before
     public void setup() {
-	new EmiteTester();
+	final EmiteTester emite = new EmiteTester();
 	final HablarTester hablar = new HablarTester();
 	itemMenu = hablar.newMenu();
 	final RosterItemDisplay itemDisplay = hablar.newDisplay(RosterItemDisplay.class);
 	display = hablar.newDisplay(RosterGroupDisplay.class);
-	when(display.newRosterItemDisplay(anyString(), anyString())).thenReturn(itemDisplay);
+	when(display.newRosterItemDisplay()).thenReturn(itemDisplay);
 	group = new RosterGroup("mygroup");
 	group.add(RosterTester.createItem("test1", "name1", "mygroup"));
 	group.add(RosterTester.createItem("test2", "name2", "mygroup"));

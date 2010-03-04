@@ -20,8 +20,8 @@ public class RosterGroupWidget extends FlowPanel implements RosterGroupDisplay {
     }
 
     @Override
-    public RosterItemDisplay newRosterItemDisplay(final String groupId, final String itemId) {
-	return new RosterItemWidget(groupId, itemId);
+    public RosterItemDisplay newRosterItemDisplay() {
+	return new RosterItemWidget();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class RosterGroupWidget extends FlowPanel implements RosterGroupDisplay {
 
     @Override
     public void removeAll() {
-	clear();
+	removeAll();
     }
 
 }

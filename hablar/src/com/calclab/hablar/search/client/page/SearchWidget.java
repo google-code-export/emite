@@ -96,8 +96,8 @@ public class SearchWidget extends Composite implements SearchDisplay {
     }
 
     @Override
-    public SearchResultItemDisplay newSearchResultItemDisplay(final String itemId) {
-	return new SearchResultItemWidget(itemId);
+    public SearchResultItemDisplay newSearchResultItemDisplay() {
+	return new SearchResultItemWidget();
     }
 
     @UiHandler("term")

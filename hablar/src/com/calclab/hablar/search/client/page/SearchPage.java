@@ -8,7 +8,6 @@ import java.util.List;
 import com.calclab.emite.core.client.xmpp.session.ResultListener;
 import com.calclab.emite.xep.search.client.SearchManager;
 import com.calclab.emite.xep.search.client.SearchResultItem;
-import com.calclab.hablar.core.client.Idify;
 import com.calclab.hablar.core.client.mvp.HablarEventBus;
 import com.calclab.hablar.core.client.page.PagePresenter;
 import com.calclab.hablar.core.client.ui.icon.HablarIcons;
@@ -81,8 +80,7 @@ public class SearchPage extends PagePresenter<SearchDisplay> {
 		public void onSuccess(final List<SearchResultItem> items) {
 		    display.showMessage(i18n().searchResultsFor(text, items.size()), Level.success);
 		    for (final SearchResultItem item : items) {
-			final SearchResultItemDisplay itemDisplay = display.newSearchResultItemDisplay(Idify.id(item
-				.getJid()));
+			final SearchResultItemDisplay itemDisplay = display.newSearchResultItemDisplay();
 			new SearchResultItemPresenter(item, itemMenu, itemDisplay);
 			display.addResult(itemDisplay);
 		    }

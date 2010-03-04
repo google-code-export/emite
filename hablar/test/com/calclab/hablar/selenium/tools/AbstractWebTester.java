@@ -36,10 +36,6 @@ public abstract class AbstractWebTester {
 	driver.get(baseUrl);
     }
 
-    public boolean isElementPresent(final String id) {
-	return selenium.isElementPresent(id);
-    }
-
     public boolean isTextPresent(final String text) {
 	return selenium.isTextPresent(text);
     }

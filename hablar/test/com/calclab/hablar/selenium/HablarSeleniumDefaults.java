@@ -2,16 +2,14 @@ package com.calclab.hablar.selenium;
 
 import java.awt.Point;
 
-import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 
 import com.calclab.hablar.selenium.chat.ChatPageObject;
-import com.calclab.hablar.selenium.editbuddy.EditBuddyPageObject;
-import com.calclab.hablar.selenium.groupchat.GroupChatPageObject;
 import com.calclab.hablar.selenium.login.LoginPageObject;
 import com.calclab.hablar.selenium.openchat.OpenChatPageObject;
 import com.calclab.hablar.selenium.roster.RosterPageObject;
@@ -29,8 +27,6 @@ public class HablarSeleniumDefaults {
     protected ChatPageObject chat;
     protected SearchPageObject search;
     protected GenericWebTester webtester;
-    protected EditBuddyPageObject editBuddy;
-    protected GroupChatPageObject groupChat;
 
     @AfterSuite
     public void closeBrowser() {
@@ -53,26 +49,24 @@ public class HablarSeleniumDefaults {
 		{ "test1@localhost", "test" }, { "", "" } };
     }
 
+    @BeforeMethod
+    public void goHome() {
+	webtester.home();
+    }
+
     public void moveMouseAt(final Point point) {
 	webtester.moveMouseAt(point);
     }
 
-    @BeforeMethod
+    @BeforeTest
     public void setupSeleniumModule(final ITestContext context) {
-	if (!Suco.getComponents().hasProvider(WebDriver.class)) {
-	    Suco.install(new SeleniumModule());
-	}
-	if (webtester == null) {
-	    webtester = Suco.get(GenericWebTester.class);
-	    login = Suco.get(LoginPageObject.class);
-	    roster = Suco.get(RosterPageObject.class);
-	    openChat = Suco.get(OpenChatPageObject.class);
-	    search = Suco.get(SearchPageObject.class);
-	    chat = Suco.get(ChatPageObject.class);
-	    editBuddy = Suco.get(EditBuddyPageObject.class);
-	    groupChat = Suco.get(GroupChatPageObject.class);
-	}
-	webtester.home();
+	Suco.install(new SeleniumModule());
+	webtester = Suco.get(GenericWebTester.class);
+	login = Suco.get(LoginPageObject.class);
+	roster = Suco.get(RosterPageObject.class);
+	openChat = Suco.get(OpenChatPageObject.class);
+	search = Suco.get(SearchPageObject.class);
+	chat = Suco.get(ChatPageObject.class);
     }
 
     public void sleep(final int milliseconds) {
