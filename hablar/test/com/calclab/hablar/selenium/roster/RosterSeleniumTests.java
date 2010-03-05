@@ -2,25 +2,13 @@ package com.calclab.hablar.selenium.roster;
 
 import org.testng.annotations.Test;
 
-public class RosterSeleniumTests extends AbstractRosterTests {
+import com.calclab.hablar.selenium.HablarSeleniumTest;
+
+public class RosterSeleniumTests extends HablarSeleniumTest {
 
     @Test
-    public void shouldAddAndRemoveRosterItem() {
-	login();
-	addSeleniumBuddy();
-	removeSeleniumBuddy();
-	logout();
+    public void shouldHaveRosterPage() {
+	login("test1@localhost", "test1");
+	roster.getHeader().click();
     }
-
-    @Test
-    public void shouldAddToGroup() {
-	login();
-	addSeleniumBuddy();
-	addToGroup("testgroup");
-	sleep(2000);
-	removeFromGroup("testgroup");
-	removeSeleniumBuddy();
-	logout();
-    }
-
 }

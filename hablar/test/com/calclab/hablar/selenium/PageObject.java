@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.RenderedWebElement;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ByIdOrName;
 import org.testng.Assert;
 
 import com.calclab.suco.client.Suco;
@@ -12,6 +11,10 @@ import com.calclab.suco.client.Suco;
 public abstract class PageObject {
 
     private static final long[] POLL_INTERVALS = { 10, 20, 30, 40, 50, 50, 50, 50, 100 };
+
+    private WebDriver getWebDriver() {
+	return Suco.get(WebDriver.class);
+    }
 
     protected RenderedWebElement findElement(final By by) {
 	return (RenderedWebElement) getWebDriver().findElement(by);
@@ -28,7 +31,7 @@ public abstract class PageObject {
     protected void waitFor(final String waitForWhat, final Runnable runnable) {
 	int i = 0;
 	boolean success = false;
-	final long timeout = System.currentTimeMillis() + 9000;
+	final long timeout = System.currentTimeMillis() + 5000;
 	while (i < POLL_INTERVALS.length && !success) {
 	    try {
 		runnable.run();
@@ -52,7 +55,6 @@ public abstract class PageObject {
     }
 
     protected void waitFor(final WebElement element, final String text) {
-	System.out.println("WAIT FOR: " + text);
 	waitFor(text, new Runnable() {
 	    @Override
 	    public void run() {
@@ -60,19 +62,5 @@ public abstract class PageObject {
 		Assert.assertTrue(elText.contains(text));
 	    }
 	});
-    }
-
-    protected void waitForId(final String id) {
-	System.out.println("WAIT FOR: " + id);
-	waitFor(id, new Runnable() {
-	    @Override
-	    public void run() {
-		Assert.assertTrue(((RenderedWebElement) getWebDriver().findElement(new ByIdOrName(id))).isDisplayed());
-	    }
-	});
-    }
-
-    private WebDriver getWebDriver() {
-	return Suco.get(WebDriver.class);
     }
 }

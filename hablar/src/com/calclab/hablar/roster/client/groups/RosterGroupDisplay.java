@@ -8,7 +8,7 @@ public interface RosterGroupDisplay extends Display {
 
     boolean isVisible();
 
-    RosterItemDisplay newRosterItemDisplay(String groupId, String itemId);
+    RosterItemDisplay newRosterItemDisplay();
 
     void remove(RosterItemDisplay itemDisplay);
 

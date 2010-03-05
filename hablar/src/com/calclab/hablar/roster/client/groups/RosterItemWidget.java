@@ -1,6 +1,5 @@
 package com.calclab.hablar.roster.client.groups;
 
-import com.calclab.hablar.core.client.Idify;
 import com.calclab.hablar.core.client.ui.icon.HablarIcons;
 import com.calclab.hablar.core.client.ui.icon.HablarIcons.IconType;
 import com.google.gwt.core.client.GWT;
@@ -28,11 +27,9 @@ public class RosterItemWidget extends Composite implements RosterItemDisplay {
 
     private static RosterItemWidgetUiBinder uiBinder = GWT.create(RosterItemWidgetUiBinder.class);
 
-    public RosterItemWidget(final String groupId, final String itemId) {
+    public RosterItemWidget() {
 	initWidget(uiBinder.createAndBindUi(this));
-	self.ensureDebugId(Idify.id("RosterItemWidget", groupId, itemId));
 	menu.addStyleName(HablarIcons.get(IconType.menu));
-	menu.ensureDebugId(Idify.id("RosterItemWidget", groupId, itemId, "roster-menu"));
     }
 
     @Override
