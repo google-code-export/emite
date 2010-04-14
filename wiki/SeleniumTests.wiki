@@ -32,8 +32,8 @@ Install the TestNG Plugin for eclipse (optional, but needed to run the Selenium 
  http://beust.com/eclipse/
 
 Configure a test user in your server. We suggest to add two user:
-  * test1@localhost, password: test1
-  * selenium@localhost, password: selenium
+  * test1@localhost, display name: test1, password: test1
+  * selenium@localhost, display name: selenium, password: selenium
 
 = Running =
 
