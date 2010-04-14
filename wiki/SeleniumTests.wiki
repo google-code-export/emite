@@ -31,7 +31,9 @@ and check that the GWT plugin is installed and enabled correctly.
 Install the TestNG Plugin for eclipse (optional, but needed to run the Selenium tests from the UI). The TestNG update site:
  http://beust.com/eclipse/
 
-Configure a test user in your server (we use username: test1@localhost, password: test1)
+Configure a test user in your server. We suggest to add two user:
+  * test1@localhost, password: test1
+  * selenium@localhost, password: selenium
 
 = Running =
 
