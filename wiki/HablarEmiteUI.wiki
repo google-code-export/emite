@@ -3,7 +3,7 @@
 
 = Introduction =
 
-_Hablar_ is the a new Emite user interface builded using GWT widgets and UIBinder GWT2.0 feature.
+_Hablar_ is the a new Emite user interface builded using GWT widgets and UIBinder GWT2.0 feature. See the HablarUserGuide for instructions on how to use it.
 
 Hablar is build using the MVP pattern and its composed of several modules that can be optional included to create a customized user interface.
 
