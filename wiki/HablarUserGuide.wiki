@@ -1,5 +1,5 @@
 #summary Hablar: user guide
-#labels Phase-Implementation
+#labels Phase-Implementation,Users-guide,Featured
 
 = Introduction =
 
