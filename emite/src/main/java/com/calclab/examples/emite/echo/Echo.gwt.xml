@@ -1,7 +1,0 @@
-<module>
-  <inherits name="com.calclab.emite.core.EmiteCore" />
-
-  <entry-point
-    class="com.calclab.examples.emite.echo.client.EchoModule" />
-
-</module>
