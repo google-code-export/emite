@@ -1,0 +1,14 @@
+war/examplexmppsession
+war/EmiteFunctionalTests/
+war/ExampleEcho/
+war/ExampleIMChat/
+war/ExampleXmppSession/
+
+.svn
+**/.svn
+war/WEB-INF/classes
+war/com.*/*
+war/emite.*/*
+
+
+
