@@ -13,6 +13,7 @@ Emite Xmpp servers compatibility matrix:
 || ejabberd  || 2.0.2 || yes ||  || [https://support.process-one.net/browse/EJAB-724;jsessionid=7DA6E5F568CA3368182DC577B8EFAFD9?page=com.atlassian.jira.ext.fisheye%3Afisheye-issuepanel some bosh issues] ||
 || ejabberd  || 2.0.3 || yes ||  || ||
 || tigase   || ? || ? || Not tested || ||
+|| zimbra  || 5.0.18 || yes ||  || ||
 
 
 
