@@ -2,6 +2,7 @@ package com.calclab.hablar.core.client.ui.icon;
 
 import java.util.HashMap;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
@@ -38,7 +39,9 @@ public class Icons {
     public static final String ROSTER = "roster";
     public static final String SEARCH = "search";
 
-    private static HashMap<String, ImageResource> icons = new HashMap<String, ImageResource>();
+    private final HashMap<String, ImageResource> icons = new HashMap<String, ImageResource>();
+
+    private static Icons instance = GWT.create(Icons.class);
 
     /**
      * Get a icon with the given token. If no image is associated to that token,
@@ -49,6 +52,10 @@ public class Icons {
      * @return the icon if any or a default icon
      */
     public static ImageResource get(final String token) {
+	return instance.getImageResource(token);
+    }
+
+    protected ImageResource getImageResource(final String token) {
 	return icons.get(token);
     }
 
@@ -60,6 +67,10 @@ public class Icons {
      * @return
      */
     public static ImageResource register(final String token, final ImageResource image) {
+	return instance.registerImageResource(token, image);
+    }
+
+    protected ImageResource registerImageResource(final String token, final ImageResource image) {
 	return icons.put(token, image);
     }
 
@@ -82,11 +93,15 @@ public class Icons {
 	// image.getElement().setAttribute("src", get(token).getURL());
 
 	// Some workaround
+	instance.setImage(image, token);
+    }
+
+    protected void setImage(final Image image, final String token) {
 	String styles = image.getElement().getClassName();
-	image.setResource(get(token));
+	image.setResource(getImageResource(token));
 	image.getElement().setClassName(styles);
     }
 
-    private Icons() {
+    protected Icons() {
     }
 }
