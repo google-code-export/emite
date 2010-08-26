@@ -1,5 +1,5 @@
 #summary The Emite FAQ
-#labels Featured
+#labels
 
 = Emite FAQ =
 

@@ -1,4 +1,5 @@
 #summary Gentle introduction to emite
+#labels Featured
 
 _UNDER CONSTRUCTION_
 

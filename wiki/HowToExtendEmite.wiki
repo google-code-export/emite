@@ -1,5 +1,5 @@
 #summary How to add new functionallity to emite
-#labels Featured,Phase-Implementation
+#labels Phase-Implementation
 
 Emite has a highly modular architectured (based on [http://suco.googlecode.com Suco]), so add new functionallity is an easy task.
 

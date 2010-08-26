@@ -1,5 +1,5 @@
 #summary If you're planning to use emite, this guide is for you.
-#labels Featured
+
 
 ==Basic concepts==
 

@@ -1,5 +1,5 @@
 #summary Hablar is a new GWT2.0 emite ui
-#labels Featured,Users-guide,Phase-Implementation
+#labels Users-guide,Phase-Implementation
 
 = Introduction =
 

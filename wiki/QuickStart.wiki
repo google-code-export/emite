@@ -1,5 +1,5 @@
 #summary How to get the ui running and create a new app with emite
-#labels Featured,Phase-Deploy
+#labels Phase-Deploy
 
 
 Emite its a pure gwt library, so no server code is involved.

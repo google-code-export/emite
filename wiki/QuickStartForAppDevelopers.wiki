@@ -1,5 +1,5 @@
 #summary Tutorial outlining minimal steps for setting up a full dev environment for creating GWT applications on top of emite.
-#labels Featured,Phase-Deploy
+abels Featured,Phase-Deploy
 
 *update: added a mini section for openfire configuration*
 
