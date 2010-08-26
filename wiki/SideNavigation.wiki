@@ -2,7 +2,7 @@
   * [GettingStarted Getting started]
   * [MakeEmiteBetter Make emite better]
   * [FAQ FAQ]
-  * [EmiteLib Emite library user's guide]
+  * Emite library user's guide
     * [GeneralConcepts Emite general concepts]
     * [ModuleList Emite's module list]
     * [EmiteCore Emite core module]
@@ -10,12 +10,12 @@
     * [BrowserModule Emite's browser module]
   * [HablarEmiteUI Emite Hablar UI client]
     * [HablarUserGuide Hablar user guide]
-  * [!DeployEmite Emite deployment docs]
+  * Emite deployment docs
     * [EmiteProxy Deployment in development enviroment]
     * [EjabberdUbuntu Install ejabberd on ubuntu]
     * [ServerAndClientsCompatibility Compatibility table]
     * [Troubleshooting Troubleshooting]
-  * [!OldDocs Old Emite documentation]
+  * Old Emite documentation
     * [UserManual Emite user manual]
     * [QuickStart Quick start guide]
     * [QuickStartForAppDevelopers Quick start for developers]
