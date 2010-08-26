@@ -1,0 +1,9 @@
+#summary Gentle introduction to emite
+
+_UNDER CONSTRUCTION_
+
+Emite is a xmpp client library (emite-lib) written in java and ready to use in browser environments.
+
+Also is a full featured UI client (Hablar).
+
+Currently this documentation is underconstruction. See old documentation.

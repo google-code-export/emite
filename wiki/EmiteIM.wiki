@@ -1,0 +1,6 @@
+#summary How to use Emite's instant messaging module
+
+_UNDER CONSTRUCTION_
+
+
+Currently this documentation is underconstruction. See old documentation.
