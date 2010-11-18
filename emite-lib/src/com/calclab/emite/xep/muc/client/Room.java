@@ -4,12 +4,11 @@ import java.util.Collection;
 
 import com.calclab.emite.core.client.events.PresenceHandler;
 import com.calclab.emite.core.client.xmpp.stanzas.Message;
-import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.core.client.xmpp.stanzas.Presence.Show;
+import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.Chat;
 import com.calclab.emite.xep.muc.client.events.BeforeRoomInvitationSendHandler;
 import com.calclab.emite.xep.muc.client.events.OccupantChangedHandler;
-import com.calclab.emite.xep.muc.client.events.RoomInvitationSentHandler;
 import com.calclab.emite.xep.muc.client.subject.RoomSubject;
 import com.calclab.suco.client.events.Listener;
 import com.calclab.suco.client.events.Listener2;
@@ -45,14 +44,6 @@ public interface Room extends Chat {
      * @return
      */
     public HandlerRegistration addPresenceReceivedHandler(PresenceHandler handler);
-
-    /**
-     * Add a handler to know when a room invitation has been sent
-     * 
-     * @param handler
-     * @return
-     */
-    public HandlerRegistration addRoomInvitationSentHandler(RoomInvitationSentHandler handler);
 
     /**
      * Find an occupant with the given occupant uri

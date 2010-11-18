@@ -16,7 +16,6 @@ import com.calclab.emite.core.client.packet.IPacket;
 import com.calclab.emite.core.client.packet.MatcherFactory;
 import com.calclab.emite.core.client.packet.NoPacket;
 import com.calclab.emite.core.client.packet.PacketMatcher;
-import com.calclab.emite.core.client.util.NonBlockingCommandScheduler;
 import com.calclab.emite.core.client.xmpp.session.IQResponseHandler;
 import com.calclab.emite.core.client.xmpp.session.XmppSession;
 import com.calclab.emite.core.client.xmpp.session.XmppSession.SessionStates;
@@ -30,26 +29,17 @@ import com.calclab.emite.im.client.roster.events.RosterGroupChangedHandler;
 import com.calclab.emite.im.client.roster.events.RosterItemChangedEvent;
 import com.calclab.emite.im.client.roster.events.RosterRetrievedEvent;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class XmppRosterLogic extends XmppRosterGroupsLogic implements XmppRoster {
-
     private static final PacketMatcher ROSTER_QUERY_FILTER = MatcherFactory.byNameAndXMLNS("query", "jabber:iq:roster");
-
-    private final NonBlockingCommandScheduler commandScheduler;
 
     @Inject
     public XmppRosterLogic(final XmppSession session) {
 	super(session);
-
-	commandScheduler = new NonBlockingCommandScheduler();
-
 	GWT.log("Creating XmppRosterLogic");
 
 	session.addSessionStateChangedHandler(true, new StateChangedHandler() {
@@ -183,28 +173,10 @@ public class XmppRosterLogic extends XmppRosterGroupsLogic implements XmppRoster
 		    if (IQ.isSuccess(iq)) {
 			clearGroupAll();
 			final List<? extends IPacket> children = iq.getFirstChild("query").getChildren();
-
-			RepeatingCommand command = new RepeatingCommand() {
-
-			    int i = 0;
-
-			    @Override
-			    public boolean execute() {
-				if (i >= children.size()) {
-				    return false;
-				}
-
-				final RosterItem item = RosterItem.parse(children.get(i));
-				storeItem(item);
-
-				++i;
-				// Return true if we have more items
-				return (i < children.size());
-			    }
-			};
-
-			Scheduler.get().scheduleIncremental(command);
-
+			for (final IPacket child : children) {
+			    final RosterItem item = RosterItem.parse(child);
+			    storeItem(item);
+			}
 			if (!rosterReady) {
 			    rosterReady = true;
 			    session.setSessionState(SessionStates.rosterReady);
@@ -246,11 +218,20 @@ public class XmppRosterLogic extends XmppRosterGroupsLogic implements XmppRoster
 	    storeItem(item);
 	    event = new RosterItemChangedEvent(ChangeTypes.added, item);
 	} else { // update or remove
+	    // removeItem(old);
 	    final SubscriptionState subscriptionState = item.getSubscriptionState();
 	    if (subscriptionState == SubscriptionState.remove) {
 		removeItem(old);
 		event = new RosterItemChangedEvent(ChangeTypes.removed, old);
 	    } else {
+		// if (subscriptionState == SubscriptionState.to ||
+		// subscriptionState == SubscriptionState.both) {
+		// // already subscribed, preserve available/show/status
+		// item.setAvaialableResources(old.getAvailableResources());
+		// item.setShow(old.getShow());
+		// item.setStatus(old.getStatus());
+		// }
+		// storeItem(item);
 		updateExistingItem(old, item);
 		event = new RosterItemChangedEvent(ChangeTypes.modified, old);
 	    }
@@ -281,49 +262,30 @@ public class XmppRosterLogic extends XmppRosterGroupsLogic implements XmppRoster
 	List<String> newGroups = newItem.getGroups();
 
 	// Go through and remove any old groups which aren't on the new item
-	for (final String group : groups) {
+	for (String group : groups) {
 	    if (!newGroups.contains(group)) {
-		commandScheduler.addCommand(new Command() {
-
-		    @Override
-		    public void execute() {
-			item.removeFromGroup(group);
-		    }
-
-		});
+		item.removeFromGroup(group);
 	    }
 	}
 
 	// Then go through and add in any new groups which aren't on the
 	// existing item
-	for (final String group : newGroups) {
+	for (String group : newGroups) {
 	    // Update the existing item
 	    if (!groups.contains(group)) {
-		commandScheduler.addCommand(new Command() {
-
-		    @Override
-		    public void execute() {
-			item.addToGroup(group);
-		    }
-
-		});
+		item.addToGroup(group);
 	    }
 
-	    commandScheduler.addCommand(new Command() {
-		@Override
-		public void execute() {
-		    // And update the roster group accordingly
-		    RosterGroup rosterGroup = XmppRosterLogic.this.getRosterGroup(group);
+	    // And update the roster group accordingly
+	    RosterGroup rosterGroup = this.getRosterGroup(group);
 
-		    if (rosterGroup == null) {
-			rosterGroup = addGroup(group);
-		    }
+	    if (rosterGroup == null) {
+		rosterGroup = addGroup(group);
+	    }
 
-		    if (!rosterGroup.hasItem(item.getJID())) {
-			rosterGroup.add(item);
-		    }
-		}
-	    });
+	    if (!rosterGroup.hasItem(item.getJID())) {
+		rosterGroup.add(item);
+	    }
 	}
 
 	// And remove the item from any groups it may still be in
@@ -341,15 +303,8 @@ public class XmppRosterLogic extends XmppRosterGroupsLogic implements XmppRoster
 	}
 
 	// Remove any groups which are now empty
-	for (final String groupName : groupsToRemove) {
-	    commandScheduler.addCommand(new Command() {
-
-		@Override
-		public void execute() {
-		    removeGroup(groupName);
-		}
-
-	    });
+	for (String groupName : groupsToRemove) {
+	    removeGroup(groupName);
 	}
 
     }

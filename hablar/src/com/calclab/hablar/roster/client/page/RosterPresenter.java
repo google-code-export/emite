@@ -6,12 +6,9 @@ import java.util.HashMap;
 
 import com.calclab.emite.core.client.xmpp.session.Session;
 import com.calclab.emite.core.client.xmpp.session.Session.State;
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterGroup;
-import com.calclab.emite.im.client.roster.XmppRoster;
-import com.calclab.emite.im.client.roster.events.RosterGroupChangedEvent;
-import com.calclab.emite.im.client.roster.events.RosterGroupChangedHandler;
-import com.calclab.emite.im.client.roster.events.RosterItemChangedEvent;
-import com.calclab.emite.im.client.roster.events.RosterItemChangedHandler;
+import com.calclab.emite.im.client.roster.RosterItem;
 import com.calclab.hablar.core.client.mvp.HablarEventBus;
 import com.calclab.hablar.core.client.page.Page;
 import com.calclab.hablar.core.client.page.PagePresenter;
@@ -49,7 +46,7 @@ public class RosterPresenter extends PagePresenter<RosterDisplay> implements
 	}
 
 	private boolean active;
-	private final XmppRoster roster;
+	private final Roster roster;
 	private final RosterBasicActions basicActions;
 	private final Menu<RosterItemPresenter> itemMenu;
 	private final HashMap<String, RosterGroupPresenter> groupPresenters;
@@ -59,7 +56,7 @@ public class RosterPresenter extends PagePresenter<RosterDisplay> implements
 	public RosterPresenter(final HablarEventBus eventBus,
 			final RosterDisplay display, final RosterConfig rosterConfig) {
 		super(TYPE, "" + ++index, eventBus, display);
-		roster = Suco.get(XmppRoster.class);
+		roster = Suco.get(Roster.class);
 
 		if (rosterConfig.rosterMenuActions != null) {
 			basicActions = rosterConfig.rosterMenuActions;
@@ -117,34 +114,44 @@ public class RosterPresenter extends PagePresenter<RosterDisplay> implements
 	}
 
 	private void addRosterListeners() {
-		roster.addRosterItemChangedHandler(new RosterItemChangedHandler() {
-			
+		roster.onItemAdded(new Listener<RosterItem>() {
 			@Override
-			public void onRosterItemChanged(RosterItemChangedEvent event) {
-				if(event.isAdded()) {
-					final String message = i18n().userAdded(
-							event.getRosterItem().getJID().toString());
-					fireMessage(message);
-				} else if(event.isRemoved()) {
-					final String message = i18n().userRemoved(
-							event.getRosterItem().getJID().toString());
-					fireMessage(message);
-				} else if(event.isModified()) {
-					for(RosterGroupPresenter groupPresenter : groupPresenters.values()) {
-						groupPresenter.rosterItemChanged(event.getRosterItem());
-					}
-				}
+			public void onEvent(final RosterItem item) {
+				final String message = i18n().userAdded(
+						item.getJID().toString());
+				fireMessage(message);
+			}
+
+		});
+
+		roster.onItemRemoved(new Listener<RosterItem>() {
+			@Override
+			public void onEvent(final RosterItem item) {
+				final String message = i18n().userRemoved(
+						item.getJID().toString());
+				fireMessage(message);
+			}
+		});
+
+		roster.onGroupAdded(new Listener<RosterGroup>() {
+			@Override
+			public void onEvent(final RosterGroup group) {
+				createGroup(group);
+			}
+		});
+
+		roster.onGroupRemoved(new Listener<RosterGroup>() {
+			@Override
+			public void onEvent(final RosterGroup group) {
+				display.remove(groupPresenters.get(group.getName()));
 			}
 		});
 		
-		roster.addRosterGroupChangedHandler(new RosterGroupChangedHandler() {
-			
+		roster.onItemChanged(new Listener<RosterItem>() {
 			@Override
-			public void onGroupChanged(RosterGroupChangedEvent event) {
-				if(event.isAdded()) {
-					createGroup(event.getRosterGroup());
-				} else if(event.isRemoved()) {
-					display.remove(groupPresenters.get(event.getRosterGroup().getName()));
+			public void onEvent(RosterItem item) {
+				for(RosterGroupPresenter groupPresenter : groupPresenters.values()) {
+					groupPresenter.rosterItemChanged(item);
 				}
 			}
 		});

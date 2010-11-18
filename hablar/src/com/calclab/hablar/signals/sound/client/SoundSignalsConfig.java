@@ -1,7 +1,6 @@
 package com.calclab.hablar.signals.sound.client;
 
 import com.calclab.emite.browser.client.PageAssist;
-import com.google.gwt.core.client.GWT;
 
 public class SoundSignalsConfig {
 
@@ -17,5 +16,5 @@ public class SoundSignalsConfig {
     }
 
     public int defaultVolume = 50;
-    public String fileUrl = GWT.getModuleBaseURL() + "click.wav";
+    public String fileUrl = "com.calclab.hablar.signals.sound.HablarSoundSignals/click.wav";
 }

@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class RosterItemWidget extends Composite implements RosterItemDisplay {
@@ -23,9 +22,6 @@ public class RosterItemWidget extends Composite implements RosterItemDisplay {
 
     @UiField
     FocusPanel self;
-    
-    @UiField
-    LayoutPanel layoutPanel;
 
     @UiField
     Label name, jid, status;
@@ -105,9 +101,4 @@ public class RosterItemWidget extends Composite implements RosterItemDisplay {
     public void setWidgetTitle(final String title) {
 	setTitle(title);
     }
-
-	@Override
-	public void forceLayout() {
-		layoutPanel.forceLayout();
-	}
 }

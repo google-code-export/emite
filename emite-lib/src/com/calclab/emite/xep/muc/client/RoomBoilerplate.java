@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import com.calclab.emite.core.client.events.ChangedEvent.ChangeTypes;
 import com.calclab.emite.core.client.events.PresenceHandler;
 import com.calclab.emite.core.client.events.PresenceReceivedEvent;
-import com.calclab.emite.core.client.events.ChangedEvent.ChangeTypes;
 import com.calclab.emite.core.client.xmpp.session.XmppSession;
 import com.calclab.emite.core.client.xmpp.stanzas.XmppURI;
 import com.calclab.emite.im.client.chat.AbstractChat;
@@ -39,6 +39,15 @@ abstract class RoomBoilerplate extends AbstractChat implements Room {
 	return BeforeRoomInvitationSendEvent.bind(chatEventBus, handler);
     }
 
+    protected void addOccupant(Occupant occupant) {
+	occupantsByOccupantUri.put(occupant.getOccupantUri(), occupant);
+	XmppURI userUri = occupant.getUserUri();
+	if (userUri != null) {
+	    occupantsByUserUri.put(userUri.getJID(), occupant);
+	}
+	chatEventBus.fireEvent(new OccupantChangedEvent(ChangeTypes.added, occupant));
+    }
+
     /**
      * Add a handler to know when a occupant has changed
      * 
@@ -55,7 +64,12 @@ abstract class RoomBoilerplate extends AbstractChat implements Room {
 	return PresenceReceivedEvent.bind(chatEventBus, handler);
     }
 
-    @Override
+    /**
+     * Add a handler to know when a room invitation has been sent
+     * 
+     * @param handler
+     * @return
+     */
     public HandlerRegistration addRoomInvitationSentHandler(RoomInvitationSentHandler handler) {
 	return RoomInvitationSentEvent.bind(chatEventBus, handler);
     }
@@ -164,24 +178,6 @@ abstract class RoomBoilerplate extends AbstractChat implements Room {
 	});
     }
 
-    /**
-     * Use RoomSubject.requestSubjectChange
-     */
-    @Override
-    @Deprecated
-    public void setSubject(String newSubject) {
-	RoomSubject.requestSubjectChange(this, newSubject);
-    }
-
-    protected void addOccupant(Occupant occupant) {
-	occupantsByOccupantUri.put(occupant.getOccupantUri(), occupant);
-	XmppURI userUri = occupant.getUserUri();
-	if (userUri != null) {
-	    occupantsByUserUri.put(userUri.getJID(), occupant);
-	}
-	chatEventBus.fireEvent(new OccupantChangedEvent(ChangeTypes.added, occupant));
-    }
-
     protected void removeOccupant(final XmppURI occupantUri) {
 	final Occupant occupant = occupantsByOccupantUri.remove(occupantUri);
 	if (occupant != null) {
@@ -191,5 +187,14 @@ abstract class RoomBoilerplate extends AbstractChat implements Room {
 	    }
 	    chatEventBus.fireEvent(new OccupantChangedEvent(ChangeTypes.removed, occupant));
 	}
+    }
+
+    /**
+     * Use RoomSubject.requestSubjectChange
+     */
+    @Override
+    @Deprecated
+    public void setSubject(String newSubject) {
+	RoomSubject.requestSubjectChange(this, newSubject);
     }
 }

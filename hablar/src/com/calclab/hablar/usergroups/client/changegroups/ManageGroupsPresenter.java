@@ -3,8 +3,8 @@ package com.calclab.hablar.usergroups.client.changegroups;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.calclab.emite.im.client.roster.Roster;
 import com.calclab.emite.im.client.roster.RosterItem;
-import com.calclab.emite.im.client.roster.XmppRoster;
 import com.calclab.hablar.core.client.mvp.HablarEventBus;
 import com.calclab.hablar.core.client.page.PagePresenter;
 import com.calclab.hablar.core.client.validators.IsEmpty;
@@ -58,7 +58,7 @@ public class ManageGroupsPresenter extends PagePresenter<ManageGroupsDisplay> {
     }
 
     private void addToNewGroups() {
-	final XmppRoster roster = Suco.get(XmppRoster.class);
+	final Roster roster = Suco.get(Roster.class);
 
 	item.getGroups().clear();
 	for (final GroupSelectorPresenter selector : groupSelectors) {
@@ -75,7 +75,7 @@ public class ManageGroupsPresenter extends PagePresenter<ManageGroupsDisplay> {
 
 	display.getContactNameField().setText(item.getJID().toString());
 
-	final XmppRoster roster = Suco.get(XmppRoster.class);
+	final Roster roster = Suco.get(Roster.class);
 	display.clearGroupList();
 	groupSelectors.clear();
 	final List<String> belongingGroups = item.getGroups();
