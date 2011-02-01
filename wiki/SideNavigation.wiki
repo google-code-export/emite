@@ -6,7 +6,7 @@
     * [GeneralConcepts Emite general concepts]
     * [ModuleList Emite's module list]
     * [EmiteCore Emite core module]
-    * [EmiteIM Emite Instant messagein module]
+    * [EmiteIM Emite Instant Messaging module]
     * [BrowserModule Emite's browser module]
   * [HablarEmiteUI Emite Hablar UI client]
     * [HablarUserGuide Hablar user guide]

@@ -17,9 +17,11 @@ require two parameters:
 
 Here is an example of how to configure the session component:
 {{{
-  XmppConnection connection = ginjector.get(XmppConnection.class);
+  XmppConnection connection = ginjector.create(XmppConnection.class);
   connection.setSettings(new ConnectionSettings("http://myapp.com/xmpp-proxy", "mydomain.com"));
 }}}
+
+The proxy url is the url where Emite will send the xmpp bosh requests. The domain is the Xmpp server domain.
 
 ===Session component===
 
